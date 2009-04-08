@@ -20,26 +20,6 @@ under the License.
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
-    <screen name="CreateCustRequestNotification">
-        <section>
-            <actions>
-                <set field="title" value="${uiLabelMap.MyPortalCustRequestNotificationMailCreation} #${custRequestId}"/>
-            </actions>
-            <widgets>
-                <platform-specific><html><html-template location="component://myportal/templates/email/CreateCustRequestNotification.ftl"/></html></platform-specific>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="CompletedCustRequestNotification">
-        <section>
-            <actions>
-                <set field="title" value="${uiLabelMap.MyPortalCustRequestNotificationMailCompleted} #${custRequestId}"/>
-            </actions>
-            <widgets>
-                <platform-specific><html><html-template location="component://myportal/templates/email/CompletedCustRequestNotification.ftl"/></html></platform-specific>
-            </widgets>
-        </section>
-    </screen>
     <screen name="CreateUserNotification">
         <section>
             <actions>
