@@ -19,12 +19,12 @@ under the License.
 -->
 
 <entity-engine-xml>
-    <!-- Oagis component security -->
-    <SecurityPermission description="View operations in the Oagis application." permissionId="OAGIS_VIEW"/>
-
-    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="OAGIS_VIEW"/>
-    <SecurityGroupPermission groupId="FULLADMIN" permissionId="OAGIS_VIEW"/>
-    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="OAGIS_VIEW"/>
-    <SecurityGroupPermission groupId="BIZADMIN" permissionId="OAGIS_VIEW"/>
-
+    <!-- Google Base component security -->
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="GOOGLEBASE_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="GOOGLEBASE_ADMIN"/>
+    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="GOOGLEBASE_VIEW"/>
+    <SecurityGroupPermission groupId="BIZADMIN" permissionId="GOOGLEBASE_VIEW"/>
+    
+    <SecurityGroup description="Google Base Administrator" groupId="GOOGLEBASEADMIN"/>
+    <SecurityGroup description="Google Base View" groupId="GOOGLEBASEVIEW"/>
 </entity-engine-xml>

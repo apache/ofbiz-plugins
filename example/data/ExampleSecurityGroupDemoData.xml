@@ -19,11 +19,6 @@ under the License.
 -->
 <entity-engine-xml>
     <!-- Example security -->
-    <SecurityPermission description="View operations in the Example Management Screens." permissionId="EXAMPLE_VIEW"/>
-    <SecurityPermission description="Create operations in the Example Management Screens." permissionId="EXAMPLE_CREATE"/>
-    <SecurityPermission description="Update operations in the Example Management Screens." permissionId="EXAMPLE_UPDATE"/>
-    <SecurityPermission description="Delete operations in the Example Management Screens." permissionId="EXAMPLE_DELETE"/>
-    <SecurityPermission description="ALL operations in the Example Management Screens." permissionId="EXAMPLE_ADMIN"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="EXAMPLE_ADMIN"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="EXAMPLE_CREATE"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="EXAMPLE_DELETE"/>

@@ -18,10 +18,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 <entity-engine-xml>
-    <!-- Asset Maintenance security -->
-    <SecurityPermission description="ALL Web POS operations." permissionId="WEBPOS_ADMIN"/>
-    <SecurityPermission description="Web POS View permission." permissionId="WEBPOS_VIEW"/>
+    <!-- Workflow security -->
+    <SecurityPermission description="Use the Workflow Maintenance pages." permissionId="WORKFLOW_MAINT"/>
 
-    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MYPORTALBASE_ADMIN"/>
-    <SecurityGroupPermission groupId="FULLADMIN" permissionId="WEBPOS_ADMIN"/>
+    <!-- SUPER group -->
+    <SecurityGroupPermission groupId="SUPER" permissionId="WORKFLOW_MAINT"/>
 </entity-engine-xml>

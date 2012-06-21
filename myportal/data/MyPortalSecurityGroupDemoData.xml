@@ -18,9 +18,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 <entity-engine-xml>
-    <SecurityPermission description="ALL MyPortal base operations" permissionId="MYPORTALBASE_ADMIN"/>
-    <SecurityPermission description="MyPortal Base View permission." permissionId="MYPORTALBASE_VIEW"/>
-    
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MYPORTALBASE_ADMIN"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MYPORTALBASE_ADMIN"/>
     

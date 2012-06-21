@@ -19,12 +19,6 @@ under the License.
 -->
 <entity-engine-xml>
     <!-- Asset Maintenance security -->
-    <SecurityPermission description="ALL Asset Maintenance operations." permissionId="ASSETMAINT_ADMIN"/>
-    <SecurityPermission description="Asset Maintenance View permission." permissionId="ASSETMAINT_VIEW"/>
-    <SecurityPermission description="Asset Maintenance Create operations." permissionId="ASSETMAINT_CREATE"/>
-    <SecurityPermission description="Asset Maintenance Update operations." permissionId="ASSETMAINT_UPDATE"/>
-    <SecurityPermission description="Asset Maintenance Delete operations." permissionId="ASSETMAINT_DELETE"/>
-
     <SecurityGroup description="Asset Maintenance Admin group, has all maintenance permissions." groupId="ASSETMAINTADMIN"/>
     <SecurityGroup description="Asset Maintenance Technician group, has view and update." groupId="ASSETMAINTTECH"/>
 

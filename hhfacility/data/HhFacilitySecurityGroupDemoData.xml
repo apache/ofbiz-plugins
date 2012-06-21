@@ -18,8 +18,5 @@ specific language governing permissions and limitations
 under the License.
 -->
 <entity-engine-xml>
-    <SecurityPermission description="ALL hh facility operations." permissionId="HHFACILITY_ADMIN"/>
-    <SecurityPermission description="hh facility View permission." permissionId="HHFACILITY_VIEW"/>
-
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="HHFACILITY_ADMIN"/>
 </entity-engine-xml>

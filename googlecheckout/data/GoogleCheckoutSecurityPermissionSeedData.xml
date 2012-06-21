@@ -24,11 +24,7 @@ under the License.
     <SecurityPermission description="Update operations in the Google Checkout Management Screens." permissionId="GCHECKOUT_UPDATE"/>
     <SecurityPermission description="Delete operations in the Google Checkout Management Screens." permissionId="GCHECKOUT_DELETE"/>
     <SecurityPermission description="ALL operations in the Google Checkout Management Screens." permissionId="GCHECKOUT_ADMIN"/>
-    <SecurityGroupPermission groupId="FULLADMIN" permissionId="GCHECKOUT_ADMIN"/>
-    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="GCHECKOUT_CREATE"/>
-    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="GCHECKOUT_DELETE"/>
-    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="GCHECKOUT_UPDATE"/>
-    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="GCHECKOUT_VIEW"/>
-    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="GCHECKOUT_VIEW"/>
-    <SecurityGroupPermission groupId="BIZADMIN" permissionId="GCHECKOUT_ADMIN"/>
+
+    <!--  SUPER group -->
+    <SecurityGroupPermission groupId="SUPER" permissionId="GCHECKOUT_ADMIN"/>
 </entity-engine-xml>
