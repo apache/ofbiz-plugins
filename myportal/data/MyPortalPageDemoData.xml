@@ -170,7 +170,7 @@
 
     <!-- Myportal help pages -->
     <DataResource dataResourceId="HELP_MYPORTAL" localeString="en" dataResourceTypeId="OFBIZ_FILE" 
-      objectInfo="specialpurpose/myportal/data/helpdata/HELP_MYPORTAL.xml" dataTemplateTypeId="NONE" statusId="CTNT_IN_PROGRESS" 
+      objectInfo="plugins/myportal/data/helpdata/HELP_MYPORTAL.xml" dataTemplateTypeId="NONE" statusId="CTNT_IN_PROGRESS" 
       dataResourceName="Calendar help file" mimeTypeId="text/xml" isPublic="Y" />
     <Content contentId="HELP_MYPORTAL" contentTypeId="DOCUMENT" templateDataResourceId="HELP_TEMPL" dataResourceId="HELP_MYPORTAL" statusId="CTNT_IN_PROGRESS" 
       contentName="My Portal" mimeTypeId="text/html"/>

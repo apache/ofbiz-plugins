@@ -24,6 +24,6 @@
     <title>BIRT report generator.</title>
     <para> An example report sales can be found in the example component. </para>
     <para>
-        <xi:include href="../../../specialpurpose/birt/data/helpdata/HELP_BIRT.xml"/>
+        <xi:include href="../../../plugins/birt/data/helpdata/HELP_BIRT.xml"/>
     </para>
 </chapter>

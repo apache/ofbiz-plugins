@@ -40,7 +40,7 @@ public abstract class AbstractHtmlReport extends HtmlReport {
     
     public final static String RUN_DROPTABLE_SCRIPT = "rundroptablescript";
     
-    public final static String FILE_REPORT_OUTPUT = "specialpurpose/pricat/webapp/pricat/ftl/report.ftl";
+    public final static String FILE_REPORT_OUTPUT = "plugins/pricat/webapp/pricat/ftl/report.ftl";
     
     /**
      * Constructs a new report using the provided locale for the output language.

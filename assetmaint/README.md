@@ -17,4 +17,4 @@ JIRA issues related to this component can be found at
 
 ## commits
 Committed revisions can be viewed at 
-http://svn.apache.org/viewvc/ofbiz/trunk/specialpurpose/assetmaint/
+http://svn.apache.org/viewvc/ofbiz/trunk/plugins/assetmaint/

@@ -11,4 +11,4 @@ which can be found at https://cwiki.apache.org/confluence/display/OFBIZ/Scrum+Ma
 JIRA issues related to this component can be found at https://issues.apache.org/jira/browse/OFBIZ/component/12316900
 
 ## commits
-Committed revisions can be viewed at http://svn.apache.org/viewvc/ofbiz/trunk/specialpurpose/scrum/
+Committed revisions can be viewed at http://svn.apache.org/viewvc/ofbiz/trunk/plugins/scrum/

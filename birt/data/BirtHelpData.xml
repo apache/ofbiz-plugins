@@ -20,7 +20,7 @@
 
 <entity-engine-xml>
     <DataResource dataResourceId="HELP_BIRT" localeString="en" dataResourceTypeId="OFBIZ_FILE"
-                  objectInfo="specialpurpose/birt/data/helpdata/HELP_BIRT.xml" dataTemplateTypeId="NONE" statusId="CTNT_IN_PROGRESS"
+                  objectInfo="plugins/birt/data/helpdata/HELP_BIRT.xml" dataTemplateTypeId="NONE" statusId="CTNT_IN_PROGRESS"
                   dataResourceName="BIRT" mimeTypeId="text/xml" isPublic="Y" />
     <Content contentId="HELP_BIRT" contentTypeId="DOCUMENT" contentName="BIRT Overview" templateDataResourceId="HELP_TEMPL"
              dataResourceId="HELP_BIRT" statusId="CTNT_IN_PROGRESS" mimeTypeId="text/html"/>

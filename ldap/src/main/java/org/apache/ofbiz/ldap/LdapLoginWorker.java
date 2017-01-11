@@ -43,7 +43,7 @@ import org.xml.sax.SAXException;
  */
 public class LdapLoginWorker extends LoginWorker {
 
-    private static final String ldapConfig = "specialpurpose/ldap/config/ldap.xml";
+    private static final String ldapConfig = "plugins/ldap/config/ldap.xml";
 
     /**
      * An HTTP WebEvent handler that checks to see is a userLogin is logged in.

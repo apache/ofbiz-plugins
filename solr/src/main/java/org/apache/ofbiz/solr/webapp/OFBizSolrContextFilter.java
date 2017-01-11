@@ -165,8 +165,8 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
         try {
             nodeConfig = loadNodeConfig(solrHome, extraProperties);
         } catch (SolrException e) {
-//            nodeConfig = loadNodeConfig("specialpurpose/solr/home", extraProperties);
-            Path path = Paths.get("specialpurpose/solr/home");
+//            nodeConfig = loadNodeConfig("plugins/solr/home", extraProperties);
+            Path path = Paths.get("plugins/solr/home");
 			nodeConfig = loadNodeConfig(path, extraProperties);
         }
         cores = new CoreContainer(nodeConfig, extraProperties, true);

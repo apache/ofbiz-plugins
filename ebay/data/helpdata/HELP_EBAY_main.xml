@@ -47,7 +47,7 @@
         </listitem>
                 <listitem>
             <para>
-                Following file in specialpurpose/ebay/config/eBayExport.properties.  You will see Merchant  configurations.                    
+                Following file in plugins/ebay/config/eBayExport.properties.  You will see Merchant  configurations.                    
                 For :             
                 eBayExport.xmlGatewayUri :
                     <orderedlist>

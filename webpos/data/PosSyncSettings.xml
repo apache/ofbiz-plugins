@@ -43,7 +43,7 @@ under the License.
     <EntityGroupEntry entityGroupId="5501" entityOrPackage="org.apache.ofbiz.product.category" applEnumId="ESIA_INCLUDE"/>
     <!-- org.apache.ofbiz.party.party may be needed for certain promotions -->
     <EntityGroupEntry entityGroupId="5501" entityOrPackage="org.apache.ofbiz.party.party" applEnumId="ESIA_INCLUDE"/>
-    <EntityGroupEntry entityGroupId="5501" entityOrPackage="org.apache.ofbiz.specialpurpose.pos.PosTerminal" applEnumId="ESIA_INCLUDE"/>
+    <EntityGroupEntry entityGroupId="5501" entityOrPackage="org.apache.ofbiz.plugins.pos.PosTerminal" applEnumId="ESIA_INCLUDE"/>
 
 <!-- POS->PSS POS Terminal to Per Store Server -->
     <EntityGroup entityGroupId="5505" entityGroupName="POS: POS Terminal to Per Store Server"/>

@@ -28,6 +28,6 @@ ebaycalls.jar
 ebaysdkcore.jar
 helper.jar
 
-3) enable the component by uncommenting out the ebaystore entry from specialpurpose/component-load.xml
+3) enable the component by uncommenting out the ebaystore entry from plugins/component-load.xml
 
 4) now you can build and run OFBiz as described in the main README file

@@ -15,4 +15,4 @@ More information about the Apache Solr product can be found at: http://lucene.ap
 JIRA issues related to this component can be found at https://issues.apache.org/jira/browse/OFBIZ/component/12327633
 
 ## commits
-Committed revisions can be viewed at http://svn.apache.org/viewvc/ofbiz/trunk/specialpurpose/solr/
+Committed revisions can be viewed at http://svn.apache.org/viewvc/ofbiz/trunk/plugins/solr/

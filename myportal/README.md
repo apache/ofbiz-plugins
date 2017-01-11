@@ -15,4 +15,4 @@ https://issues.apache.org/jira/browse/OFBIZ/component/12312425
 
 ## commits
 Committed revisions can be viewed at 
-http://svn.apache.org/viewvc/ofbiz/trunk/specialpurpose/myportal/
+http://svn.apache.org/viewvc/ofbiz/trunk/plugins/myportal/
