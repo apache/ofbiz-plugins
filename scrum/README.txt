@@ -15,7 +15,7 @@ Installation (On server)
           Copy commit.py from "scrum/data/hookscripts/commit.py" to "/usr/share/subversion/hook-scripts/" and then edit file following :
           ---------------------------------------------------------------------------------
             CONFIG_PATH = ""    // the path of the revision.properties should begin from home directory.
-            Example : CONFIG_PATH = "/home/ofbiz/ofbiz/hot-deploy/scrum/config/revision.properties"
+            Example : CONFIG_PATH = "/home/ofbiz/ofbiz/plugins/scrum/config/revision.properties"
           --------------------------------------------------------------------------------
 3. Configure file setting : The original configure file is in scrum component (/scrum/config/revision.properties) you can put it 
           anywhere that you wish but should be set the path of the file in commit.py file ("CONFIG_PATH=").

@@ -32,7 +32,7 @@ REV = sys.argv[2]
 # if the repository and the version number of the repository not empty. 
 if REPOS and REV:
     # The path of revision.properties
-    CONFIG_PATH = "/home/ofbiz/ofbiz/hot-deploy/scrum/config/revision.properties"
+    CONFIG_PATH = "/home/ofbiz/ofbiz/plugins/scrum/config/revision.properties"
     openfile = open(CONFIG_PATH)
     openfile.readline()
     revision = ConfigParser.ConfigParser()
