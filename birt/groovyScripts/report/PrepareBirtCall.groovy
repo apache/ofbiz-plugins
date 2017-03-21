@@ -26,9 +26,5 @@ birtParameters.modelElementName = parameters.modelElementName
 birtParameters.userLogin = context.userLogin
 birtParameters.locale = locale
 
-if(!birtParameters.rptDesignFile) {
-    request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("BirtErrorUiLabels", "BirtErrorNotPublishedReport", locale))
-    return "error"
-}
 request.setAttribute("birtParameters", birtParameters)
 return "success"
