@@ -42,7 +42,7 @@ under the License.
             <link target="ListFlexibleReport"/>
         </menu-item>
         <menu-item name="UseFlexibleReport" title="${uiLabelMap.BirtGenericReport}"><link target="UseFlexibleReport"/></menu-item>
-        <!-- enable this onl for test
+        <!-- enable this only for test
         <menu-item name="deleteReports" title="${uiLabelMap.BirtDeleteFlexibeReports}">
             <condition>
                 <if-has-permission permission="BIRT_DELETE"/>
