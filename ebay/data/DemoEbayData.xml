@@ -20,6 +20,24 @@ under the License.
 
 <entity-engine-xml>
     <ProductStore productStoreId="9000"/>
+    <Product productId="GZ-1000" smallImageUrl="/images/products/GZ-1000/small.png" largeImageUrl="/images/products/GZ-1000/large.png"/>
+    <Product productId="GZ-1001" smallImageUrl="/images/products/GZ-1001/small.png" largeImageUrl="/images/products/GZ-1001/large.png"/>
+    <Product productId="GZ-2644" smallImageUrl="/images/products/GZ-2644/small.png" largeImageUrl="/images/products/GZ-2644/large.png"/>
+    <Party partyId="USPS" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="UPS" partyTypeId="PARTY_GROUP"/>
+    <PartyGroup partyId="USPS" groupName="USPS"/>
+    <PartyGroup partyId="UPS" groupName="UPS"/>
+    <PartyRole partyId="USPS" roleTypeId="CARRIER"/>
+    <PartyRole partyId="UPS" roleTypeId="CARRIER"/>
+
+    <ShipmentMethodType description="Standard" shipmentMethodTypeId="STANDARD"/>
+    <ShipmentMethodType description="Ground" shipmentMethodTypeId="GROUND"/>
+    <ShipmentMethodType description="Third Day" shipmentMethodTypeId="THIRD_DAY"/>
+    <ShipmentMethodType description="Second Day" shipmentMethodTypeId="SECOND_DAY"/>
+    <ShipmentMethodType description="International Express" shipmentMethodTypeId="INT_EXPRESS"/>
+    <ShipmentMethodType description="Guaranteed Next Day" shipmentMethodTypeId="NEXT_DAY"/>
+    <ShipmentMethodType description="Air" shipmentMethodTypeId="AIR"/>
+
     <WebSite webSiteId="EBAY" siteName="eBay" standardContentPrefix="http://demo-trunk.ofbiz.apache.org" productStoreId="9000"/>
     <EbayConfig productStoreId="9000" devId="ppodkYk34Kh-279a-6khr-a07c-06fd1d65824b" appId="ApacheOFB-bf44-4c32-ac45-3e099a32b675" certId="99ca5f9f-dd5c-3de-9a4c-13b247ieidfg" compatibilityLevel="635" siteId="0" xmlGatewayUri="https://api.sandbox.ebay.com/ws/api.dll" webSiteId="EBAY">
         <token><![CDATA[APACHEeerer**AQresT**aOFBIZ**Dddddg**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6wFddddddddsssererdafjk23232uy+seQ**IzABAA**AAMAAA**6kOEMXRyvyVRLt7vAL7W+5dfjdkfjkldfjlkdjfldj121219fjlkdfjldjf+oRU0d07B0jfdFxJj6OolPHiQN5c0qmVNDRsSKaOucPjXTHSBmVm62p7M9/YmRCag/Mz1DjvDTFyS1kaBinGH2lwd9AjcBSBUbD9tSZVTdKn5PQBh3kkCh5Fe+UK5fyq9OeikM/Bdfafja377dkdkBddDDll+zPbG8pYL13cBgCGj8/zzMSGX2ugZkbU01bCLKkTzLOSqIcxj9xgJ4uDHxhjjizyWlHd2ovFKP8mmc/bEjLANUqS1z0vhR0NHydU/izZR8eYAruTvX6eYzSfsZA85sVOpIAjVEYX9M4CqgXazYxDFAT+y7E4+oM9N+tx8+/dkdkfdoTTKdHhdlKwVmgdULRhW0nP04BMugLpRCQrITSVpSJ1mfkwwb4JEQRNwSSUOe/1P3t21JhUBj3OJjpwC1ds84DSh9nlyykxF3X+EfFxtE4rTKUO+fODRDD5FBDO2+TD3AROz/3u/OWOvTWUm13u2kxMiiEQ3DNkuxN4g7Gj5xhKk7uNMIRRM8YoxoDoiJnbvuLQctBtpn1vibjUJsxTlnq92PLOhsgkp2NfhcxzS1JJfDKX1snOkmWfiluqyW5oDayJoZnrHIVKD0RkYNd2h+U5DOyOJ2/YXYIAPJAcWloGLpKO7k]]></token>

@@ -20,6 +20,15 @@ under the License.
 <entity-engine-xml>
 
 
+    <UserLogin userLoginId="DemoCustomer" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a"/>
+    <UserLogin userLoginId="DemoCustomer1" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a"/>
+    <UserLogin userLoginId="DemoCustomer2" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a"/>
+    <UserLogin userLoginId="DemoCustomer3" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a"/>
+
+    <UserLogin userLoginId="DemoEmployee" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a"/>
+    <UserLogin userLoginId="DemoEmployee1" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a"/>
+    <UserLogin userLoginId="DemoEmployee2" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a"/>
+    <UserLogin userLoginId="DemoEmployee3" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a"/>
     <!-- myportal users -->
     <!-- demo customer read access to his own customer requests and related tasks including planning and actual hours-->
     <UserLoginSecurityGroup groupId="MYPORTAL_CUSTOMER" userLoginId="DemoCustomer" fromDate="2000-01-01 00:00:00.0"/>
