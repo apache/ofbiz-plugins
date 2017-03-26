@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+</head>
+<body>
+<h1 id="report-creation---adminsuper-user">Report creation - Admin/Super-User</h1>
+<h2 id="introduction">Introduction</h2>
+<p>A flexible report is an OFBiz content of FLEXIBLE_REPORT type that allows a final user to make use of the reporting module to obtain flexible reports, ie reports which are created from an entity or view definition and even from a service. A flexible report is created from a Report Master (content REPORT_MASTER), and an optional XML override of the parent form.</p>
+<h2 id="pre-requisite">Pre-requisite</h2>
+<ul>
+<li>OFBiz framework</li>
+<li>The Birt plugin</li>
+<li>The BIRT Report Designer</li>
+</ul>
+<h2 id="report-creation">Report creation</h2>
+<ol style="list-style-type: decimal">
+<li>Get to Birt component in OFBiz <img src="https://cwiki.apache.org/confluence/download/attachments/68720496/Birt%20Menus.png?api=v2" alt="Birt menus" /></li>
+<li>Click on the &quot;Flexible Report&quot; menu (varies depending on themes)</li>
+<li>Click on the &quot;Generate report&quot; button, you get to this screen:</li>
+<li>Fill the form: <img src="https://cwiki.apache.org/confluence/download/attachments/68720496/Example%20Report.png?api=v2" alt="Example Report" /></li>
+</ol>
+<ul>
+<li>The list &quot;Choose report topic&quot; will let you choose among predefined report masters your topic of interest.</li>
+<li>The report name is a simple short name from which the file name will be generated.</li>
+<li>The description is a short description which will allow you to recognise the report and its topic.</li>
+<li>The box &quot;Generate filters in design&quot; will add in the design the visualisation of the filters filled in the filtering form.</li>
+</ul>
+<p>Finally, if you don't find what you want, you will need to create a new Report Master...</p>
+<p>Once the form is validated, OFBiz will show you the &quot;Edit Report&quot; screen. <img src="https://cwiki.apache.org/confluence/download/attachments/68720496/Edit%20Report%20screen.png?api=v2" alt="Edit Report screen" /></p>
+<h2 id="report-information">Report information</h2>
+<p>This first panel allows you to change the report description and status. Actually it does not make sense changing the status to published before having downloaded the .rptdesign file (Birt Report Designer file) from the server (in database), edited and uploaded it back to the server. This is explained in the section below. Changing the status allows users to use your reports. But if you publish without any change the report will render as empty.</p>
+<h2 id="the-.rptdesign-report-file-donwload-edit-upload-and-publish-it">The .rptdesign report file: donwload, edit, upload and publish it</h2>
+<p>To really use the report you need to download the .rptdesign file from the server in a location from where you can edit it with the BIRT Report Designer. So you need to install first the BIRT Report Designer. Then you can edit the .rptdesign file in the BIRT Report Designer. For that refer to the <a href="https://svn.apache.org/repos/asf/ofbiz/ofbiz-plugins/trunk/birt/documents/Using%20the%20Birt%20Report%20Designer.md">&quot;Using the Birt Report Designer.md&quot; file</a> that you can find in the same directory: ofbiz-framework/plugins/birt/documents ### Editing the downloaded file ### Once you installed the BIRT Report Designer and have downloaded the .rptdesign file, you can edit it with the Birt Report Designer. When you have edited it suiting your needs you must upload it to the server for your changes to be taken into account by OFBiz.</p>
+<p><span style="color:red"><strong>This is when things begin to be really interesting</strong>.</span> You can then test your report using the &quot;Preview&quot; panel. There you can temporarily filter the result, and use the export format you prefer, once done click &quot;Send&quot;. You can then decide to change the report content in the Birt Report Designer again or keep your changes. Once done in the Birt Report Designer, simply select the changed file to upload, and upload it again. You can re-test your changes and continue until you really get what you want! You can then publish the report to allow users to select and use it. There are 2 ways to publish a report from the &quot;Manage reports&quot; screen or directly in the &quot;Report information&quot; panel. We will see the &quot;Manage reports&quot; screen below.</p>
+<h2 id="filters-overriding">Filters Overriding</h2>
+<p>You may want to overide the default filters. You can then use the Xml &quot;Override filters&quot; panel to override and personnalize the form, once done click &quot;Save&quot;. If you ignore that step, it will <strong>NOT</strong> prevent the report creation, <strong>it is already done</strong>, it will just be with the generic filtering form inherited from the master from. &gt;<em>Note</em>: if no preview is available, it is usually due to a mistake in the master form code. You can edit it in the database.</p>
+<h2 id="manage-reports">Manage reports</h2>
+<p>The &quot;Manage reports&quot; button get you to a screen which allows to edit (get back to current page), publish or delete a report.</p>
+<h2 id="use-a-report">Use a report</h2>
+<p>Users can select and use any published report from that screen. When they select a report they then get the same &quot;Preview&quot; Panel and can do the same things than in the &quot;Edit Report&quot; screen. Refer users to</p>
+</body>
+</html>
