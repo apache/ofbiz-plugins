@@ -67,7 +67,7 @@
     </property>
     <property key="BirtErrorNotPublishedReport">
         <value xml:lang="en">After creating a new Flexible Birt report, before visualising it, you need to add the data set fields with the Birt Report Designer and publish the report. Use your browser back button...</value>
-        <value xml:lang="fr">Après avoir créé un nouveau rapport Birt Flexible, avant de le visualiser, vous devez ajouter les champs du jeu de données (data set fields) avec le Concepteur de rapports Birt (Birt Report Designer) et publier le rapport. Utilisez le bouton de retour du navigateur...</value>
+        <value xml:lang="fr">Après avoir créé un nouveau rapport Birt Flexible, avant de le visualiser, vous devez ajouter les champs du jeu de données (data set fields) avec le concepteur de rapports Birt (Birt Report Designer) et publier le rapport. Utilisez le bouton de retour du navigateur...</value>
     </property>
     <property key="BirtErrorRetrievingTurnOver">
         <value xml:lang="en">Error while retrieving turnover informations</value>

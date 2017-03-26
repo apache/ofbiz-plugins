@@ -43,7 +43,7 @@ under the License.
             <drop-down>
                 <entity-options entity-name="Enumeration" description="${enumCode}" key-field-name="description">
                     <entity-constraint name="enumTypeId" value="FLEXIBLE_BIRT"/>
-                    <entity-order-by field-name="sequenceId"/>
+                    <entity-order-by field-name="enumCode"/>
                 </entity-options>
             </drop-down>
         </field>
