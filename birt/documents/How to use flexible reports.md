@@ -1,4 +1,4 @@
-# For users: using a flexible report#
+# Using a flexible report - User #
 ## Introduction ##
 A flexible report is an OFBiz content of FLEXIBLE_REPORT type which allows the final user to obtain reports using the Birt reporting module. It will be produced at a specific time of your choosing, with your chosen output format, filtering the data with a few parameters defined during report design creation.
 
