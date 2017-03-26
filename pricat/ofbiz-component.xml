@@ -41,6 +41,6 @@ under the License.
         server="default-server"
         location="webapp/pricatdemo"
         app-bar-display="false"
-        base-permission="OFBTOOLS,EXAMPLE"
+        base-permission="OFBTOOLS"
         mount-point="/pricatdemo" />
 </ofbiz-component>

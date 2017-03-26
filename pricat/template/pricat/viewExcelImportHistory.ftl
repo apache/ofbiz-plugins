@@ -22,7 +22,7 @@ under the License.
             <div class="col-lg-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-content text-left p-md">
-                        <#include "component://pricat/webapp/pricat/ftl/ExcelImportHistoryReport.ftl"/>
+                        <#include "component://pricat/template/pricat/ExcelImportHistoryReport.ftl"/>
                     </div>
                 </div>
             </div>

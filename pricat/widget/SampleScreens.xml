@@ -51,7 +51,7 @@ under the License.
                             <widgets>
                                 <platform-specific>
                                     <html>
-                                        <html-template location="component://pricat/webapp/pricatdemo/ftl/main.ftl"/>
+                                        <html-template location="component://pricat/template/pricatdemo/main.ftl"/>
                                     </html>
                                 </platform-specific>
                             </widgets>
@@ -74,7 +74,7 @@ under the License.
                             <widgets>
                                 <platform-specific>
                                     <html>
-                                        <html-template location="component://pricat/webapp/pricatdemo/ftl/countdownreport.ftl"/>
+                                        <html-template location="component://pricat/template/pricatdemo/countdownreport.ftl"/>
                                     </html>
                                 </platform-specific>
                             </widgets>
@@ -97,7 +97,7 @@ under the License.
                             <widgets>
                                 <platform-specific>
                                     <html>
-                                        <html-template location="component://pricat/webapp/pricatdemo/ftl/countupreport.ftl"/>
+                                        <html-template location="component://pricat/template/pricatdemo/countupreport.ftl"/>
                                     </html>
                                 </platform-specific>
                             </widgets>
@@ -116,7 +116,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://pricat/webapp/pricatdemo/ftl/SamplePricat.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="component://pricat/template/pricatdemo/SamplePricat.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -131,7 +131,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://pricat/webapp/pricatdemo/ftl/parsePricatExcel.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="component://pricat/template/pricatdemo/parsePricatExcel.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

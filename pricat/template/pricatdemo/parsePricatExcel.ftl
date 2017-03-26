@@ -18,4 +18,4 @@ under the License.
 -->
     <#assign report = Static["org.apache.ofbiz.pricat.PricatParseExcelHtmlReport"].getReport(request, response)>
     ${report.prepareDisplayReport(request, response, "parse_excel", "/pricatdemo/control/parseSamplePricat")}
-    <#include "component://pricat/webapp/pricat/ftl/pricatreport.ftl">
+    <#include "component://pricat/template/pricat/pricatreport.ftl">

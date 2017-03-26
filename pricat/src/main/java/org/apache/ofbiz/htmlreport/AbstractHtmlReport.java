@@ -36,11 +36,7 @@ public abstract class AbstractHtmlReport extends HtmlReport {
 
     public final static String THREAD_TYPE = "thread_type";
     
-    public final static String RUN_CREATETABLE_SCRIPT = "runcreatetablescript";
-    
-    public final static String RUN_DROPTABLE_SCRIPT = "rundroptablescript";
-    
-    public final static String FILE_REPORT_OUTPUT = "plugins/pricat/webapp/pricat/ftl/report.ftl";
+    public final static String FILE_REPORT_OUTPUT = "plugins/pricat/template/pricat/report.ftl";
     
     /**
      * Constructs a new report using the provided locale for the output language.

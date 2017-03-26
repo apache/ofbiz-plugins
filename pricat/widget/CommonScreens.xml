@@ -52,7 +52,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://pricat/webapp/pricat/ftl/viewExcelImportHistory.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="component://pricat/template/pricat/viewExcelImportHistory.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -71,7 +71,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://pricat/webapp/pricat/ftl/viewExcelImportLog.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="component://pricat/template/pricat/viewExcelImportLog.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

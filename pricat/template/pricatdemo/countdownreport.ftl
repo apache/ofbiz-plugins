@@ -17,5 +17,5 @@ specific language governing permissions and limitations
 under the License.
 -->
     <#assign report = Static["org.apache.ofbiz.htmlreport.sample.SampleHtmlReport"].getReport(request, response)>
-    ${report.prepareDisplayReport(request, response, "countup", "/pricatdemo/control/countupreport")}
-    <#include "component://pricat/webapp/pricat/ftl/report.ftl">
+    ${report.prepareDisplayReport(request, response, "countdown", "/pricatdemo/control/countdownreport")}
+    <#include "component://pricat/template/pricat/report.ftl">
