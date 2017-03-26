@@ -50,7 +50,8 @@ under the License.
         <field name="rptDesignFile"><hidden/></field>
         <field name="birtOutputFileName"><hidden value="${content.contentName}"/></field>
         <field name="modelElementName"><hidden value="${contentAttrs[0].attrValue}"/></field>
-        <field name="sendButton"><submit/></field>
+        <field name="sendButton" tooltip="${uiLabelMap.SendWarning}" use-when="&quot;CTNT_IN_PROGRESS&quot;.equals(&quot;${content.statusId}&quot;)"><submit/></field>
+        <field name="sendButton" use-when="!&quot;CTNT_IN_PROGRESS&quot;.equals(&quot;${content.statusId}&quot;)"><submit/></field>
         <sort-order>
             <last-field name="birtContentType"/>
             <last-field name="sendButton"/>

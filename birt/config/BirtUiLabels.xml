@@ -286,4 +286,9 @@
         <value xml:lang="en">Generate filters in design</value>
         <value xml:lang="fr">Générer les filtres dans le design</value>
     </property>
+    <property key="SendWarning">
+        <value xml:lang="en">Only when you have edited the report in the Birt Report Designer and then uploaded.</value>
+        <value xml:lang="fr">Seulement après avoir éditer le rapport avec le Birt Report Designer puis télécharger vers le serveur.</value>
+    </property>
+    
 </resource>
