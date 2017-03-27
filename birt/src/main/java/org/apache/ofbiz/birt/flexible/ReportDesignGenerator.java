@@ -1,10 +1,10 @@
 package org.apache.ofbiz.birt.flexible;
 
-import com.ibm.icu.util.ULocale;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
+
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.GeneralException;
 import org.apache.ofbiz.base.util.UtilProperties;
@@ -40,6 +40,8 @@ import org.eclipse.birt.report.model.api.elements.structures.HideRule;
 import org.eclipse.birt.report.model.api.elements.structures.ResultSetColumn;
 import org.eclipse.birt.report.model.elements.ReportItem;
 
+import com.ibm.icu.util.ULocale;
+
 /**
  * Report Design Generator Object - Handles flexible report design Generation from Master.
  */
@@ -60,10 +62,12 @@ public class ReportDesignGenerator {
     private Map<String, String> filterDisplayLabels;
     private String rptDesignName;
     private boolean generateFilters = false;
+    @SuppressWarnings("unused")
     private GenericValue userLogin;
 
     public static final String resource_error = "BirtErrorUiLabels";
 
+    @SuppressWarnings("unchecked")
     public ReportDesignGenerator(Map<String, Object> context, DispatchContext dctx) throws GeneralException, SemanticException {
         locale = (Locale) context.get("locale");
         dataMap = (Map<String, String>) context.get("dataMap");

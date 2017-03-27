@@ -163,7 +163,7 @@ public class BirtServices {
         Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String entityViewName = (String) reportContext.getParameterValue("modelElementName");
-        Map<String, Object> inputFields = (Map<String, Object>) reportContext.getParameterValue("parameters");
+        Map<String, Object> inputFields = UtilMisc.<String, Object>toMap(reportContext.getParameterValue("parameters"));
         Map<String, Object> resultPerformFind = new HashMap<String, Object>();
         Map<String, Object> resultToBirt = null;
         List<GenericValue> list = null;
@@ -337,18 +337,18 @@ public class BirtServices {
             if (ServiceUtil.isError(resultMapsForGeneration)) {
                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultMapsForGeneration));
             }
-            Map<String, String> dataMap = (Map<String, String>) resultMapsForGeneration.get("dataMap");
+            Map<String, String> dataMap = UtilMisc.<String, String>toMap(resultMapsForGeneration.get("dataMap"));
             Map<String, String> fieldDisplayLabels = null;
             if (UtilValidate.isNotEmpty(resultMapsForGeneration.get("fieldDisplayLabels"))) {
-                fieldDisplayLabels = (Map<String, String>) resultMapsForGeneration.get("fieldDisplayLabels");
+                fieldDisplayLabels = UtilMisc.<String, String>toMap(resultMapsForGeneration.get("fieldDisplayLabels"));
             }
             Map<String, String> filterMap = null;
             if (UtilValidate.isNotEmpty(resultMapsForGeneration.get("filterMap"))) {
-                filterMap = (Map<String, String>) resultMapsForGeneration.get("filterMap");
+                filterMap = UtilMisc.<String, String>toMap(resultMapsForGeneration.get("filterMap"));
             }
             Map<String, String> filterDisplayLabels = null;
             if (UtilValidate.isNotEmpty(resultMapsForGeneration.get("filterDisplayLabels"))) {
-                filterDisplayLabels = (Map<String, String>) resultMapsForGeneration.get("filterDisplayLabels");
+                filterDisplayLabels = UtilMisc.<String, String>toMap(resultMapsForGeneration.get("filterDisplayLabels"));
             }
             contentId = BirtWorker.recordReportContent(delegator, dispatcher, context);
             // callPerformFindFromBirt is the customMethod for Entity workflow
@@ -410,6 +410,7 @@ public class BirtServices {
                 serviceName = customMethodName + "PrepareFields";
             }
             try {
+                @SuppressWarnings("unused")
                 ModelService modelService = dctx.getModelService(serviceName);
             } catch (GenericServiceException e) {
                 return ServiceUtil.returnError("No service define with name " + serviceName); //TODO labelise
@@ -417,10 +418,10 @@ public class BirtServices {
             contentId = BirtWorker.recordReportContent(delegator, dispatcher, context);
             String rptDesignFileName = BirtUtil.resolveRptDesignFilePathFromContent(delegator, contentId);
             Map<String, Object> resultService = dispatcher.runSync(serviceName, UtilMisc.toMap("locale", locale, "userLogin", userLogin));
-            Map<String, String> dataMap = (Map<String, String>) resultService.get("dataMap");
-            Map<String, String> filterMap = (Map<String, String>) resultService.get("filterMap");
-            Map<String, String> fieldDisplayLabels = (Map<String, String>) resultService.get("fieldDisplayLabels");
-            Map<String, String> filterDisplayLabels = (Map<String, String>) resultService.get("filterDisplayLabels");
+            Map<String, String> dataMap = UtilMisc.<String, String>toMap(resultService.get("dataMap"));
+            Map<String, String> filterMap = UtilMisc.<String, String>toMap(resultService.get("filterMap"));
+            Map<String, String> fieldDisplayLabels = UtilMisc.<String, String>toMap(resultService.get("fieldDisplayLabels"));
+            Map<String, String> filterDisplayLabels = UtilMisc.<String, String>toMap(resultService.get("filterDisplayLabels"));
             Map<String, Object> resultGeneration = dispatcher.runSync("createFlexibleReport", UtilMisc.toMap(
                     "locale", locale,
                     "dataMap", dataMap,
@@ -685,6 +686,7 @@ public class BirtServices {
         if (UtilValidate.isNotEmpty(designStored.getBody())) {
             SlotHandle bodyStored = designStored.getBody();
 
+            @SuppressWarnings("unchecked")
             Iterator<DesignElementHandle> iter = bodyStored.iterator();
             while (iter.hasNext()) {
                 try {
@@ -718,6 +720,7 @@ public class BirtServices {
 
         //copy cube
         SlotHandle cubesFromUser = designFromUser.getCubes();
+        @SuppressWarnings("unchecked")
         Iterator<DesignElementHandle> iterCube = cubesFromUser.iterator();
 
         while (iterCube.hasNext()) {
@@ -733,6 +736,7 @@ public class BirtServices {
 
         // copy body
         SlotHandle bodyFromUser = designFromUser.getBody();
+        @SuppressWarnings("unchecked")
         Iterator<DesignElementHandle> iter = bodyFromUser.iterator();
 
         while (iter.hasNext()) {
@@ -748,6 +752,7 @@ public class BirtServices {
 
         // deleting simple master page from design stored
         try {
+            @SuppressWarnings("unchecked")
             List<DesignElementHandle> listMasterPagesStored = designStored.getMasterPages().getContents();
             for (Object masterPage : listMasterPagesStored) {
                 if (masterPage instanceof SimpleMasterPageHandle) {
@@ -756,6 +761,7 @@ public class BirtServices {
             }
 
             // adding simple master page => tous ces casts et autres instanceof... c'est laid, mais c'est tellement galère que quand je trouve une solution qui marche... :s
+            @SuppressWarnings("unchecked")
             List<DesignElementHandle> listMasterPages = designFromUser.getMasterPages().getContents();
             for (DesignElementHandle masterPage : listMasterPages) {
                 if (masterPage instanceof SimpleMasterPageHandle) {
@@ -784,12 +790,14 @@ public class BirtServices {
 
         // getting style names from stored report
         List<String> listStyleNames = new ArrayList<String>();
+        @SuppressWarnings("unchecked")
         Iterator<DesignElementHandle> iterStored = stylesStored.iterator();
         while (iterStored.hasNext()) {
             DesignElementHandle item = (DesignElementHandle) iterStored.next();
             listStyleNames.add(item.getName());
         }
 
+        @SuppressWarnings("unchecked")
         Iterator<DesignElementHandle> iterUser = stylesFromUser.iterator();
 
         // adding to styles those which are not already present

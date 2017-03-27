@@ -18,25 +18,15 @@
  *******************************************************************************/
 package org.apache.ofbiz.birt.flexible;
 
-import java.io.OutputStream;
-import java.io.StringWriter;
-import java.sql.SQLException;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+
 import org.apache.commons.collections4.MapUtils;
-import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.GeneralException;
 import org.apache.ofbiz.base.util.StringUtil;
-import org.apache.ofbiz.base.util.UtilGenerics;
 import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.base.util.UtilProperties;
 import org.apache.ofbiz.base.util.UtilValidate;
-import org.apache.ofbiz.base.util.template.FreeMarkerWorker;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
@@ -44,19 +34,7 @@ import org.apache.ofbiz.entity.condition.EntityCondition;
 import org.apache.ofbiz.entity.condition.EntityConditionList;
 import org.apache.ofbiz.entity.condition.EntityExpr;
 import org.apache.ofbiz.entity.util.EntityQuery;
-import org.apache.ofbiz.entity.util.EntityUtil;
-import org.apache.ofbiz.security.Security;
-import org.apache.ofbiz.service.GenericServiceException;
-import org.apache.ofbiz.service.LocalDispatcher;
-import org.eclipse.birt.report.engine.api.EXCELRenderOption;
-import org.eclipse.birt.report.engine.api.EngineException;
-import org.eclipse.birt.report.engine.api.HTMLRenderOption;
 import org.eclipse.birt.report.engine.api.HTMLServerImageHandler;
-import org.eclipse.birt.report.engine.api.IPDFRenderOption;
-import org.eclipse.birt.report.engine.api.IReportEngine;
-import org.eclipse.birt.report.engine.api.IReportRunnable;
-import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
-import org.eclipse.birt.report.engine.api.PDFRenderOption;
 import org.eclipse.birt.report.engine.api.RenderOption;
 import org.eclipse.birt.report.model.api.elements.DesignChoiceConstants;
 
@@ -64,6 +42,7 @@ public final class BirtUtil {
 
     public final static String module = BirtUtil.class.getName();
 
+    @SuppressWarnings("unused")
     private final static HTMLServerImageHandler imageHandler = new HTMLServerImageHandler();
     private final static Map<String, String> entityFieldTypeBirtTypeMap = MapUtils.unmodifiableMap(UtilMisc.toMap(
             "id", DesignChoiceConstants.COLUMN_DATA_TYPE_STRING,
@@ -148,8 +127,7 @@ public final class BirtUtil {
     /**
      * Return birt field type corresponding to given entity field type
      * @param entityFieldType
-     * @return
-     * @throws GeneralException
+     * @return birt field type corresponding to given entity field type
      */
     public static String convertFieldTypeToBirtType(String entityFieldType) {
         if (UtilValidate.isEmpty(entityFieldType)) {
@@ -159,10 +137,9 @@ public final class BirtUtil {
     }
 
     /**
-     * Return birt parameter type corresponding to given entity field type
+     * Return birt parameter type corresponding to given entity field type 
      * @param entityFieldType
-     * @return
-     * @throws GeneralException
+     * @return birt parameter type corresponding to given entity field type
      */
     public static String convertFieldTypeToBirtParameterType(String entityFieldType) {
         if (UtilValidate.isEmpty(entityFieldType)) {
@@ -174,8 +151,7 @@ public final class BirtUtil {
     /**
      * Return true if mime type related to a contentType is supported by Birt
      * @param contentType
-     * @return
-     * @throws GeneralException
+     * @return true if mime type related to a contentType is supported by Birt
      */
     public static boolean isSupportedMimeType(String contentType) {
         return mimeTypeOutputFormatMap.containsKey(contentType);
@@ -184,7 +160,7 @@ public final class BirtUtil {
     /**
      * Return mime type related to a contentType supported by Birt
      * @param contentType
-     * @return
+     * @return mime type related to a contentType supported by Birt
      * @throws GeneralException
      */
     public static String getMimeTypeOutputFormat(String contentType) throws GeneralException {
@@ -195,9 +171,8 @@ public final class BirtUtil {
     }
 
     /**
-     * return extension file related to a contentType supported by Birt
      * @param contentType
-     * @return
+     * return extension file related to a contentType supported by Birt
      * @throws GeneralException
      */
     public static String getMimeTypeFileExtension(String contentType) throws GeneralException {
@@ -210,7 +185,7 @@ public final class BirtUtil {
      * second from content.properties content.upload.path.prefix
      * and add birtReptDesign directory
      * default OFBIZ_HOME/runtime/uploads/birtRptDesign/
-     * @return
+     * @return template path location where rptDesign file is stored
      */
     public static String resolveTemplatePathLocation() {
         String templatePathLocation = UtilProperties.getPropertyValue("birt", "rptDesign.output.path");
@@ -231,7 +206,7 @@ public final class BirtUtil {
      * With the reporting contentId element resolve the path to rptDesign linked
      * @param delegator
      * @param contentId
-     * @return
+     * @return path to rptDesign file
      * @throws GenericEntityException
      */
     public static String resolveRptDesignFilePathFromContent(Delegator delegator, String contentId) throws GenericEntityException {
@@ -253,7 +228,7 @@ public final class BirtUtil {
     /**
      * remove all non unicode alphanumeric and replace space by _
      * @param reportName
-     * @return
+     * @return spaces replaced by underscore
      */
     public static String encodeReportName(String reportName) {
         if (UtilValidate.isEmpty(reportName)) return "";
