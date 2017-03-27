@@ -122,8 +122,8 @@
         <value xml:lang="fr">Paramètres de filtrage</value>
     </property>
     <property key="BirtFlexibleReport">
-        <value xml:lang="en">Flexible Report</value>
-        <value xml:lang="fr">Rapport configurable</value>
+        <value xml:lang="en">Flexible Reports</value>
+        <value xml:lang="fr">Rapports configurables</value>
     </property>
     <property key="BirtFlexibleReportGeneration">
         <value xml:lang="en">Generate report</value>
