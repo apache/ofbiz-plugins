@@ -360,7 +360,7 @@ public class EbayStore {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource, "EbayStoreRootCategoryNotFound", UtilMisc.toMap("prodCatalogId", context.get("prodCatalogId")), locale));
             }
         } catch (GenericEntityException e) {
-            result = ServiceUtil.returnFailure(e.getMessage());
+            result = ServiceUtil.returnError(e.getMessage());
         }
         if (result.get("responseMessage") != null && result.get("responseMessage").equals("fail")) {
             result = ServiceUtil.returnError(result.get("errorMessage").toString());
@@ -413,13 +413,13 @@ public class EbayStore {
                 }
             }
         } catch (ApiException e) {
-            result = ServiceUtil.returnFailure(e.getMessage());
+            result = ServiceUtil.returnError("ApiException ".concat(e.getMessage()));
         } catch (SdkSoapException e) {
-            result = ServiceUtil.returnFailure(e.getMessage());
+            result = ServiceUtil.returnError("SdkSoapException ".concat(e.getMessage()));
         } catch (SdkException e) {
-            result = ServiceUtil.returnFailure(e.getMessage());
+            result = ServiceUtil.returnError("SdkException ".concat(e.getMessage()));
         } catch (GenericEntityException e) {
-            result = ServiceUtil.returnFailure(e.getMessage());
+            result = ServiceUtil.returnError(e.getMessage());
         }
         return result;
     }
@@ -839,14 +839,11 @@ public class EbayStore {
                     result.put(ModelService.ERROR_MESSAGE, resp.getAck().toString() +":"+ resp.getMessage());
                 }
             } catch (ApiException e) {
-                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                result.put(ModelService.ERROR_MESSAGE, e.getMessage());
+                result = ServiceUtil.returnError("ApiException ".concat(e.getMessage()));
             } catch (SdkSoapException e) {
-                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                result.put(ModelService.ERROR_MESSAGE, e.getMessage());
+                result = ServiceUtil.returnError("SdkSoapException ".concat(e.getMessage()));
             } catch (SdkException e) {
-                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                result.put(ModelService.ERROR_MESSAGE, e.getMessage());
+                result = ServiceUtil.returnError("SdkException ".concat(e.getMessage()));
             }
         }
         return result;
@@ -925,11 +922,11 @@ public class EbayStore {
                 }
             }
         } catch (ApiException e) {
-            e.printStackTrace();
+            result = ServiceUtil.returnError("ApiException ".concat(e.getMessage()));
         } catch (SdkSoapException e) {
-            e.printStackTrace();
+            result = ServiceUtil.returnError("SdkSoapException ".concat(e.getMessage()));
         } catch (SdkException e) {
-            e.printStackTrace();
+            result = ServiceUtil.returnError("SdkException ".concat(e.getMessage()));
         }
         return result;
     }
@@ -970,11 +967,11 @@ public class EbayStore {
                 }
             }
         } catch (ApiException e) {
-            e.printStackTrace();
+            result = ServiceUtil.returnError("ApiException ".concat(e.getMessage()));
         } catch (SdkSoapException e) {
-            e.printStackTrace();
+            result = ServiceUtil.returnError("SdkSoapException ".concat(e.getMessage()));
         } catch (SdkException e) {
-            e.printStackTrace();
+            result = ServiceUtil.returnError("SdkException ".concat(e.getMessage()));
         }
         return result;
     }
@@ -1022,11 +1019,11 @@ public class EbayStore {
                 }
             }
         } catch (ApiException e) {
-            e.printStackTrace();
+            result = ServiceUtil.returnError("ApiException ".concat(e.getMessage()));
         } catch (SdkSoapException e) {
-            e.printStackTrace();
+            result = ServiceUtil.returnError("SdkSoapException ".concat(e.getMessage()));
         } catch (SdkException e) {
-            e.printStackTrace();
+            result = ServiceUtil.returnError("SdkException ".concat(e.getMessage()));
         }
         return result;
     }
@@ -1080,11 +1077,11 @@ public class EbayStore {
                 //this.returnedSubscriptionArray = resp.getSubscriptionArray();
             }
         } catch (ApiException e) {
-            e.printStackTrace();
+            result = ServiceUtil.returnError("ApiException ".concat(e.getMessage()));
         } catch (SdkSoapException e) {
-            e.printStackTrace();
+            result = ServiceUtil.returnError("SdkSoapException ".concat(e.getMessage()));
         } catch (SdkException e) {
-            e.printStackTrace();
+            result = ServiceUtil.returnError("SdkException ".concat(e.getMessage()));
         }
         return result;
     }
@@ -1208,11 +1205,11 @@ public class EbayStore {
                 }
             }
         } catch (ApiException e) {
-            e.printStackTrace();
+            result = ServiceUtil.returnError("ApiException ".concat(e.getMessage()));
         } catch (SdkSoapException e) {
-            e.printStackTrace();
+            result = ServiceUtil.returnError("SdkSoapException ".concat(e.getMessage()));
         } catch (SdkException e) {
-            e.printStackTrace();
+            result = ServiceUtil.returnError("SdkException ".concat(e.getMessage()));
         }
         return result;
     }
@@ -1322,13 +1319,14 @@ public class EbayStore {
                 }
             }
         } catch (ApiException e) {
-            result = ServiceUtil.returnError(e.getMessage());
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, e.getMessage());
         } catch (SdkSoapException e) {
-            result = ServiceUtil.returnError(e.getMessage());
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, e.getMessage());
         } catch (SdkException e) {
-            result = ServiceUtil.returnError(e.getMessage());
-        } catch (GenericServiceException e) {
-            result = ServiceUtil.returnError(e.getMessage());
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, e.getMessage());
         }
         return result;
     }
@@ -2729,7 +2727,7 @@ public class EbayStore {
             }
 
         } catch (Exception e) {
-            result = ServiceUtil.returnFailure(e.getMessage());
+            result = ServiceUtil.returnError(e.getMessage());
         }
         System.out.println(orderList);
         result.put("productStoreId", productStoreId);
