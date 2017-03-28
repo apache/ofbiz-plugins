@@ -196,14 +196,11 @@ public class EbayFeedback {
                 }
             }
         } catch (ApiException e) {
-            request.setAttribute("_ERROR_MESSAGE_","ApiException ".concat(e.getMessage()));
-            return "error";
+            result = ServiceUtil.returnError("ApiException ".concat(e.getMessage()));
         } catch (SdkException e) {
-            request.setAttribute("_ERROR_MESSAGE_","SdkException ".concat(e.getMessage()));
-            return "error";
+            result = ServiceUtil.returnError("SdkException ".concat(e.getMessage()));
         } catch (Exception e) {
-            request.setAttribute("_ERROR_MESSAGE_","Exception ".concat(e.getMessage()));
-            return "error";
+            result = ServiceUtil.returnError("Exception ".concat(e.getMessage()));
         }
         String successMsg = UtilProperties.getMessage(resource, "EbayLoadEbayFeedbackSuccessful", locale);
         result = ServiceUtil.returnSuccess(successMsg);
@@ -253,14 +250,11 @@ public class EbayFeedback {
             }
             result.put("itemsAwaitingFeedback", itemsResult);
         } catch (ApiException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            result = ServiceUtil.returnError("ApiException ".concat(e.getMessage()));
         } catch (SdkException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            result = ServiceUtil.returnError("SdkException ".concat(e.getMessage()));
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            result = ServiceUtil.returnError("Exception ".concat(e.getMessage()));
         }
         return result;
     }
@@ -377,14 +371,11 @@ public class EbayFeedback {
                 leaveFeedbackCall.leaveFeedback();
             }
         } catch (ApiException e) {
-            request.setAttribute("_ERROR_MESSAGE_","ApiException ".concat(e.getMessage()));
-            return "error";
+            result = ServiceUtil.returnError("ApiException ".concat(e.getMessage()));
         } catch (SdkException e) {
-            request.setAttribute("_ERROR_MESSAGE_","SdkException ".concat(e.getMessage()));
-            return "error";
+            result = ServiceUtil.returnError("SdkException ".concat(e.getMessage()));
         } catch (Exception e) {
-            request.setAttribute("_ERROR_MESSAGE_","Exception ".concat(e.getMessage()));
-            return "error";
+            result = ServiceUtil.returnError("Exception ".concat(e.getMessage()));
         }
         result = ServiceUtil.returnSuccess();
         return result;
