@@ -102,7 +102,6 @@ public class EbayAccount {
             result.put("registrationAddress", registrationAddress);
             result.put("status", status);
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             return  ServiceUtil.returnError(e.getMessage());
         }
         return result;

@@ -575,12 +575,16 @@ public class EbayEvents {
             }
         } catch (GenericEntityException e) {
             Debug.logError(e.getMessage(), module);
+            return "error";
         } catch (ApiException e) {
-            Debug.logError(e.getMessage(), module);
+            request.setAttribute("_ERROR_MESSAGE_","ApiException ".concat(e.getMessage()));
+            return "error";
         } catch (SdkException e) {
-            Debug.logError(e.getMessage(), module);
+            request.setAttribute("_ERROR_MESSAGE_","SdkException ".concat(e.getMessage()));
+            return "error";
         } catch (Exception e) {
-            Debug.logError(e.getMessage(), module);
+            request.setAttribute("_ERROR_MESSAGE_","Exception ".concat(e.getMessage()));
+            return "error";
         }
         request.setAttribute("productStoreId", requestParams.get("productStoreId"));
         request.setAttribute("isProductId", productId);

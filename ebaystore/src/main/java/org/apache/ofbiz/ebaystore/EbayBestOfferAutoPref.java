@@ -190,11 +190,7 @@ public class EbayBestOfferAutoPref {
                 
             }
             
-        } catch (GenericServiceException e) {
-            String errorMessage = UtilProperties.getMessage(resource, "EbayStoreBestOfferToEntityFailed", locale);
-            result = ServiceUtil.returnError(errorMessage);
-            return result;
-        } catch (GenericEntityException e) {
+        } catch (GenericServiceException | GenericEntityException e) {
             String errorMessage = UtilProperties.getMessage(resource, "EbayStoreBestOfferToEntityFailed", locale);
             result = ServiceUtil.returnError(errorMessage);
             return result;

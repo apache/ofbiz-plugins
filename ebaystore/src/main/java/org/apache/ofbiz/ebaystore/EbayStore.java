@@ -451,10 +451,6 @@ public class EbayStore {
                 UtilXml.addChildElementValue(itemElem, "Description", productStore.getString("title"), storeDocument);
                 dataStoreXml.append(UtilXml.writeXmlDocument(storeDocument));
 
-            } catch (Exception e) {
-                Debug.logError("Exception during building data items to eBay: " + e.getMessage(), module);
-                return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "productsExportToEbay.exceptionDuringBuildingDataItemsToEbay", locale));
-            }
         } catch (Exception e) {
             Debug.logError("Exception during building data items to eBay: " + e.getMessage(), module);
             return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "productsExportToEbay.exceptionDuringBuildingDataItemsToEbay", locale));
@@ -608,7 +604,7 @@ public class EbayStore {
                 }
             }
         } catch (Exception e) {
-
+            return ServiceUtil.returnFailure();
         }
         return result;
     }

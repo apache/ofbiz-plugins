@@ -18,6 +18,7 @@
  */
 package org.apache.ofbiz.ebaystore;
 
+import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.UtilDateTime;
 import org.apache.ofbiz.base.util.UtilProperties;
 import org.apache.ofbiz.base.util.UtilValidate;
@@ -195,14 +196,14 @@ public class EbayFeedback {
                 }
             }
         } catch (ApiException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            request.setAttribute("_ERROR_MESSAGE_","ApiException ".concat(e.getMessage()));
+            return "error";
         } catch (SdkException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            request.setAttribute("_ERROR_MESSAGE_","SdkException ".concat(e.getMessage()));
+            return "error";
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            request.setAttribute("_ERROR_MESSAGE_","Exception ".concat(e.getMessage()));
+            return "error";
         }
         String successMsg = UtilProperties.getMessage(resource, "EbayLoadEbayFeedbackSuccessful", locale);
         result = ServiceUtil.returnSuccess(successMsg);
@@ -376,14 +377,14 @@ public class EbayFeedback {
                 leaveFeedbackCall.leaveFeedback();
             }
         } catch (ApiException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            request.setAttribute("_ERROR_MESSAGE_","ApiException ".concat(e.getMessage()));
+            return "error";
         } catch (SdkException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            request.setAttribute("_ERROR_MESSAGE_","SdkException ".concat(e.getMessage()));
+            return "error";
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            request.setAttribute("_ERROR_MESSAGE_","Exception ".concat(e.getMessage()));
+            return "error";
         }
         result = ServiceUtil.returnSuccess();
         return result;
