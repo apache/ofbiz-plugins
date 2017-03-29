@@ -38,6 +38,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.GeneralException;
 import org.apache.ofbiz.base.util.StringUtil;
+import org.apache.ofbiz.base.util.UtilGenerics;
 import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.base.util.UtilProperties;
 import org.apache.ofbiz.base.util.UtilValidate;
@@ -163,7 +164,7 @@ public class BirtServices {
         Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String entityViewName = (String) reportContext.getParameterValue("modelElementName");
-        Map<String, Object> inputFields = UtilMisc.<String, Object>toMap(reportContext.getParameterValue("parameters"));
+        Map<String, Object> inputFields = UtilGenerics.checkMap(reportContext.getParameterValue("parameters"));
         Map<String, Object> resultPerformFind = new HashMap<String, Object>();
         Map<String, Object> resultToBirt = null;
         List<GenericValue> list = null;
@@ -337,18 +338,18 @@ public class BirtServices {
             if (ServiceUtil.isError(resultMapsForGeneration)) {
                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultMapsForGeneration));
             }
-            Map<String, String> dataMap = UtilMisc.<String, String>toMap(resultMapsForGeneration.get("dataMap"));
+            Map<String, String> dataMap = UtilGenerics.checkMap(resultMapsForGeneration.get("dataMap"));
             Map<String, String> fieldDisplayLabels = null;
             if (UtilValidate.isNotEmpty(resultMapsForGeneration.get("fieldDisplayLabels"))) {
-                fieldDisplayLabels = UtilMisc.<String, String>toMap(resultMapsForGeneration.get("fieldDisplayLabels"));
+                fieldDisplayLabels = UtilGenerics.checkMap(resultMapsForGeneration.get("fieldDisplayLabels"));
             }
             Map<String, String> filterMap = null;
             if (UtilValidate.isNotEmpty(resultMapsForGeneration.get("filterMap"))) {
-                filterMap = UtilMisc.<String, String>toMap(resultMapsForGeneration.get("filterMap"));
+                filterMap = UtilGenerics.checkMap(resultMapsForGeneration.get("filterMap"));
             }
             Map<String, String> filterDisplayLabels = null;
             if (UtilValidate.isNotEmpty(resultMapsForGeneration.get("filterDisplayLabels"))) {
-                filterDisplayLabels = UtilMisc.<String, String>toMap(resultMapsForGeneration.get("filterDisplayLabels"));
+                filterDisplayLabels = UtilGenerics.checkMap(resultMapsForGeneration.get("filterDisplayLabels"));
             }
             contentId = BirtWorker.recordReportContent(delegator, dispatcher, context);
             // callPerformFindFromBirt is the customMethod for Entity workflow
@@ -418,10 +419,10 @@ public class BirtServices {
             contentId = BirtWorker.recordReportContent(delegator, dispatcher, context);
             String rptDesignFileName = BirtUtil.resolveRptDesignFilePathFromContent(delegator, contentId);
             Map<String, Object> resultService = dispatcher.runSync(serviceName, UtilMisc.toMap("locale", locale, "userLogin", userLogin));
-            Map<String, String> dataMap = UtilMisc.<String, String>toMap(resultService.get("dataMap"));
-            Map<String, String> filterMap = UtilMisc.<String, String>toMap(resultService.get("filterMap"));
-            Map<String, String> fieldDisplayLabels = UtilMisc.<String, String>toMap(resultService.get("fieldDisplayLabels"));
-            Map<String, String> filterDisplayLabels = UtilMisc.<String, String>toMap(resultService.get("filterDisplayLabels"));
+            Map<String, String> dataMap = UtilGenerics.checkMap(resultService.get("dataMap"));
+            Map<String, String> filterMap = UtilGenerics.checkMap(resultService.get("filterMap"));
+            Map<String, String> fieldDisplayLabels = UtilGenerics.checkMap(resultService.get("fieldDisplayLabels"));
+            Map<String, String> filterDisplayLabels = UtilGenerics.checkMap(resultService.get("filterDisplayLabels"));
             Map<String, Object> resultGeneration = dispatcher.runSync("createFlexibleReport", UtilMisc.toMap(
                     "locale", locale,
                     "dataMap", dataMap,
@@ -760,7 +761,7 @@ public class BirtServices {
                 }
             }
 
-            // adding simple master page => tous ces casts et autres instanceof... c'est laid, mais c'est tellement galère que quand je trouve une solution qui marche... :s
+            // adding simple master page => All these casts and other occurrences ... It's ugly, but it's so hard that when I find a solution that works ...
             @SuppressWarnings("unchecked")
             List<DesignElementHandle> listMasterPages = designFromUser.getMasterPages().getContents();
             for (DesignElementHandle masterPage : listMasterPages) {

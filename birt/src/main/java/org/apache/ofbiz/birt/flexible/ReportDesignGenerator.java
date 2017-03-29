@@ -7,9 +7,9 @@ import java.util.Map;
 
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.GeneralException;
+import org.apache.ofbiz.base.util.UtilGenerics;
 import org.apache.ofbiz.base.util.UtilProperties;
 import org.apache.ofbiz.base.util.UtilValidate;
-import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.GenericServiceException;
 import org.eclipse.birt.core.framework.Platform;
@@ -62,22 +62,18 @@ public class ReportDesignGenerator {
     private Map<String, String> filterDisplayLabels;
     private String rptDesignName;
     private boolean generateFilters = false;
-    @SuppressWarnings("unused")
-    private GenericValue userLogin;
 
     public static final String resource_error = "BirtErrorUiLabels";
 
-    @SuppressWarnings("unchecked")
     public ReportDesignGenerator(Map<String, Object> context, DispatchContext dctx) throws GeneralException, SemanticException {
         locale = (Locale) context.get("locale");
-        dataMap = (Map<String, String>) context.get("dataMap");
+        dataMap = UtilGenerics.checkMap(context.get("dataMap"));
         filterMap = (LinkedHashMap<String, String>) context.get("filterMap");
         serviceName = (String) context.get("serviceName");
-        fieldDisplayLabels = (Map<String, String>) context.get("fieldDisplayLabels");
+        fieldDisplayLabels = UtilGenerics.checkMap(context.get("fieldDisplayLabels"));
         filterDisplayLabels = (LinkedHashMap<String, String>) context.get("filterDisplayLabels");
         rptDesignName = (String) context.get("rptDesignName");
         String writeFilters = (String) context.get("writeFilters");
-        userLogin = (GenericValue) context.get("userLogin");
         if (UtilValidate.isEmpty(dataMap)) {
             throw new GeneralException("Report design generator failed. Entry data map not found.");
         }

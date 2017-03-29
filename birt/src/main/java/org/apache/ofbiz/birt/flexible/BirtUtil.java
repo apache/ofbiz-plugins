@@ -42,8 +42,7 @@ public final class BirtUtil {
 
     public final static String module = BirtUtil.class.getName();
 
-    @SuppressWarnings("unused")
-    private final static HTMLServerImageHandler imageHandler = new HTMLServerImageHandler();
+    private final static HTMLServerImageHandler imageHandler = new HTMLServerImageHandler(); // TODO not used yet or to remove
     private final static Map<String, String> entityFieldTypeBirtTypeMap = MapUtils.unmodifiableMap(UtilMisc.toMap(
             "id", DesignChoiceConstants.COLUMN_DATA_TYPE_STRING,
             "url", DesignChoiceConstants.COLUMN_DATA_TYPE_STRING,

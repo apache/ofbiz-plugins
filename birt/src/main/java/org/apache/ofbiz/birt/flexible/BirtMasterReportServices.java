@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.ofbiz.base.util.UtilDateTime;
+import org.apache.ofbiz.base.util.UtilGenerics;
 import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.base.util.UtilProperties;
 import org.apache.ofbiz.base.util.UtilValidate;
@@ -33,7 +34,7 @@ public class BirtMasterReportServices {
     public static final String resource = "BirtUiLabels";
     public static final String resource_error = "BirtErrorUiLabels";
 
-    // The following methods are flexible service as example for reporting
+    // The following methods are flexible report services as examples for reporting
     public static Map<String, Object> workEffortPerPersonPrepareDate(DispatchContext dctx, Map<String, Object> context) {
         Map<String, String> dataMap = UtilMisc.toMap("lastName", "name", "firstName", "name", "hours", "floating-point", "fromDate", "date-time", "thruDate", "date-time");
         LinkedHashMap<String, String> filterMap = new LinkedHashMap<String, String>();
@@ -58,7 +59,7 @@ public class BirtMasterReportServices {
     public static Map<String, Object> workEffortPerPerson(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = (Delegator) dctx.getDelegator();
         IReportContext reportContext = (IReportContext) context.get("reportContext");
-        Map<String, Object> parameters = UtilMisc.<String, Object>toMap(reportContext.getParameterValue("parameters"));
+        Map<String, Object> parameters = UtilGenerics.checkMap(reportContext.getParameterValue("parameters"));
         List<GenericValue> listWorkEffortTime = null;
 
         if (UtilValidate.isEmpty(parameters.get("firstName")) && UtilValidate.isEmpty(parameters.get("lastName"))) {
@@ -147,7 +148,7 @@ public class BirtMasterReportServices {
         Delegator delegator = (Delegator) dctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
         IReportContext reportContext = (IReportContext) context.get("reportContext");
-        Map<String, Object> parameters = UtilMisc.<String, Object>toMap(reportContext.getParameterValue("parameters"));
+        Map<String, Object> parameters = UtilGenerics.checkMap(reportContext.getParameterValue("parameters"));
 
         List<GenericValue> listTurnOver = null;
         List<Map<String, Object>> listInvoiceEditable = new ArrayList<Map<String, Object>>();
@@ -178,7 +179,7 @@ public class BirtMasterReportServices {
                     String productCategoryId = (String) parameters.get("productCategoryId");
                     productCategoryList.add(productCategoryId);
                 } else if (parameters.get("productStoreId") instanceof String) {
-                    productCategoryList = (List<String>) parameters.get("productCategoryId");
+                    productCategoryList = UtilGenerics.checkList(parameters.get("productCategoryId"));
                 }
                 // getting productIds in these categories
                 EntityExpr conditionProductCategory = EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.IN, productCategoryList);
@@ -202,7 +203,7 @@ public class BirtMasterReportServices {
                     String productStoreId = (String) parameters.get("productStoreId");
                     productStoreList.add(productStoreId);
                 } else if (parameters.get("productStoreId") instanceof List) {
-                    productStoreList = (List<String>) parameters.get("productStoreId");
+                    productStoreList = UtilGenerics.checkList(parameters.get("productStoreId"));
                 }
                 // getting list of invoice Ids linked to these productStore
                 EntityExpr conditionProductStoreId = EntityCondition.makeCondition("productStoreId", EntityOperator.IN, productStoreList);
@@ -260,7 +261,7 @@ public class BirtMasterReportServices {
 
             // adding missing fields
             for (GenericValue invoice : listTurnOver) {
-                Map<String, Object> invoiceEditableTemp = UtilMisc.<String, Object>toMap(invoice.clone());
+                Map<String, Object> invoiceEditableTemp = UtilGenerics.checkMap(invoice.clone());
                 invoiceEditableTemp.remove("GenericEntity");
                 Map<String, Object> invoiceEditable = new HashMap<String, Object>();
                 invoiceEditable.putAll(invoiceEditableTemp);
