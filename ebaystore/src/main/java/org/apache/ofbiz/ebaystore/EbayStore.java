@@ -370,7 +370,6 @@ public class EbayStore {
 
     public static StoreCustomCategoryType[] toStoreCustomCategoryTypeArray(List<StoreCustomCategoryType> list) {
         StoreCustomCategoryType[] storeCustomCategoryTypeArry = null;
-        try {
             if (list != null && list.size() > 0) {
                 storeCustomCategoryTypeArry = new StoreCustomCategoryType[list.size()];
                 int i=0;
@@ -380,6 +379,7 @@ public class EbayStore {
             }
         } catch (Exception e) {
             Debug.logError(e.getMessage(), module);
+            // TODO why is there an Exception catching here? 
         }
         return storeCustomCategoryTypeArry;
     }
