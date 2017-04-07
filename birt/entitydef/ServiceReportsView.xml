@@ -46,13 +46,11 @@ under the License.
         <alias entity-alias="INV" name="invoiceDate"/>
         <alias entity-alias="INV" name="dueDate"/>
         <alias entity-alias="INV" name="currencyUomId"/>
-<!--         <alias entity-alias="INITM" name="invoiceId"/> -->
         <alias entity-alias="INITM" name="invoiceItemSeqId"/>
         <alias entity-alias="INITM" name="invoiceItemTypeId"/>
         <alias entity-alias="INITM" name="quantity"/>
         <alias entity-alias="INITM" name="amount"/>
         <alias entity-alias="PA" name="partyId"/>
-<!--         <alias entity-alias="PA" name="partyName"/> -->
         <alias entity-alias="PRO" name="productId"/>
         <alias entity-alias="PRO" name="primaryProductCategoryId"/>
         <view-link entity-alias="INV" rel-entity-alias="INITM">
