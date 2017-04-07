@@ -11,7 +11,7 @@ import org.apache.ofbiz.base.util.UtilGenerics;
 import org.apache.ofbiz.base.util.UtilProperties;
 import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.service.DispatchContext;
-import org.apache.ofbiz.service.GenericServiceException;
+import org.eclipse.birt.core.exception.BirtException;
 import org.eclipse.birt.core.framework.Platform;
 import org.eclipse.birt.report.model.api.CachedMetaDataHandle;
 import org.eclipse.birt.report.model.api.CellHandle;
@@ -85,27 +85,18 @@ public class ReportDesignGenerator {
     /**
      * Generate report design (rtdesign file).
      * @throws IOException
-     * @throws SemanticException
      * @throws GeneralException
+     * @throws BirtException 
      */
-    public void buildReport() throws IOException, SemanticException, GeneralException {
+    public void buildReport() throws IOException, GeneralException, BirtException {
         DesignConfig config = new DesignConfig();
-        IDesignEngine engine = null;
-
-        try {
-            Platform.startup();
-            IDesignEngineFactory factory = (IDesignEngineFactory) Platform.createFactoryObject(IDesignEngineFactory.EXTENSION_DESIGN_ENGINE_FACTORY);
-            engine = factory.createDesignEngine(config);
-        } catch (Exception e) {
-            throw new GeneralException(e.getMessage());
-        }
-
+        Platform.startup();
+        IDesignEngine engine = ((IDesignEngineFactory) Platform.createFactoryObject(IDesignEngineFactory.EXTENSION_DESIGN_ENGINE_FACTORY)).createDesignEngine(config);
+        
         // creating main design elements
         SessionHandle session = engine.newSessionHandle(ULocale.forLocale(locale));
         design = session.createDesign();
-
         factory = design.getElementFactory();
-
         DesignElementHandle element = factory.newSimpleMasterPage("Page Master");
         design.getMasterPages().add(element);
 
@@ -113,13 +104,7 @@ public class ReportDesignGenerator {
         createScriptedDataSource();
 
         // create DataSet call
-        try {
-            createScriptedDataset();
-        } catch (SemanticException se) {
-            throw se;
-        } catch (GenericServiceException gse) {
-            throw gse;
-        }
+        createScriptedDataset();
 
         // General design parameters
         design.setLayoutPreference(DesignChoiceConstants.REPORT_LAYOUT_PREFERENCE_AUTO_LAYOUT);
@@ -152,8 +137,8 @@ public class ReportDesignGenerator {
                 } else {
                     displayFilterName = filter;
                 }
-                ScalarParameterHandle scalParam = factory.newScalarParameter(filter);
-//                scalParam.setDisplayName(displayFilterName); // has no incidence at all right now, is only displayed when using birt's report parameter system. Not our case. I leave it here if any idea arise of how to translate these.
+                ScalarParameterHandle scalParam = ((ElementFactory) factory).newScalarParameter(filter);
+                // scalParam.setDisplayName(displayFilterName); // TODO has no incidence at all right now, is only displayed when using birt's report parameter system. Not our case. I leave it here if any idea arise of how to translate these.
                 scalParam.setPromptText(displayFilterName);
                 if ("javaObject".equals(birtType)) { //Fields of type='blob' are rejected by Birt: org.eclipse.birt.report.model.api.metadata.PropertyValueException: The choice value "javaObject" is not allowed. 
                     throw new GeneralException("Fields of type='blob' are rejected by Birt. Create a view entity, based on the requested entity, where you exclude the field of type='blob'");
@@ -202,26 +187,21 @@ public class ReportDesignGenerator {
             createScriptedBeforeFactory();
         }
 
-        // ################ CODE HERE IF YOU WANT TO ADD GENERATED DESIGN / MAY BE WORTH USING RPTTEMPLATE AND-OR RPTLIBRARY ###################
-
-        //GridHandle grid = factory.newGridItem(null, 7, 3);
-//        design.getBody().add(grid);
-
-//        grid.setWidth("100%");
-
-//        RowHandle row = (RowHandle) grid.getRows().get(0);
-
-//        ImageHandle image = factory.newImage(null);
-
-//        CellHandle cell = (CellHandle) row.getCells().get(0);
-//        cell.getContent().add(image);
-//        image.setURL("http://ofbiz.apache.org/images/ofbiz_logo.gif");
-
-//        LabelHandle label = factory.newLabel(null);
-//        cell = (CellHandle) row.getCells().get(1);
-//        cell.getContent().add(label);
-//        label.setText("Dat is dat test !");
-        // #####################
+        /*//################ CODE HERE IF YOU WANT TO ADD GENERATED DESIGN / MAY BE WORTH USING RPTTEMPLATE AND-OR RPTLIBRARY ###################
+        GridHandle grid = factory.newGridItem(null, 7, 3);
+        design.getBody().add(grid);
+        grid.setWidth("100%");
+        RowHandle row = (RowHandle) grid.getRows().get(0);
+        ImageHandle image = factory.newImage(null);
+        CellHandle cell = (CellHandle) row.getCells().get(0);
+        cell.getContent().add(image);
+        image.setURL("http://ofbiz.apache.org/images/ofbiz_logo.gif");
+        LabelHandle label = factory.newLabel(null);
+        cell = (CellHandle) row.getCells().get(1);
+        cell.getContent().add(label);
+        label.setText("Dat is dat test !");
+        // ################ CODE HERE IF YOU WANT TO ADD GENERATED DESIGN / MAY BE WORTH USING RPTTEMPLATE AND-OR RPTLIBRARY ################### */
+        
         design.saveAs(rptDesignName);
         design.close();
         if (Debug.infoOn())Debug.logInfo("####### Design generated: " + rptDesignName, module);

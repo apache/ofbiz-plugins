@@ -102,7 +102,7 @@ public class BirtServices {
         try {
             rptGenerator = new ReportDesignGenerator(context, dctx);
         } catch (Exception e1) {
-            e1.printStackTrace();
+            Debug.logError(e1, module);
             return ServiceUtil.returnError(e1.getMessage());
         }
         try {
@@ -115,6 +115,8 @@ public class BirtServices {
     }
 
     @Deprecated
+    // TODO lack documentation about the reason of deprecation
+    // Seems to need to be simply removed since not used at all. But not sure it's not still useful in certain situations, else why not already removed?
     public static Map<String, Object> prepareFlexibleReportOptionFieldsFromEntity(DispatchContext dctx, Map<String, Object> context) {
         String entityViewName = (String) context.get("entityViewName");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -139,7 +141,8 @@ public class BirtServices {
                     return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorConversionFieldToBirtFailed", locale));
                 }
             } catch (GenericServiceException e) {
-                e.printStackTrace();
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorConversionFieldToBirtFailed", locale));
             }
             // make more general when report forms have been made so too.
             if (birtType.equalsIgnoreCase("date-time") || birtType.equalsIgnoreCase("date") || birtType.equalsIgnoreCase("time")) {
@@ -154,7 +157,7 @@ public class BirtServices {
     }
 
     /**
-     * Perform find data on given view/entity and return these into birt compatible format.
+     * Perform find data on given view/entity and return these into Birt compatible format.
      * This service is meant to be used as default for View/entity report design
      *
      */
@@ -177,25 +180,25 @@ public class BirtServices {
         }
 
         try {
-            resultPerformFind = dispatcher.runSync("performFind", UtilMisc.<String, Object>toMap("entityName", entityViewName, "inputFields", inputFields, "userLogin", userLogin, "noConditionFind", "Y", "locale", locale));
+            resultPerformFind = dispatcher.runSync("performFind", UtilMisc.<String, Object>toMap("entityName", entityViewName, 
+                    "inputFields", inputFields, "userLogin", userLogin, "noConditionFind", "Y", "locale", locale));
             if (ServiceUtil.isError(resultPerformFind)) {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorRunningPerformFind", locale));
             }
         } catch (GenericServiceException e) {
-            e.printStackTrace();
-            return ServiceUtil.returnError(e.getMessage());
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorRunningPerformFind", locale));
         }
 
-        EntityListIterator listIt = (EntityListIterator) resultPerformFind.get("listIt");
-        try {
+        try (EntityListIterator listIt = (EntityListIterator) resultPerformFind.get("listIt")) {
             if (UtilValidate.isNotEmpty(listIt)) {
                 list = listIt.getCompleteList();
-                listIt.close();
             } else {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorRunningPerformFind", locale));
             }
         } catch (GenericEntityException e) {
-            e.printStackTrace();
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorRunningPerformFind", locale));
         }
         resultToBirt = ServiceUtil.returnSuccess();
         resultToBirt.put("records", list);
@@ -226,8 +229,8 @@ public class BirtServices {
             EntityCondition entityCondition = EntityCondition.makeCondition("contentId", masterContentId);
             masterContentAttribute = EntityQuery.use(delegator).from("ContentAttribute").where(entityCondition).queryFirst();
         } catch (GenericEntityException e) {
-            e.printStackTrace();
-            return ServiceUtil.returnError(e.getMessage());
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorNoAttributeFound", locale));
         }
 
         if (masterContentAttribute == null) {
@@ -237,34 +240,36 @@ public class BirtServices {
         String reportContentId;
         if (attrName.equalsIgnoreCase("Entity")) {
             String entityViewName = masterContentAttribute.getString("attrValue");
-                ModelEntity modelEntity = delegator.getModelEntity(entityViewName);
-                if (modelEntity == null) {
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorEntityViewNotExist", locale) + " " + entityViewName);
-                }
+            ModelEntity modelEntity = delegator.getModelEntity(entityViewName);
+            if (modelEntity == null) {
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorEntityViewNotExist", locale) + " " + entityViewName);
+            }
             try {
-                Map<String, Object> resultContent = dispatcher.runSync("createFlexibleReportFromMasterEntityWorkflow", UtilMisc.toMap("entityViewName", entityViewName, "reportName", reportName, "description", description, "writeFilters", writeFilters, "masterContentId", masterContentId, "userLogin", userLogin, "locale", locale));
+                Map<String, Object> resultContent = dispatcher.runSync("createFlexibleReportFromMasterEntityWorkflow", UtilMisc.toMap("entityViewName", entityViewName,
+                        "reportName", reportName, "description", description, "writeFilters", writeFilters, "masterContentId", masterContentId, "userLogin", userLogin, "locale", locale));
                 if(ServiceUtil.isError(resultContent)) {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultContent));
                 }
                 reportContentId = (String) resultContent.get("contentId");
             } catch (GenericServiceException e) {
-                e.printStackTrace();
-                return ServiceUtil.returnError(e.getMessage());
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorCannotDetermineDataSource", locale));
             }
         } else if (attrName.equalsIgnoreCase("Service")) {
             String serviceName = masterContentAttribute.getString("attrValue");
             try {
-                Map<String, Object> resultContent = dispatcher.runSync("createFlexibleReportFromMasterServiceWorkflow", UtilMisc.toMap("serviceName", serviceName, "reportName", reportName, "description", description, "writeFilters", writeFilters, "masterContentId", masterContentId, "userLogin", userLogin, "locale", locale));
+                Map<String, Object> resultContent = dispatcher.runSync("createFlexibleReportFromMasterServiceWorkflow", UtilMisc.toMap("serviceName", serviceName,
+                        "reportName", reportName, "description", description, "writeFilters", writeFilters, "masterContentId", masterContentId, "userLogin", userLogin, "locale", locale));
                 if (ServiceUtil.isError(resultContent)) {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultContent));
                 }
                 reportContentId = (String) resultContent.get("contentId");
             } catch (GenericServiceException e) {
-                e.printStackTrace();
-                return ServiceUtil.returnError(e.getMessage());
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorCannotDetermineDataSource", locale));
             }
         } else {
-            // could create other workflows. WebService? Does it need to be independent from Service workflow?
+            // TODO check: could create other workflows. WebService? Does it need to be independent from Service workflow?
             return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorCannotDetermineDataSource", locale));
         }
 
@@ -275,7 +280,7 @@ public class BirtServices {
             resultFormDisplay = dispatcher.runSync("prepareFlexibleReportSearchFormToEdit", UtilMisc.toMap("reportContentId", reportContentId, "userLogin", userLogin, "locale", locale));
             textForm = (String) resultFormDisplay.get("textForm");
         } catch (GenericServiceException e) {
-            e.printStackTrace();
+            Debug.logError(e, module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorCreatingDefaultSearchForm", locale).concat(": ").concat(e.getMessage()));
         }
 
@@ -285,8 +290,7 @@ public class BirtServices {
         return result;
     }
 
-    // I'm not a big fan of how I did the createFormForDisplay / overrideReportForm. Could probably be improved using a proper formForReport object or something similar.
-
+    // TODO check: I'm not a big fan of how I did the createFormForDisplay / overrideReportForm. Could probably be improved using a proper formForReport object or something similar.
     /**
      * Update search form of a report design
      */
@@ -311,10 +315,11 @@ public class BirtServices {
             newForm.append(overrideFilters);
             newForm.append("</forms>");
             Document xmlForm = UtilXml.readXmlDocument(newForm.toString());
-            dispatcher.runSync("updateElectronicTextForm", UtilMisc.toMap("dataResourceId", dataResourceId, "textData", UtilXml.writeXmlDocument(xmlForm), "userLogin", userLogin, "locale", locale));
+            dispatcher.runSync("updateElectronicTextForm", UtilMisc.toMap("dataResourceId", dataResourceId, "textData", UtilXml.writeXmlDocument(xmlForm),
+                    "userLogin", userLogin, "locale", locale));
         } catch (GeneralException | SAXException | ParserConfigurationException | IOException e) {
-            e.printStackTrace();
-            return ServiceUtil.returnError(e.getMessage());
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("Error in overrideReportForm"); //TODO labelise
         }
         return ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "BirtSearchFormSuccessfullyOverridde", locale));
     }
@@ -334,7 +339,8 @@ public class BirtServices {
         String contentId = null;
         Map<String, Object> result = ServiceUtil.returnSuccess();
         try {
-            Map<String, Object> resultMapsForGeneration = dispatcher.runSync("prepareFlexibleReportFieldsFromEntity", UtilMisc.toMap("modelEntity", modelEntity, "userLogin", userLogin, "locale", locale));
+            Map<String, Object> resultMapsForGeneration = dispatcher.runSync("prepareFlexibleReportFieldsFromEntity", UtilMisc.toMap("modelEntity", modelEntity,
+                    "userLogin", userLogin, "locale", locale));
             if (ServiceUtil.isError(resultMapsForGeneration)) {
                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultMapsForGeneration));
             }
@@ -359,7 +365,7 @@ public class BirtServices {
             if (UtilValidate.isEmpty(customMethodId)) customMethodId = "CM_FB_PERFORM_FIND";
             GenericValue customMethod = EntityQuery.use(delegator).from("CustomMethod").where("customMethodId", customMethodId).cache().queryOne();
             if (customMethod == null) {
-                return ServiceUtil.returnError("CustomMethod not exist : " + customMethodId); //todo labelise
+                return ServiceUtil.returnError("CustomMethod not exist : " + customMethodId); //TODO labelise
             }
             result = dispatcher.runSync("createFlexibleReport", UtilMisc.toMap(
                     "locale", locale,
@@ -375,8 +381,8 @@ public class BirtServices {
                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
             }
         } catch (GeneralException e) {
-            e.printStackTrace();
-            return ServiceUtil.returnError(e.getMessage());
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("Error in createFlexibleReportFromMasterEntityWorkflow"); //TODO labelise
         }
         result.put("contentId", contentId);
         return result;
@@ -404,16 +410,17 @@ public class BirtServices {
             }
             GenericValue customMethod = EntityQuery.use(delegator).from("CustomMethod").where("customMethodId", customMethodId).cache().queryOne();
             if (customMethod == null) {
-                return ServiceUtil.returnError("CustomMethod not exist : " + customMethodId); //todo labelise
+                return ServiceUtil.returnError("CustomMethod not exist : " + customMethodId); //TODO labelise
             }
             String customMethodName = (String) customMethod.getString("customMethodName");
             if ("default".equalsIgnoreCase(serviceName)) {
                 serviceName = customMethodName + "PrepareFields";
             }
             try {
-                @SuppressWarnings("unused")
+                @SuppressWarnings("unused") // Used only to passively check
                 ModelService modelService = dctx.getModelService(serviceName);
             } catch (GenericServiceException e) {
+                Debug.logError(e, module);
                 return ServiceUtil.returnError("No service define with name " + serviceName); //TODO labelise
             }
             contentId = BirtWorker.recordReportContent(delegator, dispatcher, context);
@@ -437,7 +444,8 @@ public class BirtServices {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorCreatingFlexibleReport", locale));
             }
         } catch (GeneralException e) {
-            return ServiceUtil.returnError(e.getMessage());
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorCreatingFlexibleReport", locale));
         }
         result.put("contentId", contentId);
         return result;
@@ -527,7 +535,8 @@ public class BirtServices {
             GenericValue electronicText = EntityQuery.use(delegator).from("ElectronicText").where("dataResourceId", dataResourceId).cache().queryOne();
             textData = electronicText.getString("textData");
         } catch (GenericEntityException e) {
-            return ServiceUtil.returnError(e.getMessage());
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("Error in createFormForDisplay"); //TODO labelise
         }
 
         if (Debug.infoOn()) Debug.logInfo(textData, module);
@@ -543,7 +552,7 @@ public class BirtServices {
     }
 
     /**
-     * delete all non-master report design
+     * delete all non-master report design, not used OOTB but accessible as service
      */
     public static Map<String, Object> deleteAllReports(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = dctx.getDelegator();
@@ -557,8 +566,8 @@ public class BirtServices {
         try {
             listContent = EntityQuery.use(delegator).from("Content").where(entityConditionContent).select("contentId").queryList();
         } catch (GenericEntityException e) {
-            e.printStackTrace();
-            return ServiceUtil.returnError(e.getMessage());
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("Error in deleteAllReports"); //TODO labelise
         }
         if (UtilValidate.isEmpty(listContent)) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorNoFlexibleReportToDelete", locale));
@@ -571,8 +580,8 @@ public class BirtServices {
                 ServiceUtil.isError(returnMap);
             }
         } catch (GenericServiceException e) {
-            e.printStackTrace();
-            return ServiceUtil.returnError(e.getMessage());
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("Error in deleteAllReports"); //TODO labelise
         }
         return ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "BirtFlexibleReportsSuccessfullyDeleted", locale));
     }
@@ -593,12 +602,17 @@ public class BirtServices {
         try {
             listContentRpt = EntityQuery.use(delegator).from("ContentAssoc").where("contentId", contentId).select("contentIdTo").queryList();
             contentIdRpt = listContentRpt.get(0).getString("contentIdTo");
-            List<EntityExpr> listConditions = UtilMisc.toList(EntityCondition.makeCondition("contentTypeId", EntityOperator.EQUALS, "RPTDESIGN"), EntityCondition.makeCondition("contentId", EntityOperator.EQUALS, contentIdRpt));
+            List<EntityExpr> listConditions = UtilMisc.toList(EntityCondition.makeCondition("contentTypeId", EntityOperator.EQUALS, "RPTDESIGN"),
+                    EntityCondition.makeCondition("contentId", EntityOperator.EQUALS, contentIdRpt));
             EntityConditionList<EntityExpr> ecl = EntityCondition.makeCondition(listConditions, EntityOperator.AND);
-            listRptDesignFileGV = EntityQuery.use(delegator).from("ContentDataResourceView").where(ecl).select("drObjectInfo").queryList();
+            listRptDesignFileGV = EntityQuery.use(delegator)
+                    .from("ContentDataResourceView")
+                    .where(ecl)
+                    .select("drObjectInfo")
+                    .queryList();
         } catch (GenericEntityException e1) {
-            e1.printStackTrace();
-            return ServiceUtil.returnError(e1.getMessage());
+            Debug.logError(e1, module);
+            return ServiceUtil.returnError("Error in deleteFlexibleReport"); //TODO labelise
         }
         if (listRptDesignFileGV.size() > 1) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorUnexpectedNumberReportToDelete", locale));
@@ -607,23 +621,20 @@ public class BirtServices {
         String rptfileName = listRptDesignFile.get(0);
         Path path = Paths.get(rptfileName);
         try {
-            if (! Files.deleteIfExists(path)) {
+            if (!Files.deleteIfExists(path)) {
                 ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorCannotLocateReportFile", locale));
             }
         } catch (IOException e) {
-            e.printStackTrace();
-            return ServiceUtil.returnError(e.getMessage());
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("Error in deleteFlexibleReport"); //TODO labelise
         }
         try {
             delegator.removeByAnd("ContentAttribute", UtilMisc.toMap("contentId", contentId));
             dispatcher.runSync("removeContentAndRelated", UtilMisc.toMap("contentId", contentId, "userLogin", userLogin, "locale", locale));
             dispatcher.runSync("removeContentAndRelated", UtilMisc.toMap("contentId", contentIdRpt, "userLogin", userLogin, "locale", locale));
-        } catch (GenericServiceException e) {
-            e.printStackTrace();
-            return ServiceUtil.returnError(e.getMessage());
-        } catch (GenericEntityException e) {
-            e.printStackTrace();
-            return ServiceUtil.returnError(e.getMessage());
+        } catch (GenericServiceException | GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("Error in deleteFlexibleReport"); //TODO labelise
         }
         return ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "BirtFlexibleReportSuccessfullyDeleted", locale));
     }
@@ -631,7 +642,6 @@ public class BirtServices {
     /**
      * Update birt rptdesign file from uploaded one.
      * <p>This will update only STYLES, BODY, MASTERPAGE AND CUBES from existing rptdesign with uploaded ones.</p>
-     *
      */
     public static Map<String, Object> uploadRptDesign(DispatchContext dctx, Map<String, Object> context) {
         String dataResourceId = (String) context.get("dataResourceIdRpt");
@@ -648,7 +658,8 @@ public class BirtServices {
             IDesignEngineFactory factory = (IDesignEngineFactory) Platform.createFactoryObject(IDesignEngineFactory.EXTENSION_DESIGN_ENGINE_FACTORY);
             engine = factory.createDesignEngine(config);
         } catch (Exception e) {
-            e.printStackTrace();
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("Error in uploadRptDesign"); //TODO labelise
         }
         SessionHandle session = engine.newSessionHandle(ULocale.forLocale(locale));
 
@@ -662,15 +673,15 @@ public class BirtServices {
         try {
             dataResource = EntityQuery.use(delegator).from("DataResource").where("dataResourceId", dataResourceId).queryOne();
         } catch (GenericEntityException e1) {
-            e1.printStackTrace();
-            return ServiceUtil.returnError(e1.getMessage());
+            Debug.logError(e1, module);
+            return ServiceUtil.returnError("Error in uploadRptDesign"); //TODO labelise
         }
         String rptDesignName = dataResource.getString("objectInfo");
         // start Birt API platfrom
         try {
             Platform.startup();
         } catch (BirtException e) {
-            e.printStackTrace();
+            Debug.logError(e, module);
             return ServiceUtil.returnError("Cannot start Birt platform");
         }
 
@@ -679,8 +690,8 @@ public class BirtServices {
         try {
             designStored = session.openDesign(rptDesignName);
         } catch (DesignFileException e) {
-            e.printStackTrace();
-            return ServiceUtil.returnError(e.getMessage());
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("Error in uploadRptDesign"); //TODO labelise
         }
 
         // check if design stored already has a body and delete it to avoid conflicts (taking into account only newly designed body)
@@ -693,8 +704,8 @@ public class BirtServices {
                 try {
                     iter.remove();
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    return ServiceUtil.returnError(e.getMessage());
+                    Debug.logError(e, module);
+                    return ServiceUtil.returnError("Error in uploadRptDesign"); //TODO labelise
                 }
             }
         }
@@ -715,8 +726,8 @@ public class BirtServices {
             Path path = Paths.get(nameTempRpt);
             Files.deleteIfExists(path);
         } catch (Exception e) {
-            e.printStackTrace();
-            return ServiceUtil.returnError(e.getMessage());
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("Error in uploadRptDesign"); //TODO labelise
         }
 
         //copy cube
@@ -730,8 +741,8 @@ public class BirtServices {
             try {
                 designStored.getCubes().add(copy);
             } catch (Exception e) {
-                e.printStackTrace();
-                return ServiceUtil.returnError(e.getMessage());
+                Debug.logError(e, module);
+                return ServiceUtil.returnError("Error in uploadRptDesign"); //TODO labelise
             }
         }
 
@@ -746,8 +757,8 @@ public class BirtServices {
             try {
                 designStored.getBody().add(copy);
             } catch (Exception e) {
-                e.printStackTrace();
-                return ServiceUtil.returnError(e.getMessage());
+                Debug.logError(e, module);
+                return ServiceUtil.returnError("Error in uploadRptDesign"); //TODO labelise
             }
         }
 
@@ -761,17 +772,17 @@ public class BirtServices {
                 }
             }
 
-            // adding simple master page => All these casts and other occurrences ... It's ugly, but it's so hard that when I find a solution that works ...
+            // FXIME ? adding simple master page => All these casts and other occurrences ... It's ugly, but it's so hard that when I find a solution that works ...
             @SuppressWarnings("unchecked")
             List<DesignElementHandle> listMasterPages = designFromUser.getMasterPages().getContents();
             for (DesignElementHandle masterPage : listMasterPages) {
                 if (masterPage instanceof SimpleMasterPageHandle) {
-                    designStored.getMasterPages().add((SimpleMasterPage) ((SimpleMasterPageHandle) masterPage).copy());
+                    designStored.getMasterPages().add((SimpleMasterPage) ((SimpleMasterPageHandle) masterPage).copy()); // TODO check what to use in place of add (deprecated)
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            return ServiceUtil.returnError(e.getMessage());
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("Error in uploadRptDesign"); //TODO labelise
         }
 
         // page variables
@@ -780,8 +791,8 @@ public class BirtServices {
             try {
                 designStored.setPageVariable(pageVariable.getName(), pageVariable.getPropertyBindingExpression(pageVariable.getName()));
             } catch (SemanticException e) {
-                e.printStackTrace();
-                return ServiceUtil.returnError(e.getMessage());
+                Debug.logError(e, module);
+                return ServiceUtil.returnError("Error in uploadRptDesign"); //TODO labelise
             }
         }
 
@@ -809,8 +820,8 @@ public class BirtServices {
                 try {
                     designStored.getStyles().add(copy);
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    return ServiceUtil.returnError(e.getMessage());
+                    Debug.logError(e, module);
+                    return ServiceUtil.returnError("Error in uploadRptDesign"); //TODO labelise
                 }
             }
         }
@@ -818,14 +829,14 @@ public class BirtServices {
         try {
             designStored.saveAs(rptDesignName);
         } catch (IOException e) {
-            e.printStackTrace();
-            return ServiceUtil.returnError(e.getMessage());
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("Error in uploadRptDesign"); //TODO labelise
         }
         designFromUser.close();
         designStored.close();
         if (Debug.infoOn()) Debug.logInfo("####### Design uploaded: ".concat(rptDesignName), module);
 
-        // should we as a secondary safety precaution delete any file finishing with _TEMP_.rptdesign?
+        // TODO check: should we, as a secondary safety precaution, delete any file finishing with _TEMP_.rptdesign?
         listSuccessMessage.add(UtilProperties.getMessage(resource, "BirtFlexibleRptDesignSuccessfullyUploaded", locale));
         result = ServiceUtil.returnSuccess(listSuccessMessage);
         return result;

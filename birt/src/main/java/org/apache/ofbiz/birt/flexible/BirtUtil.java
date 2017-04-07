@@ -184,6 +184,8 @@ public final class BirtUtil {
      * second from content.properties content.upload.path.prefix
      * and add birtReptDesign directory
      * default OFBIZ_HOME/runtime/uploads/birtRptDesign/
+     * Note: the Birt.properties file does not exist OOTB but can be added for convenience.
+     *       like using the location where you edit with the Birt Report Designer...
      * @return template path location where rptDesign file is stored
      */
     public static String resolveTemplatePathLocation() {
@@ -209,14 +211,24 @@ public final class BirtUtil {
      * @throws GenericEntityException
      */
     public static String resolveRptDesignFilePathFromContent(Delegator delegator, String contentId) throws GenericEntityException {
-        GenericValue contentRpt = EntityQuery.use(delegator).from("ContentAssoc").where("contentId", contentId).select("contentIdTo").cache().queryFirst();
+        GenericValue contentRpt = EntityQuery.use(delegator)
+                .from("ContentAssoc")
+                .where("contentId", contentId)
+                .select("contentIdTo")
+                .cache()
+                .queryFirst();
         if (contentRpt != null) {
             String contentIdRpt = contentRpt.getString("contentIdTo");
             List<EntityExpr> listConditions = UtilMisc.toList(
                     EntityCondition.makeCondition("contentTypeId", "RPTDESIGN"),
                     EntityCondition.makeCondition("contentId", contentIdRpt));
             EntityConditionList<EntityExpr> ecl = EntityCondition.makeCondition(listConditions);
-            GenericValue dataRessouceRptDesignFile = EntityQuery.use(delegator).from("ContentDataResourceView").where(ecl).select("drObjectInfo").cache().queryFirst();
+            GenericValue dataRessouceRptDesignFile = EntityQuery.use(delegator)
+                    .from("ContentDataResourceView")
+                    .where(ecl)
+                    .select("drObjectInfo")
+                    .cache()
+                    .queryFirst();
             if (dataRessouceRptDesignFile != null) {
                 return dataRessouceRptDesignFile.getString("drObjectInfo");
             }
