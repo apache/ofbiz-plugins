@@ -37,13 +37,23 @@ public class BirtMasterReportServices {
 
     // The following methods are flexible report services as examples for reporting
     public static Map<String, Object> workEffortPerPersonPrepareDate(DispatchContext dctx, Map<String, Object> context) {
-        Map<String, String> dataMap = UtilMisc.toMap("lastName", "name", "firstName", "name", "hours", "floating-point", "fromDate", "date-time", "thruDate", "date-time");
+        Map<String, String> dataMap = UtilMisc.toMap(
+                "lastName", "name", 
+                "firstName", "name", 
+                "hours", "floating-point", 
+                "fromDate", "date-time", 
+                "thruDate", "date-time");
         LinkedHashMap<String, String> filterMap = new LinkedHashMap<String, String>();
         filterMap.put("firstName", "name");
         filterMap.put("lastName", "name");
         filterMap.put("fromDate", "date-time");
         filterMap.put("thruDate", "date-time");
-        Map<String, String> fieldDisplayLabels = UtilMisc.toMap("lastName", "Last name", "firstName", "First name", "hours", "Hours", "fromDate", "From date", "thruDate", "Thru date");
+        Map<String, String> fieldDisplayLabels = UtilMisc.toMap(
+                "lastName", "Last name", 
+                "firstName", "First name", 
+                "hours", "Hours", 
+                "fromDate", "From date", 
+                "thruDate", "Thru date");
         LinkedHashMap<String, String> filterDisplayLabels = new LinkedHashMap<String, String>();
         filterDisplayLabels.put("firstName", "First name");
         filterDisplayLabels.put("lastName", "Last name");
@@ -127,8 +137,38 @@ public class BirtMasterReportServices {
     }
 
     public static Map<String, Object> turnOverPrepareFields(DispatchContext dctx, Map<String, Object> context) {
-        Map<String, String> dataMap = UtilMisc.toMap("invoiceTypeId", "short-varchar", "invoicePartyId", "short-varchar", "statusId", "short-varchar", "invoiceDate", "date", "dueDate", "date", "currencyUomId", "short-varchar", "invoiceItemTypeId", "short-varchar", "invoiceItemSeqId", "short-varchar", "productId", "short-varchar", "partyId", "short-varchar", "primaryProductCategoryId", "short-varchar", "quantity", "numeric", "amount", "currency-amount", "productStoreId", "short-varchar", "storeName", "short-varchar");
-        Map<String, String> fieldDisplayLabels = UtilMisc.toMap("invoiceTypeId", "invoice Type", "invoicePartyId", "Invoice", "statusId", "Status", "invoiceDate", "Date", "dueDate", "Due date ", "currencyUomId", "Currency", "invoiceItemTypeId", "Invoice type line", "invoiceItemSeqId", "Invoice line", "productId", "Product", "partyId", "Customer", "Customer name", "primaryProductCategoryId", "Product category", "quantity", "Qty", "amount", "Montant", "productStoreId", "Product Store", "storeName", "Product store name");
+        Map<String, String> dataMap = UtilMisc.toMap(
+                "invoiceTypeId", "short-varchar", 
+                "invoicePartyId", "short-varchar", 
+                "statusId", "short-varchar", 
+                "invoiceDate", "date", 
+                "dueDate", "date", 
+                "currencyUomId", "short-varchar", 
+                "invoiceItemTypeId", "short-varchar", 
+                "invoiceItemSeqId", "short-varchar", 
+                "productId", "short-varchar", 
+                "partyId", "short-varchar", 
+                "primaryProductCategoryId", "short-varchar", 
+                "quantity", "numeric", 
+                "amount", "currency-amount", 
+                "productStoreId", "short-varchar", 
+                "storeName", "short-varchar");
+        Map<String, String> fieldDisplayLabels = UtilMisc.toMap(
+                "invoiceTypeId", "invoice Type", 
+                "invoicePartyId", "Invoice", 
+                "statusId", "Status", 
+                "invoiceDate", "Date", 
+                "dueDate", "Due date ", 
+                "currencyUomId", "Currency", 
+                "invoiceItemTypeId", "Invoice type line", 
+                "invoiceItemSeqId", "Invoice line", 
+                "productId", "Product", 
+                "partyId", "Customer", 
+                "primaryProductCategoryId", "Product category", 
+                "quantity", "Qty", 
+                "amount", "Amount", 
+                "productStoreId", "Product Store", 
+                "storeName", "Product store name");
         LinkedHashMap<String, String> filterMap = new LinkedHashMap<String, String>(); 
         filterMap.put("productCategoryId", "short-varchar");
         filterMap.put("productStoreId", "short-varchar");
