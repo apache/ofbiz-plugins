@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.UtilDateTime;
 import org.apache.ofbiz.base.util.UtilGenerics;
 import org.apache.ofbiz.base.util.UtilMisc;
@@ -109,9 +110,12 @@ public class BirtMasterReportServices {
             EntityExpr conditionParty = EntityCondition.makeCondition("partyId", partyId);
             listConditionsWorkEffort.add(conditionParty);
             ecl = EntityCondition.makeCondition(listConditionsWorkEffort, EntityOperator.AND);
-            listWorkEffortTime = EntityQuery.use(delegator).from("WorkEffortAndTimeEntry").where(ecl).select("hours", "fromDate", "thruDate").queryList();
+            listWorkEffortTime = EntityQuery.use(delegator)
+                    .from("WorkEffortAndTimeEntry")
+                    .where(ecl).select("hours", "fromDate", "thruDate")
+                    .queryList();
         } catch (GenericEntityException e) {
-            e.printStackTrace();
+            Debug.logError(e, module);
             ServiceUtil.returnError("Error getting party from person name.");
         }
         List<GenericValue> listCompiled = new ArrayList<GenericValue>();
@@ -123,8 +127,8 @@ public class BirtMasterReportServices {
     }
 
     public static Map<String, Object> turnOverPrepareFields(DispatchContext dctx, Map<String, Object> context) {
-        Map<String, String> dataMap = UtilMisc.toMap("invoiceTypeId", "short-varchar", "invoicePartyId", "short-varchar", "statusId", "short-varchar", "invoiceDate", "date", "dueDate", "date", "currencyUomId", "short-varchar", "invoiceItemTypeId", "short-varchar", "invoiceItemSeqId", "short-varchar", "productId", "short-varchar", "partyId", "short-varchar", "partyName", "short-varchar", "primaryProductCategoryId", "short-varchar", "quantity", "numeric", "amount", "currency-amount", "productStoreId", "short-varchar", "storeName", "short-varchar");
-        Map<String, String> fieldDisplayLabels = UtilMisc.toMap("invoiceTypeId", "invoice Type", "invoicePartyId", "Invoice", "statusId", "Status", "invoiceDate", "Date", "dueDate", "Due date ", "currencyUomId", "Currency", "invoiceItemTypeId", "Invoice type line", "invoiceItemSeqId", "Invoice line", "productId", "Product", "partyId", "Customer", "partyName", "Customer name", "primaryProductCategoryId", "Product category", "quantity", "Qty", "amount", "Montant", "productStoreId", "Product Store", "storeName", "Product store name");
+        Map<String, String> dataMap = UtilMisc.toMap("invoiceTypeId", "short-varchar", "invoicePartyId", "short-varchar", "statusId", "short-varchar", "invoiceDate", "date", "dueDate", "date", "currencyUomId", "short-varchar", "invoiceItemTypeId", "short-varchar", "invoiceItemSeqId", "short-varchar", "productId", "short-varchar", "partyId", "short-varchar", "primaryProductCategoryId", "short-varchar", "quantity", "numeric", "amount", "currency-amount", "productStoreId", "short-varchar", "storeName", "short-varchar");
+        Map<String, String> fieldDisplayLabels = UtilMisc.toMap("invoiceTypeId", "invoice Type", "invoicePartyId", "Invoice", "statusId", "Status", "invoiceDate", "Date", "dueDate", "Due date ", "currencyUomId", "Currency", "invoiceItemTypeId", "Invoice type line", "invoiceItemSeqId", "Invoice line", "productId", "Product", "partyId", "Customer", "Customer name", "primaryProductCategoryId", "Product category", "quantity", "Qty", "amount", "Montant", "productStoreId", "Product Store", "storeName", "Product store name");
         LinkedHashMap<String, String> filterMap = new LinkedHashMap<String, String>(); 
         filterMap.put("productCategoryId", "short-varchar");
         filterMap.put("productStoreId", "short-varchar");
@@ -187,11 +191,11 @@ public class BirtMasterReportServices {
                 EntityExpr conditionBeforeDate = EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.nowTimestamp());
                 EntityExpr conditionNull = EntityCondition.makeCondition("thruDate", null);
                 EntityCondition conditionThroughDate = EntityCondition.makeCondition(EntityOperator.OR, UtilMisc.toList(conditionBeforeDate, conditionNull));
-                List<GenericValue> listProductIds = EntityQuery.use(delegator).from("ProductCategoryMember")
-                    .where(EntityCondition.makeCondition(UtilMisc.toList(conditionProductCategory, conditionFromDate, conditionThroughDate)))
-                    .select("productId").queryList();
+                List<GenericValue> listProductIds = EntityQuery.use(delegator)
+                        .from("ProductCategoryMember")
+                        .where(EntityCondition.makeCondition(UtilMisc.toList(conditionProductCategory, conditionFromDate, conditionThroughDate)))
+                        .select("productId").queryList();
                 List<String> listProductIdsString = EntityUtil.getFieldListFromEntityList(listProductIds, "productId", true);
-
                 EntityExpr conditionProductCat = EntityCondition.makeCondition("productId", EntityOperator.IN, listProductIdsString);
                 listAllConditions.add(conditionProductCat);
             }
@@ -257,7 +261,11 @@ public class BirtMasterReportServices {
             fieldsToSelect.add("productId");
             fieldsToSelect.add("partyId");
             fieldsToSelect.add("primaryProductCategoryId");
-            listTurnOver = EntityQuery.use(delegator).from("InvoiceItemProductAndParty").where(EntityCondition.makeCondition(listAllConditions)).select(fieldsToSelect).queryList();
+            listTurnOver = EntityQuery.use(delegator)
+                    .from("InvoiceItemProductAndParty")
+                    .where(EntityCondition.makeCondition(listAllConditions))
+                    .select(fieldsToSelect)
+                    .queryList();
 
             // adding missing fields
             for (GenericValue invoice : listTurnOver) {
@@ -271,12 +279,20 @@ public class BirtMasterReportServices {
                 EntityExpr conditionInvoiceId = EntityCondition.makeCondition("invoiceId", invoice.getString("invoiceId"));
 //                EntityExpr conditionInvoiceItemSeqId = EntityCondition.makeCondition("invoiceItemSeqId", invoice.getString("invoiceItemSeqId"));
 //                List<GenericValue> listOrderBilling = delegator.findList("OrderItemBilling", EntityCondition.makeCondition(UtilMisc.toList(conditionInvoiceId, conditionInvoiceItemSeqId)), UtilMisc.toSet("orderId"), null, null, false);
-                GenericValue orderBilling = EntityQuery.use(delegator).from("OrderItemBilling").where(conditionInvoiceId).select("orderId").queryFirst();
+                GenericValue orderBilling = EntityQuery.use(delegator)
+                        .from("OrderItemBilling")
+                        .where(conditionInvoiceId)
+                        .select("orderId")
+                        .queryFirst();
                 if (orderBilling != null) {
                     EntityExpr conditionOrderId = EntityCondition.makeCondition("orderId", orderBilling.getString("orderId"));
-                    GenericValue productStore = EntityQuery.use(delegator).from("OrderAndProductStore").where(conditionOrderId).cache().queryFirst();
+                    GenericValue productStore = EntityQuery.use(delegator)
+                            .from("OrderAndProductStore")
+                            .where(conditionOrderId)
+                            .cache()
+                            .queryFirst();
                     if (UtilValidate.isNotEmpty(productStoreList) && ! productStoreList.contains(productStore.getString("productStoreId"))) {
-                        continue; // pretty ugly... but had problems with the rare case where an invoice matches with several orders with more than one productStore
+                        continue; // FIXME pretty ugly... but had problems with the rare case where an invoice matches with several orders with more than one productStore
                     }
                     invoiceEditable.put("productStoreId", productStore.getString("productStoreId"));
                     invoiceEditable.put("storeName", productStore.getString("storeName"));
@@ -287,7 +303,7 @@ public class BirtMasterReportServices {
                 listInvoiceEditable.add(invoiceEditable);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Debug.logError(e, module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "BirtErrorRetrievingTurnOver", locale));
         }
         Map<String, Object> result = ServiceUtil.returnSuccess();

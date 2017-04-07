@@ -52,7 +52,7 @@ under the License.
         <alias entity-alias="INITM" name="quantity"/>
         <alias entity-alias="INITM" name="amount"/>
         <alias entity-alias="PA" name="partyId"/>
-        <alias entity-alias="PA" name="partyName"/>
+<!--         <alias entity-alias="PA" name="partyName"/> -->
         <alias entity-alias="PRO" name="productId"/>
         <alias entity-alias="PRO" name="primaryProductCategoryId"/>
         <view-link entity-alias="INV" rel-entity-alias="INITM">
