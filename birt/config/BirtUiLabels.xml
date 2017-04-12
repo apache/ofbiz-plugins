@@ -165,6 +165,38 @@
         <value xml:lang="en">You have no report yet</value>
         <value xml:lang="fr">Vous n'avez aucun rapport pour l'instant</value>
     </property>
+    <property key="BirtNote1">
+        <value xml:lang="en">BIRT is an open source Eclipse-based (EPL v1 license) reporting system.</value>
+        <value xml:lang="fr">BIRT est un projet de création de rapports open source basé sur Eclipse (license EPL v1).</value>
+    </property>
+    <property key="BirtNote2">
+        <value xml:lang="en">It integrates with any OFBiz application to produce compelling reports, including graphical presentations like pie and bar charts.</value>
+        <value xml:lang="fr">Il s'intègre à toute application OFBiz pour produire des rapports convaincants, y compris des présentations graphiques en secteurs et à barres.</value>
+    </property>
+    <property key="BirtNote3">
+        <value xml:lang="en">This application provides you with a sample example report.</value>
+        <value xml:lang="fr">Cette application vous fournit un exemple de rapport.</value>
+    </property>
+    <property key="BirtNote4">
+        <value xml:lang="en">See the help option to know how to create your own OFBiz integrated reports.</value>
+        <value xml:lang="fr">Consultez l'aide pour savoir comment créer vos propres rapports intégrés dans OFBiz.</value>
+    </property>
+    <property key="BirtNote5">
+        <value xml:lang="en">See the Birt home page for more information.</value>
+        <value xml:lang="fr">Consultez le projet Birt pour plus d'informations.</value>
+    </property>
+    <property key="BirtNote6">
+        <value xml:lang="en">You might also be interested by the OFBiz Flexible Reports which allows dynamic reports creation (see sub-menu).</value>
+        <value xml:lang="fr">Vous pouvez également être intéressé-e par les rapports flexibles (voir le sous-menu). Ils permettent la création dynamique de rapports.</value>
+    </property>
+    <property key="BirtNote7">
+        <value xml:lang="en">An OFBiz Flexible Reports is based on entity, view or service.</value>
+        <value xml:lang="fr">Les rapports flexibles sont construits à partir d'une entité, vue ou service</value>
+    </property>
+    <property key="BirtNote8">
+        <value xml:lang="en">Here is the link to the official OFBiz documentation</value>
+        <value xml:lang="fr">Voici le lien vers la documentation officielle</value>
+    </property>
     <property key="BirtOrderReportAllOrderItemsWithDiscountCode">
         <value xml:lang="en">All order items with discount code</value>
         <value xml:lang="fr">Tous les lignes de commandes ayant des codes promotionels</value>
@@ -290,5 +322,4 @@
         <value xml:lang="en">Only when you have edited the report in the Birt Report Designer and then uploaded.</value>
         <value xml:lang="fr">Seulement après avoir éditer le rapport avec le Birt Report Designer puis télécharger vers le serveur.</value>
     </property>
-    
 </resource>

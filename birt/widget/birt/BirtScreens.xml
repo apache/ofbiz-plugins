@@ -109,13 +109,15 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <widgets>
-                                  <label style="h3" text="BIRT is an open source Eclipse-based reporting system that integrates with any OFBiz application to produce compelling reports, including graphical presentations like pie and bar charts."/>
-                                  <label style="h3" text="This application provides you with a sample example report."/>
-                                  <label style="h3" text="See the help option to know how to create your own OFBiz integrated reports."/>
-                                  <link style="h3" text="See the Birt home for more information" target="http://eclipse.org/birt/phoenix/intro/" url-mode="plain" target-window="_blank_"/>
+                                  <label style="h3" text="${uiLabelMap.BirtNote1}"/>
+                                  <label style="h3" text="${uiLabelMap.BirtNote2}"/>
+                                  <label style="h3" text="${uiLabelMap.BirtNote3}"/>
+                                  <label style="h3" text="${uiLabelMap.BirtNote4}"/>
+                                  <link style="h3" text="${uiLabelMap.BirtNote5}" target="http://eclipse.org/birt/phoenix/intro/" url-mode="plain" target-window="_blank_"/>
                                   <horizontal-separator/>
-                                  <label style="h3" text="You might also be interested by the OFBiz Flexible Reports (see sub-menu)"/>
-                                  <link style="h3" text="Here is the official documentation" target="https://cwiki.apache.org/confluence/display/OFBIZ/Birt+Flexible+Reports" url-mode="plain" target-window="_blank_"/>
+                                  <label style="h3" text="${uiLabelMap.BirtNote6}"/>
+                                  <label style="h3" text="${uiLabelMap.BirtNote7}"/>
+                                  <link style="h3" text="${uiLabelMap.BirtNote8}" target="https://cwiki.apache.org/confluence/display/OFBIZ/Birt+Flexible+Reports" url-mode="plain" target-window="_blank_" />
                             </widgets>
                         </section>
                     </decorator-section>
