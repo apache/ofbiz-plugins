@@ -224,7 +224,7 @@
         <field name="actualHours" title="${uiLabelMap.ProjectMgrActualHours}"><display/></field>
     </form>
     <form name="MyTasks" type="list" list-name="tasks" paginate-target="MyTasks" target="updateTaskAssigment"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" separate-columns="true">
         <row-actions>
             <service service-name="getProjectTask" result-map="result">
                 <field-map field-name="taskId" from-field="workEffortId"/>
