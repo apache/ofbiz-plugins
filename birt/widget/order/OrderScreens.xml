@@ -27,7 +27,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="BirtUiLabels" map-name="uiLabelMap" global="true"/>                
+                <property-map resource="BirtUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
                 <screenlet title="${uiLabelMap.BirtOrderReportSalesReport}">
@@ -41,7 +41,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="BirtUiLabels" map-name="uiLabelMap" global="true"/>                
+                <property-map resource="BirtUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
                 <screenlet title="${uiLabelMap.BirtOrderReportProductDemandReport}">
@@ -55,7 +55,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="BirtUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>                
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
                 <screenlet title="${uiLabelMap.BirtOrderReportSaleOrdersByChannel}">
@@ -68,7 +68,7 @@ under the License.
     <screen name="SaleOrderDiscountCodeReport">
         <section>
             <actions>
-                <property-map resource="BirtUiLabels" map-name="uiLabelMap" global="true"/>                
+                <property-map resource="BirtUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
                 <screenlet title="${uiLabelMap.BirtOrderReportSaleOrderDiscountCode}">
@@ -81,7 +81,7 @@ under the License.
     <screen name="Last3MonthsSalesReport">
         <section>
             <actions>
-                <property-map resource="BirtUiLabels" map-name="uiLabelMap" global="true"/>                
+                <property-map resource="BirtUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
                 <screenlet title="${uiLabelMap.BirtOrderReportLast3MonthsSalesReport}">
@@ -94,7 +94,7 @@ under the License.
     <screen name="CouponSalesReport">
         <section>
             <actions>
-                <property-map resource="BirtUiLabels" map-name="uiLabelMap" global="true"/>                
+                <property-map resource="BirtUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
                 <screenlet title="${uiLabelMap.BirtOrderReportCouponSalesReport}">
@@ -107,7 +107,7 @@ under the License.
     <screen name="SalesOrderReport">
         <section>
             <actions>
-                <property-map resource="BirtUiLabels" map-name="uiLabelMap" global="true"/>                
+                <property-map resource="BirtUiLabels" map-name="uiLabelMap" global="true"/>
                 <entity-condition entity-name="SalesOrderItemStarSchema" list="SalesReportList">
                     <condition-list combine="and">
                         <condition-expr field-name="orderDate" operator="greater-equals" from-field="parameters.fromOrderDate" ignore-if-empty="true"/>
@@ -116,7 +116,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <screenlet title="${uiLabelMap.BirtOrderReportSalesReport}">                
+                <screenlet title="${uiLabelMap.BirtOrderReportSalesReport}">
                     <platform-specific>
                         <xml><html-template location="component://order/webapp/ordermgr/reports/SalesReport.rptdesign"/></xml>
                     </platform-specific>
@@ -128,7 +128,7 @@ under the License.
     <screen name="ProductDemandOrderReport ">
         <section>
             <actions>
-                <property-map resource="BirtUiLabels" map-name="uiLabelMap" global="true"/>                
+                <property-map resource="BirtUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
                 <screenlet title="${uiLabelMap.BirtOrderReportProductDemandReport}">
