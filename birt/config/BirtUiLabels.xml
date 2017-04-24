@@ -174,7 +174,7 @@
         <value xml:lang="fr">Il s'intègre à toute application OFBiz pour produire des rapports convaincants, y compris des présentations graphiques en secteurs et à barres.</value>
     </property>
     <property key="BirtNote3">
-        <value xml:lang="en">This application provides you with a sample example report.</value>
+        <value xml:lang="en">This application provides you with sample example reports.</value>
         <value xml:lang="fr">Cette application vous fournit un exemple de rapport.</value>
     </property>
     <property key="BirtNote4">
