@@ -162,8 +162,8 @@
         <value xml:lang="fr">Gérer les rapports</value>
     </property>
     <property key="BirtNoKnownFlexibleReport">
-        <value xml:lang="en">You have no report yet</value>
-        <value xml:lang="fr">Vous n'avez aucun rapport pour l'instant</value>
+        <value xml:lang="en">You have no Flexible Reports yet</value>
+        <value xml:lang="fr">Vous n'avez aucun rapport flexible pour l'instant</value>
     </property>
     <property key="BirtNote1">
         <value xml:lang="en">BIRT is an open source Eclipse-based (EPL v1 license) reporting system.</value>

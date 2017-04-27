@@ -319,7 +319,7 @@ public class BirtServices {
                     "userLogin", userLogin, "locale", locale));
         } catch (GeneralException | SAXException | ParserConfigurationException | IOException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError("Error in overrideReportForm"); //TODO labelise
+            return ServiceUtil.returnError("Error in overrideReportForm service."); //TODO labelise
         }
         return ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "BirtSearchFormSuccessfullyOverridde", locale));
     }
@@ -382,7 +382,7 @@ public class BirtServices {
             }
         } catch (GeneralException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError("Error in createFlexibleReportFromMasterEntityWorkflow"); //TODO labelise
+            return ServiceUtil.returnError("Error in createFlexibleReportFromMasterEntityWorkflow service"); //TODO labelise
         }
         result.put("contentId", contentId);
         return result;
@@ -536,7 +536,7 @@ public class BirtServices {
             textData = electronicText.getString("textData");
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError("Error in createFormForDisplay"); //TODO labelise
+            return ServiceUtil.returnError("Error in createFormForDisplay service."); //TODO labelise
         }
 
         if (Debug.infoOn()) Debug.logInfo(textData, module);
@@ -567,7 +567,7 @@ public class BirtServices {
             listContent = EntityQuery.use(delegator).from("Content").where(entityConditionContent).select("contentId").queryList();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError("Error in deleteAllReports"); //TODO labelise
+            return ServiceUtil.returnError("Error in deleteAllReports service."); //TODO labelise
         }
         if (UtilValidate.isEmpty(listContent)) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorNoFlexibleReportToDelete", locale));
@@ -581,7 +581,7 @@ public class BirtServices {
             }
         } catch (GenericServiceException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError("Error in deleteAllReports"); //TODO labelise
+            return ServiceUtil.returnError("Error in deleteAllReports service."); //TODO labelise
         }
         return ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "BirtFlexibleReportsSuccessfullyDeleted", locale));
     }
@@ -612,7 +612,7 @@ public class BirtServices {
                     .queryList();
         } catch (GenericEntityException e1) {
             Debug.logError(e1, module);
-            return ServiceUtil.returnError("Error in deleteFlexibleReport"); //TODO labelise
+            return ServiceUtil.returnError("Error in deleteFlexibleReport service."); //TODO labelise
         }
         if (listRptDesignFileGV.size() > 1) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorUnexpectedNumberReportToDelete", locale));
@@ -626,7 +626,7 @@ public class BirtServices {
             }
         } catch (IOException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError("Error in deleteFlexibleReport"); //TODO labelise
+            return ServiceUtil.returnError("Error in deleteFlexibleReport service."); //TODO labelise
         }
         try {
             delegator.removeByAnd("ContentAttribute", UtilMisc.toMap("contentId", contentId));
@@ -634,7 +634,7 @@ public class BirtServices {
             dispatcher.runSync("removeContentAndRelated", UtilMisc.toMap("contentId", contentIdRpt, "userLogin", userLogin, "locale", locale));
         } catch (GenericServiceException | GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError("Error in deleteFlexibleReport"); //TODO labelise
+            return ServiceUtil.returnError("Error in deleteFlexibleReport service."); //TODO labelise
         }
         return ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "BirtFlexibleReportSuccessfullyDeleted", locale));
     }
@@ -659,7 +659,7 @@ public class BirtServices {
             engine = factory.createDesignEngine(config);
         } catch (Exception e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError("Error in uploadRptDesign"); //TODO labelise
+            return ServiceUtil.returnError("Error in uploadRptDesign service."); //TODO labelise
         }
         SessionHandle session = engine.newSessionHandle(ULocale.forLocale(locale));
 
@@ -674,7 +674,7 @@ public class BirtServices {
             dataResource = EntityQuery.use(delegator).from("DataResource").where("dataResourceId", dataResourceId).queryOne();
         } catch (GenericEntityException e1) {
             Debug.logError(e1, module);
-            return ServiceUtil.returnError("Error in uploadRptDesign"); //TODO labelise
+            return ServiceUtil.returnError("Error in uploadRptDesign service."); //TODO labelise
         }
         String rptDesignName = dataResource.getString("objectInfo");
         // start Birt API platfrom
@@ -691,7 +691,7 @@ public class BirtServices {
             designStored = session.openDesign(rptDesignName);
         } catch (DesignFileException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError("Error in uploadRptDesign"); //TODO labelise
+            return ServiceUtil.returnError("Error in uploadRptDesign service."); //TODO labelise
         }
 
         // check if design stored already has a body and delete it to avoid conflicts (taking into account only newly designed body)
@@ -705,7 +705,7 @@ public class BirtServices {
                     iter.remove();
                 } catch (Exception e) {
                     Debug.logError(e, module);
-                    return ServiceUtil.returnError("Error in uploadRptDesign"); //TODO labelise
+                    return ServiceUtil.returnError("Error in uploadRptDesign service."); //TODO labelise
                 }
             }
         }
@@ -727,7 +727,7 @@ public class BirtServices {
             Files.deleteIfExists(path);
         } catch (Exception e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError("Error in uploadRptDesign"); //TODO labelise
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorInuploadRptDesignNoFile", locale));
         }
 
         //copy cube
@@ -742,7 +742,7 @@ public class BirtServices {
                 designStored.getCubes().add(copy);
             } catch (Exception e) {
                 Debug.logError(e, module);
-                return ServiceUtil.returnError("Error in uploadRptDesign"); //TODO labelise
+                return ServiceUtil.returnError("Error in uploadRptDesign service."); //TODO labelise
             }
         }
 
@@ -758,7 +758,7 @@ public class BirtServices {
                 designStored.getBody().add(copy);
             } catch (Exception e) {
                 Debug.logError(e, module);
-                return ServiceUtil.returnError("Error in uploadRptDesign"); //TODO labelise
+                return ServiceUtil.returnError("Error in uploadRptDesign service."); //TODO labelise
             }
         }
 
@@ -782,7 +782,7 @@ public class BirtServices {
             }
         } catch (Exception e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError("Error in uploadRptDesign"); //TODO labelise
+            return ServiceUtil.returnError("Error in uploadRptDesign service."); //TODO labelise
         }
 
         // page variables
@@ -792,7 +792,7 @@ public class BirtServices {
                 designStored.setPageVariable(pageVariable.getName(), pageVariable.getPropertyBindingExpression(pageVariable.getName()));
             } catch (SemanticException e) {
                 Debug.logError(e, module);
-                return ServiceUtil.returnError("Error in uploadRptDesign"); //TODO labelise
+                return ServiceUtil.returnError("Error in uploadRptDesign service."); //TODO labelise
             }
         }
 
@@ -821,7 +821,7 @@ public class BirtServices {
                     designStored.getStyles().add(copy);
                 } catch (Exception e) {
                     Debug.logError(e, module);
-                    return ServiceUtil.returnError("Error in uploadRptDesign"); //TODO labelise
+                    return ServiceUtil.returnError("Error in uploadRptDesign service."); //TODO labelise
                 }
             }
         }
@@ -830,7 +830,7 @@ public class BirtServices {
             designStored.saveAs(rptDesignName);
         } catch (IOException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError("Error in uploadRptDesign"); //TODO labelise
+            return ServiceUtil.returnError("Error in uploadRptDesign service."); //TODO labelise
         }
         designFromUser.close();
         designStored.close();

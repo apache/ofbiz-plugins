@@ -57,6 +57,10 @@
         <value xml:lang="en">No view entity name found</value>
         <value xml:lang="fr">Aucun nom de vue/entité n'a été trouvé</value>
     </property>
+    <property key="BirtErrorInuploadRptDesignNoFile">
+        <value xml:lang="en">Error in uploadRptDesign service. Check you have selected a .rptdesign file to upload.</value>
+        <value xml:lang="fr">Erreur dans le service uploadRptDesign. Vérifiez que vous avez sélectionné un fichier .rptdesign à télécharger vers le serveur.</value>
+    </property>
     <property key="BirtErrorNoAttributeFound">
         <value xml:lang="en">Master workflow attribute not found</value>
         <value xml:lang="fr">L'attribut de workflow du master n'as pas pu être trouvé</value>
