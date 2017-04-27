@@ -19,6 +19,7 @@ under the License.
 -->
 
 <entity-engine-xml>
+    <UserLoginSecurityGroup groupId="ECOMMERCE_CUSTOMER" userLoginId="DemoCustomer" fromDate="2000-01-01 00:00:00.0"/>
     <!-- suppliers -->
     <Party partyId="DemoSupplier" partyTypeId="PARTY_GROUP"/>
     <PartyGroup partyId="DemoSupplier" groupName="Demo Supplier"/>
