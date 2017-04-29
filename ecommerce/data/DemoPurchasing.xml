@@ -21,18 +21,6 @@ under the License.
 <entity-engine-xml>
     <UserLoginSecurityGroup groupId="ECOMMERCE_CUSTOMER" userLoginId="DemoCustomer" fromDate="2000-01-01 00:00:00.0"/>
     <!-- suppliers -->
-    <Party partyId="DemoSupplier" partyTypeId="PARTY_GROUP"/>
-    <PartyGroup partyId="DemoSupplier" groupName="Demo Supplier"/>
-    <PartyRole partyId="DemoSupplier" roleTypeId="SUPPLIER"/>
-    <ContactMech contactMechId="9001" contactMechTypeId="POSTAL_ADDRESS"/>
-    <PartyContactMech partyId="DemoSupplier" contactMechId="9001" fromDate="2001-05-13 00:00:00.000" allowSolicitation="Y"/>
-    <PostalAddress contactMechId="9001" toName="Demo Supplier Company" address1="2004 Factory Blvd" city="City of Industry" postalCode="90000" countryGeoId="USA" stateProvinceGeoId="CA"/>
-    <PartyContactMechPurpose partyId="DemoSupplier" contactMechId="9001" contactMechPurposeTypeId="BILLING_LOCATION" fromDate="2001-05-13 00:00:00.000"/>
-    <PartyContactMechPurpose partyId="DemoSupplier" contactMechId="9001" contactMechPurposeTypeId="GENERAL_LOCATION" fromDate="2001-05-13 00:00:00.000"/>
-    <PartyContactMechPurpose partyId="DemoSupplier" contactMechId="9001" contactMechPurposeTypeId="PAYMENT_LOCATION" fromDate="2001-05-13 00:00:00.000"/>
-    <UserLogin userLoginId="DemoSupplier" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a" partyId="DemoSupplier"/>
-
-
     <Party partyId="BigSupplier" partyTypeId="PARTY_GROUP" />
     <PartyGroup partyId="BigSupplier" groupName="Big Supplier" />
     <PartyRole partyId="BigSupplier" roleTypeId="SUPPLIER" />
