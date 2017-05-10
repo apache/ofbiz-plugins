@@ -25,11 +25,16 @@ import org.apache.lucene.document.Document
 import org.apache.lucene.index.DirectoryReader
 import org.apache.lucene.queryparser.classic.ParseException
 import org.apache.lucene.queryparser.classic.QueryParser
-import org.apache.lucene.search.*
+import org.apache.lucene.search.BooleanClause
+import org.apache.lucene.search.BooleanQuery
+import org.apache.lucene.search.IndexSearcher
+import org.apache.lucene.search.Query
+import org.apache.lucene.search.ScoreDoc
+import org.apache.lucene.search.TopScoreDocCollector
 import org.apache.lucene.store.FSDirectory
 
 if (parameters.luceneQuery) {
-    combQuery = new BooleanQuery.Builder()
+    Query combQuery = new BooleanQuery()
     IndexSearcher searcher
     WhitespaceAnalyzer analyzer
     try {
@@ -53,7 +58,7 @@ if (parameters.luceneQuery) {
     combQuery.add(query, BooleanClause.Occur.MUST)
 
     TopScoreDocCollector collector = TopScoreDocCollector.create(100) // defaulting to 100 results
-    searcher.search(combQuery.build(), collector)
+    searcher.search(combQuery, collector)
     ScoreDoc[] hits = collector.topDocs().scoreDocs
     productList = []
     hits.each { hit ->

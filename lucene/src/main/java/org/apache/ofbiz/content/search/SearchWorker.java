@@ -41,7 +41,7 @@ public final class SearchWorker {
 
     public static final String module = SearchWorker.class.getName();
 
-    private static final Version LUCENE_VERSION = Version.LUCENE_6_2_1;
+    private static final Version LUCENE_VERSION = Version.LUCENE_6_5_1;
 
     private SearchWorker() {}
 
@@ -68,7 +68,7 @@ public final class SearchWorker {
 
     public static String getIndexPath(String path) {
         String basePath = UtilProperties.getPropertyValue("lucene", "defaultIndex", "index");
-        return (UtilValidate.isNotEmpty(path)? basePath + "/" + path: basePath);
+        return (UtilValidate.isNotEmpty(path)? basePath + "/" + path + "/index" : basePath);
     }
 
     public static void indexContentList(LocalDispatcher dispatcher, Delegator delegator, List<String> idList) throws Exception {
