@@ -35,7 +35,7 @@
        that you fully re-index after changing this setting as it can
        affect both how text is indexed and queried.
   -->
-  <luceneMatchVersion>6.2.1</luceneMatchVersion>
+  <luceneMatchVersion>6.5.1</luceneMatchVersion>
 
   <!-- <lib/> directives can be used to instruct Solr to load any Jars
        identified and use them to resolve any "plugins" specified in
@@ -101,7 +101,7 @@
        replication is in use, this should match the replication
        configuration.
     -->
-  <dataDir>${solr.data.dir:runtime/indexes/solr}</dataDir>
+  <dataDir>${ofbiz.home}/runtime/indexes/products/</dataDir>
 
 
   <!-- The DirectoryFactory to use for indexes.
