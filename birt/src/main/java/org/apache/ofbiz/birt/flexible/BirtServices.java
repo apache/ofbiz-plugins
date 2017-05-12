@@ -815,7 +815,7 @@ public class BirtServices {
         // adding to styles those which are not already present
         while (iterUser.hasNext()) {
             DesignElementHandle item = (DesignElementHandle) iterUser.next();
-            if (! listStyleNames.contains(item.getName())) {
+            if (!listStyleNames.contains(item.getName())) {
                 DesignElementHandle copy = item.copy().getHandle(item.getModule());
                 try {
                     designStored.getStyles().add(copy);

@@ -130,7 +130,7 @@ public final class BirtWorker {
         }
 
         // set output options
-        if (! BirtUtil.isSupportedMimeType(contentType)) {
+        if (!BirtUtil.isSupportedMimeType(contentType)) {
             throw new GeneralException("Unknown content type : " + contentType);
         }
         RenderOption options = new RenderOption();
@@ -264,7 +264,7 @@ public final class BirtWorker {
             new GeneralException(ServiceUtil.getErrorMessage(resultElectronicText));
         }
         String reportForm = (String) resultElectronicText.get("textData");
-        if (! reportForm.startsWith("<?xml")) {
+        if (!reportForm.startsWith("<?xml")) {
             StringBuffer xmlHeaderForm = new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
             xmlHeaderForm.append("<forms xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://ofbiz.apache.org/dtds/widget-form.xsd\">");
             xmlHeaderForm.append(reportForm);
@@ -281,7 +281,7 @@ public final class BirtWorker {
         String dataResourceIdRpt = delegator.getNextSeqId("DataResource");
         String contentIdRpt = delegator.getNextSeqId("Content");
         String rptDesignName = BirtUtil.encodeReportName(reportName);
-        if (! rptDesignName.endsWith(".rptdesign")) {
+        if (!rptDesignName.endsWith(".rptdesign")) {
             rptDesignName = rptDesignName.concat(".rptdesign");
         }
         dispatcher.runSync("createDataResource", UtilMisc.toMap("dataResourceId", dataResourceIdRpt, "dataResourceTypeId", "LOCAL_FILE", "mimeTypeId", "text/rptdesign", "dataResourceName", rptDesignName, "objectInfo", templateFileLocation, "userLogin", userLogin));

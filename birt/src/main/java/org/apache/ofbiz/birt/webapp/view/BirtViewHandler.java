@@ -122,7 +122,7 @@ public class BirtViewHandler implements ViewHandler {
             if (UtilValidate.isNotEmpty(outputFileName)) {
                 outputFileName = BirtUtil.encodeReportName(outputFileName);
                 String format = BirtUtil.getMimeTypeFileExtension(contentType);
-                if (! outputFileName.endsWith(format)) {
+                if (!outputFileName.endsWith(format)) {
                     outputFileName = outputFileName.concat(format);
                 }
                 outputFileName = UtilHttp.canonicalizeParameter(outputFileName);
@@ -130,7 +130,7 @@ public class BirtViewHandler implements ViewHandler {
             }
 
             // checking consistency between Birt content type and response content type
-            if (! contentType.equals(response.getContentType())) {
+            if (!contentType.equals(response.getContentType())) {
                 response.setContentType(contentType);
             }
 

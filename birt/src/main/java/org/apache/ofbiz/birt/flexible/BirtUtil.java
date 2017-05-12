@@ -180,8 +180,8 @@ public final class BirtUtil {
 
     /**
      * Resolve the template path location where rptDesign file are stored,
-     * first try the resolution from birt.properties with rptDesign.output.path
-     * second from content.properties content.upload.path.prefix
+     * first try the resolution from content.properties content.upload.path.prefix
+     * second from birt.properties with rptDesign.output.path
      * and add birtReptDesign directory
      * default OFBIZ_HOME/runtime/uploads/birtRptDesign/
      * Note: the Birt.properties file does not exist OOTB but can be added for convenience.
@@ -193,13 +193,13 @@ public final class BirtUtil {
         if (UtilValidate.isEmpty(templatePathLocation)) {
             templatePathLocation = UtilProperties.getPropertyValue("content", "content.upload.path.prefix", "runtime/uploads");
         }
-        if (! templatePathLocation.endsWith("/")) {
+        if (!templatePathLocation.endsWith("/")) {
             templatePathLocation = templatePathLocation.concat("/");
         }
-        if (! templatePathLocation.endsWith("/birtRptDesign/")) {
+        if (!templatePathLocation.endsWith("/birtRptDesign/")) {
             templatePathLocation = templatePathLocation.concat("birtRptDesign/");
         }
-        if (! templatePathLocation.startsWith("/")) templatePathLocation = System.getProperty("ofbiz.home").concat("/").concat(templatePathLocation);
+        if (!templatePathLocation.startsWith("/")) templatePathLocation = System.getProperty("ofbiz.home").concat("/").concat(templatePathLocation);
         return templatePathLocation;
     }
 
