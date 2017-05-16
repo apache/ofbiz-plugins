@@ -89,7 +89,7 @@ context.cart = cart
 // nuke the event messages
 request.removeAttribute("_EVENT_MESSAGE_")
 
-if (cartPartyId && !cartPartyId.equals("_NA_")) {
+if (cartPartyId && !"_NA_".equals(cartPartyId)) {
     cartParty = from("Party").where("partyId", cartPartyId).queryOne()
     if (cartParty) {
         cartPerson = cartParty.getRelatedOne("Person", false)

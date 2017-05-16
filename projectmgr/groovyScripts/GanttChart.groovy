@@ -73,13 +73,13 @@ if (phases) {
                 taskInfo = resultTaskInfo.taskInfo
                 taskInfo.taskNr = task.workEffortId
                 taskInfo.phaseNr = phase.phaseId
-                if (taskInfo.plannedHours && !taskInfo.currentStatusId.equals("PTS_COMPLETED") && taskInfo.plannedHours > taskInfo.actualHours) {
+                if (taskInfo.plannedHours && !"PTS_COMPLETED".equals(taskInfo.currentStatusId) && taskInfo.plannedHours > taskInfo.actualHours) {
                     taskInfo.resource = taskInfo.plannedHours + " Hrs"
                 } else {
                     taskInfo.resource = taskInfo.actualHours + " Hrs"
                 }
                 Double duration = resultTaskInfo.plannedHours
-                if (taskInfo.currentStatusId.equals("PTS_COMPLETED")) {
+                if ("PTS_COMPLETED".equals(taskInfo.currentStatusId)) {
                     taskInfo.completion = 100
                 } else {
                     if (taskInfo.actualHours && taskInfo.plannedHours) {

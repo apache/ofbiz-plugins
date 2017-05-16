@@ -148,13 +148,13 @@ while (te.hasNext()) {
         dayNumber = "d" + (timeEntry.fromDate.getTime() - timesheet.fromDate.getTime()) / (24*60*60*1000)
         hours = timeEntry.hours.doubleValue()
         entry.put(String.valueOf(dayNumber), hours)
-        if (dayNumber.equals("d0")) day0Total += hours
-        if (dayNumber.equals("d1")) day1Total += hours
-        if (dayNumber.equals("d2")) day2Total += hours
-        if (dayNumber.equals("d3")) day3Total += hours
-        if (dayNumber.equals("d4")) day4Total += hours
-        if (dayNumber.equals("d5")) day5Total += hours
-        if (dayNumber.equals("d6")) day6Total += hours
+        if ("d0".equals(dayNumber)) day0Total += hours
+        if ("d1".equals(dayNumber)) day1Total += hours
+        if ("d2".equals(dayNumber)) day2Total += hours
+        if ("d3".equals(dayNumber)) day3Total += hours
+        if ("d4".equals(dayNumber)) day4Total += hours
+        if ("d5".equals(dayNumber)) day5Total += hours
+        if ("d6".equals(dayNumber)) day6Total += hours
         taskTotal += hours
     }
     entry.rateTypeId = timeEntry.rateTypeId
@@ -166,7 +166,7 @@ if (timeEntry) {
     }
 
 // add empty lines if timesheet not completed
-if (!timesheet.statusId.equals("TIMESHEET_COMPLETED")) {
+if (!"TIMESHEET_COMPLETED".equals(timesheet.statusId)) {
     for (c=0; c < 3; c++) { // add empty lines
         entries.add(["timesheetId" : timesheet.timesheetId])
     }

@@ -69,7 +69,7 @@ if ("add".equals(mode)) {
     }
 }
 
-if (permissionType.equals("complex")) {
+if ("complex".equals(permissionType)) {
     mapIn = [:]
     mapIn.userLogin = userLogin
     targetOperationList = StringUtil.split(targetOperation, "|")

@@ -40,7 +40,7 @@ entryIterator = from("ProjectPhaseTaskAndTimeEntryTimeSheet")
                     .queryIterator()
 while (entryItem = entryIterator.next()) {
     invoice = entryItem.getRelatedOne("Invoice", false)
-    if (invoice.getString("statusId").equals("INVOICE_IN_PROCESS")) {
+    if ("INVOICE_IN_PROCESS".equals(invoice.getString("statusId"))) {
         context.partyIdFrom = invoice.partyIdFrom
         context.partyId = invoice.partyId
         context.invoiceId = invoice.invoiceId

@@ -176,7 +176,7 @@ if (orderHeader) {
         ritems = oitem.getRelated("ReturnItem", null, null, false)
         ritems.each { ritem ->
             rh = ritem.getRelatedOne("ReturnHeader", false)
-            if (!rh.statusId.equals("RETURN_CANCELLED")) {
+            if (!"RETURN_CANCELLED".equals(rh.statusId)) {
                 returned += ritem.returnQuantity
             }
         }

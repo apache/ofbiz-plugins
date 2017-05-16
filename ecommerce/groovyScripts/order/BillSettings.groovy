@@ -39,7 +39,7 @@ context.partyId = partyId
 // nuke the event messages
 request.removeAttribute("_EVENT_MESSAGE_")
 
-if (partyId && !partyId.equals("_NA_")) {
+if (partyId && !"_NA_".equals(partyId)) {
     party = from("Party").where("partyId", partyId).queryOne()
     person = party.getRelatedOne("Person", false)
     context.party = party

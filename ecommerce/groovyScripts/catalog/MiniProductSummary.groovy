@@ -55,7 +55,7 @@ if (miniProduct && productStoreId && prodCatalogId ) {
     // returns: isSale, price, orderItemPriceInfos
     context.priceResult = priceResult
     // Check if Price has to be displayed with tax
-    if (productStore.get("showPricesWithVatTax").equals("Y")) {
+    if ("Y".equals(productStore.get("showPricesWithVatTax"))) {
         Map priceMap = runService('calcTaxForDisplay', ["basePrice": priceResult.get("price"), "locale": locale, "productId": optProductId, "productStoreId": productStoreId])
         context.price = priceMap.get("priceWithTax")
     } else {
@@ -68,7 +68,7 @@ if (miniProduct && productStoreId && prodCatalogId ) {
         if (configWrapper) {
             configWrapper.setDefaultConfig()
             // Check if Config Price has to be displayed with tax
-            if (productStore.get("showPricesWithVatTax").equals("Y")) {
+            if ("Y".equals(productStore.get("showPricesWithVatTax"))) {
                 BigDecimal totalPriceNoTax = configWrapper.getTotalPrice()
                 Map totalPriceMap = runService('calcTaxForDisplay', ["basePrice": totalPriceNoTax, "locale": locale, "productId": optProductId, "productStoreId": productStoreId])
                 context.totalPrice = totalPriceMap.get("priceWithTax")

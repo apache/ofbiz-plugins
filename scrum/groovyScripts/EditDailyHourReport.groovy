@@ -182,26 +182,26 @@ while (te.hasNext()) {
         dayNumber = "d" + (timeEntry.fromDate.getTime() - timesheet.fromDate.getTime()) / (24*60*60*1000)
         hours = timeEntry.hours.doubleValue()
         entry.put(String.valueOf(dayNumber), hours)
-        if (dayNumber.equals("d0")) day0Total += hours
-        if (dayNumber.equals("d1")) day1Total += hours
-        if (dayNumber.equals("d2")) day2Total += hours
-        if (dayNumber.equals("d3")) day3Total += hours
-        if (dayNumber.equals("d4")) day4Total += hours
-        if (dayNumber.equals("d5")) day5Total += hours
-        if (dayNumber.equals("d6")) day6Total += hours
+        if ("d0".equals(dayNumber)) day0Total += hours
+        if ("d1".equals(dayNumber)) day1Total += hours
+        if ("d2".equals(dayNumber)) day2Total += hours
+        if ("d3".equals(dayNumber)) day3Total += hours
+        if ("d4".equals(dayNumber)) day4Total += hours
+        if ("d5".equals(dayNumber)) day5Total += hours
+        if ("d6".equals(dayNumber)) day6Total += hours
         taskTotal += hours
     }
     if (timeEntry.planHours) {
         dayNumber = "pd" + (timeEntry.fromDate.getTime() - timesheet.fromDate.getTime()) / (24*60*60*1000)
         planHours = timeEntry.planHours.doubleValue()
         entry.put(String.valueOf(dayNumber), planHours)
-        if (dayNumber.equals("pd0")) pDay0Total += planHours
-        if (dayNumber.equals("pd1")) pDay1Total += planHours
-        if (dayNumber.equals("pd2")) pDay2Total += planHours
-        if (dayNumber.equals("pd3")) pDay3Total += planHours
-        if (dayNumber.equals("pd4")) pDay4Total += planHours
-        if (dayNumber.equals("pd5")) pDay5Total += planHours
-        if (dayNumber.equals("pd6")) pDay6Total += planHours
+        if ("pd0".equals(dayNumber)) pDay0Total += planHours
+        if ("pd1".equals(dayNumber)) pDay1Total += planHours
+        if ("pd2".equals(dayNumber)) pDay2Total += planHours
+        if ("pd3".equals(dayNumber)) pDay3Total += planHours
+        if ("pd4".equals(dayNumber)) pDay4Total += planHours
+        if ("pd5".equals(dayNumber)) pDay5Total += planHours
+        if ("pd6".equals(dayNumber)) pDay6Total += planHours
         planTotal += planHours
 
     }
@@ -265,13 +265,13 @@ while ((emplLeaveMap = emplLeave.next())) {
             ["userLogin": parameters.userLogin, "partyId": emplLeaveEntry.partyId, "leaveTypeId": emplLeaveEntry.leaveTypeId, "fromDate": emplLeaveEntry.fromDate])
         leaveHours = resultHours.hours.doubleValue()
         leaveEntry.put(String.valueOf(leaveDayNumber), leaveHours)
-        if (leaveDayNumber.equals("d0")) day0Total += leaveHours
-        if (leaveDayNumber.equals("d1")) day1Total += leaveHours
-        if (leaveDayNumber.equals("d2")) day2Total += leaveHours
-        if (leaveDayNumber.equals("d3")) day3Total += leaveHours
-        if (leaveDayNumber.equals("d4")) day4Total += leaveHours
-        if (leaveDayNumber.equals("d5")) day5Total += leaveHours
-        if (leaveDayNumber.equals("d6")) day6Total += leaveHours
+        if ("d0".equals(leaveDayNumber)) day0Total += leaveHours
+        if ("d1".equals(leaveDayNumber)) day1Total += leaveHours
+        if ("d2".equals(leaveDayNumber)) day2Total += leaveHours
+        if ("d3".equals(leaveDayNumber)) day3Total += leaveHours
+        if ("d4".equals(leaveDayNumber)) day4Total += leaveHours
+        if ("d5".equals(leaveDayNumber)) day5Total += leaveHours
+        if ("d6".equals(leaveDayNumber)) day6Total += leaveHours
         leaveTaskTotal += leaveHours
     }
     if (resultHours.hours) {
@@ -280,13 +280,13 @@ while ((emplLeaveMap = emplLeave.next())) {
             ["userLogin": parameters.userLogin, "partyId": emplLeaveEntry.partyId, "leaveTypeId": emplLeaveEntry.leaveTypeId, "fromDate": emplLeaveEntry.fromDate])
         leavePlanHours = resultPlanHours.hours.doubleValue()
         leaveEntry.put(String.valueOf(leavePlanDay), leavePlanHours)
-        if (leavePlanDay.equals("pd0")) pDay0Total += leavePlanHours
-        if (leavePlanDay.equals("pd1")) pDay1Total += leavePlanHours
-        if (leavePlanDay.equals("pd2")) pDay2Total += leavePlanHours
-        if (leavePlanDay.equals("pd3")) pDay3Total += leavePlanHours
-        if (leavePlanDay.equals("pd4")) pDay4Total += leavePlanHours
-        if (leavePlanDay.equals("pd5")) pDay5Total += leavePlanHours
-        if (leavePlanDay.equals("pd6")) pDay6Total += leavePlanHours
+        if ("pd0".equals(leavePlanDay)) pDay0Total += leavePlanHours
+        if ("pd1".equals(leavePlanDay)) pDay1Total += leavePlanHours
+        if ("pd2".equals(leavePlanDay)) pDay2Total += leavePlanHours
+        if ("pd3".equals(leavePlanDay)) pDay3Total += leavePlanHours
+        if ("pd4".equals(leavePlanDay)) pDay4Total += leavePlanHours
+        if ("pd5".equals(leavePlanDay)) pDay5Total += leavePlanHours
+        if ("pd6".equals(leavePlanDay)) pDay6Total += leavePlanHours
         leavePlanTotal += leavePlanHours
     }
     leaveEntry.rateTypeId = "STANDARD"
@@ -303,7 +303,7 @@ if (emplLeaveEntry) {
     }
 
 // add empty lines if timesheet not completed
-if (!timesheet.statusId.equals("TIMESHEET_COMPLETED")) {
+if (!"TIMESHEET_COMPLETED".equals(timesheet.statusId)) {
     for (c=0; c < 3; c++) { // add empty lines
         entries.add(["timesheetId" : timesheet.timesheetId])
     }
@@ -393,7 +393,7 @@ userLoginId = userLogin.partyId
         if (partyAssignmentTaskMap) {
             custRequestTypeId = projectAndTaskMap.custRequestTypeId
 			backlogStatusId = projectAndTaskMap.backlogStatusId
-			if (custRequestTypeId.equals("RF_SCRUM_MEETINGS") && backlogStatusId.equals("CRQ_REVIEWED")) {
+			if ("RF_SCRUM_MEETINGS".equals(custRequestTypeId) && "CRQ_REVIEWED".equals(backlogStatusId)) {
 				projectSprintBacklogAndTaskList.add(projectAndTaskMap)
 			   }
             } else {

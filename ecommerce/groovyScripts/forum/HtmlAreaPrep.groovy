@@ -36,6 +36,6 @@ import javax.servlet.http.*
 
 contentIdTo = parameters.contentIdTo
 
-if (!contentIdTo || !contentIdTo.equals("TEMPLATE_MASTER")) {
+if (!contentIdTo || !"TEMPLATE_MASTER".equals(contentIdTo)) {
     context.dynamicPrimaryHTMLField = "textData"
 }

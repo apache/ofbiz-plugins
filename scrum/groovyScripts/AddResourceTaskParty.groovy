@@ -46,7 +46,7 @@ userLoginId = userLogin.partyId
                     } else {
                         custRequestTypeId = projectAndTaskMap.custRequestTypeId
                         backlogStatusId = projectAndTaskMap.backlogStatusId
-                        if (custRequestTypeId.equals("RF_SCRUM_MEETINGS") && backlogStatusId.equals("CRQ_REVIEWED")) {
+                        if ("RF_SCRUM_MEETINGS".equals(custRequestTypeId) && "CRQ_REVIEWED".equals(backlogStatusId)) {
                             projectSprintBacklogAndTaskList.add(projectAndTaskMap)
                            }
                      }

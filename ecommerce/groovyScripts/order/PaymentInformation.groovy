@@ -35,7 +35,7 @@ if (!partyId) {
 }
 context.partyId = partyId
 
-if (partyId && !partyId.equals("_NA_")) {
+if (partyId && !"_NA_".equals(partyId)) {
     party = from("Party").where("partyId", partyId).queryOne()
     person = party.getRelatedOne("Person", false)
     context.party = party

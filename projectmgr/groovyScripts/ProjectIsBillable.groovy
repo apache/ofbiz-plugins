@@ -22,10 +22,10 @@ projectMembers = from("WorkEffortPartyAssignment").where("workEffortId", context
 toPartyId = null
 fromPartyId = null
 projectMembers.each {member ->
-    if (member.roleTypeId.equals("INTERNAL_ORGANIZATIO")) {
+    if ("INTERNAL_ORGANIZATIO".equals(member.roleTypeId)) {
         fromPartyId = member.partyId
     }
-    if (member.roleTypeId.equals("CLIENT_BILLING")) {
+    if ("CLIENT_BILLING".equals(member.roleTypeId)) {
         toPartyId = member.partyId
     }
     if (fromPartyId && toPartyId && fromPartyId.equals(toPartyId)) {
