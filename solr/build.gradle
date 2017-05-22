@@ -19,3 +19,6 @@
 dependencies {
     pluginLibsCompile 'org.apache.solr:solr-core:6.5.1'
 }
+def jvmArguments = ['-Xms128M', '-Xmx1024M',
+'-Dsolr.log.dir=runtime/logs',
+                '-Dsolr.log.level=INFO']
