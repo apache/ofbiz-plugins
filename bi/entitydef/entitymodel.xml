@@ -31,7 +31,7 @@ under the License.
     <!-- ========================================================= -->
     <entity entity-name="DateDimension" package-name="org.apache.ofbiz.bi.dimension" title="Date Dimension">
         <description>Date (days) dimension. The natural key is [dateValue]</description>
-        <field name="dimensionId" type="id-ne">
+        <field name="dimensionId" type="id">
             <description>Unique identifier of the Date dimension record</description>
         </field>
         <field name="dateValue" type="date">
@@ -78,7 +78,7 @@ under the License.
 
     <entity entity-name="CurrencyDimension" package-name="org.apache.ofbiz.bi.dimension" title="Currency Dimension">
         <description>Currency dimension. The natural key is [currencyId]</description>
-        <field name="dimensionId" type="id-ne">
+        <field name="dimensionId" type="id">
             <description>Unique identifier of the Currency dimension record</description>
         </field>
         <field name="currencyId" type="id-ne">
@@ -92,7 +92,7 @@ under the License.
 
     <entity entity-name="ProductDimension" package-name="org.apache.ofbiz.bi.dimension.product" title="Product Dimension">
         <description>Product dimension. The natural key is [productId]</description>
-        <field name="dimensionId" type="id-ne">
+        <field name="dimensionId" type="id">
             <description>Unique identifier of the Product dimension record</description>
         </field>
         <field name="productId" type="id-ne">
@@ -111,8 +111,8 @@ under the License.
     <!-- ========================================================= -->
     <entity entity-name="SalesInvoiceItemFact" package-name="org.apache.ofbiz.bi.fact.accounting" title="Sales Invoice Item Fact">
         <description>A transaction fact entity with invoice item grain.</description>
-        <field name="invoiceId" type="id-ne"></field> <!-- degenerate dimension -->
-        <field name="invoiceItemSeqId" type="id-ne"></field> <!-- degenerate dimension -->
+        <field name="invoiceId" type="id"></field> <!-- degenerate dimension -->
+        <field name="invoiceItemSeqId" type="id"></field> <!-- degenerate dimension -->
         <field name="orderId" type="id-ne"></field> <!-- degenerate dimension -->
         <field name="invoiceDateDimId" type="id-ne"></field>
         <field name="productDimId" type="id-ne"></field>
@@ -195,8 +195,8 @@ under the License.
 
     <entity entity-name="SalesOrderItemFact" package-name="org.apache.ofbiz.bi.fact.order" title="Sales Order Item Fact">
         <description>A transaction fact entity with order item grain.</description>
-        <field name="orderId" type="id-ne"></field> <!-- degenerate dimension -->
-        <field name="orderItemSeqId" type="id-ne"></field> <!-- degenerate dimension -->
+        <field name="orderId" type="id"></field> <!-- degenerate dimension -->
+        <field name="orderItemSeqId" type="id"></field> <!-- degenerate dimension -->
         <field name="orderDateDimId" type="id-ne"></field>
         <field name="productDimId" type="id-ne"></field>
         <field name="origCurrencyDimId" type="id-ne"></field>
@@ -280,7 +280,7 @@ under the License.
 
     <entity entity-name="InventoryItemFact" package-name="org.apache.ofbiz.bi.fact.product" title="Inventory Item Fact">
         <description>A transaction fact entity with inventory item.</description>
-        <field name="inventoryItemId" type="id-ne"></field>
+        <field name="inventoryItemId" type="id"></field>
         <field name="facilityId" type="id-ne"></field>
         <field name="productDimId" type="id-ne"></field>
         <field name="origCurrencyDimId" type="id-ne"></field>

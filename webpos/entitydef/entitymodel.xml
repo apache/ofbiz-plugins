@@ -40,7 +40,7 @@ under the License.
     <entity entity-name="PosTerminal"
             package-name="org.apache.ofbiz.plugins.pos"
             title="Pos Terminal">
-      <field name="posTerminalId" type="id-ne"></field>
+      <field name="posTerminalId" type="id"></field>
       <field name="facilityId" type="id"></field>
       <field name="pushEntitySyncId" type="id"></field>
       <field name="terminalName" type="name"></field>
@@ -49,7 +49,7 @@ under the License.
     <entity entity-name="PosTerminalLog"
             package-name="org.apache.ofbiz.plugins.pos"
             title="Pos Terminal Log">
-      <field name="posTerminalLogId" type="id-ne"></field>
+      <field name="posTerminalLogId" type="id"></field>
       <field name="posTerminalId" type="id-ne"></field>
       <field name="transactionId" type="id"></field>
       <field name="itemCount" type="numeric"></field>
@@ -76,7 +76,7 @@ under the License.
     <entity entity-name="PosTerminalState"
             package-name="org.apache.ofbiz.plugins.pos"
             title="Pos Terminal State">
-      <field name="posTerminalId" type="id-ne"></field>
+      <field name="posTerminalId" type="id"></field>
       <field name="openedDate" type="date-time"></field>
       <field name="closedDate" type="date-time"></field>
       <field name="startingTxId" type="id-long"></field>
@@ -98,7 +98,7 @@ under the License.
     <entity entity-name="PosTerminalInternTx"
             package-name="org.apache.ofbiz.plugins.pos"
             title="Pos Terminal Internal Transaction">
-      <field name="posTerminalLogId" type="id-ne"></field>
+      <field name="posTerminalLogId" type="id"></field>
       <field name="paidAmount" type="currency-amount"></field>
       <field name="reasonComment" type="comment"/>
       <field name="reasonEnumId" type="id"/>

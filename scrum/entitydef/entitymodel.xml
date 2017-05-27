@@ -83,7 +83,7 @@ under the License.
     <extend-entity entity-name="CustRequest">
         <field name="custEstimatedMilliSeconds" type="floating-point"/>
         <field name="custSequenceNum" type="numeric"/>
-        <field name="parentCustRequestId" type="id-ne"/>
+        <field name="parentCustRequestId" type="id"/>
         <field name="billed" type="indicator"/>
         <relation type="one" fk-name="CUST_REQ_PARENT" title="Parent" rel-entity-name="CustRequest">
             <key-map field-name="parentCustRequestId" rel-field-name="custRequestId"/>

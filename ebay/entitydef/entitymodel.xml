@@ -41,7 +41,7 @@ under the License.
     <entity entity-name="EbayConfig"
             package-name="org.apache.ofbiz.ebay.config"
             title="eBay Configuration">
-        <field name="productStoreId" type="id-ne"></field>    
+        <field name="productStoreId" type="id"></field>
         <field name="devId" type="value"></field>
         <field name="appId" type="value"></field>
         <field name="certId" type="value"></field>
@@ -63,8 +63,8 @@ under the License.
     <entity entity-name="EbayShippingMethod"
             package-name="org.apache.ofbiz.ebay.shipping"
             title="Ebay Shipping Method Config">
-        <field name="shipmentMethodName" type="id-long-ne"></field>
-        <field name="productStoreId" type="id-ne"></field>
+        <field name="shipmentMethodName" type="id-long"></field>
+        <field name="productStoreId" type="id"></field>
         <field name="amount" type="currency-amount"></field>
         <field name="additionalAmount" type="currency-amount"></field>
         <field name="additionalPercent" type="fixed-point"></field>

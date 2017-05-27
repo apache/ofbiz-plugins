@@ -40,7 +40,7 @@ under the License.
     <!-- ========================================================= -->
 
     <entity entity-name="Example" package-name="org.apache.ofbiz.example.example" title="Example Entity">
-        <field name="exampleId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="exampleId" type="id"><description>primary sequenced ID</description></field>
         <field name="exampleTypeId" type="id-ne"></field>
         <field name="statusId" type="id-ne"></field>
         <field name="exampleName" type="name"></field>
@@ -60,8 +60,8 @@ under the License.
         </relation>
     </entity>
     <entity entity-name="ExampleItem" package-name="org.apache.ofbiz.example.example" title="Example Item Entity">
-        <field name="exampleId" type="id-ne"></field>
-        <field name="exampleItemSeqId" type="id-ne"><description>secondary sequenced ID</description></field>
+        <field name="exampleId" type="id"></field>
+        <field name="exampleItemSeqId" type="id"><description>secondary sequenced ID</description></field>
         <field name="description" type="description"></field>
         <field name="amount" type="floating-point"></field>
         <field name="amountUomId" type="id"></field>
@@ -75,7 +75,7 @@ under the License.
         </relation>
     </entity>
     <entity entity-name="ExampleStatus" package-name="org.apache.ofbiz.example.example" title="Example Status Entity">
-        <field name="exampleId" type="id-ne"></field>
+        <field name="exampleId" type="id"></field>
         <field name="statusDate" type="date-time"></field>
         <field name="statusEndDate" type="date-time"></field>
         <field name="changeByUserLoginId" type="id-vlong"></field>
@@ -95,7 +95,7 @@ under the License.
     <entity entity-name="ExampleType"
             package-name="org.apache.ofbiz.example.example"
             title="Example Type Entity">
-        <field name="exampleTypeId" type="id-ne"></field>
+        <field name="exampleTypeId" type="id"></field>
         <field name="parentTypeId" type="id"></field>
         <field name="description" type="description"></field>
         <prim-key field="exampleTypeId"/>
@@ -111,7 +111,7 @@ under the License.
     <entity entity-name="ExampleFeature"
         package-name="org.apache.ofbiz.example.feature"
         title="Example Feature Entity">
-        <field name="exampleFeatureId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="exampleFeatureId" type="id"><description>primary sequenced ID</description></field>
         <field name="featureSourceEnumId" type="id-ne"></field>
         <field name="description" type="description"></field>
         <prim-key field="exampleFeatureId"/>
@@ -122,8 +122,8 @@ under the License.
     <entity entity-name="ExampleFeatureAppl"
         package-name="org.apache.ofbiz.example.feature"
         title="Example Feature Application Entity">
-        <field name="exampleId" type="id-ne"></field>
-        <field name="exampleFeatureId" type="id-ne"></field>
+        <field name="exampleId" type="id"></field>
+        <field name="exampleFeatureId" type="id"></field>
         <field name="fromDate" type="date-time"></field>
         <field name="thruDate" type="date-time"></field>
         <field name="exampleFeatureApplTypeId" type="id-ne"></field>
@@ -144,7 +144,7 @@ under the License.
     <entity entity-name="ExampleFeatureApplType"
         package-name="org.apache.ofbiz.example.feature"
         title="Example Feature Application Type Entity">
-        <field name="exampleFeatureApplTypeId" type="id-ne"></field>
+        <field name="exampleFeatureApplTypeId" type="id"></field>
         <field name="parentTypeId" type="id"></field>
         <field name="description" type="description"></field>
         <prim-key field="exampleFeatureApplTypeId"/>

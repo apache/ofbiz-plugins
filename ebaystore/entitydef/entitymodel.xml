@@ -34,9 +34,9 @@ under the License.
     <entity entity-name="EbayProductStoreInventory"
         package-name="org.apache.ofbiz.ebay.store"
         title="Ebay store product inventory and status of listing">
-        <field name="productStoreId" type="id-ne"></field>
-        <field name="facilityId" type="id-ne"></field>
-        <field name="productId" type="id-ne"></field>
+        <field name="productStoreId" type="id"></field>
+        <field name="facilityId" type="id"></field>
+        <field name="productId" type="id"></field>
         <field name="folderId" type="id-ne"></field>
         <field name="ebayProductId" type="numeric"></field>
         <field name="quantityReserved" type="fixed-point"></field>
@@ -57,8 +57,8 @@ under the License.
     </entity>
     <entity entity-name="EbayProductStorePref" package-name="org.apache.ofbiz.ebay.store"
          title="Ebay store and Preference">
-        <field name="productStoreId" type="id-ne"/>
-        <field name="autoPrefEnumId" type="id-ne"/>
+        <field name="productStoreId" type="id"/>
+        <field name="autoPrefEnumId" type="id"/>
         <field name="autoPrefJobId" type="id-ne"/>
         <field name="enabled" type="indicator"/>
         <field name="condition1" type="value"/>
@@ -79,7 +79,7 @@ under the License.
     </entity>
     <entity entity-name="EbayProductListing" package-name="org.apache.ofbiz.ebay.store"
         title="eBay Product Listing">
-        <field name="productListingId" type="id-ne"/>
+        <field name="productListingId" type="id"/>
         <field name="itemId" type="id-long"/>
         <field name="productStoreId" type="id-ne"/>
         <field name="productId" type="id-ne"/>
@@ -102,8 +102,8 @@ under the License.
     </entity>
     <entity entity-name="EbayProductListingAttribute" package-name="org.apache.ofbiz.ebay.store"
         title="eBay Product Listing">
-        <field name="productListingId" type="id-ne"/>
-        <field name="attrName" type="id-long-ne"/>
+        <field name="productListingId" type="id"/>
+        <field name="attrName" type="id-long"/>
         <field name="attrValue" type="value"/>
         <prim-key field="productListingId"/>
         <prim-key field="attrName"/>
@@ -113,7 +113,7 @@ under the License.
     </entity>
     <entity entity-name="EBayLogMessagesInfo" package-name="org.apache.ofbiz.ebay.store"
         title="eBay Log Messages Info">
-        <field name="productStoreId" type="id-ne"/>
+        <field name="productStoreId" type="id"/>
         <field name="logAck" type="name"/>
         <field name="functionName" type="name"/>
         <field name="logMessage" type="very-long"/>
@@ -125,10 +125,10 @@ under the License.
         </relation>
     </entity>
     <entity entity-name="EbayProductStorePrefCond" package-name="org.apache.ofbiz.ebay.store">
-        <field name="prefCondId" type="id-ne"/>
+        <field name="prefCondId" type="id"/>
         <field name="acceptanceCondition" type="long-varchar"></field>
         <field name="description" type="long-varchar"></field>
-        <field name="parentPrefCondId" type="id-ne"></field>
+        <field name="parentPrefCondId" type="id"></field>
         <prim-key field="prefCondId"/>
     </entity>
     <entity entity-name="EbayUserBestOffer" package-name="org.apache.ofbiz.ebay.store"

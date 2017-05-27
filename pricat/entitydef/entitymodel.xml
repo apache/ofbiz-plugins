@@ -28,7 +28,7 @@ under the License.
       <field name="fileName" type="value"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
-      <field name="thruReasonId" type="id-ne"></field>
+      <field name="thruReasonId" type="id"></field>
       <field name="statusId" type="id-ne"></field>
       <field name="threadName" type="name"></field>
       <field name="logFileName" type="value"></field>
