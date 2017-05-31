@@ -5,8 +5,7 @@ For more information about this component visit the [https://cwiki.apache.org/co
 
 Information about the birt product can be found at: [http://www.eclipse.org/birt/](http://www.eclipse.org/birt/)
 
-JIRA issues related to this component can be found at [https://issues.apache.org/jira/browse/OFBIZ/
-component/12321022](https://issues.apache.org/jira/browse/OFBIZ/component/12321022 "Jira")
+JIRA issues related to this component can be found at [https://issues.apache.org/jira/browse/OFBIZ/component/12321022](https://issues.apache.org/jira/browse/OFBIZ/component/12321022 "Jira")
 
 Committed revisions can be viewed at [http://svn.apache.org/viewvc/ofbiz/ofbiz-plugins/trunk/birt/](http://svn.apache.org/viewvc/ofbiz/ofbiz-plugins/trunk/birt/ "Svn")
 
