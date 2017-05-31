@@ -171,10 +171,8 @@ public class WebPosSearch {
         }
         mainCond = EntityCondition.makeCondition(andExprs, EntityOperator.AND);
         List<GenericValue> parties = null;
-        try {
-            EntityListIterator pli = delegator.findListIteratorByCondition(dynamicView, mainCond, null, null, orderBy, null);
+        try (EntityListIterator pli = delegator.findListIteratorByCondition(dynamicView, mainCond, null, null, orderBy, null)) {
             parties = EntityUtil.filterByDate(pli.getCompleteList(), true);
-            pli.close();
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
         }
