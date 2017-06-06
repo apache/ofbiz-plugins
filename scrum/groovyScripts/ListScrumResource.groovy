@@ -37,11 +37,23 @@ performFindInMap.noConditionFind = "Y"
 performFindInMap.inputFields = inputFields
 performFindInMap.orderBy = parameters.sortField
 if (parameters.sortField) {
-	performFindInMap.orderBy = "lastName"
+    performFindInMap.orderBy = "lastName"
 }
 performFindResults = runService('performFind', performFindInMap)
-resultList = performFindResults.listIt.getCompleteList()
-performFindResults.listIt.close()
+try {
+    resultList = performFindResults.listIt.getCompleteList()
+} catch (GenericEntityException e) {
+    Debug.logError(e, "Failure in " + module)
+} finally {
+    if (performFindResults.listIt != null) {
+        try {
+            performFindResults.listIt.close()
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+            }
+    }
+}
+
 
 resultList.each() { result ->
     if (!"N".equals(result.enabled)) {

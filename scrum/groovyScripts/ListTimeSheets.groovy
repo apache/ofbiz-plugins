@@ -24,6 +24,7 @@ import org.apache.ofbiz.base.util.Debug
 import org.apache.ofbiz.base.util.UtilDateTime
 
 // get all timesheets of all user, including the planned hours
+module ="ListTimeSheets.groovy"
 timesheets = []
 inputFields = [:]
 
@@ -33,8 +34,19 @@ if (!parameters.noConditionFind) {
 inputFields.putAll(parameters)
 performFindResults = runService('performFind', ["entityName": "Timesheet", "inputFields": inputFields, "orderBy": "fromDate DESC"])
 if (performFindResults.listSize > 0) {
-    timesheetsDb = performFindResults.listIt.getCompleteList()
-    performFindResults.listIt.close()
+    try {
+        timesheetsDb = performFindResults.listIt.getCompleteList()
+    } catch (GenericEntityException e) {
+        Debug.logError(e, "Failure in " + module)
+    } finally {
+        if (performFindResults.listIt != null) {
+            try {
+                performFindResults.listIt.close()
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                }
+        }
+    }
     
     timesheetsDb.each { timesheetDb ->
         //get hours from EmplLeave

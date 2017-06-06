@@ -38,8 +38,19 @@ if(parameters.statusId == null){
 inputFields.putAll(parameters)
 inputFields.custRequestTypeId = "RF_PROD_BACKLOG"
 def performFindResults = runService('performFind', ["entityName": "CustRequestAndCustRequestItem", "inputFields": inputFields, "orderBy": "custSequenceNum"])
-def custRequestAndItems = performFindResults.listIt.getCompleteList()
-performFindResults.listIt.close()
+try {
+    def custRequestAndItems = performFindResults.listIt.getCompleteList()
+} catch (GenericEntityException e) {
+    Debug.logError(e, "Failure in " + module)
+} finally {
+    if (performFindResults.listIt != null) {
+        try {
+            performFindResults.listIt.close()
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+            }
+    }
+}
 
 // prepare cust request item list [cust request and item Map]
 def countSequence = 1
