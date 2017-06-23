@@ -18,7 +18,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<!-- To know more about this setting please read the documentation http://cwiki.apache.org/confluence/x/bgFk -->
+<!-- To know more about this setting please read the documentation https://cwiki.apache.org/confluence/display/OFBIZ/Sync+Setup+Notes+and+Example -->
 
 <entity-engine-xml>
 <!-- MCS->PSS Central Server to Per Store Server -->

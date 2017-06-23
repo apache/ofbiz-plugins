@@ -19,7 +19,7 @@ under the License.
     <div id="link-column">
 
         <h2>What is Apache OFBiz?</h2>
-        <a href="https://cwiki.apache.org/confluence/display/OFBADMIN/Apache+OFBiz+Project+Overview">Project Overview</a>
+        <a href="http://ofbiz.apache.org/apache-ofbiz-project-overview.html">Project Overview</a>
         <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Is+OFBiz+for+Me">Is OFBiz for Me?</a>
         <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Main+New+Features">Main New Features</a>
         <a href="comingsoon.html">Features Coming Soon</a>
@@ -28,7 +28,7 @@ under the License.
         <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Apache+OFBiz+User+List">User List</a>
         <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Apache+OFBiz+User+Stories">User Stories</a>
         <a href="https://cwiki.apache.org/confluence/display/OFBIZ/General+Material+for+Branding+and+Marketing">Brochures, etc</a>
-        <a href="https://cwiki.apache.org/confluence/display/OFBADMIN/OFBiz+Documentation+Index">Documentation</a>
+        <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Documentation">Documentation</a>
         <a href="VideosConf.html">Conference Videos</a>
         <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Framework+Introduction+Videos+and+Diagrams">Framework Intro Videos</a>
 
@@ -45,15 +45,15 @@ under the License.
         <a href="http://docs.ofbiz.org/x/yg4" target="_blank">Alternative Demo Servers</a>
 
         <h2>Download OFBiz</h2>
-        <a href="https://cwiki.apache.org/confluence/display/OFBADMIN/Apache+OFBiz+Getting+Started">Getting Started (Read this first)</a>
-        <a href="https://cwiki.apache.org/confluence/display/OFBADMIN/Copyright+and+License">Copyright &amp; License</a>
+        <a href="http://ofbiz.apache.org/apache-ofbiz-getting-started.html">Getting Started (Read this first)</a>
+        <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Copyright+and+License">Copyright &amp; License</a>
 
         <a href="https://ofbiz.apache.org/source-repositories.html">Source Access (Recommended)</a>
         <a href="http://build.hotwaxmedia.com/">Nightly Builds (Ready to use)</a>
 
         <h2>Resources &amp; Tools</h2>
-        <a href="https://cwiki.apache.org/confluence/display/OFBADMIN/OFBiz+Documentation+Index">Main Documentation Page</a>
-        <a href="https://cwiki.apache.org/confluence/display/OFBADMIN/Mailing+Lists">Mailing Lists</a>
+        <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Documentation">Main Documentation Page</a>
+        <a href="http://ofbiz.apache.org/mailing-lists.html">Mailing Lists</a>
 
         <a href="https://issues.apache.org/jira/browse/OFBIZ">Issue Tracker (Jira)</a>
         <a href="https://ofbiz.apache.org/source-repositories.html">Source Repository (SVN)</a>

@@ -53,7 +53,7 @@
         <section>
             <title>The production setup guide.</title>
             <para>
-                   An excellent guide to configure the system in a production environment, read the document at the <link xl:href="http://cwiki.apache.org/confluence/display/OFBTECH/Apache+OFBiz+Technical+Production+Setup+Guide">OFBiz documentation site</link>
+                   An excellent guide to configure the system in a production environment, read the document at the <link xl:href="http://cwiki.apache.org/confluence/display/OFBIZ/Apache+OFBiz+Technical+Production+Setup+Guide">OFBiz documentation site</link>
             </para>
         </section>
         

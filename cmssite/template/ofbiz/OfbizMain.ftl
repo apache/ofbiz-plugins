@@ -49,13 +49,13 @@ under the License.
 
 
         <p>For answers to your questions you might find the following documents useful:
-          <a href="https://cwiki.apache.org/confluence/display/OFBADMIN/Apache+OFBiz+Project+Overview">Project Overview</a>,
+          <a href="http://ofbiz.apache.org/apache-ofbiz-project-overview.html">Project Overview</a>,
           <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Is+OFBiz+for+Me">Is Apache OFBiz for Me?</a>,
           <a href="feature-list.html">Feature List</a>, and
           <a href="comingsoon.html">Features Coming Soon</a>
         </p>
 
-        <p>For more technical information, see the <a href="https://cwiki.apache.org/confluence/display/OFBADMIN/OFBiz+Documentation+Index">Documentation</a> page.</p>
+        <p>For more technical information, see the <a href="https://cwiki.apache.org/confluence/display/OFBIZ/Documentation">Documentation</a> page.</p>
 
 
         <p>Apache OFBiz offers a great deal of functionality, including:</p>
