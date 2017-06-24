@@ -23,9 +23,6 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-component.xsd">
     <resource-loader name="main" type="component"/>
 
-    <!-- load single or multiple external libraries -->
-    <classpath type="jar" location="build/lib/*"/>
-
     <entity-resource type="data" reader-name="demo" loader="main" location="data/CmsMultiSiteDemoData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/CmsSiteDemoData.xml"/>
 
