@@ -19,19 +19,26 @@ under the License.
 -->
 
 <entity-engine-xml>
-    <DataResource dataResourceId="CNTGIZMOSLRG" dataResourceTypeId="ELECTRONIC_TEXT" mimeTypeId="text/html" localeString="en_US" isPublic="Y" dataResourceName="Large Gizmos"/>
-    <ElectronicText dataResourceId="CNTGIZMOSLRG">
+
+    <Content contentId="LuceneCONTENT" contentTypeId="WEB_SITE_PUB_PT" contentName="Lucene Content Root" description="Lucene Content Categories"/>
+
+    <Content contentId="LCNTGIZMOS" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="LuceneCONTENT" contentName="Lucene Gizmos" description="Lucene Gizmos" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAssoc contentId="LuceneCONTENT" contentIdTo="LCNTGIZMOS" contentAssocTypeId="SUB_CONTENT" fromDate="2001-05-13 12:00:00.000" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAttribute contentId="LCNTGIZMOS" attrName="publishOperation" attrValue="HAS_USER_ROLE"/>
+
+    <DataResource dataResourceId="LCNTGIZMOSLRG" dataResourceTypeId="ELECTRONIC_TEXT" mimeTypeId="text/html" localeString="en_US" isPublic="Y" dataResourceName="Large Lucene Gizmos"/>
+    <ElectronicText dataResourceId="LCNTGIZMOSLRG">
         <textData><![CDATA[
             <div>
                 <ol>
-                    <li>Large Gizmos are for those who loves them large!</li>
+                    <li>Large Lucene Gizmos are for those who loves them large!</li>
                     <li>A lot of them and more to come</li>
                 </ol>
             </div>
         ]]></textData>
     </ElectronicText>
-    <DataResource dataResourceId="CNTGIZMOSSML" dataResourceTypeId="ELECTRONIC_TEXT" mimeTypeId="text/html" localeString="en_US" isPublic="Y" dataResourceName="Small Gizmos"/>
-    <ElectronicText dataResourceId="CNTGIZMOSSML">
+    <DataResource dataResourceId="LCNTGIZMOSSML" dataResourceTypeId="ELECTRONIC_TEXT" mimeTypeId="text/html" localeString="en_US" isPublic="Y" dataResourceName="Small Lucene Gizmos"/>
+    <ElectronicText dataResourceId="LCNTGIZMOSSML">
         <textData><![CDATA[
             <div>
                 <ol>
@@ -46,17 +53,17 @@ under the License.
         <textData><![CDATA[
             <div>
                 <ol>
-                    <li>Gizmos are the best ones</li>
+                    <li>Lucene Gizmos are the best ones</li>
                     <li>Don't use widgets, use gizmos !</li>
                 </ol>
             </div>
         ]]></textData>
     </ElectronicText>
 
-    <Content contentId="CNTGIZMOSLRG" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="CNTGIZMOS" contentName="Large Gizmos" description="Large Widgets" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"
-        dataResourceId="CNTGIZMOSLRG" mimeTypeId="text/html" localeString="en_US"/>
-    <Content contentId="CNTGIZMOSSML" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="CNTGIZMOS" contentName="Small Gizmos" description="Large Widgets" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"
-        dataResourceId="CNTGIZMOSSML" mimeTypeId="text/html" localeString="en_US"/>
-    <Content contentId="GIZMOSLRG" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="CNTGIZMOS" contentName="Advocacy" description="Advocacy" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"
+    <Content contentId="LCNTGIZMOSLRG" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="LCNTGIZMOS" contentName="Large Lucene Gizmos" description="Large Widgets" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"
+        dataResourceId="LCNTGIZMOSLRG" mimeTypeId="text/html" localeString="en_US"/>
+    <Content contentId="LCNTGIZMOSSML" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="LCNTGIZMOS" contentName="Small Lucene Gizmos" description="Large Widgets" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"
+        dataResourceId="LCNTGIZMOSSML" mimeTypeId="text/html" localeString="en_US"/>
+    <Content contentId="GIZMOSLRG" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="LCNTGIZMOS" contentName="Advocacy" description="Advocacy" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"
         dataResourceId="GIZMOSLRG" mimeTypeId="text/html" localeString="en_US"/>
 </entity-engine-xml>
