@@ -101,7 +101,7 @@
        replication is in use, this should match the replication
        configuration.
     -->
-  <dataDir>${ofbiz.home}/runtime/indexes/products/</dataDir>
+  <dataDir>${ofbiz.home}/runtime/indexes/solr/products/</dataDir>
 
 
   <!-- The DirectoryFactory to use for indexes.
