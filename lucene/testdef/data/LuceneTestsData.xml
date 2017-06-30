@@ -37,6 +37,10 @@ under the License.
             </div>
         ]]></textData>
     </ElectronicText>
+    <Content contentId="LCNTGIZMOSLRG" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="LCNTGIZMOS" contentName="Large Lucene Gizmos" description="Large Widgets" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"
+        dataResourceId="LCNTGIZMOSLRG" mimeTypeId="text/html" localeString="en_US"/>
+    <ContentAssoc contentId="LCNTGIZMOS" contentIdTo="LCNTGIZMOSLRG" contentAssocTypeId="SUB_CONTENT" fromDate="2001-05-13 12:00:00.000" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>    
+    
     <DataResource dataResourceId="LCNTGIZMOSSML" dataResourceTypeId="ELECTRONIC_TEXT" mimeTypeId="text/html" localeString="en_US" isPublic="Y" dataResourceName="Small Lucene Gizmos"/>
     <ElectronicText dataResourceId="LCNTGIZMOSSML">
         <textData><![CDATA[
@@ -48,6 +52,10 @@ under the License.
             </div>
         ]]></textData>
     </ElectronicText>
+    <Content contentId="LCNTGIZMOSSML" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="LCNTGIZMOS" contentName="Small Lucene Gizmos" description="Large Widgets" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"
+        dataResourceId="LCNTGIZMOSSML" mimeTypeId="text/html" localeString="en_US"/>
+    <ContentAssoc contentId="LCNTGIZMOS" contentIdTo="LCNTGIZMOSSML" contentAssocTypeId="SUB_CONTENT" fromDate="2001-05-13 12:00:00.000" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+    
     <DataResource dataResourceId="GIZMOSLRG" dataResourceTypeId="ELECTRONIC_TEXT" mimeTypeId="text/html" localeString="en_US" isPublic="Y" dataResourceName="Advocacy"/>
     <ElectronicText dataResourceId="GIZMOSLRG">
         <textData><![CDATA[
@@ -59,11 +67,8 @@ under the License.
             </div>
         ]]></textData>
     </ElectronicText>
-
-    <Content contentId="LCNTGIZMOSLRG" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="LCNTGIZMOS" contentName="Large Lucene Gizmos" description="Large Widgets" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"
-        dataResourceId="LCNTGIZMOSLRG" mimeTypeId="text/html" localeString="en_US"/>
-    <Content contentId="LCNTGIZMOSSML" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="LCNTGIZMOS" contentName="Small Lucene Gizmos" description="Large Widgets" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"
-        dataResourceId="LCNTGIZMOSSML" mimeTypeId="text/html" localeString="en_US"/>
     <Content contentId="GIZMOSLRG" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="LCNTGIZMOS" contentName="Advocacy" description="Advocacy" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"
         dataResourceId="GIZMOSLRG" mimeTypeId="text/html" localeString="en_US"/>
+    <ContentAssoc contentId="LCNTGIZMOS" contentIdTo="GIZMOSLRG" contentAssocTypeId="SUB_CONTENT" fromDate="2001-05-13 12:00:00.000" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+
 </entity-engine-xml>

@@ -61,14 +61,17 @@ public class LuceneTests extends OFBizTestCase {
 
     public void testSearchTermHand() throws Exception {
         Map<String, Object> ctx = new HashMap<String, Object>();
-        ctx.put("contentId", "WebStoreCONTENT");
+        ctx.put("contentId", "LuceneCONTENT");
         ctx.put("userLogin", userLogin);
         Map<String, Object> resp = dispatcher.runSync("indexContentTree", ctx);
         assertTrue("Could not init search index", ServiceUtil.isSuccess(resp));
+        
         try {
             Thread.sleep(3000); // sleep 3 seconds to give enough time to the indexer to process the entries
         } catch(Exception e) {}
+        
         Directory directory = FSDirectory.open(new File(SearchWorker.getIndexPath("content")).toPath());
+        
         DirectoryReader r = null;
         try {
             r = DirectoryReader.open(directory);
