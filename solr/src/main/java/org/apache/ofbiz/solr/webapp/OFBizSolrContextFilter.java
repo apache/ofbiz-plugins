@@ -36,10 +36,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.solr.common.SolrException;
-import org.apache.solr.core.CoreContainer;
-import org.apache.solr.core.NodeConfig;
-import org.apache.solr.servlet.SolrDispatchFilter;
 import org.apache.ofbiz.base.conversion.ConversionException;
 import org.apache.ofbiz.base.conversion.JSONConverters.MapToJSON;
 import org.apache.ofbiz.base.lang.JSON;
@@ -51,6 +47,10 @@ import org.apache.ofbiz.base.util.UtilTimer;
 import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.webapp.control.LoginWorker;
+import org.apache.solr.common.SolrException;
+import org.apache.solr.core.CoreContainer;
+import org.apache.solr.core.NodeConfig;
+import org.apache.solr.servlet.SolrDispatchFilter;
 
 /**
  * OFBizSolrContextFilter - Restricts access to solr urls.
@@ -65,6 +65,8 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
      */
     public void init(FilterConfig config) throws ServletException {
+        Properties props = System.getProperties();
+        props.setProperty("solr.log.dir", UtilProperties.getPropertyValue("solrconfig", "solr.log.dir", "runtime/logs/solr"));
         super.init(config);
     }
 
@@ -112,19 +114,19 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
                 // NOTE: the update requests are defined in an index's solrconfig.xml
                 // get the Solr index name from the request
                 if (UtilValidate.isEmpty(userLogin) || !LoginWorker.hasBasePermission(userLogin, httpRequest)) {
-                	sendJsonHeaderMessage(httpRequest, httpResponse, userLogin, "SolrErrorUpdateLoginFirst", "SolrErrorNoUpdatePermission", locale);
+                    sendJsonHeaderMessage(httpRequest, httpResponse, userLogin, "SolrErrorUpdateLoginFirst", "SolrErrorNoUpdatePermission", locale);
                     return;
                 }
             } else if (servletPath.endsWith("/replication")) {
                 // get the Solr index name from the request
                 if (UtilValidate.isEmpty(userLogin) || !LoginWorker.hasBasePermission(userLogin, httpRequest)) {
-                	sendJsonHeaderMessage(httpRequest, httpResponse, userLogin, "SolrErrorReplicateLoginFirst", "SolrErrorNoReplicatePermission", locale);
+                    sendJsonHeaderMessage(httpRequest, httpResponse, userLogin, "SolrErrorReplicateLoginFirst", "SolrErrorNoReplicatePermission", locale);
                     return;
                 }
             } else if (servletPath.endsWith("/file") || servletPath.endsWith("/file/")) {
                 // get the Solr index name from the request
                 if (UtilValidate.isEmpty(userLogin) || !LoginWorker.hasBasePermission(userLogin, httpRequest)) {
-                	sendJsonHeaderMessage(httpRequest, httpResponse, userLogin, "SolrErrorViewFileLoginFirst", "SolrErrorNoViewFilePermission", locale);
+                    sendJsonHeaderMessage(httpRequest, httpResponse, userLogin, "SolrErrorViewFileLoginFirst", "SolrErrorNoViewFilePermission", locale);
                     return;
                 }
             }
@@ -167,7 +169,7 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
         } catch (SolrException e) {
 //            nodeConfig = loadNodeConfig("plugins/solr/home", extraProperties);
             Path path = Paths.get("plugins/solr/home");
-			nodeConfig = loadNodeConfig(path, extraProperties);
+            nodeConfig = loadNodeConfig(path, extraProperties);
         }
         cores = new CoreContainer(nodeConfig, extraProperties, true);
         cores.load();
