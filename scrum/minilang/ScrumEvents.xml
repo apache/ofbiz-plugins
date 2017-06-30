@@ -698,11 +698,11 @@
                 </iterate>
                 <if-not-empty field="custRequestIndex">
                     <script>groovy:
-                         List indexList = custRequestIndex;
-                         Collections.sort(indexList);
-                         Collections.reverse(indexList);
-                         List uniqueCustRequestIndexList = indexList;
-                         return org.apache.ofbiz.base.util.UtilMisc.toMap("uniqueCustRequestIndexList", uniqueCustRequestIndexList);
+                         List indexList = custRequestIndex
+                         Collections.sort(indexList)
+                         Collections.reverse(indexList)
+                         List uniqueCustRequestIndexList = indexList
+                         return org.apache.ofbiz.base.util.UtilMisc.toMap("uniqueCustRequestIndexList", uniqueCustRequestIndexList)
                      </script>
                 </if-not-empty>
                 <if-not-empty field="uniqueCustRequestIndexList">
@@ -759,9 +759,9 @@
                         <else>
                              <!-- get size -->
                             <script>groovy:
-                                 List custRequestSeq = custRequestListWithNewSeq;
-                                 List custRequestSeqList = org.apache.ofbiz.base.util.UtilMisc.sortMaps(custRequestSeq, org.apache.ofbiz.base.util.UtilMisc.toList("custSequenceNum"));
-                                 return org.apache.ofbiz.base.util.UtilMisc.toMap("custRequestSeqList", custRequestSeqList);
+                                 List custRequestSeq = custRequestListWithNewSeq
+                                 List custRequestSeqList = org.apache.ofbiz.base.util.UtilMisc.sortMaps(custRequestSeq, org.apache.ofbiz.base.util.UtilMisc.toList("custSequenceNum"))
+                                 return org.apache.ofbiz.base.util.UtilMisc.toMap("custRequestSeqList", custRequestSeqList)
                             </script>
                             <set field="custRequestListWithNewSeq" from-field="custRequestSeqList"/>
                             <call-object-method method-name="size" obj-field="custRequestListWithNewSeq" ret-field="newCustCount"/>
@@ -4216,15 +4216,15 @@
 
             <!-- Check the password, etc for validity -->
             <script>groovy:
-                String password = (String) userLoginContext.get("currentPassword");
-                String confirmPassword = (String) userLoginContext.get("currentPasswordVerify");
-                String passwordHint = (String) userLoginContext.get("passwordHint");
-                org.apache.ofbiz.common.login.LoginServices.checkNewPassword(newUserLogin, null, password, confirmPassword, passwordHint, error_list, true, locale);
+                String password = (String) userLoginContext.get("currentPassword")
+                String confirmPassword = (String) userLoginContext.get("currentPasswordVerify")
+                String passwordHint = (String) userLoginContext.get("passwordHint")
+                org.apache.ofbiz.common.login.LoginServices.checkNewPassword(newUserLogin, null, password, confirmPassword, passwordHint, error_list, true, locale)
             </script>
              <!-- If password encryption is enabled, encrpyt it now -->
             <script>groovy:
-                boolean useEncryption = "true".equals(org.apache.ofbiz.base.util.UtilProperties.getPropertyValue("security", "password.encrypt"));
-                if (useEncryption) { newUserLogin.set("currentPassword", org.apache.ofbiz.base.crypto.HashCrypt.getDigestHash((String) newUserLogin.get("currentPassword"))); }
+                boolean useEncryption = "true".equals(org.apache.ofbiz.base.util.UtilProperties.getPropertyValue("security", "password.encrypt"))
+                if (useEncryption) { newUserLogin.set("currentPassword", org.apache.ofbiz.base.crypto.HashCrypt.getDigestHash((String) newUserLogin.get("currentPassword"))) }
             </script>
 
             <!-- create the UserLogin -->
