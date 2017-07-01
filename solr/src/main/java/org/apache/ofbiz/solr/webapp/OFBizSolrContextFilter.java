@@ -67,6 +67,7 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
     public void init(FilterConfig config) throws ServletException {
         Properties props = System.getProperties();
         props.setProperty("solr.log.dir", UtilProperties.getPropertyValue("solrconfig", "solr.log.dir", "runtime/logs/solr"));
+        props.setProperty("solr.log.level", UtilProperties.getPropertyValue("solrconfig", "solr.log.level", "INFO"));
         super.init(config);
     }
 
