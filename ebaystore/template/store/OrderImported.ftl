@@ -51,10 +51,10 @@ function uploadTrackingCode(orderId, productStoreId) {
           <td width="10%" align="right">${uiLabelMap.OrderRemainingSubTotal}</td>
           <td width="10%" align="right">${uiLabelMap.OrderOrderTotal}</td>
           <td width="5%">&nbsp;</td>
-          <#if (requestParameters.filterInventoryProblems?default("N") == "Y") ||
-              (requestParameters.filterPOsOpenPastTheirETA?default("N") == "Y") ||
-              (requestParameters.filterPOsWithRejectedItems?default("N") == "Y") ||
-              (requestParameters.filterPartiallyReceivedPOs?default("N") == "Y")>
+          <#if ("Y" == requestParameters.filterInventoryProblems?default("N")) ||
+              ("Y" == requestParameters.filterPOsOpenPastTheirETA?default("N")) ||
+              ("Y" == requestParameters.filterPOsWithRejectedItems?default("N")) ||
+              ("Y" == requestParameters.filterPartiallyReceivedPOs?default("N"))>
             <td width="15%">${uiLabelMap.CommonStatus}</td>
             <td width="5%">${uiLabelMap.CommonFilter}</td>
           <#else>
@@ -68,7 +68,7 @@ function uploadTrackingCode(orderId, productStoreId) {
             <#assign orh = Static["org.apache.ofbiz.order.order.OrderReadHelper"].getHelper(orderHeader)>
             <#assign statusItem = orderHeader.getRelatedOne("StatusItem", true)>
             <#assign orderType = orderHeader.getRelatedOne("OrderType", true)>
-            <#if orderType.orderTypeId == "PURCHASE_ORDER">
+            <#if "PURCHASE_ORDER" == orderType.orderTypeId>
               <#assign displayParty = orh.getSupplierAgent()!>
             <#else>
               <#assign displayParty = orh.getPlacingParty()!>
@@ -104,10 +104,10 @@ function uploadTrackingCode(orderId, productStoreId) {
               <td>&nbsp;</td>
               <td>${statusItem.get("description",locale)?default(statusItem.statusId?default("N/A"))}</td>
               </td>
-              <#if (requestParameters.filterInventoryProblems?default("N") == "Y") ||
-                  (requestParameters.filterPOsOpenPastTheirETA?default("N") == "Y") ||
-                  (requestParameters.filterPOsWithRejectedItems?default("N") == "Y") ||
-                  (requestParameters.filterPartiallyReceivedPOs?default("N") == "Y")>
+              <#if ("Y" == requestParameters.filterInventoryProblems?default("N")) ||
+                  ("Y" == requestParameters.filterPOsOpenPastTheirETA?default("N")) ||
+                  ("Y" == requestParameters.filterPOsWithRejectedItems?default("N")) ||
+                  ("Y" == requestParameters.filterPartiallyReceivedPOs?default("N"))>
                 <td>
                   <#if filterInventoryProblems.contains(orderHeader.orderId)>
                     Inv&nbsp;

@@ -201,7 +201,7 @@ under the License.
       <li>
         <a href="<@ofbizUrl>clearExpListing</@ofbizUrl>?productStoreId=${productStoreId!}">Clear Listing</a>
       </li>
-      <#if isExportValid?? && isExportValid == "true">
+      <#if isExportValid?? && "true" == isExportValid>
         <li>
           <a href="<@ofbizUrl>exportListingToEbay</@ofbizUrl>?productStoreId=${productStoreId!}">
             Export Products Listing</a>
@@ -488,7 +488,7 @@ under the License.
                                   <td class="label">
                                     <label><b>Enable auto-relist item</b>
                                       <input type="checkbox" name="isAutoRelist"
-                                          value="Y" <#if isAutoRelist == "Y">checked="checked"</#if>/>
+                                          value="Y" <#if "Y" == isAutoRelist>checked="checked"</#if>/>
                                     </label>
                                   </td>
                                 </tr>
@@ -497,7 +497,7 @@ under the License.
                                     <td class="label">
                                       <label><b>Require eBay Inventory</b>
                                         <input type="checkbox" name="requireEbayInventory"
-                                            value="Y" <#if requireEbayInventory == "Y">checked="checked"</#if>/>
+                                            value="Y" <#if "Y" == requireEbayInventory>checked="checked"</#if>/>
                                       </label>
                                     </td>
                                     <td></td>
@@ -528,7 +528,7 @@ under the License.
                     </div>
                     <!-- item specifices section -->
                     <#if primaryCate?has_content && primaryCate.getCategoryID()?? && listingTypes?has_content>
-                      <#if checkSpecific == "true">
+                      <#if "true" == checkSpecific>
                         <div class="screenlet">
                           <div class="screenlet-title-bar">
                             <ul>
@@ -695,7 +695,7 @@ under the License.
                               <#assign tabName = "">
                               <#list listingTypes as listingType>
                               <#-- default with aution and fixed price -->
-                                <#if listingType.type.equals("Chinese") || listingType.type == "FixedPriceItem">
+                                <#if listingType.type.equals("Chinese") || "FixedPriceItem" == listingType.type>
                                   <#if listingType.type.equals("Chinese")><#assign tabName = "Auction"></#if>
                                   <#if listingType.type.equals("FixedPriceItem")><#assign tabName = "Fixed Price"></#if>
                                   <li <#if id==1 > style="margin-left: 1px" id="tabHeaderActive_"<#else>
@@ -712,7 +712,7 @@ under the License.
                           <div id="tabscontent">
                             <#assign id = 1>
                             <#list listingTypes as listingType>
-                              <#if listingType.type.equals("Chinese") || listingType.type! == "FixedPriceItem">
+                              <#if listingType.type.equals("Chinese") || "FixedPriceItem" == listingType.type!>
                                 <#if listingType.type.equals("Chinese")><#assign tabName = "Auction"></#if>
                                 <#if listingType.type.equals("FixedPriceItem") ><#assign tabName = "Fixed Price"></#if>
                                 <div id="tabContent${id}" class="tabContent" <#if id != 1>style="display:none;"</#if>>
@@ -728,7 +728,7 @@ under the License.
                                           </label>
                                           <#--<input type="checkbox" value="Y" name="enabledAuction_${id}"/>
                                           <b>${tabName!}</b></checkbox-->
-                                        <#elseif listingType.type == "FixedPriceItem">
+                                        <#elseif "FixedPriceItem" == listingType.type>
                                           <label>
                                             <input type="radio" name="listype" value="fixedprice"/>
                                             <b>${tabName!}</b>
@@ -745,7 +745,7 @@ under the License.
                                             <#list durations as duration>
                                               <#if duration.indexOf("_")!= -1>
                                                 <#assign dura = duration.substring(duration.indexOf("_")+1)>
-                                              <#elseif duration == "GTC">
+                                              <#elseif "GTC" == duration>
                                                 <#assign dura = "Good 'Til Cancelled">
                                               </#if>
                                               <option value="${duration!}">${dura!} ${uiLabelMap.CommonDays}</option>
@@ -771,9 +771,9 @@ under the License.
                                     <#if productPrices?has_content>
                                       <#list productPrices as productPrice>
                                         <#assign currencyUomId = productPrice.currencyUomId!>
-                                        <#if productPrice.productPriceTypeId == "MINIMUM_PRICE">
+                                        <#if "MINIMUM_PRICE" == productPrice.productPriceTypeId>
                                           <#assign min = productPrice.price!>
-                                        <#elseif productPrice.productPriceTypeId == "MAXIMUM_PRICE">
+                                        <#elseif "MAXIMUM_PRICE" == productPrice.productPriceTypeId>
                                           <#assign max = productPrice.price!>
                                         </#if>
                                       </#list>

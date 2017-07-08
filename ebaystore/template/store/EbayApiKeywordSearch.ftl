@@ -143,12 +143,12 @@ under the License.
                 <label>
                   ${uiLabelMap.CommonAny}
                   <input type="radio" name="SEARCH_OPERATOR"
-                      value="OR" <#if searchOperator == "OR">checked="checked"</#if>/>
+                      value="OR" <#if "OR" == searchOperator>checked="checked"</#if>/>
                 </label>
                 <label>
                   ${uiLabelMap.CommonAll}
                   <input type="radio" name="SEARCH_OPERATOR"
-                      value="AND" <#if searchOperator == "AND">checked="checked"</#if>/>
+                      value="AND" <#if "AND" == searchOperator>checked="checked"</#if>/>
                 </label>
               </div>
             </td>

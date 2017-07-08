@@ -189,12 +189,12 @@ under the License.
           <td valign="middle">
             <div onclick="javascript:switchTheme();">
               <label>
-                <input type="radio" name="storeThemeType" <#if themeType! == "Basic">checked="checked"</#if>
+                <input type="radio" name="storeThemeType" <#if "Basic" == themeType!>checked="checked"</#if>
                     value="Basic" default="default"/>
                 Basic Theme
               </label>
               <label>
-                <input type="radio" name="storeThemeType" <#if themeType! == "Advanced">checked="checked"</#if>
+                <input type="radio" name="storeThemeType" <#if "Advanced" == themeType!>checked="checked"</#if>
                     value="Advanced"/>
                 Advanced Theme
               </label>
@@ -559,10 +559,10 @@ under the License.
   </form>
 </#if>
 <script language="Javascript" type="text/javascript">
-    <#if themeType! == "Basic">
+    <#if "Basic" == themeType!>
         document.StoreSettingForm.storeAdvancedTheme.disabled = true;
         document.StoreSettingForm.storeAdvancedThemeColor.disabled = true;
-    <#elseif themeType! == "Advanced">
+    <#elseif "Advanced" == themeType!>
         document.StoreSettingForm.storeBasicTheme.disabled = true;
         document.StoreSettingForm.storePrimaryColor.disabled = true;
         document.StoreSettingForm.storeSecondaryColor.disabled = true;

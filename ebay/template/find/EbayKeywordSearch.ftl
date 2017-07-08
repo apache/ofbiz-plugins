@@ -58,7 +58,7 @@ under the License.
                 | <a href="<@ofbizUrl>keywordsearch/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N/~PAGING=${paging}/~noConditionFind=${noConditionFind}</@ofbizUrl>"
                     class="buttontext">${uiLabelMap.CommonNext}</a>
               </#if>
-              <#if paging == "Y">
+              <#if "Y" == paging>
                 <a href="<@ofbizUrl>keywordsearch/~VIEW_INDEX=0/~VIEW_SIZE=99999/~clearSearch=N/~PAGING=N/~noConditionFind=${noConditionFind}</@ofbizUrl>"
                     class="buttontext">${uiLabelMap.CommonPagingOff}</a>
               <#else>

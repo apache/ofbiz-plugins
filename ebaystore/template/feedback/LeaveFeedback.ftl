@@ -28,7 +28,7 @@ under the License.
         obj.src = "/images/rate/starHover.gif";
     }
     function outStar(obj){
-        if(active != "" || obj.src == "/images/rate/starActive.gif"){
+        if(active != "" || "/images/rate/starActive.gif" == obj.src){
             obj.src = "/images/rate/starActive.gif";
         }else{
             obj.src = "/images/rate/starDefault.gif";
@@ -70,9 +70,9 @@ under the License.
           <#if parameters.role?has_content && parameters.transactionId?has_content
               && parameters.targetUser?has_content && parameters.commentingUser?has_content>
             <#if parameters.transactionId == leaveFeedback.transactionID && parameters.itemId == leaveFeedback.itemID>
-              <#if role == "buyer">
+              <#if "buyer" == role>
                 <#assign feedbackCounter = feedbackCounter + 1>
-                <#if row == "">
+                <#if "" == row>
                   <#assign row = "alternate-row">
                 <#else>
                   <#assign row = "">
@@ -116,7 +116,7 @@ under the License.
               </tr>
               <#else>
                 <#assign feedbackCounter = feedbackCounter + 1>
-                <#if row == "">
+                <#if "" == row>
                   <#assign row = "alternate-row">
                 <#else>
                   <#assign row = "">
@@ -350,9 +350,9 @@ under the License.
               </#if>
             </#if>
           <#elseif role=="buyer">
-            <#if leaveFeedback.role == "buyer">
+            <#if "buyer" == leaveFeedback.role>
               <#assign feedbackCounter = feedbackCounter + 1>
-              <#if row == "">
+              <#if "" == row>
                 <#assign row = "alternate-row">
               <#else>
                 <#assign row = "">
@@ -393,10 +393,10 @@ under the License.
                 </td>
               </tr>
             </#if>
-          <#elseif role == "seller">
-            <#if leaveFeedback.role == "seller">
+          <#elseif "seller" == role>
+            <#if "seller" == leaveFeedback.role>
               <#assign feedbackCounter = feedbackCounter + 1>
-              <#if row == "">
+              <#if "" == row>
                 <#assign row = "alternate-row">
               <#else>
                 <#assign row = "">
@@ -623,7 +623,7 @@ under the License.
             </#if>
           <#else>
             <#assign feedbackCounter = feedbackCounter + 1>
-            <#if row == "">
+            <#if "" == row>
               <#assign row = "alternate-row">
             <#else>
               <#assign row = "">
@@ -641,7 +641,7 @@ under the License.
                   order details</a>
               </td>
               <td>
-                <#if leaveFeedback.role == "seller">
+                <#if "seller" == leaveFeedback.role>
                   <label>
                     <input type="radio" name="commentType${feedbackCounter}" value="positive"
                         onclick="document.getElementById('rate${feedbackCounter}').style.display='block';"/>
@@ -674,7 +674,7 @@ under the License.
                     <span>I'll leave Feedback later</span>
                   </label>
                 </#if>
-                <#if leaveFeedback.role == "seller">
+                <#if "seller" == leaveFeedback.role>
                   <div id="rate${feedbackCounter}" style="display:none">
                     <input type="text" value="" maxlength="80" size="80" name="commentText${feedbackCounter}"
                         label="Tell us more"/>
@@ -862,7 +862,7 @@ under the License.
                 </#if>
               </td>
               <td>
-                <#if leaveFeedback.role == "buyer">
+                <#if "buyer" == leaveFeedback.role>
                   Buyer:<a target="_blank"
                       href="http://myworld.sandbox.ebay.com/${leaveFeedback.userID}">${leaveFeedback.userID}</a>
                 <#else>

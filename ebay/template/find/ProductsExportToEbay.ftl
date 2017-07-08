@@ -64,7 +64,7 @@ under the License.
           </select>
         </td>
       </tr>
-      <#if hideExportOptions?has_content && hideExportOptions == "N">
+      <#if hideExportOptions?has_content && "N" == hideExportOptions>
         <tr>
           <td align="right" class="label">${uiLabelMap.CommonCountry}</td>
           <td>&nbsp;</td>
