@@ -20,7 +20,7 @@ under the License.
 <#assign resourceParam = "resource"
          borderStyle = "2px inset ThreeDHighlight"
          borderSimpleStyle = "2px solid ThreeDFace">
-<#if report.isMultiOperation(request)?string("true", "false") == "true">
+<#if "true" == report.isMultiOperation(request)?string("true", "false")>
     <#assign resourceParam = null>
 </#if>
 <#assign action = report.getParamAction(request)>
@@ -84,7 +84,7 @@ ${StringUtil.wrapString(report.getReportUpdate())}
         active = setTimeout("reload('reportupdate');", 2000);
   } else {
        var hasNext = "${report.getParamThreadHasNext(request)}";
-       if (hasNext == "true") {
+       if ("true" == hasNext) {
                if (!${report.hasError()?string("true", "false")} || parent.isContinueChecked()) {
                    // all actions ok or continue checked, continue automatically
                    continueReport();
@@ -411,7 +411,7 @@ function displayButtonRow(rowId, show) {
 }
 
 function enableButtons(rowId) {
-    if (rowId == "buttonrowcontinue") {
+    if ("buttonrowcontinue" == rowId) {
         toggleButton("contok", false);
         toggleButton("contcancel", false);
     } else {
@@ -420,7 +420,7 @@ function enableButtons(rowId) {
 }
 
 function disableButtons(rowId) {
-    if (rowId == "buttonrowcontinue") {
+    if ("buttonrowcontinue" == rowId) {
         toggleButton("contok", true);
         toggleButton("contcancel", true);
     } else {
@@ -436,7 +436,7 @@ function toggleButton(buttonId, disableButton) {
 }
 
 function initButtons() {
-    if (document.main.threadhasnext && document.main.threadhasnext.value == "true"
+    if (document.main.threadhasnext && "true" == document.main.threadhasnext.value
             && document.main.reportcontinuekey && document.main.reportcontinuekey.value != "") {
         displayButtonRowContinue();
     } else {
@@ -448,7 +448,7 @@ function initButtons() {
 }
 
 function submitActionRefresh(para1, para2, para3) {
-<#if report.getParamRefreshWorkplace()?has_content && report.getParamRefreshWorkplace() == "true"> 
+<#if report.getParamRefreshWorkplace()?has_content && "true" == report.getParamRefreshWorkplace()>
     <#-- workplace must be refresehd (reloaded) -->
     top.location.href = "${StringUtil.wrapString(report.getDialogRealUri(request))}";
 <#else> 

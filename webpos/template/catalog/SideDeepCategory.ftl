@@ -37,7 +37,7 @@ under the License.
   <#else>
       <#assign browseCategoryButtonClass = "browsecategorybutton">
   </#if>
-  <#if wrapInBox == "Y">
+  <#if "Y" == wrapInBox>
   <div id="sidedeepcategory">
     <h3><#if categoryDescription?has_content>${categoryDescription}<#else>${categoryName?default("")}</#if></h3>
     <div>
@@ -62,7 +62,7 @@ under the License.
     </#if>
   </#if>
   </li>
-  <#if wrapInBox == "Y">
+  <#if "Y" == wrapInBox>
       </div>
     </div>
   </div>

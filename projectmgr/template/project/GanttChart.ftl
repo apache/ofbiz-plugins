@@ -29,13 +29,13 @@ g.setShowComp(1); // Show/Hide % Complete(0/1)
 // Parameters             (pID, pName,                  pStart,      pEnd,        pColor,   pLink,          pMile, pRes,  pComp, pGroup, pParent, pOpen)
 
 <#list phaseTaskList as t>
-    <#if t.workEffortTypeId == "PHASE">
+    <#if "PHASE" == t.workEffortTypeId>
         g.AddTaskItem(new JSGantt.TaskItem("${t.phaseNr}", "${t.phaseSeqNum!}. ${t.phaseName}", "", "", "00ff00", "", 0, "", 0, 1, 0, 1));
     </#if>
-    <#if t.workEffortTypeId == "TASK">
+    <#if "TASK" == t.workEffortTypeId>
         g.AddTaskItem(new JSGantt.TaskItem("${t.taskNr}","${t.taskSeqNum!}. ${t.taskName}","${StringUtil.wrapString(t.estimatedStartDate)}", "${StringUtil.wrapString(t.estimatedCompletionDate)}","009900", "${t.url}", 0 , "${t.resource!}", ${t.completion!} , 0, ${t.phaseNr}, 1<#if t.preDecessor??>, "${t.preDecessor}"</#if>));
     </#if>
-    <#if t.workEffortTypeId == "MILESTONE">
+    <#if "MILESTONE" == t.workEffortTypeId>
         g.AddTaskItem(new JSGantt.TaskItem("${t.taskNr}","${t.taskName}","${StringUtil.wrapString(t.estimatedStartDate)}", "${StringUtil.wrapString(t.estimatedCompletionDate)}","00ff00", "", 1 , "${t.resource!}", ${t.completion!} , 0,${t.phaseNr}, "", "" ));
     </#if>
 </#list>

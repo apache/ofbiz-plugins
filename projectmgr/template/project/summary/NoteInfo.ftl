@@ -46,7 +46,7 @@ under the License.
                     <div>${note.noteInfo!}</div>
                   </td>
                   <td align="right" valign="top" width="15%">
-                    <#if note.internalNote! == "N">
+                    <#if "N" == note.internalNote!>
                         <div>${uiLabelMap.ProjectMgrPrintableNote}</div>
                           <#if project?has_content>
                             <form name="updateProjectNoteForPublicNote" method="post" action="<@ofbizUrl>updateProjectNote</@ofbizUrl>">
@@ -64,7 +64,7 @@ under the License.
                             </form>
                           </#if>
                     </#if>
-                    <#if note.internalNote! == "Y">
+                    <#if "Y" == note.internalNote!>
                         <div>${uiLabelMap.OrderNotPrintableNote}</div>
                            <#if project?has_content>
                              <form name="updateProjectNoteForPrivateNote" method="post" action="<@ofbizUrl>updateProjectNote</@ofbizUrl>">

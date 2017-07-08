@@ -60,7 +60,7 @@ under the License.
                     <td><#if historyEntry.fromDate?exists && historyEntry.fromDate?has_content>${historyEntry.fromDate?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
                     <td><#if historyEntry.thruDate?exists && historyEntry.thruDate?has_content>${historyEntry.thruDate?string("yyyy-MM-dd HH:mm:ss")}</#if></td>
                     <td><#if historyEntry.statusId?exists && historyEntry.statusId?has_content>${uiLabelMap.get(historyEntry.statusId)}</#if></td>
-                    <td><#if historyEntry.statusId?exists && historyEntry.statusId == "EXCEL_IMPORTED" && historyEntry.thruReasonId?exists && historyEntry.thruReasonId?has_content>${uiLabelMap.get(historyEntry.thruReasonId)}</#if></td>
+                    <td><#if historyEntry.statusId?exists && "EXCEL_IMPORTED" == historyEntry.statusId && historyEntry.thruReasonId?exists && historyEntry.thruReasonId?has_content>${uiLabelMap.get(historyEntry.thruReasonId)}</#if></td>
                     <td>
                         <#assign buttons = 0 />
                         <#if historyEntry.logFileName?exists && historyEntry.logFileName?has_content>
