@@ -45,10 +45,10 @@ under the License.
           value="${requestParameters.SEARCH_STRING?if_exists}"/>
       <label for="SEARCH_OPERATOR_ANY">${uiLabelMap.CommonAny}</label>
       <input type="radio" name="SEARCH_OPERATOR" id="SEARCH_OPERATOR_ANY"
-          value="OR" <#if searchOperator == "OR">checked="checked"</#if>/>
+          value="OR" <#if "OR" == searchOperator>checked="checked"</#if>/>
       <label for="SEARCH_OPERATOR_ALL">${uiLabelMap.CommonAll}</label>
       <input type="radio" name="SEARCH_OPERATOR" id="SEARCH_OPERATOR_ALL"
-          value="AND" <#if searchOperator == "AND">checked="checked"</#if>/>
+          value="AND" <#if "AND" == searchOperator>checked="checked"</#if>/>
     </div>
   <#list productFeatureTypeIdsOrdered as productFeatureTypeId>
     <#assign findPftMap =

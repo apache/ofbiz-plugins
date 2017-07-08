@@ -34,7 +34,7 @@ under the License.
   <#assign internalNameParts=internalName?split(".")/>
   <#assign firstPart=internalNameParts[0] />
   <#assign nowStamp=Static["org.apache.ofbiz.base.util.UtilDateTime"].nowTimestamp()/>
-  <#if firstPart == "WIDGETS">
+  <#if "WIDGETS" == firstPart>
     <ContentAssoc contentId="CNTWIDGETS" contentIdTo="${contentId}" contentAssocTypeId="SUB_CONTENT"
         fromDate="${nowStamp?string("yyyy-MM-dd HH:mm:ss")}"/>
   </#if>

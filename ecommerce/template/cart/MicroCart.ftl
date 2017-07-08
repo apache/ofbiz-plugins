@@ -48,7 +48,7 @@ under the License.
     </li>
     <#if (shoppingCartSize > 0)>
       <#if !initialLocaleComplete?? || initialLocaleComplete?length == 2 >
-        <#if initialLocaleComplete?? && initialLocaleComplete?length == 2  && initialLocaleComplete == "fr">
+        <#if initialLocaleComplete?? && initialLocaleComplete?length == 2  && "fr" == initialLocaleComplete>
           <#assign initialLocaleComplete = "fr_FR"><#-- same idea can be used with other default locale -->
         <#else>
           <#assign initialLocaleComplete = "en_US">

@@ -47,7 +47,7 @@ under the License.
 
     <tr>
       <td>
-        <#if surveyQuestionAndAppl.surveyQuestionTypeId == "BOOLEAN">
+        <#if "BOOLEAN" == surveyQuestionAndAppl.surveyQuestionTypeId>
           <#assign selectedOption = (answer.booleanResponse)?default("Y")>
           <div><span style="white-space: nowrap;">
             <#if "Y" == selectedOption><b>==>&nbsp;<font color="red"></#if>${uiLabelMap.CommonY}<#if "Y" == selectedOption></font></b></#if>&nbsp;[${results._yes_total?default(0)?string("#")} / ${results._yes_percent?default(0)?string("#")}%]
@@ -56,7 +56,7 @@ under the License.
             <#if "N" == selectedOption><b>==>&nbsp;<font color="red"></#if>${uiLabelMap.CommonN}<#if "N" == selectedOption></font></b></#if>&nbsp;[${results._no_total?default(0)?string("#")} / ${results._no_percent?default(0)?string("#")}%]
           </span></div>
 
-        <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "OPTION">
+        <#elseif "OPTION" == surveyQuestionAndAppl.surveyQuestionTypeId>
           <#assign options = surveyQuestionAndAppl.getRelated("SurveyQuestionOption", null, sequenceSort, false)!>
           <#assign selectedOption = (answer.surveyOptionSeqId)?default("_NA_")>
           <#if options?has_content>

@@ -26,12 +26,12 @@
 <#-- This code sets the checkboxes based on existing data -->
 <#assign text_check=""/>
 <#assign img_check=""/>
-<#if (imageContent?has_content && (drDataTemplateTypeId?default("") == "SCREEN_COMBINED")
+<#if (imageContent?has_content && ("SCREEN_COMBINED" == drDataTemplateTypeId?default(""))
     || drMimeTypeId?default("")?starts_with("image"))>
   <#assign img_check="checked='checked'"/>
 </#if>
 <#if (textContent?has_content && drMimeTypeId?default("")?starts_with("text"))
-    || (textContent?has_content && (drDataTemplateTypeId?default("") == "SCREEN_COMBINED"))
+    || (textContent?has_content && ("SCREEN_COMBINED" == drDataTemplateTypeId?default("")))
     || !img_check?has_content>
   <#assign text_check="checked='checked'"/>
 </#if>
@@ -39,7 +39,7 @@
 <#-- Sets one of the two templates -->
 <#assign topleft_check=""/>
 <#assign topcenter_check=""/>
-<#if view.drDataResourceId?has_content && view.drDataResourceId == "BLOG_TPL_TOPLEFT">
+<#if view.drDataResourceId?has_content && "BLOG_TPL_TOPLEFT" == view.drDataResourceId>
   <#assign topleft_check="checked='checked'"/>
 <#else>
   <#assign topcenter_check="checked='checked'"/>

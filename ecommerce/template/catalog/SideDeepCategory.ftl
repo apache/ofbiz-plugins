@@ -39,7 +39,7 @@ under the License.
   <#else>
     <#assign browseCategoryButtonClass = "browsecategorybutton">
   </#if>
-  <#if wrapInBox == "Y">
+  <#if "Y" == wrapInBox>
     <div  id="sidedeepcategory" class="screenlet">
       <div class="screenlet-title-bar">
         <ul>
@@ -85,7 +85,7 @@ under the License.
       </#if>
     </#if>
   </li>
-  <#if wrapInBox == "Y">
+  <#if "Y" == wrapInBox>
         </div>
       </div>
     </div>

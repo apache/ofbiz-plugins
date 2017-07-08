@@ -74,7 +74,7 @@ under the License.
     <#list ownedFinAccountTransList as ownedFinAccountTrans>
       <#assign finAccountTransType = ownedFinAccountTrans.getRelatedOne("FinAccountTransType", false)/>
       <#assign displayAmount = ownedFinAccountTrans.amount/>
-      <#if ownedFinAccountTrans.finAccountTransTypeId == "WITHDRAWAL">
+      <#if "WITHDRAWAL" == ownedFinAccountTrans.finAccountTransTypeId>
         <#assign displayAmount = -displayAmount/>
       </#if>
       <tr>

@@ -166,8 +166,8 @@ under the License.
             <div>
               <label for="isPublic">${uiLabelMap.EcommercePublic}?</label>
               <select name="isPublic" id="isPublic">
-                <#if (((shoppingList.isPublic)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
-                <#if (((shoppingList.isPublic)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
+                <#if ("Y" == ((shoppingList.isPublic)!""))><option value="Y">${uiLabelMap.CommonY}</option></#if>
+                <#if ("N" == ((shoppingList.isPublic)!""))><option value="N">${uiLabelMap.CommonN}</option></#if>
                 <option></option>
                 <option value="Y">${uiLabelMap.CommonY}</option>
                 <option value="N">${uiLabelMap.CommonN}</option>
@@ -176,8 +176,8 @@ under the License.
             <div>
               <label for="isActive">${uiLabelMap.EcommerceActive}?</label>
               <select name="isActive" id="isActive">
-                <#if (((shoppingList.isActive)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
-                <#if (((shoppingList.isActive)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
+                <#if ("Y" == ((shoppingList.isActive)!""))><option value="Y">${uiLabelMap.CommonY}</option></#if>
+                <#if ("N" == ((shoppingList.isActive)!""))><option value="N">${uiLabelMap.CommonN}</option></#if>
                 <option></option>
                 <option value="Y">${uiLabelMap.CommonY}</option>
                 <option value="N">${uiLabelMap.CommonN}</option>
@@ -206,7 +206,7 @@ under the License.
     </div>
 </div>
 
-<#if shoppingListType?? && shoppingListType.shoppingListTypeId == "SLT_AUTO_REODR">
+<#if shoppingListType?? && "SLT_AUTO_REODR" == shoppingListType.shoppingListTypeId>
   <#assign nowTimestamp = Static["org.apache.ofbiz.base.util.UtilDateTime"].monthBegin()>
 <div class="screenlet">
     <div class="screenlet-title-bar">
@@ -215,7 +215,7 @@ under the License.
         </div>
         <h3>
             ${uiLabelMap.EcommerceShoppingListReorder} - ${shoppingList.listName}
-            <#if shoppingList.isActive?default("N") == "N">
+            <#if "N" == shoppingList.isActive?default("N")>
                 ${uiLabelMap.EcommerceOrderNotActive}
             </#if>
         </h3>
@@ -240,10 +240,10 @@ under the License.
                 </select>
                 <select name="frequency" class="selectBox">
                   <option value="">${uiLabelMap.EcommerceSelectFrequency}</option>
-                  <option value="4" <#if (recurrenceRule.frequency)?default("") == "DAILY">selected="selected"</#if>>${uiLabelMap.CommonDay}</option>
-                  <option value="5" <#if (recurrenceRule.frequency)?default("") == "WEEKLY">selected="selected"</#if>>${uiLabelMap.CommonWeek}</option>
-                  <option value="6" <#if (recurrenceRule.frequency)?default("") == "MONTHLY">selected="selected"</#if>>${uiLabelMap.CommonMonth}</option>
-                  <option value="7" <#if (recurrenceRule.frequency)?default("") == "YEARLY">selected="selected"</#if>>${uiLabelMap.CommonYear}</option>
+                  <option value="4" <#if ("DAILY">selected="selected"</#if>>${uiLabelMap.CommonDay}</option>
+                  <option value="5" <#if ("WEEKLY" == recurrenceRule.frequency)?default("")>selected="selected"</#if>>${uiLabelMap.CommonWeek}</option>
+                  <option value="6" <#if ("MONTHLY" == recurrenceRule.frequency)?default("")>selected="selected"</#if>>${uiLabelMap.CommonMonth}</option>
+                  <option value="7" <#if ("YEARLY" == recurrenceRule.frequency)?default("")>selected="selected"</#if>>${uiLabelMap.CommonYear}</option>
                 </select>
               </span>
               <span>
@@ -300,10 +300,10 @@ under the License.
                   <select name="paymentMethodId" class="selectBox">
                     <option value="">${uiLabelMap.OrderSelectPaymentMethod}</option>
                     <#list paymentMethodList as paymentMethod>
-                      <#if paymentMethod.paymentMethodTypeId == "CREDIT_CARD">
+                      <#if "CREDIT_CARD" == paymentMethod.paymentMethodTypeId>
                         <#assign creditCard = paymentMethod.getRelatedOne("CreditCard", false)>
                         <option value="${paymentMethod.paymentMethodId}" <#if (shoppingList.paymentMethodId)?default("") == paymentMethod.paymentMethodId>selected="selected"</#if>>CC:&nbsp;${Static["org.apache.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}</option>
-                      <#elseif paymentMethod.paymentMethodTypeId == "EFT_ACCOUNT">
+                      <#elseif "EFT_ACCOUNT" == paymentMethod.paymentMethodTypeId>
                         <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount", false)>
                         <option value="${paymentMethod.paymentMethodId}">EFT:&nbsp;${eftAccount.bankName!}: ${eftAccount.accountNumber!}</option>
                       </#if>
@@ -317,7 +317,7 @@ under the License.
                 <a href="<@ofbizUrl>editcreditcard?DONE_PAGE=editShoppingList</@ofbizUrl>" class="buttontext">${uiLabelMap.EcommerceNewCreditCard}</a>
                 <a href="<@ofbizUrl>editeftaccount?DONE_PAGE=editShoppingList</@ofbizUrl>" class="buttontext">${uiLabelMap.EcommerceNewEFTAccount}</a>
               </div>
-              <#if shoppingList.isActive?default("N") == "Y">
+              <#if "Y" == shoppingList.isActive?default("N")>
                 <div>
                   <#assign nextTime = recInfo.next(lastSlOrderTime)?if_exists />
                   <#if nextTime?has_content>
@@ -443,7 +443,7 @@ under the License.
                           <input type="hidden" name="shoppingListId" value="${shoppingListItem.shoppingListId}" />
                           <input type="hidden" name="shoppingListItemSeqId" value="${shoppingListItem.shoppingListItemSeqId}" />
                           <input type="hidden" name="reservStart" />
-                          <#if product.productTypeId == "ASSET_USAGE">
+                          <#if "ASSET_USAGE" == product.productTypeId>
                            <table>
                              <tr>
                                <td>&nbsp;</td>

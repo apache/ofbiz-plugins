@@ -263,9 +263,9 @@ under the License.
       <td>&nbsp;</td>
       <td>
         <select name="allowSolicitation" class='selectBox'>
-          <#if (((partyContactMechData.allowSolicitation)!"") == "Y")>
+          <#if ("Y" == ((partyContactMechData.allowSolicitation)!""))>
             <option value="Y">${uiLabelMap.CommonY}</option></#if>
-          <#if (((partyContactMechData.allowSolicitation)!"") == "N")>
+          <#if ("N" == ((partyContactMechData.allowSolicitation)!""))>
             <option value="N">${uiLabelMap.CommonN}</option></#if>
           <option></option>
           <option value="Y">${uiLabelMap.CommonY}</option>

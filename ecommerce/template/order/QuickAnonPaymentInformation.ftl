@@ -31,7 +31,7 @@ function init() {
 function aroundSubmitOrder(invocation) {
     var formToSubmit = document.setPaymentInformation;
     var paymentMethodTypeOption = document.setPaymentInformation.paymentMethodTypeOptionList.options[document.setPaymentInformation.paymentMethodTypeOptionList.selectedIndex].value;
-    if(paymentMethodTypeOption == "none"){
+    if("none" == paymentMethodTypeOption){
         document.setPaymentInformation.action = "<@ofbizUrl>quickAnonAddGiftCardToCart</@ofbizUrl>";
     }
 
@@ -41,7 +41,7 @@ function aroundSubmitOrder(invocation) {
         data: jQuery("#setPaymentInformation").serialize(),
         success: function(data) {
             if (paymentMethodTypeOption != "EXT_OFFLINE"){
-                   if(paymentMethodTypeOption == "none"){
+                   if("none" == paymentMethodTypeOption){
                        document.getElementById("noPaymentMethodSelectedError").innerHTML = "${uiLabelMap.EcommerceMessagePleaseSelectPaymentMethod}";
                    } else {
                        document.getElementById("paymentInfoSection").innerHTML = data;
@@ -72,7 +72,7 @@ function getPaymentInformation() {
   var paymentMethodTypeOption = document.setPaymentInformation.paymentMethodTypeOptionList.options[document.setPaymentInformation.paymentMethodTypeOptionList.selectedIndex].value;
   var connectionObject;
    if (paymentMethodTypeOption.length > 0){
-      if(paymentMethodTypeOption == "CREDIT_CARD"){
+      if("CREDIT_CARD" == paymentMethodTypeOption){
 
         jQuery.ajax({
             url: "<@ofbizUrl>quickAnonCcInfo</@ofbizUrl>",
@@ -84,7 +84,7 @@ function getPaymentInformation() {
 
         document.setPaymentInformation.paymentMethodTypeId.value = "CREDIT_CARD";
         document.setPaymentInformation.action = "<@ofbizUrl>quickAnonEnterCreditCard</@ofbizUrl>";
-      } else if (paymentMethodTypeOption == "EFT_ACCOUNT"){
+      } else if ("EFT_ACCOUNT" == paymentMethodTypeOption){
 
        jQuery.ajax({
             url: "<@ofbizUrl>quickAnonEftInfo</@ofbizUrl>",
@@ -96,7 +96,7 @@ function getPaymentInformation() {
 
         document.setPaymentInformation.paymentMethodTypeId.value = "EFT_ACCOUNT";
         document.setPaymentInformation.action = "<@ofbizUrl>quickAnonEnterEftAccount</@ofbizUrl>";
-      } else if (paymentMethodTypeOption == "EXT_OFFLINE"){
+      } else if ("EXT_OFFLINE" == paymentMethodTypeOption){
         document.setPaymentInformation.paymentMethodTypeId.value = "EXT_OFFLINE";
         document.getElementById("paymentInfoSection").innerHTML = "";
         document.setPaymentInformation.action = "<@ofbizUrl>quickAnonEnterExtOffline</@ofbizUrl>";
@@ -113,7 +113,7 @@ function getPaymentInformation() {
         <div class='h3'>${uiLabelMap.AccountingPaymentInformation}</div>
     </div>
     <div class="screenlet-body">
-          <#if requestParameters.singleUsePayment?default("N") == "Y">
+          <#if "Y" == requestParameters.singleUsePayment?default("N")>
             <input type="hidden" name="singleUsePayment" value="Y"/>
             <input type="hidden" name="appendPayment" value="Y"/>
           </#if>
@@ -133,13 +133,13 @@ function getPaymentInformation() {
                    <select name="paymentMethodTypeOptionList" class="selectBox"  onchange="javascript:getPaymentInformation();">
                        <option value="none">Select One</option>
                      <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
-                       <option value="CREDIT_CARD" <#if (parameters.paymentMethodTypeId?default("") == "CREDIT_CARD")> selected="selected"</#if>>${uiLabelMap.AccountingVisaMastercardAmexDiscover}</option>
+                       <option value="CREDIT_CARD" <#if ("CREDIT_CARD" == parameters.paymentMethodTypeId?default(""))> selected="selected"</#if>>${uiLabelMap.AccountingVisaMastercardAmexDiscover}</option>
                      </#if>
                      <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??>
-                       <option value="EFT_ACCOUNT" <#if (parameters.paymentMethodTypeId?default("") == "EFT_ACCOUNT")> selected="selected"</#if>>${uiLabelMap.AccountingAHCElectronicCheck}</option>
+                       <option value="EFT_ACCOUNT" <#if ("EFT_ACCOUNT" == parameters.paymentMethodTypeId?default(""))> selected="selected"</#if>>${uiLabelMap.AccountingAHCElectronicCheck}</option>
                      </#if>
                      <#if productStorePaymentMethodTypeIdMap.EXT_OFFLINE??>
-                       <option value="EXT_OFFLINE" <#if (parameters.paymentMethodTypeId?default("") == "EXT_OFFLINE")> selected="selected"</#if>>${uiLabelMap.OrderPaymentOfflineCheckMoney}</option>
+                       <option value="EXT_OFFLINE" <#if ("EXT_OFFLINE" == parameters.paymentMethodTypeId?default(""))> selected="selected"</#if>>${uiLabelMap.OrderPaymentOfflineCheckMoney}</option>
                      </#if>
                    </select>
                  </td>

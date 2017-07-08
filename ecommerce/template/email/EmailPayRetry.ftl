@@ -18,10 +18,10 @@ under the License.
 -->
 
 <br/>
-<#if orderHeader.statusId == "ORDER_REJECTED">
+<#if "ORDER_REJECTED" == orderHeader.statusId>
   ${uiLabelMap.OrderEmailProblemWithYourPaymentMethod} ${orderHeader.orderId}.<br/>
   ${uiLabelMap.OrderEmailProblemCancelledNotProcessed}<br/>
-<#elseif orderHeader.statusId == "ORDER_APPROVED">
+<#elseif "ORDER_APPROVED" == orderHeader.statusId>
   ${uiLabelMap.OrderEmailPaymentOK} ${orderHeader.orderId} ${uiLabelMap.OrderEmailAccepted}
 <#else>
   ${uiLabelMap.OrderEmailSorry} ${orderHeader.orderId}.<br/>

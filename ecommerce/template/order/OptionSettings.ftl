@@ -55,12 +55,12 @@ under the License.
   <fieldset>
     <legend>${uiLabelMap.OrderShipAllAtOnce}?</legend>
     <div>
-      <input type="radio" id="maySplit_N" <#if shoppingCart.getMaySplit()?default("N") == "N">checked="checked"</#if>
+      <input type="radio" id="maySplit_N" <#if "N" == shoppingCart.getMaySplit()?default("N")>checked="checked"</#if>
           name="may_split" value="false"/>
       <label for="maySplit_N">${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}.</label>
     </div>
     <div>
-      <input type="radio" id="maySplit_Y" <#if shoppingCart.getMaySplit()?default("N") == "Y">checked="checked"</#if>
+      <input type="radio" id="maySplit_Y" <#if "Y" == shoppingCart.getMaySplit()?default("N")>checked="checked"</#if>
           name="may_split" value="true"/>
       <label for="maySplit_Y">${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</label>
     </div>
@@ -79,12 +79,12 @@ under the License.
     <fieldset>
       <legend>${uiLabelMap.OrderIsThisGift}</legend>
       <div>
-        <input type="radio" id="is_gift_Y" <#if shoppingCart.getIsGift()?default("Y") == "Y">checked="checked"</#if>
+        <input type="radio" id="is_gift_Y" <#if "Y" == shoppingCart.getIsGift()?default("Y")>checked="checked"</#if>
             name="is_gift" value="true"/>
         <label for="is_gift_Y">${uiLabelMap.CommonYes}</label>
       </div>
       <div>
-        <input type="radio" id="is_gift_N" <#if shoppingCart.getIsGift()?default("N") == "N">checked="checked"</#if>
+        <input type="radio" id="is_gift_N" <#if "N" == shoppingCart.getIsGift()?default("N")>checked="checked"</#if>
             name="is_gift" value="false"/>
         <label far="is_gift_N">${uiLabelMap.CommonNo}</label>
       </div>

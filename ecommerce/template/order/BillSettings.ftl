@@ -19,7 +19,7 @@ under the License.
 
 <script language="JavaScript" type="text/javascript">
   function shipBillAddr() {
-    <#if requestParameters.singleUsePayment?default("N") == "Y">
+    <#if "Y" == requestParameters.singleUsePayment?default("N")>
       <#assign singleUse = "&amp;singleUsePayment=Y">
     <#else>
       <#assign singleUse = "">
@@ -44,9 +44,9 @@ under the License.
     <div class='h3'>${uiLabelMap.AccountingPaymentInformation}</div>
   </div>
   <div class="screenlet-body">
-    <#if (paymentMethodType?? && !requestParameters.resetType?has_content) || finalizeMode?default("") == "payment">
+    <#if (paymentMethodType?? && !requestParameters.resetType?has_content) || "payment" == finalizeMode?default("")>
       <#-- after initial screen; show detailed screens for selected type -->
-      <#if paymentMethodType == "CC">
+      <#if "CC" == paymentMethodType>
         <#if creditCard?has_content && postalAddress?has_content>
           <form method="post" action="<@ofbizUrl>changeCreditCardAndBillingAddress</@ofbizUrl>" name="billsetupform">
             <input type="hidden" name="paymentMethodId" value="${creditCard.paymentMethodId!}"/>
@@ -57,7 +57,7 @@ under the License.
           <form method="post" action="<@ofbizUrl>enterCreditCardAndBillingAddress</@ofbizUrl>" name="billsetupform">
         </#if>
       </#if>
-      <#if paymentMethodType == "EFT">
+      <#if "EFT" == paymentMethodType>
         <#if eftAccount?has_content && postalAddress?has_content>
           <form method="post" action="<@ofbizUrl>changeEftAccountAndBillingAddress</@ofbizUrl>" name="billsetupform">
             <input type="hidden" name="paymentMethodId" value="${eftAccount.paymentMethodId!}"/>
@@ -68,11 +68,11 @@ under the License.
           <form method="post" action="<@ofbizUrl>enterEftAccountAndBillingAddress</@ofbizUrl>" name="billsetupform">
         </#if>
       </#if>
-      <#if paymentMethodType == "GC">
+      <#if "GC" == paymentMethodType>
         <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="billsetupform">
       </#if>
 
-      <#if requestParameters.singleUsePayment?default("N") == "Y">
+      <#if "Y" == requestParameters.singleUsePayment?default("N")>
         <input type="hidden" name="singleUsePayment" value="Y"/>
         <input type="hidden" name="appendPayment" value="Y"/>
       </#if>
@@ -104,7 +104,7 @@ under the License.
           </tr>
         </#if>
 
-        <#if (paymentMethodType == "CC" || paymentMethodType == "EFT")>
+        <#if ("CC" == paymentMethodType || "EFT" == paymentMethodType)>
           <tr>
             <td width="26%" align="right" valign="top">
               <div class="tableheadtext">${uiLabelMap.PartyBillingAddress}</div>
@@ -116,7 +116,7 @@ under the License.
         </#if>
 
         <#-- credit card fields -->
-        <#if paymentMethodType == "CC">
+        <#if "CC" == paymentMethodType>
           <#if !creditCard?has_content>
             <#assign creditCard = requestParameters>
           </#if>
@@ -230,7 +230,7 @@ under the License.
         </#if>
 
         <#-- gift card fields -->
-        <#if requestParameters.useGc?default("") == "GC" || paymentMethodType == "GC">
+        <#if "GC" == requestParameters.useGc?default("") || "GC" == paymentMethodType>
           <#assign giftCard = requestParameters>
           <input type="hidden" name="addGiftCard" value="Y"/>
           <#if paymentMethodType != "GC">
@@ -307,7 +307,7 @@ under the License.
             <tr>
               <td width='5%' nowrap="nowrap">
                 <input type="checkbox" name="useGc" value="GC"
-                    <#if paymentMethodType?? && paymentMethodType == "GC">checked="checked"</#if>/>
+                    <#if paymentMethodType?? && "GC" == paymentMethodType>checked="checked"</#if>/>
               </td>
               <td width='95%' nowrap="nowrap">
                 <div>${uiLabelMap.AccountingCheckGiftCard}</div>
@@ -323,7 +323,7 @@ under the License.
             <tr>
               <td width='5%' nowrap="nowrap">
                 <input type="radio" name="paymentMethodType" value="offline"
-                    <#if paymentMethodType?? && paymentMethodType == "offline">checked="checked"</#if>/>
+                    <#if paymentMethodType?? && "offline" == paymentMethodType>checked="checked"</#if>/>
               </td>
               <td width='95%' nowrap="nowrap">
                 <div>${uiLabelMap.OrderPaymentOfflineCheckMoney}</div>
@@ -339,7 +339,7 @@ under the License.
             <tr>
               <td width='5%' nowrap="nowrap">
                 <input type="radio" name="paymentMethodType" value="CC"
-                    <#if paymentMethodType?? && paymentMethodType == "CC">checked="checked"</#if>/>
+                    <#if paymentMethodType?? && "CC" == paymentMethodType>checked="checked"</#if>/>
               </td>
               <td width='95%' nowrap="nowrap">
                 <div>${uiLabelMap.AccountingVisaMastercardAmexDiscover}</div>
@@ -355,7 +355,7 @@ under the License.
             <tr>
               <td width='5%' nowrap="nowrap">
                 <input type="radio" name="paymentMethodType" value="EFT"
-                    <#if paymentMethodType?? && paymentMethodType == "EFT">checked="checked"</#if>/>
+                    <#if paymentMethodType?? && "EFT" == paymentMethodType>checked="checked"</#if>/>
               </td>
               <td width='95%' nowrap="nowrap">
                 <div>${uiLabelMap.AccountingAHCElectronicCheck}</div>

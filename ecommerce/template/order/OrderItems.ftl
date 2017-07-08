@@ -21,7 +21,7 @@ under the License.
 <#-- the "urlPrefix" value will be prepended to URLs by the ofbizUrl transform if/when there is no "request" object in the context -->
 <#if baseEcommerceSecureUrl??><#assign urlPrefix = baseEcommerceSecureUrl/></#if>
 <div class="screenlet">
-    <#if maySelectItems?default("N") == "Y" >
+    <#if "Y" == maySelectItems?default("N")>
       <form name="addCommonToCartForm" action="<@ofbizUrl>addordertocart/orderstatus</@ofbizUrl>" method="post">
         <input type="hidden" name="add_all" value="false" />    
             <input type="hidden" name="orderId" value="${orderHeader.orderId}" />
@@ -29,7 +29,7 @@ under the License.
   <h3>
     <#assign numColumns = 8>
     ${uiLabelMap.OrderOrderItems}
-    <#if maySelectItems?default("N") == "Y" && roleTypeId! == "PLACING_CUSTOMER">
+    <#if "Y" == maySelectItems?default("N") && "PLACING_CUSTOMER" == roleTypeId!>
       <#assign numColumns = 11>
       <a href="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()"
           class="submenutext">${uiLabelMap.OrderAddAllToCart}</a>
@@ -43,7 +43,7 @@ under the License.
     <thead>
       <tr>
         <th>${uiLabelMap.OrderProduct}</th>
-        <#if maySelectItems?default("N") == "Y">
+        <#if "Y" == maySelectItems?default("N")>
           <th>${uiLabelMap.OrderQtyOrdered}</th>
           <th>${uiLabelMap.OrderQtyPicked}</th>
           <th>${uiLabelMap.OrderQtyShipped}</th>
@@ -57,7 +57,7 @@ under the License.
           <th>${uiLabelMap.EcommerceUnitPrice}</th>
           <th>${uiLabelMap.OrderAdjustments}</th>
           <th>${uiLabelMap.CommonSubtotal}</th>
-        <#if maySelectItems?default("N") == "Y" && roleTypeId! == "PLACING_CUSTOMER">
+        <#if "Y" == maySelectItems?default("N") && "PLACING_CUSTOMER" == roleTypeId!>
           <th colspan="3"></th>
         </#if>
       </tr>
@@ -66,7 +66,7 @@ under the License.
       <tr>
         <th colspan="7">${uiLabelMap.CommonSubtotal}</th>
         <td><@ofbizCurrency amount=orderSubTotal isoCode=currencyUomId/></td>
-        <#if maySelectItems?default("N") == "Y">
+        <#if "Y" == maySelectItems?default("N")>
           <td colspan="3"></td>
         </#if>
       </tr>
@@ -74,7 +74,7 @@ under the License.
         <tr>
           <th colspan="7">${localOrderReadHelper.getAdjustmentType(orderHeaderAdjustment)}</th>
           <td><@ofbizCurrency amount=localOrderReadHelper.getOrderAdjustmentTotal(orderHeaderAdjustment) isoCode=currencyUomId/></td>
-          <#if maySelectItems?default("N") == "Y">
+          <#if "Y" == maySelectItems?default("N")>
             <td colspan="3"></td>
           </#if>
         </tr>
@@ -82,20 +82,20 @@ under the License.
       <tr>
         <th colspan="7">${uiLabelMap.OrderShippingAndHandling}</th>
         <td><@ofbizCurrency amount=orderShippingTotal isoCode=currencyUomId/></td>
-        <#if maySelectItems?default("N") == "Y">
+        <#if "Y" == maySelectItems?default("N")>
           <td colspan="3"></td>
         </#if>
       </tr>
       <tr>
         <th colspan="7">${uiLabelMap.OrderSalesTax}</th>
         <td><@ofbizCurrency amount=orderTaxTotal isoCode=currencyUomId/></td>
-        <#if maySelectItems?default("N") == "Y">
+        <#if "Y" == maySelectItems?default("N")>
           <td colspan="3"></td>
         </#if>
       </tr>
       <tr>
         <td colspan="3"></td>
-        <#if maySelectItems?default("N") == "Y">
+        <#if "Y" == maySelectItems?default("N")>
           <td colspan="${numColumns - 6}"></td>
           <td colspan="3"></td>
         <#else>
@@ -107,7 +107,7 @@ under the License.
         <td>
           <@ofbizCurrency amount=orderGrandTotal isoCode=currencyUomId/>
         </td>
-        <#if maySelectItems?default("N") == "Y">
+        <#if "Y" == maySelectItems?default("N")>
           <td colspan="3"></td>
         </#if>
       </tr>
@@ -116,7 +116,7 @@ under the License.
       <#list orderItems as orderItem>
         <#-- get info from workeffort and calculate rental quantity, if it was a rental item -->
         <#assign rentalQuantity = 1> <#-- no change if no rental item -->
-        <#if orderItem.orderItemTypeId == "RENTAL_ORDER_ITEM" && workEfforts??>
+        <#if "RENTAL_ORDER_ITEM" == orderItem.orderItemTypeId && workEfforts??>
           <#list workEfforts as workEffort>
             <#if workEffort.workEffortId == orderItem.orderItemSeqId>
               <#assign rentalQuantity = localOrderReadHelper.getWorkEffortRentalQuantity(workEffort)>
@@ -137,7 +137,7 @@ under the License.
           <td colspan="${numColumns}"></td>
         </tr>
         <tr>
-          <#if !orderItem.productId?? || orderItem.productId == "_?_">
+          <#if !orderItem.productId?? || "_?_" == orderItem.productId>
             <td>${orderItem.itemDescription?default("")}</td>
           <#else>
             <#assign product = orderItem.getRelatedOne("Product", true)!/> <#-- should always exist because of FK constraint, but just in case -->
@@ -182,13 +182,13 @@ under the License.
                   : ${product.productDepth!} ${((depthUom.abbreviation)?default(product.depthUomId))!}]
                 </#if>
               </#if>
-              <#if maySelectItems?default("N") == "Y">
+              <#if "Y" == maySelectItems?default("N")>
                 <#assign returns = orderItem.getRelated("ReturnItem", null, null, false)!>
                 <#if returns?has_content>
                   <#list returns as return>
                     <#assign returnHeader = return.getRelatedOne("ReturnHeader", false)>
                     <#if returnHeader.statusId != "RETURN_CANCELLED">
-                      <#if returnHeader.statusId == "RETURN_REQUESTED" || returnHeader.statusId == "RETURN_APPROVED">
+                      <#if "RETURN_REQUESTED" == returnHeader.statusId || "RETURN_APPROVED" == returnHeader.statusId>
                         <#assign displayState = "Return Pending">
                       <#else>
                         <#assign displayState = "Returned">
@@ -199,7 +199,7 @@ under the License.
                 </#if>
               </#if>
             </td>
-            <#if !(maySelectItems?default("N") == "Y")>
+            <#if !("Y" == maySelectItems?default("N"))>
               <td></td>
               <td></td>
               <td></td>
@@ -207,10 +207,10 @@ under the License.
             <td>
               ${orderItem.quantity?string.number}
             </td>
-            <#if maySelectItems?default("N") == "Y">
+            <#if "Y" == maySelectItems?default("N")>
               <td>
                 <#assign pickedQty = localOrderReadHelper.getItemPickedQuantityBd(orderItem)>
-                <#if pickedQty gt 0 && orderHeader.statusId == "ORDER_APPROVED">${pickedQty?default(0)?string.number}<#else>${pickedQty?default(0)?string.number}</#if>
+                <#if pickedQty gt 0 && "ORDER_APPROVED" == orderHeader.statusId>${pickedQty?default(0)?string.number}<#else>${pickedQty?default(0)?string.number}</#if>
               </td>
               <td>
                 <#assign shippedQty = localOrderReadHelper.getItemShippedQuantity(orderItem)>
@@ -234,7 +234,7 @@ under the License.
                 <@ofbizCurrency amount=localOrderReadHelper.getOrderItemTotal(orderItem) isoCode=currencyUomId/>
               </#if>
             </td>
-            <#if maySelectItems?default("N") == "Y" && roleTypeId! == "PLACING_CUSTOMER">
+            <#if "Y" == maySelectItems?default("N") && "PLACING_CUSTOMER" == roleTypeId!>
               <td></td>
               <td>
                 <input name="item_id" value="${orderItem.orderItemSeqId}" type="checkbox"/>
@@ -244,7 +244,7 @@ under the License.
           </#if>
         </tr>
         <#-- now cancel reason and comment field -->
-        <#if maySelectItems?default("N") == "Y" && (orderHeader.statusId != "ORDER_SENT" && orderItem.statusId != "ITEM_COMPLETED" && orderItem.statusId != "ITEM_CANCELLED" && pickedQty == 0)>
+        <#if "Y" == maySelectItems?default("N") && (orderHeader.statusId != "ORDER_SENT" && orderItem.statusId != "ITEM_COMPLETED" && orderItem.statusId != "ITEM_CANCELLED" && pickedQty == 0)>
           <tr>
             <td colspan="7">${uiLabelMap.OrderReturnReason}
               <select name="irm_${orderItem.orderItemSeqId}" class="selectBox">
@@ -264,7 +264,7 @@ under the License.
           </tr>
         </#if>
         <#-- show info from workeffort if it was a rental item -->
-        <#if orderItem.orderItemTypeId == "RENTAL_ORDER_ITEM">
+        <#if "RENTAL_ORDER_ITEM" == orderItem.orderItemTypeId>
           <#if workEffortSave??>
           <tr>
             <td></td>
@@ -285,7 +285,7 @@ under the License.
               : ${StringUtil.wrapString(localOrderReadHelper.getAdjustmentType(orderItemAdjustment))}
               <#if orderItemAdjustment.description?has_content>
                 : ${StringUtil.wrapString(orderItemAdjustment.description)}</#if>
-              <#if orderItemAdjustment.orderAdjustmentTypeId == "SALES_TAX">
+              <#if "SALES_TAX" == orderItemAdjustment.orderAdjustmentTypeId>
                 <#if orderItemAdjustment.primaryGeoId?has_content>
                   <#assign primaryGeo = orderItemAdjustment.getRelatedOne("PrimaryGeo", true)/>
                   <#if primaryGeo.geoName?has_content>
@@ -309,7 +309,7 @@ under the License.
               <@ofbizCurrency amount=localOrderReadHelper.getOrderItemAdjustmentTotal(orderItem, orderItemAdjustment) isoCode=currencyUomId/>
             </td>
             <td></td>
-            <#if maySelectItems?default("N") == "Y">
+            <#if "Y" == maySelectItems?default("N")>
               <td colspan="3"></td>
             </#if>
           </tr>
@@ -342,7 +342,7 @@ under the License.
       </tr>
     </tbody>
   </table>
-    <#if maySelectItems?default("N") == "Y" >
+    <#if "Y" == maySelectItems?default("N") >
         </form>
      </#if>
 </div>

@@ -20,35 +20,35 @@ under the License.
 <script language="javascript" type="text/javascript">
   //<![CDATA[
   function submitForm(form, mode, value) {
-    if (mode == "DN") {
+    if ("DN" == mode) {
       // done action; checkout
       form.action = "<@ofbizUrl>checkoutoptions</@ofbizUrl>";
       form.submit();
-    } else if (mode == "CS") {
+    } else if ("CS" == mode) {
       // continue shopping
       form.action = "<@ofbizUrl>updateCheckoutOptions/showcart</@ofbizUrl>";
       form.submit();
-    } else if (mode == "NA") {
+    } else if ("NA" == mode) {
       // new address
       form.action = "<@ofbizUrl>updateCheckoutOptions/editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION&DONE_PAGE=checkoutoptions</@ofbizUrl>";
       form.submit();
-    } else if (mode == "EA") {
+    } else if ("EA" == mode) {
       // edit address
       form.action = "<@ofbizUrl>updateCheckoutOptions/editcontactmech?DONE_PAGE=checkoutshippingaddress&contactMechId="+ value+"</@ofbizUrl>";
       form.submit();
-    } else if (mode == "NC") {
+    } else if ("NC" == mode) {
       // new credit card
       form.action = "<@ofbizUrl>updateCheckoutOptions/editcreditcard?DONE_PAGE=checkoutoptions</@ofbizUrl>";
       form.submit();
-    } else if (mode == "EC") {
+    } else if ("EC" == mode) {
       // edit credit card
       form.action = "<@ofbizUrl>updateCheckoutOptions/editcreditcard?DONE_PAGE=checkoutoptions&paymentMethodId="+ value+"</@ofbizUrl>";
       form.submit();
-    } else if (mode == "NE") {
+    } else if ("NE" == mode) {
       // new eft account
       form.action = "<@ofbizUrl>updateCheckoutOptions/editeftaccount?DONE_PAGE=checkoutoptions</@ofbizUrl>";
       form.submit();
-    } else if (mode == "EE") {
+    } else if ("EE" == mode) {
       // edit eft account
       form.action = "<@ofbizUrl>updateCheckoutOptions/editeftaccount?DONE_PAGE=checkoutoptions&paymentMethodId="+ value+"</@ofbizUrl>";
       form.submit();

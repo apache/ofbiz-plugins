@@ -61,7 +61,7 @@ under the License.
 <div class="screenlet">
   <div class="screenlet-title-bar">
     <div class="boxlink">
-      <#if parameters.showSent! == "true">
+      <#if "true" == parameters.showSent!>
         <a href="<@ofbizUrl>messagelist</@ofbizUrl>" class="submenutextright">
           ${uiLabelMap.EcommerceViewReceivedOnly}
         </a>

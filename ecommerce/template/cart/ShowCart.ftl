@@ -32,7 +32,7 @@ under the License.
             var cform = document.cartform;
             var len = cform.elements.length;
             var selectedValue = e.value;
-            if (selectedValue == "") {
+            if ("" == selectedValue) {
                 return;
             }
 
@@ -42,7 +42,7 @@ under the License.
                 var element = cform.elements[i];
                 var ename = element.name;
                 var sname = ename.substring(0,16);
-                if (sname == "option^GIFT_WRAP") {
+                if ("option^GIFT_WRAP" == sname) {
                     var options = element.options;
                     var olen = options.length;
                     var matching = -1;
@@ -102,8 +102,8 @@ under the License.
           ${uiLabelMap.EcommerceProductNumber}
           <input type="text" class="inputBox" name="add_product_id" value="${requestParameters.add_product_id!}" />
           <#-- check if rental data present  insert extra fields in Quick Add-->
-          <#if (product?? && product.getString("productTypeId") == "ASSET_USAGE"
-              ) || (product?? && product.getString("productTypeId") == "ASSET_USAGE_OUT_IN")>
+          <#if (product?? && "ASSET_USAGE" == product.getString("productTypeId")
+              ) || (product?? && "ASSET_USAGE_OUT_IN" == product.getString("productTypeId"))>
             ${uiLabelMap.EcommerceStartDate}:
             <input type="text" class="inputBox" size="10" name="reservStart"
                 value="${requestParameters.reservStart?default("")}" />

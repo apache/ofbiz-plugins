@@ -20,7 +20,7 @@ under the License.
 <div class="screenlet">
   <div class="screenlet-title-bar">
     <div class="boxlink">
-      <#if showMessageLinks?default("false")?upper_case == "TRUE">
+      <#if "TRUE" == showMessageLinks?default("false")?upper_case>
         <a href="<@ofbizUrl>messagelist</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewList}</a>
       </#if>
     </div>

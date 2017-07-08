@@ -26,7 +26,7 @@ under the License.
 
     <div class="screenlet">
       <h3>
-      <#if maySelectItems?default("N") == "Y" && returnLink?default("N") == "Y" && (orderHeader.statusId)! == "ORDER_COMPLETED" && roleTypeId! == "PLACING_CUSTOMER">
+      <#if "Y" == maySelectItems?default("N") && "Y" == returnLink?default("N") && "ORDER_COMPLETED" == (orderHeader.statusId)! && "PLACING_CUSTOMER" == roleTypeId!>
         <a href="<@ofbizUrl fullPath="true">makeReturn?orderId=${orderHeader.orderId}</@ofbizUrl>"
             class="submenutextright">${uiLabelMap.OrderRequestReturn}</a>
       </#if>
@@ -87,7 +87,7 @@ under the License.
         <ul>
           <#if !paymentMethod?has_content && paymentMethodType?has_content>
             <li>
-              <#if paymentMethodType.paymentMethodTypeId == "EXT_OFFLINE">
+              <#if "EXT_OFFLINE" == paymentMethodType.paymentMethodTypeId>
                 ${uiLabelMap.AccountingOfflinePayment}
                 <#if orderHeader?has_content && paymentAddress?has_content>
                   ${uiLabelMap.OrderSendPaymentTo}:
@@ -330,8 +330,8 @@ under the License.
           </#if>
           <li>
             ${uiLabelMap.OrderSplittingPreference}:
-            <#if maySplit?default("N") == "N">${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}.</#if>
-            <#if maySplit?default("N") == "Y">${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</#if>
+            <#if "N" == maySplit?default("N")>${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}.</#if>
+            <#if "Y" == maySplit?default("N")>${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</#if>
           </li>
           <#-- shipping instructions -->
           <#if orderHeader?has_content>
@@ -355,8 +355,8 @@ under the License.
           <#if productStore.showCheckoutGiftOptions! != "N">
             <li>
               ${uiLabelMap.OrderGift}?
-              <#if isGift?default("N") == "N">${uiLabelMap.OrderThisIsNotGift}.</#if>
-              <#if isGift?default("N") == "Y">${uiLabelMap.OrderThisIsGift}.</#if>
+              <#if "N" == isGift?default("N")>${uiLabelMap.OrderThisIsNotGift}.</#if>
+              <#if "Y" == isGift?default("N")>${uiLabelMap.OrderThisIsGift}.</#if>
             </li>
             <#if giftMessage?has_content>
               <li>

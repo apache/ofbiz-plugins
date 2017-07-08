@@ -146,7 +146,7 @@ under the License.
         <tr>
           <td>
           ${indent}
-            <#if content.contentTypeId == "WEB_SITE_PUB_PT" >
+            <#if "WEB_SITE_PUB_PT" == content.contentTypeId>
               <a class="tabButton"
                   href="<@ofbizUrl>showforum?forumId=${content.contentId!}&amp;nodeTrailCsv=${csv}</@ofbizUrl>">${uiLabelMap.CommonBackTo}</a>
               &nbsp;${content.contentName!}

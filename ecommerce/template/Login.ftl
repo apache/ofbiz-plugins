@@ -18,7 +18,7 @@ under the License.
 -->
 <#assign janrainEnabled = Static["org.apache.ofbiz.entity.util.EntityUtilProperties"].getPropertyValue("ecommerce", "janrain.enabled", delegator)>
 <#assign appName = Static["org.apache.ofbiz.entity.util.EntityUtilProperties"].getPropertyValue("ecommerce", "janrain.appName", delegator)>
-<#if janrainEnabled == "Y">
+<#if "Y" == janrainEnabled>
 <script type="text/javascript">
 (function() {
     if (typeof window.janrain !== 'object') window.janrain = {};

@@ -27,9 +27,9 @@ under the License.
   }
   function clickUsername() {
     if (document.getElementById('UNUSEEMAIL').checked) {
-      if (lastFocusedName == "UNUSEEMAIL") {
+      if ("UNUSEEMAIL" == lastFocusedName) {
         jQuery('#PASSWORD').focus();
-      } else if (lastFocusedName == "PASSWORD") {
+      } else if ("PASSWORD" == lastFocusedName) {
         jQuery('#UNUSEEMAIL').focus();
       } else {
         jQuery('#PASSWORD').focus();
@@ -53,7 +53,7 @@ under the License.
   function hideShowUsaStates() {
     var customerStateElement = document.getElementById('newuserform_stateProvinceGeoId');
     var customerCountryElement = document.getElementById('newuserform_countryGeoId');
-    if (customerCountryElement.value == "USA" || customerCountryElement.value == "UMI") {
+    if ("USA" == customerCountryElement.value || "UMI" == customerCountryElement.value) {
       customerStateElement.style.display = "block";
     } else {
       customerStateElement.style.display = "none";
@@ -235,10 +235,10 @@ side by side in two columns, give each fieldset a class name of "col"
       <label for="CUSTOMER_ADDRESS_ALLOW_SOL">${uiLabelMap.PartyAllowAddressSolicitation}</label>
       <@fieldErrors fieldName="CUSTOMER_ADDRESS_ALLOW_SOL"/>
       <select name="CUSTOMER_ADDRESS_ALLOW_SOL" id="CUSTOMER_ADDRESS_ALLOW_SOL">
-        <#if (((requestParameters.CUSTOMER_ADDRESS_ALLOW_SOL)!"") == "Y")>
+        <#if ("Y" == ((requestParameters.CUSTOMER_ADDRESS_ALLOW_SOL)!""))>
           <option value="Y">${uiLabelMap.CommonY}</option>
         </#if>
-        <#if (((requestParameters.CUSTOMER_ADDRESS_ALLOW_SOL)!"") == "N")>
+        <#if ("N" == ((requestParameters.CUSTOMER_ADDRESS_ALLOW_SOL)!""))>
           <option value="N">${uiLabelMap.CommonN}</option>
         </#if>
         <option></option>
@@ -279,9 +279,9 @@ side by side in two columns, give each fieldset a class name of "col"
           </td>
           <td>
             <select name="CUSTOMER_HOME_ALLOW_SOL">
-              <#if (((requestParameters.CUSTOMER_HOME_ALLOW_SOL)!"") == "Y")>
+              <#if ("Y" == ((requestParameters.CUSTOMER_HOME_ALLOW_SOL)!""))>
                 <option value="Y">${uiLabelMap.CommonY}</option></#if>
-              <#if (((requestParameters.CUSTOMER_HOME_ALLOW_SOL)!"") == "N")>
+              <#if ("N" == ((requestParameters.CUSTOMER_HOME_ALLOW_SOL)!""))>
                 <option value="N">${uiLabelMap.CommonN}</option>
               </#if>
               <option></option>
@@ -306,9 +306,9 @@ side by side in two columns, give each fieldset a class name of "col"
           </td>
           <td>
             <select name="CUSTOMER_WORK_ALLOW_SOL">
-              <#if (((requestParameters.CUSTOMER_WORK_ALLOW_SOL)!"") == "Y")>
+              <#if ("Y" == ((requestParameters.CUSTOMER_WORK_ALLOW_SOL)!""))>
                 <option value="Y">${uiLabelMap.CommonY}</option></#if>
-              <#if (((requestParameters.CUSTOMER_WORK_ALLOW_SOL)!"") == "N")>
+              <#if ("N" == ((requestParameters.CUSTOMER_WORK_ALLOW_SOL)!""))>
               <option value="N">${uiLabelMap.CommonN}</option></#if>
               <option></option>
               <option value="Y">${uiLabelMap.CommonY}</option>
@@ -330,9 +330,9 @@ side by side in two columns, give each fieldset a class name of "col"
           <td></td>
           <td>
             <select name="CUSTOMER_FAX_ALLOW_SOL">
-              <#if (((requestParameters.CUSTOMER_FAX_ALLOW_SOL)!"") == "Y")>
+              <#if ("Y" == ((requestParameters.CUSTOMER_FAX_ALLOW_SOL)!""))>
                 <option value="Y">${uiLabelMap.CommonY}</option></#if>
-              <#if (((requestParameters.CUSTOMER_FAX_ALLOW_SOL)!"") == "N")>
+              <#if ("N" == ((requestParameters.CUSTOMER_FAX_ALLOW_SOL)!""))>
               <option value="N">${uiLabelMap.CommonN}</option></#if>
               <option></option>
               <option value="Y">${uiLabelMap.CommonY}</option>
@@ -355,9 +355,9 @@ side by side in two columns, give each fieldset a class name of "col"
           <td></td>
           <td>
             <select name="CUSTOMER_MOBILE_ALLOW_SOL">
-              <#if (((requestParameters.CUSTOMER_MOBILE_ALLOW_SOL)!"") == "Y")>
+              <#if ("Y" == ((requestParameters.CUSTOMER_MOBILE_ALLOW_SOL)!""))>
                 <option value="Y">${uiLabelMap.CommonY}</option></#if>
-              <#if (((requestParameters.CUSTOMER_MOBILE_ALLOW_SOL)!"") == "N")>
+              <#if ("N" == ((requestParameters.CUSTOMER_MOBILE_ALLOW_SOL)!""))>
               <option value="N">${uiLabelMap.CommonN}</option></#if>
               <option></option>
               <option value="Y">${uiLabelMap.CommonY}</option>
@@ -380,9 +380,9 @@ side by side in two columns, give each fieldset a class name of "col"
     <div>
       <label for="CUSTOMER_EMAIL_ALLOW_SOL">${uiLabelMap.PartyAllowSolicitation}</label>
       <select name="CUSTOMER_EMAIL_ALLOW_SOL" id="CUSTOMER_EMAIL_ALLOW_SOL">
-        <#if (((requestParameters.CUSTOMER_EMAIL_ALLOW_SOL)!"") == "Y")>
+        <#if ("Y" == ((requestParameters.CUSTOMER_EMAIL_ALLOW_SOL)!""))>
           <option value="Y">${uiLabelMap.CommonY}</option></#if>
-        <#if (((requestParameters.CUSTOMER_EMAIL_ALLOW_SOL)!"") == "N")>
+        <#if ("N" == ((requestParameters.CUSTOMER_EMAIL_ALLOW_SOL)!""))>
         <option value="N">${uiLabelMap.CommonN}</option></#if>
         <option></option>
         <option value="Y">${uiLabelMap.CommonY}</option>

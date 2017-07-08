@@ -332,7 +332,7 @@ under the License.
           </#if>
         </#if>
       </#list>
-      <#if postalAddressFlag == "N">
+      <#if "N" == postalAddressFlag>
         <div>
           <label>${uiLabelMap.PartyPostalInformationNotFound}.</label>
         </div>

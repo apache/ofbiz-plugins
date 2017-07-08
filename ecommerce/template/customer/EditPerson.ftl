@@ -86,8 +86,8 @@ under the License.
             <select name="gender" class='selectBox'>
             <#if personData.gender?has_content >
               <option value="${personData.gender}">
-                <#if personData.gender == "M" >${uiLabelMap.CommonMale}</#if>
-                  <#if personData.gender == "F" >${uiLabelMap.CommonFemale}</#if>
+                <#if "M" == personData.gender >${uiLabelMap.CommonMale}</#if>
+                  <#if "F" == personData.gender >${uiLabelMap.CommonFemale}</#if>
               </option>
               <option value="${personData.gender}"> --</option>
             <#else>
@@ -132,9 +132,9 @@ under the License.
             <select name="maritalStatus" class='selectBox'>
             <#if personData.maritalStatus?has_content>
               <option value="${personData.maritalStatus}">
-                <#if personData.maritalStatus == "S">${uiLabelMap.PartySingle}</#if>
-                 <#if personData.maritalStatus == "M">${uiLabelMap.PartyMarried}</#if>
-                 <#if personData.maritalStatus == "D">${uiLabelMap.PartyDivorced}</#if>
+                <#if "S" == personData.maritalStatus>${uiLabelMap.PartySingle}</#if>
+                 <#if "M" == personData.maritalStatus>${uiLabelMap.PartyMarried}</#if>
+                 <#if "D" == personData.maritalStatus>${uiLabelMap.PartyDivorced}</#if>
               </option>
               <option value="${personData.maritalStatus}"> --</option>
             <#else>

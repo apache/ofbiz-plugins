@@ -123,8 +123,8 @@ function onClickShippingMethod(e) {
               <td colspan="2">
                 <div>
                   <h2>${uiLabelMap.OrderIsThisGift}</h2>
-                  <input type='radio' <#if shoppingCart.getIsGift()?default("Y") == "Y">checked="checked"</#if> name='is_gift' value='true'/><span class='tabletext'>${uiLabelMap.CommonYes}</span>
-                  <input type='radio' <#if shoppingCart.getIsGift()?default("N") == "N">checked="checked"</#if> name='is_gift' value='false'/><span class='tabletext'>${uiLabelMap.CommonNo}</span>
+                  <input type='radio' <#if "Y" == shoppingCart.getIsGift()?default("Y")>checked="checked"</#if> name='is_gift' value='true'/><span class='tabletext'>${uiLabelMap.CommonYes}</span>
+                  <input type='radio' <#if "N" == shoppingCart.getIsGift()?default("N")>checked="checked"</#if> name='is_gift' value='false'/><span class='tabletext'>${uiLabelMap.CommonNo}</span>
                 </div>
               </td>
             </tr>
@@ -148,7 +148,7 @@ function onClickShippingMethod(e) {
     <tr>
         <td valign="top" colspan="2">
             <div>
-                <input type='radio' <#if shoppingCart.getMaySplit()?default("N") == "N">checked="checked"</#if> name='may_split' value='false'/>
+                <input type='radio' <#if "N" == shoppingCart.getMaySplit()?default("N")>checked="checked"</#if> name='may_split' value='false'/>
                 <span>${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}.</span>
             </div>
         </td>
@@ -156,7 +156,7 @@ function onClickShippingMethod(e) {
     <tr>
         <td valign="top"  colspan="2">
             <div>
-                <input <#if shoppingCart.getMaySplit()?default("N") == "Y">checked="checked"</#if> type='radio' name='may_split' value='true'/>
+                <input <#if "Y" == shoppingCart.getMaySplit()?default("N")>checked="checked"</#if> type='radio' name='may_split' value='true'/>
                 <span>${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</span>
             </div>
         </td>

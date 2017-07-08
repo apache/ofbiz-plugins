@@ -23,7 +23,7 @@ under the License.
   <ul>
     <li>
       ${miniProduct.productId}
-      <#if (priceResult.price?default(0) > 0 && miniProduct.requireAmount?default("N") == "N")>
+      <#if (priceResult.price?default(0) > 0 && "N" == miniProduct.requireAmount?default("N"))>
         <#if "Y" = miniProduct.isVirtual!>
           ${uiLabelMap.CommonFrom}
         </#if>
@@ -46,14 +46,14 @@ under the License.
     <#elseif (miniProduct.salesDiscontinuationDate??) && (nowTimeLong > miniProduct.salesDiscontinuationDate.getTime())>
       <#-- check to see if salesDiscontinuationDate has passed -->
       <li>${uiLabelMap.ProductNoLongerAvailable}</li>
-    <#elseif miniProduct.isVirtual?default("N") == "Y">
+    <#elseif "Y" == miniProduct.isVirtual?default("N")>
       <li>
         <a href="<@ofbizCatalogAltUrl productCategoryId=requestParameters.category_id?? productId=miniProduct.productId/>"
             class="buttons">
           <span style="white-space: nowrap;">${uiLabelMap.OrderChooseVariations}...</span>
         </a>
       </li>
-    <#elseif miniProduct.requireAmount?default("N") == "Y">
+    <#elseif "Y" == miniProduct.requireAmount?default("N")>
       <li>
         <a href="<@ofbizCatalogAltUrl productCategoryId=requestParameters.category_id?? productId=miniProduct.productId/>"
             class="buttons">

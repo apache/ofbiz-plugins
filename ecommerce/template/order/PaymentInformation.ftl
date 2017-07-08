@@ -21,7 +21,7 @@ under the License.
 </#if>
 <script language="JavaScript" type="text/javascript">
 function shipBillAddr() {
-    <#if requestParameters.singleUsePayment?default("N") == "Y">
+    <#if "Y" == requestParameters.singleUsePayment?default("N")>
       <#assign singleUse = "&amp;singleUsePayment=Y">
     <#else>
       <#assign singleUse = "">
@@ -40,7 +40,7 @@ function shipBillAddr() {
     </div>
     <div class="screenlet-body">
           <#-- after initial screen; show detailed screens for selected type -->
-          <#if paymentMethodTypeId! == "CREDIT_CARD">
+          <#if "CREDIT_CARD" == paymentMethodTypeId!>
             <#if creditCard?has_content && postalAddress?has_content && !requestParameters.useShipAddr??>
               <form method="post" action="<@ofbizUrl>changeCreditCardAndBillingAddress</@ofbizUrl>" name="${parameters.formNameValue}">
                 <input type="hidden" name="paymentMethodId" value="${creditCard.paymentMethodId!}"/>
@@ -50,7 +50,7 @@ function shipBillAddr() {
             <#else>
               <form method="post" action="<@ofbizUrl>enterCreditCardAndBillingAddress</@ofbizUrl>" name="${parameters.formNameValue}">
             </#if>
-          <#elseif paymentMethodTypeId! == "EFT_ACCOUNT">
+          <#elseif "EFT_ACCOUNT" == paymentMethodTypeId!>
             <#if eftAccount?has_content && postalAddress?has_content>
               <form method="post" action="<@ofbizUrl>changeEftAccountAndBillingAddress</@ofbizUrl>" name="${parameters.formNameValue}">
                 <input type="hidden" name="paymentMethodId" value="${eftAccount.paymentMethodId!}"/>
@@ -60,15 +60,15 @@ function shipBillAddr() {
             <#else>
               <form method="post" action="<@ofbizUrl>enterEftAccountAndBillingAddress</@ofbizUrl>" name="${parameters.formNameValue}">
             </#if>
-          <#elseif paymentMethodTypeId! == "GIFT_CARD"> <#--Don't know much how this is handled -->
+          <#elseif "GIFT_CARD" == paymentMethodTypeId!> <#--Don't know much how this is handled -->
             <form method="post" action="<@ofbizUrl>enterGiftCard</@ofbizUrl>" name="${parameters.formNameValue}">
-          <#elseif paymentMethodTypeId! == "EXT_OFFLINE">
+          <#elseif "EXT_OFFLINE" == paymentMethodTypeId!>
             <form method="post" action="<@ofbizUrl>processPaymentSettings</@ofbizUrl>" name="${parameters.formNameValue}">
           <#else>
             <div>${uiLabelMap.AccountingPaymentMethodTypeNotHandled} ${paymentMethodTypeId!}</div>
           </#if>
 
-          <#if requestParameters.singleUsePayment?default("N") == "Y">
+          <#if "Y" == requestParameters.singleUsePayment?default("N")>
             <input type="hidden" name="singleUsePayment" value="Y"/>
             <input type="hidden" name="appendPayment" value="Y"/>
           </#if>
@@ -95,7 +95,7 @@ function shipBillAddr() {
               </tr>
             </#if>
 
-            <#if (paymentMethodTypeId! == "CREDIT_CARD" || paymentMethodTypeId! == "EFT_ACCOUNT")>
+            <#if ("CREDIT_CARD" == paymentMethodTypeId! || "EFT_ACCOUNT" == paymentMethodTypeId!)>
               <tr>
                 <td width="26%" align="right" valign="top"><div class="tableheadtext">${uiLabelMap.PartyBillingAddress}</div></td>
                 <td width="5">&nbsp;</td>
@@ -105,7 +105,7 @@ function shipBillAddr() {
             </#if>
 
             <#-- credit card fields -->
-            <#if paymentMethodTypeId! == "CREDIT_CARD">
+            <#if "CREDIT_CARD" == paymentMethodTypeId!>
               <#if !creditCard?has_content>
                 <#assign creditCard = requestParameters>
               </#if>
@@ -191,7 +191,7 @@ function shipBillAddr() {
             </#if>
 
             <#-- gift card fields -->
-            <#if requestParameters.addGiftCard?default("") == "Y" || paymentMethodTypeId! == "GIFT_CARD">
+            <#if "Y" == requestParameters.addGiftCard?default("") || "GIFT_CARD" == paymentMethodTypeId!>
               <input type="hidden" name="addGiftCard" value="Y"/>
               <#assign giftCard = giftCard!>
               <#if paymentMethodTypeId! != "GIFT_CARD">

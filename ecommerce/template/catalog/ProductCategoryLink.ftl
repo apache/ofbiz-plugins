@@ -26,12 +26,12 @@ under the License.
     <#assign imageUrl = productCategoryLink.imageUrl!/>
     <#assign detailText = productCategoryLink.detailText!/>
 
-    <#if productCategoryLink.linkTypeEnumId == "PCLT_SEARCH_PARAM">
+    <#if "PCLT_SEARCH_PARAM" == productCategoryLink.linkTypeEnumId>
       <#assign linkUrl = requestAttributes._REQUEST_HANDLER_.makeLink(
           request, response, "keywordsearch?" + productCategoryLink.linkInfo)/>
-    <#elseif productCategoryLink.linkTypeEnumId == "PCLT_ABS_URL">
+    <#elseif "PCLT_ABS_URL" == productCategoryLink.linkTypeEnumId>
       <#assign linkUrl = productCategoryLink.linkInfo!/>
-    <#elseif productCategoryLink.linkTypeEnumId == "PCLT_CAT_ID">
+    <#elseif "PCLT_CAT_ID" == productCategoryLink.linkTypeEnumId>
       <#assign linkUrl = requestAttributes._REQUEST_HANDLER_.makeLink(
           request, response, "category/~category_id=" + productCategoryLink.linkInfo) +
           "/~pcategory=" + productCategoryId/>

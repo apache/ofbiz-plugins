@@ -35,7 +35,7 @@ under the License.
 
 <#macro "ask:section">
   <#list .node?children as kid>
-    <#if kid?node_name == "sectionTitle">
+    <#if "sectionTitle" == kid?node_name>
       <h3><#recurse kid></h3>
     <#else>
       ${kid.@@markup}

@@ -40,7 +40,7 @@ under the License.
       <#else>
         <a href="<@ofbizUrl>viewprofile?SHOW_OLD=true</@ofbizUrl>" class="button">${uiLabelMap.PartyShowOld}</a>
       </#if>
-      <#if (productStore.enableDigProdUpload)! == "Y">
+      <#if "Y" == (productStore.enableDigProdUpload)!>
         <a href="<@ofbizUrl>digitalproductlist</@ofbizUrl>" class="button">${uiLabelMap.EcommerceDigitalProductUpload}</a>
       </#if>
     </td>
@@ -130,9 +130,9 @@ under the License.
                 <div>
                   <#if contactMechPurposeType??>
                     ${contactMechPurposeType.get("description",locale)}
-                    <#if contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION" && (profiledefs.defaultShipAddr)?default("") == contactMech.contactMechId>
+                    <#if "SHIPPING_LOCATION" == contactMechPurposeType.contactMechPurposeTypeId && (profiledefs.defaultShipAddr)?default("") == contactMech.contactMechId>
                       <span class="buttontextdisabled">${uiLabelMap.EcommerceIsDefault}</span>
-                    <#elseif contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION">
+                    <#elseif "SHIPPING_LOCATION" == contactMechPurposeType.contactMechPurposeTypeId>
                       <form name="defaultShippingAddressForm" method="post" action="<@ofbizUrl>setprofiledefault/viewprofile</@ofbizUrl>">
                         <input type="hidden" name="productStoreId" value="${productStoreId}" />
                         <input type="hidden" name="defaultShipAddr" value="${contactMech.contactMechId}" />
@@ -240,7 +240,7 @@ under the License.
               <#assign giftCard = paymentMethodValueMap.giftCard! />
               <#assign eftAccount = paymentMethodValueMap.eftAccount! />
               <tr>
-                <#if paymentMethod.paymentMethodTypeId! == "CREDIT_CARD">
+                <#if "CREDIT_CARD" == paymentMethod.paymentMethodTypeId!>
                 <td valign="top">
                   <div>
                     ${uiLabelMap.AccountingCreditCard}:
@@ -261,7 +261,7 @@ under the License.
                   <a href="<@ofbizUrl>editcreditcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="button">
                             ${uiLabelMap.CommonUpdate}</a>
                 </td>
-                <#elseif paymentMethod.paymentMethodTypeId! == "GIFT_CARD">
+                <#elseif "GIFT_CARD" == paymentMethod.paymentMethodTypeId!>
                   <#if giftCard?has_content && giftCard.cardNumber?has_content>
                     <#assign giftCardNumber = "" />
                     <#assign pcardNumber = giftCard.cardNumber />
@@ -291,7 +291,7 @@ under the License.
                     <a href="<@ofbizUrl>editgiftcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="button">
                             ${uiLabelMap.CommonUpdate}</a>
                   </td>
-                  <#elseif paymentMethod.paymentMethodTypeId! == "EFT_ACCOUNT">
+                  <#elseif "EFT_ACCOUNT" == paymentMethod.paymentMethodTypeId!>
                   <td valign="top">
                     <div>
                       ${uiLabelMap.AccountingEFTAccount}: ${eftAccount.nameOnAccount!} - <#if eftAccount.bankName?has_content>${uiLabelMap.AccountingBank}: ${eftAccount.bankName}</#if> <#if eftAccount.accountNumber?has_content>${uiLabelMap.AccountingAccount} #: ${eftAccount.accountNumber}</#if>
@@ -475,7 +475,7 @@ under the License.
         <td>${emailAddress.infoString!}</td>
         <td>&nbsp;</td>
         <td>
-          <#if (contactListParty.statusId! == "CLPT_ACCEPTED")>            
+          <#if ("CLPT_ACCEPTED" == contactListParty.statusId!)>
             <form method="post" action="<@ofbizUrl>updateContactListParty</@ofbizUrl>" name="clistRejectForm${contactListParty_index}">
             <div>
               <#assign productStoreId = Static["org.apache.ofbiz.product.store.ProductStoreWorker"].getProductStoreId(request) />
@@ -488,7 +488,7 @@ under the License.
               <input type="submit" value="${uiLabelMap.EcommerceUnsubscribe}" class="smallSubmit"/>
               </div>
             </form>
-          <#elseif (contactListParty.statusId! == "CLPT_PENDING")>
+          <#elseif ("CLPT_PENDING" == contactListParty.statusId!)>
             <form method="post" action="<@ofbizUrl>updateContactListParty</@ofbizUrl>" name="clistAcceptForm${contactListParty_index}">
             <div>
               <input type="hidden" name="partyId" value="${party.partyId}"/>
@@ -500,7 +500,7 @@ under the License.
               <input type="submit" value="${uiLabelMap.EcommerceVerifySubscription}" class="smallSubmit"/>
               </div>
             </form>
-          <#elseif (contactListParty.statusId! == "CLPT_REJECTED")>
+          <#elseif ("CLPT_REJECTED" == contactListParty.statusId!)>
             <form method="post" action="<@ofbizUrl>updateContactListParty</@ofbizUrl>" name="clistPendForm${contactListParty_index}">
             <div>
               <input type="hidden" name="partyId" value="${party.partyId}"/>
@@ -559,9 +559,9 @@ under the License.
             <#assign responses = Static["org.apache.ofbiz.product.store.ProductStoreWorker"].checkSurveyResponse(request, survey.surveyId)?default(0)>
             <#if (responses < 1)>${uiLabelMap.EcommerceNotCompleted}<#else>${uiLabelMap.EcommerceCompleted}</#if>
           </td>
-          <#if (responses == 0 || survey.allowMultiple?default("N") == "Y")>
+          <#if (responses == 0 || "Y"  == survey.allowMultiple?default("N"))>
             <#assign surveyLabel = uiLabelMap.EcommerceTakeSurvey />
-            <#if (responses > 0 && survey.allowUpdate?default("N") == "Y")>
+            <#if (responses > 0 && "Y"  == survey.allowUpdate?default("N"))>
               <#assign surveyLabel = uiLabelMap.EcommerceUpdateSurvey />
             </#if>
             <td align="right"><a href="<@ofbizUrl>takesurvey?productStoreSurveyId=${surveyAppl.productStoreSurveyId}</@ofbizUrl>" class="button">${surveyLabel}</a></td>

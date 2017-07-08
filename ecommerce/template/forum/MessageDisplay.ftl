@@ -18,7 +18,7 @@ under the License.
 -->
 <#-- Thread content id equals contentId if contentAssocTypeId equals PUBLISH_LINK, else threadContentId = ownerContentId -->
 <#assign threadContentId = forumMessage.contentId/>
-<#if forumMessage.caContentAssocTypeId == "RESPONSE">
+<#if "RESPONSE" == forumMessage.caContentAssocTypeId>
   <#assign threadContentId = forumMessage.ownerContentId!/>
 </#if>
 <#if rsp??>

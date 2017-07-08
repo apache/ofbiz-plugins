@@ -24,31 +24,31 @@ under the License.
      <fieldset>
        <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??>
          <div>
-           <input type="checkbox" name="addGiftCard" value="Y" <#if addGiftCard?? && addGiftCard == "Y">checked="checked"</#if> />
+           <input type="checkbox" name="addGiftCard" value="Y" <#if addGiftCard?? && "Y" == addGiftCard>checked="checked"</#if> />
            <label for="addGiftCard">${uiLabelMap.AccountingCheckGiftCard}</label>
          </div>
        </#if>
        <#if productStorePaymentMethodTypeIdMap.EXT_OFFLINE??>
          <div>
-           <input type="radio" id="paymentMethodTypeId_EXT_OFFLINE" name="paymentMethodTypeId" value="EXT_OFFLINE" <#if paymentMethodTypeId?? && paymentMethodTypeId == "EXT_OFFLINE">checked="checked"</#if> />
+           <input type="radio" id="paymentMethodTypeId_EXT_OFFLINE" name="paymentMethodTypeId" value="EXT_OFFLINE" <#if paymentMethodTypeId?? && "EXT_OFFLINE" == paymentMethodTypeId>checked="checked"</#if> />
            <label for="paymentMethodTypeId_EXT_OFFLINE">${uiLabelMap.OrderPaymentOfflineCheckMoney}</label>
          </div>
        </#if>
        <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
          <div>
-           <input type="radio" id="paymentMethodTypeId_CREDIT_CARD" name="paymentMethodTypeId" value="CREDIT_CARD" <#if paymentMethodTypeId?? && paymentMethodTypeId == "CREDIT_CARD">checked="checked"</#if> />
+           <input type="radio" id="paymentMethodTypeId_CREDIT_CARD" name="paymentMethodTypeId" value="CREDIT_CARD" <#if paymentMethodTypeId?? && "CREDIT_CARD" == paymentMethodTypeId>checked="checked"</#if> />
            <label for="paymentMethodTypeId_CREDIT_CARD">${uiLabelMap.AccountingVisaMastercardAmexDiscover}</label>
          </div>
        </#if>
        <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??>
          <div>
-           <input type="radio" id="paymentMethodTypeId_EFT_ACCOUNT" name="paymentMethodTypeId" value="EFT_ACCOUNT" <#if paymentMethodTypeId?? && paymentMethodTypeId == "EFT_ACCOUNT">checked="checked"</#if> />
+           <input type="radio" id="paymentMethodTypeId_EFT_ACCOUNT" name="paymentMethodTypeId" value="EFT_ACCOUNT" <#if paymentMethodTypeId?? && "EFT_ACCOUNT" == paymentMethodTypeId>checked="checked"</#if> />
            <label for="paymentMethodTypeId_EFT_ACCOUNT">${uiLabelMap.AccountingAHCElectronicCheck}</label>
          </div>
        </#if>
        <#if productStorePaymentMethodTypeIdMap.EXT_PAYPAL??>
          <div>
-           <input type="radio" id="paymentMethodTypeId_EXT_PAYPAL" name="paymentMethodTypeId" value="EXT_PAYPAL" <#if paymentMethodTypeId?? && paymentMethodTypeId == "EXT_PAYPAL">checked="checked"</#if> />
+           <input type="radio" id="paymentMethodTypeId_EXT_PAYPAL" name="paymentMethodTypeId" value="EXT_PAYPAL" <#if paymentMethodTypeId?? && "EXT_PAYPAL" == paymentMethodTypeId>checked="checked"</#if> />
            <label for="paymentMethodTypeId_EXT_PAYPAL">${uiLabelMap.AccountingPayWithPayPal}</label>
          </div>
        </#if>

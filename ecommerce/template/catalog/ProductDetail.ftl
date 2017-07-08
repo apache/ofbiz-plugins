@@ -102,16 +102,16 @@ ${virtualVariantJavaScript!}
         }
         else {
             var defaultDetailImage = "${firstDetailImage?default(mainDetailImageUrl?default("_NONE_"))}";
-            if (defaultDetailImage == null || defaultDetailImage == "null" || defaultDetailImage == "") {
+            if (defaultDetailImage == null || "null" == defaultDetailImage || "" == defaultDetailImage) {
                defaultDetailImage = "_NONE_";
             }
 
-            if (detailImageUrl == null || detailImageUrl == "null") {
+            if (detailImageUrl == null || "null" == detailImageUrl) {
                 detailImageUrl = defaultDetailImage;
             }
         }
 
-        if (detailImageUrl == "_NONE_") {
+        if ("_NONE_" == detailImageUrl) {
             hack = document.createElement('span');
             hack.innerHTML="${uiLabelMap.CommonNoDetailImageAvailableToDisplay}";
             showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonNoDetailImageAvailableToDisplay}");
@@ -219,7 +219,7 @@ ${virtualVariantJavaScript!}
     }
 
     function additemSubmit(){
-        <#if product.productTypeId! == "ASSET_USAGE" || product.productTypeId! == "ASSET_USAGE_OUT_IN">
+        <#if "ASSET_USAGE" == product.productTypeId! || "ASSET_USAGE_OUT_IN" == product.productTypeId!>
         newdatevalue = validate(document.addform.reservStart.value);
         if (newdatevalue == false) {
             document.addform.reservStart.focus();
@@ -233,8 +233,8 @@ ${virtualVariantJavaScript!}
     }
 
     function addShoplistSubmit(){
-        <#if product.productTypeId! == "ASSET_USAGE" || product.productTypeId! == "ASSET_USAGE_OUT_IN">
-        if (document.addToShoppingList.reservStartStr.value == "") {
+        <#if "ASSET_USAGE" == product.productTypeId! || "ASSET_USAGE_OUT_IN" == product.productTypeId!>
+        if ("" == document.addToShoppingList.reservStartStr.value) {
             document.addToShoppingList.submit();
         } else {
             newdatevalue = validate(document.addToShoppingList.reservStartStr.value);
@@ -252,7 +252,7 @@ ${virtualVariantJavaScript!}
         </#if>
     }
 
-    <#if product.virtualVariantMethodEnum! == "VV_FEATURETREE" && featureLists?has_content>
+    <#if "VV_FEATURETREE" == product.virtualVariantMethodEnum! && featureLists?has_content>
         function checkRadioButton() {
             var block1 = document.getElementById("addCart1");
             var block2 = document.getElementById("addCart2");
@@ -525,7 +525,7 @@ $(function(){
           <span class="${priceStyle}">
             <@ofbizCurrency amount=price.price isoCode=price.currencyUsed />
           </span>
-          <#if product.productTypeId! == "ASSET_USAGE" || product.productTypeId! == "ASSET_USAGE_OUT_IN">
+          <#if "ASSET_USAGE" == product.productTypeId! || "ASSET_USAGE_OUT_IN" == product.productTypeId!>
             <#if product.reserv2ndPPPerc?? && product.reserv2ndPPPerc != 0><br/>
               <span class="${priceStyle}">
                 ${uiLabelMap.ProductReserv2ndPPPerc}
@@ -566,7 +566,7 @@ $(function(){
         </div>
       </#if>
       <#-- show price details ("showPriceDetails" field can be set in the screen definition) -->
-      <#if (showPriceDetails?? && showPriceDetails?default("N") == "Y")>
+      <#if (showPriceDetails?? && "Y" == showPriceDetails?default("N"))>
         <#if price.orderItemPriceInfos??>
           <#list price.orderItemPriceInfos as orderItemPriceInfo>
             <div>${orderItemPriceInfo.description!}</div>
@@ -661,8 +661,8 @@ $(function(){
           ${uiLabelMap.CommonComment}&nbsp;<input type="text" name="${orderItemAttr}comment"/>
         </#if>
         <#-- Variant Selection -->
-        <#if product.isVirtual!?upper_case == "Y">
-          <#if product.virtualVariantMethodEnum! == "VV_FEATURETREE" && featureLists?has_content>
+        <#if "Y" == product.isVirtual!?upper_case>
+          <#if "VV_FEATURETREE" == product.virtualVariantMethodEnum! && featureLists?has_content>
             <#list featureLists as featureList>
               <#list featureList as feature>
                 <#if feature_index == 0>
@@ -701,7 +701,7 @@ $(function(){
               &nbsp;
             </div>
           </#if>
-          <#if !product.virtualVariantMethodEnum?? || product.virtualVariantMethodEnum == "VV_VARIANTTREE">
+          <#if !product.virtualVariantMethodEnum?? || "VV_VARIANTTREE" == product.virtualVariantMethodEnum>
             <#if variantTree?? && (variantTree.size() &gt; 0)>
               <#list featureSet as currentType>
                 <div>
@@ -741,7 +741,7 @@ $(function(){
               </strong>
             </div>
           </#if>
-          <#if (availableInventory??) && (availableInventory <= 0) && product.requireAmount?default("N") == "N">
+          <#if (availableInventory??) && (availableInventory <= 0) && "N" == product.requireAmount?default("N")>
             <#assign inStock = false />
           </#if>
         </#if>
@@ -755,7 +755,7 @@ $(function(){
         <#-- check to see if the product requires inventory check and has inventory -->
         <#elseif product.virtualVariantMethodEnum! != "VV_FEATURETREE">
           <#if inStock>
-            <#if product.requireAmount?default("N") == "Y">
+            <#if "Y" == product.requireAmount?default("N")>
               <#assign hiddenStyle = "visible" />
             <#else>
               <#assign hiddenStyle = "hidden"/>
@@ -764,7 +764,7 @@ $(function(){
               <span style="white-space: nowrap;"><strong>${uiLabelMap.CommonAmount}:</strong></span>&nbsp;
               <input type="text" size="5" name="add_amount" value=""/>
             </div>
-            <#if product.productTypeId! == "ASSET_USAGE" || product.productTypeId! == "ASSET_USAGE_OUT_IN">
+            <#if "ASSET_USAGE" == product.productTypeId! || "ASSET_USAGE_OUT_IN" == product.productTypeId!>
               <div>
                 <label>
                   Start Date(yyyy-mm-dd)
@@ -788,16 +788,16 @@ $(function(){
                   style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
             <#else>
               <span><input name="quantity" id="quantity" value="1" size="4" maxLength="4" type="text"
-                           <#if product.isVirtual!?upper_case == "Y">disabled="disabled"</#if>/></span><a
+                           <#if "Y" == product.isVirtual!?upper_case>disabled="disabled"</#if>/></span><a
                 href="javascript:addItem()" id="addToCart" name="addToCart"
                 class="buttontext">${uiLabelMap.OrderAddToCart}</a>
               <@showUnavailableVarients/>
             </#if>
           <#else>
             <#if productStore??>
-              <#if productStore.requireInventory?? && productStore.requireInventory == "N">
+              <#if productStore.requireInventory?? && "N" == productStore.requireInventory>
                 <span><input name="quantity" id="quantity" value="1" size="4" maxLength="4" type="text"
-                             <#if product.isVirtual!?upper_case == "Y">disabled="disabled"</#if>/></span><a
+                             <#if "Y" == product.isVirtual!?upper_case>disabled="disabled"</#if>/></span><a
                   href="javascript:addItem()" id="addToCart" name="addToCart"
                   class="buttontext">${uiLabelMap.OrderAddToCart}</a>
                 <@showUnavailableVarients/>
@@ -847,7 +847,7 @@ $(function(){
             </select>
             &nbsp;&nbsp;
           <#--assign nowDate = Static["org.apache.ofbiz.base.util.UtilDateTime"].nowDateString("yyyy-MM-dd")-->
-            <#if product.productTypeId! == "ASSET_USAGE">&nbsp;
+            <#if "ASSET_USAGE" == product.productTypeId!>&nbsp;
               ${uiLabelMap.CommonStartDate}(yyyy-mm-dd)
               <@htmlTemplate.renderDateTimeField name="reservStartStr" event="" action="" value="${startDate}"
                   className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="15" maxlength="30"
@@ -858,7 +858,7 @@ $(function(){
               <input type="text" size="4" name="reservLength"/>&nbsp;<br/>Number of&nbsp;persons&nbsp;&nbsp;
               <input type="text" size="4" name="reservPersons" value="1"/>&nbsp;&nbsp;Qty&nbsp;&nbsp;
               <input type="text" size="5" name="quantity" value="1"/>
-            <#elseif product.productTypeId! == "ASSET_USAGE_OUT_IN">&nbsp;
+            <#elseif "ASSET_USAGE_OUT_IN" == product.productTypeId!>&nbsp;
               ${uiLabelMap.CommonStartDate}(yyyy-mm-dd)&nbsp;&nbsp;&nbsp;
               <@htmlTemplate.renderDateTimeField name="reservStartStr" event="" action="" value="${startDate}"
                   className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="15" maxlength="30"
@@ -949,7 +949,7 @@ $(function(){
         <#assign postedPerson = postedUserLogin.getRelatedOne("Person", false)! />
         <div>
           <strong>${uiLabelMap.CommonBy} : </strong>
-          <#if productReview.postedAnonymous?default("N") == "Y">
+          <#if "Y" == productReview.postedAnonymous?default("N")>
             ${uiLabelMap.OrderAnonymous}
           <#else>
             ${postedPerson.firstName} ${postedPerson.lastName}&nbsp;
@@ -983,7 +983,7 @@ $(function(){
       <#if assocProducts?has_content>
         <h2>
           ${beforeName!}
-          <#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME", "html")!}</#if>${afterName!}
+          <#if "Y" == showName>${productContentWrapper.get("PRODUCT_NAME", "html")!}</#if>${afterName!}
         </h2>
 
         <div class="productsummary-container">

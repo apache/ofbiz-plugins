@@ -33,7 +33,7 @@ under the License.
         <tr>
           <td>
             ${indent}
-            <#if content.contentTypeId == "WEB_SITE_PUB_PT" >
+            <#if "WEB_SITE_PUB_PT" == content.contentTypeId>
               <a class="tabButton"
                   href="<@ofbizUrl>showcontenttree?contentId=${content.contentId!}&nodeTrailCsv=${csv}</@ofbizUrl>">
                 ${uiLabelMap.CommonBackTo}
@@ -48,7 +48,7 @@ under the License.
             </#if>
             <#local indent = indent + "&nbsp;&nbsp;&nbsp;&nbsp;">
             [${content.contentId!}]
-            <#if searchOn?has_content && searchOn?lower_case == "true">
+            <#if searchOn?has_content && "true" == searchOn?lower_case>
               &nbsp;
               <a class="tabButton"
                   href="<@ofbizUrl>searchContent?siteId=${siteId!}&nodeTrailCsv=${csv}</@ofbizUrl>">
