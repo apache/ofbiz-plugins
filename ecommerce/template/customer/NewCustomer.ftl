@@ -424,13 +424,13 @@ side by side in two columns, give each fieldset a class name of "col"
       <div>
         <label for="PASSWORD">${uiLabelMap.CommonPassword}*</label>
         <@fieldErrors fieldName="PASSWORD"/>
-        <input type="password" name="PASSWORD" id="PASSWORD" onfocus="setLastFocused(this);"/>
+        <input type="password" name="PASSWORD" autocomplete="off" id="PASSWORD" onfocus="setLastFocused(this);"/>
       </div>
 
       <div>
         <label for="CONFIRM_PASSWORD">${uiLabelMap.PartyRepeatPassword}*</label>
         <@fieldErrors fieldName="CONFIRM_PASSWORD"/>
-        <input type="password" class='inputBox' name="CONFIRM_PASSWORD" id="CONFIRM_PASSWORD" value="" maxlength="50"/>
+        <input type="password" class='inputBox' name="CONFIRM_PASSWORD" id="CONFIRM_PASSWORD" autocomplete="off" value="" maxlength="50"/>
       </div>
 
       <div>

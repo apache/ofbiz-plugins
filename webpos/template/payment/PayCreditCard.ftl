@@ -42,7 +42,7 @@ under the License.
         ${uiLabelMap.WebPosPayCreditCardSwipeData}
       </td>
       <td width="75%" align="left" colspan="3">
-        <input type="password" id="swipeData" name="swipeData" size="50" value=""/>
+        <input type="password" id="swipeData" name="swipeData" size="50" autocomplete="off" value=""/>
       </td>
     </tr>
     <tr id="showCreditCardData1" style="display:none">

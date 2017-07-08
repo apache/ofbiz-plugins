@@ -40,15 +40,15 @@ under the License.
       </#if>
       <div>
         ${uiLabelMap.CommonPassword}:&nbsp;
-        <input type="password" name="PASSWORD" value="" size="20"/>
+        <input type="password" name="PASSWORD" autocomplete="off" value="" size="20"/>
       </div>
       <div>
         ${uiLabelMap.CommonNewPassword}:&nbsp;
-        <input type="password" name="newPassword" value="" size="20"/>
+        <input type="password" name="newPassword" autocomplete="off" value="" size="20"/>
       </div>
       <div>
         ${uiLabelMap.CommonNewPasswordVerify}:&nbsp;
-        <input type="password" name="newPasswordVerify" value="" size="20"/>
+        <input type="password" name="newPasswordVerify" autocomplete="off" value="" size="20"/>
       </div>
       <div>
         <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonLogin}"/>

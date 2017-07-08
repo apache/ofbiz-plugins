@@ -79,14 +79,14 @@ under the License.
                     <tr>
                         <td class="label">    Password    </td>
                         <td>
-                            <input type="password" id="RegisterPerson_PASSWORD" maxlength="250" size="15" name="PASSWORD" class="required false" value="${requestParameters.PASSWORD!}"/>
+                            <input type="password" id="RegisterPerson_PASSWORD" maxlength="250" size="15" name="PASSWORD" class="required false" autocomplete="off" value="${requestParameters.PASSWORD!}"/>
                             <span class="tooltip">Required</span>    
                         </td>
                     </tr>
                     <tr>
                         <td class="label">    Password    </td>
                         <td>
-                            <input type="password" id="RegisterPerson_CONFIRM_PASSWORD" maxlength="250" size="15" name="CONFIRM_PASSWORD" class="required false" value="${requestParameters.CONFIRM_PASSWORD!}"/>
+                            <input type="password" id="RegisterPerson_CONFIRM_PASSWORD" maxlength="250" size="15" name="CONFIRM_PASSWORD" class="required false" autocomplete="off" value="${requestParameters.CONFIRM_PASSWORD!}"/>
                             <span class="tooltip">* Confirm</span>    
                         </td>
                     </tr>

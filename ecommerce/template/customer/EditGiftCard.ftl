@@ -66,7 +66,7 @@ under the License.
           <td width="5">&nbsp;</td>
           <td width="74%">
             <input type="password" class="inputBox" size="10" maxlength="60" name="pinNumber"
-                value="${giftCardData.pinNumber!}"/>
+                autocomplete="off" value="${giftCardData.pinNumber!}"/>
           </td>
         </tr>
         <tr>

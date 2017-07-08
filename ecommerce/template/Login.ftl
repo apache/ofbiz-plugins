@@ -65,7 +65,7 @@ under the License.
               </#if>
               <div>
                 <label for="password">${uiLabelMap.CommonPassword}:</label>
-                <input type="password" id="password" name="PASSWORD" value=""/>
+                <input type="password" id="password" name="PASSWORD" autocomplete="off" value=""/>
               </div>
               <div>
                 <input type="submit" class="button" value="${uiLabelMap.CommonLogin}"/>
@@ -98,7 +98,7 @@ under the License.
         </#if>
         <div>
           <label for="password">${uiLabelMap.CommonPassword}:</label>
-          <input type="password" id="password" name="PASSWORD" value=""/>
+          <input type="password" id="password" name="PASSWORD" autocomplete="off" value=""/>
         </div>
         <div>
           <input type="submit" class="button" value="${uiLabelMap.CommonLogin}"/>

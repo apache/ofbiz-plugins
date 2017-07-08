@@ -87,7 +87,7 @@ under the License.
           <#elseif "NUMBER_LONG" == surveyQuestionAndAppl.surveyQuestionTypeId>
             <input type="text" size="6" class="textBox" name="answers_${surveyQuestionAndAppl.surveyQuestionId}" value="${(answer.numericResponse?string("#"))!}"/>
           <#elseif "PASSWORD" == surveyQuestionAndAppl.surveyQuestionTypeId>
-            <input type="password" size="30" class="textBox" name="answers_${surveyQuestionAndAppl.surveyQuestionId}" value="${(answer.textResponse)!}"/>
+            <input type="password" size="30" class="textBox" name="answers_${surveyQuestionAndAppl.surveyQuestionId}" autocomplete="off" value="${(answer.textResponse)!}"/>
           <#elseif "OPTION" == surveyQuestionAndAppl.surveyQuestionTypeId>
             <#assign options = surveyQuestionAndAppl.getRelated("SurveyQuestionOption", null, sequenceSort, false)!>
             <#assign selectedOption = (answer.surveyOptionSeqId)?default("_NA_")>

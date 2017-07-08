@@ -31,7 +31,7 @@ under the License.
   </div>
   <div data-role="fieldcontainer">
     <label for="PASSWORD">${uiLabelMap.CommonPassword}</label>
-    <input type="password" id="PASSWORD" name="PASSWORD" value="" size="20" />
+    <input type="password" id="PASSWORD" name="PASSWORD" autocomplete="off" value="" size="20" />
   </div>
   <#if ("Y" == useMultitenant)>
     <div data-role="fieldcontainer">

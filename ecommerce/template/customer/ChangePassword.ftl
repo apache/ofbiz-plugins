@@ -30,15 +30,15 @@ under the License.
       <fieldset>
         <div>
           <label for="currentPassword">${uiLabelMap.PartyOldPassword}</label>
-          <input type="password" class='inputBox' name="currentPassword" id="currentPassword" maxlength="20" />*
+          <input type="password" class='inputBox' name="currentPassword" autocomplete="off" id="currentPassword" maxlength="20" />*
         </div>
         <div>
           <label for="newPassword">${uiLabelMap.PartyNewPassword}</label>
-          <input type="password" class='inputBox' name="newPassword" id="newPassword" maxlength="20" />*
+          <input type="password" class='inputBox' name="newPassword" autocomplete="off" id="newPassword" maxlength="20" />*
         </div>
         <div>
           <label for="newPasswordVerify">${uiLabelMap.PartyNewPasswordVerify}</label>
-          <input type="password" class='inputBox' name="newPasswordVerify" id="newPasswordVerify" maxlength="20" />*
+          <input type="password" class='inputBox' name="newPasswordVerify" autocomplete="off" id="newPasswordVerify" maxlength="20" />*
         </div>
         <div>
           <label for="passwordHint">${uiLabelMap.PartyPasswordHint}</label>

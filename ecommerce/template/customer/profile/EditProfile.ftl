@@ -65,15 +65,15 @@ under the License.
       </div>
       <div>
         <label for="currentPassword">${uiLabelMap.CommonCurrentPassword}*</label>
-        <input type="password" name="currentPassword" id="currentPassword" value="" maxlength="16" />
+        <input type="password" name="currentPassword" id="currentPassword" autocomplete="off" value="" maxlength="16" />
       </div>
       <div>
         <label for="newPassword">${uiLabelMap.CommonNewPassword}*</label>
-        <input type="password" name="newPassword" id="newPassword" value="" maxlength="16" />
+        <input type="password" name="newPassword" id="newPassword" autocomplete="off" value="" maxlength="16" />
       </div>
       <div>
         <label for="newPasswordVerify">${uiLabelMap.CommonNewPasswordVerify}*</label>
-        <input type="password" name="newPasswordVerify" id="newPasswordVerify" value="" maxlength="16" />
+        <input type="password" name="newPasswordVerify" id="newPasswordVerify" autocomplete="off" value="" maxlength="16" />
       </div>
     </fieldset>
     <div>
