@@ -990,7 +990,7 @@ under the License.
     </request-map>
     <request-map uri="removeAttachFileForProduct">
         <security https="true" auth="true"/>
-        <event type="service" invoke="removeCommEventContentAssoc"/>
+        <event type="service" invoke="expireCommEventContentAssoc"/>
         <response name="success" type="view" value="NewProductEmail"/>
         <response name="error" type="view" value="NewProductEmail"/>
     </request-map>
@@ -1127,7 +1127,7 @@ under the License.
     </request-map>
     <request-map uri="removeAttachFile">
         <security https="true" auth="true"/>
-        <event type="service" invoke="removeCommEventContentAssoc"/>
+        <event type="service" invoke="expireCommEventContentAssoc"/>
         <response name="success" type="view" value="NewProductBacklogEmail"/>
         <response name="error" type="view" value="NewProductBacklogEmail"/>
     </request-map>
