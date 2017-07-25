@@ -23,12 +23,14 @@ import java.util.Calendar
 import net.fortuna.ical4j.model.DateTime
 import org.apache.ofbiz.base.util.*
 import org.apache.ofbiz.entity.condition.*
+import org.apache.ofbiz.entity.GenericEntityException
 import sun.util.calendar.LocalGregorianCalendar.Date
 
 def module = "AddProductBacklogItem.groovy"
 
 // find cust request and items
 def inputFields = [:]
+def custRequestAndItems = []
 
 if(parameters.statusId == null){
     parameters.statusId = ""
@@ -39,7 +41,7 @@ inputFields.putAll(parameters)
 inputFields.custRequestTypeId = "RF_PROD_BACKLOG"
 def performFindResults = runService('performFind', ["entityName": "CustRequestAndCustRequestItem", "inputFields": inputFields, "orderBy": "custSequenceNum"])
 try {
-    def custRequestAndItems = performFindResults.listIt.getCompleteList()
+    custRequestAndItems = performFindResults.listIt.getCompleteList()
 } catch (GenericEntityException e) {
     Debug.logError(e, "Failure in " + module)
 } finally {
