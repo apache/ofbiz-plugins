@@ -690,11 +690,15 @@
         <value xml:lang="zh-TW">唯讀分層尋找資料項目,僅按鈕可用</value>
     </property>
     <property key="ExampleLookupFields4">
-        <value xml:lang="en">Lookup Field of type layered and showing use of set_values underneath, ie returning not only Id but also another value. Both using also autocomplete</value>
-        <value xml:lang="fr">Champ de recherche de type layer avec usage sous-jacent de set_values qui permet de traiter non seulement une référence mais aussi une autre valeur. Les 2 utilisent aussi l'autocompletion</value>
+        <value xml:lang="en">Lookup Field of presentation type layered and showing use of set_values underneath, ie returning not only Id but also another value. Both using also autocomplete</value>
+        <value xml:lang="fr">Champ de recherche de type présentation layer avec usage sous-jacent de set_values qui permet de traiter non seulement une référence mais aussi une autre valeur. Les 2 utilisent aussi l'autocompletion</value>
         <value xml:lang="ja">レイヤー表示の種類の検索フィールド。下にセットした値の使用方法を表示。IDだけでなくその他の値を戻す。両方ともオートコンプリート使用</value>
         <value xml:lang="zh">类型分层的查找数据项，并在下面显示数值集合的使用，比如不仅返回标识（Id），还有另一个数值。这两个数值都使用自动填充</value>
         <value xml:lang="zh-TW">類型階層式尋找資料項目,並在下面顯示數值集合的使用,比如不僅返回識別(Id),還有另一個數值.這兩個數值都使用自動完成</value>
+    </property>
+    <property key="ExampleLookupFields5">
+        <value xml:lang="en">Lookup Field of presentation type none. We call only the autocomplete</value>
+        <value xml:lang="fr">Champs de recherche de type de présentation aucun, qui utilise seulement l'autocompletion</value>
     </property>
     <property key="ExampleLookupFieldsTitle">
         <value xml:lang="en">Lookup Fields</value>

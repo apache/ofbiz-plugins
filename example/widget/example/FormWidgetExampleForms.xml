@@ -365,6 +365,11 @@ under the License.
         <field name="geoName" title="${uiLabelMap.CommonGeoName}" tooltip="${uiLabelMap.ExampleLookupFields4}" tooltip-style="button-text">
             <lookup target-form-name="LookupGeoName" description-field-name="geoId"/>
         </field>
+        <!-- Looup with only the autocompletion -->
+        <!-- passes the name in one field and the id in another -->
+        <field name="geoNameAutoComplete" title="${uiLabelMap.CommonGeoName}" tooltip="${uiLabelMap.ExampleLookupFields5}" tooltip-style="button-text">
+            <lookup target-form-name="LookupGeoName" description-field-name="geoId" presentation="none"/>
+        </field>
         <!-- This field may be hidden and the name rendered in geoName using default-value if geoId is known when loading the form-->
         <field name="geoId" title="${uiLabelMap.CommonGeoId}"><text/></field><!-- the text field is only used for rendering. In the "real life" you would use the hidden field commented below to pass the data to the request  -->
         <!--field name="geoId"><hidden/></field-->
@@ -381,6 +386,7 @@ under the License.
             </field-group>
             <field-group>
                 <sort-field name="geoName"/>
+                <sort-field name="geoNameAutoComplete"/>
                 <sort-field name="geoId"/>
             </field-group>
         </sort-order>
