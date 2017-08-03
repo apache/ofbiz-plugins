@@ -81,7 +81,7 @@ under the License.
         <field name="dimensionId" type="id">
             <description>Unique identifier of the Currency dimension record</description>
         </field>
-        <field name="currencyId" type="id-ne">
+        <field name="currencyId" type="id">
             <description>The currency id (natural key).</description>
         </field>
         <field name="description" type="description">
@@ -95,7 +95,7 @@ under the License.
         <field name="dimensionId" type="id">
             <description>Unique identifier of the Product dimension record</description>
         </field>
-        <field name="productId" type="id-ne">
+        <field name="productId" type="id">
             <description>The natural key. From Product.productId</description>
         </field>
         <field name="productType" type="description">
@@ -113,11 +113,11 @@ under the License.
         <description>A transaction fact entity with invoice item grain.</description>
         <field name="invoiceId" type="id"></field> <!-- degenerate dimension -->
         <field name="invoiceItemSeqId" type="id"></field> <!-- degenerate dimension -->
-        <field name="orderId" type="id-ne"></field> <!-- degenerate dimension -->
-        <field name="invoiceDateDimId" type="id-ne"></field>
-        <field name="productDimId" type="id-ne"></field>
-        <field name="billToCustomerDimId" type="id-ne"></field> <!-- TODO: implement the dimension -->
-        <field name="origCurrencyDimId" type="id-ne"></field>
+        <field name="orderId" type="id"></field> <!-- degenerate dimension -->
+        <field name="invoiceDateDimId" type="id"></field>
+        <field name="productDimId" type="id"></field>
+        <field name="billToCustomerDimId" type="id"></field> <!-- TODO: implement the dimension -->
+        <field name="origCurrencyDimId" type="id"></field>
 
         <field name="quantity" type="fixed-point">
             <description>Quantity invoiced. From InvoiceItem.quantity</description>
@@ -197,15 +197,15 @@ under the License.
         <description>A transaction fact entity with order item grain.</description>
         <field name="orderId" type="id"></field> <!-- degenerate dimension -->
         <field name="orderItemSeqId" type="id"></field> <!-- degenerate dimension -->
-        <field name="orderDateDimId" type="id-ne"></field>
-        <field name="productDimId" type="id-ne"></field>
-        <field name="origCurrencyDimId" type="id-ne"></field>
-        <field name="billToCustomerDimId" type="id-ne"></field> <!-- TODO: implement the dimension -->
+        <field name="orderDateDimId" type="id"></field>
+        <field name="productDimId" type="id"></field>
+        <field name="origCurrencyDimId" type="id"></field>
+        <field name="billToCustomerDimId" type="id"></field> <!-- TODO: implement the dimension -->
 
-        <field name="productCategoryId" type="id-ne"></field>
-        <field name="productStoreId" type="id-ne"></field>
-        <field name="salesChannelEnumId" type="id-ne"></field>
-        <field name="statusId" type="id-ne"></field>
+        <field name="productCategoryId" type="id"></field>
+        <field name="productStoreId" type="id"></field>
+        <field name="salesChannelEnumId" type="id"></field>
+        <field name="statusId" type="id"></field>
 
         <field name="brand" type="name"></field>
         <field name="pod" type="name"></field>
@@ -259,7 +259,7 @@ under the License.
         <field name="countOrder" type="fixed-point">
             <description>Count of order.</description>
         </field>
-        <field name="productPromoCode" type="id-ne">
+        <field name="productPromoCode" type="id">
             <description>Product promotion Code.</description>
         </field>
 
@@ -281,10 +281,10 @@ under the License.
     <entity entity-name="InventoryItemFact" package-name="org.apache.ofbiz.bi.fact.product" title="Inventory Item Fact">
         <description>A transaction fact entity with inventory item.</description>
         <field name="inventoryItemId" type="id"></field>
-        <field name="facilityId" type="id-ne"></field>
-        <field name="productDimId" type="id-ne"></field>
-        <field name="origCurrencyDimId" type="id-ne"></field>
-        <field name="inventoryDateDimId" type="id-ne"></field>
+        <field name="facilityId" type="id"></field>
+        <field name="productDimId" type="id"></field>
+        <field name="origCurrencyDimId" type="id"></field>
+        <field name="inventoryDateDimId" type="id"></field>
 
         <field name="quantityOnHandTotal" type="fixed-point"></field>
         <field name="availableToPromiseTotal" type="fixed-point"></field>

@@ -409,4 +409,8 @@ under the License.
             <hyperlink description="${uiLabelMap.ExampleNewExample} (Layered-modal)" target="EditExampleLayer" also-hidden="false" link-type="layered-modal"/>
         </field>
     </form>
+
+    <form name="MaskFieldExampleForm" type="single">
+        <field name="maskField" className="test" title="${uiLabelMap.ExampleField}"><text mask='a*-999-a999'/></field>
+    </form>
 </forms>

@@ -68,7 +68,7 @@ under the License.
             package-name="org.apache.ofbiz.passport"
             title="Store GitHub access token for user">
         <field name="gitHubUserId" type="id-vlong"></field>
-        <field name="productStoreId" type="id-ne"></field>
+        <field name="productStoreId" type="id"></field>
         <field name="envPrefix" type="short-varchar"></field>
         <field name="tokenType" type="short-varchar"></field>
         <field name="accessToken" type="value"></field>
@@ -102,7 +102,7 @@ under the License.
             package-name="org.apache.ofbiz.passport"
             title="Store LinkedIn access token for user">
         <field name="linkedInUserId" type="id-vlong"></field>
-        <field name="productStoreId" type="id-ne"></field>
+        <field name="productStoreId" type="id"></field>
         <field name="envPrefix" type="short-varchar"></field>
         <field name="accessToken" type="value"></field>
         <prim-key field="linkedInUserId"/>

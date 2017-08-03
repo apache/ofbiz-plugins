@@ -37,7 +37,7 @@ under the License.
         <field name="productStoreId" type="id"></field>
         <field name="facilityId" type="id"></field>
         <field name="productId" type="id"></field>
-        <field name="folderId" type="id-ne"></field>
+        <field name="folderId" type="id"></field>
         <field name="ebayProductId" type="numeric"></field>
         <field name="quantityReserved" type="fixed-point"></field>
         <field name="availableToPromiseListing" type="fixed-point"></field>
@@ -59,12 +59,12 @@ under the License.
          title="Ebay store and Preference">
         <field name="productStoreId" type="id"/>
         <field name="autoPrefEnumId" type="id"/>
-        <field name="autoPrefJobId" type="id-ne"/>
+        <field name="autoPrefJobId" type="id"/>
         <field name="enabled" type="indicator"/>
         <field name="condition1" type="value"/>
         <field name="condition2" type="value"/>
         <field name="condition3" type="value"/>
-        <field name="parentPrefCondId" type="id-ne"></field>
+        <field name="parentPrefCondId" type="id"></field>
         <prim-key field="productStoreId"/>
         <prim-key field="autoPrefEnumId"/>
         <relation type="one" fk-name="EBY_STR_PREF" rel-entity-name="ProductStore">
@@ -81,10 +81,10 @@ under the License.
         title="eBay Product Listing">
         <field name="productListingId" type="id"/>
         <field name="itemId" type="id-long"/>
-        <field name="productStoreId" type="id-ne"/>
-        <field name="productId" type="id-ne"/>
+        <field name="productStoreId" type="id"/>
+        <field name="productId" type="id"/>
         <field name="userLoginId" type="id-vlong"/>
-        <field name="statusId" type="id-ne"/>
+        <field name="statusId" type="id"/>
         <field name="listingXml" type="very-long"/>
         <field name="startDateTime" type="date-time"/>
         <field name="endDateTime" type="date-time"/>
@@ -136,7 +136,7 @@ under the License.
         <field name="itemId" type="value"/>
         <field name="userId" type="value"/>
         <field name="bestOfferId" type="value"/>
-        <field name="productStoreId" type="id-ne"/>
+        <field name="productStoreId" type="id"/>
         <field name="contactStatus" type="value"/>
         <prim-key field="itemId"/>
         <prim-key field="userId"/>

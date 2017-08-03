@@ -716,6 +716,12 @@
         <value xml:lang="zh">样例首页</value>
         <value xml:lang="zh-TW">範例首頁</value>
     </property>
+    <property key="ExampleMaskField">
+        <value xml:lang="en">Mask Field</value>
+    </property>
+    <property key="ExampleMaskFieldDescription">
+        <value xml:lang="en">Here is a simple example to mask a field with given mask definition as 'a*-999-a999'.</value>
+    </property>
     <property key="ExampleMessage">
         <value xml:lang="en">For something interesting make sure you are logged in, try username:admin, password:ofbiz.</value>
         <value xml:lang="fr">Pour voir les exemples, vérifiez que vous être connecté, essayez l'utilisateur admin et le mot de passe ofbiz</value>

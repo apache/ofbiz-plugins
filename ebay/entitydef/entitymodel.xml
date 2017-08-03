@@ -50,7 +50,7 @@ under the License.
         <field name="siteId" type="id"></field>
         <field name="xmlGatewayUri" type="value"></field>
         <field name="customXml" type="very-long"></field>
-        <field name="webSiteId" type="id-ne"></field>
+        <field name="webSiteId" type="id"></field>
         <prim-key field="productStoreId"/>      
         <relation type="one" fk-name="EBY_PROD_STORE" rel-entity-name="ProductStore">
             <key-map field-name="productStoreId"/>
@@ -68,9 +68,9 @@ under the License.
         <field name="amount" type="currency-amount"></field>
         <field name="additionalAmount" type="currency-amount"></field>
         <field name="additionalPercent" type="fixed-point"></field>
-        <field name="methodTypeEnumId" type="id-ne"></field>
-        <field name="carrierPartyId" type="id-ne"></field>
-        <field name="shipmentMethodTypeId" type="id-ne"></field>      
+        <field name="methodTypeEnumId" type="id"></field>
+        <field name="carrierPartyId" type="id"></field>
+        <field name="shipmentMethodTypeId" type="id"></field>      
         <prim-key field="shipmentMethodName"/>
         <prim-key field="productStoreId"/>
         <relation type="one" fk-name="EBYSM_PRD_STRE" rel-entity-name="ProductStore">

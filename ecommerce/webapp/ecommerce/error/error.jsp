@@ -40,7 +40,7 @@ under the License.
           </tr>
           <tr>
             <td>
-              <div align="left"><font face="Verdana, Arial, Helvetica, sans-serif" size="2"><%=UtilFormatOut.replaceString(errorMsg, "\n", "<br/>")%></font></div>
+              <div align="left"><font face="Verdana, Arial, Helvetica, sans-serif" size="2"><%=UtilFormatOut.replaceString(errorMsg, "\n", "<br/>test message")%></font></div>
             </td>
           </tr>
         </table>

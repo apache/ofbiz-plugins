@@ -50,7 +50,7 @@ under the License.
             package-name="org.apache.ofbiz.plugins.pos"
             title="Pos Terminal Log">
       <field name="posTerminalLogId" type="id"></field>
-      <field name="posTerminalId" type="id-ne"></field>
+      <field name="posTerminalId" type="id"></field>
       <field name="transactionId" type="id"></field>
       <field name="itemCount" type="numeric"></field>
       <field name="orderId" type="id"></field>
