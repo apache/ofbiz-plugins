@@ -104,7 +104,6 @@
         <alias entity-alias="PT" name="productId"/>
         <alias entity-alias="PT" name="productTypeId"/>
         <alias entity-alias="PT" name="primaryProductCategoryId"/>
-        <alias entity-alias="PT" name="manufacturerPartyId"/>
         <alias entity-alias="PT" name="facilityId"/>
         <alias entity-alias="PT" name="introductionDate"/>
         <alias entity-alias="PT" name="internalName"/>
@@ -144,7 +143,6 @@
         <alias entity-alias="PT" name="productId"/>
         <alias entity-alias="PT" name="productTypeId"/>
         <alias entity-alias="PT" name="primaryProductCategoryId"/>
-        <alias entity-alias="PT" name="manufacturerPartyId"/>
         <alias entity-alias="PT" name="facilityId"/>
         <alias entity-alias="PT" name="introductionDate"/>
         <alias entity-alias="PT" name="internalName"/>

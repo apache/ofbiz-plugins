@@ -35,7 +35,6 @@
         <field name="primaryProductCategoryId"><hidden/></field>
         <field name="internalName" title="${uiLabelMap.ProductInternalName}"><text size="30" maxlength="60"/></field>
         <field name="brandName" title="${uiLabelMap.ProductBrandName}" ><text size="30" maxlength="60"/></field>
-        <field name="manufacturerPartyId" title="${uiLabelMap.AccountingFixedAssetManufacturerId}" ><lookup target-form-name="LookupPartyName"/></field>
         <field name="comments" title="${uiLabelMap.CommonComments}"><text size="60" maxlength="250"/></field>
         <field name="requireInventory"><hidden value="N"/></field>
         <field name="autoCreateKeywords"><hidden value="N"/></field>
