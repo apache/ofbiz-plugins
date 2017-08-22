@@ -559,25 +559,6 @@
     <request-map uri="EditCommunicationEvent"><security https="true" auth="true"/>
         <response name="success" type="view" value="EditCommunicationEvent"/>
     </request-map>
-    <request-map uri="EditPartyRates"><security https="true" auth="true"/><response name="success" type="view" value="EditPartyRates"/></request-map>
-    <request-map uri="createPartyRate">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="updatePartyRate"/>
-        <response name="success" type="view" value="EditPartyRates"/>
-        <response name="error" type="view" value="EditPartyRates"/>
-    </request-map>
-    <request-map uri="updatePartyRate">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="updatePartyRate"/>
-        <response name="success" type="view" value="EditPartyRates"/>
-        <response name="error" type="view" value="EditPartyRates"/>
-    </request-map>
-    <request-map uri="deletePartyRate">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="deletePartyRate"/>
-        <response name="success" type="view" value="EditPartyRates"/>
-        <response name="error" type="view" value="EditPartyRates"/>
-    </request-map>
     <request-map uri="createnewlogin"><security https="true" auth="true"/><response name="success" type="view" value="createnewlogin"/></request-map>
     <request-map uri="createUserLogin">
         <security https="true" auth="true"/>

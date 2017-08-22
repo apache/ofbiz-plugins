@@ -171,11 +171,6 @@
         <response name="success" type="view" value="showHelp"/>
     </request-map>
     
-    <request-map uri="help">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="help"/>
-    </request-map>
-    
     <!-- User preference mapping -->
     <request-map uri="setUserPreference">
         <security https="true" auth="true"/>

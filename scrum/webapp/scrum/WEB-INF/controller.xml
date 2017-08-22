@@ -408,10 +408,6 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="backlogView"/>
     </request-map>
-    <request-map uri="EditTaskPartyAssigns">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditTaskPartyAssigns"/>
-    </request-map>
     <request-map uri="EditTask">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditTask"/>
