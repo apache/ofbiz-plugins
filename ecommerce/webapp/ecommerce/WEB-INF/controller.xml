@@ -1971,7 +1971,7 @@ under the License.
     <!-- Forum Views -->
     <!-- new -->
     <view-map name="Showforum" type="screen" page="component://ecommerce/widget/ForumScreens.xml#Showforum"/>
-    <view-map name="AddForumThread" page="component://ecommerce/widget/ForumScreens.xml#AddForumThread" type="screen"/>
+    <view-map name="AddForumThread" type="screen" page="component://ecommerce/widget/ForumScreens.xml#AddForumThread"/>
     <view-map name="ViewForumMessage" type="screen" page="component://ecommerce/widget/ForumScreens.xml#ViewForumMessage"/>
 
     <!-- Quote Views -->

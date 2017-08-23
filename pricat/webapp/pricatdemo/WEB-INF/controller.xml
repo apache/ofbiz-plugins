@@ -83,6 +83,6 @@ under the License.
     <view-map name="main" type="screen" page="component://pricat/widget/SampleScreens.xml#main"/>
     <view-map name="countdownreport" type="screen" page="component://pricat/widget/SampleScreens.xml#countdownreport"/>
     <view-map name="countupreport" type="screen" page="component://pricat/widget/SampleScreens.xml#countupreport"/>
-    <view-map name="SamplePricat" page="component://pricat/widget/SampleScreens.xml#SamplePricat" type="screen"/>
-    <view-map name="parseSamplePricat" page="component://pricat/widget/SampleScreens.xml#parseSamplePricat" type="screen"/>
+    <view-map name="SamplePricat" type="screen" page="component://pricat/widget/SampleScreens.xml#SamplePricat"/>
+    <view-map name="parseSamplePricat" type="screen" page="component://pricat/widget/SampleScreens.xml#parseSamplePricat"/>
 </site-conf>

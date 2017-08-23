@@ -282,8 +282,8 @@ under the License.
     <view-map name="ExampleOsmGeoLocationPointSet4" type="screen" page="component://example/widget/example/ExampleScreens.xml#ExampleOsmGeoLocationPointSet4"/>
 
     <!-- Flot view mapping -->
-    <view-map name="ExampleBarChart" page="component://example/widget/example/ExampleScreens.xml#ExampleBarChart" type="screen"/>
-    <view-map name="ExamplePieChart" page="component://example/widget/example/ExampleScreens.xml#ExamplePieChart" type="screen"/>
+    <view-map name="ExampleBarChart" type="screen" page="component://example/widget/example/ExampleScreens.xml#ExampleBarChart"/>
+    <view-map name="ExamplePieChart" type="screen" page="component://example/widget/example/ExampleScreens.xml#ExamplePieChart"/>
     
     <!--  content FOP example -->
     <view-map name="fonts.fo" type="screenfop" page="component://content/widget/CommonScreens.xml#fonts.fo" content-type="application/pdf" encoding="none"/>

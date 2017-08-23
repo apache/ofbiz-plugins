@@ -52,7 +52,7 @@ under the License.
     </request-map>
 
     <!-- View Mappings -->
-    <view-map name="ProductSearch" page="component://lucene/widget/LuceneScreens.xml#ProductSearch" type="screen"/>
-    <view-map name="AdminSearch" page="component://lucene/widget/LuceneScreens.xml#AdminSearch" type="screen"/>
-    <view-map name="AdminIndex" page="component://lucene/widget/LuceneScreens.xml#AdminIndex" type="screen"/>
+    <view-map name="ProductSearch" type="screen" page="component://lucene/widget/LuceneScreens.xml#ProductSearch"/>
+    <view-map name="AdminSearch" type="screen" page="component://lucene/widget/LuceneScreens.xml#AdminSearch"/>
+    <view-map name="AdminIndex" type="screen" page="component://lucene/widget/LuceneScreens.xml#AdminIndex"/>
 </site-conf>
