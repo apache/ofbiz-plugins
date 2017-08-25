@@ -50,8 +50,10 @@ import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.ServiceUtil;
+import org.apache.ofbiz.widget.model.ThemeFactory;
 import org.apache.ofbiz.widget.renderer.ScreenRenderer;
 import org.apache.ofbiz.widget.renderer.ScreenStringRenderer;
+import org.apache.ofbiz.widget.renderer.VisualTheme;
 import org.apache.ofbiz.widget.renderer.macro.MacroScreenRenderer;
 import org.eclipse.birt.report.engine.api.EngineException;
 import org.eclipse.birt.report.engine.api.IReportEngine;
@@ -88,6 +90,8 @@ public class BirtEmailServices {
         Map<String, Object> birtParameters = UtilGenerics.cast(serviceContext.remove(BirtWorker.getBirtParameters()));
         String birtImageDirectory = (String) serviceContext.remove(BirtWorker.getBirtImageDirectory());
         String birtContentType = (String) serviceContext.remove(BirtWorker.getBirtContentType());
+        VisualTheme visualTheme = (VisualTheme) context.get("visualTheme");
+        if (visualTheme == null) visualTheme = ThemeFactory.resolveVisualTheme(null);
         if (bodyParameters == null) {
             bodyParameters = MapStack.create();
         }
@@ -111,8 +115,7 @@ public class BirtEmailServices {
         screenContext.put("locale", locale);
         ScreenStringRenderer screenStringRenderer = null;
         try {
-            screenStringRenderer = new MacroScreenRenderer(EntityUtilProperties.getPropertyValue("widget", "screen.name", delegator),
-                    EntityUtilProperties.getPropertyValue("widget", "screen.screenrenderer", delegator));
+            screenStringRenderer = new MacroScreenRenderer("screen", visualTheme.getModelTheme().getScreenRendererLocation("screen"));
         } catch (TemplateException e) {
             String errMsg =  UtilProperties.getMessage(resource, "BirtErrorRenderingScreenForEmail", UtilMisc.toMap("errorString", e.toString()), locale);
             Debug.logError(e, errMsg, module);

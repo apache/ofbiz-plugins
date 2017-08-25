@@ -52,8 +52,10 @@ import org.apache.ofbiz.entity.util.EntityUtilProperties;
 import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.ServiceUtil;
 import org.apache.ofbiz.webapp.view.ApacheFopWorker;
+import org.apache.ofbiz.widget.model.ThemeFactory;
 import org.apache.ofbiz.widget.renderer.ScreenRenderer;
 import org.apache.ofbiz.widget.renderer.ScreenStringRenderer;
+import org.apache.ofbiz.widget.renderer.VisualTheme;
 import org.apache.ofbiz.widget.renderer.macro.MacroScreenRenderer;
 import org.xml.sax.SAXException;
 
@@ -64,9 +66,11 @@ public class ExamplePrintServices {
     public static final String resource = "ExampleUiLabels";
 
     public static Map<String, Object> printReportPdf(DispatchContext dctx, Map<String, ? extends Object> context) {
-    	 Locale locale = (Locale)context.get("locale");
+        Locale locale = (Locale)context.get("locale");
         String screenLocation = "component://example/widget/example/ExampleReportScreens.xml";
         String reportScreenName = "ExampleReport";
+        VisualTheme visualTheme = (VisualTheme) context.get("visualTheme");
+        if (visualTheme == null) visualTheme = ThemeFactory.resolveVisualTheme(null);
         Map<String, Object> workContext = new HashMap<String, Object>();
         workContext.putAll(context);
 
@@ -74,8 +78,7 @@ public class ExamplePrintServices {
         Writer reportWriter = new StringWriter();
         ScreenStringRenderer screenStringRenderer = null;
         try {
-            screenStringRenderer = new MacroScreenRenderer(EntityUtilProperties.getPropertyValue("widget", "screen.name", dctx.getDelegator()),
-                    EntityUtilProperties.getPropertyValue("widget", "screen.screenrenderer", dctx.getDelegator()));
+            screenStringRenderer = new MacroScreenRenderer("screen", visualTheme.getModelTheme().getScreenRendererLocation("screen"));
         } catch (TemplateException e) {
             String errMsg = UtilProperties.getMessage(resource, "ExampleGeneralErrorRenderingScreen", UtilMisc.toMap("errorString", e.toString()), locale);
             Debug.logError(e, errMsg, module);
