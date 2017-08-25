@@ -30,6 +30,7 @@ import org.apache.ofbiz.product.catalog.*
 import org.apache.ofbiz.product.store.*
 import org.apache.ofbiz.service.calendar.*
 import org.apache.ofbiz.webapp.website.WebSiteWorker
+import org.apache.ofbiz.widget.renderer.VisualTheme
 
 if (userLogin) 
 {
@@ -40,6 +41,7 @@ if (userLogin)
 
 
 cart = ShoppingCartEvents.getCartObject(request)
+VisualTheme visualTheme =
 currencyUomId = cart.getCurrency()
 
 productStoreId = ProductStoreWorker.getProductStoreId(request)
@@ -142,7 +144,7 @@ if (shoppingListId) {
             context.shoppingListItemDatas = shoppingListItemDatas
             // pagination for the shopping list
             viewIndex = Integer.valueOf(parameters.VIEW_INDEX  ?: 1)
-            viewSize = parameters.VIEW_SIZE ?: EntityUtilProperties.getPropertyAsInteger("widget", "widget.form.defaultViewSize", 20)
+            viewSize = parameters.VIEW_SIZE ?: visualTheme.getModelTheme().getDefaultViewSize()?:20
             listSize = shoppingListItemDatas ? shoppingListItemDatas.size() : 0
 
             lowIndex = ((viewIndex - 1) * viewSize) + 1
