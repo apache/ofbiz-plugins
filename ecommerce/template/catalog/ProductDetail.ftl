@@ -367,9 +367,8 @@ $(function(){
           <#assign productLargeImageUrl = firstLargeImage />
         </#if>
         <#if productLargeImageUrl?string?has_content>
-        ${productLargeImageUrl!}===
           <a href="javascript:popupDetail();">
-            <img id="detailImage" src="<@ofbizContentUrl>${contentPathPrefix!}${productLargeImageUrl?html}</@ofbizContentUrl>"
+            <img id="detailImage" src="<@ofbizContentUrl>${contentPathPrefix!}${productLargeImageUrl!}</@ofbizContentUrl>"
                 name="mainImage" vspace="5" hspace="5" class="cssImgXLarge" alt=""/>
           </a>
           <input type="hidden" id="originalImage" name="originalImage"
@@ -397,14 +396,13 @@ $(function(){
       <#-- Product image/name/price -->
       <div id="detailImageBox">
         <#assign productLargeImageUrl = productContentWrapper.get("LARGE_IMAGE_URL", "url")! />
-          <label>${productLargeImageUrl}</label>
         <#-- remove the next two lines to always display the virtual image first (virtual images must exist) -->
         <#if firstLargeImage?has_content>
           <#assign productLargeImageUrl = firstLargeImage />
         </#if>
         <#if productLargeImageUrl?string?has_content>
           <a href="javascript:popupDetail();">
-            <img id="detailImage" src="<@ofbizContentUrl>${contentPathPrefix!}${productLargeImageUrl?html!}</@ofbizContentUrl>"
+            <img id="detailImage" src="<@ofbizContentUrl>${contentPathPrefix!}${productLargeImageUrl!}</@ofbizContentUrl>"
                 name="mainImage" vspace="5" hspace="5" class="cssImgXLarge" alt=""/>
           </a>
           <input type="hidden" id="originalImage" name="originalImage"
