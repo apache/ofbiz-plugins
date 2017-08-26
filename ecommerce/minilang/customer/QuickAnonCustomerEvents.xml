@@ -353,7 +353,7 @@ under the License.
                 if (useEncryption) {
                     String hashType = org.apache.ofbiz.common.login.LoginServices.getHashType()
                     newUserLogin.set("currentPassword", org.apache.ofbiz.base.crypto.HashCrypt.digestHash(hashType, null, (String) newUserLogin.get("currentPassword"))) 
-                    }
+                }
             </script>
             <!-- create the UserLogin manually to get around ordering and security constraints in the service -->
             <set field="userLoginContext.partyId" from-field="partyId"/>
