@@ -47,7 +47,7 @@ partyNameView = delegator.findOne("PartyNameView", UtilMisc.toMap("partyId", use
 // set logo image url
 logoImageUrl = organizationPartyGroup.getString("logoImageUrl");
 if (!logoImageUrl) {
-    logoImageUrl = FileUtil.getFile("component://images/webapp/images/ofbiz_logo.gif").getPath();
+    logoImageUrl = FileUtil.getFile("component://common-theme/webapp/images/ofbiz_logo.gif").getPath();
 }
 
 fromDate = null;

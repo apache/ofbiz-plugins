@@ -54,7 +54,7 @@ organizationPartyGroup = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId
 // set logo image url
 logoImageUrl = organizationPartyGroup.getString("logoImageUrl");
 if (!logoImageUrl) {
-    logoImageUrl = FileUtil.getFile("component://images/webapp/images/ofbiz_logo.gif").getPath();
+    logoImageUrl = FileUtil.getFile("component://common-theme/webapp/images/ofbiz_logo.gif").getPath();
 }
 
 // create debit/credit total variable
