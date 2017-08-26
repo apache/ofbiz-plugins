@@ -4224,7 +4224,10 @@
              <!-- If password encryption is enabled, encrpyt it now -->
             <script>groovy:
                 boolean useEncryption = "true".equals(org.apache.ofbiz.base.util.UtilProperties.getPropertyValue("security", "password.encrypt"))
-                if (useEncryption) { newUserLogin.set("currentPassword", org.apache.ofbiz.base.crypto.HashCrypt.getDigestHash((String) newUserLogin.get("currentPassword"))) }
+                if (useEncryption) {
+                    String hashType = org.apache.ofbiz.common.login.LoginServices.getHashType()
+                    newUserLogin.set("currentPassword", org.apache.ofbiz.base.crypto.HashCrypt.digestHash(hashType, null, (String) newUserLogin.get("currentPassword")))
+                }
             </script>
 
             <!-- create the UserLogin -->
