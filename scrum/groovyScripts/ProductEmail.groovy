@@ -17,13 +17,10 @@
  * under the License.
  */
 
-import java.util.*
-import java.lang.*
-import org.apache.ofbiz.base.util.*
-import org.apache.ofbiz.entity.*
 import org.apache.ofbiz.base.util.Debug
+import org.apache.ofbiz.base.util.UtilDateTime
 import org.apache.ofbiz.base.util.UtilValidate
-import org.apache.ofbiz.entity.util.*
+import org.apache.ofbiz.entity.GenericEntityException
 
 productId = parameters.productId
 loginPartyId = userLogin.partyId

@@ -17,8 +17,8 @@
 * under the License.
 */
 
-import org.apache.ofbiz.entity.condition.*
-import org.apache.ofbiz.base.util.*
+import org.apache.ofbiz.entity.condition.EntityCondition
+import org.apache.ofbiz.entity.condition.EntityOperator
 
 taskStatusId = null
 paraBacklogStatusId = backlogStatusId

@@ -17,8 +17,6 @@
  * under the License.
  */
 
-import org.apache.ofbiz.base.util.*
-import org.apache.ofbiz.entity.condition.*
 
 def module = "BacklogNotifications.groovy"
 

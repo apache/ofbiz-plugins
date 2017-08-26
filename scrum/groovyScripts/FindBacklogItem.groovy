@@ -17,19 +17,11 @@
  * under the License.
  */
 
-import java.util.*
-import java.lang.*
-import org.apache.ofbiz.base.util.*
-import org.apache.ofbiz.entity.*
 import org.apache.ofbiz.base.util.UtilMisc
-import org.apache.ofbiz.base.util.UtilValidate
-import org.apache.ofbiz.base.util.UtilDateTime
-import org.apache.ofbiz.entity.util.*
-import org.apache.ofbiz.entity.condition.*
-import java.sql.Timestamp
+import org.apache.ofbiz.entity.condition.EntityCondition
+import org.apache.ofbiz.entity.condition.EntityOperator
 
 productId =parameters.productId
-custRequestList=[]
 backlogList=[]
 custRequestList = from("CustRequestItem").where("productId", productId).queryList()
 custRequestList.each { custRequestListMap ->

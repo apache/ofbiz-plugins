@@ -17,9 +17,6 @@
 * under the License.
 */
 
-import org.apache.ofbiz.entity.condition.*
-import org.apache.ofbiz.base.util.*
-import org.apache.ofbiz.entity.util.EntityUtil
 import org.apache.ofbiz.entity.condition.EntityCondition
 import org.apache.ofbiz.entity.condition.EntityOperator
 
@@ -73,7 +70,7 @@ if (scrumUserLoginSecurityGroupList) {
         if (userPreferenceList) {
             userPreferenceList.each { userPreferenceMap ->
                 userPreferenceOutList.add(userPreferenceMap)
-            }
+            }makeCondition
         }
     }
     context.userPreferenceList = userPreferenceOutList

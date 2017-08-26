@@ -17,8 +17,10 @@
  * under the License.
  */
 
-import org.apache.ofbiz.entity.condition.*
-import org.apache.ofbiz.base.util.*
+import org.apache.ofbiz.entity.condition.EntityCondition
+import org.apache.ofbiz.entity.condition.EntityOperator
+import org.apache.ofbiz.entity.condition.EntityJoinOperator
+import org.apache.ofbiz.base.util.UtilMisc
 
 cond = EntityCondition.makeCondition([
         EntityCondition.makeCondition ("projectTypeId", EntityOperator.EQUALS, "SCRUM_PROJECT"),

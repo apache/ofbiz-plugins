@@ -17,9 +17,6 @@
 * under the License.
 */
 
-import org.apache.ofbiz.base.util.Debug
-
-custRequestWorkEffortList = []
 sprintStatusId = "SPRINT_CLOSED"
 sprintId = null
 custRequestWorkEffortList = custRequestMap.getRelated("CustRequestWorkEffort", null, null, false)

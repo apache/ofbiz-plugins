@@ -17,13 +17,8 @@
  * under the License.
  */
 
-import java.util.*
-import java.lang.*
-import org.apache.ofbiz.entity.*
-import org.apache.ofbiz.entity.condition.*
-import org.apache.ofbiz.entity.util.*
-import org.apache.ofbiz.base.util.*
-import org.apache.ofbiz.entity.condition.EntityFunction
+import org.apache.ofbiz.entity.GenericEntityException
+import org.apache.ofbiz.base.util.Debug
 
 def module = "ListScrumResource.groovy"
 

@@ -17,14 +17,10 @@
 * under the License.
 */
 
-import java.sql.*
-import java.sql.Timestamp
-import java.util.Calendar
-import net.fortuna.ical4j.model.DateTime
-import org.apache.ofbiz.base.util.*
-import org.apache.ofbiz.entity.condition.*
+import org.apache.ofbiz.base.util.UtilMisc
+import org.apache.ofbiz.entity.condition.EntityCondition
+import org.apache.ofbiz.entity.condition.EntityOperator
 import org.apache.ofbiz.entity.GenericEntityException
-import sun.util.calendar.LocalGregorianCalendar.Date
 
 def module = "AddProductBacklogItem.groovy"
 

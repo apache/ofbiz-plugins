@@ -17,9 +17,6 @@
 * under the License.
 */
 
-import java.util.*
-import org.apache.ofbiz.base.util.Debug
-
 partyId = parameters.partyId
 // get existing task that no assign
 projectSprintBacklogAndTaskList = []

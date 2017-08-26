@@ -19,16 +19,15 @@
 
 import java.util.*
 import java.lang.*
-import org.apache.ofbiz.base.util.*
-import org.apache.ofbiz.entity.*
-import org.apache.ofbiz.base.util.Debug
 import org.apache.ofbiz.base.util.UtilMisc
-import org.apache.ofbiz.base.util.UtilValidate
+import org.apache.ofbiz.base.util.UtilProperties
 import org.apache.ofbiz.base.util.UtilDateTime
-import org.apache.ofbiz.entity.util.*
-import org.apache.ofbiz.entity.condition.*
+import org.apache.ofbiz.entity.condition.EntityComparisonOperator
+import org.apache.ofbiz.entity.condition.EntityCondition
+import org.apache.ofbiz.entity.condition.EntityOperator
+import org.apache.ofbiz.entity.util.EntityFindOptions
+import org.apache.ofbiz.entity.util.EntityUtil
 import org.apache.ofbiz.webapp.website.WebSiteWorker
-import java.sql.Timestamp
 
 uiLabelMap = UtilProperties.getResourceBundleMap("scrumUiLabels", locale)
 partyId = parameters.partyId
