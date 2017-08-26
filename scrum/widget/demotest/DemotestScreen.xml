@@ -36,7 +36,7 @@
 <!--                <set field="activeApp" value="scrum" global="true"/>-->
                 <set field="applicationMenuName" value="MainDemoUser" global="true"/>
                 <set field="applicationMenuLocation" value="component://scrum/widget/scrumMenus.xml" global="true"/>
-                <set field="applicationTitle" value="${uiLabelMap.ScrumApplication}" global="true"/>
+                <set field="applicationTitle" from-field="uiLabelMap.ScrumApplication" global="true"/>
             </actions>
             <widgets>
                 <include-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml"/>

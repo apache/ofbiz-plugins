@@ -108,7 +108,7 @@ under the License.
             </condition>
             <actions>
                 <property-map resource="ExampleUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="title" value="${uiLabelMap.PageTitleLookupExampleFeature}"/>
+                <set field="title" from-field="uiLabelMap.PageTitleLookupExampleFeature"/>
                 <set field="queryString" from-field="result.queryString"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSizeDefaultValue" value="${groovy: modelTheme.getDefaultViewSize()}" type="Integer"/>

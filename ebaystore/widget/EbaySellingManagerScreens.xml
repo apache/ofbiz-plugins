@@ -46,12 +46,12 @@
                     <widgets>
                         <section>
                             <actions>
-                                <set field="parameters.facilityId" value="${facilityId}"/>
+                                <set field="parameters.facilityId" from-field="facilityId"/>
                                 <set field="parameters.productStoreId" from-field="parameters.productStoreId"/>
                                 <service service-name="getFolderInEbayStoreInventory" result-map="result">
                                     <field-map field-name="productStoreId" from-field="parameters.productStoreId"/>
                                 </service>
-                                <set field="ebayfolderId" value="${result.folderId}"/>
+                                <set field="ebayfolderId" from-field="result.folderId"/>
                             </actions>
                             <widgets>
                                 <section>
@@ -67,7 +67,7 @@
                     <fail-widgets>
                         <section>
                             <actions>
-                                <set field="parameters.facilityId" value="${facilityId}"/>
+                                <set field="parameters.facilityId" from-field="facilityId"/>
                                 <set field="parameters.productStoreId" from-field="parameters.productStoreId"/>
                             </actions>
                             <widgets>
@@ -539,7 +539,7 @@
                 <set field="headerItem" value="ebayStore"/>
                 <set field="sellingManagerItem" value="ordersImported"/>
                 <script location="component://order/groovyScripts/order/FindOrders.groovy"/>
-                <set field="orderList" value="${orderList}" type="List"/>
+                <set field="orderList" from-field="orderList" type="List"/>
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
             </actions>
             <widgets>
@@ -609,16 +609,16 @@
     <screen name="customerOfferData">
         <section>
            <actions>
-               <set field="productStoreId" value="${parameters.productStoreId}"/>
-               <set field="itemId" value="${parameters.itemId}"/>
-               <set field="userId" value="${parameters.userId}"/>
-               <set field="itemName" value="${parameters.itemName}"/>
-               <set field="email" value="${parameters.email}"/>
-               <set field="quantity" value="${parameters.quantity}"/>
-               <set field="price" value="${parameters.price}"/>
-               <set field="message" value="${parameters.message}"/>
-               <set field="offerId" value="${parameters.offerId}"/>
-               <set field="contactStatus" value="${parameters.contactStatus}"/>
+               <set field="productStoreId" from-field="parameters.productStoreId"/>
+               <set field="itemId" from-field="parameters.itemId"/>
+               <set field="userId" from-field="parameters.userId"/>
+               <set field="itemName" from-field="parameters.itemName"/>
+               <set field="email" from-field="parameters.email"/>
+               <set field="quantity" from-field="parameters.quantity"/>
+               <set field="price" from-field="parameters.price"/>
+               <set field="message" from-field="parameters.message"/>
+               <set field="offerId" from-field="parameters.offerId"/>
+               <set field="contactStatus" from-field="parameters.contactStatus"/>
            </actions>
            <widgets>
                <decorator-screen name="SellingManagerDecorator" location="${parameters.mainDecoratorLocation}">

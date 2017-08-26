@@ -31,7 +31,7 @@ under the License.
                 <set field="layoutSettings.companyName" from-field="uiLabelMap.PriCatCompanyName" global="true"/>
                 <set field="applicationMenuName" value="PriCatAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://pricat/widget/PriCatMenus.xml" global="true"/>
-                <set field="applicationTitle" value="${uiLabelMap.PriCatApplication}" global="true"/>
+                <set field="applicationTitle" from-field="uiLabelMap.PriCatApplication" global="true"/>
                 <set field="layoutSettings.styleSheets[]" value="/pricat/includes/pricat.css" global="true"/>
             </actions>
             <widgets>

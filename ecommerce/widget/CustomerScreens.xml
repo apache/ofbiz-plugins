@@ -214,7 +214,7 @@ under the License.
                 <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="titleProperty" value="PageTitleLogin"/>
-                <set field="pageHeader" value="${uiLabelMap.CommonContactUs}"/>
+                <set field="pageHeader" from-field="uiLabelMap.CommonContactUs"/>
                 <set field="headerItem" value="contactus"/>
                 <set field="submitRequest" value="contactsubmit"/>
             </actions>
@@ -284,7 +284,7 @@ under the License.
             <actions>
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleNewMessage"/>
-                <set field="pageHeader" value="${uiLabelMap.PageTitleNewMessage}"/>
+                <set field="pageHeader" from-field="uiLabelMap.PageTitleNewMessage"/>
                 <set field="showMessageLinks" value="true"/>
 
                 <set field="submitRequest" value="sendmessage"/>
@@ -639,7 +639,7 @@ under the License.
                 <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="titleProperty" value="PageTitleLogin"/>
-                <set field="pageHeader" value="${uiLabelMap.CommonContactUs}"/>
+                <set field="pageHeader" from-field="uiLabelMap.CommonContactUs"/>
                 <set field="headerItem" value="contactus"/>
                 <set field="submitRequest" value="contactsubmit"/>
             </actions>

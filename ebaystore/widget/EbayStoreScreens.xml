@@ -23,7 +23,7 @@ under the License.
     <screen name="ebayStores">
         <section>
             <actions>
-                <set field="titleProperty" value="${uiLabelMap.EbayStore}"/>
+                <set field="titleProperty" from-field="uiLabelMap.EbayStore"/>
                 <set field="headerItem" value="ebayStore"/>
             </actions>
             <widgets>
@@ -41,7 +41,7 @@ under the License.
     <screen name="ebayStoreDetail">
         <section>
             <actions>
-                <set field="titleProperty" value="${uiLabelMap.EbayStoreSetting}"/>
+                <set field="titleProperty" from-field="uiLabelMap.EbayStoreSetting"/>
                 <set field="headerItem" value="ebayStore"/>
                 <set field="tabButtonItem" value="ebayStoreSetting"/>
                 <script  location="component://ebaystore/groovyScripts/store/RetrieveStoreOptions.groovy"/>
@@ -65,7 +65,7 @@ under the License.
                 <set field="titleProperty" value="EbayExportAllCategoryToEbayStore"/>
                 <set field="headerItem" value="ebayStore"/>
                 <set field="tabButtonItem" value="ebayExportAllCategoryToEbayStore"/>
-                <set field="productStoreId" value="${parameters.productStoreId}"/>
+                <set field="productStoreId" from-field="parameters.productStoreId"/>
                 <entity-and entity-name="ProdCatalogCategory" list="categoriesList">
                     <field-map field-name="prodCatalogId" from-field="parameters.prodCatalogId"/>
                     <order-by field-name="productCategoryId"/>

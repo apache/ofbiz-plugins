@@ -301,7 +301,7 @@
                 <set field="trail" from-field="articleContentId"/>
                 <set field="enableEdit" value="false"/>
                 <property-to-field property="root.publish.point.blog" field="webPubPt" resource="blog"/>
-                <set field="rsp.contentName" value="${content.contentName}"/>
+                <set field="rsp.contentName" from-field="content.contentName"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonBlog" location="${parameters.mainDecoratorLocation}">

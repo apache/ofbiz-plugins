@@ -29,7 +29,7 @@
             <actions>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
 
-                <set field="title" value="${uiLabelMap.PartyLookupPartyPerson}"/>
+                <set field="title" from-field="uiLabelMap.PartyLookupPartyPerson"/>
                 <set field="entityName" value="Person"/>
                 <set field="queryString" from-field="result.queryString"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>

@@ -124,7 +124,7 @@ under the License.
     <screen name="receipt">
         <section>
             <actions>
-                <set field="title" value="${uiLabelMap.ProductGoodsReceipt}"/>
+                <set field="title" from-field="uiLabelMap.ProductGoodsReceipt"/>
             </actions>
             <widgets>
                 <decorator-screen name="FacilityDecorator">
@@ -139,7 +139,7 @@ under the License.
     <screen name="poreceipt">
         <section>
             <actions>
-                <set field="title" value="${uiLabelMap.ProductReceiptPurchaseOrder}"/>
+                <set field="title" from-field="uiLabelMap.ProductReceiptPurchaseOrder"/>
             </actions>
             <widgets>
                 <decorator-screen name="FacilityDecorator">
@@ -168,7 +168,7 @@ under the License.
     <screen name="productreceipt">
         <section>
             <actions>
-                <set field="title" value="${uiLabelMap.ProductReceipt}"/>
+                <set field="title" from-field="uiLabelMap.ProductReceipt"/>
                 <set field="focusField" value="productId"/>
             </actions>
             <widgets>
@@ -245,7 +245,7 @@ under the License.
     <screen name="stocktake">
         <section>
             <actions>
-                <set field="title" value="${uiLabelMap.PageTitleFindProductStocktake}"/>
+                <set field="title" from-field="uiLabelMap.PageTitleFindProductStocktake"/>
                 <set field="idValue" from-field="parameters.idValue"/>
                 <script location="component://hhfacility/groovyScripts/ProductList.groovy"/>
             </actions>
@@ -263,7 +263,7 @@ under the License.
     <screen name="productstocktake">
         <section>
             <actions>
-                <set field="title" value="${uiLabelMap.PageTitleProductStocktake}"/>
+                <set field="title" from-field="uiLabelMap.PageTitleProductStocktake"/>
                 <script location="component://hhfacility/groovyScripts/ProductStockTake.groovy"/>
 
                 <set field="locationSeqId" from-field="productFacilityLocations"/>

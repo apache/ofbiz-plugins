@@ -42,7 +42,7 @@ under the License.
                 <set field="activeApp" value="birt" global="true"/>
                 <set field="applicationMenuName" value="BirtAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://birt/widget/birt/BirtMenus.xml" global="true"/>
-                <set field="applicationTitle" value="${uiLabelMap.BirtExampleApplication}" global="true"/>
+                <set field="applicationTitle" from-field="uiLabelMap.BirtExampleApplication" global="true"/>
             </actions>
             <widgets>
                 <include-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml"/>

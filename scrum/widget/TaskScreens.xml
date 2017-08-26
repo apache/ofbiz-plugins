@@ -130,7 +130,7 @@ under the License.
     <screen name="RevisionList">
         <section>
             <actions>
-                <set field="title" value="${uiLabelMap.ScrumRevisions}"/>
+                <set field="title" from-field="uiLabelMap.ScrumRevisions"/>
                 <set field="parameters.custRequestId" from-field="custRequestWorkEffort[0].custRequestId"/>
                 <set field="parameters.noConditionFind" value="Y"/>
                 <entity-and entity-name="WorkEffortAndContentDataResource" list="listIt">

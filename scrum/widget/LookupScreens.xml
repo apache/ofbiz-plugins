@@ -28,7 +28,7 @@ under the License.
             <actions>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="title" value="${uiLabelMap.PageTitleLookupCustomerRequest}"/>
+                <set field="title" from-field="uiLabelMap.PageTitleLookupCustomerRequest"/>
                 <set field="queryString" from-field="result.queryString"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"/>
                 <set field="viewSizeDefaultValue" value="${groovy: modelTheme.getDefaultViewSize()}" type="Integer"/>

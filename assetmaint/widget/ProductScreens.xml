@@ -28,7 +28,7 @@
             </condition>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="title" value="${uiLabelMap.PageTitleLookupProduct}"/>
+                <set field="title" from-field="uiLabelMap.PageTitleLookupProduct"/>
                 <set field="queryString" from-field="result.queryString"/>
                 <set field="primaryProductCategoryId" value="PARTS"/>
                 <set field="submitTarget" value="LookupPartsProduct"/>

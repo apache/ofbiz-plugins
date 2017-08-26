@@ -734,7 +734,7 @@ under the License.
                     <field-map field-name="productId" from-field="parameters.productId"/>
                     <field-map field-name="roleTypeId" value="PRODUCT_OWNER"/>
                 </entity-and>
-                <set field="productOwnerId" value="${productRole[0].partyId}"/>
+                <set field="productOwnerId" from-field="productRole[0].partyId"/>
                 <entity-one entity-name="CommunicationEvent" value-field="parentCom">
                     <field-map field-name="communicationEventId" from-field="parameters.parentCommEventId"/>
                 </entity-one>
@@ -883,7 +883,7 @@ under the License.
                     <field-map field-name="productId" from-field="parameters.productId"/>
                     <field-map field-name="roleTypeId" value="PRODUCT_OWNER"/>
                 </entity-and>
-                <set field="productOwnerId" value="${productRole[0].partyId}"/>
+                <set field="productOwnerId" from-field="productRole[0].partyId"/>
                 <entity-one entity-name="CommunicationEvent" value-field="parentCom">
                     <field-map field-name="communicationEventId" from-field="parameters.parentCommEventId"/>
                 </entity-one>
@@ -1095,7 +1095,7 @@ under the License.
                     <field-map field-name="productId" from-field="parameters.productId"/>
                     <field-map field-name="roleTypeId" value="PRODUCT_OWNER"/>
                 </entity-and>
-                <set field="productOwnerId" value="${productRole[0].partyId}"/>
+                <set field="productOwnerId" from-field="productRole[0].partyId"/>
                 <entity-one entity-name="CommunicationEvent" value-field="parentCom">
                     <field-map field-name="communicationEventId" from-field="parameters.parentCommEventId"/>
                 </entity-one>
@@ -2060,7 +2060,7 @@ under the License.
                     <field-map field-name="productId" from-field="parameters.productId"/>
                     <field-map field-name="roleTypeId" value="PRODUCT_OWNER"/>
                 </entity-and>
-                <set field="productOwnerId" value="${productRole[0].partyId}"/>
+                <set field="productOwnerId" from-field="productRole[0].partyId"/>
                 <entity-one entity-name="CommunicationEvent" value-field="parentCom">
                     <field-map field-name="communicationEventId" from-field="parameters.parentCommEventId"/>
                 </entity-one>
@@ -2122,8 +2122,8 @@ under the License.
                             <actions>
                                 <set field="organizationPartyId" from-field="defaultOrganizationPartyId"/>
                                 <script location="component://scrum/groovyScripts/ProductEmail.groovy"/>
-                                <set field="communicationEvent.partyIdFrom" value="${partyIdFrom}" />
-                                <set field="communicationEvent.partyIdTo" value="${partyIdTo}" />
+                                <set field="communicationEvent.partyIdFrom" from-field="partyIdFrom" />
+                                <set field="communicationEvent.partyIdTo" from-field="partyIdTo" />
                             </actions>
                             <widgets/> 
                         </section>
@@ -2291,8 +2291,8 @@ under the License.
                             <actions>
                                 <set field="organizationPartyId" from-field="defaultOrganizationPartyId"/>
                                 <script location="component://scrum/groovyScripts/ProductEmail.groovy"/>
-                                <set field="communicationEvent.partyIdFrom" value="${partyIdFrom}" />
-                                <set field="communicationEvent.partyIdTo" value="${partyIdTo}" />
+                                <set field="communicationEvent.partyIdFrom" from-field="partyIdFrom" />
+                                <set field="communicationEvent.partyIdTo" from-field="partyIdTo" />
                             </actions>
                            <widgets>
                                 <container style="lefthalf">

@@ -32,7 +32,7 @@
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.EbayStoreApplication" global="true"/>
                 <set field="applicationMenuName" value="EbayStoreAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://ebaystore/widget/EbayStoreMenus.xml" global="true"/>
-                <set field="applicationTitle" value="${uiLabelMap.EbayStoreApplication}" global="true"/>
+                <set field="applicationTitle" from-field="uiLabelMap.EbayStoreApplication" global="true"/>
             </actions>
             <widgets>
                 <include-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml"/>

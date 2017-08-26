@@ -31,7 +31,7 @@ under the License.
 
                 <set field="applicationMenuName" value="SolrAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://solr/widget/SolrMenus.xml" global="true"/>
-                <set field="applicationTitle" value="${uiLabelMap.SolrApplication}" global="true"/>
+                <set field="applicationTitle" from-field="uiLabelMap.SolrApplication" global="true"/>
             </actions>
             <widgets>
                 <include-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml"/>
