@@ -2541,7 +2541,7 @@ under the License.
                 <entity-options entity-name="ContentType"/>
             </drop-down>
         </field>
-        <field name="mimeTypeId" encode-output="false">
+        <field name="mimeTypeId" >
             <drop-down allow-empty="false">
                 <entity-options entity-name="MimeType" key-field-name="mimeTypeId"/>
             </drop-down>
@@ -2665,7 +2665,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="mimeTypeId" encode-output="false">
+        <field name="mimeTypeId" >
             <drop-down allow-empty="false">
                 <entity-options entity-name="MimeType" key-field-name="mimeTypeId"/>
             </drop-down>
