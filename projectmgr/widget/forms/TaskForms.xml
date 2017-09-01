@@ -625,7 +625,7 @@
         <field name="contentTypeId"><display-entity entity-name="ContentType"/></field>
         <field name="workEffortContentTypeId"><display-entity entity-name="WorkEffortContentType"/></field>
         <field name="fromDate"><display/></field>
-        <field name="drMimeTypeId"><display-entity entity-name="MimeType" key-field-name="mimeTypeId"/></field>
+        <field name="drMimeTypeId" encode-output="false"><display-entity entity-name="MimeType" key-field-name="mimeTypeId"/></field>
     </form>
     <form name="ListWorkEffortRequests" type="list"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
