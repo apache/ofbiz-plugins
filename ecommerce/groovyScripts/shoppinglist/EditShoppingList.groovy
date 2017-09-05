@@ -41,7 +41,6 @@ if (userLogin)
 
 
 cart = ShoppingCartEvents.getCartObject(request)
-VisualTheme visualTheme =
 currencyUomId = cart.getCurrency()
 
 productStoreId = ProductStoreWorker.getProductStoreId(request)
