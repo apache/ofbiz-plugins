@@ -27,17 +27,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.poi.POIXMLException;
-import org.apache.poi.hssf.usermodel.HSSFDataFormatter;
-import org.apache.poi.ss.util.CellReference;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.commons.fileupload.FileItem;
-import org.apache.ofbiz.pricat.AbstractPricatParser;
-import org.apache.ofbiz.htmlreport.InterfaceReport;
-import org.apache.ofbiz.order.finaccount.FinAccountHelper;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.base.util.UtilProperties;
@@ -46,8 +36,18 @@ import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.transaction.GenericTransactionException;
+import org.apache.ofbiz.htmlreport.InterfaceReport;
+import org.apache.ofbiz.order.finaccount.FinAccountHelper;
+import org.apache.ofbiz.pricat.AbstractPricatParser;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceUtil;
+import org.apache.poi.POIXMLException;
+import org.apache.poi.hssf.usermodel.HSSFDataFormatter;
+import org.apache.poi.ss.util.CellReference;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  * Sample pricat excel parser.
@@ -185,7 +185,7 @@ public class SamplePricatParser extends AbstractPricatParser {
     }
 
     public void parseRowByRow(XSSFSheet sheet) {
-        int rows = sheet.getPhysicalNumberOfRows();
+        int rows = sheet.getLastRowNum() + 1;
         List<Object[]> colNames = ColNamesList.get(pricatFileVersion);
         int colNumber = colNames.size();
 
