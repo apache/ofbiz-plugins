@@ -1251,13 +1251,11 @@ this.setDisplayValue(exchangeRate);]]></method>
     var amountLocale = null;
     var baseCurrencyUomId = delegator.findOne("PartyAcctgPreference", UtilMisc.toMap("partyId", organizationPartyId), false).get("baseCurrencyUomId");
     if ("THB".equals(baseCurrencyUomId)) {
-        rule = "%bahts-and-stangs";
         amountLocale = new java.util.Locale("th");
     } else {
-        rule = "%dollars-and-cents";
         amountLocale = new java.util.Locale("us");
     }
-    var formatRuleBaseAmount = UtilNumber.formatRuleBasedAmount(debitTotal, rule, amountLocale).toUpperCase();
+    var formatRuleBaseAmount = UtilNumber.formatRuleBasedAmount(debitTotal, amountLocale).toUpperCase();
     this.setDisplayValue(formatRuleBaseAmount);
 } else {
     this.setDisplayValue("Debit not equal to credit.");
