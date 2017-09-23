@@ -240,10 +240,10 @@ under the License.
                 </select>
                 <select name="frequency" class="selectBox">
                   <option value="">${uiLabelMap.EcommerceSelectFrequency}</option>
-                  <option value="4" <#if ("DAILY">selected="selected"</#if>>${uiLabelMap.CommonDay}</option>
-                  <option value="5" <#if ("WEEKLY" == recurrenceRule.frequency)?default("")>selected="selected"</#if>>${uiLabelMap.CommonWeek}</option>
-                  <option value="6" <#if ("MONTHLY" == recurrenceRule.frequency)?default("")>selected="selected"</#if>>${uiLabelMap.CommonMonth}</option>
-                  <option value="7" <#if ("YEARLY" == recurrenceRule.frequency)?default("")>selected="selected"</#if>>${uiLabelMap.CommonYear}</option>
+                  <option value="4" <#if "DAILY" == (recurrenceRule.frequency)?default("")>selected="selected"</#if>>${uiLabelMap.CommonDay}</option>
+                  <option value="5" <#if "WEEKLY" == (recurrenceRule.frequency)?default("")>selected="selected"</#if>>${uiLabelMap.CommonWeek}</option>
+                  <option value="6" <#if "MONTHLY" == (recurrenceRule.frequency)?default("")>selected="selected"</#if>>${uiLabelMap.CommonMonth}</option>
+                  <option value="7" <#if "YEARLY" == (recurrenceRule.frequency)?default("")>selected="selected"</#if>>${uiLabelMap.CommonYear}</option>
                 </select>
               </span>
               <span>
