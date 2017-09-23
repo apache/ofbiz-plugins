@@ -583,17 +583,17 @@ under the License.
                                   <tr>
                                     <td>
                                       <script language="javascript"
-                                              src="<@ofbizContentUrl>/images/jquery/plugins/elrte-1.3/js/elrte.min.js</@ofbizContentUrl>"
+                                              src="<@ofbizContentUrl>/common/js/jquery/plugins/elrte-1.3/js/elrte.min.js</@ofbizContentUrl>"
                                               type="text/javascript">
                                       </script>
                                       <#if language?has_content && language != "en">
                                         <script language="javascript"
-                                                src="<@ofbizContentUrl>/images/jquery/plugins/elrte-1.3/js/i18n/elrte.${language!"en"}.js</@ofbizContentUrl>"
+                                                src="<@ofbizContentUrl>/common/js/jquery/plugins/elrte-1.3/js/i18n/elrte.${language!"en"}.js</@ofbizContentUrl>"
                                                 type="text/javascript">
                                         </script>
                                         <#rt/>
                                       </#if>
-                                      <link href="<@ofbizContentUrl>/images/jquery/plugins/elrte-1.3/css/elrte.min.css</@ofbizContentUrl>"
+                                      <link href="<@ofbizContentUrl>/common/js/jquery/plugins/elrte-1.3/css/elrte.min.css</@ofbizContentUrl>"
                                               rel="stylesheet" type="text/css">
                                       <script language="javascript" type="text/javascript">
                                           var opts = {
@@ -602,7 +602,7 @@ under the License.
                                               toolbar: 'maxi',
                                               doctype: '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">',
                                               //'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">',
-                                              cssfiles: ['/images/jquery/plugins/elrte-1.3/css/elrte-inner.css']
+                                              cssfiles: ['/common/js/jquery/plugins/elrte-1.3/css/elrte-inner.css']
                                           }
                                       </script>
                                       <textarea id="description" name="description" style="width:800px; height:300px">

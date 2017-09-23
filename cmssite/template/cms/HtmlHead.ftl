@@ -29,8 +29,8 @@ under the License.
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>${(decoratedContent.subcontent.title.render)!"CMS Site Generic Title (Set subcontent 'title' on your content!)"}</title>
     <link rel="shortcut icon" href="/images/ofbiz.ico" />
-    <script language="javascript" src="/images/fieldlookup.js" type="text/javascript"></script>
-    <script language="javascript" src="/images/OfbizUtil.js" type="text/javascript"></script>
+    <script language="javascript" src="/common/js/util/fieldlookup.js" type="text/javascript"></script>
+    <script language="javascript" src="/common/js/util/OfbizUtil.js" type="text/javascript"></script>
     <link rel="stylesheet" href="/images/ecommain.css" type="text/css"/>
     <link rel="stylesheet" href="/ecommerce/images/blog.css" type="text/css"/>
     <link rel="stylesheet" href="/content/contentForum.css" type="text/css"/>
