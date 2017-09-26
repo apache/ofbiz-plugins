@@ -35,6 +35,7 @@ under the License.
 
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
    
+    <!-- this overrides the accounting, facility and order applications in order to use Birt in these applications -->
     <webapp name="accounting"
         title="Accounting"
         server="default-server"
