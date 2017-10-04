@@ -57,8 +57,8 @@ under the License.
                 <!-- Get the store VisualTheme -->
                 <set field="visualThemeId" from-field="productStore.visualThemeId" default-value="EC_DEFAULT"/>
                 <script location="component://common/groovyScripts/InitTheme.groovy"/>
-                <set field="headerTemplateLocation" from-field="layoutSettings.VT_HDR_TMPLT_LOC[0]" default-value="component://ecommerce/template/includes/Header.ftl"/>
-                <set field="footerTemplateLocation" from-field="layoutSettings.VT_FTR_TMPLT_LOC[0]" default-value="component://ecommerce/template/includes/Footer.ftl"/>
+                <set field="headerTemplateLocation" from-field="layoutSettings.VT_HDR_TMPLT_LOC" default-value="component://ecommerce/template/includes/Header.ftl"/>
+                <set field="footerTemplateLocation" from-field="layoutSettings.VT_FTR_TMPLT_LOC" default-value="component://ecommerce/template/includes/Footer.ftl"/>
                 <entity-and entity-name="WebAnalyticsConfig" list="webAnalyticsConfigs">
                     <field-map field-name="webSiteId"/>
                 </entity-and>
