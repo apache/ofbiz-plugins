@@ -152,4 +152,11 @@ under the License.
         <alias entity-alias="EX" name="total" field="exampleId" function="count-distinct"/>
         <alias entity-alias="EX" name="exampleTypeId" group-by="true"/>
     </view-entity>
+
+<view-entity entity-name="ExampleTypeView" package-name="org.apache.ofbiz.example.example">
+        <member-entity entity-alias="EX" entity-name="Example"/>
+        <alias entity-alias="EX" name="exampleId" field="exampleId" />
+        <alias entity-alias="EX" name="exampleTypeId" group-by="true"/>
+    </view-entity>
+
 </entitymodel>

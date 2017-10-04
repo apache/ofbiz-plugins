@@ -101,13 +101,6 @@
         <servlet-name>CatalogUrlServlet</servlet-name>
         <url-pattern>/products/*</url-pattern>
     </servlet-mapping>
-    <session-config>
-        <session-timeout>60</session-timeout>
-        <cookie-config>
-            <http-only>true</http-only>
-            <secure>true</secure>
-        </cookie-config>
-    </session-config>
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
         <welcome-file>index.html</welcome-file>
