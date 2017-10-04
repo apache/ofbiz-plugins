@@ -33,7 +33,7 @@ under the License.
         <!--Css style-->
         <property name="VT_STYLESHEET['add']" value="/ecommerce/images/blog.css"/>
         <property name="VT_STYLESHEET['add']" value="/multiflex/style.css"/>
-        <property name="VT_STYLESHEET['add']" value="/content/images/contentForum.css"/>
+        <property name="VT_STYLESHEET['add']" value="/contentimages/css/contentForum.css"/>
         <!--template location-->
         <property name="VT_HDR_TMPLT_LOC" value="component://multiflex/template/Header.ftl"/>
         <property name="VT_FTR_TMPLT_LOC" value="component://multiflex/template/Footer.ftl"/>

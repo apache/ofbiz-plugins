@@ -34,7 +34,7 @@ under the License.
         <!--Css style-->
         <property name="VT_STYLESHEET['add']" value="/ecommerce/images/blog.css"/>
         <property name="VT_STYLESHEET['add']" value="/images/ecommain.css"/>
-        <property name="VT_STYLESHEET['add']" value="/content/contentForum.css"/>
+        <property name="VT_STYLESHEET['add']" value="/contentimages/css/contentForum.css"/>
         <!--header image -->
         <property name="VT_HDR_IMAGE_URL" value="/images/ofbiz_logo.gif"/>
         <property name="VT_SHORTCUT_ICON" value="/images/ofbiz.ico"/>
