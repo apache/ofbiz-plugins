@@ -21,6 +21,7 @@ under the License.
 <entity-engine-xml>
     <!-- Ecommerce Default Visual Theme -->
     <VisualTheme visualThemeId="EC_DEFAULT" visualThemeSetId="ECOMMERCE" description="OFBiz Ecommerce Standard Floating Layout"/>
+    <delete>
     <VisualThemeResource visualThemeId="EC_DEFAULT" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/ecommerce/images/blog.css" sequenceId="01"/>
     <VisualThemeResource visualThemeId="EC_DEFAULT" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/images/ecommain.css" sequenceId="02"/>
     <VisualThemeResource visualThemeId="EC_DEFAULT" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/content/contentForum.css" sequenceId="03"/>
@@ -29,4 +30,5 @@ under the License.
     <VisualThemeResource visualThemeId="EC_DEFAULT" resourceTypeEnumId="VT_HDR_TMPLT_LOC" resourceValue="component://ecommerce/template/includes/Header.ftl" sequenceId="06"/>
     <VisualThemeResource visualThemeId="EC_DEFAULT" resourceTypeEnumId="VT_FTR_TMPLT_LOC" resourceValue="component://ecommerce/template/includes/Footer.ftl" sequenceId="07"/>
     <VisualThemeResource visualThemeId="EC_DEFAULT" resourceTypeEnumId="VT_SCREENSHOT" resourceValue="/images/ecdefaulttheme.jpg" sequenceId="08"/>
+    </delete>
 </entity-engine-xml>

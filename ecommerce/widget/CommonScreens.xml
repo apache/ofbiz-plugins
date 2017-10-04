@@ -56,11 +56,7 @@ under the License.
 
                 <!-- Get the store VisualTheme -->
                 <set field="visualThemeId" from-field="productStore.visualThemeId" default-value="EC_DEFAULT"/>
-                <service service-name="getVisualThemeResources">
-                    <field-map field-name="visualThemeId"/>
-                    <field-map field-name="themeResources" from-field="layoutSettings"/>
-                </service>
-                <set field="layoutSettings" from-field="themeResources" default-value="${layoutSettings}" global="true"/>
+                <script location="component://common/groovyScripts/InitTheme.groovy"/>
                 <set field="headerTemplateLocation" from-field="layoutSettings.VT_HDR_TMPLT_LOC[0]" default-value="component://ecommerce/template/includes/Header.ftl"/>
                 <set field="footerTemplateLocation" from-field="layoutSettings.VT_FTR_TMPLT_LOC[0]" default-value="component://ecommerce/template/includes/Footer.ftl"/>
                 <entity-and entity-name="WebAnalyticsConfig" list="webAnalyticsConfigs">
@@ -273,11 +269,8 @@ under the License.
 
                 <!-- Get the store VisualTheme -->
                 <set field="visualThemeId" from-field="productStore.visualThemeId" default-value="EC_DEFAULT"/>
-                <service service-name="getVisualThemeResources">
-                    <field-map field-name="visualThemeId"/>
-                    <field-map field-name="themeResources" from-field="layoutSettings"/>
-                </service>
-                <set field="layoutSettings" from-field="themeResources" default-value="${layoutSettings}" global="true"/>
+                <script location="component://common/groovyScripts/InitTheme.groovy"/>
+
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://ecommerce/template/includes/HeaderHead.ftl"/></html></platform-specific>

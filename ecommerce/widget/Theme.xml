@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<theme name="ec_default"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://ofbiz.apache.org/Widget-Theme" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Theme http://ofbiz.apache.org/dtds/widget-theme.xsd">
+    <visual-themes>
+        <visual-theme id="EC_DEFAULT" display-name="Ecommerce Default">
+            <description>${str:label('CommonEntityLabels', 'VisualTheme.description.EC_DEFAULT', locale)}</description>
+            <screenshot location="/images/ecdefaulttheme.jpg"/>
+        </visual-theme>
+    </visual-themes>
+    <!-- Here we can define custom theme for ecommerce, no need to extend common theme -->
+    <extends location="component://common-theme/widget/Theme.xml"/>
+
+    <theme-properties>
+        <!--Css style-->
+        <property name="VT_STYLESHEET['add']" value="/ecommerce/images/blog.css"/>
+        <property name="VT_STYLESHEET['add']" value="/images/ecommain.css"/>
+        <property name="VT_STYLESHEET['add']" value="/content/contentForum.css"/>
+        <!--header image -->
+        <property name="VT_HDR_IMAGE_URL" value="/images/ofbiz_logo.gif"/>
+        <property name="VT_SHORTCUT_ICON" value="/images/ofbiz.ico"/>
+        <!--template location-->
+        <property name="VT_HDR_TMPLT_LOC" value="component://ecommerce/template/includes/Header.ftl"/>
+        <property name="VT_FTR_TMPLT_LOC" value="component://ecommerce/template/includes/Footer.ftl"/>
+    </theme-properties>
+</theme>
