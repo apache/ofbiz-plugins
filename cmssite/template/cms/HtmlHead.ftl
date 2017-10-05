@@ -31,7 +31,7 @@ under the License.
     <link rel="shortcut icon" href="/images/ofbiz.ico" />
     <script language="javascript" src="/common/js/util/fieldlookup.js" type="text/javascript"></script>
     <script language="javascript" src="/common/js/util/OfbizUtil.js" type="text/javascript"></script>
-    <link rel="stylesheet" href="/images/ecommain.css" type="text/css"/>
+    <link rel="stylesheet" href="/ecommerce/images/ecommain.css" type="text/css"/>
     <link rel="stylesheet" href="/ecommerce/images/blog.css" type="text/css"/>
     <link rel="stylesheet" href="/contentimages/css/contentForum.css" type="text/css"/>
 
