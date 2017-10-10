@@ -85,7 +85,7 @@ public final class SolrUtil {
         if (UtilValidate.isNotEmpty(solrWebappPortOverride)) {
             solrPort = solrWebappPortOverride;
         } else {
-            solrPort = UtilProperties.getPropertyValue("url", ("https".equals(solrWebappProtocol) ? "port.https" : "port.http"));
+            solrPort = UtilProperties.getPropertyValue("url", ("https".equals(solrWebappProtocol) ? "port.https" : "port.http"), ("https".equals(solrWebappProtocol) ? "8443" : "8080"));
         }
         
         return solrWebappProtocol + "://" + solrWebappDomainName + ":" + solrPort + solrWebappPath;

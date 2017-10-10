@@ -17,5 +17,14 @@
  * under the License.
  */
 dependencies {
-    pluginLibsCompile 'org.apache.solr:solr-core:6.5.1'
+    pluginLibsCompile 'org.apache.solr:solr-core:6.6.0'
+    pluginLibsCompile 'com.google.guava:guava:20.0'
+}
+
+configurations.all {
+    resolutionStrategy {
+      dependencySubstitution {
+          substitute module('com.google.guava:guava') with module('com.google.guava:guava:20.0')
+      }
+    }
 }
