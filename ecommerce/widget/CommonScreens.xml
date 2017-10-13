@@ -62,7 +62,7 @@ under the License.
                 <entity-and entity-name="WebAnalyticsConfig" list="webAnalyticsConfigs">
                     <field-map field-name="webSiteId"/>
                 </entity-and>
-                <set field="layoutSettings.javaScripts[]" value="/images/miscAjaxFunctions.js" global="true" />
+                <set field="layoutSettings.javaScripts[]" value="/common/js/util/miscAjaxFunctions.js" global="true" />
             </actions>
             <widgets>
                <section>
