@@ -19,7 +19,6 @@
 
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="http://ofbiz.apache.org/Site-Conf" xsi:schemaLocation="http://ofbiz.apache.org/Site-Conf http://ofbiz.apache.org/dtds/site-conf.xsd">
-    <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
     <description>Web Pos Component Site Configuration File</description>
     <errorpage>/error/error.jsp</errorpage>
     
@@ -472,6 +471,14 @@
         <response name="error" type="view" value="ForgotPassword_step2"/>
     </request-map>
     <!-- end of Ajax requests -->
+
+    <!-- Set local from user's browser -->
+    <request-map uri="setLocaleFromBrowser">
+        <security https="false" auth="false"/>
+        <event type="service" invoke="setLocaleFromBrowser"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
     
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
