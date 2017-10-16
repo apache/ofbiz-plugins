@@ -282,7 +282,7 @@ public class EbayStoreInventoryServices {
         } catch (SdkException e) {
             result = ServiceUtil.returnFailure(e.getMessage());
         }
-        if (result.get("responseMessage") != null && result.get("responseMessage").equals("fail")) folderId = null;
+        if (result.get("responseMessage") != null && "fail".equals(result.get("responseMessage"))) folderId = null;
         result.put("folderId", folderId);
         Debug.logInfo("service return result "+ result, module);
         return result;

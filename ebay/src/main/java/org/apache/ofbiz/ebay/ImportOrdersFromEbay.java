@@ -738,7 +738,7 @@ public class ImportOrdersFromEbay {
 
                     contactMechId = EbayHelper.setShippingAddressContactMech(dispatcher, delegator, party, userLogin, parameters);
                     String emailBuyer = (String) parameters.get("emailBuyer");
-                    if (!(emailBuyer.equals("") || emailBuyer.equalsIgnoreCase("Invalid Request"))) {
+                    if (!(emailBuyer.equals("") || "Invalid Request".equalsIgnoreCase(emailBuyer))) {
                         EbayHelper.setEmailContactMech(dispatcher, delegator, party, userLogin, parameters);
                     }
                     EbayHelper.setPhoneContactMech(dispatcher, delegator, party, userLogin, parameters);
@@ -767,7 +767,7 @@ public class ImportOrdersFromEbay {
                     Debug.logInfo("Creating association to eBay buyer for party: " + partyId, module);
                     EbayHelper.createEbayCustomer(dispatcher, partyId, (String) parameters.get("ebayUserIdBuyer"), (String) parameters.get("eiasTokenBuyer"), userLogin);
                     String emailBuyer = (String) parameters.get("emailBuyer");
-                    if (UtilValidate.isNotEmpty(emailBuyer) && !emailBuyer.equalsIgnoreCase("Invalid Request")) {
+                    if (UtilValidate.isNotEmpty(emailBuyer) && !"Invalid Request".equalsIgnoreCase(emailBuyer)) {
                         Debug.logInfo("Creating new email for party: " + partyId, module);
                         EbayHelper.createPartyEmail(dispatcher, partyId, emailBuyer, userLogin);
                     }

@@ -383,7 +383,7 @@ public class EbayHelper {
             map.put("countryGeoId", geoId);
             country = geoId;
             Debug.logInfo("Country geoid: " + geoId, module);
-            if (geoId.equals("USA") || geoId.equals("CAN")) {
+            if ("USA".equals(geoId) || "CAN".equals(geoId)) {
                 if (UtilValidate.isNotEmpty(state)) {
                     map.put("stateProvinceGeoId", state.toUpperCase());
                 }

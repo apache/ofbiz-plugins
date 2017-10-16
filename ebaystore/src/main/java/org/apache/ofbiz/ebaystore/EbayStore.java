@@ -362,7 +362,7 @@ public class EbayStore {
         } catch (GenericEntityException e) {
             result = ServiceUtil.returnError(e.getMessage());
         }
-        if (result.get("responseMessage") != null && result.get("responseMessage").equals("fail")) {
+        if (result.get("responseMessage") != null && "fail".equals(result.get("responseMessage"))) {
             result = ServiceUtil.returnError(result.get("errorMessage").toString());
         }
         return result;
@@ -1244,7 +1244,7 @@ public class EbayStore {
                 StoreColorSchemeType storeColorScheme = null;
                 StoreColorType storecolor = null;
                 StoreFontType storeFont = null;
-                if (context.get("themeType").equals("Advanced")) {
+                if ("Advanced".equals(context.get("themeType"))) {
                     storeColorScheme = new StoreColorSchemeType();
                     if (context.get("storeAdvancedThemeColor") != null) storeColorScheme.setColorSchemeID(Integer.parseInt((String)context.get("storeAdvancedThemeColor")));
 
@@ -1256,7 +1256,7 @@ public class EbayStore {
                     storeTheme.setColorScheme(storeColorScheme);
                     storeTheme.setName(null);
                     storeTheme.setThemeID(Integer.parseInt((String)context.get("storeAdvancedTheme")));
-                } else if (context.get("themeType").equals("Basic")) {
+                } else if ("Basic".equals(context.get("themeType"))) {
                     storeColorScheme = new StoreColorSchemeType();
                     if (context.get("storeBasicTheme")!=null) {
                         String storeBasicTheme = (String)context.get("storeBasicTheme");
@@ -1654,25 +1654,25 @@ public class EbayStore {
     public static DisputeExplanationCodeType getEbayDisputeExplanationCodeType(String disputeExplanationCode) {
         DisputeExplanationCodeType disputeExplanationCodeType = null;
         if (disputeExplanationCode != null) {
-            if (disputeExplanationCode.equals("BUYER_HAS_NOT_RESPONDED")) {
+            if ("BUYER_HAS_NOT_RESPONDED".equals(disputeExplanationCode)) {
                 disputeExplanationCodeType = DisputeExplanationCodeType.BUYER_HAS_NOT_RESPONDED;
-            } else if (disputeExplanationCode.equals("BUYER_REFUSED_TO_PAY")) {
+            } else if ("BUYER_REFUSED_TO_PAY".equals(disputeExplanationCode)) {
                 disputeExplanationCodeType = DisputeExplanationCodeType.BUYER_REFUSED_TO_PAY;
-            } else if (disputeExplanationCode.equals("BUYER_RETURNED_ITEM_FOR_REFUND")) {
+            } else if ("BUYER_RETURNED_ITEM_FOR_REFUND".equals(disputeExplanationCode)) {
                 disputeExplanationCodeType = DisputeExplanationCodeType.BUYER_RETURNED_ITEM_FOR_REFUND;
-            } else if (disputeExplanationCode.equals("UNABLE_TO_RESOLVE_TERMS")) {
+            } else if ("UNABLE_TO_RESOLVE_TERMS".equals(disputeExplanationCode)) {
                 disputeExplanationCodeType = DisputeExplanationCodeType.UNABLE_TO_RESOLVE_TERMS;
-            } else if (disputeExplanationCode.equals("BUYER_PURCHASING_MISTAKE")) {
+            } else if ("BUYER_PURCHASING_MISTAKE".equals(disputeExplanationCode)) {
                 disputeExplanationCodeType = DisputeExplanationCodeType.BUYER_PURCHASING_MISTAKE;
-            } else if (disputeExplanationCode.equals("SHIP_COUNTRY_NOT_SUPPORTED")) {
+            } else if ("SHIP_COUNTRY_NOT_SUPPORTED".equals(disputeExplanationCode)) {
                 disputeExplanationCodeType = DisputeExplanationCodeType.SHIP_COUNTRY_NOT_SUPPORTED;
-            } else if (disputeExplanationCode.equals("SHIPPING_ADDRESS_NOT_CONFIRMED")) {
+            } else if ("SHIPPING_ADDRESS_NOT_CONFIRMED".equals(disputeExplanationCode)) {
                 disputeExplanationCodeType = DisputeExplanationCodeType.SHIPPING_ADDRESS_NOT_CONFIRMED;
-            } else if (disputeExplanationCode.equals("PAYMENT_METHOD_NOT_SUPPORTED")) {
+            } else if ("PAYMENT_METHOD_NOT_SUPPORTED".equals(disputeExplanationCode)) {
                 disputeExplanationCodeType = DisputeExplanationCodeType.PAYMENT_METHOD_NOT_SUPPORTED;
-            } else if (disputeExplanationCode.equals("BUYER_NO_LONGER_REGISTERED")) {
+            } else if ("BUYER_NO_LONGER_REGISTERED".equals(disputeExplanationCode)) {
                 disputeExplanationCodeType = DisputeExplanationCodeType.BUYER_NO_LONGER_REGISTERED;
-            } else if (disputeExplanationCode.equals("BUYER_NO_LONGER_REGISTERED")) {
+            } else if ("BUYER_NO_LONGER_REGISTERED".equals(disputeExplanationCode)) {
                 disputeExplanationCodeType = DisputeExplanationCodeType.BUYER_NO_LONGER_REGISTERED;
             } else {
                 disputeExplanationCodeType = DisputeExplanationCodeType.OTHER_EXPLANATION;
@@ -1686,9 +1686,9 @@ public class EbayStore {
     public static DisputeReasonCodeType getEbayDisputeReasonCodeType(String disputeReasonCode) {
         DisputeReasonCodeType disputeReasonCodeType = null;
         if (disputeReasonCode != null) {
-            if (disputeReasonCode.equals("TRANSACTION_MUTUALLY_CANCELED")) {
+            if ("TRANSACTION_MUTUALLY_CANCELED".equals(disputeReasonCode)) {
                 disputeReasonCodeType = DisputeReasonCodeType.TRANSACTION_MUTUALLY_CANCELED;
-            } else if (disputeReasonCode.equals("BUYER_HAS_NOT_PAID")) {
+            } else if ("BUYER_HAS_NOT_PAID".equals(disputeReasonCode)) {
                 disputeReasonCodeType = DisputeReasonCodeType.BUYER_HAS_NOT_PAID;
             }
         }
@@ -1759,7 +1759,7 @@ public class EbayStore {
             result.put("checkVerify", true);
         } catch (Exception e) {
             result.put("checkVerify", checkVerify);
-            result.put("errorMessage", "This item ( " + itemID + " ) can not add second chance offer.");
+            result.put("errorMessage" , "This item ( " + itemID + " ) can not add second chance offer.");
             result.put("responseMessage", "error");
             return result;
         }

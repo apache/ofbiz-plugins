@@ -243,7 +243,7 @@ public class ProductsExportToEbay {
                     listingFormat = (String) context.get("listingFormat");
                     UtilXml.addChildElementValue(itemElem, "ListingType", listingFormat, itemDocument);
                 }
-                if (listingFormat.equals("FixedPriceItem")) {
+                if ("FixedPriceItem".equals(listingFormat)) {
                     Element startPriceElem = UtilXml.addChildElementValue(itemElem, "StartPrice", startPrice, itemDocument);
                     if (UtilValidate.isEmpty(startPriceCurrencyUomId)) {
                         startPriceCurrencyUomId = EntityUtilProperties.getPropertyValue("general", "currency.uom.id.default", "USD", delegator);

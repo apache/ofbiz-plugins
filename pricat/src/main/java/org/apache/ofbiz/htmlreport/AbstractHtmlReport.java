@@ -73,9 +73,9 @@ public abstract class AbstractHtmlReport extends HtmlReport {
         
         String action = getParamAction(request);
         if (action == null) action = "";
-        if (action.equals("reportend") || action.equals("cancel")) {
+        if ("reportend".equals(action) || "cancel".equals(action)) {
             setParamAction("reportend");
-        } else if (action.equals("reportupdate")) {
+        } else if ("reportupdate".equals(action)) {
             setParamAction("reportupdate");
         } else {
             InterfaceReportThread thread = initializeThread(request, response, name);
@@ -104,11 +104,11 @@ public abstract class AbstractHtmlReport extends HtmlReport {
     public static String checkButton(HttpServletRequest request, HttpServletResponse response) {
         String action = request.getParameter("action");
         if (ReportStringUtil.isNotEmpty(action)) {
-            if (action.equalsIgnoreCase("ok")) {
+            if ("ok".equalsIgnoreCase(action)) {
                 request.removeAttribute(SESSION_REPORT_CLASS);
                 request.removeAttribute(DIALOG_URI);
                 return "ok";
-            } else if (action.equalsIgnoreCase("cancel")) {
+            } else if ("cancel".equalsIgnoreCase(action)) {
                 request.removeAttribute(SESSION_REPORT_CLASS);
                 request.removeAttribute(DIALOG_URI);
                 return "cancel";
@@ -116,7 +116,7 @@ public abstract class AbstractHtmlReport extends HtmlReport {
         }
         action = request.getParameter("ok");
         if (ReportStringUtil.isNotEmpty(action)) {
-            if (action.equalsIgnoreCase("ok")) {
+            if ("ok".equalsIgnoreCase(action)) {
                 request.removeAttribute(SESSION_REPORT_CLASS);
                 request.removeAttribute(DIALOG_URI);
                 return "ok";
@@ -124,7 +124,7 @@ public abstract class AbstractHtmlReport extends HtmlReport {
         }
         action = request.getParameter("cancel");
         if (ReportStringUtil.isNotEmpty(action)) {
-            if (action.equalsIgnoreCase("cancel")) {
+            if ("cancel".equalsIgnoreCase(action)) {
                 request.removeAttribute(SESSION_REPORT_CLASS);
                 request.removeAttribute(DIALOG_URI);
                 return "cancel";

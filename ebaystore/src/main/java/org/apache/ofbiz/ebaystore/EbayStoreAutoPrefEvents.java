@@ -55,30 +55,30 @@ public class EbayStoreAutoPrefEvents{
         String condition10 = (String) requestParams.get("lessThanValue");
         String condition11 = (String) requestParams.get("rejectLessMsg");
         if (UtilValidate.isNotEmpty(enabled)) {
-            if (enabled.equals("Y") && UtilValidate.isEmpty(condition1)) {
+            if ("Y".equals(enabled) && UtilValidate.isEmpty(condition1)) {
                 String errMsg = "Please select Based Price.";
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
-            if (enabled.equals("Y") && UtilValidate.isEmpty(condition2)) {
+            if ("Y".equals(enabled) && UtilValidate.isEmpty(condition2)) {
                 String errMsg = "Please enter \"Percent value to accept.\"";
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
-            if (enabled.equals("Y") && condition5.equals("Y") && (UtilValidate.isEmpty(condition6) || UtilValidate.isEmpty(condition7) || UtilValidate.isEmpty(condition8))) {
+            if ("Y".equals(enabled) && "Y".equals(condition5) && (UtilValidate.isEmpty(condition6) || UtilValidate.isEmpty(condition7) || UtilValidate.isEmpty(condition8))) {
                 String errMsg = "Please enter \"Greater price percen\" , \"Less price percent \" and \"Message\"";
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
-            } else if (enabled.equals("Y") && condition5.equals("N") && (UtilValidate.isNotEmpty(condition6) || UtilValidate.isNotEmpty(condition7) || UtilValidate.isNotEmpty(condition8))) {
+            } else if ("Y".equals(enabled) && "N".equals(condition5) && (UtilValidate.isNotEmpty(condition6) || UtilValidate.isNotEmpty(condition7) || UtilValidate.isNotEmpty(condition8))) {
                 String errMsg = "Please enable rejection notification before.";
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
-            if (enabled.equals("Y") && condition9.equals("Y") && (UtilValidate.isEmpty(condition10) || UtilValidate.isEmpty(condition11))) {
+            if ("Y".equals(enabled) && "Y".equals(condition9) && (UtilValidate.isEmpty(condition10) || UtilValidate.isEmpty(condition11))) {
                 String errMsg = "Please enter \"Less price percent \" and \"Message\"";
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
-            } else if (enabled.equals("Y") && condition9.equals("N") && (UtilValidate.isNotEmpty(condition10) || UtilValidate.isNotEmpty(condition11))) {
+            } else if ("Y".equals(enabled) && "N".equals(condition9) && (UtilValidate.isNotEmpty(condition10) || UtilValidate.isNotEmpty(condition11))) {
                 String errMsg = "Please enable rejection notification before.";
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";

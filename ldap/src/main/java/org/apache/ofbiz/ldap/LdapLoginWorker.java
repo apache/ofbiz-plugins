@@ -154,7 +154,7 @@ public class LdapLoginWorker extends LoginWorker {
             }
         }
 
-        if (result.equals("error")) {
+        if ("error".equals(result)) {
             boolean useOFBizLoginWhenFail = Boolean.getBoolean(UtilXml.childElementValue(rootElement, "UseOFBizLoginWhenLDAPFail", "false"));
             if (useOFBizLoginWhenFail) {
                 return LoginWorker.login(request, response);

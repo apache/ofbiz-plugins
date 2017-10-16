@@ -933,7 +933,7 @@ public class EbayStoreAutoPreferences {
                     Date creationDate = (Date) item.get("creationTime");
                     Timestamp creationTime = UtilDateTime.toTimestamp(creationDate);
 
-                    if (creationTime.equals(lastestTime) && (item.get("listingType").toString().equals("Chinese"))) {
+                    if (creationTime.equals(lastestTime) && ("Chinese".equals(item.get("listingType").toString()))) {
                         Map<String, Object> serviceMap = new HashMap<String, Object>();
                         serviceMap.put("userLogin", userLogin);
                         serviceMap.put("locale", locale);
@@ -1241,22 +1241,22 @@ public class EbayStoreAutoPreferences {
                     if ((bestOfferDetailsType != null) && (bestOfferCount > 0) && bestOfferIsEnabled.equals(true)) {
                         //Get base price from kindOfPrice parameter
                         Double doBasePrice = null;
-                        if (priceType.equals("BUY_IT_NOW_PRICE")) {
+                        if ("BUY_IT_NOW_PRICE".equals(priceType)) {
                             doBasePrice = buyItNowPrice;
-                        } else if (priceType.equals("START_PRICE")) {
+                        } else if ("START_PRICE".equals(priceType)) {
                             doBasePrice = itemBestOffer.getStartPrice().getValue();
-                        } else if (priceType.equals("RESERVE_PRICE")) {
+                        } else if ("RESERVE_PRICE".equals(priceType)) {
                             doBasePrice = itemBestOffer.getReservePrice().getValue();
-                        } else if (priceType.equals("RETAIL_PRICE")) {
+                        } else if ("RETAIL_PRICE".equals(priceType)) {
                             //ignore
-                        } else if (priceType.equals("SELLER_COST")) {
+                        } else if ("SELLER_COST".equals(priceType)) {
                             List<GenericValue> supplierProduct = EntityQuery.use(delegator).from("SupplierProduct").where("productId", SKUItem).orderBy("availableFromDate DESC").queryList();
                             String lastPrice = supplierProduct.get(0).getString("lastPrice");
                             doBasePrice = Double.parseDouble(lastPrice);
-                        } else if (priceType.equals("SECOND_CHANCE_PRICE")) {
+                        } else if ("SECOND_CHANCE_PRICE".equals(priceType)) {
                             VerifyAddSecondChanceItemCall verifyAddSecondChanceItemCall = new VerifyAddSecondChanceItemCall(apiContext);
                             doBasePrice = verifyAddSecondChanceItemCall.getBuyItNowPrice().getValue();
-                        } else if (priceType.equals("STORE_PRICE")) {
+                        } else if ("STORE_PRICE".equals(priceType)) {
                             //ignore
                         }
                         BigDecimal basePrice = new BigDecimal(doBasePrice);
@@ -1294,7 +1294,7 @@ public class EbayStoreAutoPreferences {
                                 String[] bestOfferIDs = { bestOfferID };
                                 respondToBestOfferCall.setBestOfferIDs(bestOfferIDs);
 
-                                if (rejectOffer.equals("Y")) {
+                                if ("Y".equals(rejectOffer)) {
                                     if (offerQuantity > inventoryQuantityItem) {
                                         respondToBestOfferCall.setSellerResponse("Your order is more than inventory item's Buy-It-Now price.");
                                         respondToBestOfferCall.setBestOfferAction(BestOfferActionCodeType.DECLINE);
@@ -1304,7 +1304,7 @@ public class EbayStoreAutoPreferences {
                                 }
 
                                 String buyerMessage = bestOfferType.getBuyerMessage();
-                                if (ignoreOfferMessage.equals("Y") && UtilValidate.isNotEmpty(buyerMessage)) {
+                                if ("Y".equals(ignoreOfferMessage) && UtilValidate.isNotEmpty(buyerMessage)) {
                                     GenericValue userOfferCheck = EntityQuery.use(delegator).from("EbayUserBestOffer").where("itemId", itemID, "userId", buyerUserID).queryOne();
                                     if (UtilValidate.isEmpty(userOfferCheck)) {
                                         GenericValue ebayUserBestOffer = delegator.makeValue("EbayUserBestOffer");
@@ -1322,11 +1322,11 @@ public class EbayStoreAutoPreferences {
                                     acceptBestOfferIndexId.add(bestOfferID);
                                     String Quantity = String.valueOf(offerQuantity);
                                     acceptBestOfferIDs.put(bestOfferID, Quantity);
-                                } else if ((cerrentPrice.compareTo(greaterPrice) >= 0) && (cerrentPrice.compareTo(lessThanPrice) <= 0 ) && rejectGreaterEnable.equals("Y")) {
+                                } else if ((cerrentPrice.compareTo(greaterPrice) >= 0) && (cerrentPrice.compareTo(lessThanPrice) <= 0 ) && "Y".equals(rejectGreaterEnable)) {
                                     respondToBestOfferCall.setBestOfferAction(BestOfferActionCodeType.DECLINE);
                                     respondToBestOfferCall.setSellerResponse(rejectGreaterMsg);
                                     respondToBestOfferCall.respondToBestOffer();
-                                } else if ((cerrentPrice.compareTo(rejectPrice) <= 0 && rejectLessEnable.equals("Y"))) {
+                                } else if ((cerrentPrice.compareTo(rejectPrice) <= 0 && "Y".equals(rejectLessEnable))) {
                                     respondToBestOfferCall.setBestOfferAction(BestOfferActionCodeType.DECLINE);
                                     respondToBestOfferCall.setSellerResponse(rejectLessMsg);
                                     respondToBestOfferCall.respondToBestOffer();

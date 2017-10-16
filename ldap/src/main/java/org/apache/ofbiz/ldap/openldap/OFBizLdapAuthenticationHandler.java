@@ -67,9 +67,9 @@ public final class OFBizLdapAuthenticationHandler extends AbstractOFBizAuthentic
             controls.setCountLimit(2);  //TODO maybe properties...
             // ldap search scope
             String sub = UtilXml.childElementValue(rootElement, "Scope", "sub").toLowerCase().trim();
-            if (sub.equals("sub")) {
+            if ("sub".equals(sub)) {
                 controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-            } else if (sub.equals("one")) {
+            } else if ("one".equals(sub)) {
                 controls.setSearchScope(SearchControls.ONELEVEL_SCOPE);
             } else {
                 controls.setSearchScope(SearchControls.OBJECT_SCOPE);

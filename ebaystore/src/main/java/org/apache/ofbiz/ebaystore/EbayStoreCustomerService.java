@@ -118,11 +118,11 @@ public class EbayStoreCustomerService {
             RespondToBestOfferCall respondToBestOfferCall = new RespondToBestOfferCall(apiContext);
             respondToBestOfferCall.setItemID(itemId);
             respondToBestOfferCall.setBestOfferIDs(bestOfferIDs);
-            if (contactStatus.equals("ACCEPT")) {
+            if ("ACCEPT".equals(contactStatus)) {
                 respondToBestOfferCall.setBestOfferAction(BestOfferActionCodeType.ACCEPT);
                 respondToBestOfferCall.respondToBestOffer();
                 contactStatus = "FINISHED";
-            } else if (contactStatus.equals("DECLINE")) {
+            } else if ("DECLINE".equals(contactStatus)) {
                 respondToBestOfferCall.setBestOfferAction(BestOfferActionCodeType.DECLINE);
                 respondToBestOfferCall.respondToBestOffer();
                 contactStatus = "FINISHED";

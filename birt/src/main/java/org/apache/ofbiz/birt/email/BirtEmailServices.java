@@ -239,7 +239,7 @@ public class BirtEmailServices {
 
             // Only override the default contentType in case of plaintext, since other contentTypes may be multipart
             //    and would require specific handling.
-            if (contentType != null && contentType.equalsIgnoreCase("text/plain")) {
+            if (contentType != null && "text/plain".equalsIgnoreCase(contentType)) {
                 serviceContext.put("contentType", "text/plain");
             } else {
                 serviceContext.put("contentType", "text/html");

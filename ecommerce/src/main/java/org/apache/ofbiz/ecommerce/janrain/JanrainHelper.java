@@ -173,7 +173,7 @@ public class JanrainHelper {
             post.close();
             Document tagXml = UtilXml.readXmlDocument(buf.toString());
             Element response = tagXml.getDocumentElement();
-            if (!response.getAttribute("stat").equals("ok")) {
+            if (!"ok".equals(response.getAttribute("stat"))) {
                 throw new RuntimeException("Unexpected API error");
             }
             return response;

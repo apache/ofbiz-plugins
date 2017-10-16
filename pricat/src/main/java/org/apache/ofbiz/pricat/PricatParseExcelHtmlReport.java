@@ -82,11 +82,11 @@ public class PricatParseExcelHtmlReport extends AbstractHtmlReport {
     public static String checkButton(HttpServletRequest request, HttpServletResponse response) {
         String action = request.getParameter("action");
         if (ReportStringUtil.isNotEmpty(action)) {
-            if (action.equalsIgnoreCase("ok")) {
+            if ("ok".equalsIgnoreCase(action)) {
                 request.removeAttribute(PRICAT_REPORT_CLASS);
                 request.removeAttribute(DIALOG_URI);
                 return "ok";
-            } else if (action.equalsIgnoreCase("cancel")) {
+            } else if ("cancel".equalsIgnoreCase(action)) {
                 request.removeAttribute(PRICAT_REPORT_CLASS);
                 request.removeAttribute(DIALOG_URI);
                 return "cancel";
@@ -94,7 +94,7 @@ public class PricatParseExcelHtmlReport extends AbstractHtmlReport {
         }
         action = request.getParameter("ok");
         if (ReportStringUtil.isNotEmpty(action)) {
-            if (action.equalsIgnoreCase("ok")) {
+            if ("ok".equalsIgnoreCase(action)) {
                 request.removeAttribute(PRICAT_REPORT_CLASS);
                 request.removeAttribute(DIALOG_URI);
                 return "ok";
@@ -102,7 +102,7 @@ public class PricatParseExcelHtmlReport extends AbstractHtmlReport {
         }
         action = request.getParameter("cancel");
         if (ReportStringUtil.isNotEmpty(action)) {
-            if (action.equalsIgnoreCase("cancel")) {
+            if ("cancel".equalsIgnoreCase(action)) {
                 request.removeAttribute(PRICAT_REPORT_CLASS);
                 request.removeAttribute(DIALOG_URI);
                 return "cancel";
@@ -125,10 +125,10 @@ public class PricatParseExcelHtmlReport extends AbstractHtmlReport {
         
         String action = getParamAction(request);
         if (action == null) action = "";
-        if (action.equals("reportend") || action.equals("cancel")) {
+        if ("reportend".equals(action) || "cancel".equals(action)) {
             setParamAction("reportend");
             setDialogRealUri(request, dialogUri);
-        } else if (action.equals("reportupdate")) {
+        } else if ("reportupdate".equals(action)) {
             setParamAction("reportupdate");
         } else {
             InterfaceReportThread thread = initializeThread(request, response, name);

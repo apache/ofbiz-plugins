@@ -104,7 +104,7 @@ public class EbayEvents {
         for (int i = 1; i <= feedbackSize; i++) {
             String commentType = (String)requestParams.get("commentType"+i);
             String commentText = (String)requestParams.get("commentText"+i);
-            if (!commentType.equals("none") && commentText != null) {
+            if (!"none".equals(commentType) && commentText != null) {
                 String itemId = (String)requestParams.get("itemId"+i);
                 String transactionId = (String)requestParams.get("transactionId"+i);
                 String targetUser = (String)requestParams.get("targetUser"+i);
@@ -1110,7 +1110,7 @@ public class EbayEvents {
             AddItemCall addItemCall = (AddItemCall) itemObj.get("addItemCall");
             ItemType item = addItemCall.getItem();
             String productId = item.getSKU();
-            if (UtilValidate.isNotEmpty(itemObj.get("requireEbayInventory")) && (itemObj.get("requireEbayInventory").equals("Y"))) {
+            if (UtilValidate.isNotEmpty(itemObj.get("requireEbayInventory")) && ("Y".equals(itemObj.get("requireEbayInventory")))) {
                 GetSellingManagerInventoryRequestType req = new GetSellingManagerInventoryRequestType();
                 GetSellingManagerInventoryResponseType resp =  null;
                 SellingManagerProductType[] returnedSellingManagerProductType = null;

@@ -41,7 +41,7 @@ public class OFBizSolrLoginWorker extends LoginWorker {
      */
     public static String login(HttpServletRequest request, HttpServletResponse response) {
         String result = LoginWorker.login(request, response);
-        if (result.equals("success")) {
+        if ("success".equals(result)) {
             // send the redirect
             try {            
                 response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
@@ -57,7 +57,7 @@ public class OFBizSolrLoginWorker extends LoginWorker {
 
     public static String extensionCheckLogin(HttpServletRequest request, HttpServletResponse response) {
         String result = LoginWorker.extensionCheckLogin(request, response);
-        if (result.equals("success")) {
+        if ("success".equals(result)) {
             // send the redirect
             try {            
                 response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);

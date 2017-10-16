@@ -87,7 +87,7 @@ public final class OFBizCasAuthenticationHandler extends AbstractOFBizAuthentica
                 result = new InputStreamReader(conn.getInputStream(), "UTF-8");
                 reader = new BufferedReader(result);
                 String oneline = reader.readLine();
-                if (oneline != null && oneline.equals("yes")) {
+                if (oneline != null && "yes".equals(oneline)) {
                     // the ticket is true
                     username = reader.readLine().trim();
                     casLoggedIn = true;

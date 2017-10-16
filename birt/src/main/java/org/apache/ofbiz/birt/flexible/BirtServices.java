@@ -145,7 +145,7 @@ public class BirtServices {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorConversionFieldToBirtFailed", locale));
             }
             // make more general when report forms have been made so too.
-            if (birtType.equalsIgnoreCase("date-time") || birtType.equalsIgnoreCase("date") || birtType.equalsIgnoreCase("time")) {
+            if ("date-time".equalsIgnoreCase(birtType) || "date".equalsIgnoreCase(birtType) || "time".equalsIgnoreCase(birtType)) {
                 listMultiFields.add(field + "_fld0_op");
                 listMultiFields.add(field + "_fld0_value");
                 listMultiFields.add(field + "_fld1_op");
@@ -238,7 +238,7 @@ public class BirtServices {
         }
         String attrName = masterContentAttribute.getString("attrName");
         String reportContentId;
-        if (attrName.equalsIgnoreCase("Entity")) {
+        if ("Entity".equalsIgnoreCase(attrName)) {
             String entityViewName = masterContentAttribute.getString("attrValue");
             ModelEntity modelEntity = delegator.getModelEntity(entityViewName);
             if (modelEntity == null) {
@@ -255,7 +255,7 @@ public class BirtServices {
                 Debug.logError(e, module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorCannotDetermineDataSource", locale));
             }
-        } else if (attrName.equalsIgnoreCase("Service")) {
+        } else if ("Service".equalsIgnoreCase(attrName)) {
             String serviceName = masterContentAttribute.getString("attrValue");
             try {
                 Map<String, Object> resultContent = dispatcher.runSync("createFlexibleReportFromMasterServiceWorkflow", UtilMisc.toMap("serviceName", serviceName,

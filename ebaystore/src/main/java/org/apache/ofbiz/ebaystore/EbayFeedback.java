@@ -284,7 +284,7 @@ public class EbayFeedback {
                 leaveFeedbackCall.setTargetUser(targetUser);
                 leaveFeedbackCall.setTransactionID(transactionId);
 
-                if (role.equals("seller")) {
+                if ("seller".equals(role)) {
                     ItemRatingDetailArrayType sellerItemRatingDetailArray = new ItemRatingDetailArrayType();
 
                     //The item description
@@ -360,11 +360,11 @@ public class EbayFeedback {
                 feedbackDetail.setCommentingUser(commentingUser);
                 feedbackDetail.setCommentText(commentText);
                 feedbackDetail.setCommentTime(Calendar.getInstance());
-                if (commentType.equals("positive")) {
+                if ("positive".equals(commentType)) {
                     feedbackDetail.setCommentType(CommentTypeCodeType.POSITIVE);
-                } else if (commentType.equals("neutral")) {
+                } else if ("neutral".equals(commentType)) {
                     feedbackDetail.setCommentType(CommentTypeCodeType.NEUTRAL);
-                } else if (commentType.equals("negative")) {
+                } else if ("negative".equals(commentType)) {
                     feedbackDetail.setCommentType(CommentTypeCodeType.NEGATIVE);
                 }
                 leaveFeedbackCall.setFeedbackDetail(feedbackDetail);

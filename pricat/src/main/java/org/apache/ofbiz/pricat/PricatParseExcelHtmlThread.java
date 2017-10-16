@@ -211,7 +211,7 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
             getReport().getReportUpdate();
             String logFileName = getReport().closeLogFile();
             if (UtilValidate.isNotEmpty(pricatParser)) {
-                if (thruReasonId.equals("EXCEL_IMPORT_SUCCESS") && pricatParser.hasErrorMessages()) {
+                if ("EXCEL_IMPORT_SUCCESS".equals(thruReasonId) && pricatParser.hasErrorMessages()) {
                     thruReasonId = "EXCEL_IMPORT_QUEST";
                 }
                 pricatParser.endExcelImportHistory(logFileName, thruReasonId);
@@ -264,7 +264,7 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
         for (int i = 0; i < fileItems.size(); i++) {
             fi = fileItems.get(i);
             String fieldName = fi.getFieldName();
-            if (fieldName.equals("filename")) {
+            if ("filename".equals(fieldName)) {
                 pricatFi = fi;
                 pricatBytes = pricatFi.get();
                 Path path = Paths.get(fi.getName());

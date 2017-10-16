@@ -64,7 +64,7 @@ public final class OFBizActiveDirectoryAuthenticationHandler extends AbstractOFB
         env.put(Context.PROVIDER_URL, ldapURL);
         if (searchType == null || searchType.trim().equals("")) {
             env.put(Context.SECURITY_AUTHENTICATION, "none");
-        } else if (searchType.trim().equals("login")) {
+        } else if ("login".equals(searchType.trim())) {
             env.put(Context.SECURITY_AUTHENTICATION, authenType);
             // specify the username for search
             String userDNForSearch = UtilXml.childElementValue(rootElement, "UserDNForSearch");
@@ -82,9 +82,9 @@ public final class OFBizActiveDirectoryAuthenticationHandler extends AbstractOFB
             controls.setCountLimit(2);
             // ldap search scope
             String sub = UtilXml.childElementValue(rootElement, "Scope", "sub").toLowerCase().trim();
-            if (sub.equals("sub")) {
+            if ("sub".equals(sub)) {
                 controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-            } else if (sub.equals("one")) {
+            } else if ("one".equals(sub)) {
                 controls.setSearchScope(SearchControls.ONELEVEL_SCOPE);
             } else {
                 controls.setSearchScope(SearchControls.OBJECT_SCOPE);

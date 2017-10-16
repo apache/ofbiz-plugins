@@ -1153,7 +1153,7 @@ public class EbayOrderServices {
 
                     contactMechId = EbayHelper.setShippingAddressContactMech(dispatcher, delegator, party, userLogin, shippingAddressCtx);
                     String emailBuyer = (String) context.get("emailBuyer");
-                    if (!(emailBuyer.equals("") || emailBuyer.equalsIgnoreCase("Invalid Request"))) {
+                    if (!(emailBuyer.equals("") || "Invalid Request".equalsIgnoreCase(emailBuyer))) {
                         EbayHelper.setEmailContactMech(dispatcher, delegator, party, userLogin, context);
                     }
                     EbayHelper.setPhoneContactMech(dispatcher, delegator, party, userLogin, shippingAddressCtx);
@@ -1187,7 +1187,7 @@ public class EbayOrderServices {
                     Debug.logInfo("Creating association to eBay buyer for party: " + partyId, module);
                     EbayHelper.createEbayCustomer(dispatcher, partyId, (String) context.get("ebayUserIdBuyer"), eiasTokenBuyer, userLogin);
                     String emailBuyer = (String) context.get("emailBuyer");
-                    if (UtilValidate.isNotEmpty(emailBuyer) && !emailBuyer.equalsIgnoreCase("Invalid Request")) {
+                    if (UtilValidate.isNotEmpty(emailBuyer) && !"Invalid Request".equalsIgnoreCase(emailBuyer)) {
                         Debug.logInfo("Creating new email for party: " + partyId, module);
                         EbayHelper.createPartyEmail(dispatcher, partyId, emailBuyer, userLogin);
                     }
