@@ -23,6 +23,6 @@ under the License.
     <SecurityPermission description="All operations in the eBay Store application." permissionId="EBAYSTORE_ADMIN"/>
     <SecurityPermission description="View operations in the eBay Store application." permissionId="EBAYSTORE_VIEW"/>
 
-    <SecurityGroupPermission groupId="SUPER" permissionId="EBAYSTORE_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SUPER" permissionId="EBAYSTORE_ADMIN"/>
 
 </entity-engine-xml>

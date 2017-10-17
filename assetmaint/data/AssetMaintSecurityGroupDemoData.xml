@@ -22,10 +22,10 @@ under the License.
     <SecurityGroup description="Asset Maintenance Admin group, has all maintenance permissions." groupId="ASSETMAINTADMIN"/>
     <SecurityGroup description="Asset Maintenance Technician group, has view and update." groupId="ASSETMAINTTECH"/>
 
-    <SecurityGroupPermission groupId="ASSETMAINTADMIN" permissionId="ASSETMAINT_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="ASSETMAINTADMIN" permissionId="ASSETMAINT_ADMIN"/>
 
-    <SecurityGroupPermission groupId="ASSETMAINTTECH" permissionId="ASSETMAINT_VIEW"/>
-    <SecurityGroupPermission groupId="ASSETMAINTTECH" permissionId="ASSETMAINT_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="ASSETMAINTTECH" permissionId="ASSETMAINT_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="ASSETMAINTTECH" permissionId="ASSETMAINT_UPDATE"/>
 
-    <SecurityGroupPermission groupId="FULLADMIN" permissionId="ASSETMAINT_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FULLADMIN" permissionId="ASSETMAINT_ADMIN"/>
 </entity-engine-xml>

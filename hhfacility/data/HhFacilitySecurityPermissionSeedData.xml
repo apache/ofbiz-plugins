@@ -22,5 +22,5 @@ under the License.
     <SecurityPermission description="hh facility View permission." permissionId="HHFACILITY_VIEW"/>
 
     <!-- SUPER group -->
-    <SecurityGroupPermission groupId="SUPER" permissionId="HHFACILITY_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SUPER" permissionId="HHFACILITY_ADMIN"/>
 </entity-engine-xml>

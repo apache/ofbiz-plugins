@@ -22,6 +22,6 @@ under the License.
     <SecurityPermission description="MyPortal Base View permission." permissionId="MYPORTALBASE_VIEW"/>
     
     <!-- Super group -->
-    <SecurityGroupPermission groupId="SUPER" permissionId="MYPORTALBASE_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SUPER" permissionId="MYPORTALBASE_ADMIN"/>
     
 </entity-engine-xml>

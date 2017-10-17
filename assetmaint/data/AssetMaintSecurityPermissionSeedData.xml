@@ -26,5 +26,5 @@ under the License.
     <SecurityPermission description="Asset Maintenance Delete operations." permissionId="ASSETMAINT_DELETE"/>
 
     <!-- Super Security group -->
-    <SecurityGroupPermission groupId="SUPER" permissionId="ASSETMAINT_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SUPER" permissionId="ASSETMAINT_ADMIN"/>
 </entity-engine-xml>

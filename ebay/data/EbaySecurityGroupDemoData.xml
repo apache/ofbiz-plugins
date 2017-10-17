@@ -20,9 +20,9 @@ under the License.
 
 <entity-engine-xml>
     <!-- eBay component security -->
-    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="EBAY_VIEW"/>
-    <SecurityGroupPermission groupId="FULLADMIN" permissionId="EBAY_ADMIN"/>
-    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="EBAY_VIEW"/>
-    <SecurityGroupPermission groupId="BIZADMIN" permissionId="EBAY_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FLEXADMIN" permissionId="EBAY_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FULLADMIN" permissionId="EBAY_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="VIEWADMIN" permissionId="EBAY_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="BIZADMIN" permissionId="EBAY_VIEW"/>
 
 </entity-engine-xml>

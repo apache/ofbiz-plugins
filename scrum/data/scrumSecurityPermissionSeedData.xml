@@ -91,5 +91,5 @@ under the License.
     <SecurityPermission description="Be able to update(report) on an existing own timesheet" permissionId="SCRUM_ROLE_TIMESHEET_UPDATE"/>
     
     <!-- SUPER group -->
-    <SecurityGroupPermission groupId="SUPER" permissionId="SCRUM_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SUPER" permissionId="SCRUM_ADMIN"/>
 </entity-engine-xml>

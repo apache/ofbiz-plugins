@@ -19,6 +19,6 @@ under the License.
 -->
 <entity-engine-xml>
     <!-- WedbPOS security -->
-    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MYPORTALBASE_ADMIN"/>
-    <SecurityGroupPermission groupId="FULLADMIN" permissionId="WEBPOS_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FLEXADMIN" permissionId="MYPORTALBASE_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FULLADMIN" permissionId="WEBPOS_ADMIN"/>
 </entity-engine-xml>

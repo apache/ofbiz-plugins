@@ -21,5 +21,5 @@ under the License.
     <SecurityPermission description="ALL Business Intelligence operations." permissionId="BI_ADMIN"/>
     <SecurityPermission description="Business Intelligence View permission." permissionId="BI_VIEW"/>
 
-    <SecurityGroupPermission groupId="SUPER" permissionId="BI_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SUPER" permissionId="BI_ADMIN"/>
 </entity-engine-xml>

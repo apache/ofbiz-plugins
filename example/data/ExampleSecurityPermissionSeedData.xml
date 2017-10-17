@@ -26,5 +26,5 @@ under the License.
     <SecurityPermission description="ALL operations in the Example Management Screens." permissionId="EXAMPLE_ADMIN"/>
 
     <!-- super user -->
-    <SecurityGroupPermission groupId="SUPER" permissionId="EXAMPLE_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SUPER" permissionId="EXAMPLE_ADMIN"/>
 </entity-engine-xml>

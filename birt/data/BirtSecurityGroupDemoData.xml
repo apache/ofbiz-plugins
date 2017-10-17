@@ -27,28 +27,28 @@
     <SecurityGroup groupId="BIRTADMIN" description="Birt - admin"/>
     <SecurityGroup groupId="BIRTUSER" description="Birt - user"/>
 
-    <SecurityGroupPermission groupId="BIRTADMIN" permissionId="BIRT_CREATE"/>
-    <SecurityGroupPermission groupId="BIRTADMIN" permissionId="BIRT_UPDATE"/>
-    <SecurityGroupPermission groupId="BIRTADMIN" permissionId="BIRT_DELETE"/>
-    <SecurityGroupPermission groupId="BIRTADMIN" permissionId="BIRT_VIEW"/>
-    <SecurityGroupPermission groupId="BIRTADMIN" permissionId="OFBTOOLS_VIEW"/>
-    <SecurityGroupPermission groupId="BIRTADMIN" permissionId="CONTENTMGR_ROLE_VIEW"/>
-    <SecurityGroupPermission groupId="BIRTADMIN" permissionId="CONTENTMGR_VIEW"/>
-    <SecurityGroupPermission groupId="BIRTADMIN" permissionId="CONTENTMGR_ROLE_CREATE"/>
-    <SecurityGroupPermission groupId="BIRTADMIN" permissionId="CONTENTMGR_CREATE"/>
-    <SecurityGroupPermission groupId="BIRTADMIN" permissionId="CONTENTMGR_ROLE_UPDATE"/>
-    <SecurityGroupPermission groupId="BIRTADMIN" permissionId="CONTENTMGR_UPDATE"/>
-    <SecurityGroupPermission groupId="BIRTADMIN" permissionId="CONTENTMGR_DELETE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="BIRTADMIN" permissionId="BIRT_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="BIRTADMIN" permissionId="BIRT_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="BIRTADMIN" permissionId="BIRT_DELETE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="BIRTADMIN" permissionId="BIRT_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="BIRTADMIN" permissionId="OFBTOOLS_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="BIRTADMIN" permissionId="CONTENTMGR_ROLE_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="BIRTADMIN" permissionId="CONTENTMGR_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="BIRTADMIN" permissionId="CONTENTMGR_ROLE_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="BIRTADMIN" permissionId="CONTENTMGR_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="BIRTADMIN" permissionId="CONTENTMGR_ROLE_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="BIRTADMIN" permissionId="CONTENTMGR_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="BIRTADMIN" permissionId="CONTENTMGR_DELETE"/>
 
-    <SecurityGroupPermission groupId="BIRTUSER" permissionId="BIRT_VIEW"/>
-    <SecurityGroupPermission groupId="BIRTUSER" permissionId="OFBTOOLS_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="BIRTUSER" permissionId="BIRT_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="BIRTUSER" permissionId="OFBTOOLS_VIEW"/>
 
-    <SecurityGroupPermission groupId="FULLADMIN" permissionId="BIRT_CREATE"/>
-    <SecurityGroupPermission groupId="FULLADMIN" permissionId="BIRT_UPDATE"/>
-    <SecurityGroupPermission groupId="FULLADMIN" permissionId="BIRT_DELETE"/>
-    <SecurityGroupPermission groupId="FULLADMIN" permissionId="BIRT_VIEW"/>
-    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="BIRT_CREATE"/>
-    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="BIRT_UPDATE"/>
-    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="BIRT_DELETE"/>
-    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="BIRT_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FULLADMIN" permissionId="BIRT_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FULLADMIN" permissionId="BIRT_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FULLADMIN" permissionId="BIRT_DELETE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FULLADMIN" permissionId="BIRT_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FLEXADMIN" permissionId="BIRT_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FLEXADMIN" permissionId="BIRT_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FLEXADMIN" permissionId="BIRT_DELETE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FLEXADMIN" permissionId="BIRT_VIEW"/>
 </entity-engine-xml>

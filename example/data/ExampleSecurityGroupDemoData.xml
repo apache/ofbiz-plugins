@@ -19,11 +19,11 @@ under the License.
 -->
 <entity-engine-xml>
     <!-- Example security -->
-    <SecurityGroupPermission groupId="FULLADMIN" permissionId="EXAMPLE_ADMIN"/>
-    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="EXAMPLE_CREATE"/>
-    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="EXAMPLE_DELETE"/>
-    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="EXAMPLE_UPDATE"/>
-    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="EXAMPLE_VIEW"/>
-    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="EXAMPLE_VIEW"/>
-    <SecurityGroupPermission groupId="BIZADMIN" permissionId="EXAMPLE_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FULLADMIN" permissionId="EXAMPLE_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FLEXADMIN" permissionId="EXAMPLE_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FLEXADMIN" permissionId="EXAMPLE_DELETE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FLEXADMIN" permissionId="EXAMPLE_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FLEXADMIN" permissionId="EXAMPLE_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="VIEWADMIN" permissionId="EXAMPLE_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="BIZADMIN" permissionId="EXAMPLE_ADMIN"/>
 </entity-engine-xml>

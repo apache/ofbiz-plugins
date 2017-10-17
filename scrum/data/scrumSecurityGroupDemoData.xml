@@ -21,154 +21,154 @@ under the License.
     
     <!-- Product Owner Security Group -->
     <SecurityGroup description="Product Owner" groupId="SCRUM_PRODUCT_OWNER"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="SCRUM_VIEW"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="SCRUM_ROLE_VIEW"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="SCRUM_PROJECT_ROLE_ADMIN"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="SCRUM_PRODUCT_VIEW"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="SCRUM_PRODUCT_ROLE_VIEW"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="SCRUM_PRODUCT_BACKLOG_ADMIN"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="SCRUM_SPRINT_VIEW"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="SCRUM_DAILY_VIEW"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="SCRUM_MEMBER_VIEW"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="SCRUM_TASK_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="SCRUM_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="SCRUM_ROLE_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="SCRUM_PROJECT_ROLE_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="SCRUM_PRODUCT_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="SCRUM_PRODUCT_ROLE_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="SCRUM_PRODUCT_BACKLOG_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="SCRUM_SPRINT_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="SCRUM_DAILY_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="SCRUM_MEMBER_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="SCRUM_TASK_VIEW"/>
 
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="WORKEFFORTMGR_CREATE"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="WORKEFFORTMGR_UPDATE"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="WORKEFFORTMGR_ROLE"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="WORKEFFORTMGR_ROLE_CREATE"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="WORKEFFORTMGR_ROLE_UPDATE"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="WORKEFFORTMGR_ROLE_ADMIN"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="ASSETMAINT_CREATE"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="ASSETMAINT_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="WORKEFFORTMGR_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="WORKEFFORTMGR_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="WORKEFFORTMGR_ROLE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="WORKEFFORTMGR_ROLE_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="WORKEFFORTMGR_ROLE_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="WORKEFFORTMGR_ROLE_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="ASSETMAINT_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="ASSETMAINT_ADMIN"/>
     
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="WORKEFFORTMGR_VIEW"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="WORKEFFORTMGR_CREATE"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="WORKEFFORTMGR_UPDATE"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="WORKEFFORTMGR_DELETE"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="WORKEFFORTMGR_ROLE_VIEW"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="WORKEFFORTMGR_ROLE_CREATE"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="WORKEFFORTMGR_ROLE_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="WORKEFFORTMGR_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="WORKEFFORTMGR_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="WORKEFFORTMGR_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="WORKEFFORTMGR_DELETE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="WORKEFFORTMGR_ROLE_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="WORKEFFORTMGR_ROLE_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="WORKEFFORTMGR_ROLE_UPDATE"/>
     
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="PARTYMGR_ROLE_CREATE"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="PARTYMGR_ROLE_DELETE"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="PARTYMGR_CME_CREATE"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="PARTYMGR_CME_UPDATE"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="CONTENTMGR_ROLE_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="PARTYMGR_ROLE_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="PARTYMGR_ROLE_DELETE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="PARTYMGR_CME_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="PARTYMGR_CME_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="CONTENTMGR_ROLE_CREATE"/>
     
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="CATALOG_CREATE"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="CATALOG_ROLE_CREATE"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="CATALOG_UPDATE"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="CATALOG_ROLE_UPDATE"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="SECURITY_CREATE"/>
-    <SecurityGroupPermission groupId="SCRUM_PRODUCT_OWNER" permissionId="CATALOG_DELETE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="CATALOG_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="CATALOG_ROLE_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="CATALOG_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="CATALOG_ROLE_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="SECURITY_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="CATALOG_DELETE"/>
     
     
     <!-- Scrum Master Security Group -->
     <SecurityGroup description="Scrum Master" groupId="SCRUM_MASTER"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="SCRUM_VIEW"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="SCRUM_ROLE_VIEW"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="SCRUM_PROJECT_ROLE_ADMIN"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="SCRUM_SPRINT_VIEW"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="SCRUM_SPRINT_CREATE"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="SCRUM_SPRINT_UPDATE"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="SCRUM_SPRINT_DELETE"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="SCRUM_TASK_VIEW"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="SCRUM_TASK_CREATE"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="SCRUM_TASK_UPDATE"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="SCRUM_TASK_DELETE"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="SCRUM_DAILY_VIEW"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="SCRUM_DAILY_CREATE"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="SCRUM_DAILY_UPDATE"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="SCRUM_DAILY_DELETE"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="SCRUM_MEMBER_VIEW"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="SCRUM_MEMBER_CREATE"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="SCRUM_MEMBER_DELETE"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="SCRUM_TEST_ADMIN"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="SCRUM_PRODUCT_BACKLOG_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="SCRUM_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="SCRUM_ROLE_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="SCRUM_PROJECT_ROLE_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="SCRUM_SPRINT_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="SCRUM_SPRINT_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="SCRUM_SPRINT_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="SCRUM_SPRINT_DELETE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="SCRUM_TASK_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="SCRUM_TASK_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="SCRUM_TASK_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="SCRUM_TASK_DELETE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="SCRUM_DAILY_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="SCRUM_DAILY_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="SCRUM_DAILY_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="SCRUM_DAILY_DELETE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="SCRUM_MEMBER_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="SCRUM_MEMBER_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="SCRUM_MEMBER_DELETE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="SCRUM_TEST_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="SCRUM_PRODUCT_BACKLOG_ADMIN"/>
     
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="WORKEFFORTMGR_ADMIN"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="WORKEFFORTMGR_VIEW"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="WORKEFFORTMGR_CREATE"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="WORKEFFORTMGR_UPDATE"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="WORKEFFORTMGR_DELETE"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="WORKEFFORTMGR_ROLE_VIEW"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="WORKEFFORTMGR_ROLE_CREATE"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="WORKEFFORTMGR_ROLE_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="WORKEFFORTMGR_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="WORKEFFORTMGR_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="WORKEFFORTMGR_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="WORKEFFORTMGR_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="WORKEFFORTMGR_DELETE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="WORKEFFORTMGR_ROLE_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="WORKEFFORTMGR_ROLE_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="WORKEFFORTMGR_ROLE_UPDATE"/>
     
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="PARTYMGR_ROLE_CREATE"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="PARTYMGR_ROLE_DELETE"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="PARTYMGR_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="PARTYMGR_ROLE_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="PARTYMGR_ROLE_DELETE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="PARTYMGR_VIEW"/>
     
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="SECURITY_CREATE"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="PARTYMGR_CME_CREATE"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="PARTYMGR_CME_UPDATE"/>
-    <SecurityGroupPermission groupId="SCRUM_MASTER" permissionId="CONTENTMGR_ROLE_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="SECURITY_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="PARTYMGR_CME_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="PARTYMGR_CME_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="CONTENTMGR_ROLE_CREATE"/>
     
     <!-- Scrum Team Security Group -->
     <SecurityGroup description="Scrum Team" groupId="SCRUM_TEAM"/>
-    <SecurityGroupPermission groupId="SCRUM_TEAM" permissionId="SCRUM_VIEW"/>
-    <SecurityGroupPermission groupId="SCRUM_TEAM" permissionId="SCRUM_ROLE_VIEW"/>
-    <SecurityGroupPermission groupId="SCRUM_TEAM" permissionId="SCRUM_SPRINT_VIEW"/>
-    <SecurityGroupPermission groupId="SCRUM_TEAM" permissionId="SCRUM_TASK_VIEW"/>
-    <SecurityGroupPermission groupId="SCRUM_TEAM" permissionId="SCRUM_TASK_CREATE"/>
-    <SecurityGroupPermission groupId="SCRUM_TEAM" permissionId="SCRUM_TASK_UPDATE"/>
-    <SecurityGroupPermission groupId="SCRUM_TEAM" permissionId="SCRUM_TASK_DELETE"/>
-    <SecurityGroupPermission groupId="SCRUM_TEAM" permissionId="SCRUM_DAILY_VIEW"/>
-    <SecurityGroupPermission groupId="SCRUM_TEAM" permissionId="SCRUM_DAILY_CREATE"/>
-    <SecurityGroupPermission groupId="SCRUM_TEAM" permissionId="SCRUM_DAILY_UPDATE"/>
-    <SecurityGroupPermission groupId="SCRUM_TEAM" permissionId="SCRUM_DAILY_DELETE"/>
-    <SecurityGroupPermission groupId="SCRUM_TEAM" permissionId="SCRUM_PROJECT_ROLE_VIEW"/>
-    <SecurityGroupPermission groupId="SCRUM_TEAM" permissionId="SCRUM_PRODUCT_BACKLOG_UPDATE"/>
-    <SecurityGroupPermission groupId="SCRUM_TEAM" permissionId="SCRUM_ROLE_TIMESHEET_CREATE"/>
-    <SecurityGroupPermission groupId="SCRUM_TEAM" permissionId="SCRUM_ROLE_TIMESHEET_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEAM" permissionId="SCRUM_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEAM" permissionId="SCRUM_ROLE_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEAM" permissionId="SCRUM_SPRINT_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEAM" permissionId="SCRUM_TASK_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEAM" permissionId="SCRUM_TASK_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEAM" permissionId="SCRUM_TASK_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEAM" permissionId="SCRUM_TASK_DELETE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEAM" permissionId="SCRUM_DAILY_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEAM" permissionId="SCRUM_DAILY_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEAM" permissionId="SCRUM_DAILY_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEAM" permissionId="SCRUM_DAILY_DELETE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEAM" permissionId="SCRUM_PROJECT_ROLE_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEAM" permissionId="SCRUM_PRODUCT_BACKLOG_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEAM" permissionId="SCRUM_ROLE_TIMESHEET_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEAM" permissionId="SCRUM_ROLE_TIMESHEET_UPDATE"/>
 
-    <SecurityGroupPermission groupId="SCRUM_TEAM" permissionId="WORKEFFORTMGR_CREATE"/>
-    <SecurityGroupPermission groupId="SCRUM_TEAM" permissionId="WORKEFFORTMGR_UPDATE"/>
-    <SecurityGroupPermission groupId="SCRUM_TEAM" permissionId="WORKEFFORTMGR_DELETE"/>
-    <SecurityGroupPermission groupId="SCRUM_TEAM" permissionId="WORKEFFORTMGR_ROLE_CREATE"/>
-    <SecurityGroupPermission groupId="SCRUM_TEAM" permissionId="WORKEFFORTMGR_ROLE_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEAM" permissionId="WORKEFFORTMGR_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEAM" permissionId="WORKEFFORTMGR_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEAM" permissionId="WORKEFFORTMGR_DELETE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEAM" permissionId="WORKEFFORTMGR_ROLE_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEAM" permissionId="WORKEFFORTMGR_ROLE_UPDATE"/>
 
-    <SecurityGroupPermission groupId="SCRUM_TEAM" permissionId="PARTYMGR_ROLE_CREATE"/>
-    <SecurityGroupPermission groupId="SCRUM_TEAM" permissionId="PARTYMGR_ROLE_DELETE"/>
-    <SecurityGroupPermission groupId="SCRUM_TEAM" permissionId="PARTYMGR_CME_CREATE"/>
-    <SecurityGroupPermission groupId="SCRUM_TEAM" permissionId="PARTYMGR_CME_UPDATE"/>
-    <SecurityGroupPermission groupId="SCRUM_TEAM" permissionId="CONTENTMGR_ROLE_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEAM" permissionId="PARTYMGR_ROLE_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEAM" permissionId="PARTYMGR_ROLE_DELETE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEAM" permissionId="PARTYMGR_CME_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEAM" permissionId="PARTYMGR_CME_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEAM" permissionId="CONTENTMGR_ROLE_CREATE"/>
     
     <SecurityGroup description="Scrum Administrator group, has all scrum permissions." groupId="SCRUM_ADMIN"/>
-    <SecurityGroupPermission groupId="SCRUM_ADMIN" permissionId="SCRUM_ADMIN"/>
-    <SecurityGroupPermission groupId="SCRUM_ADMIN" permissionId="SCRUM_TEST_ADMIN"/>
-    <SecurityGroupPermission groupId="SCRUM_ADMIN" permissionId="PARTYMGR_VIEW"/>
-    <SecurityGroupPermission groupId="SCRUM_ADMIN" permissionId="SCRUM_ROLE_ADMIN"/>
-    <SecurityGroupPermission groupId="SCRUM_ADMIN" permissionId="WORKEFFORTMGR_ROLE_ADMIN"/>
-    <SecurityGroupPermission groupId="SCRUM_ADMIN" permissionId="SCRUM_BILLING_ADMIN"/>
-    <SecurityGroupPermission groupId="SCRUM_ADMIN" permissionId="WORKEFFORTMGR_CREATE"/>
-    <SecurityGroupPermission groupId="SCRUM_ADMIN" permissionId="WORKEFFORTMGR_UPDATE"/>
-    <SecurityGroupPermission groupId="SCRUM_ADMIN" permissionId="WORKEFFORTMGR_DELETE"/>
-    <SecurityGroupPermission groupId="SCRUM_ADMIN" permissionId="SCRUM_TIMESHEET_CREATE"/>
-    <SecurityGroupPermission groupId="SCRUM_ADMIN" permissionId="SCRUM_TIMESHEET_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_ADMIN" permissionId="SCRUM_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_ADMIN" permissionId="SCRUM_TEST_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_ADMIN" permissionId="PARTYMGR_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_ADMIN" permissionId="SCRUM_ROLE_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_ADMIN" permissionId="WORKEFFORTMGR_ROLE_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_ADMIN" permissionId="SCRUM_BILLING_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_ADMIN" permissionId="WORKEFFORTMGR_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_ADMIN" permissionId="WORKEFFORTMGR_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_ADMIN" permissionId="WORKEFFORTMGR_DELETE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_ADMIN" permissionId="SCRUM_TIMESHEET_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_ADMIN" permissionId="SCRUM_TIMESHEET_UPDATE"/>
     
     <!-- Scrum Tester Security Group -->
     <SecurityGroup description="Scrum Test Administrator" groupId="SCRUM_TEST_ADMIN"/>
-    <SecurityGroupPermission groupId="SCRUM_TEST_ADMIN" permissionId="SCRUM_VIEW"/>
-    <SecurityGroupPermission groupId="SCRUM_TEST_ADMIN" permissionId="WORKEFFORTMGR_ROLE_CREATE"/>
-    <SecurityGroupPermission groupId="SCRUM_TEST_ADMIN" permissionId="WORKEFFORTMGR_ROLE_UPDATE"/>
-    <SecurityGroupPermission groupId="SCRUM_TEST_ADMIN" permissionId="SCRUM_TEST_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEST_ADMIN" permissionId="SCRUM_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEST_ADMIN" permissionId="WORKEFFORTMGR_ROLE_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEST_ADMIN" permissionId="WORKEFFORTMGR_ROLE_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEST_ADMIN" permissionId="SCRUM_TEST_ADMIN"/>
 
     <!-- Administrator Permission -->
-    <SecurityGroupPermission groupId="FULLADMIN" permissionId="SCRUM_ADMIN"/>
-    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SCRUM_READ"/>
-    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="SCRUM_VIEW"/>
-    <SecurityGroupPermission groupId="BIZADMIN" permissionId="SCRUM_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FULLADMIN" permissionId="SCRUM_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FLEXADMIN" permissionId="SCRUM_READ"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="VIEWADMIN" permissionId="SCRUM_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="BIZADMIN" permissionId="SCRUM_ADMIN"/>
     
     <!-- stakeholder Security Group -->
     <SecurityGroup description="Stakeholder" groupId="SCRUM_STAKEHOLDER"/>
-    <SecurityGroupPermission groupId="SCRUM_STAKEHOLDER" permissionId="SCRUM_VIEW"/>
-    <SecurityGroupPermission groupId="SCRUM_STAKEHOLDER" permissionId="SCRUM_PROJECT_ROLE_VIEW"/>
-    <SecurityGroupPermission groupId="SCRUM_STAKEHOLDER" permissionId="SCRUM_PRODUCT_ROLE_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_STAKEHOLDER" permissionId="SCRUM_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_STAKEHOLDER" permissionId="SCRUM_PROJECT_ROLE_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_STAKEHOLDER" permissionId="SCRUM_PRODUCT_ROLE_VIEW"/>
     
      <!-- billing Security Group -->
     <SecurityGroup description="Scrumbilling" groupId="SCRUM_BILLING"/>
-    <SecurityGroupPermission groupId="SCRUM_BILLING" permissionId="SCRUM_BILLING_ADMIN"/>
-    <SecurityGroupPermission groupId="SCRUM_BILLING" permissionId="SCRUM_VIEW"/>
-    <SecurityGroupPermission groupId="FULLADMIN" permissionId="SCRUM_BILLING_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_BILLING" permissionId="SCRUM_BILLING_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_BILLING" permissionId="SCRUM_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FULLADMIN" permissionId="SCRUM_BILLING_ADMIN"/>
 </entity-engine-xml>

@@ -23,20 +23,20 @@ under the License.
     <!-- Project Manager security -->
 
     <!-- add permission to general groups -->
-    <SecurityGroupPermission groupId="BIZADMIN" permissionId="PROJECTMGR_ADMIN"/>
-    <SecurityGroupPermission groupId="FULLADMIN" permissionId="PROJECTMGR_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="BIZADMIN" permissionId="PROJECTMGR_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FULLADMIN" permissionId="PROJECTMGR_ADMIN"/>
 
     <SecurityGroup description="Project Admin group, has update access to own projects." groupId="PROJECTADMIN"/>
-    <SecurityGroupPermission groupId="PROJECTADMIN" permissionId="PROJECTMGR_ROLE_ADMIN"/>
-    <SecurityGroupPermission groupId="PROJECTADMIN" permissionId="PROJECTMGR_VIEW"/>
-    <SecurityGroupPermission groupId="PROJECTADMIN" permissionId="PROJECTMGR_TIMESHEET_CREATE"/>
-    <SecurityGroupPermission groupId="PROJECTADMIN" permissionId="PROJECTMGR_TIMESHEET_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="PROJECTADMIN" permissionId="PROJECTMGR_ROLE_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="PROJECTADMIN" permissionId="PROJECTMGR_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="PROJECTADMIN" permissionId="PROJECTMGR_TIMESHEET_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="PROJECTADMIN" permissionId="PROJECTMGR_TIMESHEET_UPDATE"/>
 
     <SecurityGroup description="Project User group, has read, task create/assign and timesheet create/update access to own projects." groupId="PROJECTUSER"/>
-    <SecurityGroupPermission groupId="PROJECTUSER" permissionId="PROJECTMGR_VIEW"/>
-    <SecurityGroupPermission groupId="PROJECTUSER" permissionId="PROJECTMGR_ROLE_VIEW"/>
-    <SecurityGroupPermission groupId="PROJECTUSER" permissionId="PROJECTMGR_ROLE_TASK_CREATE"/>
-    <SecurityGroupPermission groupId="PROJECTUSER" permissionId="PROJECTMGR_ROLE_TIMESHEET_CREATE"/>
-    <SecurityGroupPermission groupId="PROJECTUSER" permissionId="PROJECTMGR_ROLE_TIMESHEET_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="PROJECTUSER" permissionId="PROJECTMGR_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="PROJECTUSER" permissionId="PROJECTMGR_ROLE_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="PROJECTUSER" permissionId="PROJECTMGR_ROLE_TASK_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="PROJECTUSER" permissionId="PROJECTMGR_ROLE_TIMESHEET_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="PROJECTUSER" permissionId="PROJECTMGR_ROLE_TIMESHEET_UPDATE"/>
 
 </entity-engine-xml>
