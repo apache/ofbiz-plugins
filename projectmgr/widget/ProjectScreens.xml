@@ -54,7 +54,7 @@ under the License.
             <widgets>
                 <section>
                     <condition>
-                        <not><if-has-permission permission="PROJECTMGR" action="_ADMIN"/></not>
+                        <not><if-has-permission permission="PROJECTMGR_ADMIN"/></not>
                     </condition>
                     <actions>
                         <set field="parameters.partyId" from-field="parameters.userLogin.partyId"/>
@@ -933,9 +933,8 @@ under the License.
                                 <condition>
                                     <or>
                                         <if-has-permission permission="PROJECTMGR_ADMIN"/>
-                                        <if-has-permission permission="PROJECTMGR_ROLE_ADMIN"/>
-                                        <if-has-permission permission="PROJECTMGR_ROLE_TASK_CREATE"/>
-                                        <if-has-permission permission="PROJECTMGR_ROLE_UPDATE"/>
+                                        <if-has-permission permission="PROJECTMGR_ROLE_TASK" action="_CREATE"/>
+                                        <if-has-permission permission="PROJECTMGR_ROLE" action="_UPDATE"/>
                                     </or>
                                 </condition>
                                 <widgets>
@@ -1070,10 +1069,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <or>
-                                    <if-has-permission permission="PROJECTMGR_ADMIN"/>
-                                    <if-has-permission permission="PROJECTMGR_VIEW"/>
-                                </or>
+                                <if-has-permission permission="PROJECTMGR" action="_VIEW"/>
                             </condition>
                             <widgets>
                                 <screenlet id="searchOptions" name="findScreenlet" collapsible="true" title="${uiLabelMap.CommonSearchOptions}" initially-collapsed="true">
@@ -1102,10 +1098,7 @@ under the License.
                         <label  style="h1" text="${uiLabelMap[titleProperty]}"/>
                         <section>
                             <condition>
-                                <or>
-                                    <if-has-permission permission="PROJECTMGR_ADMIN"/>
-                                    <if-has-permission permission="PROJECTMGR_VIEW"/>
-                                </or>
+                                <if-has-permission permission="PROJECTMGR" action="_VIEW"/>
                             </condition>
                             <widgets>
                                 <include-screen name="commOverview" location="component://party/widget/partymgr/CommunicationEventScreens.xml" />

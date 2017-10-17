@@ -53,7 +53,7 @@ under the License.
         </menu-item>
         <menu-item name="portalAdmin" title="${uiLabelMap.MyPortalAdminPortalPage}">
             <condition>
-            <and><if-has-permission permission="WEBTOOLS_VIEW"/>
+            <and><if-has-permission permission="WEBTOOLS" action="_VIEW"/>
             <or>
             <if-has-permission permission="MYPORTALBASE_ADMIN"/>
             </or>

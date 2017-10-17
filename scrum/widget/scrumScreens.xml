@@ -2884,7 +2884,7 @@ under the License.
                                             <widgets>
                                                 <section>
                                                     <condition>
-                                                        <if-has-permission permission="SCRUM_PRODUCT_ROLE_VIEW"/>
+                                                        <if-has-permission permission="SCRUM_PRODUCT_ROLE" action="_VIEW"/>
                                                     </condition>
                                                     <widgets>
                                                         <section>

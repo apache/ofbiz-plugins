@@ -273,7 +273,7 @@ under the License.
             <condition>
                 <and>
                     <or>
-                        <if-has-permission permission="SCRUM_ADMIN"/>
+                        <if-has-permission permission="SCRUM" action="_ADMIN"/>
                     </or>
                     <not><if-empty field="product"/></not>
                     <if-empty field="product.supportDiscontinuationDate"/>
@@ -288,7 +288,7 @@ under the License.
             <condition>
                 <and>
                     <or>
-                        <if-has-permission permission="SCRUM_ADMIN"/>
+                        <if-has-permission permission="SCRUM" action="_ADMIN"/>
                     </or>
                     <not><if-empty field="product"/></not>
                     <if-empty field="product.supportDiscontinuationDate"/>
@@ -326,7 +326,7 @@ under the License.
             <condition>
                 <and>
                     <or>
-                        <if-has-permission permission="SCRUM_PRODUCT_ROLE_VIEW"/>
+                        <if-has-permission permission="SCRUM_PRODUCT_ROLE" action="_VIEW"/>
                         <if-service-permission service-name="scrumPermissionCheck" main-action="UPDATE" resource-description="BACKLOG"/>
                     </or>
                     <not><if-empty field="product"/></not>
@@ -427,7 +427,7 @@ under the License.
                         <if-service-permission service-name="scrumPermissionCheck" main-action="CREATE" resource-description="TASK"/>
                         <or>
                             <and>
-                                <if-has-permission permission="SCRUM_PRODUCT_ADMIN"/>
+                                <if-has-permission permission="SCRUM_PRODUCT" action="_ADMIN"/>
                                 <if-compare operator="equals" value="CRQ_ACCEPTED" field="custRequestMap.statusId"/>
                             </and>
                         </or>

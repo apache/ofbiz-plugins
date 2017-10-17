@@ -22,7 +22,7 @@
     xmlns="http://ofbiz.apache.org/Simple-Method" xsi:schemaLocation="http://ofbiz.apache.org/Simple-Method http://ofbiz.apache.org/dtds/simple-methods.xsd">
     
     <simple-method method-name="projectMgrRequestPermission" short-description="Make sure the sure the user can read the requests for the projects">
-        <if-has-permission permission="PROJECTMGR" action="ADMIN">
+        <if-has-permission permission="PROJECTMGR_ADMIN">
             <set field="hasPermission" value="true" type="Boolean"/>
             <else>
                 <set field="hasPermission" value="false" type="Boolean"/>
@@ -87,12 +87,12 @@
                             <if-compare field="isMember" value="true" operator="equals"/>
                         </and>
                         <and>
-                            <if-has-permission permission="PROJECTMGR_VIEW"/>
-                            <not><if-has-permission permission="PROJECTMGR_ROLE_VIEW"/></not>
+                            <if-has-permission permission="PROJECTMGR" action="_VIEW"/>
+                            <not><if-has-permission permission="PROJECTMGR_ROLE" action="_VIEW"/></not>
                             <if-compare field="parameters.mainAction" value="VIEW" operator="equals"/>
                         </and>
                         <and>
-                            <if-has-permission permission="PROJECTMGR_ROLE_VIEW"/>
+                            <if-has-permission permission="PROJECTMGR_ROLE" action="_VIEW"/>
                             <if-compare field="isMember" value="true" operator="equals"/>
                             <if-compare field="parameters.mainAction" value="VIEW" operator="equals"/>
                         </and>
@@ -129,12 +129,12 @@
                             <if-compare field="isMember" value="true" operator="equals"/>
                         </and>
                         <and>
-                            <if-has-permission permission="PROJECTMGR_VIEW"/>
-                            <not><if-has-permission permission="PROJECTMGR_ROLE_VIEW"/></not>
+                            <if-has-permission permission="PROJECTMGR" action="_VIEW"/>
+                            <not><if-has-permission permission="PROJECTMGR_ROLE" action="_VIEW"/></not>
                             <if-compare field="parameters.mainAction" value="VIEW" operator="equals"/>
                         </and>
                         <and>
-                            <if-has-permission permission="PROJECTMGR_ROLE_VIEW"/>
+                            <if-has-permission permission="PROJECTMGR_ROLE" action="_VIEW"/>
                             <if-compare field="isMember" value="true" operator="equals"/>
                             <if-compare field="parameters.mainAction" value="VIEW" operator="equals"/>
                         </and>
@@ -206,17 +206,17 @@
                             <if-compare field="isMember" value="true" operator="equals"/>
                         </and>
                         <and>
-                            <if-has-permission permission="PROJECTMGR_VIEW"/>
-                            <not><if-has-permission permission="PROJECTMGR_ROLE_VIEW"/></not>
+                            <if-has-permission permission="PROJECTMGR" action="_VIEW"/>
+                            <not><if-has-permission permission="PROJECTMGR_ROLE" action="_VIEW"/></not>
                             <if-compare field="parameters.mainAction" value="VIEW" operator="equals"/>
                         </and>
                         <and>
-                            <if-has-permission permission="PROJECTMGR_ROLE_VIEW"/>
+                            <if-has-permission permission="PROJECTMGR_ROLE" action="_VIEW"/>
                             <if-compare field="isMember" value="true" operator="equals"/>
                             <if-compare field="parameters.mainAction" value="VIEW" operator="equals"/>
                         </and>
                         <and>
-                            <if-has-permission permission="PROJECTMGR_ROLE_TASK_CREATE"/>
+                            <if-has-permission permission="PROJECTMGR_ROLE_TASK" action="_CREATE"/>
                             <!-- if-compare field="isMember" value="true" operator="equals"/--><!-- currently disabled because the workEffortParentId is supplied but is empty here -->
                             <or>
                                 <if-compare field="parameters.mainAction" value="CREATE" operator="equals"/>
@@ -249,17 +249,17 @@
                     <or>
                         <if-has-permission permission="PROJECTMGR_ADMIN"/>
                         <and>
-                            <if-has-permission permission="PROJECTMGR_VIEW"/>
+                            <if-has-permission permission="PROJECTMGR" action="_VIEW"/>
                             <if-compare field="mainAction" value="VIEW" operator="equals"/>
                         </and>
                         <and>
-                            <if-has-permission permission="PROJECTMGR_TIMESHEET_CREATE"/>
-                            <not><if-has-permission permission="PROJECTMGR_ROLE_TIMESHEET_CREATE"/></not>
+                            <if-has-permission permission="PROJECTMGR_TIMESHEET" action="_CREATE"/>
+                            <not><if-has-permission permission="PROJECTMGR_ROLE_TIMESHEET" action="_CREATE"/></not>
                             <if-compare field="mainAction" value="CREATE" operator="equals"/>
                         </and>
                         <and>
-                            <if-has-permission permission="PROJECTMGR_TIMESHEET_UPDATE"/>
-                            <not><if-has-permission permission="PROJECTMGR_ROLE_TIMESHEET_UPDATE"/></not>
+                            <if-has-permission permission="PROJECTMGR_TIMESHEET" action="_UPDATE"/>
+                            <not><if-has-permission permission="PROJECTMGR_ROLE_TIMESHEET" action="_UPDATE"/></not>
                             <if-compare field="mainAction" value="UPDATE" operator="equals"/>
                         </and>
                         <and><!-- can always create ones own timesheet -->
@@ -302,27 +302,27 @@
                         <if-empty field="parameters.timesheetId"/>
                         <if-has-permission permission="PROJECTMGR_ADMIN"/>
                         <and>
-                            <if-has-permission permission="PROJECTMGR_VIEW"/>
+                            <if-has-permission permission="PROJECTMGR" action="_VIEW"/>
                             <if-compare field="mainAction" value="VIEW" operator="equals"/>
                         </and>
                         <and>
-                            <if-has-permission permission="PROJECTMGR_TIMESHEET_CREATE"/>
-                            <not><if-has-permission permission="PROJECTMGR_ROLE_TIMESHEET_CREATE"/></not>
+                            <if-has-permission permission="PROJECTMGR_TIMESHEET" action="_CREATE"/>
+                            <not><if-has-permission permission="PROJECTMGR_ROLE_TIMESHEET" action="_CREATE"/></not>
                             <if-compare field="mainAction" value="CREATE" operator="equals"/>
                         </and>
                         <and>
-                            <if-has-permission permission="PROJECTMGR_TIMESHEET_UPDATE"/>
-                            <not><if-has-permission permission="PROJECTMGR_ROLE_TIMESHEET_UPDATE"/></not>
+                            <if-has-permission permission="PROJECTMGR_TIMESHEET" action="_UPDATE"/>
+                            <not><if-has-permission permission="PROJECTMGR_ROLE_TIMESHEET" action="_UPDATE"/></not>
                             <if-compare field="mainAction" value="UPDATE" operator="equals"/>
                         </and>
                         <and>
-                            <if-has-permission permission="PROJECTMGR_ROLE_TIMESHEET_CREATE"/>
+                            <if-has-permission permission="PROJECTMGR_ROLE_TIMESHEET" action="_CREATE"/>
                             <if-compare field="mainAction" value="CREATE" operator="equals"/>
                             <if-compare-field field="partyId" to-field="parameters.userLogin.partyId" operator="equals"/>
                             <if-compare field="isMember" value="true" operator="equals"/>
                         </and>
                         <and>
-                            <if-has-permission permission="PROJECTMGR_ROLE_TIMESHEET_UPDATE"/>
+                            <if-has-permission permission="PROJECTMGR_ROLE_TIMESHEET" action="_UPDATE"/>
                             <if-compare field="mainAction" value="UPDATE" operator="equals"/>
                             <if-compare-field field="partyId" to-field="parameters.userLogin.partyId" operator="equals"/>
                             <if-compare field="isMember" value="true" operator="equals"/>

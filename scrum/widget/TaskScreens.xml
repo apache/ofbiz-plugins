@@ -456,7 +456,7 @@ under the License.
                 <screenlet title="${uiLabelMap.ScrumMgrTaskTeam}">
                     <section>
                         <condition>
-                            <if-has-permission permission="SCRUM" action="_ADMIN"/>
+                            <if-has-permission permission="SCRUM_ADMIN"/>
                         </condition>
                         <widgets>
                             <include-form name="ListTaskParties" location="component://scrum/widget/TaskForms.xml"/>

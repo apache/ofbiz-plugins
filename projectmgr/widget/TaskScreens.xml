@@ -169,10 +169,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <or>
-                                    <if-has-permission permission="PROJECTMGR_ADMIN"/>
-                                    <if-has-permission permission="PROJECTMGR_VIEW"/>
-                                </or>
+                                <if-has-permission permission="PROJECTMGR" action="_VIEW"/>
                             </condition>
                             <widgets>
                                 <screenlet  title="${uiLabelMap.PageTitleFindTask}" collapsible="true" id="findTask">
@@ -519,10 +516,9 @@ under the License.
                         <section>
                             <condition>
                                 <or>
-                                    <if-has-permission permission="PROJECTMGR_ADMIN"/>
-                                    <if-has-permission permission="PROJECTMGR_ROLE_ADMIN"/>
-                                    <if-has-permission permission="PROJECTMGR_ROLE_TASK_CREATE"/>
-                                    <if-has-permission permission="PROJECTMGR_ROLE_UPDATE"/>
+                                    <if-has-permission permission="PROJECTMGR_ADMIN" action=""/>
+                                    <if-has-permission permission="PROJECTMGR_ROLE_TASK" action="_CREATE"/>
+                                    <if-has-permission permission="PROJECTMGR_ROLE" action="_UPDATE"/>
                                 </or>
                             </condition>
                             <widgets>
