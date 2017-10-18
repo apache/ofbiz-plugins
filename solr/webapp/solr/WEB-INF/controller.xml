@@ -57,13 +57,8 @@ under the License.
         <security https="true" auth="false"/>
         <response name="success" type="view" value="main"/>
     </request-map>
-    <request-map uri="newquery">
-        <security https="true" auth="false"/>
-        <response name="success" type="view" value="newquery"/>
-    </request-map>
     
     <!-- view-maps -->
     <view-map name="main" type="screen" page="component://solr/widget/SolrScreens.xml#Main"/>
-    <view-map name="newquery" type="screen" page="component://solr/widget/SolrScreens.xml#NewQuery"/>
     
 </site-conf>

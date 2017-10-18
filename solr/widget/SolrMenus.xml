@@ -27,9 +27,6 @@ under the License.
         <menu-item name="main" title="${uiLabelMap.CommonMain}">
             <link target="main"/>
         </menu-item>
-        <menu-item name="query" title="${uiLabelMap.CommonQuery}">
-            <link target="newquery"/>
-        </menu-item>
     </menu>
     
 </menus>
