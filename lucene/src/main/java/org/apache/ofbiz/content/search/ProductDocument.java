@@ -81,11 +81,11 @@ public class ProductDocument implements LuceneDocument {
 
                 // Product Fields
                 doc.add(new StringField("productId", productId, Field.Store.YES));
-                this.addTextFieldByWeight(doc, "productName", product.getString("productName"), "index.weight.Product.productName", 0, false, "fullText", delegator);
-                this.addTextFieldByWeight(doc, "internalName", product.getString("internalName"), "index.weight.Product.internalName", 0, false, "fullText", delegator);
-                this.addTextFieldByWeight(doc, "brandName", product.getString("brandName"), "index.weight.Product.brandName", 0, false, "fullText", delegator);
-                this.addTextFieldByWeight(doc, "description", product.getString("description"), "index.weight.Product.description", 0, false, "fullText", delegator);
-                this.addTextFieldByWeight(doc, "longDescription", product.getString("longDescription"), "index.weight.Product.longDescription", 0, false, "fullText", delegator);
+                this.addTextField(doc, "productName", product.getString("productName"), false, "fullText", delegator);
+                this.addTextField(doc, "internalName", product.getString("internalName"), false, "fullText", delegator);
+                this.addTextField(doc, "brandName", product.getString("brandName"), false, "fullText", delegator);
+                this.addTextField(doc, "description", product.getString("description"), false, "fullText", delegator);
+                this.addTextField(doc, "longDescription", product.getString("longDescription"), false, "fullText", delegator);
                 doc.add(new LongPoint("introductionDate", quantizeTimestampToDays(product.getTimestamp("introductionDate"))));
                 nextReIndex = this.checkSetNextReIndex(product.getTimestamp("introductionDate"), nextReIndex);
                 doc.add(new LongPoint("salesDiscontinuationDate", quantizeTimestampToDays(product.getTimestamp("salesDiscontinuationDate"))));
@@ -113,9 +113,9 @@ public class ProductDocument implements LuceneDocument {
                         doc.add(new StringField("productFeatureId", productFeatureAndAppl.getString("productFeatureId"), Field.Store.NO));
                         doc.add(new StringField("productFeatureCategoryId", productFeatureAndAppl.getString("productFeatureCategoryId"), Field.Store.NO));
                         doc.add(new StringField("productFeatureTypeId", productFeatureAndAppl.getString("productFeatureTypeId"), Field.Store.NO));
-                        this.addTextFieldByWeight(doc, "featureDescription", productFeatureAndAppl.getString("description"), "index.weight.ProductFeatureAndAppl.description", 0, false, "fullText", delegator);
-                        this.addTextFieldByWeight(doc, "featureAbbreviation", productFeatureAndAppl.getString("abbrev"), "index.weight.ProductFeatureAndAppl.abbrev", 0, false, "fullText", delegator);
-                        this.addTextFieldByWeight(doc, "featureCode", productFeatureAndAppl.getString("idCode"), "index.weight.ProductFeatureAndAppl.idCode", 0, false, "fullText", delegator);
+                        this.addTextField(doc, "featureDescription", productFeatureAndAppl.getString("description"), false, "fullText", delegator);
+                        this.addTextField(doc, "featureAbbreviation", productFeatureAndAppl.getString("abbrev"), false, "fullText", delegator);
+                        this.addTextField(doc, "featureCode", productFeatureAndAppl.getString("idCode"), false, "fullText", delegator);
                         // Get the ProductFeatureGroupIds
                         List<GenericValue> productFeatureGroupAppls = EntityQuery.use(delegator).from("ProductFeatureGroupAppl").where("productFeatureId", productFeatureAndAppl.get("productFeatureId")).queryList();
                         productFeatureGroupAppls = this.filterByThruDate(productFeatureGroupAppls);
@@ -140,8 +140,8 @@ public class ProductDocument implements LuceneDocument {
 
                     List<GenericValue> productAttributes = EntityQuery.use(delegator).from("ProductAttribute").where("productId", productId).queryList();
                     for (GenericValue productAttribute: productAttributes) {
-                        this.addTextFieldByWeight(doc, "attributeName", productAttribute.getString("attrName"), "index.weight.ProductAttribute.attrName", 0, false, "fullText", delegator);
-                        this.addTextFieldByWeight(doc, "attributeValue", productAttribute.getString("attrValue"), "index.weight.ProductAttribute.attrValue", 0, false, "fullText", delegator);
+                        this.addTextField(doc, "attributeName", productAttribute.getString("attrName"), false, "fullText", delegator);
+                        this.addTextField(doc, "attributeValue", productAttribute.getString("attrValue"), false, "fullText", delegator);
                     }
                 }
 
@@ -153,7 +153,7 @@ public class ProductDocument implements LuceneDocument {
                         String idValue = goodIdentification.getString("idValue");
                         doc.add(new StringField("goodIdentificationTypeId", goodIdentificationTypeId, Field.Store.NO));
                         doc.add(new StringField(goodIdentificationTypeId + "_GoodIdentification", idValue, Field.Store.NO));
-                        this.addTextFieldByWeight(doc, "identificationValue", idValue, "index.weight.GoodIdentification.idValue", 0, false, "fullText", delegator);
+                        this.addTextField(doc, "identificationValue", idValue, false, "fullText", delegator);
                     }
                 }
 
@@ -172,7 +172,7 @@ public class ProductDocument implements LuceneDocument {
                             } else if (thruDate != null) {
                                 nextReIndex = this.checkSetNextReIndex(thruDate, nextReIndex);
                             }
-                            this.addTextFieldByWeight(doc, "variantProductId", variantProductAssoc.getString("productIdTo"), "index.weight.Variant.Product.productId", 0, false, "fullText", delegator);
+                            this.addTextField(doc, "variantProductId", variantProductAssoc.getString("productIdTo"), false, "fullText", delegator);
                         }
                     }
                 }
@@ -203,7 +203,7 @@ public class ProductDocument implements LuceneDocument {
                         try {
                             Map<String, Object> drContext = UtilMisc.<String, Object>toMap("product", product);
                             String contentText = DataResourceWorker.renderDataResourceAsText(null, delegator, productContentAndInfo.getString("dataResourceId"), drContext, null, null, false);
-                            this.addTextFieldByWeight(doc, "content", contentText, null, weight, false, "fullText", delegator);
+                            this.addTextField(doc, "content", contentText, false, "fullText", delegator);
                         } catch (IOException e1) {
                             Debug.logError(e1, "Error getting content text to index", module);
                         } catch (GeneralException e1) {
@@ -279,26 +279,10 @@ public class ProductDocument implements LuceneDocument {
     }
 
     // An attempt to boost/weight values in a similar manner to what OFBiz product search does.
-    private void addTextFieldByWeight(Document doc, String fieldName, String value, String property, int defaultWeight, boolean store, String fullTextFieldName, Delegator delegator) {
+    private void addTextField(Document doc, String fieldName, String value, boolean store, String fullTextFieldName, Delegator delegator) {
         if (fieldName == null) return;
 
-        float weight = 0;
-        if (property != null) {
-            try {
-                weight = EntityUtilProperties.getPropertyAsFloat("prodsearch", property, 0).floatValue();
-            } catch (Exception e) {
-                Debug.logWarning("Could not parse weight number: " + e.toString(), module);
-            }
-        } else if (defaultWeight > 0) {
-            weight = defaultWeight;
-        }
-        if (weight == 0 && !store) {
-            return;
-        }
         Field field = new TextField(fieldName, checkValue(value), (store? Field.Store.YES: Field.Store.NO));
-        if (weight > 0 && weight != 1) {
-            field.setBoost(weight);
-        }
         doc.add(field);
         if (fullTextFieldName != null) {
             doc.add(new TextField(fullTextFieldName, checkValue(value), Field.Store.NO));

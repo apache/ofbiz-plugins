@@ -330,7 +330,7 @@ public final class SolrUtil {
         httpLogin.setConfig(requestConfig);
         CloseableHttpResponse loginResponse = httpClient.execute(httpLogin, httpContext);
         loginResponse.close();
-        return new HttpSolrClient(solrUrl + "/" + solrIndexName, httpClient);
+        return new HttpSolrClient.Builder(solrUrl + "/" + solrIndexName).withHttpClient(httpClient).build();
     }
 
 }
