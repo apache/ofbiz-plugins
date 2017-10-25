@@ -505,7 +505,7 @@ under the License.
                             <input type="hidden" name="quantity" value="${shoppingListItem.quantity}" />
                             <select name="add_product_id" class="selectBox">
                               <#list productVariantAssocs as productVariantAssoc>
-                                <#assign variantProduct = productVariantAssoc.getRelatedOneCache("AssocProduct") />
+                                <#assign variantProduct = productVariantAssoc.getRelatedOne("AssocProduct", true) />
                                 <#if variantProduct??>
                                 <#assign variantProductContentWrapper = Static["org.apache.ofbiz.product.product.ProductContentWrapper"].makeProductContentWrapper(variantProduct, request) />
                                   <option value="${variantProduct.productId}">${variantproductContentWrapper.get("PRODUCT_NAME", "html")?default("No Name")} [${variantProduct.productId}]</option>
