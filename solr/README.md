@@ -1,4 +1,4 @@
-<img src="http://ofbiz.apache.org/images/logo.png" alt="Apache OFBiz" />
+<img src="http://ofbiz.apache.org/images/OFBiz-logo.png" alt="Apache OFBiz" />
 
 <img src="http://lucene.apache.org/solr/assets/identity/Solr_Logo_on_white.png" width="150px"/>
 

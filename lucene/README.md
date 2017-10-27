@@ -1,4 +1,4 @@
-<img src="http://ofbiz.apache.org/images/logo.png" alt="Apache OFBiz" />&nbsp; <img src="http://lucene.apache.org/images/lucene_logo_green_300.png" alt="Apache Lucene" />
+<img src="http://ofbiz.apache.org/images/OFBiz-logo.png" alt="Apache OFBiz" />&nbsp; <img src="http://lucene.apache.org/images/lucene_logo_green_300.png" alt="Apache Lucene" />
 
 # Lucene component
 This OFBiz component enables integrators to enhance indexing and search/find capabilities

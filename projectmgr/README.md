@@ -1,4 +1,4 @@
-<img src="http://ofbiz.apache.org/images/logo.png" alt="Apache OFBiz" />
+<img src="http://ofbiz.apache.org/images/OFBiz-logo.png" alt="Apache OFBiz" />
 
 # ProjectMgr component
 This OFBiz component enables organisations to manage projects, project phases and project tasks.

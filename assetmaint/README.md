@@ -1,4 +1,4 @@
-<img src="http://ofbiz.apache.org/images/logo.png" alt="Apache OFBiz" />
+<img src="http://ofbiz.apache.org/images/OFBiz-logo.png" alt="Apache OFBiz" />
 
 # Assetmaint component
 The asset management and maintenance application enables organisations to 

@@ -1,4 +1,4 @@
-![Apache OFBiz® logo](http://ofbiz.apache.org/images/logo.png) And
+![Apache OFBiz® logo](http://ofbiz.apache.org/images/OFBiz-logo.png) And
 ![Birt Logo](http://www.eclipse.org/birt/img/logo/Birt-logo.png)
 # Birt component
 For more information about this component visit the [https://cwiki.apache.org/confluence/display/OFBIZ/Using+BIRT+with+OFBiz](https://cwiki.apache.org/confluence/display/OFBIZ/Using+BIRT+with+OFBiz) page in the OFBiz wiki
