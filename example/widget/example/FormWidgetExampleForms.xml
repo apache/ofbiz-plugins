@@ -411,6 +411,6 @@ under the License.
     </form>
 
     <form name="MaskFieldExampleForm" type="single">
-        <field name="maskField" className="test" title="${uiLabelMap.ExampleField}"><text mask='a*-999-a999'/></field>
+        <field name="maskField" title="${uiLabelMap.ExampleField}"><text mask='a*-999-a999'/></field>
     </form>
 </forms>
