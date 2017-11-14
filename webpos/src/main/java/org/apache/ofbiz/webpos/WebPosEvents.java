@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.apache.ofbiz.webpos;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,7 +52,7 @@ public class WebPosEvents {
 
     public static String module = WebPosEvents.class.getName();
 
-    public static String posLogin(HttpServletRequest request, HttpServletResponse response) {
+    public static String posLogin(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
         HttpSession session = request.getSession(true);
         
         // get the posTerminalId
