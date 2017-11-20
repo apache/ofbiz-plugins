@@ -41,6 +41,26 @@ under the License.
     <Content contentId="CMSS_HHEAD" contentTypeId="DOCUMENT" contentName="CMS Site HTML Head" dataResourceId="CMSS_HHEAD"/>
     <ContentPurpose contentId="CMSS_HHEAD" contentPurposeTypeId="SECTION"/>
 
+    <DataResource dataResourceId="FIELD_LOOKUP_JS" dataResourceTypeId="LINK" mimeTypeId="text/js" objectInfo="/common/js/util/fieldlookup.js"/>
+    <Content contentId="FIELD_LOOKUP_JS" contentTypeId="DOCUMENT" contentName="Field Lookup JS" dataResourceId="FIELD_LOOKUP_JS"/>
+    <ContentAssoc contentId="CMSS_HHEAD" contentIdTo="FIELD_LOOKUP_JS" sequenceNum="1" contentAssocTypeId="SUB_CONTENT" mapKey="js" fromDate="2014-10-02 00:00:00"/>
+
+    <DataResource dataResourceId="OFBIZ_UTIL_JS" dataResourceTypeId="LINK" mimeTypeId="text/js" objectInfo="/common/js/util/OfbizUtil.js"/>
+    <Content contentId="OFBIZ_UTIL_JS" contentTypeId="DOCUMENT" contentName="OFBiz Util JS" dataResourceId="OFBIZ_UTIL_JS"/>
+    <ContentAssoc contentId="CMSS_HHEAD" contentIdTo="OFBIZ_UTIL_JS" sequenceNum="2" contentAssocTypeId="SUB_CONTENT" mapKey="js" fromDate="2014-10-02 00:00:00"/>
+
+    <DataResource dataResourceId="ECOM_MAIN_CSS" dataResourceTypeId="LINK" mimeTypeId="text/css" objectInfo="/ecommerce/images/ecommain.css"/>
+    <Content contentId="ECOM_MAIN_CSS" contentTypeId="DOCUMENT" contentName="E-Commerce Main CSS" dataResourceId="ECOM_MAIN_CSS"/>
+    <ContentAssoc contentId="CMSS_HHEAD" contentIdTo="ECOM_MAIN_CSS" sequenceNum="1" contentAssocTypeId="SUB_CONTENT" mapKey="css" fromDate="2014-10-02 00:00:00"/>
+    
+    <DataResource dataResourceId="BLOG_CSS" dataResourceTypeId="LINK" mimeTypeId="text/css" objectInfo="/ecommerce/images/blog.css"/>
+    <Content contentId="BLOG_CSS" contentTypeId="DOCUMENT" contentName="Blog CSS" dataResourceId="BLOG_CSS"/>
+    <ContentAssoc contentId="CMSS_HHEAD" contentIdTo="BLOG_CSS" sequenceNum="2" contentAssocTypeId="SUB_CONTENT" mapKey="css" fromDate="2014-10-02 00:00:00"/>
+
+    <DataResource dataResourceId="CON_FORUM_CSS" dataResourceTypeId="LINK" mimeTypeId="text/css" objectInfo="/contentimages/css/contentForum.css"/>
+    <Content contentId="CON_FORUM_CSS" contentTypeId="DOCUMENT" contentName="Content Forum CSS" dataResourceId="CON_FORUM_CSS"/>
+    <ContentAssoc contentId="CMSS_HHEAD" contentIdTo="CON_FORUM_CSS" sequenceNum="3" contentAssocTypeId="SUB_CONTENT" mapKey="css" fromDate="2014-10-02 00:00:00"/>
+
     <DataResource dataResourceId="CMSS_DEMO_HEADER" dataResourceTypeId="ELECTRONIC_TEXT" dataTemplateTypeId="FTL"/>
     <ElectronicText dataResourceId="CMSS_DEMO_HEADER">
         <textData><![CDATA[

@@ -29,12 +29,15 @@ under the License.
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>${(decoratedContent.subcontent.title.render)!"CMS Site Generic Title (Set subcontent 'title' on your content!)"}</title>
     <link rel="shortcut icon" href="/images/ofbiz.ico" />
-    <script language="javascript" src="/common/js/util/fieldlookup.js" type="text/javascript"></script>
-    <script language="javascript" src="/common/js/util/OfbizUtil.js" type="text/javascript"></script>
-    <link rel="stylesheet" href="/ecommerce/images/ecommain.css" type="text/css"/>
-    <link rel="stylesheet" href="/ecommerce/images/blog.css" type="text/css"/>
-    <link rel="stylesheet" href="/contentimages/css/contentForum.css" type="text/css"/>
-
+    <#assign nothing = thisContent.setSortOrder("caSequenceNum")/>
+    <#assign nothing = thisContent.setMapKeyFilter("js")/>
+    <#list thisContent.subcontent_all as content>
+      <script src="${content.render!}" type="text/javascript"></script>
+    </#list>
+    <#assign nothing = thisContent.setMapKeyFilter("css")/>
+    <#list thisContent.subcontent_all as content>
+      <link rel="stylesheet" href="${content.render!}" type="text/css"/>
+    </#list>
     <meta name="description" content="${(decoratedContent.subcontent.metaDescription.render)!}"/>
     <meta name="keywords" content="${(decoratedContent.subcontent.metaKeywords.render)!}"/>
 </head>
