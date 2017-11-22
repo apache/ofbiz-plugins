@@ -20,3 +20,5 @@ under the License.
 def localeMap = []
 org.apache.ofbiz.base.util.UtilMisc.availableLocales().each { localeMap.add(localeId:it.toString()) }
 parameters.localeList = localeMap
+
+EntityQuery.use(delegator).from("ExampleTypeView").queryList()

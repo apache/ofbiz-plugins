@@ -19,6 +19,7 @@
 package org.apache.ofbiz.solr;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -199,21 +200,21 @@ public final class ProductUtil {
 
                 if (product != null && "AGGREGATED".equals(product.getString("productTypeId"))) {
                     ProductConfigWrapper configWrapper = new ProductConfigWrapper(delegator, dispatcher, productId, null, null, null, null, locale, userLogin);
-                    String listPrice = configWrapper.getTotalListPrice().setScale(2, BigDecimal.ROUND_HALF_DOWN).toString();
+                    String listPrice = configWrapper.getTotalListPrice().setScale(2, RoundingMode.HALF_DOWN).toString();
                     if (listPrice != null)
                         dispatchContext.put("listPrice", listPrice);
-                    String defaultPrice = configWrapper.getTotalListPrice().setScale(2, BigDecimal.ROUND_HALF_DOWN).toString();
+                    String defaultPrice = configWrapper.getTotalListPrice().setScale(2, RoundingMode.HALF_DOWN).toString();
                     if (defaultPrice != null)
                         dispatchContext.put("defaultPrice", defaultPrice);
                 } else {
                     Map<String, GenericValue> priceContext = UtilMisc.toMap("product", product);
                     Map<String, Object> priceMap = dispatcher.runSync("calculateProductPrice", priceContext);
                     if (priceMap.get("listPrice") != null) {
-                        String listPrice = ((BigDecimal) priceMap.get("listPrice")).setScale(2, BigDecimal.ROUND_HALF_DOWN).toString();
+                        String listPrice = ((BigDecimal) priceMap.get("listPrice")).setScale(2, RoundingMode.HALF_DOWN).toString();
                         dispatchContext.put("listPrice", listPrice);
                     }
                     if (priceMap.get("defaultPrice") != null) {
-                        String defaultPrice = ((BigDecimal) priceMap.get("defaultPrice")).setScale(2, BigDecimal.ROUND_HALF_DOWN).toString();
+                        String defaultPrice = ((BigDecimal) priceMap.get("defaultPrice")).setScale(2, RoundingMode.HALF_DOWN).toString();
                         if (defaultPrice != null)
                             dispatchContext.put("defaultPrice", defaultPrice);
                     }
