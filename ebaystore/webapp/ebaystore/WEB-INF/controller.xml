@@ -199,25 +199,25 @@
     <request-map uri="settingCombineOrders">
         <security https="true" auth="true"/>
         <event type="simple" path="component://ebaystore/minilang/EbayStoreEvents.xml" invoke="settingCombineOrders"/>
-        <response name="success" type="request-redirect" value="automationPreferences"/>
+        <response name="success" type="request-redirect-noparam" value="automationPreferences"/>
         <response name="error" type="view" value="AutomationPreferences"/>
     </request-map>
     <request-map uri="settingWinningBuyerNotification">
         <security https="true" auth="true"/>
         <event type="simple" path="component://ebaystore/minilang/EbayStoreEvents.xml" invoke="settingWinningBuyerNotification"/>
-        <response name="success" type="request-redirect" value="automationPreferences"/>
+        <response name="success" type="request-redirect-noparam" value="automationPreferences"/>
         <response name="error" type="view" value="AutomationPreferences"/>
     </request-map>
     <request-map uri="settingSendItemDispatchedNotification">
         <security https="true" auth="true"/>
         <event type="simple" path="component://ebaystore/minilang/EbayStoreEvents.xml" invoke="settingSendItemDispatchedNotification"/>
-        <response name="success" type="request-redirect" value="automationPreferences"/>
+        <response name="success" type="request-redirect-noparam" value="automationPreferences"/>
         <response name="error" type="view" value="AutomationPreferences"/>
     </request-map>
     <request-map uri="runBlockItemOutOfStock">
         <security https="true" auth="true"/>
         <event type="simple" path="component://ebaystore/minilang/EbayStoreEvents.xml" invoke="settingAutoBlockItemOutOfStock"/>
-        <response name="success" type="request-redirect" value="automationPreferences"/>
+        <response name="success" type="request-redirect-noparam" value="automationPreferences"/>
         <response name="error" type="view" value="AutomationPreferences"/>
     </request-map>
     <!-- Store inventory -->

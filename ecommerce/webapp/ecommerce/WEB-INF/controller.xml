@@ -94,13 +94,13 @@ under the License.
     <request-map uri="logout">
         <security https="true" auth="true"/>
         <event type="java" path="org.apache.ofbiz.webapp.control.LoginWorker" invoke="logout"/>
-        <response name="success" type="request-redirect" value="main"/>
+        <response name="success" type="request-redirect-noparam" value="main"/>
         <response name="error" type="view" value="main"/>
     </request-map>
     <request-map uri="autoLogout">
         <security https="true" auth="false"/>
         <event type="java" path="org.apache.ofbiz.webapp.control.LoginWorker" invoke="autoLoginRemove"/>
-        <response name="success" type="request-redirect" value="main"/>
+        <response name="success" type="request-redirect-noparam" value="main"/>
         <response name="error" type="view" value="main"/>
     </request-map>
     <!-- End of Security Mappings -->
@@ -243,7 +243,7 @@ under the License.
         <response name="success" type="view-last" value="showcart" save-last-view="true"/>
         <response name="survey" type="view" value="survey"/>
         <response name="product" type="view" value="product"/>
-        <response name="viewcart" type="request-redirect" value="showcart"/>
+        <response name="viewcart" type="request-redirect-noparam" value="showcart"/>
         <response name="error" type="view" value="showcart"/>
     </request-map>
 
@@ -1289,7 +1289,7 @@ under the License.
     <request-map uri="submitAnonContact">
         <security https="true" auth="false"/>
         <event type="simple" invoke="createAnonContact" path="component://ecommerce/minilang/customer/CustomerEvents.xml"/>
-        <response name="success" type="request-redirect" value="main"/>
+        <response name="success" type="request-redirect-noparam" value="main"/>
         <response name="error" type="request" value="AnonContactus"/>
     </request-map>
 
