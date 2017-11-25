@@ -37,9 +37,9 @@ img {display: inline-block; vertical-align: bottom;}
 h1,h2,h3,h4,h5,h6,strong,b,dt,th {font-weight: 700;}
 address,cite,em,i,caption,dfn,var {font-style: italic;}
 
-h1 {margin: 0 0 0.75em; font-size: 2em; color:#1F2948;}
+h1 {margin: 0 0 0.5em; font-size: 2em; color:#1F2948;}
 h2 {margin: 0 0 1em; font-size: 1.5em;}
-h3 {margin: 0 0 .5em; font-size: 1.167em; color:#1F2948;}
+h3 {margin: 0 0 .5em; font-size: 1.167em;}
 h4 {margin: 0 0 1.5em; font-size: 1em;}
 h5 {margin: 0 0 1.8em; font-size: .834em;}
 h6 {margin: 0 0 2em; font-size: .75em;}
@@ -206,14 +206,14 @@ text-decoration:underline;
 
 #company-name {
 color:#1C334D;
-font-size:12pt;
+font-size:16px;
 font-weight:700;
 white-space:nowrap;
 }
 
 #company-subtitle {
 color:#1C334D;
-font-size:6pt;
+font-size:10px;
 white-space:nowrap;
 }
 
@@ -1823,4 +1823,17 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
     margin-top: 3px;
     vertical-align: top;
     width: 22px;
+}
+
+nav > a.navbar-brand > img {
+    max-width: 180px !important;
+}
+
+.quick-links{
+    border-bottom: 1px solid #ccc;
+}
+
+.quick-links > div:hover{
+    background:#f1f1f1;
+    cursor:pointer;
 }

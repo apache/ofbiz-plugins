@@ -53,6 +53,8 @@ under the License.
                 <set field="layoutSettings.javaScripts[]" value="/common/js/jquery/plugins/jquery-jgrowl/1.4.1/jquery.jgrowl.min.js" global="true"/>
                 <set field="layoutSettings.styleSheets[+0]" value="/common/js/jquery/plugins/jquery-jgrowl/1.4.1/jquery.jgrowl.min.css" global="true" />
 
+                <set field="layoutSettings.styleSheets[+0]" value="/ecommerce/css/bootstrap.min.css" global="true" />
+                <set field="layoutSettings.javaScripts[]" value="/ecommerce/js/bootstrap.min.js" global="true"/>
                 <script location="component://ecommerce/groovyScripts/EcommerceSetup.groovy"/>
 
                 <!-- Get the store VisualTheme -->

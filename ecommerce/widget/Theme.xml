@@ -36,7 +36,7 @@ under the License.
         <property name="VT_STYLESHEET['add']" value="/ecommerce/images/ecommain.css"/>
         <property name="VT_STYLESHEET['add']" value="/contentimages/css/contentForum.css"/>
         <!--header image -->
-        <property name="VT_HDR_IMAGE_URL" value="/images/ofbiz_logo.gif"/>
+        <property name="VT_HDR_IMAGE_URL" value="/images/ofbiz_logo.png"/>
         <property name="VT_SHORTCUT_ICON" value="/images/ofbiz.ico"/>
         <!--template location-->
         <property name="VT_HDR_TMPLT_LOC" value="component://ecommerce/template/includes/Header.ftl"/>

@@ -17,9 +17,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
-<div id="ecom-header">
-  <div id="left">
+<nav class="navbar navbar-light bg-light">
+  <a class="navbar-brand" href="#">
     <#if sessionAttributes.overrideLogo??>
       <img src="<@ofbizContentUrl>${sessionAttributes.overrideLogo}</@ofbizContentUrl>" alt="Logo"/>
     <#elseif catalogHeaderLogo??>
@@ -27,72 +26,78 @@ under the License.
     <#elseif layoutSettings.VT_HDR_IMAGE_URL?has_content>
       <img src="<@ofbizContentUrl>${layoutSettings.VT_HDR_IMAGE_URL}</@ofbizContentUrl>" alt="Logo"/>
     </#if>
-  </div>
-  <div id="right">
-    ${screens.render("component://ecommerce/widget/CartScreens.xml#microcart")}
-  </div>
-  <div id="middle">
+  </a>
+  <div class="navbar-text">
     <#if !productStore??>
       <h2>${uiLabelMap.EcommerceNoProductStore}</h2>
     </#if>
     <#if (productStore.title)??>
-      <div id="company-name">${productStore.title}</div>
+      <h2>${productStore.title}</h2>
     </#if>
     <#if (productStore.subtitle)??>
       <div id="company-subtitle">${productStore.subtitle}</div>
     </#if>
     <div id="welcome-message">
-    <#if sessionAttributes.autoName?has_content>
-      ${uiLabelMap.CommonWelcome}&nbsp;${sessionAttributes.autoName?html}!
-      (${uiLabelMap.CommonNotYou}?&nbsp;
-      <a href="<@ofbizUrl>autoLogout</@ofbizUrl>" class="linktext">${uiLabelMap.CommonClickHere}</a>)
-    <#else>
-      ${uiLabelMap.CommonWelcome}!
-    </#if>
+      <#if sessionAttributes.autoName?has_content>
+        ${uiLabelMap.CommonWelcome}&nbsp;${sessionAttributes.autoName}!
+        (${uiLabelMap.CommonNotYou}?&nbsp;
+        <a href="<@ofbizUrl>autoLogout</@ofbizUrl>" class="linktext">${uiLabelMap.CommonClickHere}</a>)
+      <#else>
+        ${uiLabelMap.CommonWelcome}!
+      </#if>
+    </div>
   </div>
-  </div>
-</div>
+  <span class="navbar-text">
+    ${screens.render("component://ecommerce/widget/CartScreens.xml#microcart")}
+  </span>
+</nav>
 
-<div id="ecom-header-bar">
-  <ul id="left-links">
+<div class="d-flex justify-content-end bd-highlight quick-links ml-2 mr-2">
+  <#if userLogin?has_content && userLogin.userLoginId != "anonymous">
+    <div class="p-2 bd-highlight">
+      <a href="<@ofbizUrl>logout</@ofbizUrl>">${uiLabelMap.CommonLogout}</a>
+    </div>
+  <#else>
+    <div class="p-2 bd-highlight">
+      <a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>">${uiLabelMap.CommonLogin}</a>
+    </div>
+    <div class="p-2 bd-highlight">
+      <a href="<@ofbizUrl>newcustomer</@ofbizUrl>">${uiLabelMap.EcommerceRegister}</a>
+    </div>
+  </#if>
+  <div class="p-2 bd-highlight">
     <#if userLogin?has_content && userLogin.userLoginId != "anonymous">
-      <li id="header-bar-logout"><a href="<@ofbizUrl>logout</@ofbizUrl>">${uiLabelMap.CommonLogout}</a></li>
+      <a href="<@ofbizUrl>contactus</@ofbizUrl>">${uiLabelMap.CommonContactUs}</a>
     <#else>
-      <li id="header-bar-login"><a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>">${uiLabelMap.CommonLogin}</a></li>
-      <li id="header-bar-register"><a href="<@ofbizUrl>newcustomer</@ofbizUrl>">${uiLabelMap.EcommerceRegister}</a></li>
+      <a href="<@ofbizUrl>AnonContactus</@ofbizUrl>">${uiLabelMap.CommonContactUs}</a>
     </#if>
-    <li id="header-bar-contactus">
-    <#if userLogin?has_content && userLogin.userLoginId != "anonymous">
-      <a href="<@ofbizUrl>contactus</@ofbizUrl>">${uiLabelMap.CommonContactUs}</a></li>
-    <#else>
-      <a href="<@ofbizUrl>AnonContactus</@ofbizUrl>">${uiLabelMap.CommonContactUs}</a></li>
-    </#if>
-    <li id="header-bar-main"><a href="<@ofbizUrl>main</@ofbizUrl>">${uiLabelMap.CommonMain}</a></li>
-  </ul>
-  <ul id="right-links">
-    <!-- NOTE: these are in reverse order because they are stacked right to left instead of left to right -->
-    <#if !userLogin?has_content || (userLogin.userLoginId)! != "anonymous">
-      <li id="header-bar-viewprofile">
-        <a href="<@ofbizUrl>viewprofile</@ofbizUrl>">${uiLabelMap.CommonProfile}</a>
-      </li>
-      <li id="header-bar-ListMessages">
-        <a href="<@ofbizUrl>messagelist</@ofbizUrl>">${uiLabelMap.CommonMessages}</a>
-      </li>
-      <li id="header-bar-ListQuotes">
-        <a href="<@ofbizUrl>ListQuotes</@ofbizUrl>">${uiLabelMap.OrderOrderQuotes}</a>
-      </li>
-      <li id="header-bar-ListRequests">
-        <a href="<@ofbizUrl>ListRequests</@ofbizUrl>">${uiLabelMap.OrderRequests}</a>
-      </li>
-      <li id="header-bar-editShoppingList">
-        <a href="<@ofbizUrl>editShoppingList</@ofbizUrl>">${uiLabelMap.EcommerceShoppingLists}</a>
-      </li>
-      <li id="header-bar-orderhistory">
-        <a href="<@ofbizUrl>orderhistory</@ofbizUrl>">${uiLabelMap.EcommerceOrderHistory}</a>
-      </li>
-    </#if>
-    <#if catalogQuickaddUse>
-      <li id="header-bar-quickadd"><a href="<@ofbizUrl>quickadd</@ofbizUrl>">${uiLabelMap.CommonQuickAdd}</a></li>
-    </#if>
-  </ul>
+    </div>
+  <div class="mr-auto p-2 bd-highlight">
+    <a href="<@ofbizUrl>main</@ofbizUrl>">${uiLabelMap.CommonMain}</a>
+  </div>
+
+  <!-- NOTE: these are in reverse order because they are stacked right to left instead of left to right -->
+  <#if !userLogin?has_content || (userLogin.userLoginId)! != "anonymous">
+    <div class="p-2 bd-highlight">
+      <a href="<@ofbizUrl>viewprofile</@ofbizUrl>">${uiLabelMap.CommonProfile}</a>
+    </div>
+    <div class="p-2 bd-highlight">
+      <a href="<@ofbizUrl>messagelist</@ofbizUrl>">${uiLabelMap.CommonMessages}</a>
+    </div>
+    <div class="p-2 bd-highlight">
+      <a href="<@ofbizUrl>ListQuotes</@ofbizUrl>">${uiLabelMap.OrderOrderQuotes}</a>
+    </div>
+    <div class="p-2 bd-highlight">
+      <a href="<@ofbizUrl>ListRequests</@ofbizUrl>">${uiLabelMap.OrderRequests}</a>
+    </div>
+    <div class="p-2 bd-highlight">
+      <a href="<@ofbizUrl>editShoppingList</@ofbizUrl>">${uiLabelMap.EcommerceShoppingLists}</a>
+    </div>
+    <div class="p-2 bd-highlight">
+      <a href="<@ofbizUrl>orderhistory</@ofbizUrl>">${uiLabelMap.EcommerceOrderHistory}</a>
+    </div>
+  </#if>
+  <#if catalogQuickaddUse>
+    <div class="p-2 bd-highlight"><a href="<@ofbizUrl>quickadd</@ofbizUrl>">${uiLabelMap.CommonQuickAdd}</a></div>
+  </#if>
 </div>
