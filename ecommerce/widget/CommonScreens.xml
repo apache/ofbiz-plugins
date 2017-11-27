@@ -44,7 +44,7 @@ under the License.
                 <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.apache.ofbiz.common.JsLanguageFilesMapping.dateTime.getFilePath(initialLocaleComplete)}" global="true"/>
 
                 <set field="layoutSettings.javaScripts[+0]" value="/common/js/jquery/plugins/datetimepicker/jquery-ui-timepicker-addon-1.6.3.min.js" global="true"/>
-                <set field="layoutSettings.javaScripts[+0]" value="/common/js/jquery/ui/js/jquery-ui-1.10.3.min.js" global="true"/>
+                <set field="layoutSettings.javaScripts[+0]" value="/common/js/jquery/ui/js/jquery-ui-1.12.1.min.js" global="true"/>
                 <set field="layoutSettings.javaScripts[+0]" value="/common/js/jquery/plugins/validate/jquery.validate.min.js" global="true"/>
                 <set field="layoutSettings.javaScripts[+0]" value="/common/js/jquery/plugins/browser-plugin/jquery.browser-0.1.0.min.js" global="true"/>
                 <set field="layoutSettings.javaScripts[+0]" value="/common/js/jquery/jquery-migrate-3.0.0.min.js" global="true"/>
@@ -52,6 +52,7 @@ under the License.
                 <set field="layoutSettings.javaScripts[]" value="/common/js/jquery/plugins/Readmore.js-master/readmore.js" global="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/common/js/jquery/plugins/jquery-jgrowl/1.4.1/jquery.jgrowl.min.js" global="true"/>
                 <set field="layoutSettings.styleSheets[+0]" value="/common/js/jquery/plugins/jquery-jgrowl/1.4.1/jquery.jgrowl.min.css" global="true" />
+                <set field="layoutSettings.styleSheets[+0]" value="/common/js/jquery/plugins/datetimepicker/jquery-ui-timepicker-addon-1.6.3.min.css" global="true" />
 
                 <set field="layoutSettings.styleSheets[+0]" value="/ecommerce/css/bootstrap.min.css" global="true" />
                 <set field="layoutSettings.javaScripts[]" value="/ecommerce/js/bootstrap.min.js" global="true"/>
