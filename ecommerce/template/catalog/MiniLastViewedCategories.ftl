@@ -25,17 +25,12 @@ under the License.
   <#else>
     <#assign limit=(lastViewedCategories?size-1)/>
   </#if>
-  <div id="minilastviewedcategories" class="screenlet">
-    <div class="screenlet-title-bar">
-      <ul>
-        <li class="h3">${uiLabelMap.EcommerceLastCategories}</li>
-        <li>
-          <a href="<@ofbizUrl>clearLastViewed</@ofbizUrl>">[${uiLabelMap.CommonClear}]</a>
-        </li>
-      </ul>
-      <br class="clear"/>
+  <div id="minilastviewedcategories" class="card">
+    <div class="card-header">
+      ${uiLabelMap.EcommerceLastCategories}</li>
+      <a href="<@ofbizUrl>clearLastViewed</@ofbizUrl>">[${uiLabelMap.CommonClear}]</a>
     </div>
-    <div class="screenlet-body">
+    <div class="card-body">
       <ul class="browsecategorylist">
         <#list lastViewedCategories[0..limit] as categoryId>
           <#assign category = delegator.findOne("ProductCategory",

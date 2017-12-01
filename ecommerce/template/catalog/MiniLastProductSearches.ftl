@@ -26,7 +26,7 @@ under the License.
   <#else>
     <#assign limit=(searchOptionsHistoryList?size-1)/>
   </#if>
-  <div id="minilastproductsearches" class="screenlet">
+  <div id="minilastproductsearches" class="card">
     <div class="boxlink">
       <a href="<@ofbizUrl>clearLastViewed</@ofbizUrl>" class="lightbuttontextsmall">
         [${uiLabelMap.CommonClear}]
@@ -37,7 +37,8 @@ under the License.
         </a>
       </#if>
     </div>
-    <h3>${uiLabelMap.OrderLastSearches}...</h3>
+    <div class="card-header">${uiLabelMap.OrderLastSearches}...</div>
+    <div class="card-body">
     <ul>
       <#list searchOptionsHistoryList[0..limit] as searchOptions>
         <#-- searchOptions type is ProductSearchSession.ProductSearchOptions -->
@@ -46,9 +47,9 @@ under the License.
           <ul>
             <li>
               <a href="<@ofbizUrl>setCurrentSearchFromHistoryAndSearch?searchHistoryIndex=${searchOptions_index}&amp;clearSearch=N</@ofbizUrl>"
-                  class="button">${uiLabelMap.CommonSearch}</a>
+                  class="btn btn-outline-secondary btn-sm">${uiLabelMap.CommonSearch}</a>
               <a href="<@ofbizUrl>setCurrentSearchFromHistory?searchHistoryIndex=${searchOptions_index}</@ofbizUrl>"
-                  class="button">${uiLabelMap.CommonRefine}</a>
+                  class="btn btn-outline-secondary btn-sm">${uiLabelMap.CommonRefine}</a>
             </li>
             <#assign constraintStrings = searchOptions.searchGetConstraintStrings(false, delegator, locale)>
             <#list constraintStrings as constraintString>
@@ -58,5 +59,6 @@ under the License.
         </li>
       </#list>
     </ul>
+    </div>
   </div>
 </#if>

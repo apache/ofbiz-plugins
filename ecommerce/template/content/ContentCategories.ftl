@@ -30,15 +30,12 @@ under the License.
   </#if>
 </#if>
 
-<div id="content_catagories" class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.ProductBrowseContent}</li>
-    </ul>
-    <br class="clear"/>
+<div id="content_catagories" class="card">
+  <div class="card-header">
+    ${uiLabelMap.ProductBrowseContent}
   </div>
-  <div class="screenlet-body">
-    <ul class="browsecategorylist">
+  <div class="card-body">
+    <ul>
       <#assign count_1=0/>
       <@loopSubContent contentId=contentRootId viewIndex=0 viewSize=9999 orderBy="contentName">
         <li class="browsecategorytext">

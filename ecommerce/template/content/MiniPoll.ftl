@@ -24,14 +24,11 @@ under the License.
 </#if>
 
 <#if randomSurvey?has_content>
-  <div id="minipoll" class="screenlet">
-    <div class="screenlet-title-bar">
-      <ul>
-        <li class="h3">${randomSurvey.getSurveyName()!}</li>
-      </ul>
-      <br class="clear"/>
+  <div id="minipoll" class="card">
+    <div class="card-header">
+      ${randomSurvey.getSurveyName()!}
     </div>
-    <div class="screenlet-body">
+    <div class="card-body">
       <form method="post"
           action="<@ofbizUrl>minipoll<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>"
           style="margin: 0;">

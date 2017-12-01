@@ -19,7 +19,7 @@ under the License.
 
 <#-- A simple macro that builds the contact list -->
 <#macro contactList publicEmailContactLists>
-  <select name="contactListId" class="selectBox" style="width:134px">
+  <select name="contactListId" class="selectBox form-control">
     <#list publicEmailContactLists as publicEmailContactList>
       <#assign publicContactMechType = publicEmailContactList.contactList.getRelatedOne("ContactMechType", true)!>
       <option value="${publicEmailContactList.contactList.contactListId}">
@@ -44,30 +44,26 @@ under the License.
   }
 </script>
 
-<div id="miniSignUpForContactList" class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.EcommerceSignUpForContactList}</li>
-    </ul>
-    <br class="clear"/>
+<div id="miniSignUpForContactList" class="card">
+  <div class="card-header">
+    ${uiLabelMap.EcommerceSignUpForContactList}
   </div>
-  <div class="screenlet-body">
+  <div class="card-body">
   <#if sessionAttributes.autoName?has_content>
   <#-- The visitor potentially has an account and party id -->
     <#if userLogin?has_content && userLogin.userLoginId != "anonymous">
     <#-- They are logged in so lets present the form to sign up with their email address -->
       <form method="post" action="<@ofbizUrl>createContactListParty</@ofbizUrl>" name="signUpForContactListForm"
           id="signUpForContactListForm">
-        <fieldset>
           <#assign contextPath = request.getContextPath()>
           <input type="hidden" name="baseLocation" value="${contextPath}"/>
           <input type="hidden" name="partyId" value="${partyId}"/>
           <input type="hidden" id="statusId" name="statusId" value="CLPT_PENDING"/>
           <p>${uiLabelMap.EcommerceSignUpForContactListComments}</p>
-          <div>
+          <div class="form-group">
             <@contactList publicEmailContactLists=publicEmailContactLists/>
           </div>
-          <div>
+          <div class="form-group">
             <label for="preferredContactMechId">${uiLabelMap.CommonEmail} *</label>
             <select id="preferredContactMechId" name="preferredContactMechId" class="selectBox">
               <#list partyAndContactMechList as partyAndContactMech>
@@ -86,12 +82,9 @@ under the License.
               </#list>
             </select>
           </div>
-          <div>
-            <input type="submit" value="${uiLabelMap.EcommerceSubscribe}"/>
-            <input type="button" value="${uiLabelMap.EcommerceUnsubscribe}"
-                onclick="javascript:unsubscribeByContactMech();"/>
-          </div>
-        </fieldset>
+          <input type="submit" class="form-control btn btn-outline-secondary" value="${uiLabelMap.EcommerceSubscribe}"/>
+          <input type="button" class"form-control btn btn-outline-secondary" value="${uiLabelMap.EcommerceUnsubscribe}"
+              onclick="javascript:unsubscribeByContactMech();"/>ss
       </form>
     <#else>
     <#-- Not logged in so ask them to log in and then sign up or clear the user association -->
@@ -105,7 +98,6 @@ under the License.
   <#-- There is no party info so just offer an anonymous (non-partyId) related newsletter sign up -->
     <form method="post" action="<@ofbizUrl>signUpForContactList</@ofbizUrl>" name="signUpForContactListForm"
         id="signUpForContactListForm">
-      <fieldset>
         <#assign contextPath = request.getContextPath()>
         <input type="hidden" name="baseLocation" value="${contextPath}"/>
         <input type="hidden" id="statusId" name="statusId"/>
@@ -115,13 +107,10 @@ under the License.
         </div>
         <div>
           <label for="email">${uiLabelMap.CommonEmail} *</label>
-          <input id="email" name="email" class="required" type="text"/>
+          <input id="email" name="email" class="required form-control" type="text"/>
         </div>
-        <div>
-          <input type="submit" value="${uiLabelMap.EcommerceSubscribe}"/>
-          <input type="button" value="${uiLabelMap.EcommerceUnsubscribe}" onclick="javascript:unsubscribe();"/>
-        </div>
-      </fieldset>
+          <input type="submit" class="btn btn-outline-secondary" value="${uiLabelMap.EcommerceSubscribe}"/>
+          <input type="button" class="btn btn-outline-secondary" value="${uiLabelMap.EcommerceUnsubscribe}" onclick="javascript:unsubscribe();"/>
     </form>
   </#if>
   </div>

@@ -18,14 +18,11 @@ under the License.
 -->
 
 <#if tagCloudList?has_content>
-  <div id="populartags" class="screenlet">
-    <div class="screenlet-title-bar">
-      <ul>
-        <li class="h3">${uiLabelMap.EcommerceTags}</li>
-      </ul>
-      <br class="clear"/>
+  <div id="populartags" class="card">
+    <div class="card-header">
+      ${uiLabelMap.EcommerceTags}
     </div>
-    <div class="screenlet-body">
+    <div class="card-body">
       <#list tagCloudList as tagCloud>
         <a style="font-size: ${tagCloud.fontSize}pt;"
             href="<@ofbizUrl>tagsearch?SEARCH_STRING=${tagCloud.tag}&amp;keywordTypeId=KWT_TAG&amp;statusId=KW_APPROVED</@ofbizUrl>">

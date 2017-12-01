@@ -17,15 +17,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div id="browse-forums" class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.ProductBrowseForums}</li>
-    </ul>
-    <br class="clear"/>
+<div id="browse-forums" class="card">
+  <div class="card-header">
+    ${uiLabelMap.ProductBrowseForums}</li>
   </div>
-  <div class="screenlet-body">
-    <ul class="browsecategorylist">
+  <div class="card-body">
+    <ul>
     <#list forums as forum>
       <li class="browsecategorytext">
         <a href="<@ofbizUrl>showforum?forumId=${forum.contentId}</@ofbizUrl>"

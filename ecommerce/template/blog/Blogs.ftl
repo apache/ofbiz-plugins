@@ -17,15 +17,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div id="browse-blogs" class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.ProductBrowseBlogs}</li>
-    </ul>
-    <br class="clear"/>
+<div id="browse-blogs" class="card">
+  <div class="card-header">
+    ${uiLabelMap.ProductBrowseBlogs}
   </div>
-  <div class="screenlet-body">
-    <ul class="browsecategorylist">
+  <div class="card-body">
+    <ul>
       <#list blogs as blog>
         <li class="browsecategorytext">
           <a href="<@ofbizUrl>MainBlog?blogContentId=${blog.contentId}</@ofbizUrl>" class="browsecategorybutton">

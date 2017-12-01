@@ -17,16 +17,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div id="choose-language" class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.CommonLanguageTitle}</li>
-    </ul>
-    <br class="clear"/>
+<div id="choose-language" class="card">
+  <div class="card-header">
+    ${uiLabelMap.CommonLanguageTitle}
   </div>
-  <div class="screenlet-body">
+  <div class="card-body">
     <form method="post" name="chooseLanguage" action="<@ofbizUrl>setSessionLocale</@ofbizUrl>">
-      <select name="newLocale" class="selectBox" style="width:95%" onchange="submit()">
+      <select name="newLocale" class="selectBox form-control" onchange="submit()">
         <#assign availableLocales = Static["org.apache.ofbiz.base.util.UtilMisc"].availableLocales()/>
         <#list availableLocales as availableLocale>
           <#assign langAttr = availableLocale.toString()?replace("_", "-")>

@@ -213,12 +213,10 @@
 </script>
 
 
-<div id="quickadd" class="screenlet">
-  <div class="screenlet-title-bar">
-    <ul>
-      <li class="h3">${uiLabelMap.ProductCategories}</li>
-    </ul>
+<div id="quickadd" class="card">
+  <div class="card-header">
+    ${uiLabelMap.ProductCategories}
   </div>
-  <div class="screenlet-body" id="tree">
+  <div class="card-body" id="tree">
   </div>
 </div>
