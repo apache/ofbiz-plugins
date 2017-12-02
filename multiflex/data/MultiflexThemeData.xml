@@ -25,7 +25,7 @@ under the License.
     <VisualThemeResource visualThemeId="MULTIFLEX" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/multiflex/style.css" sequenceId="02"/>
     <VisualThemeResource visualThemeId="MULTIFLEX" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/contentimages/css/contentForum.css" sequenceId="04"/>
     <VisualThemeResource visualThemeId="MULTIFLEX" resourceTypeEnumId="VT_SHORTCUT_ICON" resourceValue="/images/ofbiz.ico" sequenceId="01"/>
-    <VisualThemeResource visualThemeId="MULTIFLEX" resourceTypeEnumId="VT_HDR_IMAGE_URL" resourceValue="/images/ofbiz_logo.gif" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="MULTIFLEX" resourceTypeEnumId="VT_HDR_IMAGE_URL" resourceValue="/images/ofbiz_logo.png" sequenceId="01"/>
     <VisualThemeResource visualThemeId="MULTIFLEX" resourceTypeEnumId="VT_HDR_TMPLT_LOC" resourceValue="component://multiflex/template/Header.ftl" sequenceId="01"/>
     <VisualThemeResource visualThemeId="MULTIFLEX" resourceTypeEnumId="VT_FTR_TMPLT_LOC" resourceValue="component://multiflex/template/Footer.ftl" sequenceId="01"/>
     <VisualThemeResource visualThemeId="MULTIFLEX" resourceTypeEnumId="VT_SCREENSHOT" resourceValue="/multiflex/images/screenshot.jpg" sequenceId="01"/>
