@@ -41,10 +41,12 @@ import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.service.ServiceUtil;
 import org.apache.ofbiz.service.testtools.OFBizTestCase;
+import org.apache.ofbiz.base.util.Debug;
 
 public class LuceneTests extends OFBizTestCase {
 
     protected GenericValue userLogin = null;
+    public final static String module = LuceneTests.class.getName();
 
     public LuceneTests(String name) {
         super(name);
@@ -68,7 +70,9 @@ public class LuceneTests extends OFBizTestCase {
         
         try {
             Thread.sleep(3000); // sleep 3 seconds to give enough time to the indexer to process the entries
-        } catch(Exception e) {}
+        } catch (InterruptedException e) {
+            Debug.logError("Thread interrupted :" + e, module);
+        }
         
         Directory directory = FSDirectory.open(new File(SearchWorker.getIndexPath("content")).toPath());
         
