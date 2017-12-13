@@ -56,7 +56,7 @@ import org.apache.ofbiz.common.login.LoginServices;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
-import org.apache.ofbiz.entity.util.EntityUtil;
+import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.entity.util.EntityUtilProperties;
 import org.apache.ofbiz.product.store.ProductStoreWorker;
 import org.apache.ofbiz.service.LocalDispatcher;
@@ -247,7 +247,7 @@ public class LinkedInEvents {
         String linkedInUserId = LinkedInAuthenticator.getLinkedInUserId(userInfo);
         GenericValue linkedInUser = null;
         try {
-            linkedInUser = delegator.findOne("LinkedInUser", UtilMisc.toMap("linkedInUserId", linkedInUserId), false);
+            linkedInUser = EntityQuery.use(delegator).from("LinkedInUser").where("linkedInUserId", linkedInUserId).queryOne();
         } catch (GenericEntityException e) {
             request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
             return "error";
@@ -285,12 +285,12 @@ public class LinkedInEvents {
             }
         }
         try {
-            GenericValue userLogin = EntityUtil.getFirst(delegator.findByAnd("UserLogin", UtilMisc.toMap("externalAuthId", linkedInUserId), null, false));
+            GenericValue userLogin = EntityQuery.use(delegator).from("UserLogin").where("externalAuthId", linkedInUserId).queryFirst();
             LinkedInAuthenticator authn = new LinkedInAuthenticator();
             authn.initialize(dispatcher);
             if (UtilValidate.isEmpty(userLogin)) {
                 String userLoginId = authn.createUser(userInfo);
-                userLogin = delegator.findOne("UserLogin", UtilMisc.toMap("userLoginId", userLoginId), false);
+                userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", userLoginId).queryOne();
             }
             String autoPassword = RandomStringUtils.randomAlphanumeric(EntityUtilProperties.getPropertyAsInteger("security", "password.length.min", 5).intValue());
             boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security", "password.encrypt"));
@@ -324,6 +324,6 @@ public class LinkedInEvents {
     }
     
     public static GenericValue getOAuth2LinkedInConfig(Delegator delegator, String productStoreId) throws GenericEntityException {
-        return EntityUtil.getFirst(EntityUtil.filterByDate(delegator.findByAnd("OAuth2LinkedIn", UtilMisc.toMap("productStoreId", productStoreId), null, false)));
+        return EntityQuery.use(delegator).from("OAuth2LinkedIn").where("productStoreId", productStoreId).filterByDate().queryFirst();
     }
 }

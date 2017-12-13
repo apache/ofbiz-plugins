@@ -36,6 +36,7 @@ import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.transaction.GenericTransactionException;
+import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.htmlreport.InterfaceReport;
 import org.apache.ofbiz.order.finaccount.FinAccountHelper;
 import org.apache.ofbiz.pricat.AbstractPricatParser;
@@ -165,7 +166,7 @@ public class SamplePricatParser extends AbstractPricatParser {
             return false;
         } else {
             try {
-                GenericValue currencyUom = delegator.findOne("Uom", UtilMisc.toMap("uomId", currencyId), false);
+                GenericValue currencyUom = EntityQuery.use(delegator).from("Uom").where("uomId", currencyId).queryOne();
                 if (!"CURRENCY_MEASURE".equals(currencyUom.getString("uomTypeId"))) {
                     String errorMessage = UtilProperties.getMessage(resource, "CurrencyIdNotCurrency", new Object[] {currencyId}, locale);
                     report.println(errorMessage, InterfaceReport.FORMAT_ERROR);

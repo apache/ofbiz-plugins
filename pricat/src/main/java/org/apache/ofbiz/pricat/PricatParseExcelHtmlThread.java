@@ -57,6 +57,7 @@ import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.condition.EntityCondition;
 import org.apache.ofbiz.entity.condition.EntityOperator;
 import org.apache.ofbiz.entity.util.EntityUtil;
+import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.service.LocalDispatcher;
 
 /**
@@ -341,8 +342,7 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
     public synchronized long addExcelImportHistory() {
         long latestId = 1;
         try {
-            List<GenericValue> historyValues = delegator.findByAnd("ExcelImportHistory", UtilMisc.toMap("userLoginId", userLoginId), UtilMisc.toList("sequenceNum DESC"), false);
-            GenericValue latestHistoryValue = EntityUtil.getFirst(historyValues);
+            GenericValue latestHistoryValue = EntityQuery.use(delegator).from("ExcelImportHistory").where("userLoginId", userLoginId).orderBy("sequenceNum DESC").queryFirst();
             if (UtilValidate.isNotEmpty(latestHistoryValue)) {
                 latestId = latestHistoryValue.getLong("sequenceNum") + 1;
             }

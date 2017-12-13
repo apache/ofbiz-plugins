@@ -91,14 +91,14 @@ under the License.
               <#if task??>
                 <#assign currentStatus = task.geRelatedOne("CurrentStatusItem")!>
                 <option selected="selected" value="${currentStatus.currentStatusId}">${currentStatus.description}</option>
-                <#assign statusValidChangeToDetailList = delegator.findByAnd("StatusValidChangeToDetail", Static["org.apache.ofbiz.base.util.UtilMisc"].toMap("statusId", currentStatus.currentStatusId), null, false)>
+                <#assign statusValidChangeToDetailList = EntityQuery.use(delegator).from("StatusValidChangeToDetail").where("statusId", currentStatus.currentStatusId!).queryList()!>
                 <#list statusValidChangeToDetailList as statusValidChangeToDetail>
                   <option value=${statusValidChangeToDetail.statusId}>[${uiLabelMap.WorkEffortGeneral}]${statusValidChangeToDetail.description}</option>
                 </#list>
               <#else>
-                <#assign statusItemGenrals = delegator.findByAnd("StatusItem", Static["org.apache.ofbiz.base.util.UtilMisc"].toMap("statusTypeId", "CALENDAR_STATUS"), null, false)>
-                <#assign statusItemTasks = delegator.findByAnd("StatusItem", Static["org.apache.ofbiz.base.util.UtilMisc"].toMap("statusTypeId", "TASK_STATUS"), null, false)>
-                <#assign statusItemEvents = delegator.findByAnd("StatusItem", Static["org.apache.ofbiz.base.util.UtilMisc"].toMap("statusTypeId", "EVENT_STATUS"), null, false)>
+                <#assign statusItemGenrals = EntityQuery.use(delegator).from("StatusItem").where("statusTypeId", "CALENDAR_STATUS").queryList()!>
+                <#assign statusItemTasks = EntityQuery.use(delegator).from("StatusItem").where("statusTypeId", "TASK_STATUS").queryList()!>
+                <#assign statusItemEvents = EntityQuery.use(delegator).from("StatusItem").where("statusTypeId", "EVENT_STATUS").queryList()! >
                 <#list statusItemGenrals as statusItem>
                   <option value="${statusItem.statusId!}">[${uiLabelMap.WorkEffortGeneral}]${statusItem.description}</option>
                 </#list>
@@ -149,7 +149,7 @@ under the License.
         <tr>
           <td class="label">${uiLabelMap.ProjectMgrWorkEffortScopeEnumId}</td>
           <td>
-            <#assign enumerations = delegator.findByAnd("Enumeration", Static["org.apache.ofbiz.base.util.UtilMisc"].toMap("enumTypeId", "WORK_EFF_SCOPE"), null, false)>
+            <#assign enumerations = EntityQuery.use(delegator).from("Enumeration").where("enumTypeId", "WORK_EFF_SCOPE").queryList()!>
             <select name="scopeEnumId">
               <#if task??>
                 <#assign scopeEnumId = task.scopeEnumId!>

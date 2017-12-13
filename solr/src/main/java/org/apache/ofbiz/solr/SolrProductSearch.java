@@ -49,6 +49,7 @@ import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericDelegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
+import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.LocalDispatcher;
@@ -79,7 +80,7 @@ public abstract class SolrProductSearch {
         if (SolrUtil.isSolrEcaEnabled()) {
             // Debug.logVerbose("Solr: addToSolr: Running indexing for productId '" + productId + "'", module);
             try {
-                GenericValue product = delegator.findOne("Product", UtilMisc.toMap("productId", productId), false);
+                GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne();
                 Map<String, Object> dispatchContext = ProductUtil.getProductContent(product, dctx, context);
                 dispatchContext.put("treatConnectErrorNonFatal", SolrUtil.isEcaTreatConnectErrorNonFatal());
                 dispatchContext.put("indexName", solrIndexName);

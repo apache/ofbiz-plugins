@@ -31,7 +31,7 @@ if (sequenceNum == null) {
     return; 
 }
 
-historyEntry = delegator.findOne("ExcelImportHistory", [sequenceNum : Long.valueOf(sequenceNum), userLoginId : userLogin.userLoginId], false);
+historyEntry = from("ExcelImportHistory").where("sequenceNum", Long.valueOf(sequenceNum), "userLoginId", userLogin.userLoginId).queryOne();
 if (historyEntry == null) {
     context.logFileContent = "No import history found.";
     return;

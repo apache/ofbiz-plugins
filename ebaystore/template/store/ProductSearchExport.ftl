@@ -467,7 +467,7 @@ under the License.
                                 <tr>
                                   <td class="label">${uiLabelMap.CommonCountry}</td>
                                   <#if item.getCountry().value()??>
-                                    <#assign country = Static["org.apache.ofbiz.entity.util.EntityUtil"].getFirst(delegator.findByAnd("Geo", {"geoCode": item.getCountry().value()}, null, false))/>
+                                    <#assign country = EntityQuery.use(delegator).from("Geo").where("geoCode", item.getCountry().value()!).queryFirst()!/>
                                     <#if country?has_content>
                                       <#assign countryname = country.geoName/>
                                     </#if>

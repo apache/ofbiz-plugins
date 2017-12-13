@@ -46,7 +46,7 @@ import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.transaction.TransactionUtil;
 import org.apache.ofbiz.entity.transaction.GenericTransactionException;
-import org.apache.ofbiz.entity.util.EntityUtil;
+import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.base.util.UtilProperties;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.UtilMisc;
@@ -102,9 +102,9 @@ public class LinkedInAuthenticator implements Authenticator {
         Document user = null;
         HttpGet getMethod = null;
         try {
-            GenericValue userLogin = delegator.findOne("UserLogin", UtilMisc.toMap("userLoginId", userLoginId), false);
+            GenericValue userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", userLoginId).queryOne();
             String externalAuthId = userLogin.getString("externalAuthId");
-            GenericValue linkedInUser = delegator.findOne("LinkedInUser", UtilMisc.toMap("linedInUserId", externalAuthId), false);
+            GenericValue linkedInUser = EntityQuery.use(delegator).from("LinkedInUser").where("linkedInUserId", externalAuthId).queryOne();
             if (linkedInUser != null) {
                 String accessToken = linkedInUser.getString("accessToken");
                 if (UtilValidate.isNotEmpty(accessToken)) {
@@ -154,14 +154,14 @@ public class LinkedInAuthenticator implements Authenticator {
 
         GenericValue system;
         try {
-            system = delegator.findOne("UserLogin", UtilMisc.toMap("userLoginId", "system"), true);
+            system = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "system").cache().queryOne();
         } catch (GenericEntityException e) {
             throw new AuthenticatorException(e.getMessage(), e);
         }
 
         GenericValue userLogin;
         try {
-            userLogin = EntityUtil.getFirst(delegator.findByAnd("UserLogin", UtilMisc.toMap("externalAuthId", getLinkedInUserId(user)), null, false));
+            userLogin = EntityQuery.use(delegator).from("UserLogin").where("externalAuthId", getLinkedInUserId(user)).queryFirst();
         } catch (GenericEntityException e) {
             throw new AuthenticatorException(e.getMessage(), e);
         }
@@ -214,9 +214,9 @@ public class LinkedInAuthenticator implements Authenticator {
         Document user = null;
         HttpGet getMethod = null;
         try {
-            GenericValue userLogin = delegator.findOne("UserLogin", UtilMisc.toMap("userLoginId", userLoginId), false);
+            GenericValue userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", userLoginId).queryOne();
             String externalAuthId = userLogin.getString("externalAuthId");
-            GenericValue linkedInUser = delegator.findOne("LinkedInUser", UtilMisc.toMap("linkedInUserId", externalAuthId), false);
+            GenericValue linkedInUser = EntityQuery.use(delegator).from("LinkedInUser").where("linkedInUserId", externalAuthId).queryOne();
             if (linkedInUser != null) {
                 String accessToken = linkedInUser.getString("accessToken");
                 if (UtilValidate.isNotEmpty(accessToken)) {
@@ -245,7 +245,7 @@ public class LinkedInAuthenticator implements Authenticator {
     public String createUser(Document user) throws AuthenticatorException {
         GenericValue system;
         try {
-            system = delegator.findOne("UserLogin", UtilMisc.toMap("userLoginId", "system"), true);
+            system = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "system").cache().queryOne();
         } catch (GenericEntityException e) {
             throw new AuthenticatorException(e.getMessage(), e);
         }
@@ -316,7 +316,7 @@ public class LinkedInAuthenticator implements Authenticator {
             // check and make sure the security group exists
             GenericValue secGroup = null;
             try {
-                secGroup = delegator.findOne("SecurityGroup", UtilMisc.toMap("groupId", securityGroup), true);
+                secGroup = EntityQuery.use(delegator).from("SecurityGroup").where("groupId", securityGroup).cache().queryOne();
             } catch (GenericEntityException e) {
                 Debug.logError(e, e.getMessage(), module);
             }

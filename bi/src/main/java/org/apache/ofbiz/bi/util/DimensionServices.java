@@ -35,7 +35,7 @@ import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
-import org.apache.ofbiz.entity.util.EntityUtil;
+import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.ServiceUtil;
 
@@ -52,7 +52,7 @@ public class DimensionServices {
         GenericValue lastDimensionValue = null;
         try {
             // TODO: improve performance
-            lastDimensionValue = EntityUtil.getFirst(delegator.findByAnd(dimensionEntityName, UtilMisc.toMap(naturalKeyFields), UtilMisc.toList("-createdTxStamp"), false));
+            lastDimensionValue = EntityQuery.use(delegator).from(dimensionEntityName).where(naturalKeyFields).orderBy("-createdTxStamp").queryFirst();
         } catch (GenericEntityException gee) {
             return ServiceUtil.returnError(gee.getMessage());
         }
@@ -79,7 +79,7 @@ public class DimensionServices {
             }
             List<GenericValue> existingDimensionValues = null;
             try {
-                existingDimensionValues = delegator.findByAnd(dimensionValue.getEntityName(), UtilMisc.toMap(andCondition), null, false);
+                existingDimensionValues = EntityQuery.use(delegator).from(dimensionValue.getEntityName()).where(andCondition).queryList();
             } catch (GenericEntityException gee) {
                 return ServiceUtil.returnError(gee.getMessage());
             }
@@ -136,7 +136,7 @@ public class DimensionServices {
         while (currentDate.compareTo(thruDate) <= 0) {
             GenericValue dateValue = null;
             try {
-                dateValue = EntityUtil.getFirst(delegator.findByAnd("DateDimension", UtilMisc.toMap("dateValue", currentDate), null, false));
+                dateValue = EntityQuery.use(delegator).from("DateDimension").where("dateValue", currentDate).queryFirst();
             } catch (GenericEntityException gee) {
                 return ServiceUtil.returnError(gee.getMessage());
             }

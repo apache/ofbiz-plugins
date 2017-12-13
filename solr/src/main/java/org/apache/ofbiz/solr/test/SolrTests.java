@@ -62,7 +62,7 @@ public class SolrTests extends OFBizTestCase {
 
     public void testAddProductToIndex() throws Exception {
 
-        GenericValue product = delegator.findOne("Product", UtilMisc.toMap("productId", validTestProductId), false);
+        GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", validTestProductId).queryOne();
 
         Map<String, Object> ctx = new HashMap<String, Object>();
         ctx.put("instance", product);
@@ -99,8 +99,8 @@ public class SolrTests extends OFBizTestCase {
         List<Map<String, Object>> products = new ArrayList<>();
         Map<String, Object> product_1 = new HashMap<>();
         Map<String, Object> product_2 = new HashMap<>();
-        GenericValue validTestProduct = delegator.findOne("Product", UtilMisc.toMap("productId", validTestProductId), false);
-        GenericValue validTestProduct_2 = delegator.findOne("Product", UtilMisc.toMap("productId", validTestProductId_2), false);
+        GenericValue validTestProduct = EntityQuery.use(delegator).from("Product").where("productId", validTestProductId).queryOne();
+        GenericValue validTestProduct_2 = EntityQuery.use(delegator).from("Product").where("productId", validTestProductId_2).queryOne();
 
         product_1.put("productId", validTestProduct);
         product_2.put("productId", validTestProduct_2);
@@ -119,8 +119,8 @@ public class SolrTests extends OFBizTestCase {
         List<Map<String, Object>> products = new ArrayList<>();
         Map<String, Object> product_1 = new HashMap<>();
         Map<String, Object> product_2 = new HashMap<>();
-        GenericValue testProduct = delegator.findOne("Product", UtilMisc.toMap("productId", validTestProductId), false);
-        GenericValue testProduct_2 = delegator.findOne("Product", UtilMisc.toMap("productId", validTestProductId_2), false);
+        GenericValue testProduct = EntityQuery.use(delegator).from("Product").where("productId", validTestProductId).queryOne();
+        GenericValue testProduct_2 = EntityQuery.use(delegator).from("Product").where("productId", validTestProductId_2).queryOne();
 
         testProduct.replace("productId", invalidTestProductId);
         testProduct.replace("productId", invalidTestProductId);

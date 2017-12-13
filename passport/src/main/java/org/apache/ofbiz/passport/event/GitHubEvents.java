@@ -55,7 +55,7 @@ import org.apache.ofbiz.common.login.LoginServices;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
-import org.apache.ofbiz.entity.util.EntityUtil;
+import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.entity.util.EntityUtilProperties;
 import org.apache.ofbiz.product.store.ProductStoreWorker;
 import org.apache.ofbiz.service.LocalDispatcher;
@@ -240,7 +240,7 @@ public class GitHubEvents {
         String gitHubUserId = (String) userInfo.get("login");
         GenericValue gitHubUser = null;
         try {
-            gitHubUser = delegator.findOne("GitHubUser", UtilMisc.toMap("gitHubUserId", gitHubUserId), false);
+            gitHubUser = EntityQuery.use(delegator).from("GitHubUser").where("gitHubUserId", gitHubUserId).queryOne();
         } catch (GenericEntityException e) {
             request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
             return "error";
@@ -278,12 +278,12 @@ public class GitHubEvents {
             }
         }
         try {
-            GenericValue userLogin = EntityUtil.getFirst(delegator.findByAnd("UserLogin", UtilMisc.toMap("externalAuthId", gitHubUserId), null, false));
+            GenericValue userLogin = EntityQuery.use(delegator).from("UserLogin").where("externalAuthId", gitHubUserId).queryFirst();
             GitHubAuthenticator authn = new GitHubAuthenticator();
             authn.initialize(dispatcher);
             if (UtilValidate.isEmpty(userLogin)) {
                 String userLoginId = authn.createUser(userInfo);
-                userLogin = delegator.findOne("UserLogin", UtilMisc.toMap("userLoginId", userLoginId), false);
+                userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", userLoginId).queryOne();
             }
             String autoPassword = RandomStringUtils.randomAlphanumeric(EntityUtilProperties.getPropertyAsInteger("security", "password.length.min", 5).intValue());
             boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security", "password.encrypt"));
@@ -317,6 +317,6 @@ public class GitHubEvents {
     }
     
     public static GenericValue getOAuth2GitHubConfig(Delegator delegator, String productStoreId) throws GenericEntityException {
-        return EntityUtil.getFirst(EntityUtil.filterByDate(delegator.findByAnd("OAuth2GitHub", UtilMisc.toMap("productStoreId", productStoreId), null, false)));
+        return EntityQuery.use(delegator).from("OAuth2GitHub").where("productStoreId", productStoreId).filterByDate().queryFirst();
     }
 }

@@ -34,12 +34,12 @@ import org.apache.ofbiz.base.location.ComponentLocationResolver;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.FileUtil;
 import org.apache.ofbiz.base.util.UtilHttp;
-import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.base.util.UtilProperties;
 import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
+import org.apache.ofbiz.entity.util.EntityQuery;
 
 public class PricatEvents {
     
@@ -149,7 +149,7 @@ public class PricatEvents {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         GenericValue historyValue = null;
         try {
-            historyValue = delegator.findOne("ExcelImportHistory", UtilMisc.toMap("userLoginId", userLoginId, "sequenceNum", Long.valueOf(sequenceNum)), false);
+            historyValue = EntityQuery.use(delegator).from("ExcelImportHistory").where("userLoginId", userLoginId, "sequenceNum", Long.valueOf(sequenceNum)).queryOne();
         } catch (NumberFormatException e) {
             Debug.logError(e.getMessage(), module);
             return "error";

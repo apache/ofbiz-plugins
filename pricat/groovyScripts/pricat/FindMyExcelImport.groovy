@@ -20,5 +20,5 @@ import org.apache.ofbiz.base.util.*;
 
 module = "FindMyExcelImport.groovy";
 
-data = delegator.findByAnd("ExcelImportHistory", [userLoginId : userLogin.userLoginId], ["sequenceNum DESC"], false);
+data = from("ExcelImportHistory").where("userLoginId", userLogin.userLoginId).orderBy("sequenceNum DESC").queryList();
 context.data = data;

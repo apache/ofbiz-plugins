@@ -68,7 +68,7 @@ import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.condition.EntityCondition;
 import org.apache.ofbiz.entity.condition.EntityOperator;
-import org.apache.ofbiz.entity.util.EntityUtil;
+import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceUtil;
 
@@ -556,10 +556,9 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
         try {
             GenericValue historyValue = null;
             if (sequenceNum < 1L) {
-                historyValue = EntityUtil.getFirst(EntityUtil.filterByDate(delegator.findByAnd("ExcelImportHistory", 
-                                                    UtilMisc.toMap("userLoginId", userLoginId, "logFileName", logFileName), UtilMisc.toList("sequenceNum DESC"), false)));
+                historyValue = EntityQuery.use(delegator).from("ExcelImportHistory").where("userLoginId", userLoginId, "logFileName", logFileName).orderBy("sequenceNum DESC").filterByDate().queryFirst();
             } else {
-                historyValue = delegator.findOne("ExcelImportHistory", UtilMisc.toMap("userLoginId", userLoginId, "sequenceNum", (Long) sequenceNum), false);
+                historyValue = EntityQuery.use(delegator).from("ExcelImportHistory").where("userLoginId", userLoginId, "sequenceNum", (Long) sequenceNum).queryOne();
             }
             Timestamp now = UtilDateTime.nowTimestamp();
             if (UtilValidate.isEmpty(historyValue)) {
@@ -601,7 +600,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         GenericValue historyValue = null;
         try {
-            historyValue = delegator.findOne("ExcelImportHistory", UtilMisc.toMap("userLoginId", userLoginId, "sequenceNum", Long.valueOf(sequenceNum)), false);
+            historyValue = EntityQuery.use(delegator).from("ExcelImportHistory").where("userLoginId", userLoginId, "sequenceNum", Long.valueOf(sequenceNum)).queryOne();
         } catch (NumberFormatException e) {
             Debug.logError(e.getMessage(), module);
             return false;
@@ -623,7 +622,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
     protected void cleanupLogAndCommentedExcel() {
         try {
             report.print(UtilProperties.getMessage(resource, "CLEANUP_LOGANDEXCEL_BEGIN", locale), InterfaceReport.FORMAT_DEFAULT);
-            List<GenericValue> historyValues = delegator.findByAnd("ExcelImportHistory", UtilMisc.toMap("userLoginId", userLoginId), UtilMisc.toList("sequenceNum DESC"), false);
+            List<GenericValue> historyValues = EntityQuery.use(delegator).from("ExcelImportHistory").where("userLoginId", userLoginId).orderBy("sequenceNum DESC").queryList();
             if (UtilValidate.isEmpty(historyValues) || historyValues.size() <= HISTORY_MAX_FILENUMBER) {
                 report.print(UtilProperties.getMessage(resource, "HistoryLessThan", new Object[] {String.valueOf(HISTORY_MAX_FILENUMBER)}, locale), InterfaceReport.FORMAT_NOTE);
                 report.println(" ... " + UtilProperties.getMessage(resource, "skipped", locale), InterfaceReport.FORMAT_NOTE);
