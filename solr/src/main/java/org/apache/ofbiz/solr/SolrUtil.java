@@ -279,7 +279,7 @@ public final class SolrUtil {
             solrQuery.setFacet(true);
             solrQuery.addFacetField("cat");
             solrQuery.setFacetLimit(-1);
-            Debug.logVerbose("solr: solrQuery: " + solrQuery, module);
+            if (Debug.verboseOn()) Debug.logVerbose("solr: solrQuery: " + solrQuery, module);
             returnMap = client.query(solrQuery, METHOD.POST);
             result.put("rows", returnMap);
             result.put("numFound", returnMap.getResults().getNumFound());

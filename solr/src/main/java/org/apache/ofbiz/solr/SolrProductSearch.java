@@ -111,7 +111,7 @@ public abstract class SolrProductSearch {
             }
         } else {
             final String statusMsg = "Solr ECA indexing disabled; skipping indexing for productId '" + productId + "'";
-            Debug.logVerbose("Solr: addToSolr: " + statusMsg, module);
+            if (Debug.verboseOn()) Debug.logVerbose("Solr: addToSolr: " + statusMsg, module);
             result = ServiceUtil.returnSuccess();
         }
         return result;
@@ -139,7 +139,7 @@ public abstract class SolrProductSearch {
             Collection<SolrInputDocument> docs = new ArrayList<SolrInputDocument>();
 
             if (Debug.verboseOn()) {
-                Debug.logVerbose("Solr: Indexing document: " + doc1.toString(), module);
+                if (Debug.verboseOn()) Debug.logVerbose("Solr: Indexing document: " + doc1.toString(), module);
             }
 
             docs.add(doc1);
@@ -215,7 +215,7 @@ public abstract class SolrProductSearch {
             for (Iterator<Map<String, Object>> fieldListIterator = fieldList.iterator(); fieldListIterator.hasNext();) {
                 SolrInputDocument doc1 = SolrUtil.generateSolrDocument(fieldListIterator.next());
                 if (Debug.verboseOn()) {
-                    Debug.logVerbose("Solr: Indexing document: " + doc1.toString(), module);
+                    if (Debug.verboseOn()) Debug.logVerbose("Solr: Indexing document: " + doc1.toString(), module);
                 }
                 docs.add(doc1);
             }

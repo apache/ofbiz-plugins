@@ -105,7 +105,7 @@ public class EbayHelper {
     public static Map<String, Object> postItem(String postItemsUrl, StringBuffer generatedXmlData, String devID, String appID, String certID,
             String callName, String compatibilityLevel, String siteID) throws IOException {
         if (Debug.verboseOn()) {
-            Debug.logVerbose("Request of " + callName + " To eBay:\n" + generatedXmlData.toString(), module);
+            if (Debug.verboseOn()) Debug.logVerbose("Request of " + callName + " To eBay:\n" + generatedXmlData.toString(), module);
         }
         HttpURLConnection connection = (HttpURLConnection) (new URL(postItemsUrl)).openConnection();
         connection.setDoInput(true);
@@ -137,7 +137,7 @@ public class EbayHelper {
             result = ServiceUtil.returnFailure(EbayHelper.toString(inputStream));
         }
         if (Debug.verboseOn()) {
-            Debug.logVerbose("Response of " + callName + " From eBay:\n" + response, module);
+            if (Debug.verboseOn()) Debug.logVerbose("Response of " + callName + " From eBay:\n" + response, module);
         }
         return result;
     }
@@ -298,7 +298,7 @@ public class EbayHelper {
 
         try {
             if (UtilValidate.isNotEmpty(name) && userLogin != null) {
-                Debug.logVerbose("Creating Customer Party: " + name, module);
+                if (Debug.verboseOn()) Debug.logVerbose("Creating Customer Party: " + name, module);
 
                 // Try to split the lastname from the firstname
                 String firstName = "";
@@ -316,7 +316,7 @@ public class EbayHelper {
                         name, "firstName", firstName, "lastName", lastName, "userLogin", userLogin, "comments",
                         "Created via eBay"));
                 partyId = (String) summaryResult.get("partyId");
-                Debug.logVerbose("Created Customer Party: " + partyId, module);
+                if (Debug.verboseOn()) Debug.logVerbose("Created Customer Party: " + partyId, module);
             }
         } catch (GenericServiceException e) {
             Debug.logError(e, "Failed to createPerson", module);
