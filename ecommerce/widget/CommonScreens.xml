@@ -131,7 +131,7 @@ under the License.
             <widgets>
                     <include-screen name="language"/>
                     <include-screen name="minicart" location="component://ecommerce/widget/CartScreens.xml"/>
-                    <include-screen name="compareproductslist" location="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml"/>
+                    <include-screen name="compareproductslist" location="component://ecommerce/widget/CatalogScreens.xml"/>
                     <include-screen name="minipromotext" location="component://ecommerce/widget/CartScreens.xml"/>
                     <include-screen name="miniassocprods" location="component://ecommerce/widget/CatalogScreens.xml"/>
                     <include-screen name="factoids" location="component://ecommerce/widget/ContentScreens.xml"/>
