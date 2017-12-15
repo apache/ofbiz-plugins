@@ -33,6 +33,9 @@ under the License.
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
 
                 <set field="MainColumnStyle" value="nocolumns" global="true"/>
+                <script location="component://ecommerce/groovyScripts/EcommerceSetup.groovy"/>
+                <set field="visualThemeId" from-field="productStore.visualThemeId" default-value="EC_DEFAULT"/>
+                <script location="component://common/groovyScripts/InitTheme.groovy"/>
 
                 <!-- The default (global) shortcut icon -->
                 <set field="layoutSettings.shortcutIcon" value="/images/ofbiz.ico" global="true"/>
@@ -60,11 +63,8 @@ under the License.
                 <set field="layoutSettings.javaScripts[]" value="/ecommerce/js/popper.js" global="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/ecommerce/js/bootstrap.min.js" global="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/ecommerce/js/bootstrap.bundle.min.js" global="true"/>
-                <script location="component://ecommerce/groovyScripts/EcommerceSetup.groovy"/>
 
                 <!-- Get the store VisualTheme -->
-                <set field="visualThemeId" from-field="productStore.visualThemeId" default-value="EC_DEFAULT"/>
-                <script location="component://common/groovyScripts/InitTheme.groovy"/>
                 <set field="headerTemplateLocation" from-field="layoutSettings.VT_HDR_TMPLT_LOC" default-value="component://ecommerce/template/includes/Header.ftl"/>
                 <set field="footerTemplateLocation" from-field="layoutSettings.VT_FTR_TMPLT_LOC" default-value="component://ecommerce/template/includes/Footer.ftl"/>
                 <entity-and entity-name="WebAnalyticsConfig" list="webAnalyticsConfigs">
