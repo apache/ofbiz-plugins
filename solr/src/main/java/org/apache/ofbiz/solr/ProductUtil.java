@@ -56,7 +56,7 @@ public final class ProductUtil {
         Locale locale = new Locale("de_DE");
 
         if (Debug.verboseOn()) {
-            if (Debug.verboseOn()) Debug.logVerbose("Solr: Getting product content for productId '" + productId + "'", module);
+            Debug.logVerbose("Solr: Getting product content for productId '" + productId + "'", module);
         }
         
         try {

@@ -133,7 +133,7 @@ public class ProductsExportToEbay {
     private static Map<String, Object> postItem(String postItemsUrl, StringBuffer dataItems, String devID, String appID, String certID,
                                 String callName, String compatibilityLevel, String siteID) throws IOException {
         if (Debug.verboseOn()) {
-            if (Debug.verboseOn()) Debug.logVerbose("Request of " + callName + " To eBay:\n" + dataItems.toString(), module);
+            Debug.logVerbose("Request of " + callName + " To eBay:\n" + dataItems.toString(), module);
         }
         HttpURLConnection connection = (HttpURLConnection)(new URL(postItemsUrl)).openConnection();
         connection.setDoInput(true);
@@ -167,7 +167,7 @@ public class ProductsExportToEbay {
         }
 
         if (Debug.verboseOn()) {
-            if (Debug.verboseOn()) Debug.logVerbose("Response of " + callName + " From eBay:\n" + response, module);
+            Debug.logVerbose("Response of " + callName + " From eBay:\n" + response, module);
         }
 
         return result;
