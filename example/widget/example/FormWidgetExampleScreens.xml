@@ -25,7 +25,7 @@ under the License.
         <section>
             <actions>
                 <set field="headerItem" value="FormWidgetExamples"/>
-                <set field="layoutSettings.javaScripts[]" value="/images/combobox.js" global="true" />
+                <set field="layoutSettings.javaScripts[]" value="/common/js/util/combobox.js" global="true" />
                 <set field="formWidgetExampleFormsUrl" value="http://svn.apache.org/repos/asf/ofbiz/ofbiz-plugins/trunk/example/widget/example/FormWidgetExampleForms.xml"/>
             </actions>
             <widgets>
