@@ -17,9 +17,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div class="screenlet">
-  <div class="screenlet-title-bar">
-    <h3>${uiLabelMap.CommonContactUs}</h3>
+<div class="card m-3">
+  <div class="card-header">
+    <strong>${uiLabelMap.CommonContactUs}</strong>
   </div>
   <script type="text/javascript" language="JavaScript">
     <!--
@@ -31,7 +31,7 @@ under the License.
     }
     //-->
   </script>
-  <div class="screenlet-body">
+  <div class="card-body">
     <form id="contactForm" method="post" action="<@ofbizUrl>submitAnonContact</@ofbizUrl>">
       <input type="hidden" name="partyIdFrom" value="${(userLogin.partyId)!}"/>
       <input type="hidden" name="partyIdTo" value="${productStore.payToPartyId!}"/>
@@ -39,62 +39,68 @@ under the License.
       <input type="hidden" name="communicationEventTypeId" value="WEB_SITE_COMMUNICATI"/>
       <input type="hidden" name="productStoreId" value="${productStore.productStoreId}"/>
       <input type="hidden" name="emailType" value="CONT_NOTI_EMAIL"/>
-      <table class="basic-table" cellspacing="0">
-        <tbody>
-        <tr>
-          <td class="label">${uiLabelMap.EcommerceSubject}</td>
-          <td>
-            <input type="text" name="subject" id="subject" class="required" value="${requestParameters.subject!}"/>*
-          </td>
-        </tr>
-        <tr>
-          <td class="label">${uiLabelMap.CommonMessage}</td>
-          <td>
-            <textarea name="content" id="message" class="required" cols="50" rows="5">
-              ${requestParameters.content!}
-            </textarea>*
-          </td>
-        </tr>
-        <tr>
-          <td class="label">${uiLabelMap.FormFieldTitle_emailAddress}</td>
-          <td>
-            <input type="text" name="emailAddress" id="emailAddress" class="required"
-                value="${requestParameters.emailAddress!}"/>*
-          </td>
-        </tr>
-        <tr>
-          <td class="label">${uiLabelMap.PartyFirstName}</td>
-          <td>
-            <input type="text" name="firstName" id="firstName" class="required" value="${requestParameters.firstName!}"/>
-          </td>
-        </tr>
-        <tr>
-          <td class="label">${uiLabelMap.PartyLastName}</td>
-          <td>
-            <input type="text" name="lastName" id="lastName" class="required" value="${requestParameters.lastName!}"/>
-          </td>
-        </tr>
-        <tr>
-          <td class="label">${uiLabelMap.CommonCaptchaCode}</td>
-          <td>
-            <div>
-              <img id="captchaImage"
-                  src="<@ofbizUrl>captcha.jpg?captchaCodeId=captchaImage&amp;unique=${nowTimestamp.getTime()}</@ofbizUrl>"
-                  alt=""/>
+
+      <div class="form-group row">
+        <label for="${uiLabelMap.EcommerceSubject}" class="col-1 col-form-label">${uiLabelMap.EcommerceSubject}</label>
+        <div class="col-11">
+          <input type="text" name="subject" id="subject" class="required form-control form-control-sm" value="${requestParameters.subject!}"/>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="${uiLabelMap.CommonMessage}" class="col-1 col-form-label">${uiLabelMap.CommonMessage}</label>
+        <div class="col-11">
+          <textarea name="content" id="message" class="required form-control form-control-sm" rows="4">
+            ${requestParameters.content!}
+          </textarea>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="${uiLabelMap.FormFieldTitle_emailAddress}" class="col-1 col-form-label">${uiLabelMap.FormFieldTitle_emailAddress}</label>
+        <div class="col-11">
+           <input type="email" name="emailAddress" id="emailAddress" class="required form-control form-control-sm" value="${requestParameters.emailAddress!}"/>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group row">
+            <label for="${uiLabelMap.PartyFirstName}" class="col-2 col-form-label">${uiLabelMap.PartyFirstName}</label>
+            <div class="col-10">
+              <input type="text" name="firstName" id="firstName" class="required form-control form-control-sm" value="${requestParameters.firstName!}"/>
             </div>
-            <a href="javascript:reloadCaptcha('captchaImage');">${uiLabelMap.CommonReloadCaptchaCode}</a>
-          </td>
-        </tr>
-        <tr>
-          <td class="label">${uiLabelMap.CommonVerifyCaptchaCode}</td>
-          <td><input type="text" autocomplete="off" maxlength="30" size="23" name="captcha"/>*</td>
-        </tr>
-        <tr>
-          <td class="label"></td>
-          <td><input type="submit" value="${uiLabelMap.CommonSubmit}"/></td>
-        </tr>
-        </tbody>
-      </table>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group row">
+            <label for="${uiLabelMap.PartyLastName}" class="col-2 col-form-label">${uiLabelMap.PartyLastName}</label>
+            <div class="col-10">
+              <input type="text" name="lastName" id="lastName" class="required form-control form-control-sm" value="${requestParameters.lastName!}"/>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="${uiLabelMap.CommonCaptchaCode}" class="col-1 col-form-label">${uiLabelMap.CommonCaptchaCode}</label>
+        <div class="col-11">
+          <img id="captchaImage" src="<@ofbizUrl>captcha.jpg?captchaCodeId=captchaImage&amp;unique=${nowTimestamp.getTime()}</@ofbizUrl>" alt=""/>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-1"></div>
+        <div class="col-11">
+          <a href="javascript:reloadCaptcha('captchaImage');">${uiLabelMap.CommonReloadCaptchaCode}</a>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="${uiLabelMap.CommonVerifyCaptchaCode}" class="col-1 col-form-label">${uiLabelMap.CommonVerifyCaptchaCode}</label>
+        <div class="col-11">
+          <input type="text" autocomplete="off" maxlength="30" size="23" name="captcha" class="form-control form-control-sm"/>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <input type="submit" value="${uiLabelMap.CommonSubmit}" class="btn btn-outline-secondary"/>
+        </div>
+      </div>
     </form>
   </div>
 </div>
