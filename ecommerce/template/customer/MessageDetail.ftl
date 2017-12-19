@@ -27,8 +27,8 @@ under the License.
       Static["org.apache.ofbiz.party.party.PartyHelper"].getPartyName(delegator, communicationEvent.partyIdTo, true)>
 </#if>
 
-<div class="screenlet">
-  <div class="screenlet-title-bar">
+<div class="card m-3">
+  <div class="card-header">
     <div class="boxlink">
     <#if (communicationEvent.partyIdFrom! != (userLogin.partyId)!)>
       <a href="<@ofbizUrl>newmessage?communicationEventId=${communicationEvent.communicationEventId}</@ofbizUrl>"
@@ -37,54 +37,51 @@ under the License.
     </#if>
       <a href="<@ofbizUrl>messagelist</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewList}</a>
     </div>
-    <div class="h3">${uiLabelMap.EcommerceReadMessage}</div>
+    <strong>${uiLabelMap.EcommerceReadMessage}</strong>
   </div>
-  <div class="screenlet-body">
-    <table width="100%" border="0" cellpadding="1">
-      <tr>
-        <td>&nbsp;</td>
-      </tr>
-      <tr>
-        <td align="right">
-          <div class="tableheadtext">${uiLabelMap.CommonFrom}:</div>
-        </td>
-        <td>
-          <div>${fromName!}</div>
-        </td>
-      </tr>
-      <tr>
-        <td align="right">
-          <div class="tableheadtext">${uiLabelMap.CommonTo}:</div>
-        </td>
-        <td>
-          <div>${toName!}</div>
-        </td>
-      </tr>
-      <tr>
-        <td align="right">
-          <div class="tableheadtext">${uiLabelMap.CommonDate}:</div>
-        </td>
-        <td>
-          <div>${communicationEvent.entryDate}</div>
-        </td>
-      </tr>
-      <tr>
-        <td align="right">
-          <div class="tableheadtext">${uiLabelMap.EcommerceSubject}:</div>
-        </td>
-        <td>
-          <div>&nbsp;${(communicationEvent.subject)?default("[${uiLabelMap.EcommerceNoSubject}]")}</div>
-        </td>
-      </tr>
-      <tr>
-        <td>&nbsp;</td>
-      </tr>
-      <tr>
-        <td>&nbsp;</td>
-        <td>
-          <div>${StringUtil.wrapString(communicationEvent.content)?default("[${uiLabelMap.EcommerceEmptyBody}]")}</div>
-        </td>
-      </tr>
-    </table>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-1">
+        <strong>${uiLabelMap.CommonFrom} :</strong>
+      </div>
+      <div class="col-11">
+        ${fromName?default("N/A")}
+      </div>
+    </div>
+    <hr/>
+    <div class="row">
+      <div class="col-1">
+        <strong>${uiLabelMap.CommonTo} :</strong>
+      </div>
+      <div class="col-11">
+        ${toName?default("N/A")}
+      </div>
+    </div>
+    <hr/>
+    <div class="row">
+      <div class="col-1">
+        <strong>${uiLabelMap.CommonDate} :</strong>
+      </div>
+      <div class="col-11">
+        ${communicationEvent.entryDate?default("N/A")}
+      </div>
+    </div>
+    <hr/>
+    <div class="row">
+      <div class="col-1">
+        <strong>${uiLabelMap.EcommerceSubject} :</strong>
+      </div>
+      <div class="col-11">
+        ${(communicationEvent.subject)?default("[${uiLabelMap.EcommerceNoSubject}]")}
+      </div>
+    </div>
+    <hr/>
+    <div class="row">
+      <div class="col-1">
+      </div>
+      <div class="col-11">
+        ${StringUtil.wrapString(communicationEvent.content)?default("[${uiLabelMap.EcommerceEmptyBody}]")}
+      </div>
+    </div>
   </div>
 </div>

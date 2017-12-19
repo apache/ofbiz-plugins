@@ -17,16 +17,16 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div class="screenlet">
-  <div class="screenlet-title-bar">
+<div class="card m-3">
+  <div class="card-header">
     <div class="boxlink">
       <#if "TRUE" == showMessageLinks?default("false")?upper_case>
         <a href="<@ofbizUrl>messagelist</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewList}</a>
       </#if>
     </div>
-    <div class="h3">${pageHeader}</div>
+    <strong>${pageHeader}</strong>
   </div>
-  <div class="screenlet-body">
+  <div class="card-body">
     <form name="contactus" method="post" action="<@ofbizUrl>${submitRequest}</@ofbizUrl>" style="margin: 0;">
       <input type="hidden" name="partyIdFrom" value="${userLogin.partyId}"/>
       <input type="hidden" name="contactMechTypeId" value="WEB_ADDRESS"/>
@@ -45,82 +45,61 @@ under the License.
         </#if>
         <input type="hidden" name="origCommEventId" value="${orgComm}"/>
       </#if>
-      <table width="100%" border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td colspan="3">&nbsp;</td>
-        </tr>
-        <tr>
-          <td width="5">&nbsp;</td>
-          <td align="right">
-            <div class="tableheadtext">${uiLabelMap.CommonFrom}:</div>
-          </td>
-          <td>
-            <div>&nbsp;${sessionAttributes.autoName!} [${userLogin.partyId}] (${uiLabelMap.CommonNotYou}?&nbsp;<a
-                href="<@ofbizUrl>autoLogout</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonClickHere}</a>)
-            </div>
-          </td>
-        </tr>
-        <#if partyIdTo?has_content>
-          <#assign partyToName =
-              Static["org.apache.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyIdTo, true)>
-          <input type="hidden" name="partyIdTo" value="${partyIdTo}"/>
-          <tr>
-            <td colspan="3">&nbsp;</td>
-          </tr>
-          <tr>
-            <td width="5">&nbsp;</td>
-            <td align="right">
-              <div class="tableheadtext">${uiLabelMap.CommonTo}:</div>
-            </td>
-            <td>
-              <div>&nbsp;${partyToName}</div>
-            </td>
-          </tr>
-        </#if>
-        <tr>
-          <td colspan="3">&nbsp;</td>
-        </tr>
-        <#assign defaultSubject = (communicationEvent.subject)?default("")>
-        <#if (defaultSubject?length == 0)>
-          <#assign replyPrefix = "RE: ">
-          <#if parentEvent?has_content>
-            <#if !parentEvent.subject?default("")?upper_case?starts_with(replyPrefix)>
-              <#assign defaultSubject = replyPrefix>
-            </#if>
-            <#assign defaultSubject = defaultSubject + parentEvent.subject?default("")>
+      <div class="row">
+        <div class="col-1">
+          <strong>${uiLabelMap.CommonFrom} :</strong>
+        </div>
+        <div class="col-11">
+          ${sessionAttributes.autoName!} [${userLogin.partyId}] (${uiLabelMap.CommonNotYou}?&nbsp;<a
+                          href="<@ofbizUrl>autoLogout</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonClickHere}</a>)
+        </div>
+      </div>
+      <hr/>
+      <#if partyIdTo?has_content>
+        <#assign partyToName =
+            Static["org.apache.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyIdTo, true)>
+        <input type="hidden" name="partyIdTo" value="${partyIdTo}"/>
+        <div class="row">
+          <div class="col-1">
+            <strong>${uiLabelMap.CommonTo} :</strong>
+          </div>
+          <div class="col-11">
+            ${partyToName?default("N/A")}
+          </div>
+        </div>
+      </#if>
+      <#assign defaultSubject = (communicationEvent.subject)?default("")>
+      <#if (defaultSubject?length == 0)>
+        <#assign replyPrefix = "RE: ">
+        <#if parentEvent?has_content>
+          <#if !parentEvent.subject?default("")?upper_case?starts_with(replyPrefix)>
+            <#assign defaultSubject = replyPrefix>
           </#if>
+          <#assign defaultSubject = defaultSubject + parentEvent.subject?default("")>
         </#if>
-        <tr>
-          <td width="5">&nbsp;</td>
-          <td align="right">
-            <div class="tableheadtext">${uiLabelMap.EcommerceSubject}:</div>
-          </td>
-          <td><input type="input" class="inputBox" name="subject" size="20" value="${defaultSubject}"/>
-        </tr>
-        <tr>
-          <td colspan="3">&nbsp;</td>
-        </tr>
-        <tr>
-          <td width="5">&nbsp;</td>
-          <td align="right">
-            <div class="tableheadtext">${uiLabelMap.CommonMessage}:</div>
-          </td>
-          <td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td colspan="2">&nbsp;</td>
-          <td colspan="2">
-            <textarea name="content" class="textAreaBox" cols="40" rows="5"></textarea>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="3">&nbsp;</td>
-        </tr>
-        <tr>
-          <td colspan="2">&nbsp;</td>
-          <td><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonSend}"/></td>
-        </tr>
-      </table>
+      </#if>
+      <div class="row">
+        <div class="col-1">
+          <strong>${uiLabelMap.EcommerceSubject} :</strong>
+        </div>
+        <div class="col-11">
+          <input type="input" class="inputBox form-control form-control-sm" name="subject" size="20" value="${defaultSubject}"/>
+        </div>
+      </div>
+      <hr/>
+      <div class="row">
+        <div class="col-1">
+          <strong>${uiLabelMap.CommonMessage} :</strong>
+        </div>
+        <div class="col-11">
+          <textarea name="content" class="textAreaBox form-control form-control-sm" rows="5"></textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <input type="submit" class="smallSubmit btn btn-outline-secondary" value="${uiLabelMap.CommonSend}"/>
+        </div>
+      </div>
     </form>
   </div>
 </div>
