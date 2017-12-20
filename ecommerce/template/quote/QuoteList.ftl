@@ -17,70 +17,67 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div class="screenlet">
-    <h3>${uiLabelMap.EcommerceQuoteHistory}</h3>
-    <div class="screenlet-body">
-        <table>
-            <tr>
-                <td width="10%">
-                    <div><span style="white-space: nowrap;">${uiLabelMap.OrderQuote} ${uiLabelMap.CommonNbr}</span></div>
-                </td>
-                <td width="10">&nbsp;</td>
-                <td width="20%">
-                    <div>${uiLabelMap.CommonName}</div>
-                </td>
-                <td width="10">&nbsp;</td>
-                <td width="40%">
-                    <div>${uiLabelMap.CommonDescription}</div>
-                </td>
-                <td width="10">&nbsp;</td>
-                <td width="10%">
-                    <div>${uiLabelMap.CommonStatus}</div>
-                </td>
-                <td width="10">&nbsp;</td>
-                <td width="20%">
-                    <div>${uiLabelMap.OrderOrderQuoteIssueDate}</div>
-                    <div>${uiLabelMap.CommonValidFromDate}</div>
-                    <div>${uiLabelMap.CommonValidThruDate}</div>
-                </td>
-                <td width="10">&nbsp;</td>
-                <td width="10">&nbsp;</td>
-            </tr>
+<div class="card m-3">
+    <div class="card-header">
+      <strong>${uiLabelMap.EcommerceQuoteHistory}</strong>
+    </div>
+    <div class="card-body">
+    <#if quoteList?has_content>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        ${uiLabelMap.OrderQuote} ${uiLabelMap.CommonNbr}
+                    </th>
+                    <th>
+                        ${uiLabelMap.CommonName}
+                    </th>
+                    <th>
+                        ${uiLabelMap.CommonDescription}
+                    </th>
+                    <th>
+                        ${uiLabelMap.CommonStatus}
+                    </th>
+                    <th>
+                        ${uiLabelMap.OrderOrderQuoteIssueDate}
+                    </th>
+                    <th>${uiLabelMap.CommonValidFromDate}</th>
+                    <th>${uiLabelMap.CommonValidThruDate}</th>
+                    <th colspan="2"></th>
+                </tr>
+            </thead>
+            <tbody>
             <#list quoteList as quote>
                 <#assign status = quote.getRelatedOne("StatusItem", true)>
-                
                 <tr>
                     <td>
-                        <div>${quote.quoteId}</div>
+                       ${quote.quoteId!}
                     </td>
-                    <td width="10">&nbsp;</td>
                     <td>
-                        <div>${quote.quoteName!}</div>
+                       ${quote.quoteName?default("N/A")}
                     </td>
-                    <td width="10">&nbsp;</td>
                     <td>
-                        <div>${quote.description!}</div>
+                       ${quote.description?default("N/A")}
                     </td>
-                    <td width="10">&nbsp;</td>
                     <td>
-                        <div>${status.get("description",locale)}</div>
+                       ${status.get("description",locale)?default("N/A")}
                     </td>
-                    <td width="10">&nbsp;</td>
                     <td>
-                        <div><span style="white-space: nowrap;">${quote.issueDate!}</span></div>
-                        <div><span style="white-space: nowrap;">${quote.validFromDate!}</span></div>
-                        <div><span style="white-space: nowrap;">${quote.validThruDate!}</span></div>
+                       ${quote.issueDate?default("N/A")}
                     </td>
-                    <td width="10">&nbsp;</td>
-                    <td align="right">
+                    <td>${quote.validFromDate?default("N/A")}</td>
+                    <td>${quote.validThruDate?default("N/A")}</td>
+                    <td colspan="2">
                         <a href="<@ofbizUrl>ViewQuote?quoteId=${quote.quoteId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonView}</a>
                     </td>
-                    <td width="10">&nbsp;</td>
                 </tr>
             </#list>
-            <#if !quoteList?has_content>
-                <tr><td colspan="9"><h3>${uiLabelMap.OrderNoQuoteFound}</h3></td></tr>
-            </#if>
+            </tbody>
         </table>
+        <#else>
+            <div class="alert alert-light" role="alert">
+              <h3>${uiLabelMap.OrderNoQuoteFound}</h3>
+            </div>
+        </#if>
     </div>
 </div>
