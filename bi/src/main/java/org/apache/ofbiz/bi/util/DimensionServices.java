@@ -70,7 +70,7 @@ public class DimensionServices {
         Locale locale = (Locale) context.get("locale");
 
         try {
-            Map<String, Object> andCondition = new HashMap<String, Object>();
+            Map<String, Object> andCondition = new HashMap<>();
             for (String naturalKeyField: naturalKeyFields) {
                 andCondition.put(naturalKeyField, dimensionValue.get(naturalKeyField));
             }
@@ -149,14 +149,14 @@ public class DimensionServices {
             dateValue.set("description", dayDescriptionFormat.format(currentDate));
             int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
             dateValue.set("dayName", dayNameFormat.format(currentDate));
-            dateValue.set("dayOfMonth", new Long(calendar.get(Calendar.DAY_OF_MONTH)));
-            dateValue.set("dayOfYear", new Long(calendar.get(Calendar.DAY_OF_YEAR)));
+            dateValue.set("dayOfMonth", Long.valueOf(calendar.get(Calendar.DAY_OF_MONTH)));
+            dateValue.set("dayOfYear", Long.valueOf(calendar.get(Calendar.DAY_OF_YEAR)));
             dateValue.set("monthName", monthNameFormat.format(currentDate));
 
-            dateValue.set("monthOfYear", new Long(calendar.get(Calendar.MONTH) + 1));
-            dateValue.set("yearName", new Long(calendar.get(Calendar.YEAR)));
-            dateValue.set("weekOfMonth", new Long(calendar.get(Calendar.WEEK_OF_MONTH)));
-            dateValue.set("weekOfYear", new Long(calendar.get(Calendar.WEEK_OF_YEAR)));
+            dateValue.set("monthOfYear", Long.valueOf(calendar.get(Calendar.MONTH) + 1));
+            dateValue.set("yearName", Long.valueOf(calendar.get(Calendar.YEAR)));
+            dateValue.set("weekOfMonth", Long.valueOf(calendar.get(Calendar.WEEK_OF_MONTH)));
+            dateValue.set("weekOfYear", Long.valueOf(calendar.get(Calendar.WEEK_OF_YEAR)));
             dateValue.set("weekdayType", (dayOfWeek == 1 || dayOfWeek == 7? "Weekend": "Weekday"));
             dateValue.set("yearMonthDay", yearMonthDayFormat.format(currentDate));
             dateValue.set("yearAndMonth", yearMonthFormat.format(currentDate));

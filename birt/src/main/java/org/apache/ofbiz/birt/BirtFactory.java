@@ -39,8 +39,8 @@ public class BirtFactory {
 
     public final static String module = BirtFactory.class.getName();
 
-    protected static IReportEngine engine;
-    
+    private static IReportEngine engine;
+
     /**
      * set report engine
      * @param engine

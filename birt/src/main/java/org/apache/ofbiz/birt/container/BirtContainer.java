@@ -38,7 +38,7 @@ import org.apache.ofbiz.birt.BirtWorker;
 public class BirtContainer implements Container {
 
     public static final String module = BirtContainer.class.getName();
-    
+
     protected String configFile;
 
     private String name;
@@ -59,11 +59,6 @@ public class BirtContainer implements Container {
         // make sure the subclass sets the config name
         if (getName() == null) {
             throw new ContainerException("Unknown container config name");
-        }
-        // get the container config
-        ContainerConfig.Configuration cc = ContainerConfig.getConfiguration(getName(), configFile);
-        if (cc == null) {
-            throw new ContainerException("No " + getName() + " configuration found in container config!");
         }
 
         // create engine config
@@ -95,7 +90,7 @@ public class BirtContainer implements Container {
         Debug.logInfo("Create report engine", module);
         IReportEngine engine = factory.createReportEngine(config);
         BirtFactory.setReportEngine(engine);
-        
+
         // print supported formats
         String[] supportedFormats = engine.getSupportedFormats();
         String formatList = null;

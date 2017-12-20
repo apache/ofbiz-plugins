@@ -19,9 +19,7 @@
 package org.apache.ofbiz.birt;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.OutputStream;
-import java.io.StringWriter;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -77,7 +75,7 @@ public final class BirtWorker {
 
     private BirtWorker() {}
 
-    public static final Map<Integer, Level> levelIntMap = new HashMap<>();
+    private static final Map<Integer, Level> levelIntMap = new HashMap<>();
     static {
         levelIntMap.put(Debug.ERROR, Level.SEVERE);
         levelIntMap.put(Debug.TIMING, Level.FINE);
@@ -108,7 +106,7 @@ public final class BirtWorker {
         if (contentType == null) {
             contentType = "text/html";
         } else {
-            contentType = contentType.toLowerCase();
+            contentType = contentType.toLowerCase(Locale.getDefault());
         }
         if (birtImageDirectory == null) {
             birtImageDirectory = "/";
@@ -209,7 +207,6 @@ public final class BirtWorker {
         Locale locale = (Locale) context.get("locale");
         String description = (String) context.get("description");
         String reportName = (String) context.get("reportName");
-        String writeFilters = (String) context.get("writeFilters");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String entityViewName = (String) context.get("entityViewName");
         String serviceName = (String) context.get("serviceName");
@@ -241,7 +238,7 @@ public final class BirtWorker {
             if (!templatePathLocationDir.exists()) {
                 boolean created = templatePathLocationDir.mkdirs();
                 if (!created) {
-                    new GeneralException(UtilProperties.getMessage(resourceError, "BirtErrorCannotLocateReportFolder", locale));
+                    throw new GeneralException(UtilProperties.getMessage(resourceError, "BirtErrorCannotLocateReportFolder", locale));
                 }
             }
         int i = 0;
@@ -261,7 +258,7 @@ public final class BirtWorker {
         //resolve the initial form structure from master content
         Map<String, Object> resultElectronicText = dispatcher.runSync("getElectronicText", UtilMisc.toMap("contentId", masterContentId, "locale", locale, "userLogin", userLogin));
         if (ServiceUtil.isError(resultElectronicText)) {
-            new GeneralException(ServiceUtil.getErrorMessage(resultElectronicText));
+            throw new GeneralException(ServiceUtil.getErrorMessage(resultElectronicText));
         }
         String reportForm = (String) resultElectronicText.get("textData");
         if (!reportForm.startsWith("<?xml")) {
