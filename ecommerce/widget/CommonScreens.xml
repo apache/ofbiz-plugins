@@ -81,6 +81,7 @@ under the License.
                      <platform-specific><html><html-template location="component://ecommerce/template/includes/HeaderHead.ftl"/></html></platform-specific>
                      <platform-specific><html><html-template location="component://common-theme/template/includes/OpenHtmlBody.ftl"/></html></platform-specific>
                      <!-- render header -->
+                     <container id="parentContainer">
                      <container id="header"><platform-specific><html><html-template location="${headerTemplateLocation}"/></html></platform-specific></container>
 
                      <container id="ecom-mainarea">
@@ -99,6 +100,7 @@ under the License.
 
                     <!-- render footer -->
                     <container id="footer"><platform-specific><html><html-template location="${footerTemplateLocation}"/></html></platform-specific></container>
+                    </container>
                     <platform-specific><html><html-template location="component://common-theme/template/includes/CloseHtmlBody.ftl"/></html></platform-specific>
                   </widgets>
                   <fail-widgets>

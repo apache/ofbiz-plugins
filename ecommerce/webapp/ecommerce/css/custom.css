@@ -59,3 +59,7 @@
 .quick-links a, #paginationBox a {
 color: #000000;
 }
+
+.footer-block {
+    background: #f8f9fa;
+}

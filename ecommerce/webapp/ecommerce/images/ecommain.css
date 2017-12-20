@@ -259,7 +259,15 @@ margin-top:10px;
 position:relative;
 width:100%;
 text-align:left;
+flex:1;
 }
+
+#parentContainer {
+display: flex;
+min-height: 100vh;
+flex-direction: column;
+}
+
 
 #ecom-mainarea .left {
 background:#fff;

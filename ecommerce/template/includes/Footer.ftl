@@ -19,6 +19,7 @@ under the License.
 
 <#assign nowTimestamp = Static["org.apache.ofbiz.base.util.UtilDateTime"].nowTimestamp()>
 
+<div class="footer-block">
 <div class="d-flex justify-content-between">
   <div class="p-2">
     <a href="//jigsaw.w3.org/css-validator/">
@@ -38,4 +39,5 @@ under the License.
   <div class="p-2">
     <div><a href="<@ofbizUrl>policies</@ofbizUrl>">${uiLabelMap.EcommerceSeeStorePoliciesHere}</a></div>
   </div>
+</div>
 </div>
