@@ -84,7 +84,7 @@ under the License.
           </div>
           <input type="submit" class="form-control btn btn-outline-secondary" value="${uiLabelMap.EcommerceSubscribe}"/>
           <input type="button" class"form-control btn btn-outline-secondary" value="${uiLabelMap.EcommerceUnsubscribe}"
-              onclick="javascript:unsubscribeByContactMech();"/>ss
+              onclick="javascript:unsubscribeByContactMech();"/>
       </form>
     <#else>
     <#-- Not logged in so ask them to log in and then sign up or clear the user association -->

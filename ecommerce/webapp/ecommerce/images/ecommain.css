@@ -59,8 +59,6 @@ dl { margin: 0 0 1.5em 0; }
 dl dt { font-weight: bold; }
 dd { margin-left: 1.5em;}
 
-a, a:link, a:visited {text-decoration: none; color:#1C334D; font-weight:700;}
-a:hover {text-decoration: none; color:#111;}
 abbr,acronym {border-bottom: 1px dotted; cursor: help;}
 del {text-decoration: line-through;}
 ins {text-decoration: overline;}
@@ -113,26 +111,6 @@ text-decoration:none;
 
 input[type=radio],input[type=checkbox] {
 font-size:8pt;
-}
-
-input[type=submit],input[type=button],input[type=reset] {
-background:#FFF;
-border:#999 solid 1px;
-color:#1C334D;
-font-size:8pt;
-font-weight:700;
-margin:2px;
-}
-
-input[type=submit]:hover,
-input[type=button]:hover {
-color:red;
-cursor:pointer;
-text-decoration:underline;
-}
-
-input[type=file] {
-font-size:11px;
 }
 
 .endcolumns {
@@ -432,15 +410,6 @@ border-color:#999;
 border-style:solid;
 border-width:0;
 padding:4px;
-}
-
-.button {
-background:#ddd;
-border-color:#99C;
-border-style:outset;
-border-width:2px;
-padding-left:5px;
-padding-right:5px;
 }
 
 .tableheadtext {
@@ -773,11 +742,7 @@ height:50px;
 }
 
 .productsummary-container {
-border-top:#999 solid 1px;
-margin-bottom:5px;
 margin-top:10px;
-position:relative;
-overflow: hidden;
 }
 
 .productsummary {

@@ -44,3 +44,18 @@
 .products-card .card-title a {
     white-space: normal;
 }
+
+.gallery {
+    white-space: nowrap;
+    margin-top: 10px;
+    overflow-x: auto;
+}
+.detail-image {
+    height: 300px!important;
+    width: auto!important;
+    max-width: 300px!important;
+ }
+
+.quick-links a, #paginationBox a {
+color: #000000;
+}
