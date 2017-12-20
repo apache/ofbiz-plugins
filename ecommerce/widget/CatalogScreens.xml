@@ -143,7 +143,7 @@ under the License.
                 <script location="component://order/groovyScripts/entry/catalog/ProductSummary.groovy"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://order/template/entry/catalog/ProductSummary.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="component://ecommerce/template/catalog/ProductSummary.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -222,7 +222,7 @@ under the License.
                 <set field="paginateEcommerceStyle" value="Y"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://order/template/entry/catalog/CategoryDetail.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="component://ecommerce/template/catalog/CategoryDetail.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
