@@ -16,32 +16,30 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#if requestParties?has_content>
-
 <div class="card">
     <div class="card-header">
-        <strong>${uiLabelMap.OrderRequestRoles}</strong>
+        <strong>${uiLabelMap.CommonDate}</strong>
     </div>
     <div class="card-body">
-        <table cellspacing="0" class="basic-table">
-         <#assign row = 1>
-         <#list requestParties as requestParty>
-            <#assign roleType = requestParty.getRelatedOne("RoleType", false)>
-            <#assign party = requestParty.getRelatedOne("Party", false)>
-              <tr>
-                  <td>
-                      ${roleType.get("description", locale)!}
-                  </td>
-                  <td>
-                      ${Static["org.apache.ofbiz.party.party.PartyHelper"].getPartyName(party)}
-                  </td>
-              </tr>
-              <#if requestParties.size() != row>
-                <tr><td colspan="3"><hr /></td></tr>
-              </#if>
-              <#assign row = row + 1>
-          </#list>
-        </table>
+        <div layout="row">
+          <div class="col-12">
+            <strong>${uiLabelMap.OrderRequestDate} :</strong>
+            ${(custRequest.custRequestDate.toString())?default("N/A")}
+          </div>
+        </div>
+        <hr/>
+        <div layout="row">
+          <div class="col-12">
+            <strong>${uiLabelMap.OrderRequestCreatedDate} :</strong>
+            ${(custRequest.createdDate.toString())?default("N/A")}
+          </div>
+        </div>
+        <hr/>
+        <div layout="row">
+          <div class="col-12">
+            <strong>${uiLabelMap.OrderRequestLastModifiedDate} :</strong>
+            ${(custRequest.lastModifiedDate.toString())?default("N/A")}
+          </div>
+        </div>
     </div>
 </div>
-</#if>

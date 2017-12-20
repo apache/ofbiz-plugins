@@ -17,78 +17,76 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<div class="screenlet">
-    <h3>${uiLabelMap.EcommerceRequestHistory}</h3>
-    <div class="screenlet-body">
-        <table>
+<div class="card m-3">
+    <div class="card-header">
+      <strong>${uiLabelMap.EcommerceRequestHistory}</strong>
+    </div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
             <tr>
-                <td width="10%">
-                    <div><span style="white-space: nowrap;">${uiLabelMap.OrderRequest} ${uiLabelMap.CommonNbr}</span></div>
-                </td>
-                <td width="10">&nbsp;</td>
-                <td width="10%">
-                    <div><span style="white-space: nowrap;">${uiLabelMap.CommonType}</span></div>
-                </td>
-                <td width="10">&nbsp;</td>
-                <td width="20%">
-                    <div>${uiLabelMap.CommonName}</div>
-                </td>
-                <td width="10">&nbsp;</td>
-                <td width="40%">
-                    <div>${uiLabelMap.CommonDescription}</div>
-                </td>
-                <td width="10">&nbsp;</td>
-                <td width="10%">
-                    <div>${uiLabelMap.CommonStatus}</div>
-                </td>
-                <td width="10">&nbsp;</td>
-                <td width="20%">
-                    <div>${uiLabelMap.OrderRequestDate}</div>
-                    <div>${uiLabelMap.OrderRequestCreatedDate}</div>
-                    <div>${uiLabelMap.OrderRequestLastModifiedDate}</div>
-                </td>
-                <td width="10">&nbsp;</td>
-                <td width="10">&nbsp;</td>
+                <th>
+                   ${uiLabelMap.OrderRequest} ${uiLabelMap.CommonNbr}
+                </th>
+                <th>
+                   ${uiLabelMap.CommonType}
+                </th>
+                <th>
+                   ${uiLabelMap.CommonName}
+                </th>
+                <th>
+                   ${uiLabelMap.CommonDescription}
+                </th>
+                <th>
+                  ${uiLabelMap.CommonStatus}
+                </th>
+                <th>
+                  ${uiLabelMap.OrderRequestDate}
+                </th>
+                <th>
+                  ${uiLabelMap.OrderRequestCreatedDate}
+                </th>
+                <th>
+                  ${uiLabelMap.OrderRequestLastModifiedDate}
+                </th>
+                <th colspan="2"></th>
             </tr>
+            </thead>
             <#list requestList as custRequest>
                 <#assign status = custRequest.getRelatedOne("StatusItem", true)>
                 <#assign type = custRequest.getRelatedOne("CustRequestType", true)>
-                
-                <tr>
-                    <td>
-                        <div>${custRequest.custRequestId}</div>
-                    </td>
-                    <td width="10">&nbsp;</td>
-                    <td>
-                        <div>${type.get("description",locale)!}</div>
-                    </td>
-                    <td width="10">&nbsp;</td>
-                    <td>
-                        <div>${custRequest.custRequestName!}</div>
-                    </td>
-                    <td width="10">&nbsp;</td>
-                    <td>
-                        <div>${custRequest.description!}</div>
-                    </td>
-                    <td width="10">&nbsp;</td>
-                    <td>
-                        <div>${status.get("description",locale)}</div>
-                    </td>
-                    <td width="10">&nbsp;</td>
-                    <td>
-                        <div><span style="white-space: nowrap;">${custRequest.custRequestDate!}</span></div>
-                        <div><span style="white-space: nowrap;">${custRequest.createdDate!}</span></div>
-                        <div><span style="white-space: nowrap;">${custRequest.lastModifiedDate!}</span></div>
-                    </td>
-                    <td width="10">&nbsp;</td>
-                    <td align="right">
-                        <a href="<@ofbizUrl>/ViewRequest?custRequestId=${custRequest.custRequestId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonView}</a>
-                    </td>
-                    <td width="10">&nbsp;</td>
-                </tr>
+                <tbody>
+                    <tr>
+                        <td>
+                            ${custRequest.custRequestId?default("N/A")}
+                        </td>
+                        <td>
+                            ${type.get("description",locale)?default("N/A")}
+                        </td>
+                        <td>
+                            ${custRequest.custRequestName?default("N/A")}
+                        </td>
+                        <td>
+                            ${custRequest.description?default("N/A")}
+                        </td>
+                        <td>
+                            ${status.get("description",locale)?default("N/A")}
+                        </td>
+                        <td>
+                            ${custRequest.custRequestDate?default("N/A")}
+                        </td>
+                        <td>${custRequest.createdDate?default("N/A")}</td>
+                        <td>${custRequest.lastModifiedDate?default("N/A")}</td>
+                        <td colspan="2">
+                            <a href="<@ofbizUrl>/ViewRequest?custRequestId=${custRequest.custRequestId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonView}</a>
+                        </td>
+                    </tr>
+                </tbody>
             </#list>
             <#if !requestList?has_content>
-                <tr><td colspan="9"><h3>${uiLabelMap.OrderNoRequestFound}</h3></td></tr>
+                <div class="alert alert-light" role="alert">
+                    ${uiLabelMap.OrderNoRequestFound}
+                </div>
             </#if>
         </table>
     </div>
