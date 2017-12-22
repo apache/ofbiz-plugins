@@ -22,7 +22,7 @@
     padding:10px;
 }
 .card {
-    margin-bottom:10px!important;
+    margin-bottom:20px!important;
 }
 .d-flex.justify-content-center a {
     margin-bottom: 10px;
@@ -31,10 +31,6 @@
 .card .card-img-top {
     width: auto;
     height: 140px;
-}
-
-.card {
-    height: 100%;
 }
 
 .products-card.col-md-3 {

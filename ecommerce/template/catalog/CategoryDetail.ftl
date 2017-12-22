@@ -69,7 +69,6 @@
     </div>
     </#if>
   </#macro>
-  <br/>
 
   <#if productCategory??>
     <#assign categoryName = categoryContentWrapper.get("CATEGORY_NAME", "html")!/>

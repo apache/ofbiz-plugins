@@ -255,9 +255,8 @@ text-decoration:underline;
 
 #ecom-mainarea {
 background:#FFF;
-margin-top:10px;
+margin-top:20px;
 position:relative;
-width:100%;
 text-align:left;
 flex:1;
 }
