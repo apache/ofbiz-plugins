@@ -181,14 +181,6 @@ if (document.layers)
       }
     }
 
-    for (i = 0; i < doc.applets.length; ++i)
-    {
-      if (doc.applets[i].name && name == doc.applets[i].name)
-      {
-        elmlist[elmlist.length] = doc.applets[i];
-      }
-    }
-
     for (i = 0; i < doc.embeds.length; ++i)
     {
       if (doc.embeds[i].name && name == doc.embeds[i].name)

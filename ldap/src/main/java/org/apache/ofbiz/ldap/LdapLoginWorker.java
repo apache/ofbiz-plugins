@@ -22,14 +22,18 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.*;
+import java.util.Map;
 
 import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.ofbiz.base.util.*;
+import org.apache.ofbiz.base.util.Debug;
+import org.apache.ofbiz.base.util.UtilHttp;
+import org.apache.ofbiz.base.util.UtilMisc;
+import org.apache.ofbiz.base.util.UtilProperties;
+import org.apache.ofbiz.base.util.UtilXml;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.ldap.commons.InterfaceOFBizAuthenticationHandler;
 import org.apache.ofbiz.webapp.control.LoginWorker;
@@ -221,7 +225,7 @@ public class LdapLoginWorker extends LoginWorker {
 
     protected static Element getRootElement(HttpServletRequest request) {
         if (Debug.infoOn()) {
-            Debug.logInfo("Applet config file: " + ldapConfig, module);
+            Debug.logInfo("LDAP config file: " + ldapConfig, module);
         }
         File configFile = new File(ldapConfig);
         FileInputStream configFileIS = null;
