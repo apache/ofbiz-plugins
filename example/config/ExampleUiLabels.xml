@@ -720,7 +720,8 @@
         <value xml:lang="en">Mask Field</value>
     </property>
     <property key="ExampleMaskFieldDescription">
-        <value xml:lang="en">Here is a simple example to mask a field with given mask definition as 'a*-999-a999'.</value>
+        <value xml:lang="en">Here is a simple example to mask a field with given mask definition as 'a*-999-a999'. Default translations: * - Alphanumeric [A-Za-z0-9], 9 - Numeric [0-9*] and a - Alphabets [A-Za-z]
+        </value>
     </property>
     <property key="ExampleMessage">
         <value xml:lang="en">For something interesting make sure you are logged in, try username:admin, password:ofbiz.</value>
