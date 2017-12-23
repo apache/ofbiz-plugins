@@ -2729,7 +2729,6 @@ public class EbayStore {
         } catch (Exception e) {
             result = ServiceUtil.returnError(e.getMessage());
         }
-        System.out.println(orderList);
         result.put("productStoreId", productStoreId);
         result.put("formSelect", "order");
         result.put("orderList", orderList);
