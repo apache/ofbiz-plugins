@@ -18,29 +18,23 @@ under the License.
 -->
 
 <#if canNotView>
-  <p><h3>${uiLabelMap.AccountingCardInfoNotBelongToYou}.</h3></p>&nbsp;
-  <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
+  <h3>${uiLabelMap.AccountingCardInfoNotBelongToYou}.</h3>
+  <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="btn btn-outline-secondary">[${uiLabelMap.CommonGoBack}]</a>
 <#else>
   <#if !giftCard??>
     <h1>${uiLabelMap.AccountingAddNewGiftCard}</h1>
     <form method="post" action="<@ofbizUrl>createGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>"
-        name="editgiftcardform" style="margin: 0;">
+        name="editgiftcardform">
   <#else>
     <h1>${uiLabelMap.AccountingEditGiftCard}</h1>
-    <form method="post" action="<@ofbizUrl>updateGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editgiftcardform"
-        style="margin: 0;">
+    <form method="post" action="<@ofbizUrl>updateGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editgiftcardform">
       <input type="hidden" name="paymentMethodId" value="${paymentMethodId}"/>
-  </#if>&nbsp;
-      <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="button">${uiLabelMap.CommonGoBack}</a>&nbsp;
-      <a href="javascript:document.editgiftcardform.submit()" class="button">${uiLabelMap.CommonSave}</a>
-      <p/>
-      <table width="90%" border="0" cellpadding="2" cellspacing="0">
-        <tr>
-          <td width="26%" align="right" valign="top">
-            <div>${uiLabelMap.AccountingCardNumber}</div>
-          </td>
-          <td width="5">&nbsp;</td>
-          <td width="74%">
+  </#if>
+    <div class="form-group">
+      <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="btn btn-outline-secondary">${uiLabelMap.CommonGoBack}</a>
+      <a href="javascript:document.editgiftcardform.submit()" class="btn btn-outline-secondary">${uiLabelMap.CommonSave}</a>
+    </div>
+            <label>${uiLabelMap.AccountingCardNumber}</label>
             <#if giftCardData?has_content && giftCardData.cardNumber?has_content>
               <#assign pcardNumberDisplay = "">
               <#assign pcardNumber = giftCardData.cardNumber!>
@@ -56,25 +50,19 @@ under the License.
                 </#if>
               </#if>
             </#if>
-            <input type="text" class="inputBox" size="20" maxlength="60" name="cardNumber" value="${pcardNumberDisplay!}"/>
-          </td>
-        </tr>
-        <tr>
-          <td width="26%" align="right" valign="top">
-            <div>${uiLabelMap.AccountingPINNumber}</div>
-          </td>
-          <td width="5">&nbsp;</td>
-          <td width="74%">
-            <input type="password" class="inputBox" size="10" maxlength="60" name="pinNumber"
+            <div class="row">
+              <div class="col-sm-6">
+                <input type="text" class="form-control" name="cardNumber" value="${pcardNumberDisplay!}"/>
+              </div>
+            </div>
+            <label>${uiLabelMap.AccountingPINNumber}</label>
+            <div class="row">
+              <div class="col-sm-6">
+                <input type="password" class="form-control" name="pinNumber"
                 autocomplete="off" value="${giftCardData.pinNumber!}"/>
-          </td>
-        </tr>
-        <tr>
-          <td width="26%" align="right" valign="top">
-            <div>${uiLabelMap.AccountingExpirationDate}</div>
-          </td>
-          <td width="5">&nbsp;</td>
-          <td width="74%">
+              </div>
+            </div>
+            <label>${uiLabelMap.AccountingExpirationDate}</label>
             <#assign expMonth = "">
             <#assign expYear = "">
             <#if giftCardData?? && giftCardData.expireDate??>
@@ -84,7 +72,10 @@ under the License.
                 <#assign expYear = expDate.substring(expDate.indexOf("/")+1)>
               </#if>
             </#if>
-            <select name="expMonth" class="selectBox" onchange="javascript:makeExpDate();">
+            <div class="row">
+            <div class="col-sm-3">
+            <select name="expMonth" class="custom-select form-control" onchange="javascript:makeExpDate();">
+              <option>${uiLabelMap.CommonSelect}</option>
               <#if giftCardData?has_content && expMonth?has_content>
                 <#assign ccExprMonth = expMonth>
               <#else>
@@ -95,7 +86,10 @@ under the License.
               </#if>
               ${screens.render("component://common/widget/CommonScreens.xml#ccmonths")}
             </select>
-            <select name="expYear" class="selectBox" onchange="javascript:makeExpDate();">
+            </div>
+            <div class="col-sm-3">
+            <select name="expYear" class="custom-select form-control" onchange="javascript:makeExpDate();">
+              <option>${uiLabelMap.CommonSelect}</option>
               <#if giftCard?has_content && expYear?has_content>
                 <#assign ccExprYear = expYear>
               <#else>
@@ -106,20 +100,16 @@ under the License.
               </#if>
               ${screens.render("component://common/widget/CommonScreens.xml#ccyears")}
             </select>
-          </td>
-        </tr>
-        <tr>
-          <td width="26%" align="right" valign="top">
-            <div>${uiLabelMap.CommonDescription}</div>
-          </td>
-          <td width="5">&nbsp;</td>
-          <td width="74%">
-            <input type="text" class="inputBox" size="30" maxlength="60" name="description"
+            </div>
+          </div>
+            <label>${uiLabelMap.CommonDescription}</label>
+            <div class="row">
+            <div class="col-sm-6">
+            <input type="text" class="inputBox form-control" maxlength="60" name="description"
                 value="${paymentMethodData.description!}"/>
-          </td>
-        </tr>
-      </table>
-    </form>&nbsp;
-  <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="button">${uiLabelMap.CommonGoBack}</a>&nbsp;
-  <a href="javascript:document.editgiftcardform.submit()" class="button">${uiLabelMap.CommonSave}</a>
+            </div>
+            </div>
+    </form>
+  <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="btn btn-outline-secondary">${uiLabelMap.CommonGoBack}</a>
+  <a href="javascript:document.editgiftcardform.submit()" class="btn btn-outline-secondary">${uiLabelMap.CommonSave}</a>
 </#if>

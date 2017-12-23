@@ -675,5 +675,13 @@ under the License.
         </section>
     </screen>
 
+    <screen name="creditCardFields">
+        <section>
+            <widgets>
+                <platform-specific><html><html-template location="component://ecommerce/template/customer/CreditCardFields.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
 
 </screens>

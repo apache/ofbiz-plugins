@@ -60,7 +60,7 @@ under the License.
   </tbody>
 </#macro>
 
-<div class="card m-3">
+<div class="card">
   <div class="card-header">
     <div class="boxlink">
       <#if "true" == parameters.showSent!>
@@ -76,7 +76,7 @@ under the License.
     <strong>${uiLabelMap.CommonMessages}</strong>
   </div>
   <div class="card-body">
-    <table class="table">
+    <table class="table table-responsive-sm">
     <#if (!receivedCommunicationEvents?has_content && !sentCommunicationEvents?has_content)>
       <div class="alert alert-light" role="alert">
         ${uiLabelMap.EcommerceNoMessages}.

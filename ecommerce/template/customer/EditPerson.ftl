@@ -18,22 +18,21 @@ under the License.
 -->
 <#if person??>
   <h2>${uiLabelMap.PartyEditPersonalInformation}</h2>&nbsp;
-  <form id="editpersonform1" method="post" action="<@ofbizUrl>updatePerson</@ofbizUrl>" name="editpersonform">
+  <form id="editpersonform1" class="mr-2" method="post" action="<@ofbizUrl>updatePerson</@ofbizUrl>" name="editpersonform">
 <#else>
   <h2>${uiLabelMap.PartyAddNewPersonalInformation}</h2>&nbsp;
-  <form id="editpersonform2" method="post" action="<@ofbizUrl>createPerson/${donePage}</@ofbizUrl>"
+  <form id="editpersonform2" class="mr-2" method="post" action="<@ofbizUrl>createPerson/${donePage}</@ofbizUrl>"
       name="editpersonform">
 </#if>
-    <div>
-      &nbsp;<a href='<@ofbizUrl>${donePage}</@ofbizUrl>' class="button">${uiLabelMap.CommonGoBack}</a>
-      &nbsp;<a href="javascript:document.editpersonform.submit()" class="button">${uiLabelMap.CommonSave}</a>
-      <p/>
+    <div class="form-group">
+      <a href='<@ofbizUrl>${donePage}</@ofbizUrl>' class="btn btn-outline-secondary">${uiLabelMap.CommonGoBack}</a>
+      <a href="javascript:document.editpersonform.submit()" class="btn btn-outline-secondary">${uiLabelMap.CommonSave}</a>
+    </div>
       <input type="hidden" name="partyId" value="${person.partyId!}"/>
-      <table width="90%" border="0" cellpadding="2" cellspacing="0">
-        <tr>
-          <td align="right">${uiLabelMap.CommonTitle}</td>
-          <td>
-            <select name="personalTitle" class="selectBox">
+        <div class="row">
+          <div class="col-sm-6">
+            <label>${uiLabelMap.CommonTitle}</label>
+            <select name="personalTitle" class="form-control custom-select">
             <#if personData.personalTitle?has_content >
               <option>${personData.personalTitle}</option>
               <option value="${personData.personalTitle}"> --</option>
@@ -45,91 +44,43 @@ under the License.
               <option>${uiLabelMap.CommonTitleMs}</option>
               <option>${uiLabelMap.CommonTitleDr}</option>
             </select>
-          </td>
-        </tr>
-        <tr>
-          <td align="right">${uiLabelMap.PartyFirstName}</td>
-          <td>
-            <input type="text" class='inputBox' size="30" maxlength="30" name="firstName"
-                value="${personData.firstName!}"/>*
-          </td>
-        </tr>
-        <tr>
-          <td align="right">${uiLabelMap.PartyMiddleInitial}</td>
-          <td>
-            <input type="text" class='inputBox' size="4" maxlength="4" name="middleName"
+          </div>
+          <div class="col-sm-6">
+            <label>${uiLabelMap.PartyHeight}</label>
+            <input type="text" class="form-control" name="height" value="${personData.height!}"/>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+          <label>${uiLabelMap.PartyFirstName}</label>
+            <input type="text" class="form-control" name="firstName"
+                value="${personData.firstName!}"/>
+          </div>
+          <div class="col-sm-6">
+            <label>${uiLabelMap.PartyWeight}</label>
+            <input type="text" class="form-control" name="weight" value="${personData.weight!}"/>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <label>${uiLabelMap.PartyMiddleInitial}</label>
+            <input type="text" class="form-control" name="middleName"
                 value="${personData.middleName!}"/>
-          </td>
-        </tr>
-        <tr>
-          <td align="right">${uiLabelMap.PartyLastName}</td>
-          <td>
-            <input type="text" class='inputBox' size="30" maxlength="30" name="lastName" value="${personData.lastName!}"/>
-            *
-          </td>
-        </tr>
-        <tr>
-          <td align="right">${uiLabelMap.PartySuffix}</td>
-          <td>
-            <input type="text" class='inputBox' size="10" maxlength="30" name="suffix" value="${personData.suffix!}"/>
-          </td>
-        </tr>
-        <tr>
-          <td align="right">${uiLabelMap.PartyNickName}</td>
-          <td>
-            <input type="text" class='inputBox' size="30" maxlength="60" name="nickname" value="${personData.nickname!}"/>
-          </td>
-        </tr>
-        <tr>
-          <td align="right">${uiLabelMap.PartyGender}</td>
-          <td>
-            <select name="gender" class='selectBox'>
-            <#if personData.gender?has_content >
-              <option value="${personData.gender}">
-                <#if "M" == personData.gender >${uiLabelMap.CommonMale}</#if>
-                  <#if "F" == personData.gender >${uiLabelMap.CommonFemale}</#if>
-              </option>
-              <option value="${personData.gender}"> --</option>
-            <#else>
-              <option value="">${uiLabelMap.CommonSelectOne}</option>
-            </#if>
-              <option value="M">${uiLabelMap.CommonMale}</option>
-              <option value="F">${uiLabelMap.CommonFemale}</option>
-            </select>
-          </td>
-        </tr>
-        <tr>
-          <td align="right">${uiLabelMap.PartyBirthDate}</td>
-          <td>
-            <input type="text" class='inputBox' size="11" maxlength="20" name="birthDate"
-                value="${(personData.birthDate.toString())!}"/>
-            <div>${uiLabelMap.CommonFormatDate}</div>
-          </td>
-        </tr>
-        <tr>
-          <td align="right">${uiLabelMap.PartyHeight}</td>
-          <td>
-            <input type="text" class='inputBox' size="30" maxlength="60" name="height" value="${personData.height!}"/>
-          </td>
-        </tr>
-        <tr>
-          <td align="right">${uiLabelMap.PartyWeight}</td>
-          <td>
-            <input type="text" class='inputBox' size="30" maxlength="60" name="weight" value="${personData.weight!}"/>
-          </td>
-        </tr>
-
-        <tr>
-          <td align="right">${uiLabelMap.PartyMaidenName}</td>
-          <td>
-            <input type="text" class='inputBox' size="30" maxlength="60" name="mothersMaidenName"
-                value="${personData.mothersMaidenName!}"/>
-          </td>
-        </tr>
-        <tr>
-          <td align="right">${uiLabelMap.PartyMaritalStatus}</td>
-          <td>
-            <select name="maritalStatus" class='selectBox'>
+          </div>
+          <div class="col-sm-6">
+            <label>${uiLabelMap.PartyMaidenName}</label>
+            <input type="text" class="form-control" name="mothersMaidenName"
+                   value="${personData.mothersMaidenName!}"/>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <label>${uiLabelMap.PartyLastName}</label>
+            <input type="text" class='form-control' name="lastName" value="${personData.lastName!}"/>
+          </div>
+          <div class="col-sm-6">
+            <label>${uiLabelMap.PartyMaritalStatus}</label>
+            <select name="maritalStatus" class="form-control custom-select">
             <#if personData.maritalStatus?has_content>
               <option value="${personData.maritalStatus}">
                 <#if "S" == personData.maritalStatus>${uiLabelMap.PartySingle}</#if>
@@ -144,45 +95,68 @@ under the License.
               <option value="M">${uiLabelMap.PartyMarried}</option>
               <option value="D">${uiLabelMap.PartyDivorced}</option>
             </select>
-          </td>
-        </tr>
-        <tr>
-          <td align="right">${uiLabelMap.PartySocialSecurityNumber}</td>
-          <td>
-            <input type="text" class='inputBox' size="30" maxlength="60" name="socialSecurityNumber"
-                value="${personData.socialSecurityNumber!}"/>
-          </td>
-        </tr>
-        <tr>
-          <td align="right">${uiLabelMap.PartyPassportNumber}</td>
-          <td>
-            <input type="text" class='inputBox' size="30" maxlength="60" name="passportNumber"
-                value="${personData.passportNumber!}"/>
-          </td>
-        </tr>
-        <tr>
-          <td align="right">${uiLabelMap.PartyPassportExpireDate}</td>
-          <td>
-            <input type="text" class='inputBox' size="11" maxlength="20" name="passportExpireDate"
-                value="${personData.passportExpireDate!}"/>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+          <label>${uiLabelMap.PartySuffix}</label>
+          <input type="text" class="form-control" name="suffix" value="${personData.suffix!}"/>
+          </div>
+          <div class="col-sm-6">
+            <label>${uiLabelMap.PartyPassportNumber}</label>
+            <input type="text" class="form-control" name="passportNumber"
+                   value="${personData.passportNumber!}"/>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <label>${uiLabelMap.PartyNickName}</label>
+            <input type="text" class='form-control' name="nickname" value="${personData.nickname!}"/>
+          </div>
+          <div class="col-sm-6">
+            <label>${uiLabelMap.PartyPassportExpireDate}</label>
+            <input type="text" class="form-control" name="passportExpireDate"
+                   value="${personData.passportExpireDate!}"/>
             <div>${uiLabelMap.CommonFormatDate}</div>
-          </td>
-        </tr>
-        <tr>
-          <td align="right">${uiLabelMap.PartyTotalYearsWorkExperience}</td>
-          <td>
-            <input type="text" class='inputBox' size="30" maxlength="60" name="totalYearsWorkExperience"
-                value="${personData.totalYearsWorkExperience!}"/>
-          </td>
-        </tr>
-        <tr>
-          <td align="right">${uiLabelMap.CommonComment}</td>
-          <td>
-            <input type="text" class='inputBox' size="30" maxlength="60" name="comments" value="${personData.comments!}"/>
-          </td>
-        </tr>
-      </table>
-    </div>
-  </form>&nbsp;
-  <a href='<@ofbizUrl>${donePage}</@ofbizUrl>' class="button">${uiLabelMap.CommonGoBack}</a>&nbsp;
-  <a id="editpersonform3" href="javascript:document.editpersonform.submit()" class="button">${uiLabelMap.CommonSave}</a>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <label>${uiLabelMap.PartyGender}</label>
+            <select name="gender" class="form-control custom-select">
+            <#if personData.gender?has_content >
+              <option value="${personData.gender}">
+                <#if "M" == personData.gender >${uiLabelMap.CommonMale}</#if>
+                  <#if "F" == personData.gender >${uiLabelMap.CommonFemale}</#if>
+              </option>
+              <option value="${personData.gender}"> --</option>
+            <#else>
+              <option value="">${uiLabelMap.CommonSelectOne}</option>
+            </#if>
+              <option value="M">${uiLabelMap.CommonMale}</option>
+              <option value="F">${uiLabelMap.CommonFemale}</option>
+            </select>
+          </div>
+          <div class="col-sm-6">
+            <label>${uiLabelMap.PartyTotalYearsWorkExperience}</label>
+            <input type="text" class="form-control" name="totalYearsWorkExperience"
+                   value="${personData.totalYearsWorkExperience!}"/>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <label>${uiLabelMap.PartyBirthDate}</label>
+            <input type="text" class="form-control" name="birthDate"
+                value="${(personData.birthDate.toString())!}"/>
+            <div>${uiLabelMap.CommonFormatDate}</div>
+          </div>
+          <div class="col-sm-6">
+            <label>${uiLabelMap.CommonComment}</label>
+            <input type="text" class="form-control" name="comments" value="${personData.comments!}"/>
+          </div>
+        </div>
+  </form>
+  <div class="form-group">
+    <a href='<@ofbizUrl>${donePage}</@ofbizUrl>' class="btn btn-outline-secondary">${uiLabelMap.CommonGoBack}</a>
+    <a id="editpersonform3" href="javascript:document.editpersonform.submit()" class="btn btn-outline-secondary">${uiLabelMap.CommonSave}</a>
+  </div>

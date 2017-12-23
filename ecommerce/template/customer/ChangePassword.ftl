@@ -16,41 +16,47 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="screenlet">
-  <div class="screenlet-title-bar">
+<div class="card">
+  <div class="card-header">
     <h3>${uiLabelMap.PartyChangePassword}</h3>
-  </div>&nbsp;
-  <a id="CommonGoBack1" href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="button">${uiLabelMap.CommonGoBack}</a>&nbsp;
-  <a id="CommonSave1" href="javascript:document.getElementById('changepasswordform').submit()" class="button">
+  </div>
+  <div class="card-body">
+    <a id="CommonGoBack1" href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="btn btn-outline-secondary">${uiLabelMap.CommonGoBack}</a>
+    <a id="CommonSave1" href="javascript:document.getElementById('changepasswordform').submit()" class="btn btn-outline-secondary">
     ${uiLabelMap.CommonSave}
-  </a>
-  <p/>   
-  <div class="screenlet-body">
+    </a>
     <form id="changepasswordform" method="post" action="<@ofbizUrl>updatePassword/${donePage}</@ofbizUrl>">
-      <fieldset>
-        <div>
-          <label for="currentPassword">${uiLabelMap.PartyOldPassword}</label>
-          <input type="password" class='inputBox' name="currentPassword" autocomplete="off" id="currentPassword" maxlength="20" />*
+          <label class="mt-4 asteriskInput" for="currentPassword">${uiLabelMap.PartyOldPassword}</label>
+          <div class="row">
+            <div class="col-sm-6">
+              <input type="password" class="form-control" name="currentPassword" autocomplete="off" id="currentPassword"/>
+            </div>
+          </div>
+          <label  class="required" for="newPassword">${uiLabelMap.PartyNewPassword}</label>
+          <div class="row">
+            <div class="col-sm-6">
+              <input type="password" class="form-control" name="newPassword" autocomplete="off" id="newPassword"/>
+            </div>
+          </div>
+          <label class="required" for="newPasswordVerify">${uiLabelMap.PartyNewPasswordVerify}</label>
+          <div class="row">
+            <div class="col-sm-6">
+                <input type="password" class="form-control" name="newPasswordVerify" autocomplete="off" id="newPasswordVerify"/>
+            </div>
+          </div>
+          <label class="required" for="passwordHint">${uiLabelMap.PartyPasswordHint}</label>
+          <div class="row">
+            <div class="col-sm-6">
+                <input type="text" class="form-control" name="passwordHint" id="passwordHint" value="${userLoginData.passwordHint!}"/>
+            </div>
+          </div>
+        <div class="form-group">
+          <label>${uiLabelMap.CommonFieldsMarkedAreRequired}</label>
         </div>
-        <div>
-          <label for="newPassword">${uiLabelMap.PartyNewPassword}</label>
-          <input type="password" class='inputBox' name="newPassword" autocomplete="off" id="newPassword" maxlength="20" />*
-        </div>
-        <div>
-          <label for="newPasswordVerify">${uiLabelMap.PartyNewPasswordVerify}</label>
-          <input type="password" class='inputBox' name="newPasswordVerify" autocomplete="off" id="newPasswordVerify" maxlength="20" />*
-        </div>
-        <div>
-          <label for="passwordHint">${uiLabelMap.PartyPasswordHint}</label>
-          <input type="text" class='inputBox' maxlength="100" name="passwordHint"
-              id="passwordHint" value="${userLoginData.passwordHint!}" />
-        </div>
-        <label>${uiLabelMap.CommonFieldsMarkedAreRequired}</label>
-      </fieldset>
     </form>
-    <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="button">[${uiLabelMap.CommonGoBack}]</a>
-    <a href="javascript:document.getElementById('changepasswordform').submit()" class="button">
-      [${uiLabelMap.CommonSave}]
+    <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="btn btn-outline-secondary">${uiLabelMap.CommonGoBack}</a>
+    <a href="javascript:document.getElementById('changepasswordform').submit()" class="btn btn-outline-secondary">
+      ${uiLabelMap.CommonSave}
     </a>
   </div>
 </div>

@@ -33,10 +33,6 @@
     height: 140px;
 }
 
-.products-card.col-md-3 {
-    margin-bottom: 30px !important;
-}
-
 .products-card .card-title a {
     white-space: normal;
 }
@@ -53,9 +49,26 @@
  }
 
 .quick-links a, #paginationBox a {
-color: #000000;
+    color: #000000;
 }
 
 .footer-block {
     background: #f8f9fa;
+}
+
+.cart-image {
+    width:100px;
+    height:100%;
+}
+
+label.required:after {
+    content:"*";
+    color: #ff0000;
+    font-size: larger;
+    margin-left:2px;
+}
+
+/*TODO: We will remove this when we eliminate ecommain.css.*/
+.card .card-body dl.row > dd {
+    margin-left: 0;
 }

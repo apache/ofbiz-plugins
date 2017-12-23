@@ -19,7 +19,7 @@ under the License.
 
 <#if canNotView>
   <h3>${uiLabelMap.AccountingCardInfoNotBelongToYou}.</h3>
-  <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="button">${uiLabelMap.CommonGoBack}</a>
+  <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="btn btn-outline-secondary">${uiLabelMap.CommonGoBack}</a>
 <#else>
   <#if !creditCard??>
     <h2>${uiLabelMap.AccountingAddNewCreditCard}</h2>
@@ -28,61 +28,47 @@ under the License.
   <#else>
     <h2>${uiLabelMap.AccountingEditCreditCard}</h2>
     <form method="post" action="<@ofbizUrl>updateCreditCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editcreditcardform">
-    <div>
       <input type="hidden" name="paymentMethodId" value="${paymentMethodId}"/>
-  </#if>&nbsp;
-  <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="button">${uiLabelMap.CommonGoBack}</a>&nbsp;
-  <a href="javascript:document.editcreditcardform.submit()" class="button">${uiLabelMap.CommonSave}</a>
-  <p/>
-  <table width="90%" border="0" cellpadding="2" cellspacing="0">
-  ${screens.render("component://accounting/widget/CommonScreens.xml#creditCardFields")}
-    <tr>
-      <td align="right" valign="top">${uiLabelMap.PartyBillingAddress}</td>
-      <td>&nbsp;</td>
-      <td>
+  </#if>
+  <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="btn btn-outline-secondary">${uiLabelMap.CommonGoBack}</a>
+  <a href="javascript:document.editcreditcardform.submit()" class="btn btn-outline-secondary">${uiLabelMap.CommonSave}</a>
+    ${screens.render("component://ecommerce/widget/CustomerScreens.xml#creditCardFields")}
+      <label class="mb-2">${uiLabelMap.PartyBillingAddress}</label>
       <#-- Removed because is confusing, can add but would have to come back here with all data populated as before...
       <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="buttontext">
         [Create New Address]</a>&nbsp;&nbsp;
       -->
-        <table width="100%" border="0" cellpadding="1">
           <#assign hasCurrent = false />
           <#if curPostalAddress?has_content>
             <#assign hasCurrent = true />
-            <tr>
-              <td align="right" valign="top">
+            <div class="row">
+              <div class="col-sm-6">
                 <input type="radio" name="contactMechId" value="${curContactMechId}" checked="checked"/>
-              </td>
-              <td valign="top">
-              ${uiLabelMap.PartyUseCurrentAddress}:
+                <label>${uiLabelMap.PartyUseCurrentAddress}:</label>
                 <#list curPartyContactMechPurposes as curPartyContactMechPurpose>
                   <#assign curContactMechPurposeType =
                       curPartyContactMechPurpose.getRelatedOne("ContactMechPurposeType", true) />
-                  <div>
                     ${curContactMechPurposeType.get("description",locale)!}
                     <#if curPartyContactMechPurpose.thruDate??>
                       ((${uiLabelMap.CommonExpire}:${curPartyContactMechPurpose.thruDate.toString()})
                     </#if>
-                  </div>
                 </#list>
-                <div>
                   <#if curPostalAddress.toName??>${uiLabelMap.CommonTo}: ${curPostalAddress.toName}<br/></#if>
                   <#if curPostalAddress.attnName??>${uiLabelMap.PartyAddrAttnName}: ${curPostalAddress.attnName}
-                    <br/>
                   </#if>
-                  ${curPostalAddress.address1!}<br/>
+                  ${curPostalAddress.address1!}
                   <#if curPostalAddress.address2??>${curPostalAddress.address2}<br/></#if>
                   ${curPostalAddress.city}
                   <#if curPostalAddress.stateProvinceGeoId?has_content>,&nbsp;
                     ${curPostalAddress.stateProvinceGeoId}
                   </#if>&nbsp;${curPostalAddress.postalCode}
-                  <#if curPostalAddress.countryGeoId??><br/>${curPostalAddress.countryGeoId}</#if>
+                  <#if curPostalAddress.countryGeoId??>${curPostalAddress.countryGeoId}</#if>
                   <div>(${uiLabelMap.CommonUpdated}:&nbsp;${(curPartyContactMech.fromDate.toString())!})</div>
                   <#if curPartyContactMech.thruDate??>
-                    <div>${uiLabelMap.CommonDelete}:&nbsp;${curPartyContactMech.thruDate.toString()}
+                    ${uiLabelMap.CommonDelete}:&nbsp;${curPartyContactMech.thruDate.toString()}
                   </#if>
-                </div>
-              </td>
-            </tr>
+              </div>
+            </div>
           <#else>
             <#-- <tr>
               <td valign="top" colspan="2">
@@ -102,62 +88,44 @@ under the License.
             <#assign partyContactMechPurposes = postalAddressInfo.partyContactMechPurposes />
             <#assign postalAddress = postalAddressInfo.postalAddress />
             <#assign partyContactMech = postalAddressInfo.partyContactMech />
-            <tr>
-              <td align="right" valign="top">
+                <div class="row">
+                <div class="col-sm-6">
                 <input type="radio" name="contactMechId" value="${contactMech.contactMechId}"/>
-              </td>
-              <td valign="middle">
                 <#list partyContactMechPurposes as partyContactMechPurpose>
                   <#assign contactMechPurposeType =
                       partyContactMechPurpose.getRelatedOne("ContactMechPurposeType", true) />
-                  <div>
                     ${contactMechPurposeType.get("description",locale)!}
                     <#if partyContactMechPurpose.thruDate??>
                       (${uiLabelMap.CommonExpire}:${partyContactMechPurpose.thruDate})
                     </#if>
-                  </div>
                 </#list>
-                <div>
-                  <#if postalAddress.toName??>${uiLabelMap.CommonTo}: ${postalAddress.toName}<br/></#if>
-                  <#if postalAddress.attnName??>${uiLabelMap.PartyAddrAttnName}: ${postalAddress.attnName}<br/></#if>
-                  ${postalAddress.address1!}<br/>
-                  <#if postalAddress.address2??>${postalAddress.address2}<br/></#if>
+                  <#if postalAddress.toName??><label>${uiLabelMap.CommonTo}: ${postalAddress.toName}</label></#if>
+                  <#if postalAddress.attnName??>${uiLabelMap.PartyAddrAttnName}: ${postalAddress.attnName}</#if>
+                  ${postalAddress.address1!}
+                  <#if postalAddress.address2??>${postalAddress.address2}</#if>
                   ${postalAddress.city}
                   <#if postalAddress.stateProvinceGeoId?has_content>
                     ,&nbsp;${postalAddress.stateProvinceGeoId}
-                  </#if>&nbsp;
+                  </#if>
                   ${postalAddress.postalCode}
                   <#if postalAddress.countryGeoId??><br/>${postalAddress.countryGeoId}</#if>
-                </div>
-                <div>(${uiLabelMap.CommonUpdated}:&nbsp;${(partyContactMech.fromDate.toString())!})</div>
+                (${uiLabelMap.CommonUpdated}:&nbsp;${(partyContactMech.fromDate.toString())!})
                 <#if partyContactMech.thruDate??>
-                  <div>${uiLabelMap.CommonDelete}:&nbsp;${partyContactMech.thruDate.toString()}</div>
+                  ${uiLabelMap.CommonDelete}:&nbsp;${partyContactMech.thruDate.toString()}
                 </#if>
-              </td>
-            </tr>
+                </div>
+                </div>
           </#list>
           <#if !postalAddressInfos?has_content && !curContactMech??>
-            <tr>
-              <td colspan="2">
-                <div>${uiLabelMap.PartyNoContactInformation}.</div>
-              </td>
-            </tr>
+                <label>${uiLabelMap.PartyNoContactInformation}.</label>
           </#if>
-          <tr>
-            <td align="right" valign="top">
-              <input type="radio" name="contactMechId" value="_NEW_" <#if !hasCurrent>checked="checked"</#if>/>
-            </td>
-            <td valign="middle">
-              <span>${uiLabelMap.PartyCreateNewBillingAddress}.</span>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
+              <div class="input-group">
+              <input type="radio" class="mr-2" name="contactMechId" value="_NEW_" <#if !hasCurrent>checked="checked"</#if>/>
+              <label>${uiLabelMap.PartyCreateNewBillingAddress}.</label>
+              </div>
 </div>
 </form>
-  &nbsp;<a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="button">${uiLabelMap.CommonGoBack}</a>
-  &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="button">${uiLabelMap.CommonSave}</a>
+  <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="btn btn-outline-secondary">${uiLabelMap.CommonGoBack}</a>
+  <a href="javascript:document.editcreditcardform.submit()" class="btn btn-outline-secondary">${uiLabelMap.CommonSave}</a>
 </#if>
 
