@@ -408,6 +408,9 @@ under the License.
         <field name="newExample" title=" " widget-area-style="smallSubmit" position="1">
             <hyperlink description="${uiLabelMap.ExampleNewExample} (Layered-modal)" target="EditExampleLayer" also-hidden="false" link-type="layered-modal"/>
         </field>
+        <field name="deleteLink" title="${uiLabelMap.FormFieldTitle_confirmButton} ${uiLabelMap.ExampleExample}" widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.CommonDelete}" target="FormWidgetExamples" also-hidden="false" confirmation-message="Are you sure you want to perform this action?"/>
+        </field>
     </form>
 
     <form name="MaskFieldExampleForm" type="single">
