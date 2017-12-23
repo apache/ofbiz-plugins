@@ -72,3 +72,7 @@ label.required:after {
 .card .card-body dl.row > dd {
     margin-left: 0;
 }
+
+.amount {
+    text-align:right;
+}

@@ -222,10 +222,10 @@ under the License.
                 <#else>
                   <th scope="row">${uiLabelMap.CommonQuantity}</th>
                 </#if>
-                <th scope="row">${uiLabelMap.EcommerceUnitPrice}</th>
-                <th scope="row">${uiLabelMap.EcommerceAdjustments}</th>
-                <th scope="row">${uiLabelMap.EcommerceItemTotal}</th>
-                <th scope="row">
+                <th class="amount">${uiLabelMap.EcommerceUnitPrice}</th>
+                <th class="amount">${uiLabelMap.EcommerceAdjustments}</th>
+                <th class="amount">${uiLabelMap.EcommerceItemTotal}</th>
+                <th>
                   <input type="checkbox" name="selectAll" value="0" class="selectAll"/>
                 </th>
               </tr>
@@ -458,9 +458,9 @@ under the License.
                         </#if>
                     </#if>
                   </td>
-                  <td><@ofbizCurrency amount=cartLine.getDisplayPrice() isoCode=shoppingCart.getCurrency()/></td>
-                  <td><@ofbizCurrency amount=cartLine.getOtherAdjustments() isoCode=shoppingCart.getCurrency()/></td>
-                  <td><@ofbizCurrency amount=cartLine.getDisplayItemSubTotal() isoCode=shoppingCart.getCurrency()/></td>
+                  <td class="amount"><@ofbizCurrency amount=cartLine.getDisplayPrice() isoCode=shoppingCart.getCurrency()/></td>
+                  <td class="amount"><@ofbizCurrency amount=cartLine.getOtherAdjustments() isoCode=shoppingCart.getCurrency()/></td>
+                  <td class="amount"><@ofbizCurrency amount=cartLine.getDisplayItemSubTotal() isoCode=shoppingCart.getCurrency()/></td>
                   <td>
                     <#if !cartLine.getIsPromo()>
                       <input type="checkbox" name="selectedItem" value="${cartLineIndex}" class="selectAllChild"/>
@@ -471,26 +471,23 @@ under the License.
                 </tr>
               </#list>
             </tbody>
-          </table>
-          <table class="table table-responsive-sm">
-            <thead class="thead-light">
-             <tr>
-               <th colspan="3">
-                 Summary:
-               </th>
-             </tr>
-            </thead>
+          <tfoot>
+            <tr class="table-primary">
+              <th colspan="8">
+                Summary:
+              </th>
+            </tr>
             <#if shoppingCart.getAdjustments()?has_content>
               <tr>
-                <th>${uiLabelMap.CommonSubTotal}:</th>
-                <td colspan="3">
+                <th colspan="6">${uiLabelMap.CommonSubTotal}:</th>
+                <td class="amount" colspan="1">
                   <@ofbizCurrency amount=shoppingCart.getDisplaySubTotal() isoCode=shoppingCart.getCurrency()/>
                 </td>
               </tr>
               <#if (shoppingCart.getDisplayTaxIncluded() > 0.0)>
                 <tr>
-                  <th>${uiLabelMap.OrderSalesTaxIncluded}:</th>
-                  <td colspan="3">
+                  <th colspan="6">${uiLabelMap.OrderSalesTaxIncluded}:</th>
+                  <td class="amount" colspan="1">
                     <@ofbizCurrency amount=shoppingCart.getDisplayTaxIncluded() isoCode=shoppingCart.getCurrency()/>
                   </td>
                 </tr>
@@ -498,7 +495,7 @@ under the License.
               <#list shoppingCart.getAdjustments() as cartAdjustment>
                 <#assign adjustmentType = cartAdjustment.getRelatedOne("OrderAdjustmentType", true) />
                 <tr>
-                  <th>
+                  <th colspan="6">
                     ${uiLabelMap.EcommerceAdjustment} - ${adjustmentType.get("description",locale)!}
                     <#if cartAdjustment.productPromoId?has_content>
                       <a href="<@ofbizUrl>showPromotionDetails?productPromoId=${cartAdjustment.productPromoId}</@ofbizUrl>">
@@ -506,7 +503,7 @@ under the License.
                       </a>
                     </#if>:
                   </th>
-                  <td colspan="2">
+                  <td class="amount" colspan="1">
                     <@ofbizCurrency amount=Static["org.apache.ofbiz.order.order.OrderReadHelper"]
                         .calcOrderAdjustment(cartAdjustment,
                         shoppingCart.getSubTotal()) isoCode=shoppingCart.getCurrency()/>
@@ -515,28 +512,28 @@ under the License.
               </#list>
             </#if>
             <tr>
-              <th colspan="2">${uiLabelMap.EcommerceCartTotal}:</th>
-              <td>
+              <th colspan="6">${uiLabelMap.EcommerceCartTotal}:</th>
+              <td class="amount" colspan="1">
                 <@ofbizCurrency amount=shoppingCart.getDisplayGrandTotal() isoCode=shoppingCart.getCurrency()/>
               </td>
             </tr>
             <#if itemsFromList>
               <tr>
-                <td colspan="3">L - ${uiLabelMap.EcommerceItemsfromShopingList}.</td>
+                <td colspan="8">L - ${uiLabelMap.EcommerceItemsfromShopingList}.</td>
               </tr>
             </#if>
             <#if promoItems>
               <tr>
-                <td colspan="3"><span class="badge badge-success">P</span> - ${uiLabelMap.EcommercePromotionalItems}.</td>
+                <td colspan="8"><span class="badge badge-success">P</span> - ${uiLabelMap.EcommercePromotionalItems}.</td>
               </tr>
             </#if>
             <#if !itemsFromList && !promoItems>
               <tr>
-                <td colspan="3">&nbsp;</td>
+                <td colspan="8">&nbsp;</td>
               </tr>
             </#if>
             <tr>
-              <td colspan="3">
+              <td colspan="8">
                 <#if sessionAttributes.userLogin?has_content && sessionAttributes.userLogin.userLoginId != "anonymous">
                   <select name="shoppingListId" class="selectBox">
                     <#if shoppingLists?has_content>
@@ -561,7 +558,7 @@ under the License.
               </td>
             </tr>
             <tr>
-              <td colspan="3">
+              <td colspan="8">
                 <#if sessionAttributes.userLogin?has_content && sessionAttributes.userLogin.userLoginId != "anonymous">
                   &nbsp;&nbsp;
                   <a href="<@ofbizUrl>createCustRequestFromCart</@ofbizUrl>" class="btn btn-outline-secondary btn-sm">
@@ -579,7 +576,7 @@ under the License.
               </td>
             </tr>
             <tr>
-              <td>
+              <td colspan="8">
               <label class="form-check-label">
                 <input type="checkbox" onclick="javascript:document.cartform.submit()"
                     name="alwaysShowcart" <#if shoppingCart.viewCartOnAdd()>checked="checked"</#if>/>
@@ -587,7 +584,8 @@ under the License.
               </label>
               </td>
             </tr>
-          </table>
+          </tfoot>
+        </table>
       </form>
     <#else>
       <h2>${uiLabelMap.EcommerceYourShoppingCartEmpty}.</h2>
