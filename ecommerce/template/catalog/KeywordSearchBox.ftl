@@ -19,7 +19,7 @@ under the License.
 
 <div id="keywordsearchbox" class="card">
   <div class="card-header">
-    ${uiLabelMap.ProductSearchCatalog}</li>
+    ${uiLabelMap.ProductSearchCatalog}
   </div>
   <div class="card-body">
     <form name="keywordsearchform" id="keywordsearchbox_keywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>">

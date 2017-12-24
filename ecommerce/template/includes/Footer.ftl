@@ -29,7 +29,7 @@ under the License.
       <img src="<@ofbizContentUrl>/images/valid-xhtml10.png</@ofbizContentUrl>" alt="Valid XHTML 1.0!"/>
     </a>
   </div>
-  <div class="p-2">
+  <div class="p-2 text-center">
     <a href="//ofbiz.apache.org">${uiLabelMap.EcommerceAboutUs}</a>
     <div>Copyright &copy; 2001-${nowTimestamp?string("yyyy")} The Apache Software Foundation -
       <a href="//www.apache.org">www.apache.org</a>

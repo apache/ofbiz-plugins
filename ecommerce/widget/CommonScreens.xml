@@ -59,7 +59,6 @@ under the License.
                 <set field="layoutSettings.styleSheets[+0]" value="/common/js/jquery/plugins/datetimepicker/jquery-ui-timepicker-addon-1.6.3.min.css" global="true" />
 
                 <set field="layoutSettings.styleSheets[+0]" value="/ecommerce/css/bootstrap.min.css" global="true" />
-                <set field="layoutSettings.styleSheets[+0]" value="/ecommerce/css/custom.css" global="true" />
                 <set field="layoutSettings.javaScripts[]" value="/ecommerce/js/popper.js" global="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/ecommerce/js/bootstrap.min.js" global="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/ecommerce/js/bootstrap.bundle.min.js" global="true"/>

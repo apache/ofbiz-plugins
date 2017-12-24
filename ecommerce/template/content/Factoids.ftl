@@ -32,7 +32,7 @@ under the License.
 
 <div id="factoids" class="card">
   <div class="card-header">
-    ${uiLabelMap.EcommerceFactoids}</li>
+    ${uiLabelMap.EcommerceFactoids}
   </div>
   <div class="card-body">
     <ul>

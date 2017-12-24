@@ -23,7 +23,6 @@ under the License.
     <VisualTheme visualThemeId="EC_DEFAULT" visualThemeSetId="ECOMMERCE" description="OFBiz Ecommerce Standard Floating Layout"/>
     <delete>
     <VisualThemeResource visualThemeId="EC_DEFAULT" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/ecommerce/images/blog.css" sequenceId="01"/>
-    <VisualThemeResource visualThemeId="EC_DEFAULT" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/ecommerce/images/ecommain.css" sequenceId="02"/>
     <VisualThemeResource visualThemeId="EC_DEFAULT" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/contentimages/css/contentForum.css" sequenceId="03"/>
     <VisualThemeResource visualThemeId="EC_DEFAULT" resourceTypeEnumId="VT_SHORTCUT_ICON" resourceValue="/images/ofbiz.ico" sequenceId="04"/>
     <VisualThemeResource visualThemeId="EC_DEFAULT" resourceTypeEnumId="VT_HDR_IMAGE_URL" resourceValue="/images/ofbiz_logo.png" sequenceId="05"/>

@@ -16,88 +16,103 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-<nav class="navbar navbar-light bg-light">
-  <a class="navbar-brand" href="#">
-    <#if sessionAttributes.overrideLogo??>
-      <img src="<@ofbizContentUrl>${sessionAttributes.overrideLogo}</@ofbizContentUrl>" alt="Logo"/>
-    <#elseif catalogHeaderLogo??>
-      <img src="<@ofbizContentUrl>${catalogHeaderLogo}</@ofbizContentUrl>" alt="Logo"/>
-    <#elseif layoutSettings.VT_HDR_IMAGE_URL?has_content>
-      <img src="<@ofbizContentUrl>${layoutSettings.VT_HDR_IMAGE_URL}</@ofbizContentUrl>" alt="Logo"/>
-    </#if>
-  </a>
-  <div class="navbar-text">
-    <#if !productStore??>
-      <h2>${uiLabelMap.EcommerceNoProductStore}</h2>
-    </#if>
-    <#if (productStore.title)??>
-      <h2>${productStore.title}</h2>
-    </#if>
-    <#if (productStore.subtitle)??>
-      <div id="company-subtitle">${productStore.subtitle}</div>
-    </#if>
-    <div id="welcome-message">
-      <#if sessionAttributes.autoName?has_content>
-        ${uiLabelMap.CommonWelcome}&nbsp;${sessionAttributes.autoName}!
-        (${uiLabelMap.CommonNotYou}?&nbsp;
-        <a href="<@ofbizUrl>autoLogout</@ofbizUrl>" class="linktext">${uiLabelMap.CommonClickHere}</a>)
-      <#else>
-        ${uiLabelMap.CommonWelcome}!
-      </#if>
+<div class="container-fluid">
+  <div class="row align-items-center">
+    <div class="col">
+      <a class="navbar-brand" href="#">
+          <#if sessionAttributes.overrideLogo??>
+            <img src="<@ofbizContentUrl>${sessionAttributes.overrideLogo}</@ofbizContentUrl>" alt="Logo"/>
+          <#elseif catalogHeaderLogo??>
+            <img src="<@ofbizContentUrl>${catalogHeaderLogo}</@ofbizContentUrl>" alt="Logo"/>
+          <#elseif layoutSettings.VT_HDR_IMAGE_URL?has_content>
+            <img src="<@ofbizContentUrl>${layoutSettings.VT_HDR_IMAGE_URL}</@ofbizContentUrl>" alt="Logo"/>
+          </#if>
+        </a>
+    </div>
+    <div class="col text-center d-none d-lg-block">
+      <#if !productStore??>
+            <h3>${uiLabelMap.EcommerceNoProductStore}</h3>
+          </#if>
+          <#if (productStore.title)??>
+            <h3>${productStore.title}</h3>
+           </#if>
+          <#if (productStore.subtitle)??>
+            <div id="company-subtitle">${productStore.subtitle}</div>
+          </#if>
+          <div>
+            <#if sessionAttributes.autoName?has_content>
+              <span class="text-success">${uiLabelMap.CommonWelcome}&nbsp;${sessionAttributes.autoName}!</span>
+              (${uiLabelMap.CommonNotYou}?&nbsp;
+              <a href="<@ofbizUrl>autoLogout</@ofbizUrl>" class="linktext">${uiLabelMap.CommonClickHere}</a>)
+            <#else>
+              ${uiLabelMap.CommonWelcome}!
+            </#if>
+          </div>
+    </div>
+    <div class="col">
+      ${screens.render("component://ecommerce/widget/CartScreens.xml#microcart")}
     </div>
   </div>
-  <span class="navbar-text">
-    ${screens.render("component://ecommerce/widget/CartScreens.xml#microcart")}
-  </span>
+</div>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarContent">
+    <ul class="navbar-nav mr-auto">
+      <#if userLogin?has_content && userLogin.userLoginId != "anonymous">
+        <li class="nav-item">
+          <a class="nav-link" href="<@ofbizUrl>logout</@ofbizUrl>">${uiLabelMap.CommonLogout}</a>
+        </li>
+      <#else>
+        <li class="nav-item">
+          <a class="nav-link" href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>">${uiLabelMap.CommonLogin}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="<@ofbizUrl>newcustomer</@ofbizUrl>">${uiLabelMap.EcommerceRegister}</a>
+        </li>
+      </#if>
+      <li class="nav-item">
+        <#if userLogin?has_content && userLogin.userLoginId != "anonymous">
+          <a class="nav-link" href="<@ofbizUrl>contactus</@ofbizUrl>">${uiLabelMap.CommonContactUs}</a>
+        <#else>
+          <a class="nav-link" href="<@ofbizUrl>AnonContactus</@ofbizUrl>">${uiLabelMap.CommonContactUs}</a>
+        </#if>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="<@ofbizUrl>main</@ofbizUrl>">${uiLabelMap.CommonMain}</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav ml-auto">
+      <#if !userLogin?has_content || (userLogin.userLoginId)! != "anonymous">
+        <li class="nav-item">
+          <a class="nav-link" href="<@ofbizUrl>viewprofile</@ofbizUrl>">${uiLabelMap.CommonProfile}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="<@ofbizUrl>messagelist</@ofbizUrl>">${uiLabelMap.CommonMessages}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="<@ofbizUrl>ListQuotes</@ofbizUrl>">${uiLabelMap.OrderOrderQuotes}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="<@ofbizUrl>ListRequests</@ofbizUrl>">${uiLabelMap.OrderRequests}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="<@ofbizUrl>editShoppingList</@ofbizUrl>">${uiLabelMap.EcommerceShoppingLists}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="<@ofbizUrl>orderhistory</@ofbizUrl>">${uiLabelMap.EcommerceOrderHistory}</a>
+        </li>
+      </#if>
+      <#if catalogQuickaddUse>
+        <li class="nav-item"><a class="nav-link" href="<@ofbizUrl>quickadd</@ofbizUrl>">${uiLabelMap.CommonQuickAdd}</a></li>
+      </#if>
+    </ul>
+  </div>
 </nav>
 
-<div class="d-flex justify-content-end bd-highlight quick-links ml-2 mr-2">
-  <#if userLogin?has_content && userLogin.userLoginId != "anonymous">
-    <div class="p-2 bd-highlight">
-      <a href="<@ofbizUrl>logout</@ofbizUrl>">${uiLabelMap.CommonLogout}</a>
-    </div>
-  <#else>
-    <div class="p-2 bd-highlight">
-      <a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>">${uiLabelMap.CommonLogin}</a>
-    </div>
-    <div class="p-2 bd-highlight">
-      <a href="<@ofbizUrl>newcustomer</@ofbizUrl>">${uiLabelMap.EcommerceRegister}</a>
-    </div>
-  </#if>
-  <div class="p-2 bd-highlight">
-    <#if userLogin?has_content && userLogin.userLoginId != "anonymous">
-      <a href="<@ofbizUrl>contactus</@ofbizUrl>">${uiLabelMap.CommonContactUs}</a>
-    <#else>
-      <a href="<@ofbizUrl>AnonContactus</@ofbizUrl>">${uiLabelMap.CommonContactUs}</a>
-    </#if>
-    </div>
-  <div class="mr-auto p-2 bd-highlight">
-    <a href="<@ofbizUrl>main</@ofbizUrl>">${uiLabelMap.CommonMain}</a>
-  </div>
 
-  <!-- NOTE: these are in reverse order because they are stacked right to left instead of left to right -->
-  <#if !userLogin?has_content || (userLogin.userLoginId)! != "anonymous">
-    <div class="p-2 bd-highlight">
-      <a href="<@ofbizUrl>viewprofile</@ofbizUrl>">${uiLabelMap.CommonProfile}</a>
-    </div>
-    <div class="p-2 bd-highlight">
-      <a href="<@ofbizUrl>messagelist</@ofbizUrl>">${uiLabelMap.CommonMessages}</a>
-    </div>
-    <div class="p-2 bd-highlight">
-      <a href="<@ofbizUrl>ListQuotes</@ofbizUrl>">${uiLabelMap.OrderOrderQuotes}</a>
-    </div>
-    <div class="p-2 bd-highlight">
-      <a href="<@ofbizUrl>ListRequests</@ofbizUrl>">${uiLabelMap.OrderRequests}</a>
-    </div>
-    <div class="p-2 bd-highlight">
-      <a href="<@ofbizUrl>editShoppingList</@ofbizUrl>">${uiLabelMap.EcommerceShoppingLists}</a>
-    </div>
-    <div class="p-2 bd-highlight">
-      <a href="<@ofbizUrl>orderhistory</@ofbizUrl>">${uiLabelMap.EcommerceOrderHistory}</a>
-    </div>
-  </#if>
-  <#if catalogQuickaddUse>
-    <div class="p-2 bd-highlight"><a href="<@ofbizUrl>quickadd</@ofbizUrl>">${uiLabelMap.CommonQuickAdd}</a></div>
-  </#if>
-</div>
+
+
+

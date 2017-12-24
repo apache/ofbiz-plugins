@@ -17,9 +17,13 @@
  * under the License.
  */
 
-#ecomMainContainer{
-    margin-top:10px!important;
+#ecom-mainarea{
     padding:10px;
+    background: #FFF;
+    margin-top: 20px;
+    position: relative;
+    text-align: left;
+    flex: 1;
 }
 .card {
     margin-bottom:20px!important;
@@ -68,11 +72,20 @@ label.required:after {
     margin-left:2px;
 }
 
-/*TODO: We will remove this when we eliminate ecommain.css.*/
-.card .card-body dl.row > dd {
-    margin-left: 0;
-}
-
 .amount {
     text-align:right;
 }
+
+.navbar-dark .navbar-nav .nav-link {
+    color:#ffffff!important;
+}
+.navbar-dark .nav-item:hover, .navbar-dark .nav-item .nav-link:hover{
+    background: #555555!important;
+}
+
+#parentContainer {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
