@@ -25,14 +25,18 @@ under the License.
 </#if>
 
 <#if (shoppingCartSize > 0)>
-<div class="screenlet">
-  <h3>${uiLabelMap.CommonCheckoutAnonymous}</h3>
+<div class="d-flex justify-content-center">
+<div class="card">
+  <div class="card-header">${uiLabelMap.CommonCheckoutAnonymous}</div>
+  <div class="card-body">
   <p>${uiLabelMap.CommonCheckoutAnonymousMsg}:</p>
-  <ul>
+  <ul class="list-unstyled">
     <li><a href="<@ofbizUrl>setCustomer</@ofbizUrl>">${uiLabelMap.OrderCheckout}</a></li>
     <li><a href="<@ofbizUrl>quickAnonCheckout</@ofbizUrl>">${uiLabelMap.OrderCheckoutQuick}</a></li>
     <li><a href="<@ofbizUrl>anonOnePageCheckout</@ofbizUrl>">${uiLabelMap.EcommerceOnePageCheckout}</a></li>
   </ul>
+  </div>
+</div>
 </div>
 </#if>
 
