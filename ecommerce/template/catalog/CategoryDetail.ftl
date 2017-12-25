@@ -132,7 +132,6 @@
 
               <#assign numCol = numCol?default(1)/>
               <#assign numCol = numCol?number/>
-              <#assign tabCol = 1/>
 
 
               <div
@@ -140,11 +139,6 @@
                 style="position: relative; margin-top: ${height}px;"
               </#if>
               class="productsummary-container<#if (numCol?int > 1)> matrix</#if>">
-
-
-              <#if (numCol?int > 1)>
-                <!-- yaha table tag tha-->
-              </#if>
 
               <div class="row row-eq-height">
 
@@ -155,15 +149,10 @@
                     ${setRequestAttribute("listIndex", productCategoryMember_index)}
                     ${screens.render(productsummaryScreen)}
                     <#else>
-                      <#if (tabCol?int = 1)><tr></#if>
-
                       ${setRequestAttribute("optProductId", productCategoryMember.productId)}
                       ${setRequestAttribute("productCategoryMember", productCategoryMember)}
                       ${setRequestAttribute("listIndex", productCategoryMember_index)}
                       ${screens.render(productsummaryScreen)}
-
-                      <#if (tabCol?int = numCol)><!-- yaha tr tha--></#if>
-                      <#assign tabCol = tabCol+1/><#if (tabCol?int > numCol)><#assign tabCol = 1/></#if>
                   </#if>
                 </#list>
 

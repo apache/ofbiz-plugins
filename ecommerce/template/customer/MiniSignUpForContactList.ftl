@@ -83,7 +83,7 @@ under the License.
             </select>
           </div>
           <input type="submit" class="form-control btn btn-outline-secondary" value="${uiLabelMap.EcommerceSubscribe}"/>
-          <input type="button" class"form-control btn btn-outline-secondary" value="${uiLabelMap.EcommerceUnsubscribe}"
+          <input type="button" class="form-control btn btn-outline-secondary" value="${uiLabelMap.EcommerceUnsubscribe}"
               onclick="javascript:unsubscribeByContactMech();"/>
       </form>
     <#else>

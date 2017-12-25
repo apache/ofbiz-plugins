@@ -84,7 +84,7 @@ under the License.
                 </div>
                 <div class="form-group col-md-6">
                   <label for="lastName">${uiLabelMap.PartyLastName}*
-                  <span id="advice-required-lastName" style="display:none"class="errorMessage">
+                  <span id="advice-required-lastName" style="display:none" class="errorMessage">
                     (${uiLabelMap.CommonRequired})
                   </span>
                   </label>
@@ -162,7 +162,7 @@ under the License.
                 </#if>
                 <div class="form-group col-md-4">
                   <label for="emailAddress">${uiLabelMap.PartyEmailAddress}*
-                    <span id="advice-required-emailAddress" style="display:none"class="errorMessage">
+                    <span id="advice-required-emailAddress" style="display:none" class="errorMessage">
                       (${uiLabelMap.CommonRequired})
                     </span>
                   </label>
@@ -198,7 +198,7 @@ under the License.
                 </div>
                 <div class="form-group col-md-3">
                   <label for="shipToPostalCode">${uiLabelMap.PartyZipCode}*
-                    <span id="advice-required-shipToPostalCode" class="custom-advice errorMessage"style="display:none">
+                    <span id="advice-required-shipToPostalCode" class="custom-advice errorMessage" style="display:none">
                       (${uiLabelMap.CommonRequired})
                     </span>
                   </label>

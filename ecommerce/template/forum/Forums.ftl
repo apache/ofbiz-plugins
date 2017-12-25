@@ -19,7 +19,7 @@ under the License.
 
 <div id="browse-forums" class="card">
   <div class="card-header">
-    ${uiLabelMap.ProductBrowseForums}</li>
+    ${uiLabelMap.ProductBrowseForums}
   </div>
   <div class="card-body">
     <ul>

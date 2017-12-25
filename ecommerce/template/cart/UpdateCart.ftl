@@ -35,7 +35,7 @@ under the License.
       </thead>
       <tfoot>
         <tr id="completedCartSubtotalRow">
-          <th id="subTotal" scope="row" colspan="4">${uiLabelMap.CommonSubtotal}</th>
+          <td id="subTotal" scope="row" colspan="4">${uiLabelMap.CommonSubtotal}</td>
           <td headers="subTotal" colspan="2" class="amount" id="completedCartSubTotal">
             <@ofbizCurrency amount=shoppingCart.getSubTotal() isoCode=shoppingCart.getCurrency() />
           </td>
@@ -47,26 +47,26 @@ under the License.
               .calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal()) />
         </#list>
         <tr id="completedCartDiscountRow">
-          <th id="productDiscount" scope="row" colspan="4">${uiLabelMap.ProductDiscount}</th>
+          <td id="productDiscount" scope="row" colspan="4">${uiLabelMap.ProductDiscount}</td>
           <td headers="productDiscount" colspan="2" class="amount text-success" id="completedCartDiscount">
             <input type="hidden" value="${orderAdjustmentsTotal}" id="initializedCompletedCartDiscount" />
             <@ofbizCurrency amount=orderAdjustmentsTotal isoCode=shoppingCart.getCurrency() />
           </td>
         </tr>
         <tr>
-          <th id="shippingAndHandling" scope="row" colspan="4">${uiLabelMap.OrderShippingAndHandling}</th>
+          <td id="shippingAndHandling" scope="row" colspan="4">${uiLabelMap.OrderShippingAndHandling}</td>
           <td headers="shippingAndHandling" colspan="2" class="amount" id="completedCartTotalShipping">
             <@ofbizCurrency amount=shoppingCart.getTotalShipping() isoCode=shoppingCart.getCurrency() />
           </td>
         </tr>
         <tr>
-          <th id="salesTax" scope="row" colspan="4">${uiLabelMap.OrderSalesTax}</th>
+          <td id="salesTax" scope="row" colspan="4">${uiLabelMap.OrderSalesTax}</td>
           <td headers="salesTax" colspan="2" class="amount" id="completedCartTotalSalesTax">
             <@ofbizCurrency amount=shoppingCart.getTotalSalesTax() isoCode=shoppingCart.getCurrency() />
           </td>
         </tr>
         <tr>
-          <th id="grandTotal" scope="row" colspan="4">${uiLabelMap.OrderGrandTotal}</th>
+          <td id="grandTotal" scope="row" colspan="4">${uiLabelMap.OrderGrandTotal}</td>
           <td headers="grandTotal" colspan="2" class="amount" id="completedCartDisplayGrandTotal">
             <strong><@ofbizCurrency amount=shoppingCart.getDisplayGrandTotal() isoCode=shoppingCart.getCurrency() /></strong>
           </td>
@@ -128,14 +128,14 @@ under the License.
           <tfoot>
             <tr class="thead-light"><th colspan="7" >Summary</th></tr>
             <tr>
-              <th scope="row" colspan="5">${uiLabelMap.CommonSubtotal}</th>
-              <td class="amount"id="cartSubTotal" >
+              <td scope="row" colspan="5">${uiLabelMap.CommonSubtotal}</td>
+              <td class="amount" id="cartSubTotal" >
                 <@ofbizCurrency amount=shoppingCart.getSubTotal() isoCode=shoppingCart.getCurrency() />
               </td>
               <td>&nbsp;</td>
             </tr>
             <tr>
-              <th scope="row" colspan="5">${uiLabelMap.ProductDiscount}</th>
+              <td scope="row" colspan="5">${uiLabelMap.ProductDiscount}</td>
               <td id="cartDiscountValue" class="amount text-success">
                 <#assign orderAdjustmentsTotal = 0  />
                 <#list shoppingCart.getAdjustments() as cartAdjustment>
@@ -148,21 +148,21 @@ under the License.
               <td>&nbsp;</td>
             </tr>
             <tr>
-              <th scope="row" colspan="5">${uiLabelMap.OrderShippingAndHandling}</th>
+              <td scope="row" colspan="5">${uiLabelMap.OrderShippingAndHandling}</td>
               <td id="cartTotalShipping" class="amount">
                 <@ofbizCurrency amount=shoppingCart.getTotalShipping() isoCode=shoppingCart.getCurrency() />
               </td>
               <td>&nbsp;</td>
             </tr>
             <tr>
-              <th scope="row" colspan="5">${uiLabelMap.OrderSalesTax}</th>
+              <td scope="row" colspan="5">${uiLabelMap.OrderSalesTax}</td>
               <td id="cartTotalSalesTax" class="amount">
                 <@ofbizCurrency amount=shoppingCart.getTotalSalesTax() isoCode=shoppingCart.getCurrency() />
               </td>
               <td>&nbsp;</td>
             </tr>
             <tr>
-              <th scope="row" colspan="5">${uiLabelMap.OrderGrandTotal}</th>
+              <td scope="row" colspan="5">${uiLabelMap.OrderGrandTotal}</td>
               <td id="cartDisplayGrandTotal" class="amount">
                 <strong><@ofbizCurrency amount=shoppingCart.getDisplayGrandTotal() isoCode=shoppingCart.getCurrency() /></strong>
               </td>

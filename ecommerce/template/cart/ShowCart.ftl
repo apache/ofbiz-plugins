@@ -334,7 +334,7 @@ under the License.
                             Static["org.apache.ofbiz.product.product.ProductWorker"].getGwpAlternativeOptionName(
                             dispatcher, delegator, alternativeOptionProductId, requestAttributes.locale) />
                           <option
-                              value="<@ofbizUrl>setDesiredAlternateGwpProductId?alternateGwpProductId=${alternativeOptionProductId}&alternateGwpLine=${cartLineIndex}</@ofbizUrl>">
+                              value="<@ofbizUrl>setDesiredAlternateGwpProductId?alternateGwpProductId=${alternativeOptionProductId}&amp;alternateGwpLine=${cartLineIndex}</@ofbizUrl>">
                             ${alternativeOptionName?default(alternativeOptionProductId)}
                           </option>
                         </#list>
@@ -533,7 +533,7 @@ under the License.
               <td colspan="8">
                 <#if sessionAttributes.userLogin?has_content && sessionAttributes.userLogin.userLoginId != "anonymous">
                   <div class="input-group">
-                  <select class="form-control" name="shoppingListId" class="selectBox">
+                  <select class="form-control selectBox" name="shoppingListId">
                     <#if shoppingLists?has_content>
                       <#list shoppingLists as shoppingList>
                         <option value="${shoppingList.shoppingListId}">${shoppingList.listName}</option>
