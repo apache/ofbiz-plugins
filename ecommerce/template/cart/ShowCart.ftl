@@ -73,7 +73,6 @@ under the License.
 <#assign fixedAssetExist = shoppingCart.containAnyWorkEffortCartItems() />
 <#-- change display format when rental items exist in the shoppingcart -->
 <div>
-  <h2>
     <#if ((sessionAttributes.lastViewedProducts)?has_content && sessionAttributes.lastViewedProducts?size > 0)>
       <#assign continueLink = "/product?product_id=" + sessionAttributes.lastViewedProducts.get(0) />
     <#else>
@@ -92,7 +91,6 @@ under the License.
       </span>
     </#if>
     ${uiLabelMap.CommonQuickAdd}
-  </h2>
   <div>
     <div>
       <form method="post"
@@ -171,7 +169,6 @@ under the License.
         </#if>
       </ul>
     </div>
-    <br />
     <div class="row mb-2">
       <div class="col-xl-12">
         <span class="h3">${uiLabelMap.OrderShoppingCart}</span>
@@ -188,13 +185,13 @@ under the License.
       <form method="post" action="<@ofbizUrl>modifycart</@ofbizUrl>" name="cartform">
           <input type="hidden" name="removeSelected" value="false" />
           <table class="table  table-responsive-sm">
-            <thead class="thead-dark">
+            <thead class="thead-light">
               <tr>
                 <th></th>
                 <th scope="row">${uiLabelMap.OrderProduct}</th>
                 <#if asslGiftWraps?has_content && productStore.showCheckoutGiftOptions! != "N">>
                   <th scope="row">
-                    <select class="selectBox" name="GWALL" onchange="javascript:gwAll(this);">
+                    <select class="form-control" name="GWALL" onchange="javascript:gwAll(this);">
                       <option value="">${uiLabelMap.EcommerceGiftWrapAllItems}</option>
                       <option value="NO^">${uiLabelMap.EcommerceNoGiftWrap}</option>
                       <#list allgiftWraps as option>
@@ -279,12 +276,12 @@ under the License.
                       <#-- ${cartLineIndex} - -->
 
                     <div class="media-body">
-                      <h3 class="mt-0">
+                      <h4 class="mt-0">
                       <a href="<@ofbizCatalogAltUrl productId=parentProductId/>"
                           >${cartLine.getProductId()} -
                         ${cartLine.getName(dispatcher)!}
                       </a>
-                       </h3>
+                      </h4>
                         ${cartLine.getDescription(dispatcher)!}
                       <#-- For configurable products, the selected options are shown -->
                       <#if cartLine.getConfigWrapper()??>
@@ -472,7 +469,7 @@ under the License.
               </#list>
             </tbody>
           <tfoot>
-            <tr class="table-primary">
+            <tr class="thead-light">
               <th colspan="8">
                 Summary:
               </th>
@@ -535,7 +532,8 @@ under the License.
             <tr>
               <td colspan="8">
                 <#if sessionAttributes.userLogin?has_content && sessionAttributes.userLogin.userLoginId != "anonymous">
-                  <select name="shoppingListId" class="selectBox">
+                  <div class="input-group">
+                  <select class="form-control" name="shoppingListId" class="selectBox">
                     <#if shoppingLists?has_content>
                       <#list shoppingLists as shoppingList>
                         <option value="${shoppingList.shoppingListId}">${shoppingList.listName}</option>
@@ -544,10 +542,12 @@ under the License.
                     <option value="">---</option>
                     <option value="">${uiLabelMap.OrderNewShoppingList}</option>
                   </select>
-                  &nbsp;&nbsp;
-                  <a href="javascript:addToList();" class="btn btn-outline-secondary btn-sm">
+                  <span class="input-group-btn">
+                  <a href="javascript:addToList();" class="btn btn-outline-secondary">
                     ${uiLabelMap.EcommerceAddSelectedtoList}
-                  </a>&nbsp;&nbsp;
+                  </a>
+                  </span>
+                  </div>
                 <#else>
                   ${uiLabelMap.OrderYouMust}
                   <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="btn btn-outline-secondary btn-sm">
@@ -560,7 +560,6 @@ under the License.
             <tr>
               <td colspan="8">
                 <#if sessionAttributes.userLogin?has_content && sessionAttributes.userLogin.userLoginId != "anonymous">
-                  &nbsp;&nbsp;
                   <a href="<@ofbizUrl>createCustRequestFromCart</@ofbizUrl>" class="btn btn-outline-secondary btn-sm">
                     ${uiLabelMap.OrderCreateCustRequestFromCart}
                   </a>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -588,7 +587,7 @@ under the License.
         </table>
       </form>
     <#else>
-      <h2>${uiLabelMap.EcommerceYourShoppingCartEmpty}.</h2>
+      <h3>${uiLabelMap.EcommerceYourShoppingCartEmpty}.</h3>
     </#if>
 <#-- Copy link bar to bottom to include a link bar at the bottom too -->
     </div>
@@ -597,7 +596,7 @@ under the License.
 <div class="row">
   <div class="col-xl-6">
   <div>
-    <h2>${uiLabelMap.ProductPromoCodes}</h2>
+    <h3>${uiLabelMap.ProductPromoCodes}</h3>
   </div>
   <div>
     <div>
@@ -627,7 +626,7 @@ under the License.
 <#if showPromoText?? && showPromoText>
    <div class="col-xl-6">
     <div>
-      <h2>${uiLabelMap.OrderSpecialOffers}</h2>
+      <h3>${uiLabelMap.OrderSpecialOffers}</h3>
     </div>
     <div>
       <#-- show promotions text -->
@@ -651,7 +650,7 @@ under the License.
 <#if associatedProducts?has_content>
   <div>
     <div>
-      <h2>${uiLabelMap.EcommerceYouMightAlsoIntrested}:</h2>
+      <h3>${uiLabelMap.EcommerceYouMightAlsoIntrested}:</h3>
     </div>
     <div>
       <#-- random complementary products -->
