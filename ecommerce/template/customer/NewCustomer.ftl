@@ -102,8 +102,8 @@ will generally always be reserved for the logo at the top of the page.
   </#if>
 </#macro>
 <div class="d-flex justify-content-center">
-  <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="button">${uiLabelMap.CommonCancel}</a>
-  <a href="javascript:document.getElementById('newuserform').submit()" class="button">${uiLabelMap.CommonSave}</a>
+  <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="btn btn-outline-secondary btn-sm">${uiLabelMap.CommonCancel}</a>&nbsp;
+  <a href="javascript:document.getElementById('newuserform').submit()" class="btn btn-outline-secondary btn-sm">${uiLabelMap.CommonSave}</a>
 </div>
 <div class="d-flex justify-content-center">
 <div class="card p-2 m-3">
@@ -119,7 +119,7 @@ will generally always be reserved for the logo at the top of the page.
     <fieldset>
       <legend>${uiLabelMap.PartyFullName}</legend>
       <input type="hidden" name="emailProductStoreId" value="${productStoreId}"/>
-      <div class="row">
+      <div class="row form-group">
         <div class="col-12">
           <label for="USER_TITLE">${uiLabelMap.CommonTitle}</label>
           <@fieldErrors fieldName="USER_TITLE"/>
@@ -138,7 +138,7 @@ will generally always be reserved for the logo at the top of the page.
         </div>
       </div>
 
-      <div class="row">
+      <div class="row form-group">
         <div class="col-12">
           <label for="USER_FIRST_NAME">${uiLabelMap.PartyFirstName}*</label>
           <@fieldErrors fieldName="USER_FIRST_NAME"/>
@@ -146,7 +146,7 @@ will generally always be reserved for the logo at the top of the page.
         </div>
       </div>
 
-      <div class="row">
+      <div class="row form-group">
         <div class="col-12">
           <label for="USER_MIDDLE_NAME">${uiLabelMap.PartyMiddleInitial}</label>
           <@fieldErrors fieldName="USER_MIDDLE_NAME"/>
@@ -154,7 +154,7 @@ will generally always be reserved for the logo at the top of the page.
         </div>
       </div>
 
-      <div class="row">
+      <div class="row form-group">
         <div class="col-12">
           <label for="USER_LAST_NAME">${uiLabelMap.PartyLastName}*</label>
           <@fieldErrors fieldName="USER_LAST_NAME"/>
@@ -162,7 +162,7 @@ will generally always be reserved for the logo at the top of the page.
         </div>
       </div>
 
-      <div class="row">
+      <div class="row form-group">
         <div class="col-12">
           <label for="USER_SUFFIX">${uiLabelMap.PartySuffix}</label>
           <@fieldErrors fieldName="USER_SUFFIX"/>
@@ -170,9 +170,10 @@ will generally always be reserved for the logo at the top of the page.
           </div>
       </div>
   </fieldset>
+  <hr/>
   <fieldset>
       <legend>${uiLabelMap.PartyEmailAddress}</legend>
-      <div class="row">
+      <div class="row form-group">
         <div class="col-12">
           <label for="CUSTOMER_EMAIL">${uiLabelMap.PartyEmailAddress}*</label>
           <@fieldErrors fieldName="CUSTOMER_EMAIL"/>
@@ -180,7 +181,7 @@ will generally always be reserved for the logo at the top of the page.
             class="form-control form-control-sm" onchange="changeEmail()" onkeyup="changeEmail()"/>
         </div>
       </div>
-      <div class="row">
+      <div class="row form-group">
         <div class="col-12">
           <label for="CUSTOMER_EMAIL_ALLOW_SOL">${uiLabelMap.PartyAllowSolicitation}</label>
           <select name="CUSTOMER_EMAIL_ALLOW_SOL" id="CUSTOMER_EMAIL_ALLOW_SOL" class="form-control form-control-sm">
@@ -200,7 +201,7 @@ will generally always be reserved for the logo at the top of the page.
 
   <fieldset>
     <legend>${uiLabelMap.PartyShippingAddress}</legend>
-    <div class="row">
+    <div class="row form-group">
       <div class="col-12">
         <label for="CUSTOMER_ADDRESS1">${uiLabelMap.PartyAddressLine1}*</label>
         <@fieldErrors fieldName="CUSTOMER_ADDRESS1"/>
@@ -208,7 +209,7 @@ will generally always be reserved for the logo at the top of the page.
           value="${requestParameters.CUSTOMER_ADDRESS1!}" class="form-control form-control-sm"/>
       </div>
     </div>
-    <div class="row">
+    <div class="row form-group">
       <div class="col-12">
         <label for="CUSTOMER_ADDRESS2">${uiLabelMap.PartyAddressLine2}</label>
         <@fieldErrors fieldName="CUSTOMER_ADDRESS2"/>
@@ -216,14 +217,14 @@ will generally always be reserved for the logo at the top of the page.
             value="${requestParameters.CUSTOMER_ADDRESS2!}" class="form-control form-control-sm"/>
       </div>
     </div>
-    <div class="row">
+    <div class="row form-group">
       <div class="col-12">
         <label for="CUSTOMER_CITY">${uiLabelMap.PartyCity}*</label>
         <@fieldErrors fieldName="CUSTOMER_CITY"/>
         <input type="text" name="CUSTOMER_CITY" id="CUSTOMER_CITY" value="${requestParameters.CUSTOMER_CITY!}" class="form-control form-control-sm"/>
       </div>
     </div>
-    <div class="row">
+    <div class="row form-group">
       <div class="col-12">
         <label for="CUSTOMER_POSTAL_CODE">${uiLabelMap.PartyZipCode}*</label>
         <@fieldErrors fieldName="CUSTOMER_POSTAL_CODE"/>
@@ -231,7 +232,7 @@ will generally always be reserved for the logo at the top of the page.
           value="${requestParameters.CUSTOMER_POSTAL_CODE!}" class="form-control form-control-sm"/>
       </div>
     </div>
-    <div class="row">
+    <div class="row form-group">
       <div class="col-12">
         <label for="customerCountry">${uiLabelMap.CommonCountry}*</label>
         <@fieldErrors fieldName="CUSTOMER_COUNTRY"/>
@@ -248,14 +249,14 @@ will generally always be reserved for the logo at the top of the page.
         </select>
       </div>
     </div>
-    <div class="row">
+    <div class="row form-group">
       <div class="col-12">
         <label for="customerState">${uiLabelMap.PartyState}*</label>
         <@fieldErrors fieldName="CUSTOMER_STATE"/>
         <select name="CUSTOMER_STATE" id="newuserform_stateProvinceGeoId" class="form-control form-control-sm"></select>
       </div>
     </div>
-    <div class="row">
+    <div class="row form-group">
       <div class="col-12">
         <label for="CUSTOMER_ADDRESS_ALLOW_SOL">${uiLabelMap.PartyAllowAddressSolicitation}</label>
         <@fieldErrors fieldName="CUSTOMER_ADDRESS_ALLOW_SOL"/>
@@ -275,13 +276,13 @@ will generally always be reserved for the logo at the top of the page.
   </fieldset>
   </div>
 </div>
-
+<hr/>
   <fieldset>
     <legend>${uiLabelMap.PartyPhoneNumbers}</legend>
     <table class="table table-responsive"
         summary="Tabular form for entering multiple telecom numbers for different purposes.
         Each row allows user to enter telecom number for a purpose">
-      <thead>
+      <thead class="thead-light">
         <tr>
           <th></th>
           <th>${uiLabelMap.CommonCountry}</th>
@@ -396,7 +397,8 @@ will generally always be reserved for the logo at the top of the page.
       </tbody>
     </table>
   </fieldset>
-  <div class="row">
+  <hr/>
+  <div class="row form-group">
   <div class="col-6">
   <fieldset>
     <legend><#if getUsername>${uiLabelMap.CommonUsername}</#if></legend>
@@ -406,14 +408,14 @@ will generally always be reserved for the logo at the top of the page.
         <div class="row">
         <div class="form-check col-12">
           <label class="form-check-label">
-            <input type="checkbox" class="checkbox" name="UNUSEEMAIL" class="form-check-input" id="UNUSEEMAIL" value="on"
+            <input type="checkbox" name="UNUSEEMAIL" class="checkbox form-check-input" id="UNUSEEMAIL" value="on"
                 onclick="setEmailUsername();" onfocus="setLastFocused(this);"/> ${uiLabelMap.EcommerceUseEmailAddress}
           </label>
         </div>
         </div>
       </#if>
 
-      <div class="row">
+      <div class="row form-group">
       <div class="col-12">
         <label for="USERNAME">${uiLabelMap.CommonUsername}*</label>
         <#if requestParameters.preferredUsername?has_content>
@@ -433,7 +435,7 @@ will generally always be reserved for the logo at the top of the page.
   <fieldset>
     <legend>${uiLabelMap.CommonPassword}</legend>
     <#if createAllowPassword>
-      <div class="row">
+      <div class="row form-group">
       <div class="col-12">
         <label for="PASSWORD">${uiLabelMap.CommonPassword}*</label>
         <@fieldErrors fieldName="PASSWORD"/>
@@ -441,7 +443,7 @@ will generally always be reserved for the logo at the top of the page.
       </div>
       </div>
 
-      <div class="row">
+      <div class="row form-group">
       <div class="col-12">
         <label for="CONFIRM_PASSWORD">${uiLabelMap.PartyRepeatPassword}*</label>
         <@fieldErrors fieldName="CONFIRM_PASSWORD"/>
@@ -449,7 +451,7 @@ will generally always be reserved for the logo at the top of the page.
       </div>
       </div>
 
-      <div class="row">
+      <div class="row form-group">
       <div class="col-12">
         <label for="PASSWORD_HINT">${uiLabelMap.PartyPasswordHint}</label>
         <@fieldErrors fieldName="PASSWORD_HINT"/>
@@ -476,8 +478,8 @@ class name of "button". No other class names should be used to style
 button actions.
 ------------------------------------------------------------------------------->
 <div class="d-flex justify-content-center">
-  <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="button">${uiLabelMap.CommonCancel}</a>&nbsp;
-  <a href="javascript:document.getElementById('newuserform').submit()" class="button">${uiLabelMap.CommonSave}</a>
+  <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="btn btn-outline-secondary btn-sm">${uiLabelMap.CommonCancel}</a>&nbsp;
+  <a href="javascript:document.getElementById('newuserform').submit()" class="btn btn-outline-secondary btn-sm">${uiLabelMap.CommonSave}</a>
 </div>
 
 <script type="text/javascript">
