@@ -23,8 +23,8 @@ under the License.
     </div>
     <div class="card-body">
     <#if quoteList?has_content>
-        <table class="table">
-            <thead>
+        <table class="table table-responsive-sm">
+            <thead class="thead-light">
                 <tr>
                     <th>
                         ${uiLabelMap.OrderQuote} ${uiLabelMap.CommonNbr}
