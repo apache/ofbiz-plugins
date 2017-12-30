@@ -547,11 +547,9 @@ under the License.
                 <script location="component://order/groovyScripts/entry/catalog/Category.groovy"/>
                 <set field="fromSetSessionLocale" value="${groovy: return request.getAttribute('fromSetSessionLocale');}"/>
                 <set field="visualThemeId" from-field="productStore.visualThemeId" default-value="EC_DEFAULT"/>
-                <service service-name="getVisualThemeResources">
-                    <field-map field-name="visualThemeId"/>
-                    <field-map field-name="themeResources" from-field="layoutSettings"/>
-                </service>
-                <set field="layoutSettings" from-field="themeResources" default-value="${layoutSettings}" global="true"/>
+                <set field="visualTheme" value="${groovy: org.apache.ofbiz.widget.model.ThemeFactory.getVisualThemeFromId(visualThemeId)}"/>
+                <set field="modelTheme" value="${groovy: visualTheme.getModelTheme()}"/>
+                <set field="layoutSettings" value="${groovy: modelTheme.getThemeResources()}"/>
             </actions>
             <widgets>
                 <section>
