@@ -47,6 +47,9 @@ import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ModelService;
 import org.apache.ofbiz.webapp.stats.VisitHandler;
 import org.w3c.dom.Element;
+import org.apache.ofbiz.service.ServiceUtil;
+import org.apache.ofbiz.base.util.Debug;
+
 
 /**
  * The abstract Authentication Handler.
@@ -129,6 +132,9 @@ public abstract class AbstractOFBizAuthenticationHandler implements InterfaceOFB
 
         try {
             loginResult = dispatcher.runSync("userLogin", UtilMisc.toMap("login.username", username, "login.password", password, "visitId", visitId, "locale", UtilHttp.getLocale(request)));
+            if (ServiceUtil.isError(loginResult)) {
+             throw new Exception(ServiceUtil.getErrorMessage(loginResult));
+            }
         } catch (GenericServiceException e) {
             throw new GenericServiceException(e.getLocalizedMessage());
         }

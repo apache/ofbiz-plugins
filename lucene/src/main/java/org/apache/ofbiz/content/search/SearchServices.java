@@ -36,6 +36,7 @@ import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.ServiceUtil;
 import org.apache.ofbiz.service.LocalDispatcher;
+import java.util.HashMap;
 
 /**
  * SearchServices Class
@@ -77,7 +78,10 @@ public class SearchServices {
 
             for (GenericValue productFeatureAppl : productFeatureAppls) {
                 try {
-                    dispatcher.runSync("indexProduct", UtilMisc.toMap("productId", productFeatureAppl.get("productId")));
+                    Map<String, Object> result = dispatcher.runSync("indexProduct", UtilMisc.toMap("productId", productFeatureAppl.get("productId")));
+                    if (ServiceUtil.isError(result)) {
+                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                    }
                 } catch (GenericServiceException e) {
                     Debug.logError(e, module);
                 }
@@ -91,9 +95,16 @@ public class SearchServices {
 
     public static Map<String, Object> indexProductsFromProductAssoc(DispatchContext dctx, Map<String, ? extends Object> context) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
+        Map<String, Object> result = new HashMap<String, Object>();
         try {
-            dispatcher.runSync("indexProduct", UtilMisc.toMap("productId", context.get("productId")));
-            dispatcher.runSync("indexProduct", UtilMisc.toMap("productId", context.get("productIdTo")));
+            result = dispatcher.runSync("indexProduct", UtilMisc.toMap("productId", context.get("productId")));
+            if (ServiceUtil.isError(result)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+            }
+            result = dispatcher.runSync("indexProduct", UtilMisc.toMap("productId", context.get("productIdTo")));
+            if (ServiceUtil.isError(result)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+            }
         } catch (GenericServiceException e) {
             Debug.logError(e, module);
         }
@@ -103,13 +114,17 @@ public class SearchServices {
     public static Map<String, Object> indexProductsFromDataResource(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
+        Map<String, Object> result = new HashMap<String, Object>();
         try {
             List<GenericValue> contents = EntityQuery.use(delegator).from("Content").where("dataResourceId", context.get("dataResourceId")).queryList();
             for (GenericValue content : contents) {
-                dispatcher.runSync("indexProductsFromContent",
+                result = dispatcher.runSync("indexProductsFromContent",
                         UtilMisc.toMap(
                                 "userLogin", context.get("userLogin"),
                                 "contentId", content.get("contentId")));
+                if (ServiceUtil.isError(result)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                }
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
@@ -125,7 +140,10 @@ public class SearchServices {
             List<GenericValue> productContents = EntityQuery.use(delegator).from("ProductContent").where("contentId", context.get("contentId")).queryList();
             for (GenericValue productContent : productContents) {
                 try {
-                    dispatcher.runSync("indexProduct", UtilMisc.toMap("productId", productContent.get("productId")));
+                    Map<String, Object> result = dispatcher.runSync("indexProduct", UtilMisc.toMap("productId", productContent.get("productId")));
+                    if (ServiceUtil.isError(result)) {
+                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                    }
                 } catch (GenericServiceException e) {
                     Debug.logError(e, module);
                 }
@@ -162,9 +180,13 @@ public class SearchServices {
 
     private static void indexProductCategoryMembers(String productCategoryId, Delegator delegator, LocalDispatcher dispatcher) throws GenericEntityException {
         List<GenericValue> productCategoryMembers = EntityQuery.use(delegator).from("ProductCategoryMember").where("productCategoryId", productCategoryId).queryList();
+        Map<String, Object> result;
         for (GenericValue productCategoryMember : productCategoryMembers) {
             try {
-                dispatcher.runSync("indexProduct", UtilMisc.toMap("productId", productCategoryMember.get("productId")));
+                result = dispatcher.runSync("indexProduct", UtilMisc.toMap("productId", productCategoryMember.get("productId")));
+                if (ServiceUtil.isError(result)) {
+                    throw new GenericEntityException(ServiceUtil.getErrorMessage(result));
+                }
             } catch (GenericServiceException e) {
                 Debug.logError(e, module);
             }

@@ -133,7 +133,13 @@ public class EbayEvents {
                 leavefeedback.put("AqItemAsDescribedId", AqItemAsDescribedId);
                 // Call service
                 try {
-                    dispatcher.runSync("leaveFeedback", leavefeedback);
+                    Map<String, Object> resultMap = dispatcher.runSync("leaveFeedback", leavefeedback);
+                    if (ServiceUtil.isError(resultMap)) {
+                        String errorMessage = ServiceUtil.getErrorMessage(resultMap);
+                        request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                        Debug.logError(errorMessage, module);
+                        return "error";
+                    }
                 } catch (GenericServiceException e) {
                     Debug.logError(e, module);
                     request.setAttribute("_ERROR_MESSAGE_","Exception: ".concat(e.getMessage()));
@@ -880,7 +886,13 @@ public class EbayEvents {
                                     inMap.put("availableToPromiseListing", new BigDecimal(newAtp));
                                     inMap.put("userLogin", userLogin);
                                     try {
-                                        dispatcher.runSync("updateEbayProductStoreInventory", inMap);
+                                        Map<String, Object> resultMap = dispatcher.runSync("updateEbayProductStoreInventory", inMap);
+                                        if (ServiceUtil.isError(resultMap)) {
+                                            String errorMessage = ServiceUtil.getErrorMessage(resultMap);
+                                            request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                                            Debug.logError(errorMessage, module);
+                                            return "error";
+                                        }
                                     } catch (GenericServiceException ex) {
                                         Debug.logError(ex.getMessage(), module);
                                         request.setAttribute("_ERROR_MESSAGE_","Exception: ".concat(ex.getMessage()));
@@ -921,6 +933,12 @@ public class EbayEvents {
                             try {
                                 prodMap.put("statusId", "ITEM_CREATED");
                                 Map<String, Object> result = dispatcher.runSync("createEbayProductListing", prodMap);
+                                if (ServiceUtil.isError(result)) {
+                                    String errorMessage = ServiceUtil.getErrorMessage(result);
+                                    request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                                    Debug.logError(errorMessage, module);
+                                    return "error";
+                                }
                                 productListingId = result.get("productListingId").toString();
                                 itemObj.put("productListingId", productListingId);
                                 itemObj.put("isSaved", "Y");
@@ -933,7 +951,13 @@ public class EbayEvents {
                             productListingId = itemObj.get("productListingId").toString();
                             prodMap.put("productListingId", productListingId);
                             try {
-                                dispatcher.runSync("updateEbayProductListing", prodMap);
+                                Map<String, Object> result = dispatcher.runSync("updateEbayProductListing", prodMap);
+                                if (ServiceUtil.isError(result)) {
+                                    String errorMessage = ServiceUtil.getErrorMessage(result);
+                                    request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                                    Debug.logError(errorMessage, module);
+                                    return "error";
+                                }
                             } catch (GenericServiceException ex) {
                                 Debug.logError(ex.getMessage(), module);
                                 request.setAttribute("_ERROR_MESSAGE_","Exception: ".concat(ex.getMessage()));
@@ -949,7 +973,13 @@ public class EbayEvents {
                             ebayProdAttrMap.put("userLogin", userLogin);
                             ebayProdAttrMap.put("attributeMapList", attributeMapList);
                             try {
-                                dispatcher.runSync("setEbayProductListingAttribute", ebayProdAttrMap);
+                                Map<String, Object> result = dispatcher.runSync("setEbayProductListingAttribute", ebayProdAttrMap);
+                                if (ServiceUtil.isError(result)) {
+                                    String errorMessage = ServiceUtil.getErrorMessage(result);
+                                    request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                                    Debug.logError(errorMessage, module);
+                                    return "error";
+                                }
                             } catch (GenericServiceException ex) {
                                 Debug.logError(ex.getMessage(), module);
                                 request.setAttribute("_ERROR_MESSAGE_","Exception: ".concat(ex.getMessage()));
@@ -1091,7 +1121,13 @@ public class EbayEvents {
             }
             for (Map<String,Object> itemObj : listAddItem) {
                 updateQuantityInventoryProduct(itemObj, productStoreId, locale, delegator, dispatcher, userLogin);
-                dispatcher.runSync("exportProductEachItem", UtilMisc.toMap("itemObject", itemObj));
+                Map<String, Object> result = dispatcher.runSync("exportProductEachItem", UtilMisc.toMap("itemObject", itemObj));
+                if (ServiceUtil.isError(result)) {
+                    String errorMessage = ServiceUtil.getErrorMessage(result);
+                    request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                    Debug.logError(errorMessage, module);
+                    return "error";
+                }
             }
         } catch (GenericServiceException gse) {
             Debug.logError(e.getMessage(), module);

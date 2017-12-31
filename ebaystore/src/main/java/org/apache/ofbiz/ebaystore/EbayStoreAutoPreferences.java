@@ -241,6 +241,7 @@ public class EbayStoreAutoPreferences {
         ApiContext apiContext = EbayStoreHelper.getApiContext(productStoreId, locale, delegator);
 
         try {
+            Map<String, Object> resultMap = new HashMap<String, Object>();
             GenericValue ebayProductStorePref = null;
             String comments = null;
             String autoPrefJobId = null;
@@ -281,9 +282,21 @@ public class EbayStoreAutoPreferences {
             context.put("condition2", comments);
             context.put("condition3", null);
             if (UtilValidate.isEmpty(ebayProductStorePref)) {
-                dispatcher.runSync("createEbayProductStorePref", context);
+                resultMap = dispatcher.runSync("createEbayProductStorePref", context);
+                if (ServiceUtil.isError(resultMap)) {
+                    String errorMessage = ServiceUtil.getErrorMessage(resultMap);
+                    request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                    Debug.logError(errorMessage, module);
+                    return "error";
+                }
             } else {
-                dispatcher.runSync("updateEbayProductStorePref", context);
+                resultMap = dispatcher.runSync("updateEbayProductStorePref", context);
+                if (ServiceUtil.isError(resultMap)) {
+                    String errorMessage = ServiceUtil.getErrorMessage(resultMap);
+                    request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                    Debug.logError(errorMessage, module);
+                    return "error";
+                }
             }
             request.setAttribute("_EVENT_MESSAGE_", "Setting Automated Positive Feedback for Buyers Success with site " + apiContext.getSite().value());
 
@@ -411,12 +424,18 @@ public class EbayStoreAutoPreferences {
                 if (nowTime.after(fromDate) && nowTime.before(thruDate)) {
                     serviceMap.put("productStoreId", productStoreId);
                     Map<String, Object> eBayUserLogin = dispatcher.runSync("getEbayStoreUser", serviceMap);
+                    if (ServiceUtil.isError(eBayUserLogin)) {
+                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(eBayUserLogin));
+                    }
                     String eBayUserLoginId = (String) eBayUserLogin.get("userLoginId");
                     GenericValue party = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", eBayUserLoginId).queryOne();
                     String partyId = party.getString("partyId");
                     //save sold items to OFbBiz product entity
-                    Map<String, Object> resultService = dispatcher.runSync("getEbaySoldItems", serviceMap);
-                    List<Map<String, Object>> soldItems = UtilGenerics.checkList(resultService.get("soldItems"));
+                    Map<String, Object> serviceResult = dispatcher.runSync("getEbaySoldItems", serviceMap);
+                    if (ServiceUtil.isError(resultService)) {
+                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultService));
+                    }
+                    List<Map<String, Object>> soldItems = UtilGenerics.checkList(serviceResult.get("soldItems"));
                     if (soldItems.size() != 0) {
                         for (int itemCount = 0; itemCount < soldItems.size(); itemCount++) {
                             Map<String, Object> soldItemMap = soldItems.get(itemCount);
@@ -428,7 +447,10 @@ public class EbayStoreAutoPreferences {
                                     inMap.put("productTypeId", "EBAY_ITEM");
                                     inMap.put("internalName", "eBay Item " + soldItemMap.get("title"));
                                     inMap.put("userLogin", userLogin);
-                                    dispatcher.runSync("createProduct", inMap);
+                                    Map<String, Object> result = dispatcher.runSync("createProduct", inMap);
+                                    if (ServiceUtil.isError(result)) {
+                                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                                    }
                                     // ProductRole (VENDOR)
                                     List<GenericValue> productRole = EntityQuery.use(delegator).from("ProductRole").where("partyId", partyId, "productId", soldItemMap.get("itemId"), "roleTypeId", "VENDOR").queryList();
                                     if (productRole.size() == 0) {
@@ -438,7 +460,10 @@ public class EbayStoreAutoPreferences {
                                         addRole.put("partyId", partyId);
                                         addRole.put("fromDate", UtilDateTime.nowTimestamp());
                                         addRole.put("userLogin", userLogin);
-                                        dispatcher.runSync("addPartyToProduct", addRole);
+                                        Map<String, Object> result = dispatcher.runSync("addPartyToProduct", addRole);
+                                        if (ServiceUtil.isError(result)) {
+                                            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                                        }
                                     }
                                 }
                             }
@@ -448,8 +473,11 @@ public class EbayStoreAutoPreferences {
                     serviceMap = new HashMap<String, Object>();
                     serviceMap.put("userLogin", userLogin);
                     serviceMap.put("productStoreId", productStoreId);
-                    resultService = dispatcher.runSync("getEbayActiveItems", serviceMap);
-                    List<Map<String, Object>> activeItems = UtilGenerics.checkList(resultService.get("activeItems"));
+                    serviceResult = dispatcher.runSync("getEbayActiveItems", serviceMap);
+                    if (ServiceUtil.isError(resultService)) {
+                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultService));
+                    }
+                    List<Map<String, Object>> activeItems = UtilGenerics.checkList(serviceResult.get("activeItems"));
                     List<String> activeItemMaps = new LinkedList<String>();
                     if (activeItems.size() != 0) {
                         for (int itemCount = 0; itemCount < activeItems.size(); itemCount++) {
@@ -535,8 +563,11 @@ public class EbayStoreAutoPreferences {
                 Map<String, Object> serviceMap = new HashMap<String, Object>();
                 serviceMap.put("productStoreId", productStoreId);
                 serviceMap.put("userLogin", userLogin);
-                Map<String, Object> resultService = dispatcher.runSync("getEbaySoldItems", serviceMap);
-                List<Map<String, Object>> soldItems = UtilGenerics.checkList(resultService.get("soldItems"));
+                Map<String, Object> serviceResult = dispatcher.runSync("getEbaySoldItems", serviceMap);
+                if (ServiceUtil.isError(resultService)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultService));
+                }
+                List<Map<String, Object>> soldItems = UtilGenerics.checkList(serviceResult.get("soldItems"));
                 // check items to dispute
                 List<Map<String, Object>> itemsToDispute = new LinkedList<Map<String,Object>>();
                 for (int itemCount = 0; itemCount < soldItems.size(); itemCount++) {
@@ -608,8 +639,11 @@ public class EbayStoreAutoPreferences {
                 Map<String, Object> serviceMap = new HashMap<String, Object>();
                 serviceMap.put("productStoreId", productStoreId);
                 serviceMap.put("userLogin", userLogin);
-                Map<String, Object> resultService = dispatcher.runSync("getEbaySoldItems", serviceMap);
-                List<Map<String, Object>> soldItems = UtilGenerics.checkList(resultService.get("soldItems"));
+                Map<String, Object> serviceResult = dispatcher.runSync("getEbaySoldItems", serviceMap);
+                if (ServiceUtil.isError(resultService)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultService));
+                }
+                List<Map<String, Object>> soldItems = UtilGenerics.checkList(serviceResult.get("soldItems"));
                 // check items to dispute
                 List<Map<String, Object>> itemsToDispute = new LinkedList<Map<String,Object>>();
                 for (int itemCount = 0; itemCount < soldItems.size(); itemCount++) {
@@ -925,6 +959,9 @@ public class EbayStoreAutoPreferences {
         try {
             GenericValue userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "system").queryOne();
             Map<String, Object> resultSold =  dispatcher.runSync("getEbaySoldItems", UtilMisc.toMap("productStoreId", productStoreId, "userLogin", userLogin));
+            if (ServiceUtil.isError(resultSold)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultSold));
+            }
             List<Map<String, Object>> soldItems = UtilGenerics.checkList(resultSold.get("soldItems"));
             if (soldItems.size() != 0) {
                 for (int i = 0; i < soldItems.size(); i++) {
@@ -940,6 +977,9 @@ public class EbayStoreAutoPreferences {
                         serviceMap.put("productStoreId", productStoreId);
                         serviceMap.put("itemId", item.get("itemId").toString());
                         Map<String, Object> resultBid =  dispatcher.runSync("getEbayAllBidders", serviceMap);
+                        if (ServiceUtil.isError(resultBid)) {
+                            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultBid));
+                        }
                         List<Map<String, Object>> allBidders =  UtilGenerics.checkList(resultBid.get("allBidders"));
 
                         if (allBidders.size() != 0) {
@@ -996,6 +1036,9 @@ public class EbayStoreAutoPreferences {
             GenericValue userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "system").queryOne();
             context.put("userLogin", userLogin);
             Map<String, Object> resultSold =  dispatcher.runSync("getEbaySoldItems", context);
+            if (ServiceUtil.isError(resultSold)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultSold));
+            }
             List<Map<String, Object>> soldItems = UtilGenerics.checkList(resultSold.get("soldItems"));
             if (soldItems.size() != 0) {
                 for (int i = 0; i < soldItems.size(); i++) {
@@ -1132,7 +1175,10 @@ public class EbayStoreAutoPreferences {
                 itemObject.put("productListingId", ebayProductListing.getString("productListingId"));
                 inMap.put("itemObject", itemObject);
                 inMap.put("userLogin", userLogin);
-                Map<String, Object>result = dispatcher.runSync("exportProductEachItem", inMap);
+                Map<String, Object> result = dispatcher.runSync("exportProductEachItem", inMap);
+                if (ServiceUtil.isError(result)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                }
                 String success = (String) result.get("responseMessage");
                 if ("success".equals(success)) {
                     String duration = item.getListingDuration();

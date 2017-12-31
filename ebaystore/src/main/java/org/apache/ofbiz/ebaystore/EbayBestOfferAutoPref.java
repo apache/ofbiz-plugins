@@ -101,80 +101,119 @@ public class EbayBestOfferAutoPref {
                 ebayCondition1.put("prefCondId", prefCondId1);
                 ebayCondition1.put("parentPrefCondId", parentPrefCondId);
                 ebayCondition1.put("description", "Kind of Price Field");
-                dispatcher.runSync("createEbayProductStorePrefCond", ebayCondition1);
+                result = dispatcher.runSync("createEbayProductStorePrefCond", ebayCondition1);
+                if (ServiceUtil.isError(result)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                }
 
                 String prefCondId2 = delegator.getNextSeqId("EbayProductStorePrefCond");
                 ebayCondition2.put("prefCondId", prefCondId2);
                 ebayCondition2.put("parentPrefCondId", parentPrefCondId);
                 ebayCondition2.put("description", "acceptBestOfferValue Field");
-                dispatcher.runSync("createEbayProductStorePrefCond", ebayCondition2);
+                result = dispatcher.runSync("createEbayProductStorePrefCond", ebayCondition2);
+                if (ServiceUtil.isError(result)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                }
 
                 String prefCondId3 = delegator.getNextSeqId("EbayProductStorePrefCond");
                 ebayCondition3.put("prefCondId", prefCondId3);
                 ebayCondition3.put("parentPrefCondId", parentPrefCondId);
                 ebayCondition3.put("description", "rejectOffer Field");
-                dispatcher.runSync("createEbayProductStorePrefCond", ebayCondition3);
+                result = dispatcher.runSync("createEbayProductStorePrefCond", ebayCondition3);
+                if (ServiceUtil.isError(result)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                }
 
                 String prefCondId4 = delegator.getNextSeqId("EbayProductStorePrefCond");
                 ebayCondition4.put("prefCondId", prefCondId4);
                 ebayCondition4.put("parentPrefCondId", parentPrefCondId);
                 ebayCondition4.put("description", "ignoreOfferMessage Field");
-                dispatcher.runSync("createEbayProductStorePrefCond", ebayCondition4);
+                result = dispatcher.runSync("createEbayProductStorePrefCond", ebayCondition4);
+                if (ServiceUtil.isError(result)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                }
 
                 String prefCondId5 = delegator.getNextSeqId("EbayProductStorePrefCond");
                 ebayCondition5.put("prefCondId", prefCondId5);
                 ebayCondition5.put("parentPrefCondId", parentPrefCondId);
                 ebayCondition5.put("description", "rejectGreaterEnable Field");
-                dispatcher.runSync("createEbayProductStorePrefCond", ebayCondition5);
+                result = dispatcher.runSync("createEbayProductStorePrefCond", ebayCondition5);
+                if (ServiceUtil.isError(result)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                }
 
                 String prefCondId6 = delegator.getNextSeqId("EbayProductStorePrefCond");
                 ebayCondition6.put("prefCondId", prefCondId6);
                 ebayCondition6.put("parentPrefCondId", parentPrefCondId);
                 ebayCondition6.put("description", "greaterValue Field");
-                dispatcher.runSync("createEbayProductStorePrefCond", ebayCondition6);
+                result = dispatcher.runSync("createEbayProductStorePrefCond", ebayCondition6);
+                if (ServiceUtil.isError(result)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                }
 
                 String prefCondId7 = delegator.getNextSeqId("EbayProductStorePrefCond");
                 ebayCondition7.put("prefCondId", prefCondId7);
                 ebayCondition7.put("parentPrefCondId", parentPrefCondId);
                 ebayCondition7.put("description", "lessValue Field");
-                dispatcher.runSync("createEbayProductStorePrefCond", ebayCondition7);
+                result = dispatcher.runSync("createEbayProductStorePrefCond", ebayCondition7);
+                if (ServiceUtil.isError(result)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                }
 
                 String prefCondId8 = delegator.getNextSeqId("EbayProductStorePrefCond");
                 ebayCondition8.put("prefCondId", prefCondId8);
                 ebayCondition8.put("parentPrefCondId", parentPrefCondId);
                 ebayCondition8.put("description", "rejectGreaterMsg Field");
-                dispatcher.runSync("createEbayProductStorePrefCond", ebayCondition8);
+                result = dispatcher.runSync("createEbayProductStorePrefCond", ebayCondition8);
+                if (ServiceUtil.isError(result)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                }
 
                 String prefCondId9 = delegator.getNextSeqId("EbayProductStorePrefCond");
                 ebayCondition9.put("prefCondId", prefCondId9);
                 ebayCondition9.put("parentPrefCondId", parentPrefCondId);
                 ebayCondition9.put("description", "rejectLessEnable Field");
-                dispatcher.runSync("createEbayProductStorePrefCond", ebayCondition9);
+                result = dispatcher.runSync("createEbayProductStorePrefCond", ebayCondition9);
+                if (ServiceUtil.isError(result)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                }
 
                 String prefCondId10 = delegator.getNextSeqId("EbayProductStorePrefCond");
                 ebayCondition10.put("prefCondId", prefCondId10);
                 ebayCondition10.put("parentPrefCondId", parentPrefCondId);
                 ebayCondition10.put("description", "lessThanValue Field");
-                dispatcher.runSync("createEbayProductStorePrefCond", ebayCondition10);
+                result = dispatcher.runSync("createEbayProductStorePrefCond", ebayCondition10);
+                if (ServiceUtil.isError(result)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                }
 
                 String prefCondId11 = delegator.getNextSeqId("EbayProductStorePrefCond");
                 ebayCondition11.put("prefCondId", prefCondId11);
                 ebayCondition11.put("parentPrefCondId", parentPrefCondId);
                 ebayCondition11.put("description", "rejectLessMsg Field");
-                dispatcher.runSync("createEbayProductStorePrefCond", ebayCondition11);
+                result = dispatcher.runSync("createEbayProductStorePrefCond", ebayCondition11);
+                if (ServiceUtil.isError(result)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                }
 
                 Map<String, Object> ebayPref = UtilMisc.<String, Object>toMap("userLogin", userLogin, "serviceName", "autoBestOffer");
                 ebayPref.put("parentPrefCondId",parentPrefCondId);
                 ebayPref.put("enabled", enabled);
                 ebayPref.put("autoPrefEnumId", "EBAY_AUTO_BEST_OFFER");
                 ebayPref.put("productStoreId",productStoreId);
-                dispatcher.runSync("createEbayProductStorePref",ebayPref);
+                result = dispatcher.runSync("createEbayProductStorePref",ebayPref);
+                if (ServiceUtil.isError(result)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                }
             } else {
                 Map<String, Object> ebayPref = UtilMisc.<String, Object>toMap("userLogin", userLogin, "serviceName", "autoBestOffer");
                 ebayPref.put("enabled", enabled);
                 ebayPref.put("autoPrefEnumId", "EBAY_AUTO_BEST_OFFER");
                 ebayPref.put("productStoreId",productStoreId);
-                dispatcher.runSync("updateEbayProductStorePref",ebayPref);
+                result = dispatcher.runSync("updateEbayProductStorePref",ebayPref);
+                if (ServiceUtil.isError(result)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                }
 
                 String parentPrefCondId = productStorePref.getString("parentPrefCondId");
                 List<GenericValue> productPref = EntityQuery.use(delegator).from("EbayProductStorePrefCond").where("parentPrefCondId",parentPrefCondId).queryList();
@@ -184,7 +223,10 @@ public class EbayBestOfferAutoPref {
                     for (int i = 0; i < productPref.size(); i++) {
                         ebayPrefCond.put("prefCondId",productPref.get(i).getString("prefCondId"));
                         ebayPrefCond.put("acceptanceCondition",condition[i]);
-                        dispatcher.runSync("updateEbayProductStorePrefCond",ebayPrefCond);
+                        result = dispatcher.runSync("updateEbayProductStorePrefCond",ebayPrefCond);
+                        if (ServiceUtil.isError(result)) {
+                            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                        }
                     }
                 }
                 

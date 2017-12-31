@@ -84,7 +84,10 @@ public class ScrumServices {
                                     GenericValue userLogin = (GenericValue) context.get("userLogin");
                                     // also close the incoming communication event
                                     if (UtilValidate.isNotEmpty(productRoleMap)) {
-                                        dispatcher.runSync("setCommunicationEventStatus", UtilMisc.<String, Object>toMap("communicationEventId", communicationEvent.getString("communicationEventId"), "statusId", "COM_COMPLETE", "userLogin", userLogin));
+                                        Map<String, Object> result = dispatcher.runSync("setCommunicationEventStatus", UtilMisc.<String, Object>toMap("communicationEventId", communicationEvent.getString("communicationEventId"), "statusId", "COM_COMPLETE", "userLogin", userLogin));
+                                        if (ServiceUtil.isError(result)) {
+                                            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                                        }
                                     }
                                 } catch (GenericServiceException e1) {
                                     Debug.logError(e1, "Error calling updating commevent status", module);
@@ -227,7 +230,10 @@ public class ScrumServices {
                                 inputMap.put("revisionDescription", taskInfo);
                                 inputMap.put("userLogin", userLogin);
                                 Debug.logInfo("inputMap ============== >>>>>>>>>>> "+ inputMap, module);
-                                dispatcher.runSync("updateScrumRevision", inputMap);
+                                result = dispatcher.runSync("updateScrumRevision", inputMap);
+                                if (ServiceUtil.isError(result)) {
+                                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                                }
                             }
                         }
                     }

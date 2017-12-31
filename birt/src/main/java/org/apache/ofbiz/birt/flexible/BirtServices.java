@@ -136,6 +136,10 @@ public class BirtServices {
             String birtType = null;
             try {
                 Map<String, Object> convertRes = dispatcher.runSync("convertFieldTypeToBirtType", UtilMisc.toMap("fieldType", fieldType, "userLogin", userLogin));
+                if (ServiceUtil.isError(convertRes)) {
+                    String errMsg = UtilProperties.getMessage(resource_error, "BirtErrorConversionFieldToBirtFailed", locale);
+                    return ServiceUtil.returnError(errMsg + ServiceUtil.getErrorMessage(convertRes));
+                }
                 birtType = (String) convertRes.get("birtType");
                 if (UtilValidate.isEmpty(birtType)) {
                     return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorConversionFieldToBirtFailed", locale));
@@ -278,6 +282,9 @@ public class BirtServices {
         Map<String, Object> resultFormDisplay;
         try {
             resultFormDisplay = dispatcher.runSync("prepareFlexibleReportSearchFormToEdit", UtilMisc.toMap("reportContentId", reportContentId, "userLogin", userLogin, "locale", locale));
+            if (ServiceUtil.isError(resultFormDisplay)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultFormDisplay));
+            }
             textForm = (String) resultFormDisplay.get("textForm");
         } catch (GenericServiceException e) {
             Debug.logError(e, module);
@@ -315,8 +322,11 @@ public class BirtServices {
             newForm.append(overrideFilters);
             newForm.append("</forms>");
             Document xmlForm = UtilXml.readXmlDocument(newForm.toString());
-            dispatcher.runSync("updateElectronicTextForm", UtilMisc.toMap("dataResourceId", dataResourceId, "textData", UtilXml.writeXmlDocument(xmlForm),
+            Map<String, Object> result = dispatcher.runSync("updateElectronicTextForm", UtilMisc.toMap("dataResourceId", dataResourceId, "textData", UtilXml.writeXmlDocument(xmlForm),
                     "userLogin", userLogin, "locale", locale));
+            if (ServiceUtil.isError(result)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+            }
         } catch (GeneralException | SAXException | ParserConfigurationException | IOException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError("Error in overrideReportForm service."); //TODO labelise
@@ -425,11 +435,14 @@ public class BirtServices {
             }
             contentId = BirtWorker.recordReportContent(delegator, dispatcher, context);
             String rptDesignFileName = BirtUtil.resolveRptDesignFilePathFromContent(delegator, contentId);
-            Map<String, Object> resultService = dispatcher.runSync(serviceName, UtilMisc.toMap("locale", locale, "userLogin", userLogin));
-            Map<String, String> dataMap = UtilGenerics.checkMap(resultService.get("dataMap"));
-            Map<String, String> filterMap = UtilGenerics.checkMap(resultService.get("filterMap"));
-            Map<String, String> fieldDisplayLabels = UtilGenerics.checkMap(resultService.get("fieldDisplayLabels"));
-            Map<String, String> filterDisplayLabels = UtilGenerics.checkMap(resultService.get("filterDisplayLabels"));
+            Map<String, Object> serviceResult = dispatcher.runSync(serviceName, UtilMisc.toMap("locale", locale, "userLogin", userLogin));
+            if (ServiceUtil.isError(serviceResult)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+            }
+            Map<String, String> dataMap = UtilGenerics.checkMap(serviceResult.get("dataMap"));
+            Map<String, String> filterMap = UtilGenerics.checkMap(serviceResult.get("filterMap"));
+            Map<String, String> fieldDisplayLabels = UtilGenerics.checkMap(serviceResult.get("fieldDisplayLabels"));
+            Map<String, String> filterDisplayLabels = UtilGenerics.checkMap(serviceResult.get("filterDisplayLabels"));
             Map<String, Object> resultGeneration = dispatcher.runSync("createFlexibleReport", UtilMisc.toMap(
                     "locale", locale,
                     "dataMap", dataMap,
@@ -577,7 +590,9 @@ public class BirtServices {
         try {
             for (String contentId : listContentId) {
                 Map<String, Object> returnMap = dispatcher.runSync("deleteFlexibleReport", UtilMisc.toMap("contentId", contentId, "userLogin", userLogin, "locale", locale));
-                ServiceUtil.isError(returnMap);
+                if (ServiceUtil.isError(returnMap)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(returnMap));
+                }
             }
         } catch (GenericServiceException e) {
             Debug.logError(e, module);
@@ -630,8 +645,14 @@ public class BirtServices {
         }
         try {
             delegator.removeByAnd("ContentAttribute", UtilMisc.toMap("contentId", contentId));
-            dispatcher.runSync("removeContentAndRelated", UtilMisc.toMap("contentId", contentId, "userLogin", userLogin, "locale", locale));
-            dispatcher.runSync("removeContentAndRelated", UtilMisc.toMap("contentId", contentIdRpt, "userLogin", userLogin, "locale", locale));
+            Map<String, Object> result = dispatcher.runSync("removeContentAndRelated", UtilMisc.toMap("contentId", contentId, "userLogin", userLogin, "locale", locale));
+            if (ServiceUtil.isError(result)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+            }
+            result = dispatcher.runSync("removeContentAndRelated", UtilMisc.toMap("contentId", contentIdRpt, "userLogin", userLogin, "locale", locale));
+            if (ServiceUtil.isError(result)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+            }
         } catch (GenericServiceException | GenericEntityException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError("Error in deleteFlexibleReport service."); //TODO labelise

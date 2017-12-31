@@ -68,6 +68,9 @@ public class EbayFeedback {
             inMap.put("productStoreId", productStoreId);
             inMap.put("userLogin", userLogin);
             Map<String, Object> resultUser = dispatcher.runSync("getEbayStoreUser", inMap);
+            if (ServiceUtil.isError(resultUser)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultUser));
+            }
             String userID = (String)resultUser.get("userLoginId");
             GetFeedbackCall feedbackCall = new GetFeedbackCall();
             feedbackCall.setApiContext(apiContext);

@@ -47,6 +47,7 @@ import org.apache.ofbiz.securityext.login.LoginEvents;
 import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.webpos.session.WebPosSession;
+import org.apache.ofbiz.service.ServiceUtil;
 
 public class WebPosEvents {
 
@@ -174,12 +175,24 @@ public class WebPosEvents {
                             String productStoreId = webPosSession.getProductStoreId();
                             try {
                                 featureMap = dispatcher.runSync("getProductFeatureSet", UtilMisc.toMap("productId", productId));
+                                if (ServiceUtil.isError(featureMap)) {
+                                    String errorMessage = ServiceUtil.getErrorMessage(featureMap);
+                                    request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                                    Debug.logError(errorMessage, module);
+                                    return "error";
+                                }
                                 Set<String> featureSet = UtilGenerics.cast(featureMap.get("featureSet"));
                                 if (UtilValidate.isNotEmpty(featureSet)) {
                                     request.setAttribute("featureSet", featureSet);
                                     try {
                                         variantTreeMap = dispatcher.runSync("getProductVariantTree", 
                                                          UtilMisc.toMap("productId", productId, "featureOrder", featureSet, "productStoreId", productStoreId));
+                                        if (ServiceUtil.isError(variantTreeMap)) {
+                                            String errorMessage = ServiceUtil.getErrorMessage(variantTreeMap);
+                                            request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                                            Debug.logError(errorMessage, module);
+                                            return "error";
+                                        }
                                         Map<String, Object> variantTree = UtilGenerics.cast(variantTreeMap.get("variantTree"));
                                         if (UtilValidate.isNotEmpty(variantTree)) {
                                             request.setAttribute("variantTree", variantTree);

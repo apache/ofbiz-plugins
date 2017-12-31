@@ -272,20 +272,45 @@ public final class BirtWorker {
         reportForm = reportFormExpd.expandString(context);
 
         //create content and dataressource strucutre
-        dispatcher.runSync("createDataResource", UtilMisc.toMap("dataResourceId", dataResourceId, "dataResourceTypeId", "ELECTRONIC_TEXT", "dataTemplateTypeId", "FORM_COMBINED", "userLogin", userLogin));
-        dispatcher.runSync("createElectronicTextForm", UtilMisc.toMap("dataResourceId", dataResourceId, "textData", reportForm, "userLogin", userLogin));
-        dispatcher.runSync("createContent", UtilMisc.toMap("contentId", contentId, "contentTypeId", "FLEXIBLE_REPORT", "dataResourceId", dataResourceId, "statusId", "CTNT_IN_PROGRESS", "contentName", reportName, "description", description, "userLogin", userLogin));
+        Map<String, Object> result = null;
+        result = dispatcher.runSync("createDataResource", UtilMisc.toMap("dataResourceId", dataResourceId, "dataResourceTypeId", "ELECTRONIC_TEXT", "dataTemplateTypeId", "FORM_COMBINED", "userLogin", userLogin));
+        if (ServiceUtil.isError(result)) {
+            throw new GeneralException(ServiceUtil.getErrorMessage(result));
+        }
+        result = dispatcher.runSync("createElectronicTextForm", UtilMisc.toMap("dataResourceId", dataResourceId, "textData", reportForm, "userLogin", userLogin));
+        if (ServiceUtil.isError(result)) {
+            throw new GeneralException(ServiceUtil.getErrorMessage(result));
+        }
+        result = dispatcher.runSync("createContent", UtilMisc.toMap("contentId", contentId, "contentTypeId", "FLEXIBLE_REPORT", "dataResourceId", dataResourceId, "statusId", "CTNT_IN_PROGRESS", "contentName", reportName, "description", description, "userLogin", userLogin));
+        if (ServiceUtil.isError(result)) {
+            throw new GeneralException(ServiceUtil.getErrorMessage(result));
+        }
         String dataResourceIdRpt = delegator.getNextSeqId("DataResource");
         String contentIdRpt = delegator.getNextSeqId("Content");
         String rptDesignName = BirtUtil.encodeReportName(reportName);
         if (!rptDesignName.endsWith(".rptdesign")) {
             rptDesignName = rptDesignName.concat(".rptdesign");
         }
-        dispatcher.runSync("createDataResource", UtilMisc.toMap("dataResourceId", dataResourceIdRpt, "dataResourceTypeId", "LOCAL_FILE", "mimeTypeId", "text/rptdesign", "dataResourceName", rptDesignName, "objectInfo", templateFileLocation, "userLogin", userLogin));
-        dispatcher.runSync("createContent", UtilMisc.toMap("contentId", contentIdRpt, "contentTypeId", "RPTDESIGN", "dataResourceId", dataResourceIdRpt, "statusId", "CTNT_PUBLISHED", "contentName", reportName, "description", description + " (.rptDesign file)", "userLogin", userLogin));
-        dispatcher.runSync("createContentAssoc", UtilMisc.toMap("contentId", masterContentId, "contentIdTo", contentId, "contentAssocTypeId", "SUB_CONTENT", "userLogin", userLogin));
-        dispatcher.runSync("createContentAssoc", UtilMisc.toMap("contentId", contentId, "contentIdTo", contentIdRpt, "contentAssocTypeId", "SUB_CONTENT", "userLogin", userLogin));
-        dispatcher.runSync("createContentAttribute", UtilMisc.toMap("contentId", contentId, "attrName", workflowType, "attrValue", modelElementName, "userLogin", userLogin));
+        result = dispatcher.runSync("createDataResource", UtilMisc.toMap("dataResourceId", dataResourceIdRpt, "dataResourceTypeId", "LOCAL_FILE", "mimeTypeId", "text/rptdesign", "dataResourceName", rptDesignName, "objectInfo", templateFileLocation, "userLogin", userLogin));
+        if (ServiceUtil.isError(result)) {
+            throw new GeneralException(ServiceUtil.getErrorMessage(result));
+        }
+        result = dispatcher.runSync("createContent", UtilMisc.toMap("contentId", contentIdRpt, "contentTypeId", "RPTDESIGN", "dataResourceId", dataResourceIdRpt, "statusId", "CTNT_PUBLISHED", "contentName", reportName, "description", description + " (.rptDesign file)", "userLogin", userLogin));
+        if (ServiceUtil.isError(result)) {
+            throw new GeneralException(ServiceUtil.getErrorMessage(result));
+        }
+        result = dispatcher.runSync("createContentAssoc", UtilMisc.toMap("contentId", masterContentId, "contentIdTo", contentId, "contentAssocTypeId", "SUB_CONTENT", "userLogin", userLogin));
+        if (ServiceUtil.isError(result)) {
+            throw new GeneralException(ServiceUtil.getErrorMessage(result));
+        }
+        result = dispatcher.runSync("createContentAssoc", UtilMisc.toMap("contentId", contentId, "contentIdTo", contentIdRpt, "contentAssocTypeId", "SUB_CONTENT", "userLogin", userLogin));
+        if (ServiceUtil.isError(result)) {
+            throw new GeneralException(ServiceUtil.getErrorMessage(result));
+        }
+        result = dispatcher.runSync("createContentAttribute", UtilMisc.toMap("contentId", contentId, "attrName", workflowType, "attrValue", modelElementName, "userLogin", userLogin));
+        if (ServiceUtil.isError(result)) {
+            throw new GeneralException(ServiceUtil.getErrorMessage(result));
+        }
         return contentId;
     }
 

@@ -279,7 +279,10 @@ public class EbayStoreHelper {
                     Map<String, Object>inMap = new HashMap<String, Object>();
                     inMap.put("jobId", jobId);
                     inMap.put("userLogin", userLogin);
-                    dispatcher.runSync("resetScheduledJob", inMap);
+                    result = dispatcher.runSync("resetScheduledJob", inMap);
+                    if (ServiceUtil.isError(result)) {
+                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                    }
                 }
             }
             if (UtilValidate.isEmpty(ebayProductPref.getString("autoPrefJobId"))) {
@@ -361,7 +364,10 @@ public class EbayStoreHelper {
             inMap.put("userLogin", userLogin);
             for (int index = 0; index < jobs.size(); index++) {
                 inMap.put("jobId", jobs.get(index).getString("jobId"));
-                dispatcher.runSync("cancelScheduledJob", inMap);
+                result = dispatcher.runSync("cancelScheduledJob", inMap);
+                if (ServiceUtil.isError(result)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                }
             }
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError(e.getMessage());
@@ -450,7 +456,10 @@ public class EbayStoreHelper {
                 updateItemMap.put("statusId", "ITEM_APPROVED");
                 updateItemMap.put("userLogin", userLogin);
                 try {
-                    dispatcher.runSync("updateEbayProductListing", updateItemMap);
+                    result = dispatcher.runSync("updateEbayProductListing", updateItemMap);
+                    if (ServiceUtil.isError(result)) {
+                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                    }
                 } catch (GenericServiceException ex) {
                     Debug.logError(ex.getMessage(), module);
                     return ServiceUtil.returnError(ex.getMessage());
@@ -481,13 +490,16 @@ public class EbayStoreHelper {
               }
            }
            for (Map.Entry<String,Object> entry : attributeMapList.entrySet()) {
-              if (UtilValidate.isNotEmpty(entry.getKey())) {
-            	   ebayProductListingAttributeMap.put("productListingId", productListingId);
-            	   ebayProductListingAttributeMap.put("attrName", entry.getKey().toString());
-            	   ebayProductListingAttributeMap.put("attrValue", entry.getValue().toString());
-            	   ebayProductListingAttributeMap.put("userLogin", userLogin);
-            	   dispatcher.runSync("createEbayProductListingAttribute", ebayProductListingAttributeMap);
-              }
+               if (UtilValidate.isNotEmpty(entry.getKey())) {
+                   ebayProductListingAttributeMap.put("productListingId", productListingId);
+                   ebayProductListingAttributeMap.put("attrName", entry.getKey().toString());
+                   ebayProductListingAttributeMap.put("attrValue", entry.getValue().toString());
+                   ebayProductListingAttributeMap.put("userLogin", userLogin);
+                   Map<String, Object> result = dispatcher.runSync("createEbayProductListingAttribute", ebayProductListingAttributeMap);
+                   if (ServiceUtil.isError(result)) {
+                       return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                   }
+               }
            }
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError(e.getMessage());
@@ -714,7 +726,10 @@ public class EbayStoreHelper {
                 newMap.put("logMessage", errorMessage);
                 newMap.put("createDatetime", UtilDateTime.nowTimestamp());
                 newMap.put("userLogin", userLogin);
-                dispatcher.runSync("insertErrorMessagesFromEbay", newMap);
+                Map<String, Object> result = dispatcher.runSync("insertErrorMessagesFromEbay", newMap);
+                if (ServiceUtil.isError(result)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                }
             } catch (Exception ex) {
                 Debug.logError("Error from create error log messages : "+ex.getMessage(), module);
             }

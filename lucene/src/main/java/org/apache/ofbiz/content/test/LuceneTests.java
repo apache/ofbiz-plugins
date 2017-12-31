@@ -66,6 +66,10 @@ public class LuceneTests extends OFBizTestCase {
         ctx.put("contentId", "LuceneCONTENT");
         ctx.put("userLogin", userLogin);
         Map<String, Object> resp = dispatcher.runSync("indexContentTree", ctx);
+        if (ServiceUtil.isError(resp)) {
+            String errorMessage = ServiceUtil.getErrorMessage(resp);
+            throw new Exception(errorMessage);
+        }
         assertTrue("Could not init search index", ServiceUtil.isSuccess(resp));
         
         try {

@@ -68,12 +68,20 @@ public class SolrTests extends OFBizTestCase {
         ctx.put("instance", product);
 
         Map<String, Object> resp = dispatcher.runSync("addToSolr", ctx);
+        if (ServiceUtil.isError(resp)) {
+            String errorMessage = ServiceUtil.getErrorMessage(resp);
+            throw new Exception(errorMessage);
+        }
         assertTrue("Could not init search index", ServiceUtil.isSuccess(resp));
 
         Map<String, Object> sctx = new HashMap<String, Object>();
         sctx.put("productCategoryId", "102");
 
         Map<String, Object> sresp = dispatcher.runSync("solrProductsSearch", sctx);
+        if (ServiceUtil.isError(sresp)) {
+            String errorMessage = ServiceUtil.getErrorMessage(sresp);
+            throw new Exception(errorMessage);
+        }
         assertTrue("Could not query search index", ServiceUtil.isSuccess(sresp));
 
 
@@ -83,6 +91,10 @@ public class SolrTests extends OFBizTestCase {
         context = new HashMap<>();
         context.put("productId", validTestProductId);
         response = dispatcher.runSync("addToSolrIndex", context);
+        if (ServiceUtil.isError(response)) {
+            String errorMessage = ServiceUtil.getErrorMessage(response);
+            throw new Exception(errorMessage);
+        }
         assertTrue("Could not add Product to Index", ServiceUtil.isSuccess(
                 response));
     }
@@ -91,6 +103,10 @@ public class SolrTests extends OFBizTestCase {
         context = new HashMap<>();
         context.put("productId", invalidTestProductId);
         response = dispatcher.runSync("addToSolrIndex", context);
+        if (ServiceUtil.isError(response)) {
+            String errorMessage = ServiceUtil.getErrorMessage(response);
+            throw new Exception(errorMessage);
+        }
         assertTrue("Could not test the addition of an invalid product to the Solr index", ServiceUtil.isSuccess(
                 response));
     }
@@ -111,6 +127,10 @@ public class SolrTests extends OFBizTestCase {
         context.put("fieldList", products);
 
         response = dispatcher.runSync("addListToSolrIndex", context);
+        if (ServiceUtil.isError(response)) {
+            String errorMessage = ServiceUtil.getErrorMessage(response);
+            throw new Exception(errorMessage);
+        }
         assertTrue("Could not add products to index", ServiceUtil.isSuccess(response));
 
     }
@@ -134,6 +154,10 @@ public class SolrTests extends OFBizTestCase {
         context.put("fieldList", products);
 
         response = dispatcher.runSync("addListToSolrIndex", context);
+        if (ServiceUtil.isError(response)) {
+            String errorMessage = ServiceUtil.getErrorMessage(response);
+            throw new Exception(errorMessage);
+        }
         assertTrue("Could not test adding invalid products to index", ServiceUtil.isSuccess(response));
 
     }

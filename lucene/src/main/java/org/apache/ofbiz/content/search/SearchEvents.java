@@ -54,6 +54,12 @@ public class SearchEvents {
         serviceInMap.put("contentId", siteId);
         try {
             result = dispatcher.runSync("indexContentTree", serviceInMap);
+            if (ServiceUtil.isError(result)) {
+                String errorMessage = ServiceUtil.getErrorMessage(result);
+                request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                Debug.logError(errorMessage, module);
+                return "error";
+            }
         } catch (GenericServiceException e) {
             String errorMsg = "Error calling the indexContentTree service." + e.toString();
             Debug.logError(e, errorMsg, module);

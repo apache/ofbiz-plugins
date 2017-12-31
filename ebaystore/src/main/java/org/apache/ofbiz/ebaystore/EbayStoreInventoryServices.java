@@ -391,7 +391,10 @@ public class EbayStoreInventoryServices {
                 ebayProductStoreInventoryList = EntityQuery.use(delegator).from("EbayProductStoreInventory").where("facilityId",(String)context.get("facilityId"),"productStoreId",(String)context.get("productStoreId")).queryList();
                 for (GenericValue ebayProductStoreInventory : ebayProductStoreInventoryList) {
                     if (ebayProductStoreInventory.get("ebayProductId") != null) {
-                        dispatcher.runSync("updateEbayInventoryStatusByProductId", UtilMisc.toMap("productStoreId", (String)context.get("productStoreId"), "facilityId", (String)context.get("facilityId"), "folderId", ebayProductStoreInventory.get("folderId"), "productId", ebayProductStoreInventory.get("productId"), "ebayProductId", ebayProductStoreInventory.get("ebayProductId"), "userLogin", context.get("userLogin")));
+                        Map<String, Object> result = dispatcher.runSync("updateEbayInventoryStatusByProductId", UtilMisc.toMap("productStoreId", (String)context.get("productStoreId"), "facilityId", (String)context.get("facilityId"), "folderId", ebayProductStoreInventory.get("folderId"), "productId", ebayProductStoreInventory.get("productId"), "ebayProductId", ebayProductStoreInventory.get("ebayProductId"), "userLogin", context.get("userLogin")));
+                        if (ServiceUtil.isError(result)) {
+                            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                        }
                     }
                 }
             }

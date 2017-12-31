@@ -257,9 +257,15 @@ public class BirtEmailServices {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         try {
             if (isMultiPart) {
-                dispatcher.runSync("sendMailMultiPart", serviceContext);
+                Map<String, Object> resultMap = dispatcher.runSync("sendMailMultiPart", serviceContext);
+                if (ServiceUtil.isError(resultMap)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultMap));
+                }
             } else {
-                dispatcher.runSync("sendMail", serviceContext);
+                Map<String, Object> resultMap = dispatcher.runSync("sendMail", serviceContext);
+                if (ServiceUtil.isError(resultMap)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultMap));
+                }
             }
         } catch (GenericServiceException e) {
             String errMsg = UtilProperties.getMessage(resource, "BirtErrorInSendingEmail", UtilMisc.toMap("errorString", e.toString()), locale);

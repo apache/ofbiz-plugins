@@ -859,7 +859,10 @@ public class EbayStore {
                 inMap.put("subtitle", returnStoreType.getDescription());
                 inMap.put("title", returnStoreType.getName());
                 inMap.put("userLogin", context.get("userLogin"));
-                dispatcher.runSync("updateProductStore", inMap);
+                Map<String, Object> result = dispatcher.runSync("updateProductStore", inMap);
+                if (ServiceUtil.isError(result)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                }
             }
         } catch (GenericServiceException e) {
             Debug.logError("error message"+e, module);
@@ -1314,6 +1317,9 @@ public class EbayStore {
                 }
                 LocalDispatcher dispatcher = dctx.getDispatcher();
                 Map<String,Object> results = dispatcher.runSync("getEbayStoreOutput",UtilMisc.toMap("productStoreId",(String) context.get("productStoreId"),"userLogin",context.get("userLogin")));
+                if (ServiceUtil.isError(results)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(results));
+                }
                 if (results != null) {
                     result.put("ebayStore", results.get("ebayStore"));
                 }
@@ -1633,7 +1639,10 @@ public class EbayStore {
                     inMap.put("productId", context.get("productId"));
                     inMap.put("availableToPromiseListing", new BigDecimal(newAtp));
                     inMap.put("userLogin", context.get("userLogin"));
-                    dispatcher.runSync("updateEbayProductStoreInventory", inMap);
+                    Map<String, Object> result = dispatcher.runSync("updateEbayProductStoreInventory", inMap);
+                    if (ServiceUtil.isError(result)) {
+                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                    }
                 }
                 result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
                 result.put(ModelService.SUCCESS_MESSAGE, "Export products listing success..");

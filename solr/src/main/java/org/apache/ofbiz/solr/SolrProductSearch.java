@@ -408,6 +408,9 @@ public abstract class SolrProductSearch {
             dispatchMap.put("indexName", solrIndexName);
 
             Map<String, Object> searchResult = dispatcher.runSync("runSolrQuery", dispatchMap);
+            if (ServiceUtil.isError(searchResult)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(searchResult));
+            }
 
             QueryResponse queryResult = (QueryResponse) searchResult.get("queryResult");
 
@@ -455,6 +458,9 @@ public abstract class SolrProductSearch {
             dispatchMap.put("indexName", solrIndexName);
 
             Map<String, Object> searchResult = dispatcher.runSync("runSolrQuery", dispatchMap);
+            if (ServiceUtil.isError(searchResult)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(searchResult));
+            }
             QueryResponse queryResult = (QueryResponse) searchResult.get("queryResult");
 
             List<List<String>> suggestions = new ArrayList<List<String>>();
@@ -682,7 +688,9 @@ public abstract class SolrProductSearch {
             // THis adds all products to the Index (instantly)
             Map<String, Object> runResult = dispatcher.runSync("addListToSolrIndex", UtilMisc.toMap("fieldList", solrDocs, "userLogin", userLogin, "locale", locale, "indexName",
                     solrIndexName, "treatConnectErrorNonFatal", treatConnectErrorNonFatal));
-
+            if (ServiceUtil.isError(runResult)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(runResult));
+            }
             String runMsg = ServiceUtil.getErrorMessage(runResult);
             if (UtilValidate.isEmpty(runMsg)) {
                 runMsg = null;

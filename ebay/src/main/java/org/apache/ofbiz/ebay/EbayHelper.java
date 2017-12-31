@@ -253,6 +253,9 @@ public class EbayHelper {
             Map<String, Object> results = dispatcher.runSync("createPaymentFromPreference", UtilMisc.toMap("userLogin", userLogin,
                     "orderPaymentPreferenceId", paymentPreference.get("orderPaymentPreferenceId"), "paymentFromId",
                     partyIdFrom, "paymentRefNum", externalId, "comments", "Payment receive via eBay"));
+            if (ServiceUtil.isError(results)) {
+                Debug.logError(ServiceUtil.getErrorMessage(results) + " - " + results, module);
+            }
 
             if ((results == null) || (results.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR))) {
                 Debug.logError((String) results.get(ModelService.ERROR_MESSAGE), module);
@@ -315,6 +318,10 @@ public class EbayHelper {
                 Map<String, Object> summaryResult = dispatcher.runSync("createPerson", UtilMisc.<String, Object> toMap("description",
                         name, "firstName", firstName, "lastName", lastName, "userLogin", userLogin, "comments",
                         "Created via eBay"));
+                if (ServiceUtil.isError(summaryResult)) {
+                    Debug.logError(ServiceUtil.getErrorMessage(summaryResult) + " - " + summaryResult, module);
+                    return null;
+                }
                 partyId = (String) summaryResult.get("partyId");
                 if (Debug.verboseOn()) Debug.logVerbose("Created Customer Party: " + partyId, module);
             }
@@ -346,6 +353,10 @@ public class EbayHelper {
             correctCityStateCountry(dispatcher, context, city, state, country);
 
             Map<String, Object> summaryResult = dispatcher.runSync("createPartyPostalAddress", context);
+            if (ServiceUtil.isError(summaryResult)) {
+                Debug.logError(ServiceUtil.getErrorMessage(summaryResult) + " - " + summaryResult, module);
+                return null;
+            }
             contactMechId = (String) summaryResult.get("contactMechId");
             // Set also as a billing address
             context = new HashMap<String, Object>();
@@ -353,7 +364,11 @@ public class EbayHelper {
             context.put("contactMechId", contactMechId);
             context.put("contactMechPurposeTypeId", "BILLING_LOCATION");
             context.put("userLogin", userLogin);
-            dispatcher.runSync("createPartyContactMechPurpose", context);
+            summaryResult = dispatcher.runSync("createPartyContactMechPurpose", context);
+            if (ServiceUtil.isError(summaryResult)) {
+                Debug.logError(ServiceUtil.getErrorMessage(summaryResult) + " - " + summaryResult, module);
+                return null;
+            }
         } catch (GenericServiceException e) {
             Debug.logError(e, "Failed to createAddress", module);
         }
@@ -409,6 +424,10 @@ public class EbayHelper {
             context.put("userLogin", userLogin);
             context.put("contactMechPurposeTypeId", "PHONE_SHIPPING");
             summaryResult = dispatcher.runSync("createPartyTelecomNumber", context);
+            if (ServiceUtil.isError(summaryResult)) {
+                Debug.logError(ServiceUtil.getErrorMessage(summaryResult) + " - " + summaryResult, module);
+                return null;
+            }
             phoneContactMechId = (String) summaryResult.get("contactMechId");
         } catch (GenericServiceException e) {
             Debug.logError(e, "Failed to createPartyPhone", module);
@@ -428,6 +447,9 @@ public class EbayHelper {
                 context.put("userLogin", userLogin);
                 context.put("contactMechTypeId", "EMAIL_ADDRESS");
                 summaryResult = dispatcher.runSync("createEmailAddress", context);
+                if (ServiceUtil.isError(summaryResult)) {
+                    Debug.logError(ServiceUtil.getErrorMessage(summaryResult) + " - " + summaryResult, module);
+                }
                 emailContactMechId = (String) summaryResult.get("contactMechId");
 
                 context.clear();
@@ -436,6 +458,9 @@ public class EbayHelper {
                 context.put("contactMechPurposeTypeId", "OTHER_EMAIL");
                 context.put("userLogin", userLogin);
                 summaryResult = dispatcher.runSync("createPartyContactMech", context);
+                if (ServiceUtil.isError(summaryResult)) {
+                    Debug.logError(ServiceUtil.getErrorMessage(summaryResult) + " - " + summaryResult, module);
+                }
             }
         } catch (GenericServiceException e) {
             Debug.logError(e, "Failed to createPartyEmail", module);
@@ -454,6 +479,9 @@ public class EbayHelper {
                 context.put("attrValue", eias);
                 context.put("userLogin", userLogin);
                 summaryResult = dispatcher.runSync("createPartyAttribute", context);
+                if (ServiceUtil.isError(summaryResult)) {
+                    Debug.logError(ServiceUtil.getErrorMessage(summaryResult) + " - " + summaryResult, module);
+                }
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Failed to create eBay EIAS party attribute");
             }
@@ -467,6 +495,9 @@ public class EbayHelper {
                 context.put("attrValue", ebayUserIdBuyer);
                 context.put("userLogin", userLogin);
                 summaryResult = dispatcher.runSync("createPartyAttribute", context);
+                if (ServiceUtil.isError(summaryResult)) {
+                    Debug.logError(ServiceUtil.getErrorMessage(summaryResult) + " - " + summaryResult, module);
+                }
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Failed to create eBay userId party attribute");
             }

@@ -65,6 +65,9 @@ public class EbayStoreOrder {
                     context.put("shippingAddressStreet1", context.get("shippingAddressStreet").toString());
                 }
                 result = dispatcher.runSync("EbayStoreCreateTransactionShoppingCart", context);
+                if (ServiceUtil.isError(result)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                }
             }
         } catch (GenericServiceException e) {
             result = ServiceUtil.returnFailure(e.getMessage());
@@ -79,6 +82,9 @@ public class EbayStoreOrder {
         if (UtilValidate.isEmpty(context.get("orderId"))) {
             try {
                 result = dispatcher.runSync("EbayStoreCreateOrderShoppingCart", context);
+                if (ServiceUtil.isError(result)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                }
             } catch (GenericServiceException e) {
                 result = ServiceUtil.returnFailure(e.getMessage());
             }

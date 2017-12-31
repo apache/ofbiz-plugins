@@ -1,5 +1,4 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
+/* Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
  * regarding copyright ownership.  The ASF licenses this file
@@ -101,7 +100,12 @@ public class EbayStoreAutoPrefEvents{
         bestOfferCondition.put("condition10", condition10);
         bestOfferCondition.put("condition11", condition11);
         try {
-            dispatcher.runSync("ebayBestOfferPrefCond", bestOfferCondition);
+            Map<String, Object> result = dispatcher.runSync("ebayBestOfferPrefCond", bestOfferCondition);
+            if (ServiceUtil.isError(result)) {
+                request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(result));
+                Debug.log( ServiceUtil.getErrorMessage(result),module);
+                return "error";
+            }
         } catch (GenericServiceException e) {
             Debug.logError(e, module);
             return "error";

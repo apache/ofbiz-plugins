@@ -38,6 +38,8 @@ import org.apache.ofbiz.product.product.ProductContentWrapper;
 import org.apache.ofbiz.product.product.ProductWorker;
 import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.LocalDispatcher;
+import org.apache.ofbiz.service.ServiceUtil;
+
 
 /**
  * Product utility class for solr.
@@ -129,11 +131,17 @@ public final class ProductUtil {
                 // if(product.get("popularity") != null) dispatchContext.put("popularity", "");
 
                 Map<String, Object> featureSet = dispatcher.runSync("getProductFeatureSet", UtilMisc.toMap("productId", productId));
+                if (ServiceUtil.isError(featureSet)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(featureSet));
+                }
                 if (featureSet != null) {
                     dispatchContext.put("features", (Set<?>) featureSet.get("featureSet"));
                 }
 
                 Map<String, Object> productInventoryAvailable = dispatcher.runSync("getProductInventoryAvailable", UtilMisc.toMap("productId", productId));
+                if (ServiceUtil.isError(productInventoryAvailable)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(productInventoryAvailable));
+                }
                 String inStock = null;
                 BigDecimal availableToPromiseTotal = (BigDecimal) productInventoryAvailable.get("availableToPromiseTotal");
                 if (availableToPromiseTotal != null) {
@@ -208,6 +216,9 @@ public final class ProductUtil {
                 } else {
                     Map<String, GenericValue> priceContext = UtilMisc.toMap("product", product);
                     Map<String, Object> priceMap = dispatcher.runSync("calculateProductPrice", priceContext);
+                    if (ServiceUtil.isError(priceMap)) {
+                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(priceMap));
+                    }
                     if (priceMap.get("listPrice") != null) {
                         String listPrice = ((BigDecimal) priceMap.get("listPrice")).setScale(2, BigDecimal.ROUND_HALF_DOWN).toString();
                         dispatchContext.put("listPrice", listPrice);
