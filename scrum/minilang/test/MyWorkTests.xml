@@ -25,7 +25,7 @@ under the License.
             <field-map field-name="userLoginId" value="scrumteam1"/>
         </entity-one>
         <set-current-user-login value-field="userLogin"/>
-        <set field="inMap.timesheetId" value="DEMO-TIMESHEET1" />
+        <set field="inMap.timesheetId" value="WRONG" />
         <set field="inMap.workEffortId" value="DEMO-TASK-1"/>
         <set field="inMap.planHours_o_0" value="2.0" type="Double"/>
         <set field="inMap.hoursDay0_o_0" value="1.0" type="Double"/>
