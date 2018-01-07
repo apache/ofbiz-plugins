@@ -620,7 +620,7 @@ under the License.
         <value xml:lang="zh-TW">訂單</value>
     </property>
     <property key="ScrumBacklogId">
-        <value xml:lang="en">Backlog Id</value>
+        <value xml:lang="en">Backlog ID</value>
         <value xml:lang="ja">バックログID</value>
         <value xml:lang="zh">订单标识</value>
         <value xml:lang="zh-TW">訂單識別</value>
@@ -795,7 +795,7 @@ under the License.
         <value xml:lang="zh-TW">團隊名稱</value>
     </property>
     <property key="ScrumCompanyPartyId">
-        <value xml:lang="en">Company Party Id</value>
+        <value xml:lang="en">Company Party ID</value>
         <value xml:lang="ja">会社取引先ID</value>
         <value xml:lang="zh">团队会员标识</value>
         <value xml:lang="zh-TW">團隊團體識別</value>
@@ -1453,7 +1453,7 @@ under the License.
         <value xml:lang="zh-TW">產品訂單電子郵件訊息</value>
     </property>
     <property key="ScrumProductBacklogId">
-        <value xml:lang="en">Product Backlog Id</value>
+        <value xml:lang="en">Product Backlog ID</value>
         <value xml:lang="ja">製品バックログID</value>
         <value xml:lang="zh">产品订单标识</value>
         <value xml:lang="zh-TW">產品訂單識別</value>
@@ -1644,7 +1644,7 @@ under the License.
     </property>
     <property key="ScrumRateTypeId">
         <value xml:lang="de">Verechnungs Typ ID</value>
-        <value xml:lang="en">Rate Type Id</value>
+        <value xml:lang="en">Rate Type ID</value>
         <value xml:lang="fr">Réf. du type de taux</value>
         <value xml:lang="it">Tipo percentuale</value>
         <value xml:lang="ja">レート種類ID</value>
@@ -1946,7 +1946,7 @@ under the License.
         <value xml:lang="zh-TW">當前任務</value>
     </property>
     <property key="ScrumTaskId">
-        <value xml:lang="en">Task Id</value>
+        <value xml:lang="en">Task ID</value>
         <value xml:lang="ja">タスクID</value>
         <value xml:lang="zh">任务标识</value>
         <value xml:lang="zh-TW">任務識別</value>

@@ -43,7 +43,7 @@
     </property>
     <property key="FormFieldTitle_clientBillingPartyId">
         <value xml:lang="de">Kunden Rechnungsadresse</value>
-        <value xml:lang="en">Client Billing Party Id</value>
+        <value xml:lang="en">Client Billing Party ID</value>
         <value xml:lang="fr">Client facturé</value>
         <value xml:lang="it">Soggetto fatturazione</value>
         <value xml:lang="ja">顧客請求取引先ID</value>
@@ -97,7 +97,7 @@
     </property>
     <property key="FormFieldTitle_newTimesheetId">
         <value xml:lang="de">Neue Zeiterfassungs ID</value>
-        <value xml:lang="en">New Timesheet Id</value>
+        <value xml:lang="en">New Timesheet ID</value>
         <value xml:lang="fr">Réf. de nouvelle feuille d'activité</value>
         <value xml:lang="it">Nuova timbratura</value>
         <value xml:lang="ja">新規予定表ID</value>
@@ -152,7 +152,7 @@
     </property>
     <property key="FormFieldTitle_phaseId">
         <value xml:lang="de">Phase ID</value>
-        <value xml:lang="en">Phase Id</value>
+        <value xml:lang="en">Phase ID</value>
         <value xml:lang="fr">Réf. de phase</value>
         <value xml:lang="it">Fase</value>
         <value xml:lang="ja">フェーズID</value>
@@ -239,7 +239,7 @@
     </property>
     <property key="FormFieldTitle_templateId">
         <value xml:lang="de">Vorlage ID</value>
-        <value xml:lang="en">Template Id</value>
+        <value xml:lang="en">Template ID</value>
         <value xml:lang="fr">Réf. de modèle</value>
         <value xml:lang="it">Template</value>
         <value xml:lang="ja">テンプレートID</value>
@@ -1229,7 +1229,7 @@
     </property>
     <property key="ProjectMgrCustRequestCategoryId">
         <value xml:lang="de">Kategorie ID der Kundenanfrage</value>
-        <value xml:lang="en">Cust Request Category Id</value>
+        <value xml:lang="en">Cust Request Category ID</value>
         <value xml:lang="fr">Réf. de catégorie de demande client</value>
         <value xml:lang="it">Categoria richiesta cliente</value>
         <value xml:lang="ja">顧客リクエストカテゴリID</value>
@@ -1743,7 +1743,7 @@
     </property>
     <property key="ProjectMgrPartyRoleTypeId">
         <value xml:lang="de">Funktionstyp ID</value>
-        <value xml:lang="en">Role Type Id</value>
+        <value xml:lang="en">Role Type ID</value>
         <value xml:lang="fr">Rôle</value>
         <value xml:lang="it">Tipo ruolo</value>
         <value xml:lang="ja">ロール種類ID</value>
@@ -1895,7 +1895,7 @@
     </property>
     <property key="ProjectMgrProjectId">
         <value xml:lang="de">Projekt ID</value>
-        <value xml:lang="en">Project Id</value>
+        <value xml:lang="en">Project ID</value>
         <value xml:lang="fr">N° de projet</value>
         <value xml:lang="it">Progetto</value>
         <value xml:lang="ja">プロジェクトID</value>
@@ -1978,7 +1978,7 @@
     </property>
     <property key="ProjectMgrQuickAssignPartyId">
         <value xml:lang="de">Schnell verbinden mit Akteur ID</value>
-        <value xml:lang="en">Quick Assign Party Id</value>
+        <value xml:lang="en">Quick Assign Party ID</value>
         <value xml:lang="fr">Affecter rapidement un acteur</value>
         <value xml:lang="it">Assegnazione veloce soggetto</value>
         <value xml:lang="ja">取引先IDのクイック割当</value>
@@ -1990,7 +1990,7 @@
     </property>
     <property key="ProjectMgrRateTypeId">
         <value xml:lang="de">Verechnungs Typ ID</value>
-        <value xml:lang="en">Rate Type Id</value>
+        <value xml:lang="en">Rate Type ID</value>
         <value xml:lang="fr">Réf. du type de taux</value>
         <value xml:lang="it">Tipo percentuale</value>
         <value xml:lang="ja">レート種類ID</value>
@@ -2220,7 +2220,7 @@
     </property>
     <property key="ProjectMgrStatusId">
         <value xml:lang="de">Status ID</value>
-        <value xml:lang="en">Status Id</value>
+        <value xml:lang="en">Status ID</value>
         <value xml:lang="fr">Statut</value>
         <value xml:lang="it">Stato</value>
         <value xml:lang="ja">ステータスID</value>
@@ -2350,7 +2350,7 @@
     </property>
     <property key="ProjectMgrTaskId">
         <value xml:lang="de">Aufgaben ID</value>
-        <value xml:lang="en">Task Id</value>
+        <value xml:lang="en">Task ID</value>
         <value xml:lang="fr">Réf. de tâche</value>
         <value xml:lang="it">Compito</value>
         <value xml:lang="ja">タスクID</value>

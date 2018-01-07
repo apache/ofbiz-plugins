@@ -790,9 +790,9 @@
         <value xml:lang="zh-TW">繼續步驟</value>
     </property>
     <property key="EcommerceDataResourceId">
-        <value xml:lang="da">Dataresurse Id</value>
+        <value xml:lang="da">Dataresurse ID</value>
         <value xml:lang="de">Datenressource ID</value>
-        <value xml:lang="en">Data Resource Id</value>
+        <value xml:lang="en">Data Resource ID</value>
         <value xml:lang="es">Código de Data Resource</value>
         <value xml:lang="fr">Ref. de ressource de données</value>
         <value xml:lang="hi-IN">आंकड़े सहारा नम्बर</value>
@@ -801,7 +801,7 @@
         <value xml:lang="nl">Databron ID</value>
         <value xml:lang="pt-BR">ID de fonte de dados</value>
         <value xml:lang="ro">Cod Resursa Date</value>
-        <value xml:lang="ru">Data Resource Id</value>
+        <value xml:lang="ru">Data Resource ID</value>
         <value xml:lang="th">หมายเลขแหล่งที่มา</value>
         <value xml:lang="vi">Tài nguyên dữ liệu</value>
         <value xml:lang="zh">数据资源标识</value>

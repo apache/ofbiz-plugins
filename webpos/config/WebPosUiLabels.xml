@@ -1072,7 +1072,7 @@
         <value xml:lang="zh-TW">送貨合計</value>
     </property>
     <property key="WebPosTransactionId">
-        <value xml:lang="en">Transaction Id</value>
+        <value xml:lang="en">Transaction ID</value>
         <value xml:lang="fr">N° de transaction</value>
         <value xml:lang="it">Transazione</value>
         <value xml:lang="ja">トランザクションID</value>

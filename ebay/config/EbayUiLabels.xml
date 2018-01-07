@@ -100,7 +100,7 @@
         <value xml:lang="zh-TW">匯出到eBay</value>
     </property>
     <property key="EbayImportEbayItem">
-        <value xml:lang="en">Item Id</value>
+        <value xml:lang="en">Item ID</value>
         <value xml:lang="fr">Réf. d'article</value>
         <value xml:lang="it">Numero oggetto</value>
         <value xml:lang="th">รหัสรายการ</value>
@@ -488,7 +488,7 @@
         <value xml:lang="zh-TW">從訂單識別獲取外部識別時出錯</value>
     </property>
     <property key="ordersImportFromEbay.errorRetrievingOrderFromOrderId">
-        <value xml:lang="en">Error Retrieving Order From Order Id</value>
+        <value xml:lang="en">Error Retrieving Order From Order ID</value>
         <value xml:lang="it">Errore nella ricerca dell'ordine attraverso il numero ordine</value>
         <value xml:lang="zh">从订单标识获取订单时出错</value>
         <value xml:lang="zh-TW">從訂單識別獲取訂單時出錯</value>
