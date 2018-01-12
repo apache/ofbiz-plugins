@@ -23,10 +23,3 @@ dependencies {
         exclude group: 'org.eclipse.birt.runtime.3_7_1', module: 'org.apache.batik.pdf'
     }
 }
-// If the example plugin misses the birt component can't build. 
-// If you want to use the birt component independently of the example plugin
-// simply comment out or remove the line below. 
-apply from: '../example/build.gradle'
-// Then the flexible report example will not work
-// It's not an issue out of demonstration
-// If needed simply remove the birt data related to the example component
