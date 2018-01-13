@@ -57,9 +57,9 @@ under the License.
           <th></th>
           <th>${uiLabelMap.OrderQtyOrdered}</th>
         </#if>
-          <th>${uiLabelMap.EcommerceUnitPrice}</th>
-          <th>${uiLabelMap.OrderAdjustments}</th>
-          <th>${uiLabelMap.CommonSubtotal}</th>
+          <th class="amount">${uiLabelMap.EcommerceUnitPrice}</th>
+          <th class="amount">${uiLabelMap.OrderAdjustments}</th>
+          <th class="amount">${uiLabelMap.CommonSubtotal}</th>
         <#if "Y" == maySelectItems?default("N") && "PLACING_CUSTOMER" == roleTypeId!>
           <th colspan="3"></th>
         </#if>
@@ -68,7 +68,7 @@ under the License.
     <tfoot>
       <tr>
         <th colspan="7">${uiLabelMap.CommonSubtotal}</th>
-        <td><@ofbizCurrency amount=orderSubTotal isoCode=currencyUomId/></td>
+        <td class="amount"><@ofbizCurrency amount=orderSubTotal isoCode=currencyUomId/></td>
         <#if "Y" == maySelectItems?default("N")>
           <td colspan="3"></td>
         </#if>
@@ -76,7 +76,7 @@ under the License.
       <#list headerAdjustmentsToShow as orderHeaderAdjustment>
         <tr>
           <th colspan="7">${localOrderReadHelper.getAdjustmentType(orderHeaderAdjustment)}</th>
-          <td><@ofbizCurrency amount=localOrderReadHelper.getOrderAdjustmentTotal(orderHeaderAdjustment) isoCode=currencyUomId/></td>
+          <td class="amount"><@ofbizCurrency amount=localOrderReadHelper.getOrderAdjustmentTotal(orderHeaderAdjustment) isoCode=currencyUomId/></td>
           <#if "Y" == maySelectItems?default("N")>
             <td colspan="3"></td>
           </#if>
@@ -84,14 +84,14 @@ under the License.
       </#list>
       <tr>
         <th colspan="7">${uiLabelMap.OrderShippingAndHandling}</th>
-        <td><@ofbizCurrency amount=orderShippingTotal isoCode=currencyUomId/></td>
+        <td class="amount"><@ofbizCurrency amount=orderShippingTotal isoCode=currencyUomId/></td>
         <#if "Y" == maySelectItems?default("N")>
           <td colspan="3"></td>
         </#if>
       </tr>
       <tr>
         <th colspan="7">${uiLabelMap.OrderSalesTax}</th>
-        <td><@ofbizCurrency amount=orderTaxTotal isoCode=currencyUomId/></td>
+        <td class="amount"><@ofbizCurrency amount=orderTaxTotal isoCode=currencyUomId/></td>
         <#if "Y" == maySelectItems?default("N")>
           <td colspan="3"></td>
         </#if>
@@ -107,7 +107,7 @@ under the License.
       </tr>
       <tr>
         <th colspan="7">${uiLabelMap.OrderGrandTotal}</th>
-        <td>
+        <td class="amount">
           <@ofbizCurrency amount=orderGrandTotal isoCode=currencyUomId/>
         </td>
         <#if "Y" == maySelectItems?default("N")>
@@ -224,13 +224,13 @@ under the License.
                 ${canceledQty?default(0)?string.number}
               </td>
             </#if>
-            <td>
+            <td class="amount">
               <@ofbizCurrency amount=orderItem.unitPrice isoCode=currencyUomId/>
             </td>
-            <td>
+            <td class="amount">
               <@ofbizCurrency amount=localOrderReadHelper.getOrderItemAdjustmentsTotal(orderItem) isoCode=currencyUomId/>
             </td>
-            <td>
+            <td class="amount">
               <#if workEfforts??>
                   <@ofbizCurrency amount=localOrderReadHelper.getOrderItemTotal(orderItem)*rentalQuantity isoCode=currencyUomId/>
                 <#else>
@@ -308,7 +308,7 @@ under the License.
               </#if>
             </td>
             <td colspan="5"></td>
-            <td>
+            <td class="amount">
               <@ofbizCurrency amount=localOrderReadHelper.getOrderItemAdjustmentTotal(orderItem, orderItemAdjustment) isoCode=currencyUomId/>
             </td>
             <td></td>
