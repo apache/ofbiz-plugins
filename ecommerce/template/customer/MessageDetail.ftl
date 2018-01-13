@@ -29,15 +29,13 @@ under the License.
 
 <div class="card m-3">
   <div class="card-header">
-    <div class="boxlink">
+    <strong>${uiLabelMap.EcommerceReadMessage}</strong>
     <#if (communicationEvent.partyIdFrom! != (userLogin.partyId)!)>
       <a href="<@ofbizUrl>newmessage?communicationEventId=${communicationEvent.communicationEventId}</@ofbizUrl>"
-          class="submenutext">${uiLabelMap.PartyReply}
+          class="float-right">${uiLabelMap.PartyReply}
       </a>
     </#if>
-      <a href="<@ofbizUrl>messagelist</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewList}</a>
-    </div>
-    <strong>${uiLabelMap.EcommerceReadMessage}</strong>
+      <a href="<@ofbizUrl>messagelist</@ofbizUrl>" class="float-right">${uiLabelMap.EcommerceViewList}</a>
   </div>
   <div class="card-body">
     <div class="row">

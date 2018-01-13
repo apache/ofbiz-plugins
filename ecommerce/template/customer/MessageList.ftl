@@ -62,18 +62,16 @@ under the License.
 
 <div class="card">
   <div class="card-header">
-    <div class="boxlink">
-      <#if "true" == parameters.showSent!>
-        <a href="<@ofbizUrl>messagelist</@ofbizUrl>" class="submenutextright">
-          ${uiLabelMap.EcommerceViewReceivedOnly}
-        </a>
-      <#else>
-        <a href="<@ofbizUrl>messagelist?showSent=true</@ofbizUrl>" class="submenutextright">
-          ${uiLabelMap.EcommerceViewSent}
-        </a>
-      </#if>
-    </div>
     <strong>${uiLabelMap.CommonMessages}</strong>
+    <#if "true" == parameters.showSent!>
+      <a href="<@ofbizUrl>messagelist</@ofbizUrl>" class="float-right">
+        ${uiLabelMap.EcommerceViewReceivedOnly}
+      </a>
+    <#else>
+      <a href="<@ofbizUrl>messagelist?showSent=true</@ofbizUrl>" class="float-right">
+        ${uiLabelMap.EcommerceViewSent}
+      </a>
+    </#if>
   </div>
   <div class="card-body">
     <table class="table table-responsive-sm">
@@ -82,7 +80,7 @@ under the License.
         ${uiLabelMap.EcommerceNoMessages}.
       </div>
     <#else>
-      <thead>
+      <thead class="thead-light">
         <tr>
           <th>
             ${uiLabelMap.CommonFrom}
