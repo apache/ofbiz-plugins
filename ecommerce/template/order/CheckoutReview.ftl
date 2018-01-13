@@ -34,7 +34,7 @@ under the License.
   // -->
 </script>
 
-<h1>${uiLabelMap.OrderFinalCheckoutReview}</h1>
+<h2>${uiLabelMap.OrderFinalCheckoutReview}</h2>
 <#if !isDemoStore?? && isDemoStore>
   <p>${uiLabelMap.OrderDemoFrontNote}.</p>
 </#if>
@@ -43,27 +43,23 @@ under the License.
   ${screens.render("component://ecommerce/widget/OrderScreens.xml#orderheader")}
   <br/>
   ${screens.render("component://ecommerce/widget/OrderScreens.xml#orderitems")}
-  <table border="0" cellpadding="1" width="100%">
-    <tr>
-      <td colspan="4">
-        &nbsp;
-      </td>
-      <td align="right">
-        <form type="post" action="<@ofbizUrl>processorder</@ofbizUrl>" name="${parameters.formNameValue}">
-          <#if (requestParameters.checkoutpage)?has_content>
-            <input type="hidden" name="checkoutpage" value="${requestParameters.checkoutpage}"/>
-          </#if>
-          <#if (requestAttributes.issuerId)?has_content>
-            <input type="hidden" name="issuerId" value="${requestAttributes.issuerId}"/>
-          </#if>
-          <input type="button" name="processButton" value="${uiLabelMap.OrderSubmitOrder}" onclick="processOrder();"
-                 class="mediumSubmit"/>
-        </form>
+  <div class="row">
+    <div class="col-auto ml-auto">
+      <form type="post" action="<@ofbizUrl>processorder</@ofbizUrl>" name="${parameters.formNameValue}">
+        <#if (requestParameters.checkoutpage)?has_content>
+          <input type="hidden" name="checkoutpage" value="${requestParameters.checkoutpage}"/>
+        </#if>
+        <#if (requestAttributes.issuerId)?has_content>
+          <input type="hidden" name="issuerId" value="${requestAttributes.issuerId}"/>
+        </#if>
+        <input type="button" name="processButton" class="btn btn-primary" value="${uiLabelMap.OrderSubmitOrder}" onclick="processOrder();"
+               class="mediumSubmit"/>
+      </form>
       <#-- doesn't work with Safari, seems to work with IE, Mozilla
-           <a href="#" onclick="processOrder();" class="buttontextbig">[${uiLabelMap.OrderSubmitOrder}]&nbsp;</a> -->
-      </td>
-    </tr>
-  </table>
+      <a href="#" onclick="processOrder();" >[${uiLabelMap.OrderSubmitOrder}]&nbsp;</a> -->
+    </div>
+  </div>
+
 <#else>
   <h3>${uiLabelMap.OrderErrorShoppingCartEmpty}.</h3>
 </#if>
