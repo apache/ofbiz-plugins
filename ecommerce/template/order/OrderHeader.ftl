@@ -24,221 +24,231 @@ under the License.
   <#assign externalOrder = "(" + orderHeader.externalId + ")"/>
 </#if>
 
-    <div class="screenlet">
-      <h3>
-      <#if "Y" == maySelectItems?default("N") && "Y" == returnLink?default("N") && "ORDER_COMPLETED" == (orderHeader.statusId)! && "PLACING_CUSTOMER" == roleTypeId!>
-        <a href="<@ofbizUrl fullPath="true">makeReturn?orderId=${orderHeader.orderId}</@ofbizUrl>"
-            class="submenutextright">${uiLabelMap.OrderRequestReturn}</a>
-      </#if>
-      ${uiLabelMap.OrderOrder}
-      <#if orderHeader?has_content>
-        ${uiLabelMap.CommonNbr}
-        <a href="<@ofbizUrl fullPath="true">orderstatus?orderId=${orderHeader.orderId}</@ofbizUrl>"
-            class="lightbuttontext">${orderHeader.orderId}</a>
-      </#if>
-      ${uiLabelMap.CommonInformation}
-      <#if (orderHeader.orderId)??>
-        ${externalOrder!} [ <a href="<@ofbizUrl fullPath="true">order.pdf?orderId=${(orderHeader.orderId)!}</@ofbizUrl>"
-            target="_BLANK" class="lightbuttontext">PDF</a> ]
-      </#if>
-      </h3>
-      <#-- placing customer information -->
-      <ul>
-        <#if localOrderReadHelper?? && orderHeader?has_content>
-          <#assign displayParty = localOrderReadHelper.getPlacingParty()!/>
-          <#if displayParty?has_content>
-            <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.apache.ofbiz.base.util.UtilMisc"].toMap("partyId", displayParty.partyId, "compareDate", orderHeader.orderDate, "userLogin", userLogin))/>
-          </#if>
-          <li>
-            ${uiLabelMap.PartyName}
-            ${(displayPartyNameResult.fullName)?default("[Name Not Found]")}
-          </li>
+    <div class="card">
+      <div class="card-header">
+        <strong>
+        <#if "Y" == maySelectItems?default("N") && "Y" == returnLink?default("N") && "ORDER_COMPLETED" == (orderHeader.statusId)! && "PLACING_CUSTOMER" == roleTypeId!>
+          <a href="<@ofbizUrl fullPath="true">makeReturn?orderId=${orderHeader.orderId}</@ofbizUrl>"
+              class="submenutextright">${uiLabelMap.OrderRequestReturn}</a>
         </#if>
-        <#-- order status information -->
-        <li>
-          ${uiLabelMap.CommonStatus}
-          <#if orderHeader?has_content>
-            ${localOrderReadHelper.getStatusString(locale)}
-          <#else>
-            ${uiLabelMap.OrderNotYetOrdered}
-          </#if>
-        </li>
-        <#-- ordered date -->
+        ${uiLabelMap.OrderOrder}
         <#if orderHeader?has_content>
-          <li>
-            ${uiLabelMap.CommonDate}
-            ${orderHeader.orderDate.toString()}
-          </li>
+          ${uiLabelMap.CommonNbr}
+          <a href="<@ofbizUrl fullPath="true">orderstatus?orderId=${orderHeader.orderId}</@ofbizUrl>"
+              class="btn btn-sm">${orderHeader.orderId}</a>
         </#if>
-        <#if distributorId??>
-          <li>
-            ${uiLabelMap.OrderDistributor}
-            ${distributorId}
-          </li>
+        ${uiLabelMap.CommonInformation}
+        <#if (orderHeader.orderId)??>
+          ${externalOrder!} [ <a href="<@ofbizUrl fullPath="true">order.pdf?orderId=${(orderHeader.orderId)!}</@ofbizUrl>"
+              target="_BLANK" class="btn btn-sm">PDF</a> ]
         </#if>
-      </ul>
-    </div>
-
-    <div class="screenlet">
-      <#if paymentMethods?has_content || paymentMethodType?has_content || billingAccount?has_content>
-        <#-- order payment info -->
-        <h3>${uiLabelMap.AccountingPaymentInformation}</h3>
-        <#-- offline payment address infomation :: change this to use Company's address -->
-        <ul>
-          <#if !paymentMethod?has_content && paymentMethodType?has_content>
+        </strong>
+      </div>
+      <div class="card-body">
+        <#-- placing customer information -->
+        <ul class="list-unstyled">
+          <#if localOrderReadHelper?? && orderHeader?has_content>
+            <#assign displayParty = localOrderReadHelper.getPlacingParty()!/>
+            <#if displayParty?has_content>
+              <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", Static["org.apache.ofbiz.base.util.UtilMisc"].toMap("partyId", displayParty.partyId, "compareDate", orderHeader.orderDate, "userLogin", userLogin))/>
+            </#if>
             <li>
-              <#if "EXT_OFFLINE" == paymentMethodType.paymentMethodTypeId>
-                ${uiLabelMap.AccountingOfflinePayment}
-                <#if orderHeader?has_content && paymentAddress?has_content>
-                  ${uiLabelMap.OrderSendPaymentTo}:
-                  <#if paymentAddress.toName?has_content>${paymentAddress.toName}</#if>
-                  <#if paymentAddress.attnName?has_content>
-                    ${uiLabelMap.PartyAddrAttnName}  : ${paymentAddress.attnName}
-                  </#if>
-                  ${paymentAddress.address1}
-                  <#if paymentAddress.address2?has_content>${paymentAddress.address2}</#if>
-                  <#assign paymentStateGeo = (delegator.findOne("Geo", {"geoId", paymentAddress.stateProvinceGeoId!}, false))! />
-                  ${paymentAddress.city}
-                  <#if paymentStateGeo?has_content>, ${paymentStateGeo.geoName!}</#if>
-                  ${paymentAddress.postalCode!}
-                  <#assign paymentCountryGeo = (delegator.findOne("Geo", {"geoId", paymentAddress.countryGeoId!}, false))! />
-                  <#if paymentCountryGeo?has_content>${paymentCountryGeo.geoName!}</#if>
-                  ${uiLabelMap.EcommerceBeSureToIncludeYourOrderNb}
-                </#if>
-              <#else>
-                <#assign outputted = true>
-                ${uiLabelMap.AccountingPaymentVia} ${paymentMethodType.get("description",locale)}
-              </#if>
+              ${uiLabelMap.PartyName} :
+              ${(displayPartyNameResult.fullName)?default("[Name Not Found]")}
             </li>
           </#if>
-          <#if paymentMethods?has_content>
-            <#list paymentMethods as paymentMethod>
-              <#if "CREDIT_CARD" == paymentMethod.paymentMethodTypeId>
-                <#assign creditCard = paymentMethod.getRelatedOne("CreditCard", false)>
-                <#assign formattedCardNumber = Static["org.apache.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)>
-              <#elseif "GIFT_CARD" == paymentMethod.paymentMethodTypeId>
-                <#assign giftCard = paymentMethod.getRelatedOne("GiftCard", false)>
-              <#elseif "EFT_ACCOUNT" == paymentMethod.paymentMethodTypeId>
-                <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount", false)>
-              </#if>
-              <#-- credit card info -->
-              <#if "CREDIT_CARD" == paymentMethod.paymentMethodTypeId && creditCard?has_content>
-                <#if outputted?default(false)></#if>
-                <#assign pmBillingAddress = creditCard.getRelatedOne("PostalAddress", false)!>
-                <li>
-                  <ul>
-                    <li> ${uiLabelMap.AccountingCreditCard}
-                      <#if creditCard.companyNameOnCard?has_content>${creditCard.companyNameOnCard}</#if>
-                      <#if creditCard.titleOnCard?has_content>${creditCard.titleOnCard}</#if>
-                      ${creditCard.firstNameOnCard}
-                      <#if creditCard.middleNameOnCard?has_content>${creditCard.middleNameOnCard}</#if>
-                      ${creditCard.lastNameOnCard}
-                      <#if creditCard.suffixOnCard?has_content>${creditCard.suffixOnCard}</#if>
-                    </li>
-                    <li>${formattedCardNumber}</li>
-                  </ul>
-                </li>
-                <#-- Gift Card info -->
-              <#elseif "GIFT_CARD" == paymentMethod.paymentMethodTypeId && giftCard?has_content>
-                <#if outputted?default(false)></#if>
-                <#if giftCard?has_content && giftCard.cardNumber?has_content>
-                  <#assign pmBillingAddress = giftCard.getRelatedOne("PostalAddress", false)!>
-                  <#assign giftCardNumber = "">
-                  <#assign pcardNumber = giftCard.cardNumber>
-                  <#if pcardNumber?has_content>
-                    <#assign psize = pcardNumber?length - 4>
-                    <#if 0 < psize>
-                      <#list 0 .. psize-1 as foo>
-                        <#assign giftCardNumber = giftCardNumber + "*">
-                      </#list>
-                      <#assign giftCardNumber = giftCardNumber + pcardNumber[psize .. psize + 3]>
-                    <#else>
-                      <#assign giftCardNumber = pcardNumber>
-                    </#if>
-                  </#if>
-                </#if>
-                <li>
-                  ${uiLabelMap.AccountingGiftCard}
-                  ${giftCardNumber}
-                </li>
-                <#-- EFT account info -->
-              <#elseif "EFT_ACCOUNT" == paymentMethod.paymentMethodTypeId && eftAccount?has_content>
-                <#if outputted?default(false)></#if>
-                <#assign pmBillingAddress = eftAccount.getRelatedOne("PostalAddress", false)!>
-                <li>
-                  <ul>
-                    <li>
-                      ${uiLabelMap.AccountingEFTAccount}
-                      ${eftAccount.nameOnAccount!}
-                    </li>
-                    <li>
-                      <#if eftAccount.companyNameOnAccount?has_content>${eftAccount.companyNameOnAccount}</#if>
-                    </li>
-                    <li>
-                      ${uiLabelMap.AccountingBank}: ${eftAccount.bankName}, ${eftAccount.routingNumber}
-                    </li>
-                    <li>
-                      ${uiLabelMap.AccountingAccount} #: ${eftAccount.accountNumber}
-                    </li>
-                  </ul>
-                </li>
-              </#if>
-              <#if pmBillingAddress?has_content>
-                <li>
-                  <ul>
-                    <li>
-                      <#if pmBillingAddress.toName?has_content>${uiLabelMap.CommonTo}: ${pmBillingAddress.toName}</#if>
-                    </li>
-                    <li>
-                      <#if pmBillingAddress.attnName?has_content>
-                        ${uiLabelMap.CommonAttn}  : ${pmBillingAddress.attnName}
-                      </#if>
-                    </li>
-                    <li>
-                      ${pmBillingAddress.address1}
-                    </li>
-                    <li>
-                      <#if pmBillingAddress.address2?has_content>${pmBillingAddress.address2}</#if>
-                    </li>
-                    <li>
-                      <#assign pmBillingStateGeo = (delegator.findOne("Geo", {"geoId", pmBillingAddress.stateProvinceGeoId!}, false))! />
-                      ${pmBillingAddress.city}
-                      <#if pmBillingStateGeo?has_content>  , ${ pmBillingStateGeo.geoName!}</#if>
-                      ${pmBillingAddress.postalCode!}
-                      <#assign pmBillingCountryGeo = (delegator.findOne("Geo", {"geoId", pmBillingAddress.countryGeoId!}, false))! />
-                      <#if pmBillingCountryGeo?has_content>${pmBillingCountryGeo.geoName!}</#if>
-                    </li>
-                  </ul>
-                </li>
-              </#if>
-              <#assign outputted = true>
-            </#list>
-          </#if>
-          <#-- billing account info -->
-          <#if billingAccount?has_content>
-            <#if outputted?default(false)></#if>
-            <#assign outputted = true>
+          <#-- order status information -->
+          <li>
+            ${uiLabelMap.CommonStatus} :
+            <#if orderHeader?has_content>
+              ${localOrderReadHelper.getStatusString(locale)}
+            <#else>
+              ${uiLabelMap.OrderNotYetOrdered}
+            </#if>
+          </li>
+          <#-- ordered date -->
+          <#if orderHeader?has_content>
             <li>
-              ${uiLabelMap.AccountingBillingAccount}
-              #${billingAccount.billingAccountId!} - ${billingAccount.description!}
+              ${uiLabelMap.CommonDate} :
+              ${orderHeader.orderDate.toString()}
             </li>
           </#if>
-          <#if (customerPoNumberSet?has_content)>
+          <#if distributorId??>
             <li>
-              ${uiLabelMap.OrderPurchaseOrderNumber}
-              <#list customerPoNumberSet as customerPoNumber>
-                ${customerPoNumber!}
-              </#list>
+              ${uiLabelMap.OrderDistributor} :
+              ${distributorId}
             </li>
           </#if>
         </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <#if paymentMethods?has_content || paymentMethodType?has_content || billingAccount?has_content>
+        <#-- order payment info -->
+        <div class="card-header">
+          <strong>${uiLabelMap.AccountingPaymentInformation}</strong>
+        </div>
+        <#-- offline payment address infomation :: change this to use Company's address -->
+        <div class="card-body">
+          <ul class="list-unstyled">
+            <#if !paymentMethod?has_content && paymentMethodType?has_content>
+              <li>
+                <#if "EXT_OFFLINE" == paymentMethodType.paymentMethodTypeId>
+                  ${uiLabelMap.AccountingOfflinePayment}
+                  <#if orderHeader?has_content && paymentAddress?has_content>
+                    ${uiLabelMap.OrderSendPaymentTo}:
+                    <#if paymentAddress.toName?has_content>${paymentAddress.toName}</#if>
+                    <#if paymentAddress.attnName?has_content>
+                      ${uiLabelMap.PartyAddrAttnName}  : ${paymentAddress.attnName}
+                    </#if>
+                    ${paymentAddress.address1}
+                    <#if paymentAddress.address2?has_content>${paymentAddress.address2}</#if>
+                    <#assign paymentStateGeo = (delegator.findOne("Geo", {"geoId", paymentAddress.stateProvinceGeoId!}, false))! />
+                    ${paymentAddress.city}
+                    <#if paymentStateGeo?has_content>, ${paymentStateGeo.geoName!}</#if>
+                    ${paymentAddress.postalCode!}
+                    <#assign paymentCountryGeo = (delegator.findOne("Geo", {"geoId", paymentAddress.countryGeoId!}, false))! />
+                    <#if paymentCountryGeo?has_content>${paymentCountryGeo.geoName!}</#if>
+                    ${uiLabelMap.EcommerceBeSureToIncludeYourOrderNb}
+                  </#if>
+                <#else>
+                  <#assign outputted = true>
+                  ${uiLabelMap.AccountingPaymentVia} ${paymentMethodType.get("description",locale)}
+                </#if>
+              </li>
+            </#if>
+            <#if paymentMethods?has_content>
+              <#list paymentMethods as paymentMethod>
+                <#if "CREDIT_CARD" == paymentMethod.paymentMethodTypeId>
+                  <#assign creditCard = paymentMethod.getRelatedOne("CreditCard", false)>
+                  <#assign formattedCardNumber = Static["org.apache.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)>
+                <#elseif "GIFT_CARD" == paymentMethod.paymentMethodTypeId>
+                  <#assign giftCard = paymentMethod.getRelatedOne("GiftCard", false)>
+                <#elseif "EFT_ACCOUNT" == paymentMethod.paymentMethodTypeId>
+                  <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount", false)>
+                </#if>
+                <#-- credit card info -->
+                <#if "CREDIT_CARD" == paymentMethod.paymentMethodTypeId && creditCard?has_content>
+                  <#if outputted?default(false)></#if>
+                  <#assign pmBillingAddress = creditCard.getRelatedOne("PostalAddress", false)!>
+                  <li>
+                    <ul class="list-unstyled">
+                      <li> ${uiLabelMap.AccountingCreditCard}
+                        <#if creditCard.companyNameOnCard?has_content>${creditCard.companyNameOnCard}</#if>
+                        <#if creditCard.titleOnCard?has_content>${creditCard.titleOnCard}</#if>
+                        ${creditCard.firstNameOnCard}
+                        <#if creditCard.middleNameOnCard?has_content>${creditCard.middleNameOnCard}</#if>
+                        ${creditCard.lastNameOnCard}
+                        <#if creditCard.suffixOnCard?has_content>${creditCard.suffixOnCard}</#if>
+                      </li>
+                      <li>${formattedCardNumber}</li>
+                    </ul>
+                  </li>
+                  <#-- Gift Card info -->
+                <#elseif "GIFT_CARD" == paymentMethod.paymentMethodTypeId && giftCard?has_content>
+                  <#if outputted?default(false)></#if>
+                  <#if giftCard?has_content && giftCard.cardNumber?has_content>
+                    <#assign pmBillingAddress = giftCard.getRelatedOne("PostalAddress", false)!>
+                    <#assign giftCardNumber = "">
+                    <#assign pcardNumber = giftCard.cardNumber>
+                    <#if pcardNumber?has_content>
+                      <#assign psize = pcardNumber?length - 4>
+                      <#if 0 < psize>
+                        <#list 0 .. psize-1 as foo>
+                          <#assign giftCardNumber = giftCardNumber + "*">
+                        </#list>
+                        <#assign giftCardNumber = giftCardNumber + pcardNumber[psize .. psize + 3]>
+                      <#else>
+                        <#assign giftCardNumber = pcardNumber>
+                      </#if>
+                    </#if>
+                  </#if>
+                  <li>
+                    ${uiLabelMap.AccountingGiftCard}
+                    ${giftCardNumber}
+                  </li>
+                  <#-- EFT account info -->
+                <#elseif "EFT_ACCOUNT" == paymentMethod.paymentMethodTypeId && eftAccount?has_content>
+                  <#if outputted?default(false)></#if>
+                  <#assign pmBillingAddress = eftAccount.getRelatedOne("PostalAddress", false)!>
+                  <li>
+                    <ul class="list-unstyled">
+                      <li>
+                        ${uiLabelMap.AccountingEFTAccount}
+                        ${eftAccount.nameOnAccount!}
+                      </li>
+                      <li>
+                        <#if eftAccount.companyNameOnAccount?has_content>${eftAccount.companyNameOnAccount}</#if>
+                      </li>
+                      <li>
+                        ${uiLabelMap.AccountingBank}: ${eftAccount.bankName}, ${eftAccount.routingNumber}
+                      </li>
+                      <li>
+                        ${uiLabelMap.AccountingAccount} #: ${eftAccount.accountNumber}
+                      </li>
+                    </ul>
+                  </li>
+                </#if>
+                <#if pmBillingAddress?has_content>
+                  <li>
+                    <ul class="list-unstyled">
+                      <li>
+                        <#if pmBillingAddress.toName?has_content>${uiLabelMap.CommonTo}: ${pmBillingAddress.toName}</#if>
+                      </li>
+                      <li>
+                        <#if pmBillingAddress.attnName?has_content>
+                          ${uiLabelMap.CommonAttn}  : ${pmBillingAddress.attnName}
+                        </#if>
+                      </li>
+                      <li>
+                        ${pmBillingAddress.address1}
+                      </li>
+                      <li>
+                        <#if pmBillingAddress.address2?has_content>${pmBillingAddress.address2}</#if>
+                      </li>
+                      <li>
+                        <#assign pmBillingStateGeo = (delegator.findOne("Geo", {"geoId", pmBillingAddress.stateProvinceGeoId!}, false))! />
+                        ${pmBillingAddress.city}
+                        <#if pmBillingStateGeo?has_content>  , ${ pmBillingStateGeo.geoName!}</#if>
+                        ${pmBillingAddress.postalCode!}
+                        <#assign pmBillingCountryGeo = (delegator.findOne("Geo", {"geoId", pmBillingAddress.countryGeoId!}, false))! />
+                        <#if pmBillingCountryGeo?has_content>${pmBillingCountryGeo.geoName!}</#if>
+                      </li>
+                    </ul>
+                  </li>
+                </#if>
+                <#assign outputted = true>
+              </#list>
+            </#if>
+            <#-- billing account info -->
+            <#if billingAccount?has_content>
+              <#if outputted?default(false)></#if>
+              <#assign outputted = true>
+              <li>
+                ${uiLabelMap.AccountingBillingAccount}
+                #${billingAccount.billingAccountId!} - ${billingAccount.description!}
+              </li>
+            </#if>
+            <#if (customerPoNumberSet?has_content)>
+              <li>
+                ${uiLabelMap.OrderPurchaseOrderNumber}
+                <#list customerPoNumberSet as customerPoNumber>
+                  ${customerPoNumber!}
+                </#list>
+              </li>
+            </#if>
+          </ul>
+        </div>
       </#if>
     </div>
 
-  <#-- right side -->
-  <div class="screenlet">
+  <div class="card">
     <#if orderItemShipGroups?has_content>
-      <h3>${uiLabelMap.OrderShippingInformation}</h3>
+      <div class="card-header">
+        <strong>${uiLabelMap.OrderShippingInformation}</strong>
+      </div>
+      <div class="card-body">
       <#-- shipping address -->
       <#assign groupIdx = 0>
       <#list orderItemShipGroups as shipGroup>
@@ -249,10 +259,10 @@ under the License.
           <#assign shippingAddress = cart.getShippingAddress(groupIdx)!>
           <#assign groupNumber = groupIdx + 1>
         </#if>
-        <ul>
+        <ul class="list-unstyled">
           <#if shippingAddress?has_content>
             <li>
-              <ul>
+              <ul class="list-unstyled">
                 <li>
                   ${uiLabelMap.OrderDestination} [${groupNumber}]
                   <#if shippingAddress.toName?has_content>${uiLabelMap.CommonTo}: ${shippingAddress.toName}</#if>
@@ -282,7 +292,7 @@ under the License.
             </li>
           </#if>
           <li>
-            <ul>
+            <ul class="list-unstyled">
               <li>
                 ${uiLabelMap.OrderMethod}:
                 <#if orderHeader?has_content>
@@ -368,6 +378,7 @@ under the License.
         </ul>
         <#assign groupIdx = groupIdx + 1>
       </#list><#-- end list of orderItemShipGroups -->
+      </div>
     </#if>
   </div>
 

@@ -20,27 +20,30 @@ under the License.
 <#-- NOTE: this template is used for the orderstatus screen in ecommerce AND for order notification emails through the OrderNoticeEmail.ftl file -->
 <#-- the "urlPrefix" value will be prepended to URLs by the ofbizUrl transform if/when there is no "request" object in the context -->
 <#if baseEcommerceSecureUrl??><#assign urlPrefix = baseEcommerceSecureUrl/></#if>
-<div class="screenlet">
+<div class="card">
     <#if "Y" == maySelectItems?default("N")>
-      <form name="addCommonToCartForm" action="<@ofbizUrl>addordertocart/orderstatus</@ofbizUrl>" method="post">
+          <form name="addCommonToCartForm" action="<@ofbizUrl>addordertocart/orderstatus</@ofbizUrl>" method="post">
         <input type="hidden" name="add_all" value="false" />    
             <input type="hidden" name="orderId" value="${orderHeader.orderId}" />
     </#if>
-  <h3>
+  <div class="card-header">
+    <strong>
     <#assign numColumns = 8>
     ${uiLabelMap.OrderOrderItems}
     <#if "Y" == maySelectItems?default("N") && "PLACING_CUSTOMER" == roleTypeId!>
       <#assign numColumns = 11>
       <a href="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()"
-          class="submenutext">${uiLabelMap.OrderAddAllToCart}</a>
+          class="btn btn-sm float-right">${uiLabelMap.OrderAddAllToCart}</a>
       <a href="javascript:document.addCommonToCartForm.add_all.value='false';document.addCommonToCartForm.submit()"
-          class="submenutext">${uiLabelMap.OrderAddCheckedToCart}</a>
+          class="btn btn-sm float-right">${uiLabelMap.OrderAddCheckedToCart}</a>
       <a href="<@ofbizUrl fullPath="true">createShoppingListFromOrder?orderId=${orderHeader.orderId}&amp;frequency=6&amp;intervalNumber=1&amp;shoppingListTypeId=SLT_AUTO_REODR</@ofbizUrl>"
-          class="submenutextright">${uiLabelMap.OrderSendMeThisEveryMonth}</a>
+          class="btn btn-sm float-right">${uiLabelMap.OrderSendMeThisEveryMonth}</a>
     </#if>
-  </h3>
-  <table>
-    <thead>
+    </strong>
+  </div>
+  <div class="card-body">
+  <table class="table table-responsive-sm">
+    <thead class="thead-light">
       <tr>
         <th>${uiLabelMap.OrderProduct}</th>
         <#if "Y" == maySelectItems?default("N")>
@@ -146,7 +149,7 @@ under the License.
                   class="linktext">${orderItem.productId} - ${orderItem.itemDescription?default("")}</a>
               <#assign orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)/>
               <#if orderItemAttributes?has_content>
-                <ul>
+                <ul class="list-unstyled">
                   <#list orderItemAttributes as orderItemAttribute>
                     <li>${orderItemAttribute.attrName} : ${orderItemAttribute.attrValue}</li>
                   </#list>
@@ -345,4 +348,5 @@ under the License.
     <#if "Y" == maySelectItems?default("N") >
         </form>
      </#if>
+     </div>
 </div>
