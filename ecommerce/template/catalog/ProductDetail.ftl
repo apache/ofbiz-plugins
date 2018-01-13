@@ -982,8 +982,8 @@ $(function(){
         <a href="<@ofbizUrl>reviewProduct?category_id=${categoryId!}&amp;product_id=${product.productId}</@ofbizUrl>"
            class="linktext">${uiLabelMap.ProductBeTheFirstToReviewThisProduct}</a>
       </div>
-    </div>
     </#if>
+  </div>
     <#-- Upgrades/Up-Sell/Cross-Sell -->
     <#macro associated assocProducts beforeName showName afterName formNamePrefix targetRequestName>
       <#assign pageProduct = product />
