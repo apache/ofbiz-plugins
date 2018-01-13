@@ -377,7 +377,7 @@ under the License.
                     </label>
                     <input type="text" name="billToContactNumber" class="required" id="billToContactNumber"
                         value="${billToTelecomNumber.contactNumber!}" size="10" maxlength="15"/> -
-                  </span>
+                  </div>
                   <div class="form-group col-md-3">
                     <label for="billToExtension">${uiLabelMap.PartyExtension}</label>
                     <input type="text" name="billToExtension" id="billToExtension"
