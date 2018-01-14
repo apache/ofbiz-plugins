@@ -287,7 +287,7 @@ under the License.
             <display description="${uiLabelMap.ExampleMultipleDropDownTooltip}"/>
         </field>
         <field name="countryGeoIdMultiple" title="${uiLabelMap.CommonCountry}">
-            <drop-down no-current-selected-key="USA">
+            <drop-down no-current-selected-key="USA" allow-multiple="true">
                 <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName}">
                     <entity-constraint name="geoTypeId" value="COUNTRY"/>
                     <entity-order-by field-name="geoName"/>
