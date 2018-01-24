@@ -397,7 +397,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://order/template/entry/catalog/QuickAdd.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="component://ecommerce/template/order/QuickAdd.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -410,7 +410,7 @@ under the License.
                 <script location="component://order/groovyScripts/entry/catalog/ProductSummary.groovy"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://order/template/entry/catalog/QuickAddSummary.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="component://ecommerce/template/order/QuickAddSummary.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
