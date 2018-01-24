@@ -25,26 +25,21 @@ under the License.
   <#else>
     <#assign limit=(lastViewedProducts?size-1)/>
   </#if>
-  <div id="minilastviewedproducts" class="screenlet">  
-    <div class="screenlet-title-bar">
-      <ul>
-        <li class="h3">${uiLabelMap.EcommerceLastProducts}</li>
-        <li>
+  <div id="minilastviewedproducts" class="card">
+    <div class="card-header">
+        ${uiLabelMap.EcommerceLastProducts}
+        <div class="float-right">
           <a href="<@ofbizUrl>clearLastViewed</@ofbizUrl>">
             [${uiLabelMap.CommonClear}]
           </a>
-        </li>
-        <#if (lastViewedProducts?size > maxToShow)>
-          <li>
-            <a href="<@ofbizUrl>lastviewedproducts</@ofbizUrl>">
-              [${uiLabelMap.CommonMore}]
-            </a>
-          </li>
-        </#if>
-      </ul>
-      <br class="clear"/>
+          <#if (lastViewedProducts?size > maxToShow)>
+              <a href="<@ofbizUrl>lastviewedproducts</@ofbizUrl>">
+                [${uiLabelMap.CommonMore}]
+              </a>
+          </#if>
+        </div>
     </div>
-    <div class="screenlet-body">
+    <div class="card-body">
       <ul>
         <#list lastViewedProducts[0..limit] as productId>
           <li>
