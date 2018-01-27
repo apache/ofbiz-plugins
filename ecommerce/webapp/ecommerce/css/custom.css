@@ -16,10 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
+body {
+    font-size: 0.9rem;
+}
+a,.btn-link{
+    color: #158ae2;
+}
+a.btn-primary {
+    color: white!important;
+}
 #ecom-mainarea{
     padding:10px;
-    background: #FFF;
     margin-top: 20px;
     position: relative;
     text-align: left;

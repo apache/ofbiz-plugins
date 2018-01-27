@@ -22,8 +22,8 @@ under the License.
       <strong>${uiLabelMap.EcommerceRequestHistory}</strong>
     </div>
     <div class="card-body">
-        <table class="table">
-            <thead>
+        <table class="table table-responsive-sm">
+            <thead class="thead-light">
             <tr>
                 <th>
                    ${uiLabelMap.OrderRequest} ${uiLabelMap.CommonNbr}

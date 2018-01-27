@@ -22,8 +22,8 @@ under the License.
         <strong>${uiLabelMap.OrderRequestItems}</strong>
     </div>
     <div class="card-body">
-        <table class="table">
-            <thead>
+        <table class="table table-responsive-sm">
+            <thead class="thead-light">
                 <tr>
                     <th>${uiLabelMap.ProductItem}</th>
                     <th>${uiLabelMap.OrderProduct}</th>
