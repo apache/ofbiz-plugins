@@ -41,58 +41,58 @@ under the License.
       <input type="hidden" name="emailType" value="CONT_NOTI_EMAIL"/>
 
       <div class="form-group row">
-        <label for="${uiLabelMap.EcommerceSubject}" class="col-1 col-form-label">${uiLabelMap.EcommerceSubject}</label>
-        <div class="col-11">
+        <label for="${uiLabelMap.EcommerceSubject}" class="col-2 col-form-label">${uiLabelMap.EcommerceSubject}</label>
+        <div class="col-10">
           <input type="text" name="subject" id="subject" class="required form-control form-control-sm" value="${requestParameters.subject!}"/>
         </div>
       </div>
       <div class="form-group row">
-        <label for="${uiLabelMap.CommonMessage}" class="col-1 col-form-label">${uiLabelMap.CommonMessage}</label>
-        <div class="col-11">
+        <label for="${uiLabelMap.CommonMessage}" class="col-2 col-form-label">${uiLabelMap.CommonMessage}</label>
+        <div class="col-10">
           <textarea name="content" id="message" class="required form-control form-control-sm" rows="4">
             ${requestParameters.content!}
           </textarea>
         </div>
       </div>
       <div class="form-group row">
-        <label for="${uiLabelMap.FormFieldTitle_emailAddress}" class="col-1 col-form-label">${uiLabelMap.FormFieldTitle_emailAddress}</label>
-        <div class="col-11">
+        <label for="${uiLabelMap.FormFieldTitle_emailAddress}" class="col-2 col-form-label">${uiLabelMap.FormFieldTitle_emailAddress}</label>
+        <div class="col-10">
            <input type="email" name="emailAddress" id="emailAddress" class="required form-control form-control-sm" value="${requestParameters.emailAddress!}"/>
         </div>
       </div>
       <div class="row">
         <div class="col-6">
           <div class="form-group row">
-            <label for="${uiLabelMap.PartyFirstName}" class="col-2 col-form-label">${uiLabelMap.PartyFirstName}</label>
-            <div class="col-10">
+            <label for="${uiLabelMap.PartyFirstName}" class="col-4 col-form-label">${uiLabelMap.PartyFirstName}</label>
+            <div class="col-8">
               <input type="text" name="firstName" id="firstName" class="required form-control form-control-sm" value="${requestParameters.firstName!}"/>
             </div>
           </div>
         </div>
         <div class="col-6">
           <div class="form-group row">
-            <label for="${uiLabelMap.PartyLastName}" class="col-2 col-form-label">${uiLabelMap.PartyLastName}</label>
-            <div class="col-10">
+            <label for="${uiLabelMap.PartyLastName}" class="col-4 col-form-label">${uiLabelMap.PartyLastName}</label>
+            <div class="col-8">
               <input type="text" name="lastName" id="lastName" class="required form-control form-control-sm" value="${requestParameters.lastName!}"/>
             </div>
           </div>
         </div>
       </div>
       <div class="form-group row">
-        <label for="${uiLabelMap.CommonCaptchaCode}" class="col-1 col-form-label">${uiLabelMap.CommonCaptchaCode}</label>
-        <div class="col-11">
+        <label for="${uiLabelMap.CommonCaptchaCode}" class="col-2 col-form-label">${uiLabelMap.CommonCaptchaCode}</label>
+        <div class="col-10">
           <img id="captchaImage" src="<@ofbizUrl>captcha.jpg?captchaCodeId=captchaImage&amp;unique=${nowTimestamp.getTime()}</@ofbizUrl>" alt=""/>
         </div>
       </div>
       <div class="row">
-        <div class="col-1"></div>
-        <div class="col-11">
+        <div class="col-2"></div>
+        <div class="col-10">
           <a href="javascript:reloadCaptcha('captchaImage');">${uiLabelMap.CommonReloadCaptchaCode}</a>
         </div>
       </div>
       <div class="form-group row">
-        <label for="${uiLabelMap.CommonVerifyCaptchaCode}" class="col-1 col-form-label">${uiLabelMap.CommonVerifyCaptchaCode}</label>
-        <div class="col-11">
+        <label for="${uiLabelMap.CommonVerifyCaptchaCode}" class="col-2 col-form-label">${uiLabelMap.CommonVerifyCaptchaCode}</label>
+        <div class="col-10">
           <input type="text" autocomplete="off" maxlength="30" size="23" name="captcha" class="form-control form-control-sm"/>
         </div>
       </div>
