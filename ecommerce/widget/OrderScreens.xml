@@ -261,7 +261,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://order/template/entry/CheckoutShippingAddress.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="component://ecommerce/template/order/CheckoutShippingAddress.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -602,6 +602,45 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/template/order/OnePageCheckoutProcess.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="customertaxinfo">
+        <!-- meant to be included, generally through a screens.render type of thing -->
+        <section>
+            <actions>
+                <set field="partyId" from-field="userLogin.partyId"/>
+                <entity-condition entity-name="PartyTaxAuthInfoAndDetail" list="partyTaxAuthInfoAndDetailList">
+                    <condition-expr field-name="partyId" from-field="partyId"/>
+                    <order-by field-name="geoCode"/>
+                    <order-by field-name="groupName"/>
+                </entity-condition>
+                <entity-condition entity-name="TaxAuthorityAndDetail" list="taxAuthorityAndDetailList">
+                    <order-by field-name="geoCode"/>
+                    <order-by field-name="groupName"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://ecommerce/template/order/CustomerTaxInfo.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="checkoutpayment">
+        <section>
+            <actions>
+                <set field="rightbarScreenName" value="rightbar"/>
+                <set field="MainColumnStyle" value="rightonly"/>
+
+                <set field="titleProperty" value="PageTitleCheckoutOptions"/>
+                <script location="component://order/groovyScripts/entry/CheckoutPayment.groovy"/>
+                <script location="component://order/groovyScripts/entry/StorePaymentOptions.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://ecommerce/template/order/CheckoutPayment.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
