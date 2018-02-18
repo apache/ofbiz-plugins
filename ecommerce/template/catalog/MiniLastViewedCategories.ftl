@@ -28,7 +28,7 @@ under the License.
   <div id="minilastviewedcategories" class="card">
     <div class="card-header">
       ${uiLabelMap.EcommerceLastCategories}
-      <a href="<@ofbizUrl>clearLastViewed</@ofbizUrl>">[${uiLabelMap.CommonClear}]</a>
+      <a href="<@ofbizUrl>clearLastViewed</@ofbizUrl>" class="float-right">[${uiLabelMap.CommonClear}]</a>
     </div>
     <div class="card-body">
       <ul class="browsecategorylist">

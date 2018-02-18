@@ -52,8 +52,9 @@ under the License.
           <label class="form-check-label" for="SEARCH_OPERATOR_AND"><input type="radio" class="form-check-input" name="SEARCH_OPERATOR" id="SEARCH_OPERATOR_AND" value="AND" <#if "AND" == searchOperator>checked="checked"</#if> />${uiLabelMap.CommonAll}</label>
         </div>
       </div>
-      <input type="submit" value="${uiLabelMap.CommonFind}" class="btn btn-outline-secondary" />
-
+      <div class="form-group">
+        <input type="submit" value="${uiLabelMap.CommonFind}" class="btn btn-outline-secondary" />
+      </div>
     </form>
     <form name="advancedsearchform" id="keywordsearchbox_advancedsearchform" method="post" action="<@ofbizUrl>advancedsearch</@ofbizUrl>">
     <#if 0 &lt; otherSearchProdCatalogCategories?size>
@@ -70,7 +71,9 @@ under the License.
     <#else>
       <input type="hidden" name="SEARCH_CATEGORY_ID" value="${searchCategoryId!}" />
     </#if>
-      <input type="submit" value="${uiLabelMap.ProductAdvancedSearch}" class="btn btn-outline-secondary" />
+      <div class="form-group">
+        <input type="submit" value="${uiLabelMap.ProductAdvancedSearch}" class="btn btn-outline-secondary" />
+      </div>
     </form>
   </div>
 </div>

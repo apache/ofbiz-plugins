@@ -65,7 +65,7 @@ under the License.
           </div>
           <div class="form-group">
             <label for="preferredContactMechId">${uiLabelMap.CommonEmail} *</label>
-            <select id="preferredContactMechId" name="preferredContactMechId" class="selectBox">
+            <select id="preferredContactMechId" name="preferredContactMechId" class="form-control">
               <#list partyAndContactMechList as partyAndContactMech>
                 <option value="${partyAndContactMech.contactMechId}">
                   <#if partyAndContactMech.infoString?has_content>
@@ -82,9 +82,12 @@ under the License.
               </#list>
             </select>
           </div>
-          <input type="submit" class="form-control btn btn-outline-secondary" value="${uiLabelMap.EcommerceSubscribe}"/>
-          <input type="button" class="form-control btn btn-outline-secondary" value="${uiLabelMap.EcommerceUnsubscribe}"
+          <div class="form-group">
+            <input type="submit" class="btn btn-outline-secondary" value="${uiLabelMap.EcommerceSubscribe}"/>
+
+            <input type="button" class="btn btn-outline-secondary" value="${uiLabelMap.EcommerceUnsubscribe}"
               onclick="javascript:unsubscribeByContactMech();"/>
+          </div>
       </form>
     <#else>
     <#-- Not logged in so ask them to log in and then sign up or clear the user association -->
