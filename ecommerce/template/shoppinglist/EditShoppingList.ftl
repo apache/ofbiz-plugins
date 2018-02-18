@@ -83,12 +83,10 @@ under the License.
 <div class="card">
   <div class="card-header">
     <strong>${uiLabelMap.EcommerceShoppingLists}</strong>
-    <div class="boxlink">
-            <form id="createEmptyShoppingList" action="<@ofbizUrl>createEmptyShoppingList</@ofbizUrl>" method="post">
-               <input type="hidden" name="productStoreId" value="${productStoreId!}" />
-               <a href="javascript:document.getElementById('createEmptyShoppingList').submit();">${uiLabelMap.CommonCreateNew}</a>
-            </form>
-        </div>
+    <form id="createEmptyShoppingList" action="<@ofbizUrl>createEmptyShoppingList</@ofbizUrl>" method="post">
+       <input type="hidden" name="productStoreId" value="${productStoreId!}" />
+       <a href="javascript:document.getElementById('createEmptyShoppingList').submit();" class="float-right">${uiLabelMap.CommonCreateNew}</a>
+    </form>
   </div>
     <div class="card-body">
         <#if shoppingLists?has_content>

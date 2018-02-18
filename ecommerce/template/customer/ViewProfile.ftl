@@ -181,7 +181,7 @@ under the License.
                         <input type="hidden" name="productStoreId" value="${productStoreId}" />
                         <input type="hidden" name="defaultShipAddr" value="${contactMech.contactMechId}" />
                         <input type="hidden" name="partyId" value="${party.partyId}" />
-                        <input type="submit" value="${uiLabelMap.EcommerceSetDefault}" class="button" />
+                        <input type="submit" value="${uiLabelMap.EcommerceSetDefault}" class="btn btn-outline-secondary" />
                       </form>
                     </#if>
                   <#else>
@@ -585,6 +585,7 @@ under the License.
     <table class="table table-responsive-sm">
       <#list surveys as surveyAppl>
         <#assign survey = surveyAppl.getRelatedOne("Survey", false) />
+        <tbody>
         <tr>
           <td>${survey.surveyName!}&nbsp;-&nbsp;${survey.description!}</td>
           <td>
@@ -599,6 +600,7 @@ under the License.
             <td><a href="<@ofbizUrl>takesurvey?productStoreSurveyId=${surveyAppl.productStoreSurveyId}</@ofbizUrl>" class="btn btn-outline-secondary">${surveyLabel}</a></td>
           </#if>
         </tr>
+        </tbody>
       </#list>
     </table>
   </div>
