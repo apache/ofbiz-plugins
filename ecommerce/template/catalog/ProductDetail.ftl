@@ -695,7 +695,7 @@ $(function(){
             </#list>
             <input type="hidden" name="add_product_id" value="${product.productId}"/>
             <div id="addCart1" class="form-group" style="display:none;">
-              <label><strong>${uiLabelMap.CommonQuantity}:</strong></span>
+              <label><strong>${uiLabelMap.CommonQuantity}:</strong></label>
               <input type="text" class="form-control" size="5" name="quantity" value="1"/>
               <a href="javascript:javascript:addItem();" class="btn btn-outline-secondary"><span
                   style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
@@ -756,7 +756,6 @@ $(function(){
         </div>
         <#-- check to see if introductionDate hasnt passed yet -->
         <#if product.introductionDate?? && nowTimestamp.before(product.introductionDate)>
-          <p>&nbsp;</p>
           <div style="color: red;">${uiLabelMap.ProductProductNotYetMadeAvailable}.</div>
         <#-- check to see if salesDiscontinuationDate has passed -->
         <#elseif product.salesDiscontinuationDate?? && nowTimestamp.after(product.salesDiscontinuationDate)>
@@ -924,7 +923,7 @@ $(function(){
             <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);">
               <img src="<@ofbizContentUrl>${contentPathPrefix!}${imageUrl}</@ofbizContentUrl>" class="cssImgSmall" alt=""/>
             </a>
-          <li/>
+          </li>
         </#if>
         <#assign indexer = indexer + 1 />
       </#list>
@@ -1078,7 +1077,6 @@ $(function(){
       <h4>${uiLabelMap.EcommerceProductTags}</h4>
     <#if productTags??>
       <p class="titleAddTags"><strong>${uiLabelMap.EcommerceProductTagsDetail}:</strong></p>
-      <p>
         <ul>
           <li>
             <#assign no = 0 />
@@ -1094,7 +1092,6 @@ $(function(){
             </#list>
           </li>
         </ul>
-      </p>
     </#if>
     <div class="form-group">
       <label>${uiLabelMap.EcommerceAddYourTags}:</label>
