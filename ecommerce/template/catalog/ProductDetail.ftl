@@ -341,18 +341,24 @@ $(function(){
   <#assign productAdditionalImage4 = productContentWrapper.get("ADDITIONAL_IMAGE_4", "url")! />
 
   <#-- Category next/previous -->
+
   <#if category??>
-    <div id="paginationBox">
-      <#if previousProductId??>
-        <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId! productId=previousProductId!/>"
-            >${uiLabelMap.CommonPrevious}</a>&nbsp;|&nbsp;
+    <div class="row">
+    <div class="col-auto mt-3 ml-2">
+       <#if previousProductId??>
+         <a class="btn btn-outline-secondary" href="<@ofbizCatalogAltUrl productCategoryId=categoryId! productId=previousProductId!/>">${uiLabelMap.CommonPrevious}</a>
+       </#if>
+    </div>
+    <#if category.categoryName?has_content>
+    <div class="col-auto"
+      <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId!/>" class="linktext">${(category.categoryName)?default(category.description)!}</a>
+    </div>
+    </#if>
+    <div class="col-auto mt-3">
+      <#if nextProductId??>
+        <a class="btn btn-outline-secondary" href="<@ofbizCatalogAltUrl productCategoryId=categoryId! productId=nextProductId!/>">${uiLabelMap.CommonNext}</a>
       </#if>
-      <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId!/>"
-          class="linktext">${(category.categoryName)?default(category.description)!}</a>
-      <#if nextProductId??>&nbsp;|&nbsp;
-        <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId! productId=nextProductId!/>"
-            >${uiLabelMap.CommonNext}</a>
-      </#if>
+    </div>
     </div>
   </#if>
 
@@ -662,12 +668,13 @@ $(function(){
           </div>
         </#if>
         <#-- Variant Selection -->
+        <div class="form-group">
+        <label>${uiLabelMap.CommonAmount}:</label>
         <#if "Y" == product.isVirtual!?upper_case>
           <#if "VV_FEATURETREE" == product.virtualVariantMethodEnum! && featureLists?has_content>
             <#list featureLists as featureList>
               <#list featureList as feature>
                 <#if feature_index == 0>
-                  <div>
                     ${feature.description}:
                     <select id="FT${feature.productFeatureTypeId}" name="FT${feature.productFeatureTypeId}" class="form-control"
                         onchange="javascript:checkRadioButton();">
@@ -687,8 +694,8 @@ $(function(){
             </div>
             </#list>
             <input type="hidden" name="add_product_id" value="${product.productId}"/>
-            <div id="addCart1" style="display:none;">
-            <span style="white-space: nowrap;"><strong>${uiLabelMap.CommonQuantity}:</strong></span>&nbsp;
+            <div id="addCart1" class="form-group" style="display:none;">
+              <label><strong>${uiLabelMap.CommonQuantity}:</strong></span>
               <input type="text" class="form-control" size="5" name="quantity" value="1"/>
               <a href="javascript:javascript:addItem();" class="btn btn-outline-secondary"><span
                   style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
@@ -746,6 +753,7 @@ $(function(){
             <#assign inStock = false />
           </#if>
         </#if>
+        </div>
         <#-- check to see if introductionDate hasnt passed yet -->
         <#if product.introductionDate?? && nowTimestamp.before(product.introductionDate)>
           <p>&nbsp;</p>
@@ -761,9 +769,8 @@ $(function(){
             <#else>
               <#assign hiddenStyle = "hidden"/>
             </#if>
-            <div id="add_amount" class="${hiddenStyle}">
-              <span style="white-space: nowrap;"><strong>${uiLabelMap.CommonAmount}:</strong></span>&nbsp;
-              <input type="text" class="form-control" size="5" name="add_amount" value=""/>
+            <div id="add_amount" class="${hiddenStyle} form-group">
+              <input type="text" class="form-control" name="add_amount" value=""/>
             </div>
             <#if "ASSET_USAGE" == product.productTypeId! || "ASSET_USAGE_OUT_IN" == product.productTypeId!>
               <div>
@@ -788,10 +795,14 @@ $(function(){
               <a href="javascript:addItem()" class="btn btn-outline-secondary"><span
                   style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
             <#else>
-              <div class="input-group"><input name="quantity" class="form-control" id="quantity" value="1" size="4" maxLength="4" type="text"
-                           <#if "Y" == product.isVirtual!?upper_case>disabled="disabled"</#if>/><span class="input-group-btn"><a
-                href="javascript:addItem()" id="addToCart" name="addToCart"
-                class="btn btn-outline-secondary">${uiLabelMap.OrderAddToCart}</a></span></div>
+              <div class="form-group">
+              <label>${uiLabelMap.CommonQuantity}:</label>
+              <div class="input-group">
+                <input name="quantity" class="form-control" id="quantity" value="1" size="4" maxLength="4" type="text"
+                <#if "Y" == product.isVirtual!?upper_case>disabled="disabled"</#if>/><span class="input-group-btn">
+                <a href="javascript:addItem()" id="addToCart" name="addToCart" class="btn btn-outline-secondary">${uiLabelMap.OrderAddToCart}</a></span>
+              </div>
+              </div>
               <@showUnavailableVarients/>
             </#if>
           <#else>
@@ -828,7 +839,6 @@ $(function(){
     </div>
     <div>
       <#if sessionAttributes.userLogin?has_content && sessionAttributes.userLogin.userLoginId != "anonymous">
-        <hr/>
         <form name="addToShoppingList" method="post"
               action="<@ofbizUrl>addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
           <fieldset>
@@ -947,13 +957,13 @@ $(function(){
     <#-- Any attributes/etc may go here -->
 
     <#-- Product Reviews -->
+  <hr>
   <div id="reviews">
-    <div>${uiLabelMap.OrderCustomerReviews}:</div>
+    <h4>${uiLabelMap.OrderCustomerReviews}:</h4>
     <#if averageRating?? && (averageRating &gt; 0) && numRatings?? && (numRatings &gt; 1)>
       <div>${uiLabelMap.OrderAverageRating}: ${averageRating} <#if numRatings??>
         (${uiLabelMap.CommonFrom} ${numRatings} ${uiLabelMap.OrderRatings})</#if></div>
     </#if>
-    <hr/>
     <#if productReviews?has_content>
       <#list productReviews as productReview>
         <#assign postedUserLogin = productReview.getRelatedOne("UserLogin", false) />
@@ -977,11 +987,8 @@ $(function(){
            class="linktext">${uiLabelMap.ProductReviewThisProduct}!</a>
       </div>
     <#else>
-      <div>${uiLabelMap.ProductProductNotReviewedYet}.</div>
-      <div>
-        <a href="<@ofbizUrl>reviewProduct?category_id=${categoryId!}&amp;product_id=${product.productId}</@ofbizUrl>"
-           class="linktext">${uiLabelMap.ProductBeTheFirstToReviewThisProduct}</a>
-      </div>
+      <p>${uiLabelMap.ProductProductNotReviewedYet}. <a href="<@ofbizUrl>reviewProduct?category_id=${categoryId!}&amp;product_id=${product.productId}</@ofbizUrl>" class="linktext">${uiLabelMap.ProductBeTheFirstToReviewThisProduct}</a>
+      </p>
     </#if>
   </div>
     <#-- Upgrades/Up-Sell/Cross-Sell -->
@@ -1066,9 +1073,9 @@ $(function(){
       </#list>
     </div>
   </#if>
+  <hr>
     <div class="product-tags">
-      <p class="titleProductTags">
-      <h3>${uiLabelMap.EcommerceProductTags}</h3></p>
+      <h4>${uiLabelMap.EcommerceProductTags}</h4>
     <#if productTags??>
       <p class="titleAddTags"><strong>${uiLabelMap.EcommerceProductTagsDetail}:</strong></p>
       <p>
@@ -1089,9 +1096,8 @@ $(function(){
         </ul>
       </p>
     </#if>
-
-      <p class="titleAddTags"><strong>${uiLabelMap.EcommerceAddYourTags}:</strong></p>
-      <p>
+    <div class="form-group">
+      <label>${uiLabelMap.EcommerceAddYourTags}:</label>
       <form method="post" action="<@ofbizUrl>addProductTags</@ofbizUrl>" name="addProductTags">
         <input type="hidden" name="productId" value="${product.productId!}"/>
         <div class="input-group">
@@ -1099,10 +1105,10 @@ $(function(){
           <span class="input-group-btn"><input class="buttonProductTags btn btn-outline-secondary" type="submit" value="${uiLabelMap.EcommerceAddTags}" name="addTag"/></span>
         </div>
       </form>
-      <span>${uiLabelMap.EcommerceAddTagsDetail}</span>
-      </p>
     </div>
-    <hr/>
+      <span>${uiLabelMap.EcommerceAddTagsDetail}</span>
+
+    </div>
     <form action="<@ofbizUrl>tagsearch</@ofbizUrl>" method="post" name="productTagsearchform" id="productTagsearchform">
       <input type="hidden" name="keywordTypeId" value="KWT_TAG"/>
       <input type="hidden" name="statusId" value="KW_APPROVED"/>
