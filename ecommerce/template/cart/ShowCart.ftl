@@ -648,19 +648,21 @@ under the License.
 </div>
 
 <#if associatedProducts?has_content>
-  <div>
-    <div>
+  <div class="card">
+    <div class="card-header">
       <h3>${uiLabelMap.EcommerceYouMightAlsoIntrested}:</h3>
     </div>
-    <div>
+    <div class="card-body">
       <#-- random complementary products -->
+      <div class="row row-eq-height">
       <#list associatedProducts as assocProduct>
-        <div>
+
           ${setRequestAttribute("optProduct", assocProduct)}
           ${setRequestAttribute("listIndex", assocProduct_index)}
           ${screens.render("component://ecommerce/widget/CatalogScreens.xml#productsummary")}
-        </div>
+
       </#list>
+        </div>
     </div>
   </div>
 </#if>

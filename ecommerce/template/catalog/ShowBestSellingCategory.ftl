@@ -22,7 +22,6 @@ under the License.
     Popular Categories
   </h4>
   <div class="card-body">
-    <p class="card-text">
         <div class="row">
 
           <#list productCategoryList as childCategoryList>
@@ -70,9 +69,9 @@ under the License.
                         <#list productCategoryMembers as productCategoryMember>
                           <#if (i > 2)>
                             <#if productCategoryMembers[i]?has_content>
-                              <a class="linktext" href="<@ofbizCatalogAltUrl productCategoryId=productCategoryId/>">
+                              <li><a class="linktext" href="<@ofbizCatalogAltUrl productCategoryId=productCategoryId/>">
                                 <span>More...</span>
-                              </a>
+                              </a></li>
                             </#if>
                             <#break>
                           </#if>
@@ -100,7 +99,6 @@ under the License.
           </#list>
           </div>
         </#list>
-    </p>
   </div>
 </div>
 

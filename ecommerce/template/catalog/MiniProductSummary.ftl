@@ -28,12 +28,10 @@ under the License.
           ${uiLabelMap.CommonFrom}
         </#if>
         <#if totalPrice??>
-          <li>
             ${uiLabelMap.ProductAggregatedPrice}:
             <span class='basePrice'>
               <@ofbizCurrency amount=totalPrice isoCode=priceResult.currencyUsed/>
             </span>
-          </li>
         <#else>
           <span class="<#if priceResult.isSale>salePrice<#else>normalPrice</#if>">
           <@ofbizCurrency amount=priceResult.price isoCode=priceResult.currencyUsed/></span>

@@ -74,12 +74,12 @@ under the License.
     </#if>
   </div>
   <div class="card-body">
-    <table class="table table-responsive-sm">
     <#if (!receivedCommunicationEvents?has_content && !sentCommunicationEvents?has_content)>
       <div class="alert alert-light" role="alert">
         ${uiLabelMap.EcommerceNoMessages}.
       </div>
     <#else>
+    <table class="table table-responsive-sm">
       <thead class="thead-light">
         <tr>
           <th>
@@ -104,7 +104,8 @@ under the License.
       <#list sentCommunicationEvents! as sentCommunicationEvent>
         <@showMessage communicationEvent=sentCommunicationEvent isSentMessage=true index=sentCommunicationEvent_index/>
       </#list>
-    </#if>
     </table>
+    </#if>
+
   </div>
 </div>

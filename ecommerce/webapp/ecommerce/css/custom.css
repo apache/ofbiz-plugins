@@ -43,6 +43,9 @@ a.btn-primary {
     width: auto;
     height: 140px;
 }
+.card-body ul {
+    padding : 0px;
+}
 
 .products-card .card-title a {
     white-space: normal;
