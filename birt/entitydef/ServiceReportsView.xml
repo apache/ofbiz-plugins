@@ -24,7 +24,7 @@ under the License.
     <description>None</description>
     <version>1.0</version>
 
-    <view-entity entity-name="OrderAndProductStore" package-name="org.ofbiz.birt">
+    <view-entity entity-name="OrderAndProductStore" package-name="org.apache.ofbiz.birt">
         <member-entity entity-alias="OH" entity-name="OrderHeader"/>
         <member-entity entity-alias="PS" entity-name="ProductStore"/>
         <alias-all entity-alias="PS"/>
@@ -34,7 +34,7 @@ under the License.
         </view-link>
     </view-entity>
     
-    <view-entity entity-name="InvoiceItemProductAndParty" package-name="org.ofbiz.birt">
+    <view-entity entity-name="InvoiceItemProductAndParty" package-name="org.apache.ofbiz.birt">
         <member-entity entity-alias="INV" entity-name="Invoice"/>
         <member-entity entity-alias="INITM" entity-name="InvoiceItem"/>
         <member-entity entity-alias="PA" entity-name="Party"/>
