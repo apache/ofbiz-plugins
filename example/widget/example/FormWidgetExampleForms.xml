@@ -352,10 +352,22 @@ under the License.
         <field name="geoIdAlone" title="${uiLabelMap.CommonGeoId}"  tooltip="${uiLabelMap.ExampleLookupFields1}" tooltip-style="button-text">
             <lookup target-form-name="LookupGeo" presentation="window"/>
         </field>
+        <!-- Old style lookup with description field (in a popup window without autocompletion)-->
+        <field name="geoIdAloneDesc" title="${uiLabelMap.CommonGeoId}">
+            <text/>
+        </field>
+        <field name="geoNameAloneDesc" title="${uiLabelMap.CommonGeoName}"  tooltip="${uiLabelMap.ExampleLookupFields6}" tooltip-style="button-text">
+            <lookup target-form-name="LookupGeo" presentation="window" description-field-name="geoIdAloneDesc"/>
+        </field>
         <!-- Standard lookup (in a layer with autocompletion) -->
         <field name="geoIdStd" title="${uiLabelMap.CommonGeoId}" tooltip="${uiLabelMap.ExampleLookupFields2}" tooltip-style="button-text">
             <lookup target-form-name="LookupGeo"/>
         </field>
+        <!-- Standard lookup with description field  (in a layer with autocompletion) -->
+        <field name="geoNameStdDesc" title="${uiLabelMap.CommonGeoName}" tooltip="${uiLabelMap.ExampleLookupFields7}" tooltip-style="button-text">
+            <lookup target-form-name="LookupGeoName" description-field-name="geoIdStdDesc"/>
+        </field>
+        <field name="geoIdStdDesc" title="${uiLabelMap.CommonGeoId}"><text/></field>
         <!-- Standard read only lookup (in a layer with autocompletion) -->
         <field name="geoIdReadOnly" title="${uiLabelMap.CommonGeoId}"  tooltip="${uiLabelMap.ExampleLookupFields3}" tooltip-style="button-text">
             <lookup target-form-name="LookupGeo" read-only="true"/>
@@ -379,7 +391,15 @@ under the License.
                 <sort-field name="geoIdAlone"/>
             </field-group>
             <field-group>
+                <sort-field name="geoNameAloneDesc"/>
+                <sort-field name="geoIdAloneDesc"/>
+            </field-group>
+            <field-group>
                 <sort-field name="geoIdStd"/>
+            </field-group>
+            <field-group>
+                <sort-field name="geoNameStdDesc"/>
+                <sort-field name="geoIdStdDesc"/>
             </field-group>
             <field-group>
                 <sort-field name="geoIdReadOnly"/>

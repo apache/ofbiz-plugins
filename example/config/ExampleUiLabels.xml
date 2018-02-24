@@ -700,6 +700,12 @@
         <value xml:lang="en">Lookup Field of presentation type none. We call only the autocomplete</value>
         <value xml:lang="fr">Champs de recherche de type de présentation aucun, qui utilise seulement l'autocompletion</value>
     </property>
+    <property key="ExampleLookupFields6">
+        <value xml:lang="en">Popup lookup field with description (old way, maybe be useful in some cases, notably if javascript is not enabled)</value>
+    </property>
+    <property key="ExampleLookupFields7">
+        <value xml:lang="en">Layered lookup field with autocompletion, description at right and optional target</value>
+    </property>
     <property key="ExampleLookupFieldsTitle">
         <value xml:lang="en">Lookup Fields</value>
         <value xml:lang="fr">Champs de recherche</value>
