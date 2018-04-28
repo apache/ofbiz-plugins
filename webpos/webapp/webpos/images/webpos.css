@@ -260,12 +260,6 @@ input[type="text"]:focus, input[type="password"]:focus {
     overflow: auto; 
     height: 110px;
 }
-#billingAddressSelected  {
-    color: white;
-}
-#shippingAddressSelected {
-    color: white;
-}
 .selectedAddress {
     border: 1px solid #0099CC;
     background-color: #fece2f;
