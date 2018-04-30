@@ -19,7 +19,7 @@ under the License.
 -->
 <entity-engine-xml>
     <!-- Enumeration for thruReasonId of ExcelImportHistory entity -->
-    <EnumerationType description="Excel import thru reasons" enumTypeId="EXCEL_IMPORT_THRU" hasTable="N" parentTypeId=""/>
+    <EnumerationType description="Excel import thru reasons" enumTypeId="EXCEL_IMPORT_THRU" hasTable="N"/>
     
     <Enumeration enumId="EXCEL_IMPORT_SUCCESS" enumCode="EXCEL_IMPORT_SUCCESS" description="Excel Imported Successfully" sequenceId="01" enumTypeId="EXCEL_IMPORT_THRU"/>
     <Enumeration enumId="EXCEL_IMPORT_STOPPED" enumCode="EXCEL_IMPORT_STOPPED" description="Excel Imported Stopped by user" sequenceId="02" enumTypeId="EXCEL_IMPORT_THRU"/>
@@ -27,7 +27,7 @@ under the License.
     <Enumeration enumId="EXCEL_IMPORT_QUEST" enumCode="EXCEL_IMPORT_QUEST" description="Excel Imported Has Error Messages" sequenceId="04" enumTypeId="EXCEL_IMPORT_THRU"/>
 
     <!-- Enumeration for statusId of ExcelImportHistory entity -->
-    <EnumerationType description="Excel import status" enumTypeId="EXCEL_IMPORT_STATUS" hasTable="N" parentTypeId=""/>
+    <EnumerationType description="Excel import status" enumTypeId="EXCEL_IMPORT_STATUS" hasTable="N"/>
     
     <Enumeration enumId="EXCEL_IMPORTING" enumCode="EXCEL_IMPORTING" description="Excel is being imported in progress" sequenceId="01" enumTypeId="EXCEL_IMPORT_STATUS"/>
     <Enumeration enumId="EXCEL_IMPORTED" enumCode="EXCEL_IMPORTED" description="Excel has been imported" sequenceId="02" enumTypeId="EXCEL_IMPORT_STATUS"/>

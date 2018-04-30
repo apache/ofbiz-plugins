@@ -22,10 +22,10 @@ under the License.
     <RoleType roleTypeId="EBAY_ACCOUNT" hasTable="N" description="eBay Account"/>
     <RoleType roleTypeId="COMMENTATOR" hasTable="N" description="Commentator"/>
 
-    <EnumerationType description="Inventory Reservation For Ebay Store" enumTypeId="EBAY_INV_RESERVE" hasTable="N" parentTypeId=""/>
+    <EnumerationType description="Inventory Reservation For Ebay Store" enumTypeId="EBAY_INV_RESERVE" hasTable="N"/>
     <Enumeration description="ebay inventory reserve" enumCode="EBAY_INV" enumId="EBAY_INV_RES" sequenceId="01" enumTypeId="EBAY_INV_RESERVE"/>
 
-    <EnumerationType description="Ebay setting auto preferences" enumTypeId="EBAY_AUTO_PREF" hasTable="N" parentTypeId=""/>
+    <EnumerationType description="Ebay setting auto preferences" enumTypeId="EBAY_AUTO_PREF" hasTable="N"/>
     
     <!-- Automation Preference -->
     <Enumeration enumId="EBAY_AUTO_DISPUTE1" description="Automatic Dispute not complete" enumTypeId="EBAY_AUTO_PREF"/>
@@ -39,7 +39,7 @@ under the License.
     <Enumeration enumId="EBAY_AUTO_BLK_ITEM" description="Automatic block item that out of stock" enumTypeId="EBAY_AUTO_PREF"/>
     <Enumeration enumId="EBAY_AUTO_BEST_OFFER" description="Automatic best offer enable" enumTypeId="EBAY_AUTO_PREF"/>
     <!-- Ebay Automation Price -->
-    <EnumerationType description="Ebay setting auto price" enumTypeId="EBAY_AUTO_PRICE" hasTable="N" parentTypeId=""/>
+    <EnumerationType description="Ebay setting auto price" enumTypeId="EBAY_AUTO_PRICE" hasTable="N"/>
     <Enumeration enumId="REFAIL_PRICE" description="Refail Price" enumTypeId="EBAY_AUTO_PRICE"/>
     <Enumeration enumId="START_PRICE" description="Start Price" enumTypeId="EBAY_AUTO_PRICE"/>
     <Enumeration enumId="RESERVE_PRICE" description="Reserve Price" enumTypeId="EBAY_AUTO_PRICE"/>

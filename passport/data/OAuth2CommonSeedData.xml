@@ -20,8 +20,8 @@ under the License.
 
 <entity-engine-xml>
 
-    <EnumerationType description="Passport Login Method Type" enumTypeId="ppLoginMethType" hasTable="N" parentTypeId=""/>
-    <EnumerationType description="Passport Login Provider" enumTypeId="ppLoginProvider" hasTable="N" parentTypeId=""/>
+    <EnumerationType description="Passport Login Method Type" enumTypeId="ppLoginMethType" hasTable="N"/>
+    <EnumerationType description="Passport Login Provider" enumTypeId="ppLoginProvider" hasTable="N"/>
 
     <EnumerationType description="OAuth2 Login Method Type" enumTypeId="OAuth2" hasTable="N" parentTypeId="ppLoginMethType"/>
 

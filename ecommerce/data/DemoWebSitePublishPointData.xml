@@ -60,7 +60,7 @@ under the License.
     <ContentAssoc contentId="WebStoreCONTENT" contentIdTo="POLICY" contentAssocTypeId="SUB_CONTENT" fromDate="2001-05-13 12:00:00.000" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
     <ContentAttribute contentId="POLICY" attrName="publishOperation" attrValue="HAS_USER_ROLE"/>
 
-    <Content contentId="WebStoreFACTOID" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="" contentName="Factoids" description="Factoids" createdDate="2004-07-05 12:00:00.000" createdByUserLogin="admin"/>
+    <Content contentId="WebStoreFACTOID" contentTypeId="WEB_SITE_PUB_PT" contentName="Factoids" description="Factoids" createdDate="2004-07-05 12:00:00.000" createdByUserLogin="admin"/>
 
     <!-- An example of sub-content to be rendered by the root contentId (WebStoreCONTENT) and map-key (policies) -->
     <DataResource dataResourceId="STORE_POLICIES" dataResourceTypeId="ELECTRONIC_TEXT" mimeTypeId="text/html" localeString="en_US" isPublic="Y" dataResourceName="Store Policies"/>

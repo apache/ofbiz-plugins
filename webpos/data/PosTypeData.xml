@@ -18,7 +18,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <entity-engine-xml>
-    <StatusType description="Pos Transaction" hasTable="N" parentTypeId="" statusTypeId="POSTX_STATUS"/>
+    <StatusType description="Pos Transaction" hasTable="N" statusTypeId="POSTX_STATUS"/>
     <StatusItem description="Active" sequenceId="01" statusCode="ACTIVE" statusId="POSTX_ACTIVE" statusTypeId="POSTX_STATUS"/>
     <StatusItem description="Sold" sequenceId="10" statusCode="SOLD" statusId="POSTX_SOLD" statusTypeId="POSTX_STATUS"/>
     <StatusItem description="Returned" sequenceId="15" statusCode="RETURNED" statusId="POSTX_RETURNED" statusTypeId="POSTX_STATUS"/>

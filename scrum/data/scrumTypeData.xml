@@ -139,8 +139,7 @@ under the License.
     <PortalPortlet portalPortletId="Revisions" portletName="Revisions"
         screenName="PartyRevisions"
         screenLocation="component://scrum/widget/ResourceScreens.xml"
-        description="Identification associate to a party"
-        screenshot=""/>
+        description="Identification associate to a party"/>
     <PortalPage portalPageId="ScrumPartyProfile" sequenceNum="0" portalPageName="Parties" description="Party profile page using flexible Portal technology" ownerUserLoginId="_NA_"/>
     <PortalPageColumn portalPageId="ScrumPartyProfile" columnSeqId="00001" columnWidthPercentage="50"/>
     <PortalPageColumn portalPageId="ScrumPartyProfile" columnSeqId="00002"/><!-- no width in pixels or percent, use the rest of the space available -->

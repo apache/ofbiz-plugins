@@ -20,9 +20,9 @@ under the License.
 
 <entity-engine-xml>
     <ProductPricePurpose productPricePurposeId="EBAY" description="eBay Auction"/>
-    <ProductCategoryType productCategoryTypeId="EBAY_CATEGORY" description="eBay" hasTable="N" parentTypeId=""/>
+    <ProductCategoryType productCategoryTypeId="EBAY_CATEGORY" description="eBay" hasTable="N"/>
     <ProductContentType productContentTypeId="EBAY_DESCRIPTION" description="Detail Page for eBay Auctions"/>
 
-    <EnumerationType description="Ebay Ship Types" enumTypeId="EBAY_SHIP_TYPE" hasTable="N" parentTypeId=""/>
+    <EnumerationType description="Ebay Ship Types" enumTypeId="EBAY_SHIP_TYPE" hasTable="N"/>
     <Enumeration description="Flat Rate Shipping" enumCode="FLAT_RATE" enumId="EBAY_FLAT_RATE" sequenceId="01" enumTypeId="EBAY_SHIP_TYPE"/>    
 </entity-engine-xml>

@@ -24,5 +24,5 @@
                   dataResourceName="BIRT" mimeTypeId="text/xml" isPublic="Y" />
     <Content contentId="HELP_BIRT" contentTypeId="DOCUMENT" contentName="BIRT Overview" templateDataResourceId="HELP_TEMPL"
              dataResourceId="HELP_BIRT" statusId="CTNT_IN_PROGRESS" mimeTypeId="text/html"/>
-    <ContentAssoc contentId="HELP_ROOT" contentIdTo="HELP_BIRT" contentAssocTypeId="TREE_CHILD" fromDate="2006-01-12 01:01:01" sequenceNum="" mapKey="BIRT_main"/>
+    <ContentAssoc contentId="HELP_ROOT" contentIdTo="HELP_BIRT" contentAssocTypeId="TREE_CHILD" fromDate="2006-01-12 01:01:01" mapKey="BIRT_main"/>
 </entity-engine-xml>

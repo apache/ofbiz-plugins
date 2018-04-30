@@ -22,14 +22,11 @@ under the License.
 
     <EnumerationType description="LinkedIn Login" enumTypeId="LinkedIn" hasTable="N" parentTypeId="ppLoginProvider"/>
 
-    <ThirdPartyLogin productStoreId="9000" loginMethTypeId="OAuth2" loginProviderId="LinkedIn" fromDate="2011-01-01 00:00:00.0" thruDate="" sequenceNum=""/>
+    <ThirdPartyLogin productStoreId="9000" loginMethTypeId="OAuth2" loginProviderId="LinkedIn" fromDate="2011-01-01 00:00:00.0"/>
     
-    <OAuth2LinkedIn productStoreId="9000" 
-                    apiKey="" secretKey=""
-                    testReturnUrl="" 
-                    liveReturnUrl="" 
+    <OAuth2LinkedIn productStoreId="9000"
                     localRedirectUri="/ecomseo/linkedInRedirect" 
-                    iconUrl="/passport/images/linkedin.png" fromDate="2011-01-01 00:00:00.0" thruDate=""/>
+                    iconUrl="/passport/images/linkedin.png" fromDate="2011-01-01 00:00:00.0"/>
     <!-- The testReturnUrl, i.e. https://yourTestWebSiteOrIp:8443/ecomseo/linkedInResponse -->
     <!-- The liveReturnUrl, i.e. https://yourLiveWebSiteOrIp:8443/ecomseo/linkedInResponse -->
     

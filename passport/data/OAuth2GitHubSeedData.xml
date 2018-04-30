@@ -22,13 +22,9 @@ under the License.
 
     <EnumerationType description="GitHub Login" enumTypeId="GitHub" hasTable="N" parentTypeId="ppLoginProvider"/>
 
-    <ThirdPartyLogin productStoreId="9000" loginMethTypeId="OAuth2" loginProviderId="GitHub" fromDate="2011-01-01 00:00:00.0" thruDate="" sequenceNum=""/>
+    <ThirdPartyLogin productStoreId="9000" loginMethTypeId="OAuth2" loginProviderId="GitHub" fromDate="2011-01-01 00:00:00.0"/>
     
-    <OAuth2GitHub productStoreId="9000" 
-                    clientId="" clientSecret=""
-                    returnUrl=""
-                    localRedirectUri="/ecomseo/gitHubRedirect" 
-                    iconUrl="/passport/images/github.png" fromDate="2011-01-01 00:00:00.0" thruDate=""/>
+    <OAuth2GitHub productStoreId="9000" localRedirectUri="/ecomseo/gitHubRedirect" iconUrl="/passport/images/github.png" fromDate="2011-01-01 00:00:00.0"/>
     <!-- The returnUrl, i.e. https://yourWebSiteOrIp:8443/ecomseo/githubResponse -->
     
 </entity-engine-xml>
