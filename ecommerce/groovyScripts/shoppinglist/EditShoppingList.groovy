@@ -143,7 +143,7 @@ if (shoppingListId) {
             context.shoppingListItemDatas = shoppingListItemDatas
             // pagination for the shopping list
             viewIndex = Integer.valueOf(parameters.VIEW_INDEX  ?: 1)
-            viewSize = parameters.VIEW_SIZE ?: visualTheme.getModelTheme().getDefaultViewSize()?:20
+            viewSize = parameters.VIEW_SIZE ? Integer.valueOf(parameters.VIEW_SIZE) : visualTheme.getModelTheme().getDefaultViewSize()?:20
             listSize = shoppingListItemDatas ? shoppingListItemDatas.size() : 0
 
             lowIndex = ((viewIndex - 1) * viewSize) + 1
