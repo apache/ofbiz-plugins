@@ -57,7 +57,7 @@ under the License.
                 <set field="layoutSettings.javaScripts[]" value="/common/js/jquery/plugins/jquery-jgrowl/jquery.jgrowl-1.4.6.min.js" global="true"/>
                 
                 <set field="layoutSettings.styleSheets[+0]" value="/common/js/jquery/ui/jquery-ui-1.12.1.min.css" global="true" />
-                <set field="layoutSettings.styleSheets[+0]" value="/common/js/jquery/plugins/jquery-jgrowl/1.4.1/jquery.jgrowl.min.css" global="true" />
+                <set field="layoutSettings.styleSheets[+0]" value="/common/js/jquery/plugins/jquery-jgrowl/jquery.jgrowl-1.4.6.min.css" global="true" />
                 <set field="layoutSettings.styleSheets[+0]" value="/common/js/jquery/plugins/datetimepicker/jquery-ui-timepicker-addon-1.6.3.min.css" global="true" />
 
                 <set field="layoutSettings.styleSheets[+0]" value="/ecommerce/css/bootstrap.min.css" global="true" />
