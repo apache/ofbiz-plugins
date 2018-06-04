@@ -21,6 +21,7 @@ import org.apache.ofbiz.product.category.*
 import org.apache.ofbiz.base.util.UtilValidate
 
 parentCategoryStr = parameters.parentCategoryStr
+productCategoryId=parameters.category_id
 if(!UtilValidate.isEmpty(parentCategoryStr)) {
     pathList = parentCategoryStr.split('/')
     cateList = []
