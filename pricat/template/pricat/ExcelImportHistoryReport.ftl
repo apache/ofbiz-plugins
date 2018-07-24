@@ -98,7 +98,7 @@ under the License.
         </#if>
     </tbody>
 </table>
-<script type="text/javascript" language="JavaScript">
+<script type="text/javascript">
     function viewExcelImportLog(sequenceNum) {
         document.location = "<@ofbizUrl>viewExcelImportLog</@ofbizUrl>?sequenceNum=" + sequenceNum;
     }

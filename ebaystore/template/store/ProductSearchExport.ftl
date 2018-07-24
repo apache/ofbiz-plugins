@@ -62,7 +62,7 @@ under the License.
         background-color:#FFF;
     }
 </style>
-<script language="JavaScript" type="text/javascript">
+<script type="text/javascript">
 
     function retrieveEbayCategoryByParent(url,cateId,productStoreId,id){
         if (cateId.match('true')){
@@ -582,12 +582,12 @@ under the License.
                                 <table cellspacing="0">
                                   <tr>
                                     <td>
-                                      <script language="javascript"
+                                      <script
                                               src="<@ofbizContentUrl>/common/js/jquery/plugins/elrte-1.3/js/elrte.min.js</@ofbizContentUrl>"
                                               type="text/javascript">
                                       </script>
                                       <#if language?has_content && language != "en">
-                                        <script language="javascript"
+                                        <script
                                                 src="<@ofbizContentUrl>/common/js/jquery/plugins/elrte-1.3/js/i18n/elrte.${language!"en"}.js</@ofbizContentUrl>"
                                                 type="text/javascript">
                                         </script>
@@ -595,7 +595,7 @@ under the License.
                                       </#if>
                                       <link href="<@ofbizContentUrl>/common/js/jquery/plugins/elrte-1.3/css/elrte.min.css</@ofbizContentUrl>"
                                               rel="stylesheet" type="text/css">
-                                      <script language="javascript" type="text/javascript">
+                                      <script type="text/javascript">
                                           var opts = {
                                               cssClass: 'el-rte',
                                               lang: '${language}',

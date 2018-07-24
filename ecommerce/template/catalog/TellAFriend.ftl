@@ -56,7 +56,7 @@ under the License.
         </tr>
       </table>
     <#else>
-      <script language="JavaScript" type="text/javascript">
+      <script type="text/javascript">
         <!-- //
         window.close();
         // -->

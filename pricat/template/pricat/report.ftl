@@ -31,7 +31,7 @@ under the License.
         <#assign htmlStart = report.htmlStart(false)>
         ${StringUtil.wrapString(htmlStart)}
 
-<script language='JavaScript'>
+<script>
 <!--
 
 function a(message) {
@@ -141,7 +141,7 @@ function continueReport() {
 
 ${StringUtil.wrapString(report.htmlStart())}
 
-<script type="text/javascript" language="JavaScript">
+<script type="text/javascript">
 <!--
 
 // saves the HTML of the extended report format, 

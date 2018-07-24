@@ -70,7 +70,7 @@ function xbLibrary(path)
 xbLibrary.prototype.loadScript = 
 function (scriptName)
 {
-  document.write('<script language="javascript" src="' + this.path + '/' + scriptName + '"><\/script>');
+  document.write('<script src="' + this.path + '/' + scriptName + '"><\/script>');
 };
 
 // default xbLibrary

@@ -31,7 +31,7 @@ List<GenericValue> webAnalytics = delegator.findByAnd("WebAnalyticsConfig", Util
 <head>
 <title>Error 404</title>
 <%if (webAnalytics != null) {%>
-<script language="JavaScript" type="text/javascript">
+<script type="text/javascript">
 <%for (GenericValue webAnalytic : webAnalytics) {%>
     <%=StringUtil.wrapString((String) webAnalytic.get("webAnalyticsCode"))%>
 <%}%>

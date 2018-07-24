@@ -30,7 +30,7 @@ under the License.
     </div>
 </div>
 
-<script language='JavaScript'>
+<script>
 <!--
 jQuery(document).ready( function() {
     jQuery("#htmlreport").html("${StringUtil.wrapString(logFileContent!)}");

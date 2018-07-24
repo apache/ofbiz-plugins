@@ -21,7 +21,7 @@ under the License.
   <div class="card-header">
     <strong>${uiLabelMap.CommonContactUs}</strong>
   </div>
-  <script type="text/javascript" language="JavaScript">
+  <script type="text/javascript">
     <!--
     function reloadCaptcha(fieldName) {
       var captchaUri = "<@ofbizUrl>captcha.jpg?captchaCodeId=" + fieldName + "&amp;unique=_PLACEHOLDER_</@ofbizUrl>";

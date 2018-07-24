@@ -4,7 +4,7 @@
 /* Usage:
 <html>
 <head>
-<script LANGUAGE="JavaScript1.2" src="overlay.js"></script>
+<script src="overlay.js"></script>
 ...rest of head...
 </head>
 <body onload="overlaySetup(corner)">

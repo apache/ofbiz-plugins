@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
 function submitForm(form) {
    form.submit();
 }

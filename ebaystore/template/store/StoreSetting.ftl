@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<script language="Javascript" type="text/javascript">
+<script type="text/javascript">
     function countAreaChars(areaName, limit, charleft)
     {
         if (areaName.value.length > limit) {
@@ -549,7 +549,7 @@ under the License.
           </td>
         </tr>
       </table>
-      <script language="Javascript" type="text/javascript">
+      <script type="text/javascript">
           document.getElementById('charsleft1').innerHTML
               = (35 - document.StoreSettingForm.storeName.value.length) + " charactors left.";
           document.getElementById('charsleft2').innerHTML
@@ -558,7 +558,7 @@ under the License.
     </fieldset>
   </form>
 </#if>
-<script language="Javascript" type="text/javascript">
+<script type="text/javascript">
     <#if "Basic" == themeType!>
         document.StoreSettingForm.storeAdvancedTheme.disabled = true;
         document.StoreSettingForm.storeAdvancedThemeColor.disabled = true;

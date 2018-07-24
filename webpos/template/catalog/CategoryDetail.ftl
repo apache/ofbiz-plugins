@@ -62,7 +62,7 @@ under the License.
   </tr>
   </#if>
 </table>
-<script language="JavaScript" type="text/javascript">
+<script type="text/javascript">
   showSelectedButton();
 </script>
 </#if>

@@ -19,7 +19,7 @@ under the License.
 <#if requestParameters.paymentMethodTypeId?has_content>
    <#assign paymentMethodTypeId = "${requestParameters.paymentMethodTypeId!}">
 </#if>
-<script language="JavaScript" type="text/javascript">
+<script type="text/javascript">
 function shipBillAddr() {
     <#if "Y" == requestParameters.singleUsePayment?default("N")>
       <#assign singleUse = "&amp;singleUsePayment=Y">

@@ -105,7 +105,7 @@ under the License.
     <meta name="keywords" content="${metaKeywords}"/>
   </#if>
   <#if webAnalyticsConfigs?has_content>
-    <script language="JavaScript" type="text/javascript">
+    <script type="text/javascript">
       <#list webAnalyticsConfigs as webAnalyticsConfig>
         <#if  webAnalyticsConfig.webAnalyticsTypeId != "BACKEND_ANALYTICS">
           ${StringUtil.wrapString(webAnalyticsConfig.webAnalyticsCode!)}
