@@ -6,13 +6,13 @@
   <xsl:param name="scripts" select="normalize-space($annotation.js)"/>
   <xsl:choose>
     <xsl:when test="contains($scripts, ' ')">
-      <script type="text/javascript" src="{substring-before($scripts, ' ')}"/>
+      <script type="application/javascript" src="{substring-before($scripts, ' ')}"/>
       <xsl:call-template name="add.annotation.links">
         <xsl:with-param name="scripts" select="substring-after($scripts, ' ')"/>
       </xsl:call-template>
     </xsl:when>
     <xsl:otherwise>
-      <script type="text/javascript" src="{$scripts}"/>
+      <script type="application/javascript" src="{$scripts}"/>
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>

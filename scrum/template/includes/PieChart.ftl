@@ -20,7 +20,7 @@ under the License.
         <INPUT type="HIDDEN" name="productId" value="${product.productId}"/>
     </div>
     <form id="form_birtReport" method="post"></form>
-    <script type="text/javascript">
+    <script type="application/javascript">
     function loadViewerbirtReport(){
     var formObj = document.getElementById( "form_birtReport" );
     var paramContainer = document.getElementById("params_birtReport");
@@ -44,4 +44,4 @@ under the License.
     
     </script>
     <iframe name="birtReport" frameborder="no"  scrolling = "auto"  style='height:350px;width:100%;' ></iframe>
-    <script type="text/javascript">loadViewerbirtReport();</script> 
+    <script type="application/javascript">loadViewerbirtReport();</script>

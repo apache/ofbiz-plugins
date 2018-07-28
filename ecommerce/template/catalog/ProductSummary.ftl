@@ -17,7 +17,7 @@
     under the License.
     -->
   ${virtualJavaScript!}
-  <script type="text/javascript">
+  <script type="application/javascript">
 <!--
     function displayProductVirtualId(variantId, virtualProductId, pForm) {
         if(variantId){

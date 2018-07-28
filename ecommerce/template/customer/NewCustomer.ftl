@@ -18,7 +18,7 @@ under the License.
 -->
 
 <#if getUsername>
-<script type="text/javascript">
+<script type="application/javascript">
   //<![CDATA[
   lastFocusedName = null;
   function setLastFocused(formElement) {
@@ -479,7 +479,7 @@ button actions.
   <a href="javascript:document.getElementById('newuserform').submit()" class="btn btn-outline-secondary btn-sm">${uiLabelMap.CommonSave}</a>
 </div>
 
-<script type="text/javascript">
+<script type="application/javascript">
   //<![CDATA[
   hideShowUsaStates();
   //]]>

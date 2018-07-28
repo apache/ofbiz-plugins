@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<script type="text/javascript">
+<script type="application/javascript">
 <!--
     var clicked = 0;
     function processOrder() {

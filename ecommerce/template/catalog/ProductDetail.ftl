@@ -24,7 +24,7 @@ under the License.
 <#-- virtual product javascript -->
 ${virtualJavaScript!}
 ${virtualVariantJavaScript!}
-<script type="text/javascript">
+<script type="application/javascript">
 //<![CDATA[
     var detailImageUrl = null;
     function setAddProductId(name) {
@@ -897,7 +897,7 @@ $(function(){
     </div>
     <#-- Prefill first select box (virtual products only) -->
     <#if variantTree?? && 0 &lt; variantTree.size()>
-      <script type="text/javascript">eval("list" + "${featureOrderFirst}" + "()");</script>
+      <script type="application/javascript">eval("list" + "${featureOrderFirst}" + "()");</script>
     </#if>
 
     <#-- Swatches (virtual products only) -->

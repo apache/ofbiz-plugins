@@ -29,6 +29,6 @@ under the License.
   <input type="submit" value="${uiLabelMap.CommonSearch}" id="partySearchConfirm"/>
   <br/>
 </div>
-<script type="text/javascript">
+<script type="application/javascript">
   partyKeyEvents();
 </script>

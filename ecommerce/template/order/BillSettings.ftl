@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<script type="text/javascript">
+<script type="application/javascript">
   function shipBillAddr() {
     <#if "Y" == requestParameters.singleUsePayment?default("N")>
       <#assign singleUse = "&amp;singleUsePayment=Y">

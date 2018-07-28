@@ -29,7 +29,7 @@ under the License.
   </select>
 </#macro>
 
-<script type="text/javascript">
+<script type="application/javascript">
   function unsubscribe() {
     var form = document.getElementById("signUpForContactListForm");
     form.action = "<@ofbizUrl>unsubscribeContactListParty</@ofbizUrl>"

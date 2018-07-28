@@ -32,7 +32,7 @@ under the License.
     <#assign nothing = thisContent.setSortOrder("caSequenceNum")/>
     <#assign nothing = thisContent.setMapKeyFilter("js")/>
     <#list thisContent.subcontent_all as content>
-      <script src="${content.render!}" type="text/javascript"></script>
+      <script src="${content.render!}" type="application/javascript"></script>
     </#list>
     <#assign nothing = thisContent.setMapKeyFilter("css")/>
     <#list thisContent.subcontent_all as content>

@@ -147,7 +147,7 @@
           <xsl:apply-templates select="/processing-instruction('dbhtml')" mode="css.pi"/>
 
           <xsl:if test="$overlay != 0 or $keyboard.nav != 0                         or $dynamic.toc != 0 or $active.toc != 0                         or $overlay.logo != ''">
-            <script  type="text/javascript">
+            <script  type="application/javascript">
               <xsl:text> </xsl:text>
             </script>
           </xsl:if>
@@ -158,7 +158,7 @@
               <xsl:with-param name="language" select="'javascript'"/>
             </xsl:call-template>
             <xsl:call-template name="xbLibrary.js"/>
-            <script  type="text/javascript">
+            <script  type="application/javascript">
               <xsl:text disable-output-escaping="yes">
                 &lt;!--
                 xblibrary = new xbLibrary('</xsl:text>
@@ -181,7 +181,7 @@
           </xsl:if>
 
           <xsl:if test="$dynamic.toc != 0">
-            <script  type="text/javascript">
+            <script  type="application/javascript">
               <xsl:text disable-output-escaping="yes">
                 &lt;!--
 function init() {
@@ -306,7 +306,7 @@ function init() {
           </xsl:call-template>
 
           <xsl:if test="$overlay != 0 or $keyboard.nav != 0                         or $dynamic.toc != 0 or $active.toc != 0">
-            <script  type="text/javascript">
+            <script  type="application/javascript">
               <xsl:text> </xsl:text>
             </script>
           </xsl:if>
@@ -317,7 +317,7 @@ function init() {
               <xsl:with-param name="language" select="'javascript'"/>
             </xsl:call-template>
             <xsl:call-template name="xbLibrary.js"/>
-            <script  type="text/javascript">
+            <script  type="application/javascript">
               <xsl:text disable-output-escaping="yes">
                 &lt;!--
                 xblibrary = new xbLibrary('</xsl:text>
@@ -423,7 +423,7 @@ function init() {
           </xsl:call-template>
 
           <xsl:if test="$overlay != 0 or $keyboard.nav != 0                         or $dynamic.toc != 0 or $active.toc != 0">
-            <script  type="text/javascript">
+            <script  type="application/javascript">
               <xsl:text> </xsl:text>
             </script>
           </xsl:if>
@@ -434,7 +434,7 @@ function init() {
               <xsl:with-param name="language" select="'javascript'"/>
             </xsl:call-template>
             <xsl:call-template name="xbLibrary.js"/>
-            <script  type="text/javascript">
+            <script  type="application/javascript">
               <xsl:text disable-output-escaping="yes">
                 &lt;!--
                 xblibrary = new xbLibrary('</xsl:text>
@@ -505,7 +505,7 @@ function init() {
           </xsl:call-template>
 
           <xsl:if test="$overlay != 0 or $keyboard.nav != 0                         or $dynamic.toc != 0 or $active.toc != 0">
-            <script  type="text/javascript">
+            <script  type="application/javascript">
               <xsl:text> </xsl:text>
             </script>
           </xsl:if>
@@ -516,7 +516,7 @@ function init() {
               <xsl:with-param name="language" select="'javascript'"/>
             </xsl:call-template>
             <xsl:call-template name="xbLibrary.js"/>
-            <script  type="text/javascript">
+            <script  type="application/javascript">
               <xsl:text disable-output-escaping="yes">
                 &lt;!--
                 xblibrary = new xbLibrary('</xsl:text>
@@ -577,7 +577,7 @@ function init() {
           </xsl:call-template>
 
           <xsl:if test="$overlay != 0 or $keyboard.nav != 0                         or $dynamic.toc != 0 or $active.toc != 0">
-            <script  type="text/javascript">
+            <script  type="application/javascript">
               <xsl:text> </xsl:text>
             </script>
           </xsl:if>
@@ -588,7 +588,7 @@ function init() {
               <xsl:with-param name="language" select="'javascript'"/>
             </xsl:call-template>
             <xsl:call-template name="xbLibrary.js"/>
-            <script  type="text/javascript">
+            <script  type="application/javascript">
               <xsl:text disable-output-escaping="yes">
                 &lt;!--
                 xblibrary = new xbLibrary('</xsl:text>
@@ -907,7 +907,7 @@ function init() {
 	  </xsl:call-template>
 	  
 	  <xsl:if test="$overlay != 0 or $keyboard.nav != 0     or $dynamic.toc != 0 or $active.toc != 0">
-	    <script  type="text/javascript">
+	    <script  type="application/javascript">
 	      <xsl:text> </xsl:text>
 	    </script>
 	  </xsl:if>
@@ -918,7 +918,7 @@ function init() {
 	      <xsl:with-param name="language" select="'javascript'"/>
 	    </xsl:call-template>
 	    <xsl:call-template name="xbLibrary.js"/>
-	    <script  type="text/javascript">
+	    <script  type="application/javascript">
 	      <xsl:text disable-output-escaping="yes">
 		&lt;!--
                 xblibrary = new xbLibrary('</xsl:text>
@@ -1029,7 +1029,7 @@ function init() {
           </xsl:call-template>
 
           <xsl:if test="$overlay != 0 or $keyboard.nav != 0                         or $dynamic.toc != 0 or $active.toc != 0">
-            <script  type="text/javascript">
+            <script  type="application/javascript">
               <xsl:text> </xsl:text>
             </script>
           </xsl:if>
@@ -1113,7 +1113,7 @@ function init() {
           </xsl:call-template>
 
           <xsl:if test="$overlay != 0 or $keyboard.nav != 0                         or $dynamic.toc != 0 or $active.toc != 0">
-            <script  type="text/javascript">
+            <script  type="application/javascript">
               <xsl:text> </xsl:text>
             </script>
           </xsl:if>
@@ -1124,7 +1124,7 @@ function init() {
               <xsl:with-param name="language" select="'javascript'"/>
             </xsl:call-template>
             <xsl:call-template name="xbLibrary.js"/>
-            <script  type="text/javascript">
+            <script  type="application/javascript">
               <xsl:text disable-output-escaping="yes">
                 &lt;!--
                 xblibrary = new xbLibrary('</xsl:text>
@@ -1195,7 +1195,7 @@ function init() {
           </xsl:call-template>
 
           <xsl:if test="$overlay != 0 or $keyboard.nav != 0                         or $dynamic.toc != 0 or $active.toc != 0">
-            <script  type="text/javascript">
+            <script  type="application/javascript">
               <xsl:text> </xsl:text>
             </script>
           </xsl:if>
@@ -1206,7 +1206,7 @@ function init() {
               <xsl:with-param name="language" select="'javascript'"/>
             </xsl:call-template>
             <xsl:call-template name="xbLibrary.js"/>
-            <script  type="text/javascript">
+            <script  type="application/javascript">
               <xsl:text disable-output-escaping="yes">
                 &lt;!--
                 xblibrary = new xbLibrary('</xsl:text>
@@ -1377,7 +1377,7 @@ function init() {
 	  </xsl:call-template>
 
 	  <xsl:if test="$overlay != 0 or $keyboard.nav != 0     or $dynamic.toc != 0 or $active.toc != 0">
-	    <script  type="text/javascript">
+	    <script  type="application/javascript">
 	      <xsl:text> </xsl:text>
 	    </script>
 	  </xsl:if>
@@ -1388,7 +1388,7 @@ function init() {
 	      <xsl:with-param name="language" select="'javascript'"/>
 	    </xsl:call-template>
 	    <xsl:call-template name="xbLibrary.js"/>
-	    <script  type="text/javascript">
+	    <script  type="application/javascript">
 	      <xsl:text disable-output-escaping="yes">
                 &lt;!--
                 xblibrary = new xbLibrary('</xsl:text>
@@ -1491,7 +1491,7 @@ function init() {
           <xsl:apply-templates select="/processing-instruction('dbhtml')" mode="css.pi"/>
 
           <xsl:if test="$overlay != 0 or $keyboard.nav != 0                         or $dynamic.toc != 0 or $active.toc != 0">
-            <script type="text/javascript">
+            <script type="application/javascript">
               <xsl:text> </xsl:text>
             </script>
           </xsl:if>
@@ -1502,7 +1502,7 @@ function init() {
               <xsl:with-param name="language" select="'javascript'"/>
             </xsl:call-template>
             <xsl:call-template name="xbLibrary.js"/>
-            <script  type="text/javascript">
+            <script  type="application/javascript">
               <xsl:text disable-output-escaping="yes">
                 &lt;!--
                 xblibrary = new xbLibrary('</xsl:text>
@@ -1566,7 +1566,7 @@ function init() {
           <xsl:apply-templates select="/processing-instruction('dbhtml')" mode="css.pi"/>
 
           <xsl:if test="$overlay != 0 or $keyboard.nav != 0                         or $dynamic.toc != 0 or $active.toc != 0">
-            <script  type="text/javascript">
+            <script  type="application/javascript">
               <xsl:text> </xsl:text>
             </script>
           </xsl:if>
@@ -1589,7 +1589,7 @@ function init() {
               <xsl:with-param name="language" select="'javascript'"/>
             </xsl:call-template>
             <xsl:call-template name="xbLibrary.js"/>
-            <script  type="text/javascript">
+            <script  type="application/javascript">
               <xsl:text disable-output-escaping="yes">
                 &lt;!--
                 xblibrary = new xbLibrary('</xsl:text>
@@ -1652,7 +1652,7 @@ function init() {
           <xsl:apply-templates select="/processing-instruction('dbhtml')" mode="css.pi"/>
 
           <xsl:if test="$overlay != 0 or $keyboard.nav != 0                         or $dynamic.toc != 0 or $active.toc != 0">
-            <script type="text/javascript">
+            <script type="application/javascript">
               <xsl:text> </xsl:text>
             </script>
           </xsl:if>
@@ -1663,7 +1663,7 @@ function init() {
               <xsl:with-param name="language" select="'javascript'"/>
             </xsl:call-template>
             <xsl:call-template name="xbLibrary.js"/>
-            <script type="text/javascript">
+            <script type="application/javascript">
               <xsl:text disable-output-escaping="yes">
                 &lt;!--
                 xblibrary = new xbLibrary('</xsl:text>

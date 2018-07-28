@@ -531,7 +531,7 @@ public class HtmlReport extends AbstractReport {
                 result.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
                 result.append("/pricat/includes/pricat.css");
                 result.append("\">\n");
-                result.append("<script type=\"text/javascript\">\n");
+                result.append("<script type=\"application/javascript\">\n");
                 result.append(dialogScriptSubmit());
                 result.append("</script>\n");
             }

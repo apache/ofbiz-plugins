@@ -276,7 +276,7 @@ body { background-image: url('</xsl:text>
               unnecessary bloat to each chunk. -->
   <xsl:if test="$annotation.support != 0 and //annotation">
     <xsl:call-template name="add.annotation.links"/>
-    <script type="text/javascript">
+    <script type="application/javascript">
       <xsl:text>
 // Create PopupWindow objects</xsl:text>
       <xsl:for-each select="//annotation">

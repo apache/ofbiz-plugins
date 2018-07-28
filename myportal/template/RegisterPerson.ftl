@@ -98,7 +98,7 @@ under the License.
                         <td class="label"> Code Captcha </td>
                         <td><div><img id="captchaImage" src="<@ofbizUrl>captcha.jpg?captchaCodeId=captchaImage&amp;unique=${nowTimestamp.getTime()}</@ofbizUrl>" alt="" /></div></td>
                     </tr>
-                    <script type="text/javascript">
+                    <script type="application/javascript">
                     <!--
                         function reloadCaptcha(fieldName) {
                             var captchaUri = "<@ofbizUrl>captcha.jpg?captchaCodeId=" + fieldName + "&amp;unique=_PLACEHOLDER_</@ofbizUrl>";

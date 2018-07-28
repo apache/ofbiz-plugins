@@ -20,7 +20,7 @@ under the License.
     <INPUT type="HIDDEN" name="productId" value="${product.productId}"/>
 </div>
 <form id="form_taskByStatusReport" method="post"></form>
-<script type="text/javascript">
+<script type="application/javascript">
     function loadViewertaskReport(){
     var formObj = document.getElementById( "form_taskByStatusReport" );
     var paramContainer = document.getElementById("params_taskByStatusReport");
@@ -40,4 +40,4 @@ under the License.
     }
 </script>
 <iframe name="taskByStatusReport" frameborder="no" scrolling = "auto"  style='height:350px;width:100%;'></iframe>
-<script type="text/javascript">loadViewertaskReport();</script>
+<script type="application/javascript">loadViewertaskReport();</script>

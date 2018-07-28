@@ -20,7 +20,7 @@ under the License.
     <INPUT type="HIDDEN" name="productId" value="${product.productId}"/>
 </div>
 <form id="form_byTypeReport" method="post"></form>
-<script type="text/javascript">
+<script type="application/javascript">
     function loadViewerByTypeReport(){
     var formObj = document.getElementById( "form_byTypeReport" );
     var paramContainer = document.getElementById("params_byTypeReport");
@@ -41,4 +41,4 @@ under the License.
     }
 </script>
 <iframe name="byTypeReport" frameborder="no"  scrolling = "auto"  style='height:350px;width:100%;' ></iframe>
-<script type="text/javascript">loadViewerByTypeReport();</script>
+<script type="application/javascript">loadViewerByTypeReport();</script>

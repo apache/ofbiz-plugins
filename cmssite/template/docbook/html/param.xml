@@ -2424,7 +2424,7 @@ parameter.</para>
 </refnamediv>
 
 <refsynopsisdiv>
-<programlisting xml:id="html.script.type.frag">&lt;xsl:param name="html.script.type"&gt;text/javascript&lt;/xsl:param&gt;</programlisting>
+<programlisting xml:id="html.script.type.frag">&lt;xsl:param name="html.script.type"&gt;application/javascript&lt;/xsl:param&gt;</programlisting>
 </refsynopsisdiv>
 
 <refsection><info><title>Description</title></info>
@@ -2432,7 +2432,7 @@ parameter.</para>
 <para>The type of script to place in the HTML <tag>script</tag> element.
 Specifically, the value of the <tag>script</tag> element's <tag>type</tag>
 attribute.
-The default value is <literal>text/javascript</literal>.
+The default value is <literal>application/javascript</literal>.
 This param is used only when the stylesheet parameter
 <tag>html.script</tag> is non-blank and specifies the location of a script.</para>
 

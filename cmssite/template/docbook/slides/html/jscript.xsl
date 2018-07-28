@@ -36,7 +36,7 @@
 <xsl:template name="ua.js">
   <!-- Danger Will Robinson: template shadows parameter -->
   <xsl:param name="language" select="'javascript'"/>
-  <script type="text/javascript">
+  <script type="application/javascript">
     <xsl:attribute name="src">
       <xsl:call-template name="script-file">
         <xsl:with-param name="js" select="$ua.js"/>
@@ -49,7 +49,7 @@
 <xsl:template name="xbDOM.js">
   <!-- Danger Will Robinson: template shadows parameter -->
   <xsl:param name="language" select="'javascript'"/>
-  <script type="text/javascript">
+  <script type="application/javascript">
     <xsl:attribute name="src">
       <xsl:call-template name="script-file">
         <xsl:with-param name="js" select="$xbDOM.js"/>
@@ -62,7 +62,7 @@
 <xsl:template name="xbStyle.js">
   <!-- Danger Will Robinson: template shadows parameter -->
   <xsl:param name="language" select="'javascript'"/>
-  <script type="text/javascript">
+  <script type="application/javascript">
     <xsl:attribute name="src">
       <xsl:call-template name="script-file">
         <xsl:with-param name="js" select="$xbStyle.js"/>
@@ -75,7 +75,7 @@
 <xsl:template name="xbLibrary.js">
   <!-- Danger Will Robinson: template shadows parameter -->
   <xsl:param name="language" select="'javascript'"/>
-  <script type="text/javascript">
+  <script type="application/javascript">
     <xsl:attribute name="src">
       <xsl:call-template name="script-file">
         <xsl:with-param name="js" select="$xbLibrary.js"/>
@@ -88,7 +88,7 @@
 <xsl:template name="xbCollapsibleLists.js">
   <!-- Danger Will Robinson: template shadows parameter -->
   <xsl:param name="language" select="'javascript'"/>
-  <script type="text/javascript">
+  <script type="application/javascript">
     <xsl:attribute name="src">
       <xsl:call-template name="script-file">
         <xsl:with-param name="js" select="$xbCollapsibleLists.js"/>
@@ -101,7 +101,7 @@
 <xsl:template name="overlay.js">
   <!-- Danger Will Robinson: template shadows parameter -->
   <xsl:param name="language" select="'javascript'"/>
-  <script type="text/javascript">
+  <script type="application/javascript">
     <xsl:attribute name="src">
       <xsl:call-template name="script-file">
         <xsl:with-param name="js" select="$overlay.js"/>
@@ -114,7 +114,7 @@
 <xsl:template name="slides.js">
   <!-- Danger Will Robinson: template shadows parameter -->
   <xsl:param name="language" select="'javascript'"/>
-  <script type="text/javascript">
+  <script type="application/javascript">
     <xsl:attribute name="src">
       <xsl:call-template name="script-file">
         <xsl:with-param name="js" select="$slides.js"/>

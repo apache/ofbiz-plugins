@@ -45,7 +45,7 @@
           </xsl:call-template>
 
           <xsl:if test="$keyboard.nav != 0">
-            <script  type="text/javascript">
+            <script  type="application/javascript">
               <xsl:text> </xsl:text>
             </script>
           </xsl:if>
@@ -56,7 +56,7 @@
               <xsl:with-param name="language" select="'javascript'"/>
             </xsl:call-template>
             <xsl:call-template name="xbLibrary.js"/>
-            <script  type="text/javascript">
+            <script  type="application/javascript">
               <xsl:text disable-output-escaping="yes">
                 &lt;!--
                 xblibrary = new xbLibrary('../browser');
@@ -152,7 +152,7 @@
           </xsl:call-template>
 
           <xsl:if test="$keyboard.nav != 0">
-            <script  type="text/javascript">
+            <script  type="application/javascript">
               <xsl:text> </xsl:text>
             </script>
           </xsl:if>
@@ -163,7 +163,7 @@
               <xsl:with-param name="language" select="'javascript'"/>
             </xsl:call-template>
             <xsl:call-template name="xbLibrary.js"/>
-            <script  type="text/javascript">
+            <script  type="application/javascript">
               <xsl:text disable-output-escaping="yes">
                 &lt;!--
                 xblibrary = new xbLibrary('../browser');
@@ -265,7 +265,7 @@
 	  </xsl:call-template>
 	  
 	  <xsl:if test="$keyboard.nav != 0">
-	    <script  type="text/javascript">
+	    <script  type="application/javascript">
 	      <xsl:text> </xsl:text>
 	    </script>
 	  </xsl:if>
@@ -276,7 +276,7 @@
 	      <xsl:with-param name="language" select="'javascript'"/>
 	    </xsl:call-template>
 	    <xsl:call-template name="xbLibrary.js"/>
-	    <script  type="text/javascript">
+	    <script  type="application/javascript">
 	      <xsl:text disable-output-escaping="yes">
                 &lt;!--
                 xblibrary = new xbLibrary('../browser');
@@ -388,7 +388,7 @@
 	  </xsl:call-template>
 
 	  <xsl:if test="$keyboard.nav != 0">
-	    <script  type="text/javascript">
+	    <script  type="application/javascript">
 	      <xsl:text> </xsl:text>
 	    </script>
 	  </xsl:if>
@@ -399,7 +399,7 @@
 	      <xsl:with-param name="language" select="'javascript'"/>
 	    </xsl:call-template>
 	    <xsl:call-template name="xbLibrary.js"/>
-	    <script  type="text/javascript">
+	    <script  type="application/javascript">
 	      <xsl:text disable-output-escaping="yes">
                 &lt;!--
                 xblibrary = new xbLibrary('../browser');

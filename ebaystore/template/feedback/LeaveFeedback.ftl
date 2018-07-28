@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if results.itemsAwaitingFeedback?has_content>
-<script type="text/javascript">
+<script type="application/javascript">
     var active = "";
     function overStar(obj){
         if(obj.src.match("starActive")){

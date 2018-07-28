@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<script type="text/javascript">
+<script type="application/javascript">
     //<![CDATA[
         function removeSelected() {
             var cform = document.cartform;
@@ -63,7 +63,7 @@ under the License.
     //]]>
 </script>
 
-<script type="text/javascript">
+<script type="application/javascript">
     //<![CDATA[
         function setAlternateGwp(field) {
             window.location=field.value;
@@ -127,7 +127,7 @@ under the License.
   </div>
 </div>
 
-<script type="text/javascript">
+<script type="application/javascript">
     //<![CDATA[
         document.quickaddform.add_product_id.focus();
     //]]>

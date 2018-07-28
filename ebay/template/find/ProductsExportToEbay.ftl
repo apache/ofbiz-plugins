@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<script type="text/javascript">
+<script type="application/javascript">
     function changeEbayCategory(categ) {
         document.forms["ProductsExportToEbay"].action =
                 "<@ofbizUrl>ProductsExportToEbay?categoryCode="+categ+"</@ofbizUrl>";
@@ -240,7 +240,7 @@ under the License.
       </#if>
     </table>
   </form>
-  <script type="text/javascript">
+  <script type="application/javascript">
       activateSubmitButton();
   </script>
 </div>

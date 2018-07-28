@@ -41,11 +41,11 @@ under the License.
     <Content contentId="CMSS_HHEAD" contentTypeId="DOCUMENT" contentName="CMS Site HTML Head" dataResourceId="CMSS_HHEAD"/>
     <ContentPurpose contentId="CMSS_HHEAD" contentPurposeTypeId="SECTION"/>
 
-    <DataResource dataResourceId="FIELD_LOOKUP_JS" dataResourceTypeId="LINK" mimeTypeId="text/js" objectInfo="/common/js/util/fieldlookup.js"/>
+    <DataResource dataResourceId="FIELD_LOOKUP_JS" dataResourceTypeId="LINK" mimeTypeId="application/javascript" objectInfo="/common/js/util/fieldlookup.js"/>
     <Content contentId="FIELD_LOOKUP_JS" contentTypeId="DOCUMENT" contentName="Field Lookup JS" dataResourceId="FIELD_LOOKUP_JS"/>
     <ContentAssoc contentId="CMSS_HHEAD" contentIdTo="FIELD_LOOKUP_JS" sequenceNum="1" contentAssocTypeId="SUB_CONTENT" mapKey="js" fromDate="2014-10-02 00:00:00"/>
 
-    <DataResource dataResourceId="OFBIZ_UTIL_JS" dataResourceTypeId="LINK" mimeTypeId="text/js" objectInfo="/common/js/util/OfbizUtil.js"/>
+    <DataResource dataResourceId="OFBIZ_UTIL_JS" dataResourceTypeId="LINK" mimeTypeId="application/javascript" objectInfo="/common/js/util/OfbizUtil.js"/>
     <Content contentId="OFBIZ_UTIL_JS" contentTypeId="DOCUMENT" contentName="OFBiz Util JS" dataResourceId="OFBIZ_UTIL_JS"/>
     <ContentAssoc contentId="CMSS_HHEAD" contentIdTo="OFBIZ_UTIL_JS" sequenceNum="2" contentAssocTypeId="SUB_CONTENT" mapKey="js" fromDate="2014-10-02 00:00:00"/>
 

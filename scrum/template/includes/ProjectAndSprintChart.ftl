@@ -20,7 +20,7 @@ under the License.
     <INPUT type="HIDDEN" name="productId" value="${product.productId}"/>
 </div>
 <form id="form_projectSprintReport" method="post"></form>
-<script type="text/javascript">
+<script type="application/javascript">
     function loadViewerProjectSprintReport(){
     var formObj = document.getElementById( "form_projectSprintReport" );
     var paramContainer = document.getElementById("params_projectSprintReport");
@@ -41,4 +41,4 @@ under the License.
     }
 </script>
 <iframe name="projectSprintReport" frameborder="no"  scrolling = "auto"  style='height:350px;width:100%;' ></iframe>
-<script type="text/javascript">loadViewerProjectSprintReport();</script>
+<script type="application/javascript">loadViewerProjectSprintReport();</script>

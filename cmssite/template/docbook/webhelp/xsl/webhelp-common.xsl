@@ -109,7 +109,7 @@ These problems go away when you add this IE=7 mode meta tag.
             webhelp.tree.cookie.id = <xsl:value-of select="$webhelp.tree.cookie.id"/> +++ <xsl:value-of select="count(//node())"/>
             $webhelp.indexer.language = <xsl:value-of select="$webhelp.indexer.language"/> +++ <xsl:value-of select="count(//node())"/>
         </xsl:message>-->
-        <script type="text/javascript">
+        <script type="application/javascript">
             //The id for tree cookie
             var treeCookieId = "<xsl:value-of select="$webhelp.tree.cookie.id"/>";
             var language = "<xsl:value-of select="$webhelp.indexer.language"/>";
@@ -222,19 +222,19 @@ border: none; background: none; font-weight: none; color: none; }
 	     browserDetect is an Oxygen addition to warn the user if they're using chrome from the file system.
 	     This breaks the Oxygen search highlighting.
 	-->
-	<script type="text/javascript" src="{$webhelp.common.dir}browserDetect.js">
+	<script type="application/javascript" src="{$webhelp.common.dir}browserDetect.js">
             <xsl:comment> </xsl:comment>
 	</script>
-        <script type="text/javascript" src="{$webhelp.common.dir}jquery/jquery-1.4.2.min.js">
+        <script type="application/javascript" src="{$webhelp.common.dir}jquery/jquery-1.4.2.min.js">
             <xsl:comment> </xsl:comment>
         </script>
-        <script type="text/javascript" src="{$webhelp.common.dir}jquery/jquery-ui-1.8.2.custom.min.js">
+        <script type="application/javascript" src="{$webhelp.common.dir}jquery/jquery-ui-1.8.2.custom.min.js">
             <xsl:comment> </xsl:comment>
         </script>
-        <script type="text/javascript" src="{$webhelp.common.dir}jquery/jquery.cookie.js">
+        <script type="application/javascript" src="{$webhelp.common.dir}jquery/jquery.cookie.js">
             <xsl:comment> </xsl:comment>
         </script>
-        <script type="text/javascript" src="{$webhelp.common.dir}jquery/treeview/jquery.treeview.min.js">
+        <script type="application/javascript" src="{$webhelp.common.dir}jquery/treeview/jquery.treeview.min.js">
             <xsl:comment> </xsl:comment>
         </script>
 
@@ -242,13 +242,13 @@ border: none; background: none; font-weight: none; color: none; }
 	  <!--Scripts/css stylesheets for Search-->
 	  <!-- TODO: Why THREE files? There's absolutely no need for having separate files. 
 		These should have been identified at the optimization phase! --> 
-	  <script type="text/javascript" src="search/l10n.js">
+	  <script type="application/javascript" src="search/l10n.js">
 	    <xsl:comment></xsl:comment>
 	  </script>
-      <script type="text/javascript" src="search/htmlFileInfoList.js">
+      <script type="application/javascript" src="search/htmlFileInfoList.js">
 	      <xsl:comment> </xsl:comment>
 	  </script>
-	  <script type="text/javascript" src="search/nwSearchFnt.js">
+	  <script type="application/javascript" src="search/nwSearchFnt.js">
 	      <xsl:comment> </xsl:comment>
 	  </script>
 
@@ -258,7 +258,7 @@ border: none; background: none; font-weight: none; color: none; }
 	     For country codes, see: http://www.uspto.gov/patft/help/helpctry.htm
 	  -->
 	  <!--<xsl:message><xsl:value-of select="concat('search/stemmers/',$webhelp.indexer.language,'_stemmer.js')"/></xsl:message>-->
-	  <script type="text/javascript" src="{concat('search/stemmers/',$webhelp.indexer.language,'_stemmer.js')}">
+	  <script type="application/javascript" src="{concat('search/stemmers/',$webhelp.indexer.language,'_stemmer.js')}">
 	      <xsl:comment>//make this scalable to other languages as well.</xsl:comment>
 	  </script>
 
@@ -268,13 +268,13 @@ border: none; background: none; font-weight: none; color: none; }
 		TODO: Generate webhelp index for largest docbook document that can be find, and analyze the file sizes.
 		IF the file size is still around ~50KB for a given file, we should consider merging these files together. again.     	
 	  -->
-	  <script type="text/javascript" src="search/index-1.js">
+	  <script type="application/javascript" src="search/index-1.js">
 	      <xsl:comment> </xsl:comment>
 	  </script>
-	  <script type="text/javascript" src="search/index-2.js">
+	  <script type="application/javascript" src="search/index-2.js">
 	      <xsl:comment> </xsl:comment>
 	  </script>
-	  <script type="text/javascript" src="search/index-3.js">
+	  <script type="application/javascript" src="search/index-3.js">
 	      <xsl:comment> </xsl:comment>
 	  </script>
 	  <!--End of index files -->
@@ -796,7 +796,7 @@ border: none; background: none; font-weight: none; color: none; }
     <xsl:template match="text()" mode="webhelptoc"/>
 
     <xsl:template name="user.footer.content">
-        <script type="text/javascript" src="{$webhelp.common.dir}main.js">
+        <script type="application/javascript" src="{$webhelp.common.dir}main.js">
             <xsl:comment> </xsl:comment>
         </script>
     </xsl:template>

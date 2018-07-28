@@ -19,7 +19,7 @@ under the License.
 <#assign janrainEnabled = Static["org.apache.ofbiz.entity.util.EntityUtilProperties"].getPropertyValue("ecommerce", "janrain.enabled", delegator)>
 <#assign appName = Static["org.apache.ofbiz.entity.util.EntityUtilProperties"].getPropertyValue("ecommerce", "janrain.appName", delegator)>
 <#if "Y" == janrainEnabled>
-<script type="text/javascript">
+<script type="application/javascript">
 (function() {
     if (typeof window.janrain !== 'object') window.janrain = {};
     window.janrain.settings = {};
@@ -34,7 +34,7 @@ under the License.
     }
 
     var e = document.createElement('script');
-    e.type = 'text/javascript';
+    e.type = 'application/javascript';
     e.id = 'janrainAuthWidget';
 
     if (document.location.protocol === 'https:') {
@@ -142,7 +142,7 @@ under the License.
 
 <div class="endcolumns">&nbsp;</div>
 
-<script type="text/javascript">
+<script type="application/javascript">
   <#if autoUserLogin?has_content>document.loginform.PASSWORD.focus();</#if>
   <#if !autoUserLogin?has_content>document.loginform.USERNAME.focus();</#if>
 </script>
