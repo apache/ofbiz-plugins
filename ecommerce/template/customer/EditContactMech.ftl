@@ -68,8 +68,8 @@ under the License.
         <div class="col-sm-6">
             <#list partyContactMechPurposes! as partyContactMechPurpose>
               <#assign contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType", true) />
-                  <form name="deletePartyContactMechPurpose_${partyContactMechPurpose.contactMechPurposeTypeId}" class="my-2"
-                        method="post" action="<@ofbizUrl>deletePartyContactMechPurpose</@ofbizUrl>">
+                  <form name="expirePartyContactMechPurpose_${partyContactMechPurpose.contactMechPurposeTypeId}" class="my-2"
+                        method="post" action="<@ofbizUrl>expirePartyContactMechPurpose</@ofbizUrl>">
                     <div class="form-group">
                       <label class="my-2">
                         <#if contactMechPurposeType??>
@@ -86,7 +86,7 @@ under the License.
                              value="${partyContactMechPurpose.contactMechPurposeTypeId}"/>
                       <input type="hidden" name="fromDate" value="${partyContactMechPurpose.fromDate}"/>
                       <input type="hidden" name="useValues" value="true"/>
-                      <a href='javascript:document.deletePartyContactMechPurpose_${partyContactMechPurpose.contactMechPurposeTypeId}.submit()'
+                      <a href='javascript:document.expirePartyContactMechPurpose_${partyContactMechPurpose.contactMechPurposeTypeId}.submit()'
                          class="btn btn-outline-secondary">${uiLabelMap.CommonDelete}</a>
                     </div>
                   </form>
