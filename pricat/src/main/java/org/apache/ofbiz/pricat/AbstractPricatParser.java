@@ -235,16 +235,16 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
             for (CellReference cell : errorMessages.keySet()) {
                 if (cell != null && errorMessages.get(cell) != null) {
                     XSSFRow row = sheet.getRow(cell.getRow());
-                    Integer rowNum = Integer.valueOf(row.getRowNum());
+                    Integer rowNum = row.getRowNum();
                     int errorRow = newRowNum;
                     if (rowMapping.containsKey(rowNum)) {
-                        errorRow = rowMapping.get(rowNum).intValue();
+                        errorRow = rowMapping.get(rowNum);
                     } else {
                         XSSFRow newRow = errorSheet.getRow(errorRow);
                         if (newRow == null) {
                             newRow = errorSheet.createRow(errorRow);
                         }
-                        rowMapping.put(rowNum, Integer.valueOf(errorRow));
+                        rowMapping.put(rowNum, errorRow);
                         newRow.setHeight(row.getHeight());
                         copyRow(row, newRow, factory, errorPatriarch);
                         newRowNum ++;
@@ -418,7 +418,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
                 cell = row.getCell(i);
             }
             if (cell == null) {
-                if (((Boolean) colNames.get(i)[2]).booleanValue()) {
+                if ((Boolean) colNames.get(i)[2]) {
                     report.print(UtilProperties.getMessage(resource, "ErrorColCannotEmpty", new Object[] {colNames.get(i)[0]}, locale), InterfaceReport.FORMAT_WARNING);
                     errorMessages.put(new CellReference(cell), UtilProperties.getMessage(resource, "ErrorColCannotEmpty", new Object[] {colNames.get(i)[0]}, locale));
                     foundError = true;
@@ -439,14 +439,14 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
             } else {
                 report.print(((i == 0)?"":","), InterfaceReport.FORMAT_NOTE);
             }
-            if (((Boolean) colNames.get(i)[2]).booleanValue() && UtilValidate.isEmpty(cellValue)) {
+            if ((Boolean) colNames.get(i)[2] && UtilValidate.isEmpty(cellValue)) {
                 report.print(UtilProperties.getMessage(resource, "ErrorColCannotEmpty", new Object[] {colNames.get(i)[0]}, locale), InterfaceReport.FORMAT_WARNING);
                 errorMessages.put(new CellReference(cell), UtilProperties.getMessage(resource, "ErrorColCannotEmpty", new Object[] {colNames.get(i)[0]}, locale));
                 foundError = true;
                 results.add(null);
                 continue;
             }
-            if (((Boolean) colNames.get(i)[2]).booleanValue() && cellType != (int) colNames.get(i)[1]) {
+            if ((Boolean) colNames.get(i)[2] && cellType != (int) colNames.get(i)[1]) {
                 // String warningMessage = "";
                 if ((int) colNames.get(i)[1] == XSSFCell.CELL_TYPE_STRING) {
                     results.add(cellValue);
@@ -562,7 +562,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
             }
             Timestamp now = UtilDateTime.nowTimestamp();
             if (UtilValidate.isEmpty(historyValue)) {
-                historyValue = delegator.makeValue("ExcelImportHistory", UtilMisc.toMap("sequenceNum", Long.valueOf(sequenceNum), "userLoginId", userLoginId,
+                historyValue = delegator.makeValue("ExcelImportHistory", UtilMisc.toMap("sequenceNum", sequenceNum, "userLoginId", userLoginId,
                                                     "fileName", pricatFile.getName(), "statusId", "EXCEL_IMPORTED", "fromDate", now,  
                                                     "thruDate", now, "threadName", threadName, "logFileName", logFileName));
             } else {

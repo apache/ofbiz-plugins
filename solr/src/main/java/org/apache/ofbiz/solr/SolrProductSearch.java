@@ -484,8 +484,8 @@ public abstract class SolrProductSearch {
             Map<String, Integer> facetQuery = queryResult.getFacetQuery();
             Map<String, String> facetQueries = new HashMap<String, String>();
             for (String fq : facetQuery.keySet()) {
-                if (facetQuery.get(fq).intValue() > 0)
-                    facetQueries.put(fq, fq.replaceAll("^.*\\u005B(.*)\\u005D", "$1") + " (" + facetQuery.get(fq).intValue() + ")");
+                if (facetQuery.get(fq) > 0)
+                    facetQueries.put(fq, fq.replaceAll("^.*\\u005B(.*)\\u005D", "$1") + " (" + facetQuery.get(fq) + ")");
             }
 
             Map<String, Map<String, Long>> facetFields = new HashMap<String, Map<String, Long>>();

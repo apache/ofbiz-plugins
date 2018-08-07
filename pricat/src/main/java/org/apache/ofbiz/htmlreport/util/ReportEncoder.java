@@ -228,7 +228,7 @@ public final class ReportEncoder {
         while (matcher.find()) {
             String entity = matcher.group();
             String value = entity.substring(2, entity.length() - 1);
-            int c = Integer.valueOf(value).intValue();
+            int c = Integer.valueOf(value);
             if (c < 128) {
                 // first 128 chars are contained in almost every charset
                 entity = new String(new char[] {(char)c});

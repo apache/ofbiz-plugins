@@ -187,7 +187,7 @@ public class EbayStoreOrder {
 
             String shippingTotalAdditionalCost = context.get("shippingTotalAdditionalCost").toString();
             if (UtilValidate.isNotEmpty(shippingTotalAdditionalCost)) {
-                double shippingAdditionalCost = new Double(shippingTotalAdditionalCost).doubleValue();
+                double shippingAdditionalCost = new Double(shippingTotalAdditionalCost);
                 if (shippingAdditionalCost > 0) {
                     GenericValue shippingAdjustment = EbayHelper.makeOrderAdjustment(delegator, "MISCELLANEOUS_CHARGE", cart.getOrderId(), null, null, shippingAdditionalCost, 0.0);
                     if (shippingAdjustment != null) {
@@ -199,11 +199,11 @@ public class EbayStoreOrder {
             String salesTaxAmount = context.get("salesTaxAmount").toString();
             String salesTaxPercent = context.get("salesTaxPercent").toString();
             if (UtilValidate.isNotEmpty(salesTaxAmount)) {
-                double salesTaxAmountTotal = new Double(salesTaxAmount).doubleValue();
+                double salesTaxAmountTotal = new Double(salesTaxAmount);
                 if (salesTaxAmountTotal > 0) {
                     double salesPercent = 0.0;
                     if (UtilValidate.isNotEmpty(salesTaxPercent)) {
-                        salesPercent = new Double(salesTaxPercent).doubleValue();
+                        salesPercent = new Double(salesTaxPercent);
                     }
                     GenericValue salesTaxAdjustment = EbayHelper.makeOrderAdjustment(delegator, "SALES_TAX", cart.getOrderId(), null, null, salesTaxAmountTotal, salesPercent);
                     if (salesTaxAdjustment != null) {
@@ -404,7 +404,7 @@ public class EbayStoreOrder {
                 if (salesTaxAmount.doubleValue() > 0) {
                     double salesPercent = 0.0;
                     if (UtilValidate.isNotEmpty(shippingDetailsCtx.get("salesTaxPercent"))) {
-                        salesPercent = new Double(shippingDetailsCtx.get("salesTaxPercent").toString()).doubleValue();
+                        salesPercent = new Double(shippingDetailsCtx.get("salesTaxPercent").toString());
                     }
                     GenericValue salesTaxAdjustment = EbayHelper.makeOrderAdjustment(delegator, "SALES_TAX", cart.getOrderId(), null, null, salesTaxAmount.doubleValue(), salesPercent);
                     if (salesTaxAdjustment != null) {

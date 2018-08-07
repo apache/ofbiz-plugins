@@ -235,7 +235,7 @@ public class WebPosSession {
         if (UtilValidate.isEmpty(mgrLoggedIn)) {
             mgrLoggedIn = hasRole(getUserLogin(), "MANAGER");
         }
-        return mgrLoggedIn.booleanValue();
+        return mgrLoggedIn;
     }
 
     public WebPosTransaction getCurrentTransaction() {

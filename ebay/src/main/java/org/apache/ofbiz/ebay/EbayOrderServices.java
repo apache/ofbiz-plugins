@@ -743,13 +743,13 @@ public class EbayOrderServices {
                                 double shippingSurcharge = 0;
 
                                 if (UtilValidate.isNotEmpty(incuranceCost)) {
-                                    shippingInsuranceCost = new Double(incuranceCost).doubleValue();
+                                    shippingInsuranceCost = new Double(incuranceCost);
                                 }
                                 if (UtilValidate.isNotEmpty(additionalCost)) {
-                                    shippingServiceAdditionalCost = new Double(additionalCost).doubleValue();
+                                    shippingServiceAdditionalCost = new Double(additionalCost);
                                 }
                                 if (UtilValidate.isNotEmpty(surchargeCost)) {
-                                    shippingSurcharge = new Double(surchargeCost).doubleValue();
+                                    shippingSurcharge = new Double(surchargeCost);
                                 }
                                 double shippingTotalAdditionalCost = shippingInsuranceCost + shippingServiceAdditionalCost + shippingSurcharge;
                                 String totalAdditionalCost = new Double(shippingTotalAdditionalCost).toString();
@@ -1063,7 +1063,7 @@ public class EbayOrderServices {
 
             String shippingCost = (String) shippingServiceSelectedCtx.get("shippingServiceCost");
             if (UtilValidate.isNotEmpty(shippingCost)) {
-                double shippingAmount = new Double(shippingCost).doubleValue();
+                double shippingAmount = new Double(shippingCost);
                 if (shippingAmount > 0) {
                     GenericValue shippingAdjustment = EbayHelper.makeOrderAdjustment(delegator, "SHIPPING_CHARGES", cart.getOrderId(), null, null, shippingAmount, 0.0);
                     if (shippingAdjustment != null) {
@@ -1074,7 +1074,7 @@ public class EbayOrderServices {
             // Apply additional shipping costs as order adjustment
             String shippingTotalAdditionalCost = (String) shippingServiceSelectedCtx.get("shippingTotalAdditionalCost");
             if (UtilValidate.isNotEmpty(shippingTotalAdditionalCost)) {
-                double shippingAdditionalCost = new Double(shippingTotalAdditionalCost).doubleValue();
+                double shippingAdditionalCost = new Double(shippingTotalAdditionalCost);
                 if (shippingAdditionalCost > 0) {
                     GenericValue shippingAdjustment = EbayHelper.makeOrderAdjustment(delegator, "MISCELLANEOUS_CHARGE", cart.getOrderId(), null, null, shippingAdditionalCost, 0.0);
                     if (shippingAdjustment != null) {
@@ -1087,11 +1087,11 @@ public class EbayOrderServices {
             String salesTaxAmount = (String) shippingDetailsCtx.get("salesTaxAmount");
             String salesTaxPercent = (String) shippingDetailsCtx.get("salesTaxPercent");
             if (UtilValidate.isNotEmpty(salesTaxAmount)) {
-                double salesTaxAmountTotal = new Double(salesTaxAmount).doubleValue();
+                double salesTaxAmountTotal = new Double(salesTaxAmount);
                 if (salesTaxAmountTotal > 0) {
                     double salesPercent = 0.0;
                     if (UtilValidate.isNotEmpty(salesTaxPercent)) {
-                        salesPercent = new Double(salesTaxPercent).doubleValue();
+                        salesPercent = new Double(salesTaxPercent);
                     }
                     GenericValue salesTaxAdjustment = EbayHelper.makeOrderAdjustment(delegator, "SALES_TAX", cart.getOrderId(), null, null, salesTaxAmountTotal, salesPercent);
                     if (salesTaxAdjustment != null) {

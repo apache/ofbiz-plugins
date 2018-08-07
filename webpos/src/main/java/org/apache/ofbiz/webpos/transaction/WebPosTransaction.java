@@ -147,7 +147,7 @@ public class WebPosTransaction {
     public void closeTx() {
         if (UtilValidate.isNotEmpty(txLog)) {
             txLog.set("statusId", "POSTX_CLOSED");
-            txLog.set("itemCount", new Long(getCart().size()));
+            txLog.set("itemCount", (long) getCart().size());
             txLog.set("logEndDateTime", UtilDateTime.nowTimestamp());
             try {
                 txLog.store();
@@ -245,7 +245,7 @@ public class WebPosTransaction {
         // save the TX Log
         txLog.set("statusId", "POSTX_SOLD");
         txLog.set("orderId", orderId);
-        txLog.set("itemCount", new Long(getCart().size()));
+        txLog.set("itemCount", (long) getCart().size());
         txLog.set("logEndDateTime", UtilDateTime.nowTimestamp());
         try {
             txLog.store();

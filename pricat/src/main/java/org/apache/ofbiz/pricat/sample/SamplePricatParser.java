@@ -558,7 +558,7 @@ public class SamplePricatParser extends AbstractPricatParser {
                 cell = row.getCell(i);
             }
             if (cell == null) {
-                if (((Boolean) colNames.get(i)[2]).booleanValue() && (facilities.keySet().size() > 1 || (facilities.keySet().size() == 1 && i >= 2))) {
+                if ((Boolean) colNames.get(i)[2] && (facilities.keySet().size() > 1 || (facilities.keySet().size() == 1 && i >= 2))) {
                     report.print(UtilProperties.getMessage(resource, "ErrorColCannotEmpty", new Object[] {colNames.get(i)[0]}, locale), InterfaceReport.FORMAT_WARNING);
                     cell = row.createCell(i);
                     errorMessages.put(new CellReference(cell), UtilProperties.getMessage(resource, "ErrorColCannotEmpty", new Object[] {colNames.get(i)[0]}, locale));
@@ -589,14 +589,14 @@ public class SamplePricatParser extends AbstractPricatParser {
             } else {
                 report.print(((i == 0)?"":","), InterfaceReport.FORMAT_NOTE);
             }
-            if (((Boolean) colNames.get(i)[2]).booleanValue() && UtilValidate.isEmpty(cellValue) && (facilities.keySet().size() > 1 || (facilities.keySet().size() == 1 && i >= 2))) {
+            if ((Boolean) colNames.get(i)[2] && UtilValidate.isEmpty(cellValue) && (facilities.keySet().size() > 1 || (facilities.keySet().size() == 1 && i >= 2))) {
                 report.print(UtilProperties.getMessage(resource, "ErrorColCannotEmpty", new Object[] {colNames.get(i)[0]}, locale), InterfaceReport.FORMAT_WARNING);
                 errorMessages.put(new CellReference(cell), UtilProperties.getMessage(resource, "ErrorColCannotEmpty", new Object[] {colNames.get(i)[0]}, locale));
                 foundError = true;
                 results.add(null);
                 continue;
             }
-            if (((Boolean) colNames.get(i)[2]).booleanValue() && cellType != (int) colNames.get(i)[1]) {
+            if ((Boolean) colNames.get(i)[2] && cellType != (int) colNames.get(i)[1]) {
                 // String warningMessage = "";
                 if ((int) colNames.get(i)[1] == XSSFCell.CELL_TYPE_STRING) {
                     if (UtilValidate.isNotEmpty(cellValue) && UtilValidate.isNotEmpty(cellValue.trim())) {

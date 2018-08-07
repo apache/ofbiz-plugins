@@ -65,7 +65,7 @@ public class Various {
                     standard.put("estimatedNumPeople", new Double("1"));
                 }
                 if (standard.get("estimatedDuration") != null) {
-                    plannedHours += standard.getDouble("estimatedDuration").doubleValue() / standard.getDouble("estimatedNumPeople").doubleValue();
+                    plannedHours += standard.getDouble("estimatedDuration") / standard.getDouble("estimatedNumPeople");
                 }
             }
 
@@ -96,7 +96,7 @@ public class Various {
                 if (actuals.size() > 0) {
                     for (GenericValue actual : actuals) {
                         Double hour = (Double) actual.get("hours");
-                        double hours = hour.doubleValue();
+                        double hours = hour;
                         actualHours = actualHours + hours;
                     }
                 }

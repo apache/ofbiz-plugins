@@ -939,7 +939,7 @@ public class HtmlReport extends AbstractReport {
      * @return the button row
      */
     public String dialogButtonsOkCancel(HttpServletRequest request, String okAttrs, String cancelAttrs) {
-        if (Boolean.valueOf(getParamThreadHasNext(request)).booleanValue()
+        if (Boolean.valueOf(getParamThreadHasNext(request))
             && ReportStringUtil.isNotEmpty(getParamReportContinueKey())) {
             return dialogButtons(new int[] {BUTTON_OK, BUTTON_CANCEL}, new String[] {
                 okAttrs,
@@ -964,7 +964,7 @@ public class HtmlReport extends AbstractReport {
         } else {
             downloadAttrs += " ";
         }
-        if (Boolean.valueOf(getParamThreadHasNext(request)).booleanValue()
+        if (Boolean.valueOf(getParamThreadHasNext(request))
             && ReportStringUtil.isNotEmpty(getParamReportContinueKey())) {
             return dialogButtons(new int[] {BUTTON_OK, BUTTON_CANCEL, BUTTON_DOWNLOAD}, new String[] {
                 okAttrs,

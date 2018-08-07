@@ -287,7 +287,7 @@ public class EbayHelper {
                     "orderItemSeqId", orderItemSeqId, "shipGroupSeqId", shipGroupSeqId, "amount",
                     new BigDecimal(amount));
             if (sourcePercentage != 0) {
-                inputMap.put("sourcePercentage", new Double(sourcePercentage));
+                inputMap.put("sourcePercentage", sourcePercentage);
             }
             orderAdjustment = delegator.makeValue("OrderAdjustment", inputMap);
         } catch (Exception e) {
