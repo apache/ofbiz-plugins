@@ -47,6 +47,7 @@ if (!parameters.clearSearch || !"N".equals(parameters.clearSearch)) {
     ProductSearchSession.searchClear(session)
 }
 
+request.getSession().setAttribute("dispatcher",dispatcher)
 ProductSearchSession.processSearchParameters(parameters, request)
 prodCatalogId = CatalogWorker.getCurrentCatalogId(request)
 result = ProductSearchSession.getProductSearchResult(request, delegator, prodCatalogId)
