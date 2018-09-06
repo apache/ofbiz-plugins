@@ -34,12 +34,10 @@ under the License.
             </p>
           </li>
         </#list>
-        <li>
-          <a href="<@ofbizUrl>showAllPromotions</@ofbizUrl>" class="btn btn-outline-secondary">
-            ${uiLabelMap.OrderViewAllPromotions}
-          </a>
-        </li>
       </ul>
+      <a href="<@ofbizUrl>showAllPromotions</@ofbizUrl>" class="btn btn-outline-secondary">
+        ${uiLabelMap.OrderViewAllPromotions}
+      </a>
     </div>
   </div>
 </#if>

@@ -20,7 +20,7 @@ under the License.
   <a href="<@ofbizCatalogAltUrl productId=miniProduct.productId/>" class="linktext">
     ${miniProductContentWrapper.get("PRODUCT_NAME", "html")?default("No Name Available")}
   </a>
-  <ul>
+  <ul class="list-unstyled">
     <li>
       ${miniProduct.productId}
       <#if (priceResult.price?default(0) > 0 && "N" == miniProduct.requireAmount?default("N"))>

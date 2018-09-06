@@ -38,7 +38,7 @@ under the License.
     <ul>
       <#assign count_1=0/>
       <@loopSubContent contentId=contentRootId viewIndex=0 viewSize=9999 orderBy="contentName">
-        <li class="browsecategorytext">
+        <li class="browsecategorytext list-unstyled">
           <a href="<@ofbizUrl>showcontenttree?contentId=${subContentId}&amp;nodeTrailCsv=${subContentId}</@ofbizUrl>"
               class="browsecategorybutton">
             ${content.contentName}

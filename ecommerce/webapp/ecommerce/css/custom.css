@@ -98,9 +98,7 @@ label.required:after {
     min-height: 100vh;
     flex-direction: column;
 }
-li {
-    display: inline;
-}
+
 .jGrowl {
   z-index: 9999;
   color: #ffffff;

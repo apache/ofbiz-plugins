@@ -22,7 +22,7 @@ under the License.
     ${uiLabelMap.ProductBrowseForums}
   </div>
   <div class="card-body">
-    <ul>
+    <ul class="list-unstyled">
     <#list forums as forum>
       <li class="browsecategorytext">
         <a href="<@ofbizUrl>showforum?forumId=${forum.contentId}</@ofbizUrl>"

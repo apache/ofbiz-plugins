@@ -22,7 +22,7 @@ under the License.
     ${uiLabelMap.ProductBrowseBlogs}
   </div>
   <div class="card-body">
-    <ul>
+    <ul class="list-unstyled">
       <#list blogs as blog>
         <li class="browsecategorytext">
           <a href="<@ofbizUrl>MainBlog?blogContentId=${blog.contentId}</@ofbizUrl>" class="browsecategorybutton">
