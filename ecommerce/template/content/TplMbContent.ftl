@@ -51,7 +51,7 @@ under the License.
 </#macro>
 <#--
 <#macro content>
-  <#assign contentId="ECMC" + .node.@id[0]/>
+  <#local contentId="ECMC" + .node.@id[0]/>
   <DataResource dataResourceId="${contentId}" dataResourceTypeId="ELECTRONIC_TEXT"
       dataTemplateTypeId="NONE" dataSourceId="ECM" mimeTypeId="text/html"/>
   <ElectronicText dataResourceId="${contentId}">

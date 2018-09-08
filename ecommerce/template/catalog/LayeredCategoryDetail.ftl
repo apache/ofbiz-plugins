@@ -18,7 +18,7 @@ under the License.
 -->
 
 <#macro paginationControls>
-  <#assign viewIndexMax = Static["java.lang.Math"].ceil((listSize - 1)?double / viewSize?double)>
+  <#local viewIndexMax = Static["java.lang.Math"].ceil((listSize - 1)?double / viewSize?double)>
   <#if (viewIndexMax?int > 0)>
     <div class="product-prevnext">
       <#-- Start Page Select Drop-Down -->

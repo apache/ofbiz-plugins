@@ -27,13 +27,13 @@ under the License.
 </#macro>
 
 <#macro topic>
-  <#assign contentId="ECMT" + .node.@id[0]/>
+  <#local contentId="ECMT" + .node.@id[0]/>
   <Content contentId="${contentId}" contentTypeId="WEB_SITE_PUB_PT" contentName="${.node.topic_heading}"
       description="${.node.topic_desc?html}" ownerContentId=""/>
-  <#assign internalName=.node.@name[0]/>
-  <#assign internalNameParts=internalName?split(".")/>
-  <#assign firstPart=internalNameParts[0] />
-  <#assign nowStamp=Static["org.apache.ofbiz.base.util.UtilDateTime"].nowTimestamp()/>
+  <#local internalName=.node.@name[0]/>
+  <#local internalNameParts=internalName?split(".")/>
+  <#local firstPart=internalNameParts[0] />
+  <#local nowStamp=Static["org.apache.ofbiz.base.util.UtilDateTime"].nowTimestamp()/>
   <#if "WIDGETS" == firstPart>
     <ContentAssoc contentId="CNTWIDGETS" contentIdTo="${contentId}" contentAssocTypeId="SUB_CONTENT"
         fromDate="${nowStamp?string("yyyy-MM-dd HH:mm:ss")}"/>

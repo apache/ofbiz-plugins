@@ -99,8 +99,8 @@ under the License.
 
 
 <#macro listSiteIds contentId indentIndex=0>
-  <#assign dummy=Static["org.apache.ofbiz.base.util.Debug"].logInfo("in listSiteIds, contentId:" + contentId,"")/>
-  <#assign dummy=Static["org.apache.ofbiz.base.util.Debug"].logInfo("in listSiteIds, indentIndex:" + indentIndex,"")/>
+  <#local dummy=Static["org.apache.ofbiz.base.util.Debug"].logInfo("in listSiteIds, contentId:" + contentId,"")/>
+  <#local dummy=Static["org.apache.ofbiz.base.util.Debug"].logInfo("in listSiteIds, indentIndex:" + indentIndex,"")/>
   <#local indent = ""/>
   <#if 0 < indentIndex >
     <#list 0..(indentIndex - 1) as idx>

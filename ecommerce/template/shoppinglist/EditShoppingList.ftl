@@ -55,7 +55,7 @@ under the License.
 //]]>
 </script>
 <#macro paginationControls>
-  <#assign viewIndexMax = Static["java.lang.Math"].ceil((listSize)?double / viewSize?double)>
+  <#local viewIndexMax = Static["java.lang.Math"].ceil((listSize)?double / viewSize?double)>
   <#if (viewIndexMax?int > 0)>
         <#-- Start Page Select Drop-Down -->
         <select name="pageSelect" class="custom-select float-right mb-2" onchange="callDocumentByPaginate(this[this.selectedIndex].value);">

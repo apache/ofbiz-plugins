@@ -169,25 +169,25 @@ under the License.
 
 <#macro nextPrev listSize requestURL queryString lowIndex=0 highIndex=10 viewSize=10 viewIndex=0 >
 
-  <#assign lowIdx=lowIndex/>
-  <#assign highIdx=highIndex/>
-  <#assign viewSz=viewSize/>
-  <#assign viewIdx=viewIndex/>
-  <#assign listSz=listSize/>
+  <#local lowIdx=lowIndex/>
+  <#local highIdx=highIndex/>
+  <#local viewSz=viewSize/>
+  <#local viewIdx=viewIndex/>
+  <#local listSz=listSize/>
 
-  <#if !lowIdx?has_content><#assign lowIdx=0/></#if>
-  <#if !highIdx?has_content><#assign highIdx=0/></#if>
-  <#if !viewSz?has_content><#assign viewSz=10/></#if>
-  <#if !viewIdx?has_content><#assign viewIdx=10/></#if>
-  <#if !listSz?has_content><#assign listSz=0/></#if>
+  <#if !lowIdx?has_content><#local lowIdx=0/></#if>
+  <#if !highIdx?has_content><#local highIdx=0/></#if>
+  <#if !viewSz?has_content><#local viewSz=10/></#if>
+  <#if !viewIdx?has_content><#local viewIdx=10/></#if>
+  <#if !listSz?has_content><#local listSz=0/></#if>
 
   <#if queryString?has_content>
-    <#assign queryString = Static["org.apache.ofbiz.base.util.UtilHttp"].stripViewParamsFromQueryString(queryString)/>
+    <#local queryString = Static["org.apache.ofbiz.base.util.UtilHttp"].stripViewParamsFromQueryString(queryString)/>
   </#if>
 
-  <#assign lowIdxShow = lowIdx + 1 />
+  <#local lowIdxShow = lowIdx + 1 />
   <#if highIdx < lowIdxShow >
-    <#assign lowIdxShow = highIdx/>
+    <#local lowIdxShow = highIdx/>
   </#if>
   <table border="0">
     <tr>

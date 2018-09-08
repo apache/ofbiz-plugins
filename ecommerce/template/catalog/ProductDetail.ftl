@@ -992,10 +992,10 @@ $(function(){
   </div>
     <#-- Upgrades/Up-Sell/Cross-Sell -->
     <#macro associated assocProducts beforeName showName afterName formNamePrefix targetRequestName>
-      <#assign pageProduct = product />
-      <#assign targetRequest = "product" />
+      <#local pageProduct = product />
+      <#local targetRequest = "product" />
       <#if targetRequestName?has_content>
-        <#assign targetRequest = targetRequestName />
+        <#local targetRequest = targetRequestName />
       </#if>
       <#if assocProducts?has_content>
         <h2>
@@ -1006,9 +1006,9 @@ $(function(){
         <div class="productsummary-container">
           <#list assocProducts as productAssoc>
             <#if productAssoc.productId == product.productId>
-              <#assign assocProductId = productAssoc.productIdTo />
+              <#local assocProductId = productAssoc.productIdTo />
             <#else>
-              <#assign assocProductId = productAssoc.productId />
+              <#local assocProductId = productAssoc.productId />
             </#if>
             <div>
               <a href="<@ofbizUrl>${targetRequest}/<#if categoryId??>~category_id=${categoryId}/</#if>~product_id=${assocProductId}</@ofbizUrl>"
@@ -1026,7 +1026,7 @@ $(function(){
             ${setRequestAttribute("targetRequestName", targetRequestName)}
             </#if>
           ${screens.render(productsummaryScreen)}
-            <#assign product = pageProduct />
+            <#local product = pageProduct />
             <#local listIndex = listIndex + 1 />
           </#list>
         </div>

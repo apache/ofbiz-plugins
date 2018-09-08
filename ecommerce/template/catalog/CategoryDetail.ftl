@@ -41,7 +41,7 @@
 </script>
 
   <#macro paginationControls>
-    <#assign viewIndexMax = Static["java.lang.Math"].ceil((listSize)?double / viewSize?double)/>
+    <#local viewIndexMax = Static["java.lang.Math"].ceil((listSize)?double / viewSize?double)/>
     <#if (viewIndexMax?int > 0)>
       <div class="row">
         <div class="col-sm-2 offset-sm-10">

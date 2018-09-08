@@ -122,11 +122,11 @@ under the License.
 
 <#-- not used, will be deleted -->
 <#macro getCurrentContent >
-  <#assign globalNodeTrail=globalNodeTrail/>
+  <#local globalNodeTrail=globalNodeTrail/>
   <#if globalNodeTrail??>
-    <#assign currentNode=globalNodeTrail?last/>
+    <#local currentNode=globalNodeTrail?last/>
     <#if currentNode??>
-      <#assign currentValue=currentNode.value/>
+      <#local currentValue=currentNode.value/>
       <#if currentValue??>
         <@wrapSubContentCache subContentId=currentValue.contentId wrapTemplateId="WRAP_ARTICLE" >
           <@traverseSubContentCache  contentAssocTypeId="SUB_CONTENT"
@@ -134,7 +134,7 @@ under the License.
               returnAfterPickWhen="mapKey != null && mapKey.equals(\"ARTICLE\")"
               followWhen="contentAssocTypeId != null && contentAssocTypeId.equals(\"_never_\")"
               wrapTemplateId="">
-            <#assign description=currentValue.description?default("No description")/>
+            <#local description=currentValue.description?default("No description")/>
             ${uiLabelMap.CommonDescription}[${currentValue.contentId!}]:${description}
             <a class="tabButton"
                 href="<@ofbizUrl>ViewBlog?contentId=${thisContentId}&amp;nodeTrailCsv=${nodeTrailCsv!}</@ofbizUrl>">
@@ -148,10 +148,10 @@ under the License.
 </#macro>
 
 <#macro renderSiteAncestryPath trail startIndex=0 >
-  <#assign indent = "">
-  <#assign csv = "">
-  <#assign counter = 0>
-  <#assign len = trail?size>
+  <#local indent = "">
+  <#local csv = "">
+  <#local counter = 0>
+  <#local len = trail?size>
   <table border="0" cellspacing="4">
     <#list trail as webSitePublishPoint>
       <#if counter < len && startIndex <= counter >
@@ -161,12 +161,12 @@ under the License.
           <a class="tabButton"
              href="<@ofbizUrl>main?pubPt=${webSitePublishPoint.contentId!}</@ofbizUrl>">${uiLabelMap.CommonBackTo}</a>
           &nbsp;${webSitePublishPoint.templateTitle!}
-          <#assign indent = indent + "&nbsp;&nbsp;&nbsp;&nbsp;">
+          <#local indent = indent + "&nbsp;&nbsp;&nbsp;&nbsp;">
           [${webSitePublishPoint.contentId!}]
         </td>
       </#if>
     </tr>
-      <#assign counter = counter + 1>
+      <#local counter = counter + 1>
       <#if 20 < counter > <#break/></#if>
     </#list>
   </table>
