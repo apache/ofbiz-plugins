@@ -423,8 +423,8 @@ under the License.
             <a href="<@ofbizUrl>addListToCart?shoppingListId=${shoppingList.shoppingListId}</@ofbizUrl>" class="float-right">${uiLabelMap.EcommerceAddListToCart}</a>
     </div>
     <div class="card-body">
-    <@paginationControls/>
       <#if shoppingListItemDatas?has_content>
+        <@paginationControls/>
         <#-- Pagination -->
             <table class="table table-responsive-sm">
               <thead class="thead-dark">
