@@ -473,9 +473,9 @@
     <!-- end of Ajax requests -->
 
     <!-- Set local from user's browser -->
-    <request-map uri="setLocaleFromBrowser">
+    <request-map uri="SetTimeZoneFromBrowser">
         <security https="false" auth="false"/>
-        <event type="service" invoke="setLocaleFromBrowser"/>
+        <event type="service" invoke="SetTimeZoneFromBrowser"/>
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
