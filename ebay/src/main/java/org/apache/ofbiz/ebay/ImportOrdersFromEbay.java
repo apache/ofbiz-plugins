@@ -786,7 +786,7 @@ public class ImportOrdersFromEbay {
                 Debug.logInfo("Setting shipment method: " + (String) parameters.get("shippingService"), module);
                 EbayHelper.setShipmentMethodType(cart, (String) parameters.get("shippingService"), productStoreId, delegator);
 
-                cart.makeAllShipGroupInfos();
+                cart.makeAllShipGroupInfos(dispatcher);
 
                 // create the order
                 Debug.logInfo("Creating CheckOutHelper.", module);

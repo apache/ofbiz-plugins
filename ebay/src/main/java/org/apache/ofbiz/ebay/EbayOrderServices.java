@@ -1205,7 +1205,7 @@ public class EbayOrderServices {
 
                 Debug.logInfo("Setting shipment method: " + (String) shippingServiceSelectedCtx.get("shippingService"), module);
                 EbayHelper.setShipmentMethodType(cart, (String) shippingServiceSelectedCtx.get("shippingService"), productStoreId, delegator);
-                cart.makeAllShipGroupInfos();
+                cart.makeAllShipGroupInfos(dispatcher);
 
                 // create the order
                 Debug.logInfo("Creating CheckOutHelper.", module);
