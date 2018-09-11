@@ -99,6 +99,19 @@
         <value xml:lang="zh">把这个列表及子列表放入购物车</value>
         <value xml:lang="zh-TW">把此清單與子清單放入購物車</value>
     </property>
+    <property key="EcommerceAdditionalAddresses">
+        <value xml:lang="da">Ekstra adresser</value>
+        <value xml:lang="de">Zusätzliche Adressen</value>
+        <value xml:lang="en">Additional Addresses</value>
+        <value xml:lang="fr">Adresses additionelles</value>
+        <value xml:lang="it">Indirizzi aggiuntivi</value>
+        <value xml:lang="ja">追加の住所</value>
+        <value xml:lang="nl">Overige adressen</value>
+        <value xml:lang="pt-BR">Endereços adicionais</value>
+        <value xml:lang="vi">Địa chỉ bổ sung</value>
+        <value xml:lang="zh">附加地址</value>
+        <value xml:lang="zh-TW">附加位址</value>
+    </property>
     <property key="EcommerceAddListToCart">
         <value xml:lang="cs">Přidat seznam do košíku</value>
         <value xml:lang="da">Læg liste i indkøbskurven</value>
@@ -168,6 +181,19 @@
         <value xml:lang="zh">新建答案用于</value>
         <value xml:lang="zh-TW">新增回應於</value>
     </property>
+    <property key="EcommerceAddressBook">
+        <value xml:lang="da">Adressebog</value>
+        <value xml:lang="de">Adressbuch</value>
+        <value xml:lang="en">Address Book</value>
+        <value xml:lang="fr">Carnet d'adresses</value>
+        <value xml:lang="it">Indirizzario</value>
+        <value xml:lang="ja">住所録</value>
+        <value xml:lang="nl">Adresboek</value>
+        <value xml:lang="pt-BR">Caderno de endereços</value>
+        <value xml:lang="vi">Danh bạ địa chỉ</value>
+        <value xml:lang="zh">地址簿</value>
+        <value xml:lang="zh-TW">位址簿</value>
+    </property>
     <property key="EcommerceAddSelectedtoList">
         <value xml:lang="cs">Přidat vybrané do seznamu</value>
         <value xml:lang="da">Tilføj udvalgte til listen</value>
@@ -204,32 +230,6 @@
         <value xml:lang="vi">Dùng phím cách (space) để ngăn cách các Tag, sử dụng dấu nháy đơn (') cho các từ.</value>
         <value xml:lang="zh">使用空格分隔标签。使用单引号(')来表示词组。</value>
         <value xml:lang="zh-TW">使用空格分隔標籤.使用單引號(')來表示片語.</value>
-    </property>
-    <property key="EcommerceAdditionalAddresses">
-        <value xml:lang="da">Ekstra adresser</value>
-        <value xml:lang="de">Zusätzliche Adressen</value>
-        <value xml:lang="en">Additional Addresses</value>
-        <value xml:lang="fr">Adresses additionelles</value>
-        <value xml:lang="it">Indirizzi aggiuntivi</value>
-        <value xml:lang="ja">追加の住所</value>
-        <value xml:lang="nl">Overige adressen</value>
-        <value xml:lang="pt-BR">Endereços adicionais</value>
-        <value xml:lang="vi">Địa chỉ bổ sung</value>
-        <value xml:lang="zh">附加地址</value>
-        <value xml:lang="zh-TW">附加位址</value>
-    </property>
-    <property key="EcommerceAddressBook">
-        <value xml:lang="da">Adressebog</value>
-        <value xml:lang="de">Adressbuch</value>
-        <value xml:lang="en">Address Book</value>
-        <value xml:lang="fr">Carnet d'adresses</value>
-        <value xml:lang="it">Indirizzario</value>
-        <value xml:lang="ja">住所録</value>
-        <value xml:lang="nl">Adresboek</value>
-        <value xml:lang="pt-BR">Caderno de endereços</value>
-        <value xml:lang="vi">Danh bạ địa chỉ</value>
-        <value xml:lang="zh">地址簿</value>
-        <value xml:lang="zh-TW">位址簿</value>
     </property>
     <property key="EcommerceAddYourTags">
         <value xml:lang="de">Ihre Tags</value>
@@ -1360,24 +1360,6 @@
         <value xml:lang="zh">你的订单已经标记为退款。</value>
         <value xml:lang="zh-TW">禮物卡退款.</value>
     </property>
-    <property key="EcommerceGiftCardReloadFailed">
-        <value xml:lang="da">Genindlæsning af gavekort mislykkedes</value>
-        <value xml:lang="de">Aufladen Gutschein fehlgeschlagen</value>
-        <value xml:lang="en">Gift Card Reload Failed</value>
-        <value xml:lang="es">Recarga de certificado de regalo fallida. El código del error es:</value>
-        <value xml:lang="fr">Le rechargement de la carte cadeau a échoué</value>
-        <value xml:lang="hi-IN">उपहार कार्ड क्रिया असफल, जवाबी कोड है:</value>
-        <value xml:lang="it">La ricarica della carta omaggio è fallita</value>
-        <value xml:lang="ja">ギフトカードのチャージに失敗しました。レスポンスコード:</value>
-        <value xml:lang="nl">Opwaarderen geschenkkaart mislukt</value>
-        <value xml:lang="pt-BR">A recarga do cartão de presente falhou</value>
-        <value xml:lang="ro">Proces de Reincarcare Carte Omagiu Falita cu  cod de raspuns:</value>
-        <value xml:lang="ru">Перезагрузка дисконтной карты не удалась с кодом ответа:</value>
-        <value xml:lang="th">เกิดความผิดพลาดในการใส่บัตรของขวัญเพิ่ม</value>
-        <value xml:lang="vi">Tải lại thông tin Thẻ quà tặng không thành công</value>
-        <value xml:lang="zh">礼品卡充值过程失败，响应码为：</value>
-        <value xml:lang="zh-TW">禮物卡儲值失敗</value>
-    </property>
     <property key="EcommerceGiftCardReloaded">
         <value xml:lang="da">Gavekort er genindlæst</value>
         <value xml:lang="de">Gutschein aufgeladen</value>
@@ -1396,6 +1378,24 @@
         <value xml:lang="zh">已经充值了。</value>
         <value xml:lang="zh-TW">禮物卡已儲值</value>
     </property>
+    <property key="EcommerceGiftCardReloadFailed">
+        <value xml:lang="da">Genindlæsning af gavekort mislykkedes</value>
+        <value xml:lang="de">Aufladen Gutschein fehlgeschlagen</value>
+        <value xml:lang="en">Gift Card Reload Failed</value>
+        <value xml:lang="es">Recarga de certificado de regalo fallida. El código del error es:</value>
+        <value xml:lang="fr">Le rechargement de la carte cadeau a échoué</value>
+        <value xml:lang="hi-IN">उपहार कार्ड क्रिया असफल, जवाबी कोड है:</value>
+        <value xml:lang="it">La ricarica della carta omaggio è fallita</value>
+        <value xml:lang="ja">ギフトカードのチャージに失敗しました。レスポンスコード:</value>
+        <value xml:lang="nl">Opwaarderen geschenkkaart mislukt</value>
+        <value xml:lang="pt-BR">A recarga do cartão de presente falhou</value>
+        <value xml:lang="ro">Proces de Reincarcare Carte Omagiu Falita cu  cod de raspuns:</value>
+        <value xml:lang="ru">Перезагрузка дисконтной карты не удалась с кодом ответа:</value>
+        <value xml:lang="th">เกิดความผิดพลาดในการใส่บัตรของขวัญเพิ่ม</value>
+        <value xml:lang="vi">Tải lại thông tin Thẻ quà tặng không thành công</value>
+        <value xml:lang="zh">礼品卡充值过程失败，响应码为：</value>
+        <value xml:lang="zh-TW">禮物卡儲值失敗</value>
+    </property>
     <property key="EcommerceGiftWrapAllItems">
         <value xml:lang="da">Indpak alle varer i gavepapir</value>
         <value xml:lang="de">Alle Positionen mit Geschenkverpackung</value>
@@ -1413,6 +1413,24 @@
         <value xml:lang="vi">Gói tất cả hàng hóa</value>
         <value xml:lang="zh">礼品包装全部明细</value>
         <value xml:lang="zh-TW">禮物包裝全部細項</value>
+    </property>
+    <property key="EcommerceGold">
+        <value xml:lang="da">Guld</value>
+        <value xml:lang="de">Gold</value>
+        <value xml:lang="en">Gold</value>
+        <value xml:lang="es">Oro</value>
+        <value xml:lang="fr">Or</value>
+        <value xml:lang="hi-IN">स्वर्ण</value>
+        <value xml:lang="it">Oro</value>
+        <value xml:lang="ja">ゴールド</value>
+        <value xml:lang="nl">Goud</value>
+        <value xml:lang="pt-BR">Ouro</value>
+        <value xml:lang="ro">Aur</value>
+        <value xml:lang="ru">Золотой</value>
+        <value xml:lang="th">สีอง</value>
+        <value xml:lang="vi">(hạng)Vàng</value>
+        <value xml:lang="zh">金牌</value>
+        <value xml:lang="zh-TW">金牌</value>
     </property>
     <property key="EcommerceGoToList">
         <value xml:lang="cs">Jdi na seznam</value>
@@ -1433,24 +1451,6 @@
         <value xml:lang="vi">Tới danh sách</value>
         <value xml:lang="zh">转到列表</value>
         <value xml:lang="zh-TW">轉到清單</value>
-    </property>
-    <property key="EcommerceGold">
-        <value xml:lang="da">Guld</value>
-        <value xml:lang="de">Gold</value>
-        <value xml:lang="en">Gold</value>
-        <value xml:lang="es">Oro</value>
-        <value xml:lang="fr">Or</value>
-        <value xml:lang="hi-IN">स्वर्ण</value>
-        <value xml:lang="it">Oro</value>
-        <value xml:lang="ja">ゴールド</value>
-        <value xml:lang="nl">Goud</value>
-        <value xml:lang="pt-BR">Ouro</value>
-        <value xml:lang="ro">Aur</value>
-        <value xml:lang="ru">Золотой</value>
-        <value xml:lang="th">สีอง</value>
-        <value xml:lang="vi">(hạng)Vàng</value>
-        <value xml:lang="zh">金牌</value>
-        <value xml:lang="zh-TW">金牌</value>
     </property>
     <property key="EcommerceHighToLow">
         <value xml:lang="da">Høj til lav</value>
@@ -1614,26 +1614,6 @@
         <value xml:lang="zh">缺省</value>
         <value xml:lang="zh-TW">預設</value>
     </property>
-    <property key="EcommerceItemTotal">
-        <value xml:lang="cs">Položka celkem</value>
-        <value xml:lang="da">Vare total</value>
-        <value xml:lang="de">Gesamtsumme</value>
-        <value xml:lang="en">Item Total</value>
-        <value xml:lang="es">Total</value>
-        <value xml:lang="fr">Total de la ligne</value>
-        <value xml:lang="hi-IN">कुल सामान</value>
-        <value xml:lang="it">Totale riga</value>
-        <value xml:lang="ja">アイテム合計</value>
-        <value xml:lang="nl">Item Totaal</value>
-        <value xml:lang="pt-BR">Total</value>
-        <value xml:lang="pt-PT">Total de Itens</value>
-        <value xml:lang="ro">Total Linie</value>
-        <value xml:lang="ru">Позиций всего</value>
-        <value xml:lang="th">รายการรวม</value>
-        <value xml:lang="vi">Tổng sản phẩm</value>
-        <value xml:lang="zh">明细合计</value>
-        <value xml:lang="zh-TW">細項合計</value>
-    </property>
     <property key="EcommerceItemsfromShopingList">
         <value xml:lang="cs">Položky z nákupního seznamu; aktualizovat počty ze stránky sezamu</value>
         <value xml:lang="da">Varer fra indkøbsliste</value>
@@ -1653,6 +1633,26 @@
         <value xml:lang="vi">Hàng hóa từ Danh sách mua hàng</value>
         <value xml:lang="zh">明细来自购物清单；从列表页更新数量</value>
         <value xml:lang="zh-TW">細項來自購物清單; 從清單頁更新數量</value>
+    </property>
+    <property key="EcommerceItemTotal">
+        <value xml:lang="cs">Položka celkem</value>
+        <value xml:lang="da">Vare total</value>
+        <value xml:lang="de">Gesamtsumme</value>
+        <value xml:lang="en">Item Total</value>
+        <value xml:lang="es">Total</value>
+        <value xml:lang="fr">Total de la ligne</value>
+        <value xml:lang="hi-IN">कुल सामान</value>
+        <value xml:lang="it">Totale riga</value>
+        <value xml:lang="ja">アイテム合計</value>
+        <value xml:lang="nl">Item Totaal</value>
+        <value xml:lang="pt-BR">Total</value>
+        <value xml:lang="pt-PT">Total de Itens</value>
+        <value xml:lang="ro">Total Linie</value>
+        <value xml:lang="ru">Позиций всего</value>
+        <value xml:lang="th">รายการรวม</value>
+        <value xml:lang="vi">Tổng sản phẩm</value>
+        <value xml:lang="zh">明细合计</value>
+        <value xml:lang="zh-TW">細項合計</value>
     </property>
     <property key="EcommerceLanguage">
         <value xml:lang="en">Language</value>
@@ -2350,24 +2350,6 @@
         <value xml:lang="zh">没有属于你的消息</value>
         <value xml:lang="zh-TW">沒屬於你的訊息</value>
     </property>
-    <property key="EcommerceNoPROMOTIONCategory">
-        <value xml:lang="da">Ingen kategori for reklamefremstød</value>
-        <value xml:lang="de">Keine Aktionskategorie</value>
-        <value xml:lang="en">No PROMOTION Category</value>
-        <value xml:lang="es">No hay promociones en el catálogo</value>
-        <value xml:lang="fr">Aucune catégorie de promotion</value>
-        <value xml:lang="hi-IN">कैटलाग में कोई प्रोत्साहन वस्तु नहीं है</value>
-        <value xml:lang="it">Nessuna categoria di promozione</value>
-        <value xml:lang="ja">プロモーションカテゴリはありません</value>
-        <value xml:lang="nl">Geen promotie categorie gevonden</value>
-        <value xml:lang="pt-BR">Não há promoções disponíveis</value>
-        <value xml:lang="ro">Nici-o Categorie PROMOTIONALA gasita pentru CATALOG</value>
-        <value xml:lang="ru">В каталоге не найдена акционная категория</value>
-        <value xml:lang="th">ไม่มีโปรโมชั่นในหมวดหมู่นี้</value>
-        <value xml:lang="vi">Không có Phân loại Quản lý KHUYẾN MẠI cho Phân loại Trình diễn</value>
-        <value xml:lang="zh">没有找到促销分类——目录</value>
-        <value xml:lang="zh-TW">沒找到促銷分類</value>
-    </property>
     <property key="EcommerceNoParent">
         <value xml:lang="cs">Žádný předchůdce</value>
         <value xml:lang="da">Ingen forgænger</value>
@@ -2403,6 +2385,24 @@
         <value xml:lang="vi">Không có cửa hàng</value>
         <value xml:lang="zh">这个站点没有产品店铺；请检查设置。</value>
         <value xml:lang="zh-TW">此站台沒有產品商店; 請檢查設置.</value>
+    </property>
+    <property key="EcommerceNoPROMOTIONCategory">
+        <value xml:lang="da">Ingen kategori for reklamefremstød</value>
+        <value xml:lang="de">Keine Aktionskategorie</value>
+        <value xml:lang="en">No PROMOTION Category</value>
+        <value xml:lang="es">No hay promociones en el catálogo</value>
+        <value xml:lang="fr">Aucune catégorie de promotion</value>
+        <value xml:lang="hi-IN">कैटलाग में कोई प्रोत्साहन वस्तु नहीं है</value>
+        <value xml:lang="it">Nessuna categoria di promozione</value>
+        <value xml:lang="ja">プロモーションカテゴリはありません</value>
+        <value xml:lang="nl">Geen promotie categorie gevonden</value>
+        <value xml:lang="pt-BR">Não há promoções disponíveis</value>
+        <value xml:lang="ro">Nici-o Categorie PROMOTIONALA gasita pentru CATALOG</value>
+        <value xml:lang="ru">В каталоге не найдена акционная категория</value>
+        <value xml:lang="th">ไม่มีโปรโมชั่นในหมวดหมู่นี้</value>
+        <value xml:lang="vi">Không có Phân loại Quản lý KHUYẾN MẠI cho Phân loại Trình diễn</value>
+        <value xml:lang="zh">没有找到促销分类——目录</value>
+        <value xml:lang="zh-TW">沒找到促銷分類</value>
     </property>
     <property key="EcommerceNoShoppingListsCreate">
         <value xml:lang="cs">Nelze vybrat žádný nákupní seznam, založte nový</value>
@@ -3214,6 +3214,24 @@
         <value xml:lang="zh">选择频率</value>
         <value xml:lang="zh-TW">選擇頻率</value>
     </property>
+    <property key="EcommerceSelectedGiftWrap">
+        <value xml:lang="da">Vælg gavepapir</value>
+        <value xml:lang="de">Ausgewählte Geschenkverpackung</value>
+        <value xml:lang="en">Selected Gift Wrap</value>
+        <value xml:lang="es">La evoltura no está permitida para todos los artíclos. Los artículos disponibles han sido seleccionados, la orden permanece sin cambios.</value>
+        <value xml:lang="fr">Emballage cadeau sélectionné</value>
+        <value xml:lang="hi-IN">चुना गया लपेटन सभी सामान के लिये उपलब्ध नहीं है, जो सामान उपलब्ध है वह चुना गया है, बाकी वैसे ही है.</value>
+        <value xml:lang="it">Selezione Omaggio non disponibile per tutte le righe. Le righe che sono disponibile saranno selezionate, le altre rimarrano invariate.</value>
+        <value xml:lang="ja">選択したギフト包装</value>
+        <value xml:lang="nl">De geselecteerde geschenkverpakking is niet beschikbaar voor alle items. De items die beschikbaar zijn, zijn geselecteerd, de anderen zijn niet veranderd.</value>
+        <value xml:lang="pt-BR">Selecione o pacote para presente</value>
+        <value xml:lang="ro">Selectioneaza Omagiu indisponibil pentru toate liniile. Liniile care sunt disponibile vor fi selectionate, celelalte vor ramane invariate.</value>
+        <value xml:lang="ru">Выбранная подарочная упаковка не доступна для всех позиций. Выбраны только позиции для которых упаковка доступна.</value>
+        <value xml:lang="th">เลือกห่อของขวัญ</value>
+        <value xml:lang="vi">Đã chọn kiểu gói quà</value>
+        <value xml:lang="zh">所选的礼品包装无法对全部明细使用。这些选中的明细是可用的，其它没有改变。</value>
+        <value xml:lang="zh-TW">所選禮物包裝無法對全部項目使用.這些選中的項目是可用的, 其他沒有改變.</value>
+    </property>
     <property key="EcommerceSelectInterval">
         <value xml:lang="da">Vælg interval</value>
         <value xml:lang="de">Intervall wählen</value>
@@ -3239,24 +3257,6 @@
         <value xml:lang="ja">オプションを選択</value>
         <value xml:lang="zh">选择选项</value>
         <value xml:lang="zh-TW">選擇選項</value>
-    </property>
-    <property key="EcommerceSelectedGiftWrap">
-        <value xml:lang="da">Vælg gavepapir</value>
-        <value xml:lang="de">Ausgewählte Geschenkverpackung</value>
-        <value xml:lang="en">Selected Gift Wrap</value>
-        <value xml:lang="es">La evoltura no está permitida para todos los artíclos. Los artículos disponibles han sido seleccionados, la orden permanece sin cambios.</value>
-        <value xml:lang="fr">Emballage cadeau sélectionné</value>
-        <value xml:lang="hi-IN">चुना गया लपेटन सभी सामान के लिये उपलब्ध नहीं है, जो सामान उपलब्ध है वह चुना गया है, बाकी वैसे ही है.</value>
-        <value xml:lang="it">Selezione Omaggio non disponibile per tutte le righe. Le righe che sono disponibile saranno selezionate, le altre rimarrano invariate.</value>
-        <value xml:lang="ja">選択したギフト包装</value>
-        <value xml:lang="nl">De geselecteerde geschenkverpakking is niet beschikbaar voor alle items. De items die beschikbaar zijn, zijn geselecteerd, de anderen zijn niet veranderd.</value>
-        <value xml:lang="pt-BR">Selecione o pacote para presente</value>
-        <value xml:lang="ro">Selectioneaza Omagiu indisponibil pentru toate liniile. Liniile care sunt disponibile vor fi selectionate, celelalte vor ramane invariate.</value>
-        <value xml:lang="ru">Выбранная подарочная упаковка не доступна для всех позиций. Выбраны только позиции для которых упаковка доступна.</value>
-        <value xml:lang="th">เลือกห่อของขวัญ</value>
-        <value xml:lang="vi">Đã chọn kiểu gói quà</value>
-        <value xml:lang="zh">所选的礼品包装无法对全部明细使用。这些选中的明细是可用的，其它没有改变。</value>
-        <value xml:lang="zh-TW">所選禮物包裝無法對全部項目使用.這些選中的項目是可用的, 其他沒有改變.</value>
     </property>
     <property key="EcommerceSentDate">
         <value xml:lang="da">Afsendt dato</value>
@@ -4267,24 +4267,6 @@
         <value xml:lang="zh">你的购物车是空的</value>
         <value xml:lang="zh-TW">你的購物車是空的</value>
     </property>
-    <property key="PageTitleAddResponse">
-        <value xml:lang="da">Tilføj svar</value>
-        <value xml:lang="de">Antwort hinzufügen</value>
-        <value xml:lang="en">Add Response</value>
-        <value xml:lang="es">Añadir Respuesta</value>
-        <value xml:lang="fr">Ajouter une réponse</value>
-        <value xml:lang="hi-IN">उत्तर जोड़ें</value>
-        <value xml:lang="it">Aggiungi risposta</value>
-        <value xml:lang="ja">回答を追加</value>
-        <value xml:lang="nl">Voeg antwoord toe</value>
-        <value xml:lang="pt-BR">Adicionar uma resposta</value>
-        <value xml:lang="ro">Adauga Raspuns</value>
-        <value xml:lang="ru">Добавить ответ</value>
-        <value xml:lang="th">เพิ่มคำตอบ</value>
-        <value xml:lang="vi">Thêm phản hồi</value>
-        <value xml:lang="zh">添加回答</value>
-        <value xml:lang="zh-TW">增加回應</value>
-    </property>
     <property key="PageTitleAdditionalInfo">
         <value xml:lang="da">Yderligere information</value>
         <value xml:lang="de">Zusätzliche Informationen</value>
@@ -4302,6 +4284,24 @@
         <value xml:lang="vi">Thông tin miêu tả thêm</value>
         <value xml:lang="zh">附加信息</value>
         <value xml:lang="zh-TW">附加資訊</value>
+    </property>
+    <property key="PageTitleAddResponse">
+        <value xml:lang="da">Tilføj svar</value>
+        <value xml:lang="de">Antwort hinzufügen</value>
+        <value xml:lang="en">Add Response</value>
+        <value xml:lang="es">Añadir Respuesta</value>
+        <value xml:lang="fr">Ajouter une réponse</value>
+        <value xml:lang="hi-IN">उत्तर जोड़ें</value>
+        <value xml:lang="it">Aggiungi risposta</value>
+        <value xml:lang="ja">回答を追加</value>
+        <value xml:lang="nl">Voeg antwoord toe</value>
+        <value xml:lang="pt-BR">Adicionar uma resposta</value>
+        <value xml:lang="ro">Adauga Raspuns</value>
+        <value xml:lang="ru">Добавить ответ</value>
+        <value xml:lang="th">เพิ่มคำตอบ</value>
+        <value xml:lang="vi">Thêm phản hồi</value>
+        <value xml:lang="zh">添加回答</value>
+        <value xml:lang="zh-TW">增加回應</value>
     </property>
     <property key="PageTitleBillingInformation">
         <value xml:lang="da">Fakturainformation</value>
