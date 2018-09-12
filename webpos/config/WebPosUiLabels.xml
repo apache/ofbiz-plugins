@@ -27,6 +27,20 @@
         <value xml:lang="zh">调整</value>
         <value xml:lang="zh-TW">調整</value>
     </property>
+    <property key="WebPosBillingAddress">
+        <value xml:lang="en">Billing Address</value>
+        <value xml:lang="it">Indirizzo di fatturazione</value>
+        <value xml:lang="ja">請求先住所</value>
+        <value xml:lang="zh">寄账单地址</value>
+        <value xml:lang="zh-TW">寄帳單位址</value>
+    </property>
+    <property key="WebPosBillingOrShippingLocationMissing">
+        <value xml:lang="en">Billing or Shipping Location Missing</value>
+        <value xml:lang="it">Indirizzo di fatturazione o spedizione mancante</value>
+        <value xml:lang="ja">請求先または発送先の場所が正しくありません</value>
+        <value xml:lang="zh">缺少寄账单或送货地址</value>
+        <value xml:lang="zh-TW">缺少寄帳單或送貨位址</value>
+    </property>
     <property key="WebPosCart">
         <value xml:lang="en">Cart</value>
         <value xml:lang="fr">Panier du Point de vente</value>
@@ -231,6 +245,14 @@
         <value xml:lang="zh">插入一个有效的起始钱箱金额：</value>
         <value xml:lang="zh-TW">插入一個有效的起始錢箱金額:</value>
     </property>
+    <property key="WebPosManagerPaidIn">
+        <value xml:lang="en">Paid In</value>
+        <value xml:lang="fr">APPORT</value>
+        <value xml:lang="it">Pagamento in entrata</value>
+        <value xml:lang="ja">入金済</value>
+        <value xml:lang="zh">收款</value>
+        <value xml:lang="zh-TW">收款</value>
+    </property>
     <property key="WebPosManagerPaidInAmount">
         <value xml:lang="en">Enter amount to paid in</value>
         <value xml:lang="fr">Saisir un apport valide</value>
@@ -287,14 +309,6 @@
         <value xml:lang="zh">你能插入一个评论</value>
         <value xml:lang="zh-TW">你能插入一個評論</value>
     </property>
-    <property key="WebPosManagerPaidIn">
-        <value xml:lang="en">Paid In</value>
-        <value xml:lang="fr">APPORT</value>
-        <value xml:lang="it">Pagamento in entrata</value>
-        <value xml:lang="ja">入金済</value>
-        <value xml:lang="zh">收款</value>
-        <value xml:lang="zh-TW">收款</value>
-    </property>
     <property key="WebPosManagerPromoCode">
         <value xml:lang="en">Promo</value>
         <value xml:lang="fr">PROMOTION</value>
@@ -335,14 +349,6 @@
         <value xml:lang="zh">空订单</value>
         <value xml:lang="zh-TW">空訂單</value>
     </property>
-    <property key="WebPosManagerVoidOrderNumber">
-        <value xml:lang="en">Enter Order Number To Void</value>
-        <value xml:lang="fr">Saisr le n° de commande à annuler</value>
-        <value xml:lang="it">Inserire numero ordine per reso</value>
-        <value xml:lang="ja">無効にする注文Noを入力</value>
-        <value xml:lang="zh">输入订单编号无效：</value>
-        <value xml:lang="zh-TW">輸入要作廢的訂單識別:</value>
-    </property>
     <property key="WebPosManagerVoidOrderNotValidDate">
         <value xml:lang="en">Order ${parameters.orderId} has a date ${orderDate} that is before ${openDate}</value>
         <value xml:lang="fr">La commande ${parameters.orderId} a une date ${orderDate} inférieure à ${openDate}</value>
@@ -358,6 +364,14 @@
         <value xml:lang="ja">注文 ${parameters.orderId} が見つかりません</value>
         <value xml:lang="zh">没有找到订单${parameters.orderId}</value>
         <value xml:lang="zh-TW">沒有找到訂單${parameters.orderId}</value>
+    </property>
+    <property key="WebPosManagerVoidOrderNumber">
+        <value xml:lang="en">Enter Order Number To Void</value>
+        <value xml:lang="fr">Saisr le n° de commande à annuler</value>
+        <value xml:lang="it">Inserire numero ordine per reso</value>
+        <value xml:lang="ja">無効にする注文Noを入力</value>
+        <value xml:lang="zh">输入订单编号无效：</value>
+        <value xml:lang="zh-TW">輸入要作廢的訂單識別:</value>
     </property>
     <property key="WebPosManagerVoidOrderTerminalNotOpened">
         <value xml:lang="en">Terminal is not opened</value>
@@ -382,6 +396,13 @@
         <value xml:lang="ja">管理者</value>
         <value xml:lang="zh">经理</value>
         <value xml:lang="zh-TW">經理</value>
+    </property>
+    <property key="WebPosNoPartyInformation">
+        <value xml:lang="en">No Party Information</value>
+        <value xml:lang="it">Nessuna informazione soggetto</value>
+        <value xml:lang="ja">取引先情報がありません</value>
+        <value xml:lang="zh">没有会员信息</value>
+        <value xml:lang="zh-TW">沒有團體資訊</value>
     </property>
     <property key="WebPosNotEnoughFunds">
         <value xml:lang="en">You did not provide enough funds to complete this sale</value>
@@ -420,13 +441,6 @@
         <value xml:lang="ja">管理者</value>
         <value xml:lang="zh">管理程序</value>
         <value xml:lang="zh-TW">管理程式</value>
-    </property>
-    <property key="WebPosPageTitlePayment">
-        <value xml:lang="en">Payment</value>
-        <value xml:lang="it">Pagamenti</value>
-        <value xml:lang="ja">支払</value>
-        <value xml:lang="zh">支付</value>
-        <value xml:lang="zh-TW">支付</value>
     </property>
     <property key="WebPosPageTitleModifyPrice">
         <value xml:lang="en">Modify Price</value>
@@ -485,6 +499,13 @@
         <value xml:lang="zh">礼品卡支付</value>
         <value xml:lang="zh-TW">禮物卡支付</value>
     </property>
+    <property key="WebPosPageTitlePayment">
+        <value xml:lang="en">Payment</value>
+        <value xml:lang="it">Pagamenti</value>
+        <value xml:lang="ja">支払</value>
+        <value xml:lang="zh">支付</value>
+        <value xml:lang="zh-TW">支付</value>
+    </property>
     <property key="WebPosPageTitlePromoCode">
         <value xml:lang="en">Promo Code</value>
         <value xml:lang="fr">Code promotion</value>
@@ -509,6 +530,13 @@
         <value xml:lang="zh">现金金额</value>
         <value xml:lang="zh-TW">現金金額</value>
     </property>
+    <property key="WebPosPayCashGreaterThanTotalDue">
+        <value xml:lang="en">Amount in cash is greater than total due</value>
+        <value xml:lang="it">L'importo in contanti è maggiore dell'importo dovuto</value>
+        <value xml:lang="ja">現金金額が合計額より多い</value>
+        <value xml:lang="zh">现金金额大于应付合计</value>
+        <value xml:lang="zh-TW">現金金額大於應付合計</value>
+    </property>
     <property key="WebPosPayCashNotValidAmount">
         <value xml:lang="en">Insert a valid cash amount</value>
         <value xml:lang="fr">Saisir un montant en espèces valide</value>
@@ -516,13 +544,6 @@
         <value xml:lang="ja">有効な現金金額を入力</value>
         <value xml:lang="zh">插入一个有效的现金金额</value>
         <value xml:lang="zh-TW">插入一個有效的現金金額</value>
-    </property>
-    <property key="WebPosPayCashGreaterThanTotalDue">
-        <value xml:lang="en">Amount in cash is greater than total due</value>
-        <value xml:lang="it">L'importo in contanti è maggiore dell'importo dovuto</value>
-        <value xml:lang="ja">現金金額が合計額より多い</value>
-        <value xml:lang="zh">现金金额大于应付合计</value>
-        <value xml:lang="zh-TW">現金金額大於應付合計</value>
     </property>
     <property key="WebPosPayCashTotal">
         <value xml:lang="en">Total already in cash</value>
@@ -867,13 +888,6 @@
         <value xml:lang="zh">选择至少一个销售代表</value>
         <value xml:lang="zh-TW">選擇至少一個銷售代表</value>
     </property>
-    <property key="WebPosBillingAddress">
-        <value xml:lang="en">Billing Address</value>
-        <value xml:lang="it">Indirizzo di fatturazione</value>
-        <value xml:lang="ja">請求先住所</value>
-        <value xml:lang="zh">寄账单地址</value>
-        <value xml:lang="zh-TW">寄帳單位址</value>
-    </property>
     <property key="WebPosShippingAddress">
         <value xml:lang="en">Shipping Address</value>
         <value xml:lang="it">Indirizzo di spedizione</value>
@@ -888,27 +902,6 @@
         <value xml:lang="zh">送货方法</value>
         <value xml:lang="zh-TW">送貨方法</value>
     </property>
-    <property key="WebPosNoPartyInformation">
-        <value xml:lang="en">No Party Information</value>
-        <value xml:lang="it">Nessuna informazione soggetto</value>
-        <value xml:lang="ja">取引先情報がありません</value>
-        <value xml:lang="zh">没有会员信息</value>
-        <value xml:lang="zh-TW">沒有團體資訊</value>
-    </property>
-    <property key="WebPosBillingOrShippingLocationMissing">
-        <value xml:lang="en">Billing or Shipping Location Missing</value>
-        <value xml:lang="it">Indirizzo di fatturazione o spedizione mancante</value>
-        <value xml:lang="ja">請求先または発送先の場所が正しくありません</value>
-        <value xml:lang="zh">缺少寄账单或送货地址</value>
-        <value xml:lang="zh-TW">缺少寄帳單或送貨位址</value>
-    </property>
-    <property key="WebPosShortcuts">
-        <value xml:lang="en">Keyboard Shortcuts</value>
-        <value xml:lang="it">Tasti funzione</value>
-        <value xml:lang="ja">ｷｰﾎﾞｰﾄﾞｼｮｰﾄｶｯﾄ</value>
-        <value xml:lang="zh">键盘快捷键</value>
-        <value xml:lang="zh-TW">鍵盤快速鍵</value>
-    </property>
     <property key="WebPosShortcutF1">
         <value xml:lang="en">PRODUCT SEARCH</value>
         <value xml:lang="it">RICERCA PRODOTTO</value>
@@ -916,6 +909,27 @@
         <value xml:lang="nl">PRODUCT Zoeken</value>
         <value xml:lang="zh">产品搜索</value>
         <value xml:lang="zh-TW">產品搜尋</value>
+    </property>
+    <property key="WebPosShortcutF10">
+        <value xml:lang="en">ADD QUANTITY</value>
+        <value xml:lang="it">AGGIUNGI QUANTITA'</value>
+        <value xml:lang="ja">数量加算</value>
+        <value xml:lang="zh">增加数量</value>
+        <value xml:lang="zh-TW">增加數量</value>
+    </property>
+    <property key="WebPosShortcutF11">
+        <value xml:lang="en">SUBTRACT QUANTITY</value>
+        <value xml:lang="it">SOTTRAI QUANTITA'</value>
+        <value xml:lang="ja">数量減算</value>
+        <value xml:lang="zh">减少数量</value>
+        <value xml:lang="zh-TW">減少數量</value>
+    </property>
+    <property key="WebPosShortcutF12">
+        <value xml:lang="en">EMPTY CART</value>
+        <value xml:lang="it">SVUOTA CARRELLO</value>
+        <value xml:lang="ja">空の買い物かご</value>
+        <value xml:lang="zh">清空购物车</value>
+        <value xml:lang="zh-TW">清空購物車</value>
     </property>
     <property key="WebPosShortcutF2">
         <value xml:lang="en">PARTY SEARCH</value>
@@ -976,27 +990,6 @@
         <value xml:lang="zh">修改数量</value>
         <value xml:lang="zh-TW">修改數量</value>
     </property>
-    <property key="WebPosShortcutF10">
-        <value xml:lang="en">ADD QUANTITY</value>
-        <value xml:lang="it">AGGIUNGI QUANTITA'</value>
-        <value xml:lang="ja">数量加算</value>
-        <value xml:lang="zh">增加数量</value>
-        <value xml:lang="zh-TW">增加數量</value>
-    </property>
-    <property key="WebPosShortcutF11">
-        <value xml:lang="en">SUBTRACT QUANTITY</value>
-        <value xml:lang="it">SOTTRAI QUANTITA'</value>
-        <value xml:lang="ja">数量減算</value>
-        <value xml:lang="zh">减少数量</value>
-        <value xml:lang="zh-TW">減少數量</value>
-    </property>
-    <property key="WebPosShortcutF12">
-        <value xml:lang="en">EMPTY CART</value>
-        <value xml:lang="it">SVUOTA CARRELLO</value>
-        <value xml:lang="ja">空の買い物かご</value>
-        <value xml:lang="zh">清空购物车</value>
-        <value xml:lang="zh-TW">清空購物車</value>
-    </property>
     <property key="WebPosShortcutKeyDown">
         <value xml:lang="en">NEXT ROW</value>
         <value xml:lang="it">RIGA SUCCESS.</value>
@@ -1011,6 +1004,13 @@
         <value xml:lang="zh">上一行</value>
         <value xml:lang="zh-TW">上一行</value>
     </property>
+    <property key="WebPosShortcuts">
+        <value xml:lang="en">Keyboard Shortcuts</value>
+        <value xml:lang="it">Tasti funzione</value>
+        <value xml:lang="ja">ｷｰﾎﾞｰﾄﾞｼｮｰﾄｶｯﾄ</value>
+        <value xml:lang="zh">键盘快捷键</value>
+        <value xml:lang="zh-TW">鍵盤快速鍵</value>
+    </property>
     <property key="WebPosTerminal">
         <value xml:lang="en">Terminal</value>
         <value xml:lang="it">Terminale</value>
@@ -1018,19 +1018,19 @@
         <value xml:lang="zh">终端</value>
         <value xml:lang="zh-TW">終端</value>
     </property>
-    <property key="WebPosTerminalOpen">
-        <value xml:lang="en">open</value>
-        <value xml:lang="it">aperto</value>
-        <value xml:lang="ja">オープン</value>
-        <value xml:lang="zh">打开</value>
-        <value xml:lang="zh-TW">打開</value>
-    </property>
     <property key="WebPosTerminalClose">
         <value xml:lang="en">close</value>
         <value xml:lang="it">chiuso</value>
         <value xml:lang="ja">クローズ</value>
         <value xml:lang="zh">关闭</value>
         <value xml:lang="zh-TW">關閉</value>
+    </property>
+    <property key="WebPosTerminalOpen">
+        <value xml:lang="en">open</value>
+        <value xml:lang="it">aperto</value>
+        <value xml:lang="ja">オープン</value>
+        <value xml:lang="zh">打开</value>
+        <value xml:lang="zh-TW">打開</value>
     </property>
     <property key="WebPosTotal">
         <value xml:lang="en">Total</value>
