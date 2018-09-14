@@ -66,16 +66,6 @@
         <value xml:lang="zh">基于国家类型的样例，使用Geo.Geoid和Geo.GeoName等Entity.fields来填充</value>
         <value xml:lang="zh-TW">基於國家類型的範例,使用Geo.Geoid和Geo.GeoName等Entity.fields來完成</value>
     </property>
-    <property key="ExampleSpecifyOtherDropdown">
-        <value xml:lang="en">Specify-other Dropdown</value>
-        <value xml:lang="zh">指定其它输入的下拉框</value>
-        <value xml:lang="zh-TW">指定其它輸入的下拉清單</value>
-    </property>
-    <property key="ExampleSpecifyOtherTooltip">
-        <value xml:lang="en">Select "specify other" option, an input box will be shown next to dropdown. See tootip of other-field-size attribute of drop-down form element</value>
-        <value xml:lang="zh">如果选择"specify other"，下拉框旁边会出现本文框。参考form的drop-down元素的other-field-size属性说明</value>
-        <value xml:lang="zh-TW">如果選擇"specify other",下拉清單旁邊會出現本文框.參考form的drop-down元素的other-field-size屬性說明</value>
-    </property>
     <property key="ExampleBarChart">
         <value xml:lang="en">Bar Chart</value>
         <value xml:lang="fr">Histogramme</value>
@@ -95,6 +85,11 @@
         <value xml:lang="zh">日历数据项（仅用于测试）</value>
         <value xml:lang="zh-TW">日曆資料項目(僅用於測試)</value>
     </property>
+    <property key="ExampleChart">
+        <value xml:lang="en">Chart examples</value>
+        <value xml:lang="fr">Graphes</value>
+        <value xml:lang="zh">绘图样例</value>
+    </property>
     <property key="ExampleCompanyName">
         <value xml:lang="en">OFBiz: Example</value>
         <value xml:lang="fr">OFBiz : Exemple</value>
@@ -107,35 +102,22 @@
         <value xml:lang="zh-TW">OFBiz: 範例</value>
     </property>
     <property key="ExampleCompanySubtitle">
-    <!--value xml:lang="ar">جزء من عائلة أوفبيز للبرمجيات الحرة</value-->
         <value xml:lang="ar">جزء من عائلة أوفبيز للتطبيقات الحرة للتسيير</value>
         <value xml:lang="de">Teil der Apache OFBiz Familie von Open Source Software</value>
         <value xml:lang="en">Part of the Apache OFBiz Family of Open Source Software</value>
-    <!--value xml:lang="es">Parte de la familia "Open for Bussiness" de Software Libre</value-->
         <value xml:lang="es">Parte de la familia de software Apache OFBiz de código abierto</value>
         <value xml:lang="fr">Un module de la famille Apache OFBiz, logiciel libre de gestion d'entreprise.</value>
         <value xml:lang="it">Un modulo della famiglia di software open source Apache OFBiz</value>
-    <!--value xml:lang="nl">Onderdeel van de Apache OFBiz'-suite</value-->
         <value xml:lang="ja">Part of the Apache OFBiz Family of Open Source Software</value>
         <value xml:lang="nl">Deel van de Apache OFBiz-suite van Open Source Software</value>
         <value xml:lang="pt-BR">Parte da família OfBiz de software de fonte aberta</value>
-    <!--value xml:lang="pt-PT">Parte do Software de Fonte Aberta para Grupos Abertos Para o Negócio</value-->
         <value xml:lang="pt-PT">Parte da família OfBiz de software de fonte aberta</value>
-    <!--value xml:lang="ro">Parte accesibila pentru Business Family of Open Source Software</valuevalue xml:lang="ro">Parte din Open for Business Family of Open Source Software</value-->
         <value xml:lang="ro">Partea de Deschidere Pentru Afaceri Familiale din Open Source Software</value>
-    <!--value xml:lang="ru">Часть семейства ПО Apache OFBiz</valuevalue xml:lang="ru">Часть семейства "Apache OFBiz Family" программных продуктов Open Source </value-->
         <value xml:lang="ru">Входит в состав семейства Apache OFBiz</value>
-    <!--value xml:lang="th">เป็นส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value-->
         <value xml:lang="th">ส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value>
-    <!--value xml:lang="zh">开源软件OFBiz的组成部分</valuevalue xml:lang="zh">开源软件OFBiz的组成部分</value-->
         <value xml:lang="zh">开源软件OFBiz家族的一部分</value>
         <value xml:lang="zh-CN">OFBiz的一部分</value>
         <value xml:lang="zh-TW">開源軟體OFBiz家族的一部分</value>
-    </property>
-    <property key="ExampleChart">
-        <value xml:lang="en">Chart examples</value>
-        <value xml:lang="fr">Graphes</value>
-        <value xml:lang="zh">绘图样例</value>
     </property>
     <property key="ExampleCompoundWidgets">
         <value xml:lang="en">Compound Screen Widget</value>
@@ -626,6 +608,10 @@
     <property key="ExampleGeneralErrorRenderingScreen">
         <value xml:lang="en">General error rendering screen [${screenLocation}]: ${errorString}</value>
     </property>
+    <property key="ExampleGeneratePDF">
+        <value xml:lang="en">Generate PDF</value>
+        <value xml:lang="zh">生成PDF</value>
+    </property>
     <property key="ExampleGroupField">
         <value xml:lang="en">Group</value>
         <value xml:lang="it">Gruppo</value>
@@ -796,6 +782,24 @@
     <property key="ExampleParserConfigurationErrorRenderingScreen">
         <value xml:lang="en">Parser configuration error rendering screen [${screenLocation}]: ${errorString}</value>
     </property>
+    <property key="ExamplePdfBarcode">
+        <value xml:lang="de">Barcode</value>
+        <value xml:lang="en">Barcode</value>
+        <value xml:lang="es">Código de barra</value>
+        <value xml:lang="fr">Code barre</value>
+        <value xml:lang="it">Codice a barre</value>
+        <value xml:lang="ja">バーコード</value>
+        <value xml:lang="ro">Cod bara</value>
+        <value xml:lang="ru">Баркод</value>
+        <value xml:lang="th">บาร์โคด</value>
+        <value xml:lang="vi">Mã vạch (Barcode)</value>
+        <value xml:lang="zh">条形码</value>
+        <value xml:lang="zh-TW">條形碼</value>
+    </property>
+    <property key="ExamplePdfPassword">
+        <value xml:lang="en">PDF With Password</value>
+        <value xml:lang="zh">有密码的PDF</value>
+    </property>
     <property key="ExamplePermissionError">
         <value xml:lang="en">Security Error: to run ${resourceDescription} you must have the EXAMPLE_${mainAction} or EXAMPLE_ADMIN permission</value>
         <value xml:lang="fr">Erreur de sécurité : pour exécuter ${resourceDescription} vous devez avoir l'autorisation EXAMPLE_${mainAction} ou EXAMPLE_ADMIN</value>
@@ -934,6 +938,16 @@
         <value xml:lang="zh">源代码</value>
         <value xml:lang="zh-TW">原始程式碼</value>
     </property>
+    <property key="ExampleSpecifyOtherDropdown">
+        <value xml:lang="en">Specify-other Dropdown</value>
+        <value xml:lang="zh">指定其它输入的下拉框</value>
+        <value xml:lang="zh-TW">指定其它輸入的下拉清單</value>
+    </property>
+    <property key="ExampleSpecifyOtherTooltip">
+        <value xml:lang="en">Select "specify other" option, an input box will be shown next to dropdown. See tootip of other-field-size attribute of drop-down form element</value>
+        <value xml:lang="zh">如果选择"specify other"，下拉框旁边会出现本文框。参考form的drop-down元素的other-field-size属性说明</value>
+        <value xml:lang="zh-TW">如果選擇"specify other",下拉清單旁邊會出現本文框.參考form的drop-down元素的other-field-size屬性說明</value>
+    </property>
     <property key="ExampleTextDescription">
         <value xml:lang="en">This example text means we are in the extended form.</value>
         <value xml:lang="it">Questo testo di esempio significa che noi siamo nella form estesa di esempio.</value>
@@ -990,7 +1004,6 @@
         <value xml:lang="ja">別のテキスト</value>
         <value xml:lang="th">ตัวหนังสืออื่น ๆ</value>
         <value xml:lang="zh">另一个文本</value>
-        <!--value xml:lang="zh_TW">另一個文本</value-->
         <value xml:lang="zh-TW">另一個本文</value>
     </property>
     <property key="FormFieldTitle_displayAnotherText">
@@ -998,7 +1011,6 @@
         <value xml:lang="it">Testo alternativo</value>
         <value xml:lang="ja">別のテキスト</value>
         <value xml:lang="zh">另一个文本</value>
-        <!--value xml:lang="zh_TW">另一個文本</value-->
         <value xml:lang="zh-TW">另一個本文</value>
     </property>
     <property key="FormFieldTitle_exampleDate">
@@ -1040,8 +1052,55 @@
         <value xml:lang="it">Testo esempio</value>
         <value xml:lang="ja">サンプルテキスト</value>
         <value xml:lang="zh">样例文本</value>
-        <!--value xml:lang="zh_TW">範例文本</value-->
         <value xml:lang="zh-TW">範例本文</value>
+    </property>
+    <property key="PDFAllowAccessContent">
+        <value xml:lang="en">Allow Access Content</value>
+        <value xml:lang="zh">允许访问内容</value>
+    </property>
+    <property key="PDFAllowAssembleDocument">
+        <value xml:lang="en">Allow Assemble Document</value>
+        <value xml:lang="zh">允许组装文档</value>
+    </property>
+    <property key="PDFAllowCopyContent">
+        <value xml:lang="en">Allow Copy Content</value>
+        <value xml:lang="zh">允许复制内容</value>
+    </property>
+    <property key="PDFAllowEditAnnotations">
+        <value xml:lang="en">Allow Edit Annotations</value>
+        <value xml:lang="zh">允许编辑注释</value>
+    </property>
+    <property key="PDFAllowEditContent">
+        <value xml:lang="en">Allow Edit Content</value>
+        <value xml:lang="zh">允许编辑内容</value>
+    </property>
+    <property key="PDFAllowFillInForms">
+        <value xml:lang="en">Allow Fill-in Forms</value>
+        <value xml:lang="zh">允许填写表格</value>
+    </property>
+    <property key="PDFAllowPrint">
+        <value xml:lang="en">Allow Print</value>
+        <value xml:lang="zh">允许打印</value>
+    </property>
+    <property key="PDFAllowPrintHq">
+        <value xml:lang="en">Allow Print HQ</value>
+        <value xml:lang="zh">允许高质量打印</value>
+    </property>
+    <property key="PDFEncryptMetadata">
+        <value xml:lang="en">Encrypt Metadata</value>
+        <value xml:lang="zh">加密元数据</value>
+    </property>
+    <property key="PDFEncryptionLength">
+        <value xml:lang="en">Encryption Length</value>
+        <value xml:lang="zh">密钥长度</value>
+    </property>
+    <property key="PDFOwnerPassword">
+        <value xml:lang="en">Owner Password</value>
+        <value xml:lang="zh">拥有者密码</value>
+    </property>
+    <property key="PDFUserPassword">
+        <value xml:lang="en">User Password</value>
+        <value xml:lang="zh">使用者密码</value>
     </property>
     <property key="PageTitleEditExample">
         <value xml:lang="en">Edit Example</value>
@@ -1141,6 +1200,10 @@
         <value xml:lang="zh">查找样例特征</value>
         <value xml:lang="zh-TW">尋找範例特色</value>
     </property>
+    <property key="PageTitleSetExamplePdfPassword">
+        <value xml:lang="en">Set PDF Protected By Password</value>
+        <value xml:lang="zh">设置有密码保护的PDF</value>
+    </property>
     <property key="YouChangedTheSelectBoxValue">
         <value xml:lang="de">Sie haben den Wert in der Select Box geändert.</value>
         <value xml:lang="en">You have changed the value in the select box</value>
@@ -1148,82 +1211,8 @@
         <value xml:lang="zh">你修改了选择框中的值</value>
         <value xml:lang="zh-TW">你修改了選擇框中的值</value>
     </property>
-    <property key="ExamplePdfPassword">
-        <value xml:lang="en">PDF With Password</value>
-        <value xml:lang="zh">有密码的PDF</value>
-    </property>
-    <property key="ExamplePdfBarcode">
-        <value xml:lang="de">Barcode</value>
-        <value xml:lang="en">Barcode</value>
-        <value xml:lang="es">Código de barra</value>
-        <value xml:lang="fr">Code barre</value>
-        <value xml:lang="it">Codice a barre</value>
-        <value xml:lang="ja">バーコード</value>
-        <value xml:lang="ro">Cod bara</value>
-        <value xml:lang="ru">Баркод</value>
-        <value xml:lang="th">บาร์โคด</value>
-        <value xml:lang="vi">Mã vạch (Barcode)</value>
-        <value xml:lang="zh">条形码</value>
-        <value xml:lang="zh-TW">條形碼</value>
-    </property>
-    <property key="PageTitleSetExamplePdfPassword">
-        <value xml:lang="en">Set PDF Protected By Password</value>
-        <value xml:lang="zh">设置有密码保护的PDF</value>
-    </property>
-    <property key="ExampleGeneratePDF">
-        <value xml:lang="en">Generate PDF</value>
-        <value xml:lang="zh">生成PDF</value>
-    </property>
     <property key="password_not_equal_confirm_password">
         <value xml:lang="en">Password did not match confirm password.</value>
         <value xml:lang="zh">密码与验证密码不一致。</value>
-    </property>
-    <property key="PDFOwnerPassword">
-        <value xml:lang="en">Owner Password</value>
-        <value xml:lang="zh">拥有者密码</value>
-    </property>
-    <property key="PDFUserPassword">
-        <value xml:lang="en">User Password</value>
-        <value xml:lang="zh">使用者密码</value>
-    </property>
-    <property key="PDFAllowPrint">
-        <value xml:lang="en">Allow Print</value>
-        <value xml:lang="zh">允许打印</value>
-    </property>
-    <property key="PDFAllowCopyContent">
-        <value xml:lang="en">Allow Copy Content</value>
-        <value xml:lang="zh">允许复制内容</value>
-    </property>
-    <property key="PDFAllowEditContent">
-        <value xml:lang="en">Allow Edit Content</value>
-        <value xml:lang="zh">允许编辑内容</value>
-    </property>
-    <property key="PDFAllowEditAnnotations">
-        <value xml:lang="en">Allow Edit Annotations</value>
-        <value xml:lang="zh">允许编辑注释</value>
-    </property>
-    <property key="PDFAllowFillInForms">
-        <value xml:lang="en">Allow Fill-in Forms</value>
-        <value xml:lang="zh">允许填写表格</value>
-    </property>
-    <property key="PDFAllowAccessContent">
-        <value xml:lang="en">Allow Access Content</value>
-        <value xml:lang="zh">允许访问内容</value>
-    </property>
-    <property key="PDFAllowAssembleDocument">
-        <value xml:lang="en">Allow Assemble Document</value>
-        <value xml:lang="zh">允许组装文档</value>
-    </property>
-    <property key="PDFAllowPrintHq">
-        <value xml:lang="en">Allow Print HQ</value>
-        <value xml:lang="zh">允许高质量打印</value>
-    </property>
-    <property key="PDFEncryptMetadata">
-        <value xml:lang="en">Encrypt Metadata</value>
-        <value xml:lang="zh">加密元数据</value>
-    </property>
-    <property key="PDFEncryptionLength">
-        <value xml:lang="en">Encryption Length</value>
-        <value xml:lang="zh">密钥长度</value>
     </property>
 </resource>

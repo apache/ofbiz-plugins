@@ -19,6 +19,20 @@
     under the License.
 -->
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
+    <!-- Entity descriptions. The Web Tools component will use these properties
+        for online documentation. Entity description property keys have the form:
+        EntityDescription.[entityname].
+    -->
+    <property key="EntityDescription.Example">
+        <value xml:lang="en">Example Entity</value>
+        <value xml:lang="zh">样例实体</value>
+    </property>
+    <!-- Entity field descriptions. The Web Tools component will use these properties
+        for online documentation. Field description property keys have two forms:
+        FieldDescription.[fieldname] - will be used for all fields of that name
+        FieldDescription.[entityname].[fieldname] - will be used for the specified
+        entity field
+    -->
     <property key="ExampleFeatureApplType.description.DESIRED">
         <value xml:lang="en">Desired</value>
         <value xml:lang="fr">Désiré</value>
@@ -46,6 +60,7 @@
         <value xml:lang="zh">必须的</value>
         <value xml:lang="zh-TW">必須的</value>
     </property>
+    <!-- Example entity labels -->
     <property key="ExampleType.description.CONTRIVED">
         <value xml:lang="en">Contrived</value>
         <value xml:lang="fr">Arrangé</value>
@@ -73,7 +88,6 @@
         <value xml:lang="zh">制定</value>
         <value xml:lang="zh-TW">制定</value>
     </property>
-  <!-- Example entity labels -->
     <property key="ExampleType.description.REAL_WORLD">
         <value xml:lang="en">Real World</value>
         <value xml:lang="fr">Monde réel</value>
@@ -83,20 +97,6 @@
         <value xml:lang="zh">真实世界</value>
         <value xml:lang="zh-TW">真實世界</value>
     </property>
-  <!-- Entity descriptions. The Web Tools component will use these properties
-        for online documentation. Entity description property keys have the form:
-        EntityDescription.[entityname].
-    -->
-    <property key="EntityDescription.Example">
-        <value xml:lang="en">Example Entity</value>
-        <value xml:lang="zh">样例实体</value>
-    </property>
-  <!-- Entity field descriptions. The Web Tools component will use these properties
-        for online documentation. Field description property keys have two forms:
-        FieldDescription.[fieldname] - will be used for all fields of that name
-        FieldDescription.[entityname].[fieldname] - will be used for the specified
-        entity field
-    -->
     <property key="FieldDescription.Example.exampleId">
         <value xml:lang="en">A unique Example ID. If you don't assign an ID, one will be generated automatically</value>
         <value xml:lang="fr">Une réf. unique d'exemple. Si vous n'entrez pas de réf., elle sera générée automatiquement</value>
@@ -105,6 +105,12 @@
         <value xml:lang="th">รหัสตัวอย่าง ถ้าไม่มีการกำหนดรหัส จะต้องมีการสร้างขึ้นอัตโมัติ</value>
         <value xml:lang="zh">一个唯一的样例表示。如果你没有指定一个标识，那么会自动生成一个</value>
         <value xml:lang="zh-TW">一個唯一的範例表示.如果你沒有指定一個識別,那麼會自動產生一個</value>
+    </property>
+    <property key="FieldDescription.Example.exampleTypeId">
+        <value xml:lang="en">The type of Example.</value>
+        <value xml:lang="fr">Le type de l'exemple.</value>
+        <value xml:lang="zh">样例类型。</value>
+        <value xml:lang="zh-TW">範例類型.</value>
     </property>
     <property key="FieldDescription.ExampleItem.exampleItemSeqId">
         <value xml:lang="en">A unique Example Item sequence ID. If you don't assign an ID, one will be generated automatically</value>
@@ -123,12 +129,6 @@
         <value xml:lang="th">รหัสตัวอย่างประเภท ถ้าไม่มีการกำหนดรหัส จะต้องมีการสร้างขึ้นอัตโมัติ</value>
         <value xml:lang="zh">一个唯一的样例类型序号。如果你没有指定一个标识，那么会自动生成一个</value>
         <value xml:lang="zh-TW">一個唯一的範例類型序號.如果你沒有指定一個識別,那麼會自動產生一個</value>
-    </property>
-    <property key="FieldDescription.Example.exampleTypeId">
-        <value xml:lang="en">The type of Example.</value>
-        <value xml:lang="fr">Le type de l'exemple.</value>
-        <value xml:lang="zh">样例类型。</value>
-        <value xml:lang="zh-TW">範例類型.</value>
     </property>
     <property key="FieldDescription.amount">
         <value xml:lang="de">Betrag</value>
@@ -157,7 +157,6 @@
         <value xml:lang="ja">別のテキスト</value>
         <value xml:lang="th">ตัวอักษรอื่น ๆ</value>
         <value xml:lang="zh">另一个文本</value>
-        <!--value xml:lang="zh_TW">另一個文本</value-->
         <value xml:lang="zh-TW">另一個本文</value>
     </property>
     <property key="FieldDescription.comments">
