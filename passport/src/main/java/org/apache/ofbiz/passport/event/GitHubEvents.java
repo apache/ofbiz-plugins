@@ -114,12 +114,12 @@ public class GitHubEvents {
             Debug.logInfo("Request to GitHub: " + redirectUrl, module);
             response.sendRedirect(redirectUrl);
         } catch (NullPointerException e) {
-            String errMsg = UtilProperties.getMessage(resource, "RedirectToGitHubOAuth2NullException", UtilHttp.getLocale(request));
+            String errMsg = UtilProperties.getMessage(resource, "GitHubRedirectToOAuth2NullException", UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         } catch (IOException e) {
             Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.toString());
-            String errMsg = UtilProperties.getMessage(resource, "RedirectToGitHubOAuth2Error", messageMap, UtilHttp.getLocale(request));
+            String errMsg = UtilProperties.getMessage(resource, "GitHubRedirectToOAuth2Error", messageMap, UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
@@ -147,7 +147,7 @@ public class GitHubEvents {
             try {
                 errMsg = UtilProperties.getMessage(resource, "FailedToGetGitHubAuthorizationCode", UtilMisc.toMap(PassportUtil.COMMON_ERROR, error, PassportUtil.COMMON_ERROR_DESCRIPTION, URLDecoder.decode(errorDescpriton, "UTF-8")), UtilHttp.getLocale(request));
             } catch (UnsupportedEncodingException e) {
-                errMsg = UtilProperties.getMessage(resource, "GetGitHubAuthorizationCodeError", UtilHttp.getLocale(request));
+                errMsg = UtilProperties.getMessage(resource, "GitHubGetAuthorizationCodeError", UtilHttp.getLocale(request));
             }
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
@@ -156,7 +156,7 @@ public class GitHubEvents {
         
         GenericValue oauth2GitHub = getOAuth2GitHubConfig(request);
         if (UtilValidate.isEmpty(oauth2GitHub)) {
-            String errMsg = UtilProperties.getMessage(resource, "GetOAuth2GitHubConfigError", UtilHttp.getLocale(request));
+            String errMsg = UtilProperties.getMessage(resource, "GitHubGetOAuth2ConfigError", UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
@@ -198,7 +198,7 @@ public class GitHubEvents {
                 // Debug.logInfo("Generated Access Token : " + accessToken, module);
                 // Debug.logInfo("Token Type: " + tokenType, module);
             } else {
-                String errMsg = UtilProperties.getMessage(resource, "GetOAuth2GitHubAccessTokenError", UtilMisc.toMap("error", responseString), UtilHttp.getLocale(request));
+                String errMsg = UtilProperties.getMessage(resource, "GitHubGetOAuth2AccessTokenError", UtilMisc.toMap("error", responseString), UtilHttp.getLocale(request));
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
@@ -310,7 +310,7 @@ public class GitHubEvents {
             return getOAuth2GitHubConfig(delegator, productStoreId);
         } catch (GenericEntityException e) {
             Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.toString());
-            String errMsg = UtilProperties.getMessage(resource, "GetOAuth2GitHubError", messageMap, UtilHttp.getLocale(request));
+            String errMsg = UtilProperties.getMessage(resource, "GitHubGetOAuth2Error", messageMap, UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
         }
         return null;

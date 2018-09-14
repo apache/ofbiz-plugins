@@ -115,12 +115,12 @@ public class LinkedInEvents {
                     + "&state=" + state;
             response.sendRedirect(redirectUrl);
         } catch (NullPointerException e) {
-            String errMsg = UtilProperties.getMessage(resource, "RedirectToLinkedInOAuth2NullException", UtilHttp.getLocale(request));
+            String errMsg = UtilProperties.getMessage(resource, "LinkedInRedirectToOAuth2NullException", UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         } catch (IOException e) {
             Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.toString());
-            String errMsg = UtilProperties.getMessage(resource, "RedirectToLinkedInOAuth2Error", messageMap, UtilHttp.getLocale(request));
+            String errMsg = UtilProperties.getMessage(resource, "LinkedInRedirectToOAuth2Error", messageMap, UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
@@ -146,9 +146,9 @@ public class LinkedInEvents {
             String errorDescpriton = request.getParameter(PassportUtil.COMMON_ERROR_DESCRIPTION);
             String errMsg = null;
             try {
-                errMsg = UtilProperties.getMessage(resource, "FailedToGetLinkedInAuthorizationCode", UtilMisc.toMap(PassportUtil.COMMON_ERROR, error, PassportUtil.COMMON_ERROR_DESCRIPTION, URLDecoder.decode(errorDescpriton, "UTF-8")), UtilHttp.getLocale(request));
+                errMsg = UtilProperties.getMessage(resource, "LinkedInFailedToGetAuthorizationCode", UtilMisc.toMap(PassportUtil.COMMON_ERROR, error, PassportUtil.COMMON_ERROR_DESCRIPTION, URLDecoder.decode(errorDescpriton, "UTF-8")), UtilHttp.getLocale(request));
             } catch (UnsupportedEncodingException e) {
-                errMsg = UtilProperties.getMessage(resource, "GetLinkedInAuthorizationCodeError", UtilHttp.getLocale(request));
+                errMsg = UtilProperties.getMessage(resource, "LinkedInGetAuthorizationCodeError", UtilHttp.getLocale(request));
             }
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
@@ -157,7 +157,7 @@ public class LinkedInEvents {
         
         GenericValue oauth2LinkedIn = getOAuth2LinkedInConfig(request);
         if (UtilValidate.isEmpty(oauth2LinkedIn)) {
-            String errMsg = UtilProperties.getMessage(resource, "GetOAuth2LinkedInConfigError", UtilHttp.getLocale(request));
+            String errMsg = UtilProperties.getMessage(resource, "LinkedInGetOAuth2ConfigError", UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
@@ -196,7 +196,7 @@ public class LinkedInEvents {
                 accessToken = (String) userMap.get("access_token");
                 // Debug.logInfo("Generated Access Token : " + accessToken, module);
             } else {
-                String errMsg = UtilProperties.getMessage(resource, "GetOAuth2LinkedInAccessTokenError", UtilMisc.toMap("error", responseString), UtilHttp.getLocale(request));
+                String errMsg = UtilProperties.getMessage(resource, "LinkedInGetOAuth2AccessTokenError", UtilMisc.toMap("error", responseString), UtilHttp.getLocale(request));
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
@@ -317,7 +317,7 @@ public class LinkedInEvents {
             return getOAuth2LinkedInConfig(delegator, productStoreId);
         } catch (GenericEntityException e) {
             Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.toString());
-            String errMsg = UtilProperties.getMessage(resource, "GetOAuth2LinkedInError", messageMap, UtilHttp.getLocale(request));
+            String errMsg = UtilProperties.getMessage(resource, "LinkedInGetOAuth2Error", messageMap, UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
         }
         return null;
