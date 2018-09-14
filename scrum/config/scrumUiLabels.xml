@@ -18,6 +18,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
+    <property key="PageTitleAddATimesheet">
+        <value xml:lang="de">Neue wöchentliche Zeiterfassung hinzufügen</value>
+        <value xml:lang="en">Add a new weekly Timesheet</value>
+        <value xml:lang="fr">Ajouter une nouvelle feuille d'activité hebdomadaire</value>
+        <value xml:lang="it">Aggiungi una nuova timbratura settimanale</value>
+        <value xml:lang="ja">新規週次予定表を追加</value>
+        <value xml:lang="nl">Nieuwe urenstaat toevoegen</value>
+        <value xml:lang="th">เพิ่มตารางเวลารายสัปดาห์ใหม่</value>
+        <value xml:lang="zh">增加新的周时间表</value>
+        <value xml:lang="zh-TW">新增週工時表</value>
+    </property>
     <property key="PageTitleAddProductTimeToNewInvoice">
         <value xml:lang="en">Add all reported/approved task time to a new invoice</value>
         <value xml:lang="zh">把全部已报告的/已批准的任务时间添加到一个新的发票</value>
@@ -88,17 +99,6 @@ under the License.
         <value xml:lang="th">เพิ่มข้อความงาน</value>
         <value xml:lang="zh">增加任务备注</value>
         <value xml:lang="zh-TW">增加任務備註</value>
-    </property>
-    <property key="PageTitleAddATimesheet">
-        <value xml:lang="de">Neue wöchentliche Zeiterfassung hinzufügen</value>
-        <value xml:lang="en">Add a new weekly Timesheet</value>
-        <value xml:lang="fr">Ajouter une nouvelle feuille d'activité hebdomadaire</value>
-        <value xml:lang="it">Aggiungi una nuova timbratura settimanale</value>
-        <value xml:lang="ja">新規週次予定表を追加</value>
-        <value xml:lang="nl">Nieuwe urenstaat toevoegen</value>
-        <value xml:lang="th">เพิ่มตารางเวลารายสัปดาห์ใหม่</value>
-        <value xml:lang="zh">增加新的周时间表</value>
-        <value xml:lang="zh-TW">新增週工時表</value>
     </property>
     <property key="PageTitleAllBacklog">
         <value xml:lang="en">All Backlog</value>
@@ -483,18 +483,6 @@ under the License.
         <value xml:lang="zh">实际总时间</value>
         <value xml:lang="zh-TW">實際總時間</value>
     </property>
-    <property key="ScrumAdmin">
-        <value xml:lang="en">Administration</value>
-        <value xml:lang="ja">管理</value>
-        <value xml:lang="zh">管理</value>
-        <value xml:lang="zh-TW">管理</value>
-    </property>
-    <property key="ScrumAddMember">
-        <value xml:lang="en">Add Member</value>
-        <value xml:lang="ja">メンバを追加</value>
-        <value xml:lang="zh">添加成员</value>
-        <value xml:lang="zh-TW">增加會員</value>
-    </property>
     <property key="ScrumAddCompanyAndProductOwner">
         <value xml:lang="en">Add Company and Product Owner</value>
         <value xml:lang="ja">会社および製品オーナーを追加</value>
@@ -506,6 +494,12 @@ under the License.
         <value xml:lang="ja">日次ミーティング分数を追加</value>
         <value xml:lang="zh">添加每天会议分钟数</value>
         <value xml:lang="zh-TW">增加每天會議分鐘數</value>
+    </property>
+    <property key="ScrumAddMember">
+        <value xml:lang="en">Add Member</value>
+        <value xml:lang="ja">メンバを追加</value>
+        <value xml:lang="zh">添加成员</value>
+        <value xml:lang="zh-TW">增加會員</value>
     </property>
     <property key="ScrumAddNewProductBacklogItem">
         <value xml:lang="en">Add New Product Backlog Item</value>
@@ -566,6 +560,12 @@ under the License.
         <value xml:lang="zh">添加新的未计划订单明细</value>
         <value xml:lang="zh-TW">新增未計畫訂單細項</value>
     </property>
+    <property key="ScrumAdmin">
+        <value xml:lang="en">Administration</value>
+        <value xml:lang="ja">管理</value>
+        <value xml:lang="zh">管理</value>
+        <value xml:lang="zh-TW">管理</value>
+    </property>
     <property key="ScrumAllBacklogItem">
         <value xml:lang="en">All Backlog Items</value>
         <value xml:lang="ja">すべてのバックログアイテム</value>
@@ -601,17 +601,17 @@ under the License.
         <value xml:lang="zh">给我分配一个已有的任务</value>
         <value xml:lang="zh-TW">分配一個已有的任務給我</value>
     </property>
-    <property key="ScrumAssignedTo">
-        <value xml:lang="en">Assigned To</value>
-        <value xml:lang="ja">割当済</value>
-        <value xml:lang="zh">被指派给</value>
-        <value xml:lang="zh-TW">被指派給</value>
-    </property>
     <property key="ScrumAssignTo">
         <value xml:lang="en">Assign To</value>
         <value xml:lang="ja">割当先</value>
         <value xml:lang="zh">指派给</value>
         <value xml:lang="zh-TW">指派給</value>
+    </property>
+    <property key="ScrumAssignedTo">
+        <value xml:lang="en">Assigned To</value>
+        <value xml:lang="ja">割当済</value>
+        <value xml:lang="zh">被指派给</value>
+        <value xml:lang="zh-TW">被指派給</value>
     </property>
     <property key="ScrumBacklog">
         <value xml:lang="en">Backlog</value>
@@ -709,14 +709,14 @@ under the License.
         <value xml:lang="zh">取消产品订单</value>
         <value xml:lang="zh-TW">取消產品訂單</value>
     </property>
-    <property key="ScrumCategory">
-        <value xml:lang="en">Category</value>
+    <property key="ScrumCategories">
+        <value xml:lang="en">Categories</value>
         <value xml:lang="ja">カテゴリ</value>
         <value xml:lang="zh">分类</value>
         <value xml:lang="zh-TW">分類</value>
     </property>
-    <property key="ScrumCategories">
-        <value xml:lang="en">Categories</value>
+    <property key="ScrumCategory">
+        <value xml:lang="en">Category</value>
         <value xml:lang="ja">カテゴリ</value>
         <value xml:lang="zh">分类</value>
         <value xml:lang="zh-TW">分類</value>
@@ -870,17 +870,17 @@ under the License.
         <value xml:lang="zh">为未计划订单明细创建任务</value>
         <value xml:lang="zh-TW">為未計畫訂單細項新建任務</value>
     </property>
-    <property key="ScrumCustomerRequestItemName">
-        <value xml:lang="en">Customer Request Item Name</value>
-        <value xml:lang="ja">顧客リクエストアイテム名</value>
-        <value xml:lang="zh">客户请求明细名称</value>
-        <value xml:lang="zh-TW">客戶請求細項名稱</value>
-    </property>
     <property key="ScrumCustRequestId">
         <value xml:lang="en">custRequestId</value>
         <value xml:lang="ja">顧客リクエストID</value>
         <value xml:lang="zh">客户请求标识</value>
         <value xml:lang="zh-TW">客戶請求識別</value>
+    </property>
+    <property key="ScrumCustomerRequestItemName">
+        <value xml:lang="en">Customer Request Item Name</value>
+        <value xml:lang="ja">顧客リクエストアイテム名</value>
+        <value xml:lang="zh">客户请求明细名称</value>
+        <value xml:lang="zh-TW">客戶請求細項名稱</value>
     </property>
     <property key="ScrumDefaultTasks">
         <value xml:lang="en">Default Tasks</value>
@@ -966,20 +966,8 @@ under the License.
         <value xml:lang="zh">电子邮件内容</value>
         <value xml:lang="zh-TW">電子郵件內容</value>
     </property>
-    <property key="ScrumEstimatedHours">
-        <value xml:lang="en">Estimated Hours</value>
-        <value xml:lang="ja">予定時間</value>
-        <value xml:lang="zh">预计小时数</value>
-        <value xml:lang="zh-TW">預計小時數</value>
-    </property>
     <property key="ScrumErrorCallingUpdatingCommeventStatus">
         <value xml:lang="en">Error calling updating commevent status:</value>
-    </property>
-    <property key="ScrumErrorTasksList">
-        <value xml:lang="en">Error Tasks List</value>
-        <value xml:lang="ja">エラータスク一覧</value>
-        <value xml:lang="zh">错误任务列表</value>
-        <value xml:lang="zh-TW">錯誤工作清單</value>
     </property>
     <property key="ScrumErrorTaskNotFound">
         <value xml:lang="de">Aufgabe: ${parameters.workEffortId} nicht gefunden</value>
@@ -1006,6 +994,18 @@ under the License.
         <value xml:lang="nl">Taak ${parameters.workEffortId} is nog niet begonnen. Verzoeken kunnen worden toegevoegd</value>
         <value xml:lang="zh">任务：${parameters.workEffortId}没有进展，没有添加请求</value>
         <value xml:lang="zh-TW">任務:${parameters.workEffortId}沒有進展,沒有增加請求</value>
+    </property>
+    <property key="ScrumErrorTasksList">
+        <value xml:lang="en">Error Tasks List</value>
+        <value xml:lang="ja">エラータスク一覧</value>
+        <value xml:lang="zh">错误任务列表</value>
+        <value xml:lang="zh-TW">錯誤工作清單</value>
+    </property>
+    <property key="ScrumEstimatedHours">
+        <value xml:lang="en">Estimated Hours</value>
+        <value xml:lang="ja">予定時間</value>
+        <value xml:lang="zh">预计小时数</value>
+        <value xml:lang="zh-TW">預計小時數</value>
     </property>
     <property key="ScrumFindByPrimaryKeyError">
         <value xml:lang="en">Find by primary key error:</value>
@@ -1046,17 +1046,17 @@ under the License.
         <value xml:lang="zh">查找任务</value>
         <value xml:lang="zh-TW">尋找任務</value>
     </property>
-    <property key="ScrumFirstName">
-        <value xml:lang="en">First Name</value>
-        <value xml:lang="ja">姓/FN</value>
-        <value xml:lang="zh">名</value>
-        <value xml:lang="zh-TW">名</value>
-    </property>
     <property key="ScrumFinished">
         <value xml:lang="en">Finished</value>
         <value xml:lang="ja">完成</value>
         <value xml:lang="zh">已完成</value>
         <value xml:lang="zh-TW">已完成</value>
+    </property>
+    <property key="ScrumFirstName">
+        <value xml:lang="en">First Name</value>
+        <value xml:lang="ja">姓/FN</value>
+        <value xml:lang="zh">名</value>
+        <value xml:lang="zh-TW">名</value>
     </property>
     <property key="ScrumFri">
         <value xml:lang="de">Fr</value>
@@ -1122,17 +1122,17 @@ under the License.
         <value xml:lang="zh">列出更新每天会议分钟数</value>
         <value xml:lang="zh-TW">列出更新每天會議分鐘數</value>
     </property>
-    <property key="ScrumMaximumHours">
-        <value xml:lang="en">Maximum Hours</value>
-        <value xml:lang="ja">最大時間</value>
-        <value xml:lang="zh">最大小时数</value>
-        <value xml:lang="zh-TW">最大小時數</value>
-    </property>
     <property key="ScrumMax255Chars">
         <value xml:lang="en">255 Chars Maximum</value>
         <value xml:lang="ja">最長255文字</value>
         <value xml:lang="zh">最多255个字符</value>
         <value xml:lang="zh-TW">最多255個字元</value>
+    </property>
+    <property key="ScrumMaximumHours">
+        <value xml:lang="en">Maximum Hours</value>
+        <value xml:lang="ja">最大時間</value>
+        <value xml:lang="zh">最大小时数</value>
+        <value xml:lang="zh-TW">最大小時數</value>
     </property>
     <property key="ScrumMember">
         <value xml:lang="en">Member</value>
@@ -1158,12 +1158,6 @@ under the License.
         <value xml:lang="zh">成员名</value>
         <value xml:lang="zh-TW">會員名</value>
     </property>
-    <property key="ScrumMiddleName">
-        <value xml:lang="en">Middle Name</value>
-        <value xml:lang="ja">ミドル名</value>
-        <value xml:lang="zh">中间名</value>
-        <value xml:lang="zh-TW">中間名</value>
-    </property>
     <property key="ScrumMgrTaskTeam">
         <value xml:lang="de">Aufgabenteam</value>
         <value xml:lang="en">Task Team</value>
@@ -1174,6 +1168,12 @@ under the License.
         <value xml:lang="th">ทีมงาน</value>
         <value xml:lang="zh">任务团队</value>
         <value xml:lang="zh-TW">任務團隊</value>
+    </property>
+    <property key="ScrumMiddleName">
+        <value xml:lang="en">Middle Name</value>
+        <value xml:lang="ja">ミドル名</value>
+        <value xml:lang="zh">中间名</value>
+        <value xml:lang="zh-TW">中間名</value>
     </property>
     <property key="ScrumMon">
         <value xml:lang="de">Mo</value>
@@ -1197,17 +1197,17 @@ under the License.
         <value xml:lang="zh">我的简介</value>
         <value xml:lang="zh-TW">我的簡介</value>
     </property>
-    <property key="ScrumMyWork">
-        <value xml:lang="en">My Work</value>
-        <value xml:lang="ja">私の作業</value>
-        <value xml:lang="zh">我的工作</value>
-        <value xml:lang="zh-TW">我的工作</value>
-    </property>
     <property key="ScrumMyTasks">
         <value xml:lang="en">My Tasks</value>
         <value xml:lang="ja">私のタスク</value>
         <value xml:lang="zh">我的任务</value>
         <value xml:lang="zh-TW">我的任務</value>
+    </property>
+    <property key="ScrumMyWork">
+        <value xml:lang="en">My Work</value>
+        <value xml:lang="ja">私の作業</value>
+        <value xml:lang="zh">我的工作</value>
+        <value xml:lang="zh-TW">我的工作</value>
     </property>
     <property key="ScrumNewBacklogItem">
         <value xml:lang="en">New Backlog Item</value>
@@ -1374,18 +1374,6 @@ under the License.
         <value xml:lang="zh">会员关系</value>
         <value xml:lang="zh-TW">團體關係</value>
     </property>
-    <property key="ScrumPlanned">
-        <value xml:lang="en">Planned</value>
-        <value xml:lang="ja">計画済</value>
-        <value xml:lang="zh">已计划的</value>
-        <value xml:lang="zh-TW">已計畫的</value>
-    </property>
-    <property key="ScrumPlannedHours">
-        <value xml:lang="en">Planned Hours</value>
-        <value xml:lang="ja">計画済時間</value>
-        <value xml:lang="zh">已计划的小时数</value>
-        <value xml:lang="zh-TW">已計畫的小時數</value>
-    </property>
     <property key="ScrumPlanHours">
         <value xml:lang="en">Plan Hours</value>
         <value xml:lang="ja">計画時間</value>
@@ -1398,17 +1386,29 @@ under the License.
         <value xml:lang="zh">计划小时数</value>
         <value xml:lang="zh-TW">計畫小時數</value>
     </property>
-    <property key="ScrumPlhrs">
-        <value xml:lang="en">Pl hrs</value>
-        <value xml:lang="ja">計画時間</value>
-        <value xml:lang="zh">计划小时数</value>
-        <value xml:lang="zh-TW">計畫小時數</value>
+    <property key="ScrumPlanned">
+        <value xml:lang="en">Planned</value>
+        <value xml:lang="ja">計画済</value>
+        <value xml:lang="zh">已计划的</value>
+        <value xml:lang="zh-TW">已計畫的</value>
+    </property>
+    <property key="ScrumPlannedHours">
+        <value xml:lang="en">Planned Hours</value>
+        <value xml:lang="ja">計画済時間</value>
+        <value xml:lang="zh">已计划的小时数</value>
+        <value xml:lang="zh-TW">已計畫的小時數</value>
     </property>
     <property key="ScrumPlannedTime">
         <value xml:lang="en">Plan Time</value>
         <value xml:lang="ja">計画時間</value>
         <value xml:lang="zh">计划时间</value>
         <value xml:lang="zh-TW">計畫時間</value>
+    </property>
+    <property key="ScrumPlhrs">
+        <value xml:lang="en">Pl hrs</value>
+        <value xml:lang="ja">計画時間</value>
+        <value xml:lang="zh">计划小时数</value>
+        <value xml:lang="zh-TW">計畫小時數</value>
     </property>
     <property key="ScrumProblemTask">
         <value xml:lang="en">What problem are you having with to task?</value>
@@ -1554,17 +1554,17 @@ under the License.
         <value xml:lang="zh">项目</value>
         <value xml:lang="zh-TW">專案</value>
     </property>
-    <property key="ScrumProjectAndSprintList">
-        <value xml:lang="en">Project and Sprint List</value>
-        <value xml:lang="ja">プロジェクトおよびスプリント一覧</value>
-        <value xml:lang="zh">项目和冲刺列表</value>
-        <value xml:lang="zh-TW">專案和衝刺清單</value>
-    </property>
     <property key="ScrumProjectAndSprintInformationChart">
         <value xml:lang="en">Project And Sprint Information Chart</value>
         <value xml:lang="ja">プロジェクトおよびスプリント情報チャート</value>
         <value xml:lang="zh">项目和冲刺信息图</value>
         <value xml:lang="zh-TW">專案和衝刺資訊圖</value>
+    </property>
+    <property key="ScrumProjectAndSprintList">
+        <value xml:lang="en">Project and Sprint List</value>
+        <value xml:lang="ja">プロジェクトおよびスプリント一覧</value>
+        <value xml:lang="zh">项目和冲刺列表</value>
+        <value xml:lang="zh-TW">專案和衝刺清單</value>
     </property>
     <property key="ScrumProjectCurrent">
         <value xml:lang="de">Aktuelles Projekt</value>
@@ -1576,17 +1576,6 @@ under the License.
         <value xml:lang="th">โปรเจคที่ใช้กันในปัจจุบัน</value>
         <value xml:lang="zh">当前项目</value>
         <value xml:lang="zh-TW">當前專案</value>
-    </property>
-    <property key="ScrumProjectName">
-        <value xml:lang="en">Project Name</value>
-        <value xml:lang="de">Projektname</value>
-        <value xml:lang="fr">Nom du projet</value>
-        <value xml:lang="it">Nome progetto</value>
-        <value xml:lang="ja">プロジェクト名</value>
-        <value xml:lang="nl">Naam</value>
-        <value xml:lang="th">ชื่อโปรเจค</value>
-        <value xml:lang="zh">项目名称</value>
-        <value xml:lang="zh-TW">專案名稱</value>
     </property>
     <property key="ScrumProjectGoal">
         <value xml:lang="en">Project Goal</value>
@@ -1612,17 +1601,28 @@ under the License.
         <value xml:lang="zh">移动到产品</value>
         <value xml:lang="zh-TW">移動到產品</value>
     </property>
-    <property key="ScrumProjects">
-        <value xml:lang="en">Projects</value>
-        <value xml:lang="ja">プロジェクト</value>
-        <value xml:lang="zh">项目</value>
-        <value xml:lang="zh-TW">專案</value>
+    <property key="ScrumProjectName">
+        <value xml:lang="de">Projektname</value>
+        <value xml:lang="en">Project Name</value>
+        <value xml:lang="fr">Nom du projet</value>
+        <value xml:lang="it">Nome progetto</value>
+        <value xml:lang="ja">プロジェクト名</value>
+        <value xml:lang="nl">Naam</value>
+        <value xml:lang="th">ชื่อโปรเจค</value>
+        <value xml:lang="zh">项目名称</value>
+        <value xml:lang="zh-TW">專案名稱</value>
     </property>
     <property key="ScrumProjectSprint">
         <value xml:lang="en">Project/Sprint</value>
         <value xml:lang="ja">プロジェクト/スプリント</value>
         <value xml:lang="zh">项目/冲刺</value>
         <value xml:lang="zh-TW">專案/衝刺</value>
+    </property>
+    <property key="ScrumProjects">
+        <value xml:lang="en">Projects</value>
+        <value xml:lang="ja">プロジェクト</value>
+        <value xml:lang="zh">项目</value>
+        <value xml:lang="zh-TW">專案</value>
     </property>
     <property key="ScrumQuestion">
         <value xml:lang="en">Question</value>
@@ -1652,6 +1652,12 @@ under the License.
         <value xml:lang="zh">费率类型标识</value>
         <value xml:lang="zh-TW">費率類型識別</value>
     </property>
+    <property key="ScrumReOpen">
+        <value xml:lang="en">re-open</value>
+        <value xml:lang="ja">再開</value>
+        <value xml:lang="zh">重新打开</value>
+        <value xml:lang="zh-TW">重新打開</value>
+    </property>
     <property key="ScrumRecreateInvoice">
         <value xml:lang="de">Faktura neuerstellen</value>
         <value xml:lang="en">re-create Invoice</value>
@@ -1673,12 +1679,6 @@ under the License.
         <value xml:lang="zh">发布</value>
         <value xml:lang="zh-TW">發佈</value>
     </property>
-    <property key="ScrumReOpen">
-        <value xml:lang="en">re-open</value>
-        <value xml:lang="ja">再開</value>
-        <value xml:lang="zh">重新打开</value>
-        <value xml:lang="zh-TW">重新打開</value>
-    </property>
     <property key="ScrumReply">
         <value xml:lang="en">Reply</value>
         <value xml:lang="ja">応答</value>
@@ -1690,6 +1690,12 @@ under the License.
         <value xml:lang="ja">リクエスト日</value>
         <value xml:lang="zh">请求日期</value>
         <value xml:lang="zh-TW">請求日期</value>
+    </property>
+    <property key="ScrumRequestName">
+        <value xml:lang="en">Request name</value>
+        <value xml:lang="ja">リクエスト名</value>
+        <value xml:lang="zh">请求名称</value>
+        <value xml:lang="zh-TW">請求名稱</value>
     </property>
     <property key="ScrumRequesterName">
         <value xml:lang="en">Requester Name</value>
@@ -1707,12 +1713,6 @@ under the License.
         <value xml:lang="th">ชื่อแหล่งที่มา</value>
         <value xml:lang="zh">资源名称</value>
         <value xml:lang="zh-TW">資源名稱</value>
-    </property>
-    <property key="ScrumRequestName">
-        <value xml:lang="en">Request name</value>
-        <value xml:lang="ja">リクエスト名</value>
-        <value xml:lang="zh">请求名称</value>
-        <value xml:lang="zh-TW">請求名稱</value>
     </property>
     <property key="ScrumRevision">
         <value xml:lang="en">Revision</value>
@@ -1756,6 +1756,12 @@ under the License.
         <value xml:lang="nl">Za</value>
         <value xml:lang="zh">周六</value>
         <value xml:lang="zh-TW">週六</value>
+    </property>
+    <property key="ScrumScrumMembersList">
+        <value xml:lang="en">Scrum Members List</value>
+        <value xml:lang="ja">Scrumメンバ一覧</value>
+        <value xml:lang="zh">Scrum成员列表</value>
+        <value xml:lang="zh-TW">Scrum成員清單</value>
     </property>
     <property key="ScrumSelectedDate">
         <value xml:lang="de">Datum wählen</value>
@@ -1806,12 +1812,6 @@ under the License.
         <value xml:lang="ja">レビューに設定</value>
         <value xml:lang="zh">设为评审</value>
         <value xml:lang="zh-TW">設為評審</value>
-    </property>
-    <property key="ScrumScrumMembersList">
-        <value xml:lang="en">Scrum Members List</value>
-        <value xml:lang="ja">Scrumメンバ一覧</value>
-        <value xml:lang="zh">Scrum成员列表</value>
-        <value xml:lang="zh-TW">Scrum成員清單</value>
     </property>
     <property key="ScrumSinceLastMeeting">
         <value xml:lang="en">What have you accomplish since the last meeting?</value>
@@ -1873,12 +1873,6 @@ under the License.
         <value xml:lang="zh">冲刺列表</value>
         <value xml:lang="zh-TW">衝刺清單</value>
     </property>
-    <property key="ScrumSprintName">
-        <value xml:lang="en">Sprint Name</value>
-        <value xml:lang="ja">スプリント名</value>
-        <value xml:lang="zh">冲刺名称</value>
-        <value xml:lang="zh-TW">衝刺名稱</value>
-    </property>
     <property key="ScrumSprintMember">
         <value xml:lang="en">Sprint Member</value>
         <value xml:lang="ja">スプリントメンバ</value>
@@ -1896,6 +1890,12 @@ under the License.
         <value xml:lang="ja">プロジェクトに移動</value>
         <value xml:lang="zh">移动到项目</value>
         <value xml:lang="zh-TW">移動到專案</value>
+    </property>
+    <property key="ScrumSprintName">
+        <value xml:lang="en">Sprint Name</value>
+        <value xml:lang="ja">スプリント名</value>
+        <value xml:lang="zh">冲刺名称</value>
+        <value xml:lang="zh-TW">衝刺名稱</value>
     </property>
     <property key="ScrumStatusBacklog">
         <value xml:lang="en">Status Backlog</value>
@@ -1920,7 +1920,7 @@ under the License.
         <value xml:lang="zh-TW">週日</value>
     </property>
     <property key="ScrumTab">
-        <value xml:lang="en">&#160;&#160;&#160;&#160;&#160;</value>
+        <value xml:lang="en">     </value>
     </property>
     <property key="ScrumTask">
         <value xml:lang="en">Task</value>
@@ -1950,6 +1950,12 @@ under the License.
         <value xml:lang="ja">タスクID</value>
         <value xml:lang="zh">任务标识</value>
         <value xml:lang="zh-TW">任務識別</value>
+    </property>
+    <property key="ScrumTaskInformationChart">
+        <value xml:lang="en">Task Information Chart</value>
+        <value xml:lang="ja">タスク情報表</value>
+        <value xml:lang="zh">任务信息图</value>
+        <value xml:lang="zh-TW">任務資訊圖</value>
     </property>
     <property key="ScrumTaskMember">
         <value xml:lang="de">Kein Mitglied von irgendeinem Projekt, bitte Projektmanager kontaktieren</value>
@@ -2023,29 +2029,23 @@ under the License.
         <value xml:lang="zh">任务总览</value>
         <value xml:lang="zh-TW">任務總覽</value>
     </property>
+    <property key="ScrumTaskType">
+        <value xml:lang="en">Task Type</value>
+        <value xml:lang="ja">タスク種類</value>
+        <value xml:lang="zh">任务类型</value>
+        <value xml:lang="zh-TW">任務類型</value>
+    </property>
     <property key="ScrumTasks">
         <value xml:lang="en">Tasks</value>
         <value xml:lang="ja">タスク</value>
         <value xml:lang="zh">任务</value>
         <value xml:lang="zh-TW">任務</value>
     </property>
-    <property key="ScrumTaskInformationChart">
-        <value xml:lang="en">Task Information Chart</value>
-        <value xml:lang="ja">タスク情報表</value>
-        <value xml:lang="zh">任务信息图</value>
-        <value xml:lang="zh-TW">任務資訊圖</value>
-    </property>
     <property key="ScrumTasksList">
         <value xml:lang="en">Tasks List</value>
         <value xml:lang="ja">タスク一覧</value>
         <value xml:lang="zh">任务列表</value>
         <value xml:lang="zh-TW">工作清單</value>
-    </property>
-    <property key="ScrumTaskType">
-        <value xml:lang="en">Task Type</value>
-        <value xml:lang="ja">タスク種類</value>
-        <value xml:lang="zh">任务类型</value>
-        <value xml:lang="zh-TW">任務類型</value>
     </property>
     <property key="ScrumTestTasksList">
         <value xml:lang="en">Test Tasks List</value>
@@ -2123,17 +2123,17 @@ under the License.
         <value xml:lang="zh">未计划的订单列表</value>
         <value xml:lang="zh-TW">未計畫的訂單清單</value>
     </property>
-    <property key="ScrumUnplannedBacklogItemList">
-        <value xml:lang="en">Unplanned Backlog Item List</value>
-        <value xml:lang="ja">未計画のバックログアイテム一覧</value>
-        <value xml:lang="zh">未计划的订单明细列表</value>
-        <value xml:lang="zh-TW">未計畫的訂單細項清單</value>
-    </property>
     <property key="ScrumUnplanSprint">
         <value xml:lang="en">Unplanned Sprint</value>
         <value xml:lang="ja">未計画のスプリント</value>
         <value xml:lang="zh">未计划的冲刺</value>
         <value xml:lang="zh-TW">未計畫的衝刺</value>
+    </property>
+    <property key="ScrumUnplannedBacklogItemList">
+        <value xml:lang="en">Unplanned Backlog Item List</value>
+        <value xml:lang="ja">未計画のバックログアイテム一覧</value>
+        <value xml:lang="zh">未计划的订单明细列表</value>
+        <value xml:lang="zh-TW">未計畫的訂單細項清單</value>
     </property>
     <property key="ScrumUpdateProductBacklog">
         <value xml:lang="en">Update Product Backlog</value>
