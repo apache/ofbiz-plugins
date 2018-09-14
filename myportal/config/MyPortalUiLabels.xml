@@ -19,6 +19,22 @@
     under the License.
 -->
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
+    <property key="AdminPortalPage">
+        <value xml:lang="en">Portal page Admin.</value>
+        <value xml:lang="fr">Admin. Page portail</value>
+        <value xml:lang="ja">ポータルページの管理</value>
+        <value xml:lang="vi">Quản trị Cổng thông tin</value>
+        <value xml:lang="zh">门户页面管理</value>
+        <value xml:lang="zh-TW">入口網頁面管理</value>
+    </property>
+    <property key="MyPortalAdminPortalPage">
+        <value xml:lang="en">Portal page Admin.</value>
+        <value xml:lang="fr">Admin. Page portail</value>
+        <value xml:lang="ja">ポータルページの管理</value>
+        <value xml:lang="vi">Quản trị Cổng thông tin</value>
+        <value xml:lang="zh">门户页面管理</value>
+        <value xml:lang="zh-TW">入口網頁面管理</value>
+    </property>
     <property key="MyPortalAppBar">
         <value xml:lang="en">My Page App Bar</value>
         <value xml:lang="fr">Menu des applications</value>
@@ -49,9 +65,9 @@
     <property key="MyPortalEndUserCustomer">
         <value xml:lang="en">End User Customer</value>
         <value xml:lang="ja">エンドユーザ顧客</value>
-        <value xml:lang="zh-TW">最終使用客戶</value>
         <value xml:lang="vi">Khách hàng người dùng cuối</value>
         <value xml:lang="zh">最终用户</value>
+        <value xml:lang="zh-TW">最終使用客戶</value>
     </property>
     <property key="MyPortalFirstNameMissing">
         <value xml:lang="en">Your firstName is missing</value>
@@ -85,9 +101,9 @@
     <property key="MyPortalMyOrders">
         <value xml:lang="en">My Orders</value>
         <value xml:lang="ja">私の注文</value>
-        <value xml:lang="zh-TW">我的訂單</value>
         <value xml:lang="vi">Các đặt hàng của tôi</value>
         <value xml:lang="zh">我的订单</value>
+        <value xml:lang="zh-TW">我的訂單</value>
     </property>
     <property key="MyPortalNewRegistration">
         <value xml:lang="en">New Registration </value>
@@ -220,6 +236,16 @@
         <value xml:lang="zh">验证验证码</value>
         <value xml:lang="zh-TW">驗證碼</value>
     </property>
+    <property key="PageTitleFindPortalPage">
+        <value xml:lang="en">Find Portal page</value>
+        <value xml:lang="fr">Rech. page portail</value>
+        <value xml:lang="it">Ricerca pagine portale</value>
+        <value xml:lang="ja">ポータルページを検索</value>
+        <value xml:lang="pt">Encontrar a pÃ¡gina do Portal</value>
+        <value xml:lang="vi">Tìm trang Cổng thông tin</value>
+        <value xml:lang="zh">查找门户页面</value>
+        <value xml:lang="zh-TW">查詢入口網頁</value>
+    </property>
     <property key="PageTitleMyPortal">
         <value xml:lang="en">My Portal for : </value>
         <value xml:lang="fr">Mon portail pour : </value>
@@ -240,36 +266,7 @@
         <value xml:lang="zh">我的门户页面</value>
         <value xml:lang="zh-TW">入口網頁</value>
     </property>
-    <property key="PageTitleFindPortalPage">
-        <value xml:lang="en">Find Portal page</value>
-        <value xml:lang="fr">Rech. page portail</value>
-        <value xml:lang="it">Ricerca pagine portale</value>
-        <value xml:lang="ja">ポータルページを検索</value>
-        <!--value xml:lang="ja">ポータルページの検索</value-->
-        <value xml:lang="pt">Encontrar a pÃ¡gina do Portal</value>
-        <value xml:lang="vi">Tìm trang Cổng thông tin</value>
-        <!--value xml:lang="vi">Tìm trang trên Cổng thông tin</value-->
-        <value xml:lang="zh">查找门户页面</value>
-        <value xml:lang="zh-TW">查詢入口網頁</value>
-        <!--value xml:lang="zh-TW">尋找入口網頁</value-->
-    </property>
-    <property key="MyPortalAdminPortalPage">
-        <value xml:lang="en">Portal page Admin.</value>
-        <value xml:lang="fr">Admin. Page portail</value>
-        <value xml:lang="ja">ポータルページの管理</value>
-        <value xml:lang="vi">Quản trị Cổng thông tin</value>
-        <value xml:lang="zh">门户页面管理</value>
-        <value xml:lang="zh-TW">入口網頁面管理</value>
-    </property>
     <property key="PortalPageViewPermissionError">
         <value xml:lang="en">Security Error : To view this page you must have PORTALPAGE permission.</value>
-    </property>
-    <property key="AdminPortalPage">
-        <value xml:lang="en">Portal page Admin.</value>
-        <value xml:lang="fr">Admin. Page portail</value>
-        <value xml:lang="ja">ポータルページの管理</value>
-        <value xml:lang="vi">Quản trị Cổng thông tin</value>
-        <value xml:lang="zh">门户页面管理</value>
-        <value xml:lang="zh-TW">入口網頁面管理</value>
     </property>
 </resource>
