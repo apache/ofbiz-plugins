@@ -1,6 +1,8 @@
 # Report master creation #
 
 ## Introduction ##
+>Note: this feature will be officially available with the R17.12 branch first release
+
 A report master is an OFBiz content which allows a user to generate data reports. It defines data connexion, and a general filtering form for data. It can be based on an entity, a dedicated service, or in a wider sense on any shape a data connexion can take and return back a map.
 
 ## Pre-requisite ##

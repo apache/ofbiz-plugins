@@ -1,5 +1,7 @@
 # Using the Birt Report Designer - Admin/Super-User #
 ## Introduction ##
+>Note: this feature will be officially available with the R17.12 branch first release
+
 The creation of a flexible report goes through a design step of the initial flexible report output under the Birt Report Designer. 
 
 This document describes the simplest designs to connect to the data. It is not exhaustive, and simply attempts to cover basic needs. You will find much more documentation online. In our approach, the connection to the data is generated automatically by OFBiz, only the design part of the report will be discussed.

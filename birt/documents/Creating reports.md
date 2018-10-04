@@ -1,6 +1,8 @@
 # Report creation - Admin/Super-User #
 
 ## Introduction ##
+>Note: this feature will be officially available with the R17.12 branch first release
+
 A flexible report is an OFBiz content of FLEXIBLE\_REPORT type that allows a final user to make use of the reporting module to obtain flexible reports, ie reports which are created from an entity or view definition and even from a service. A flexible report is created from a Report Master (content REPORT_MASTER), and an optional XML override of the parent form.
 
 ## Pre-requisite ##
