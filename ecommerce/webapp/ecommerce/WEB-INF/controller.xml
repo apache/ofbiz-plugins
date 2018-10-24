@@ -77,7 +77,7 @@ under the License.
     <default-request request-uri="cms"/>
 
     <!-- Security Request Mappings -->
-    <request-map uri="checkLogin" edit="false">
+    <request-map uri="checkLogin">
         <description>Verify a user is logged in.</description>
         <security https="true" auth="false"/>
         <event type="java" path="org.apache.ofbiz.securityext.login.LoginEvents" invoke="storeCheckLogin"/>

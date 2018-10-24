@@ -33,7 +33,7 @@ under the License.
     </preprocessor>
     
     <!-- Security Mappings -->
-    <request-map uri="checkLogin" edit="false">
+    <request-map uri="checkLogin">
         <description>Verify a user is logged in.</description>
         <security https="true" auth="false"/>
         <event type="java" path="org.apache.ofbiz.solr.control.OFBizSolrLoginWorker" invoke="extensionCheckLogin"/>
