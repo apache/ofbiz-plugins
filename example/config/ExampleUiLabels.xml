@@ -1204,15 +1204,23 @@
         <value xml:lang="en">Set PDF Protected By Password</value>
         <value xml:lang="zh">设置有密码保护的PDF</value>
     </property>
+    <property key="password_not_equal_confirm_password">
+        <value xml:lang="en">Password did not match confirm password.</value>
+        <value xml:lang="zh">密码与验证密码不一致。</value>
+    </property>
+    <property key="SignedInAuthToAnotherDomain">
+        <value xml:lang="en">Navigate to another domain with automated signed in authentication</value>
+        <value xml:lang="fr">Naviguer vers un autre domaine avec authentification automatique</value>
+    </property>
+    <property key="TargetURL">
+        <value xml:lang="en">Target URL</value>
+        <value xml:lang="fr">URL cible</value>
+    </property>
     <property key="YouChangedTheSelectBoxValue">
         <value xml:lang="de">Sie haben den Wert in der Select Box geändert.</value>
         <value xml:lang="en">You have changed the value in the select box</value>
         <value xml:lang="ja">選択ボックスで値を変更されています</value>
         <value xml:lang="zh">你修改了选择框中的值</value>
         <value xml:lang="zh-TW">你修改了選擇框中的值</value>
-    </property>
-    <property key="password_not_equal_confirm_password">
-        <value xml:lang="en">Password did not match confirm password.</value>
-        <value xml:lang="zh">密码与验证密码不一致。</value>
     </property>
 </resource>

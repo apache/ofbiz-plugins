@@ -424,6 +424,9 @@ under the License.
         <!-- ************************ -->
         <!-- ***   Layered-modal  *** -->
         <!-- ************************ -->
+        <actions>
+            <set field="targetUrl" value="javascript:sendJWT('${webappName}', 'https://demo-trunk.ofbiz.apache.org/content/control/main')"/>
+        </actions>
         <field name="emptyField0" title=" "><display/></field>
         <field name="newExample" title=" " widget-area-style="smallSubmit" position="1">
             <hyperlink description="${uiLabelMap.ExampleNewExample} (Layered-modal)" target="EditExampleLayer" also-hidden="false" link-type="layered-modal"/>
@@ -431,8 +434,11 @@ under the License.
         <field name="deleteLink" title="${uiLabelMap.FormFieldTitle_confirmButton} ${uiLabelMap.ExampleExample}" widget-style="buttontext">
             <hyperlink description="${uiLabelMap.CommonDelete}" target="FormWidgetExamples" also-hidden="false" confirmation-message="Are you sure you want to perform this action?"/>
         </field>
-    </form>
-
+        <field name="targetUrlButton" title="${uiLabelMap.SignedInAuthToAnotherDomain}" widget-style="buttontext">
+            <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.TargetURL}" target="${targetUrl}"/>
+        </field>
+     </form>
+ 
     <form name="MaskFieldExampleForm" type="single">
         <field name="maskField" title="${uiLabelMap.ExampleField}"><text mask='a*-999-a999'/></field>
     </form>
