@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
+<#if productCategoryList?has_content>
 <div class="card">
   <h4 class="card-header">
     Popular Categories
@@ -101,4 +101,4 @@ under the License.
         </#list>
   </div>
 </div>
-
+</#if>
