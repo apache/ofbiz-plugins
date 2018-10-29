@@ -233,6 +233,7 @@ public class JanrainHelper {
                 GenericValue userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", preferredUsername).cache().queryOne();
                 if (userLogin != null) {
                     LoginWorker.doBasicLogin(userLogin, request);
+                    LoginWorker.createSecuredLoginIdCookie(request, response);
                     LoginWorker.autoLoginSet(request, response);
                     return "success";
                 } else {
