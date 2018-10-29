@@ -29,7 +29,7 @@ under the License.
             <#assign cateCount = 0/>
 
             <#list childCategoryList as productCategory>
-              <div class="products-card col-md-3">
+              <div class="products-card col-md-4">
             <#if (cateCount > 2)>
             <#assign cateCount = 0/>
             </#if>
