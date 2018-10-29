@@ -714,7 +714,7 @@
                                     <widgets/>
                                 </section>
                                     <screenlet title="Order Listings (Import single Transactions)">
-                                        <include-menu location="component://ebaystore/widget/EbayStoreMenus.xml" name="EbayOrderSubBar"/>
+                                        <include-menu name="EbayOrderSubBar" location="component://ebaystore/widget/EbayStoreMenus.xml"/>
                                         <include-form name="FindEbayStoreOrders" location="component://ebaystore/widget/EbaySellingManagerForms.xml"/>
                                         <include-form name="TransactionList" location="component://ebaystore/widget/EbaySellingManagerForms.xml"/>
                                     </screenlet>
@@ -745,7 +745,7 @@
                                     <widgets/>
                                 </section>
                                     <screenlet title="Order Listings (Import many transactions)">
-                                        <include-menu location="component://ebaystore/widget/EbayStoreMenus.xml" name="EbayOrderSubBar"/>
+                                        <include-menu name="EbayOrderSubBar" location="component://ebaystore/widget/EbayStoreMenus.xml"/>
                                         <include-form name="FindEbayStoreOrders" location="component://ebaystore/widget/EbaySellingManagerForms.xml"/>
                                         <include-form name="OrderList" location="component://ebaystore/widget/EbaySellingManagerForms.xml"/>
                                     </screenlet>
