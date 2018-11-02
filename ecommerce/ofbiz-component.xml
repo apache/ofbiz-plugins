@@ -56,12 +56,14 @@ under the License.
         server="default-server"
         location="webapp/ecommerce"
         mount-point="/ecommerce"
-        app-bar-display="false"/>
+        app-bar-display="false"
+        use-autologin-cookie="true"/>
     <webapp name="ecomseo"
         title="SEO enhanced eCommerce"
         server="default-server"
         location="webapp/ecomseo"
         mount-point="/ecomseo"
-        app-bar-display="false"/>
+        app-bar-display="false"
+        use-autologin-cookie="true"/>
 </ofbiz-component>
 
