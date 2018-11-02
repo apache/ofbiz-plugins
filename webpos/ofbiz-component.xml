@@ -52,5 +52,5 @@ under the License.
         base-permission="WEBPOS"
         mount-point="/webpos"
         app-bar-display="true"
-        keep-autologin-cookie="true"/>
+        use-autologin-cookie="true"/>
 </ofbiz-component>
