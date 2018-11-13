@@ -1,17 +1,17 @@
-= Report master creation
+=== Report master creation
 
-== Introduction
+==== Introduction
 
 NOTE: this feature will be officially available with the R17.12 branch first release
 
 A report master is an OFBiz content which allows a user to generate data reports. It defines data connexion, and a general filtering form for data. It can be based on an entity, a dedicated service, or in a wider sense on any shape a data connexion can take and return back a map.
 
-== Pre-requisite
+==== Pre-requisite
 
 * OFBiz
 * Birt plugin
 
-== Report Master based on an entity/view
+==== Report Master based on an entity/view
 
 . Create or choice a database entity or view
 . Create the general filtering form within the file plugins/birt/widget/birt/BirtMasterForms.xml. The only informations to be changed are entity-name and form name.
@@ -53,7 +53,7 @@ The form in the database is the form that will allow users to change form parame
 
 Your Report Master is created ! You can now create reports using it.
 
-== Report Master based on a service
+==== Report Master based on a service
 
 Create in plugins/birt/src/org/ofbiz/birt/birt/BirtMasterReportServices.java 2 dedicated services (see examples there)
 
@@ -118,7 +118,11 @@ The form in the database is the form that will allow users to change form parame
     </property>
 ----
 
-== Entities diagram
+==== Entities diagram
 
 The following diagram shows the Entities linked with Content to store report_master/report.
-image:https://cwiki.apache.org/confluence/download/attachments/68720496/Report_Master.png?api=v2[Report_Master]
+
+image::Report-Master.png[Report Master]
+
+
+
