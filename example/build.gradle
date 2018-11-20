@@ -18,5 +18,5 @@
  */
 
 dependencies {
-    pluginLibsCompile 'org.apache.tomcat.embed:tomcat-embed-websocket:9.0.10'
+    pluginLibsCompile 'org.apache.tomcat.embed:tomcat-embed-websocket:9.0.13'
 }
