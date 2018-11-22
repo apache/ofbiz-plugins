@@ -4,7 +4,10 @@
 
 NOTE: this feature will be officially available with the R17.12 branch first release
 
-A report master is an OFBiz content which allows a user to generate data reports. It defines data connexion, and a general filtering form for data. It can be based on an entity, a dedicated service, or in a wider sense on any shape a data connexion can take and return back a map.
+A report master is an OFBiz content which allows a user to generate data reports. 
+It defines data connexion, and a general filtering form for data. 
+It can be based on an entity, a dedicated service, or in a wider sense on any shape 
+a data connexion can take and return back a map.
 
 ==== Pre-requisite
 
@@ -23,7 +26,8 @@ A report master is an OFBiz content which allows a user to generate data reports
     </form>
 ----
 
-. Add the informations about this Master in the database using the file plugins/birt/data/BirtMasterData.xml
+. Add the informations about this Master in the database using the file 
+plugins/birt/data/BirtMasterData.xml
 
 [source,xml]
 ----
@@ -39,9 +43,12 @@ A report master is an OFBiz content which allows a user to generate data reports
     <ContentAttribute contentId="CTNT_MASTER_EXAMPLE" attrName="Entity" attrValue="Example"/>
 ----
 
-The form in the database is the form that will allow users to change form parameters. You can add any field you desire. Some field names are though reserved: reportContentId, overrideFilters, entityViewName, birtContentType.
+The form in the database is the form that will allow users to change form parameters. 
+You can add any field you desire. Some field names are though reserved: reportContentId, overrideFilters, 
+entityViewName, birtContentType.
 
-. Add in the file content/config/contentEntityLabels.xml the Property that will allow translation for your report master description.
+. Add in the file content/config/contentEntityLabels.xml the Property that will allow translation 
+for your report master description.
 
 [source,xml]
 ----
@@ -58,11 +65,21 @@ Your Report Master is created ! You can now create reports using it.
 In plugins/birt/src/main/java/org/apache/ofbiz/birt/flexible/BirtMasterReportServices.java there is 2 sets of dedicated services (see examples there)
 
 . In each set the first service, will return 4 items:
- ** an object of type Map<String, String> called dataMap. *Keys*: data field names. *Values*: data types (OFBiz types).
- ** an object of type Map<String, String> called fieldDisplayLabels. *Keys*: data field names. *Values*: the names displayed to the user. This output is optional, should it be missing, the keys will be displayed.
- ** an object of type Map<String, String> called filterMap. *Keys*: data filtering field names (exact names used for the form fields). *Values*: data type (OFBiz type). This output is optional, if missing, filters can not be displayed on the report.
- ** an object of type Map<String, String> called filterDisplayLabels. *Keys*: data filtering field names (exact names used for the form fields). *Values*: names to be displayed to the user. This output is optional, should it be missing, the keys will be displayed.
-. The second service will actually get the data. It receives an object (Object type) called reportContext. From this object, you can obtain the map parameters using the following code:
+ ** an object of type Map<String, String> called dataMap. 
+ *Keys*: data field names. *Values*: data types (OFBiz types).
+ ** an object of type Map<String, String> called fieldDisplayLabels. 
+ *Keys*: data field names. *Values*: the names displayed to the user. 
+ This output is optional, should it be missing, the keys will be displayed.
+ ** an object of type Map<String, String> called filterMap. 
+ *Keys*: data filtering field names (exact names used for the form fields). 
+ *Values*: data type (OFBiz type). 
+ This output is optional, if missing, filters can not be displayed on the report.
+ ** an object of type Map<String, String> called filterDisplayLabels. 
+ *Keys*: data filtering field names (exact names used for the form fields). 
+ *Values*: names to be displayed to the user. 
+ This output is optional, should it be missing, the keys will be displayed.
+. The second service will actually get the data. It receives an object (Object type) called reportContext. 
+From this object, you can obtain the map parameters using the following code:
 
 [source,java]
 ----
@@ -70,12 +87,14 @@ In plugins/birt/src/main/java/org/apache/ofbiz/birt/flexible/BirtMasterReportSer
 ----
 
 This Map will give access fields of the filtering form.
-This service will return a list of type List<GenericValue>, containing the data. A Map<String, Object> would also do.
+This service will return a list of type List<GenericValue>, containing the data. 
+A Map<String, Object> would also do.
 
 Then,
 
 . create the parent form in the file plugins/birt/widget/birt/BirtMasterForms.xml.
-Field names created here must be the names used on the Map parameters of the previous service, and also corresponding to the map filterMap.
+Field names created here must be the names used on the Map parameters of the previous service, 
+and also corresponding to the map filterMap.
 
 [source,xml]
 ----
@@ -107,7 +126,9 @@ Field names created here must be the names used on the Map parameters of the pre
     <ContentAttribute contentId="CTNT_MASTER_TURNOVER" attrName="Service" attrValue="default"/>
 ----
 
-The form in the database is the form that will allow users to change form parameters. You can add any field you desire. Some field names are reserved: reportContentId, overrideFilters, entityViewName, birtContentType.
+The form in the database is the form that will allow users to change form parameters. 
+You can add any field you desire. Some field names are reserved: reportContentId, overrideFilters, 
+entityViewName, birtContentType.
 
 . Import these data in the base using Webtools XML import (or the longer "gradlew 'ofbiz -l readers=seed,ext' command).
 . Add in the file content/config/contentEntityLabels.xml the Property which will translate your report Master description.
