@@ -80,7 +80,6 @@ details for each category, then to aggregate certain fields, etc.
 . Then insert some elements in the design: in the global header, everything that does not depend on the group, for example the title of the report. In the header of the group, everything that is common to the whole group and that you want to see in its title. In the details, the fields that may appear for each group line. As in the image below, the fields might be inserted by Copy/Paste from the Data Set, and titles via a text element of the palette. You can add lines and columns by right clicking on the end of the line (gray rectangle when the table is selected), etc. 
 
 image::Design-with-break.png[Design with break] 
-
 ====== Construction of aggregation 
 
 The aggregations may be on the whole table, or only on a group. They are characterized by an expression to aggregate 

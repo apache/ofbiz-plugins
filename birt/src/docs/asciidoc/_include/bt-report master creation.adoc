@@ -18,14 +18,13 @@ a data connexion can take and return back a map.
 
 . Create or choice a database entity or view
 . Create the general filtering form within the file plugins/birt/widget/birt/BirtMasterForms.xml. The only informations to be changed are entity-name and form name.
-
 [source,xml]
 ----
     <form name="CTNT_MASTER_EXAMPLE" type="single" extends="AbstractFlexibleReportSearchForm">
         <auto-fields-entity entity-name="Example" default-field-type="find"/>
     </form>
 ----
-
+[start=3]
 . Add the informations about this Master in the database using the file 
 plugins/birt/data/BirtMasterData.xml
 
@@ -46,7 +45,7 @@ plugins/birt/data/BirtMasterData.xml
 The form in the database is the form that will allow users to change form parameters. 
 You can add any field you desire. Some field names are though reserved: reportContentId, overrideFilters, 
 entityViewName, birtContentType.
-
+[start=4]
 . Add in the file content/config/contentEntityLabels.xml the Property that will allow translation 
 for your report master description.
 
@@ -105,7 +104,7 @@ and also corresponding to the map filterMap.
         <field name="productStoreId"><lookup target-form-name="LookupProductStore"/></field>
     </form>
 ----
-
+[start=2]
 . Create the master in database following.
 
 [source,xml]
@@ -129,7 +128,7 @@ and also corresponding to the map filterMap.
 The form in the database is the form that will allow users to change form parameters. 
 You can add any field you desire. Some field names are reserved: reportContentId, overrideFilters, 
 entityViewName, birtContentType.
-
+[start=3]
 . Import these data in the base using Webtools XML import (or the longer "gradlew 'ofbiz -l readers=seed,ext' command).
 . Add in the file content/config/contentEntityLabels.xml the Property which will translate your report Master description.
 

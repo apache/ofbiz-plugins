@@ -28,7 +28,8 @@ One of the functionalities of the birt plugin are the "OFBiz Flexible Reports"
 
 NOTE: This feature will begin to be officially available with the R17.12 branch first release
 
-There is an anounce with some history in the OFBiz blog:  https://blogs.apache.org/ofbiz/entry/the-birt-flexible-reports-a[Reporting in Apache OFBiz® and the OFBiz Flexible Reports]     
+There is an anounce with some history in the OFBiz blog:  
+https://blogs.apache.org/ofbiz/entry/the-birt-flexible-reports-a[Reporting in Apache OFBiz® and the OFBiz Flexible Reports]     
 
 === Technical Documentation
 include::_include/bt-creating reports.adoc[leveloffset=+1]

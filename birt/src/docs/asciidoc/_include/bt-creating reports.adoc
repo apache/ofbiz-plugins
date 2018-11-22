@@ -1,6 +1,8 @@
 === Report creation 
 
-==== Introduction NOTE: This feature will begin to be officially available with the R17.12 branch first release 
+==== Introduction 
+
+NOTE: This feature will begin to be officially available with the R17.12 branch first release 
 
 A flexible report is an OFBiz content of FLEXIBLE_REPORT type that allows a final user to make use of the reporting 
 module to obtain flexible reports, ie reports which are created from an entity or view definition and even from a 
@@ -9,26 +11,20 @@ parent form.
 
 ==== Pre-requisite 
 
-* OFBiz framework * The Birt plugin * The BIRT Report Designer: <<#_using_the_birt_report_designer,Using the Birt Report 
-Designer>> 
+* OFBiz framework 
+* The Birt plugin 
+* The BIRT Report Designer: <<#_using_the_birt_report_designer,Using the Birt Report Designer>> 
 
-* OFBiz framework
-* The Birt plugin
-* The BIRT Report Designer: <<#_using_the_birt_report_designer,Using the Birt Report Designer>>
+'''
 
 . Get to Birt component in OFBiz image:Birt-Menus.png[Birt menus] 
-
-. Click on the "Flexible Report" menu (varies depending on themes) . Click on the "Generate report" button, you get to 
-this screen: . Fill the form: image:Example-Report.png[Example Report] 
-
 . Click on the "Flexible Report" menu (varies depending on themes)
 . Click on the "Generate report" button, you get to this screen:
 . Fill the form: image:Example-Report.png[Example Report]
-
- ** The list "Choose report topic" will let you choose among predefined report masters your topic of interest.
- ** The report name is a simple short name from which the file name will be generated.
- ** The description is a short description which will allow you to recognise the report and its topic.
- ** The box "Generate filters in design" will add in the design the visualisation of the filters filled in the filtering form.
+** The list "Choose report topic" will let you choose among predefined report masters your topic of interest.
+** The report name is a simple short name from which the file name will be generated.
+** The description is a short description which will allow you to recognise the report and its topic.
+** The box "Generate filters in design" will add in the design the visualisation of the filters filled in the filtering form.
 
 Once the form is validated, OFBiz will show you the "Edit Report" screen. 
 
