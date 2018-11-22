@@ -10,7 +10,7 @@ A flexible report is an OFBiz content of FLEXIBLE_REPORT type that allows a fina
 
 * OFBiz framework
 * The Birt plugin
-* The BIRT Report Designer: <<bt-using the birt report designer.adoc#_using_the_birt_report_designer,Using the Birt Report Designer>>
+* The BIRT Report Designer: <<#_using_the_birt_report_designer,Using the Birt Report Designer>>
 
 ==== Report creation
 
@@ -37,7 +37,7 @@ This first panel allows you to change the report description and status. Actuall
 
 ==== The .rptdesign report file: download, edit, upload and publish it
 
-To really use the report you need to download the .rptdesign file from the server in a location from where you can edit it with the BIRT Report Designer. So you need to install first the BIRT Report Designer. Then you can edit the .rptdesign file in the BIRT Report Designer. For that refer to <<bt-using the birt report designer.adoc#_using_the_birt_report_designer,Using the Birt Report Designer>>.
+To really use the report you need to download the .rptdesign file from the server in a location from where you can edit it with the BIRT Report Designer. So you need to install first the BIRT Report Designer. Then you can edit the .rptdesign file in the BIRT Report Designer. For that refer to <<#_using_the_birt_report_designer,Using the Birt Report Designer>>.
 
 ===== Editing the downloaded file
 

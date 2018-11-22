@@ -55,9 +55,9 @@ Your Report Master is created ! You can now create reports using it.
 
 ==== Report Master based on a service
 
-Create in plugins/birt/src/org/ofbiz/birt/birt/BirtMasterReportServices.java 2 dedicated services (see examples there)
+In plugins/birt/src/main/java/org/apache/ofbiz/birt/flexible/BirtMasterReportServices.java there is 2 sets of dedicated services (see examples there)
 
-. The first one, which name will return 4 items:
+. In each set the first service, will return 4 items:
  ** an object of type Map<String, String> called dataMap. *Keys*: data field names. *Values*: data types (OFBiz types).
  ** an object of type Map<String, String> called fieldDisplayLabels. *Keys*: data field names. *Values*: the names displayed to the user. This output is optional, should it be missing, the keys will be displayed.
  ** an object of type Map<String, String> called filterMap. *Keys*: data filtering field names (exact names used for the form fields). *Values*: data type (OFBiz type). This output is optional, if missing, filters can not be displayed on the report.
@@ -66,14 +66,16 @@ Create in plugins/birt/src/org/ofbiz/birt/birt/BirtMasterReportServices.java 2 d
 
 [source,java]
 ----
-    Map<String, Object> parameters = (Map<String, Object>) reportContext.getParameterValue("parameters");
+    Map<String, Object> parameters = UtilGenerics.checkMap(reportContext.getParameterValue("parameters"));
 ----
 
 This Map will give access fields of the filtering form.
-This service will return a list called list of type List+++<GenericValue>+++, containing the data. A Map<String, Object> would also do.+++</GenericValue>+++
+This service will return a list of type List<GenericValue>, containing the data. A Map<String, Object> would also do.
+
+Then,
 
 . create the parent form in the file plugins/birt/widget/birt/BirtMasterForms.xml.
-Field names created here must be then names used on the Map parameters of the previous service, and also corresponding to the map filterMap.
+Field names created here must be the names used on the Map parameters of the previous service, and also corresponding to the map filterMap.
 
 [source,xml]
 ----
