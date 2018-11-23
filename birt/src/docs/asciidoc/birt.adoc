@@ -17,7 +17,13 @@ specific language governing permissions and limitations
 under the License.
 ////
 = Birt Apache OFBiz® plugin
+The Apache OFBiz Project
+Release 17.12
 :imagesdir: ./images
+ifdef::backend-pdf[]
+:title-logo-image: image::OFBiz-Logo.svg[Apache OFBiz Logo, pdfwidth=4.25in, align=center]
+:source-highlighter: rouge
+endif::[]
 :toc:
 :toclevels: 3
 
