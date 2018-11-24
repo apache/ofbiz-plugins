@@ -65,7 +65,7 @@ function submitForm(form, mode, value) {
                     <div><b>${uiLabelMap.CommonGroup} ${groupNumber}:</b></div>
                     <#list group.getShipItems() as item>
                       <#assign groupItem = group.getShipItemInfo(item)>
-                      <div>&nbsp;&nbsp;&nbsp;${item.getName()} - (${groupItem.getItemQuantity()})</div>
+                      <div>&nbsp;&nbsp;&nbsp;${item.getName(dispatcher)} - (${groupItem.getItemQuantity()})</div>
                     </#list>
                   </td>
                   <td>
@@ -185,7 +185,7 @@ function submitForm(form, mode, value) {
                       </#if>
                       <#-- end code to display a small image of the product -->
                       <a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="buttontext">${cartLine.getProductId()} -
-                      ${cartLine.getName(dispatcher)!}</a> : ${cartLine.getDescription()!}
+                      ${cartLine.getName(dispatcher)!}</a> : ${cartLine.getDescription(dispatcher)!}
 
                       <#-- display the registered ship groups and quantity -->
                       <#assign itemShipGroups = cart.getShipGroups(cartLine)>
