@@ -134,11 +134,7 @@ under the License.
                 <td/><td><i>${uiLabelMap.OrderInternalNoteMessage}</i></td>
               </tr>
             </table>
-            <#if project?has_content>
-              &nbsp;<a href="javascript:document.createnoteform.submit()" class="buttontext">${uiLabelMap.CommonSave}</a>
-            <#else>
-              &nbsp;<a href="javascript:document.createnoteform.submit()" class="buttontext">${uiLabelMap.CommonSave}</a>
-            </#if>
+            <input type="submit" value="${uiLabelMap.CommonSave}"/>
           </form>
         </div>
       </#if>
