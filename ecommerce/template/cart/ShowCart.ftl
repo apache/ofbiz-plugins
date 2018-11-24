@@ -569,11 +569,11 @@ under the License.
             </tr>
             <tr>
               <td colspan="8">
-              <label class="form-check-label">
-                <input type="checkbox" onclick="javascript:document.cartform.submit()"
+                <div class="form-check">
+                <input type="checkbox" class="form-check-input" onclick="javascript:document.cartform.submit()"
                     name="alwaysShowcart" <#if shoppingCart.viewCartOnAdd()>checked="checked"</#if>/>
-                ${uiLabelMap.EcommerceAlwaysViewCartAfterAddingAnItem}.
-              </label>
+                <label>${uiLabelMap.EcommerceAlwaysViewCartAfterAddingAnItem}.</label>
+               </div>
               </td>
             </tr>
           </tfoot>

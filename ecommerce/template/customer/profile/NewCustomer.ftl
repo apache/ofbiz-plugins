@@ -173,8 +173,8 @@ under the License.
           - <input type="text" name="shipToExtension" id="shipToExtension"
                 value="${extension?default("${parameters.shipToExtension!}")}" size="3" maxlength="3"/>
         </div>
-        <div class="inline">
-          <input type="checkbox" class="checkbox" name="useShippingAddressForBilling" id="useShippingAddressForBilling"
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" name="useShippingAddressForBilling" id="useShippingAddressForBilling"
               value="Y" <#if parameters.useShippingAddressForBilling?has_content &&
               parameters.useShippingAddressForBilling?default("")=="Y">checked="checked"</#if>/>
           <label for="useShippingAddressForBilling">${uiLabelMap.FacilityBillingAddressSameShipping}</label>

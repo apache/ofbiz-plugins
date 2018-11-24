@@ -81,15 +81,15 @@ under the License.
       <span id="advice-required-stateProvinceGeoId_${contactMech.contactMechId}" style="display: none"
           class="errorMessage">(${uiLabelMap.CommonRequired})</span>
     </div>
-    <div class="inline">
-      <label for="setBillingPurposeForPostalAddress">${uiLabelMap.EcommerceMyDefaultBillingAddress}</label>
-      <input type="checkbox" name="setBillingPurpose" id="setBillingPurposeForPostalAddress" value="Y"
+    <div class="form-check">
+      <input type="checkbox" name="setBillingPurpose" class="form-check-input" id="setBillingPurposeForPostalAddress" value="Y"
           <#if setBillingPurpose??>checked="checked"</#if>/>
+      <label for="setBillingPurposeForPostalAddress">${uiLabelMap.EcommerceMyDefaultBillingAddress}</label>
     </div>
-    <div class="inline">
-      <label for="setShippingPurposeForPostalAddress">${uiLabelMap.EcommerceMyDefaultShippingAddress}</label>
-      <input type="checkbox" name="setShippingPurpose" id="setShippingPurposeForPostalAddress" value="Y"
+    <div class="form-check">
+      <input type="checkbox" name="setShippingPurpose" class="form-check-input" id="setShippingPurposeForPostalAddress" value="Y"
           <#if setShippingPurpose??>checked="checked"</#if>/>
+      <label for="setShippingPurposeForPostalAddress">${uiLabelMap.EcommerceMyDefaultShippingAddress}</label>
     </div>
       <#--
     <div>

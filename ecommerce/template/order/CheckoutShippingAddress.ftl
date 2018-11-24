@@ -77,9 +77,9 @@ function toggleBillingAccount(box) {
                    <#assign checkThisAddress = (shippingContactMech_index == 0 && !cart.getShippingContactMechId()?has_content) || (cart.getShippingContactMechId()?default("") == shippingAddress.contactMechId)/>
                    <tr>
                      <td>
-                     <label>
-                       <input type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}"<#if checkThisAddress> checked="checked"</#if> />
-                       <span>
+                     <div class="form-check">
+                       <input type="radio" class="form-check-input" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}"<#if checkThisAddress> checked="checked"</#if> />
+                       <label>
                          <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b>&nbsp;${shippingAddress.toName}<br /></#if>
                          <#if shippingAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b>&nbsp;${shippingAddress.attnName}<br /></#if>
                          <#if shippingAddress.address1?has_content>${shippingAddress.address1},</#if>
@@ -89,8 +89,8 @@ function toggleBillingAccount(box) {
                          <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                          <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
                          <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="buttontext">${uiLabelMap.CommonUpdate}</a>
-                       </span>
-                     </label>
+                       </label>
+                     </div>
                      </td>
                    </tr>
                  </#list>
@@ -114,7 +114,7 @@ function toggleBillingAccount(box) {
                      </tr>
                    <#else>
                      <#list agreements as agreement>
-                        <label><input type="radio" name="agreementId" value="${agreement.agreementId!}"<#if checkThisAddress> checked="checked"</#if> />${agreement.description!} will be used for this order.</label>
+                       <div class="form-check"><input type="radio" class="form-check-input" name="agreementId" value="${agreement.agreementId!}"<#if checkThisAddress> checked="checked"</#if> /><label>${agreement.description!} will be used for this order.</label></div>
                      </#list>
                    </#if>
                  </#if>

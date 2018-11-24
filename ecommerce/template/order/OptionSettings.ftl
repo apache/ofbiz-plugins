@@ -27,7 +27,8 @@ under the License.
     <#list carrierShipmentMethodList as carrierShipmentMethod>
       <li>
         <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
-        <input type="radio" id="shipping_method_${shippingMethod}" name="shipping_method" value="${shippingMethod}"
+        <div class="form-check">
+        <input type="radio" class="form-check-input" id="shipping_method_${shippingMethod}" name="shipping_method" value="${shippingMethod}"
             <#if shippingMethod == chosenShippingMethod?default("N@A")>checked="checked"</#if>/>
         <label for="shipping_method_${shippingMethod}">
           <#if shoppingCart.getShippingContactMechId()??>
@@ -43,24 +44,25 @@ under the License.
               </#if>
           </#if>
         </label>
+        </div>
       </li>
     </#list>
     <#if !carrierShipmentMethodList?? || carrierShipmentMethodList?size == 0>
-      <div>
-        <input type="radio" name="shipping_method" value="Default" checked="checked"/>
+      <div class="form-check">
+        <input type="radio" class="form-check-input" name="shipping_method" value="Default" checked="checked"/>
         <label for="shipping_method">${uiLabelMap.OrderUseDefault}.</label>
       </div>
     </#if>
   </fieldset>
   <fieldset>
     <legend>${uiLabelMap.OrderShipAllAtOnce}?</legend>
-    <div>
-      <input type="radio" id="maySplit_N" <#if "N" == shoppingCart.getMaySplit()?default("N")>checked="checked"</#if>
+    <div class="form-check">
+      <input type="radio" class="form-check-input" id="maySplit_N" <#if "N" == shoppingCart.getMaySplit()?default("N")>checked="checked"</#if>
           name="may_split" value="false"/>
       <label for="maySplit_N">${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}.</label>
     </div>
-    <div>
-      <input type="radio" id="maySplit_Y" <#if "Y" == shoppingCart.getMaySplit()?default("N")>checked="checked"</#if>
+    <div class="form-check">
+      <input type="radio" class="form-check-input" id="maySplit_Y" <#if "Y" == shoppingCart.getMaySplit()?default("N")>checked="checked"</#if>
           name="may_split" value="true"/>
       <label for="maySplit_Y">${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</label>
     </div>
@@ -78,13 +80,13 @@ under the License.
   <#if productStore.showCheckoutGiftOptions! != "N">
     <fieldset>
       <legend>${uiLabelMap.OrderIsThisGift}</legend>
-      <div>
-        <input type="radio" id="is_gift_Y" <#if "Y" == shoppingCart.getIsGift()?default("Y")>checked="checked"</#if>
+      <div class="form-check">
+        <input type="radio" class="form-check-input" id="is_gift_Y" <#if "Y" == shoppingCart.getIsGift()?default("Y")>checked="checked"</#if>
             name="is_gift" value="true"/>
         <label for="is_gift_Y">${uiLabelMap.CommonYes}</label>
       </div>
-      <div>
-        <input type="radio" id="is_gift_N" <#if "N" == shoppingCart.getIsGift()?default("N")>checked="checked"</#if>
+      <div class="form-check">
+        <input type="radio" class="form-check-input" id="is_gift_N" <#if "N" == shoppingCart.getIsGift()?default("N")>checked="checked"</#if>
             name="is_gift" value="false"/>
         <label far="is_gift_N">${uiLabelMap.CommonNo}</label>
       </div>

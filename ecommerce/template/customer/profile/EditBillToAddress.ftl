@@ -100,10 +100,10 @@ under the License.
               value="${extension?default("${billToExtension!}")}" size="3" maxlength="3"/>
       </div>
     </#if>
-    <div class="inline">
-      <label for="setShippingPurposeForBilling">${uiLabelMap.EcommerceMyDefaultShippingAddress}</label>
-      <input type="checkbox" name="setShippingPurpose" id="setShippingPurposeForBilling" value="Y"
+    <div class="form-check">
+      <input type="checkbox" name="setShippingPurpose" class="form-check-input" id="setShippingPurposeForBilling" value="Y"
           <#if setShippingPurpose??>checked="checked"</#if>/>
+      <label for="setShippingPurposeForBilling">${uiLabelMap.EcommerceMyDefaultShippingAddress}</label>
     </div>
     <#--
       <div>

@@ -38,8 +38,10 @@ under the License.
         <input type="text" name="partyTaxId" class="form-control" maxlength="40"/>
       </div>
       <#if "Y" == productStore.showTaxIsExempt?default("Y")>
+        <div class="form-check">
+        <input type="checkbox"  class="form-check-input" name="isExempt" value="Y"/>
         <label>${uiLabelMap.PartyTaxIsExempt} </label>
-        <input type="checkbox" name="isExempt" value="Y"/>
+        </div>
       <#else>
         <input type="hidden" name="isExempt" value="N"/>
       </#if>

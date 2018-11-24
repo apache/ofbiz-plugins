@@ -25,38 +25,38 @@ under the License.
       <input type="hidden" name="product_id" value="${requestParameters.product_id}" />
       <input type="hidden" name="category_id" value="${requestParameters.category_id}" />
       <div>
-        <span><label for="one">${uiLabelMap.EcommerceRating}:</label></span>
-        <span>
-          <label for="one">1</label>
-          <input type="radio" id="one" name="productRating" value="1.0" />
-        </span>
-        <span>
-          <label for="two">2</label>
-          <input type="radio" id="two" name="productRating" value="2.0" />
-        </span>
-        <span>
-          <label for="three">3</label>
-          <input type="radio" id="three" name="productRating" value="3.0" />
-        </span>
-        <span>
-          <label for="four">4</label>
-          <input type="radio" id="four" name="productRating" value="4.0" />
-        </span>
-        <span>
-          <label for="five">5</label>
-          <input type="radio" id="five" name="productRating" value="5.0" />
-        </span>
+        <label for="one">${uiLabelMap.EcommerceRating}:</label>
+        <div class="form-check form-check-inline">
+          <input type="radio" class="form-check-input" id="one" name="productRating" value="1.0" />
+          <label class="form-check-label" for="one">1</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input type="radio" class="form-check-input" id="two" name="productRating" value="2.0" />
+          <label class="form-check-label" for="two">2</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input type="radio" class="form-check-input" id="three" name="productRating" value="3.0" />
+          <label class="form-check-label" for="three">3</label>
+          </div>
+        <div class="form-check form-check-inline">
+          <input type="radio" class="form-check-input" id="four" name="productRating" value="4.0" />
+          <label class="form-check-label" for="four">4</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input type="radio" class="form-check-input" id="five" name="productRating" value="5.0" />
+          <label class="form-check-label" for="five">5</label>
+        </div>
       </div>
       <div>
-        <span><label for="yes">${uiLabelMap.EcommercePostAnonymous}:</label></span>
-        <span>
-          <label for="yes">${uiLabelMap.CommonYes}</label>
-          <input type="radio" id="yes" name="postedAnonymous" value="Y" />
-        </span>
-        <span>
-          <label for="no">${uiLabelMap.CommonNo}</label>
-          <input type="radio" id="no" name="postedAnonymous" value="N" checked="checked" />
-        </span>
+        <label for="yes">${uiLabelMap.EcommercePostAnonymous}:</label>
+        <div class="form-check form-check-inline">
+          <input type="radio" class="form-check-input" id="yes" name="postedAnonymous" value="Y" />
+          <label class="form-check-label" for="yes">${uiLabelMap.CommonYes}</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input type="radio" class="form-check-input" id="no" name="postedAnonymous" value="N" checked="checked" />
+          <label class="form-check-label" for="no">${uiLabelMap.CommonNo}</label>
+        </div>
       </div>
       <div>
         <label for="review">${uiLabelMap.CommonReview}:</label>

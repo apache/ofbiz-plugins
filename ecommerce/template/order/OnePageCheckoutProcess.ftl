@@ -472,8 +472,8 @@ under the License.
                   </select>
                 </div>
               </div>
-              <div>
-                <input class="checkbox" id="useShippingAddressForBilling" name="useShippingAddressForBilling"
+              <div class="form-check">
+                <input class="form-check-input" id="useShippingAddressForBilling" name="useShippingAddressForBilling"
                        type="checkbox" value="Y"
                        <#if useShippingAddressForBilling?has_content && useShippingAddressForBilling?default("")=="Y">checked="checked"</#if>/>
                 <label for="useShippingAddressForBilling">${uiLabelMap.FacilityBillingAddressSameShipping}</label>

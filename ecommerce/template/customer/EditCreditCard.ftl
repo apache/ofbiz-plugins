@@ -43,8 +43,9 @@ under the License.
             <#assign hasCurrent = true />
             <div class="row">
               <div class="col-sm-6">
-                <input type="radio" name="contactMechId" value="${curContactMechId}" checked="checked"/>
-                <label>${uiLabelMap.PartyUseCurrentAddress}:</label>
+                <div class="form-check">
+                <input type="radio" class="form-check-input" name="contactMechId" value="${curContactMechId}" checked="checked"/>
+                <label>${uiLabelMap.PartyUseCurrentAddress}:
                 <#list curPartyContactMechPurposes as curPartyContactMechPurpose>
                   <#assign curContactMechPurposeType =
                       curPartyContactMechPurpose.getRelatedOne("ContactMechPurposeType", true) />
@@ -67,6 +68,8 @@ under the License.
                   <#if curPartyContactMech.thruDate??>
                     ${uiLabelMap.CommonDelete}:&nbsp;${curPartyContactMech.thruDate.toString()}
                   </#if>
+               </label>
+              </div>
               </div>
             </div>
           <#else>
@@ -90,7 +93,9 @@ under the License.
             <#assign partyContactMech = postalAddressInfo.partyContactMech />
                 <div class="row">
                 <div class="col-sm-6">
-                <input type="radio" name="contactMechId" value="${contactMech.contactMechId}"/>
+                <div class="form-check">
+                <input type="radio" class="form-check-input" name="contactMechId" value="${contactMech.contactMechId}"/>
+                <label>
                 <#list partyContactMechPurposes as partyContactMechPurpose>
                   <#assign contactMechPurposeType =
                       partyContactMechPurpose.getRelatedOne("ContactMechPurposeType", true) />
@@ -99,7 +104,7 @@ under the License.
                       (${uiLabelMap.CommonExpire}:${partyContactMechPurpose.thruDate})
                     </#if>
                 </#list>
-                  <#if postalAddress.toName??><label>${uiLabelMap.CommonTo}: ${postalAddress.toName}</label></#if>
+                  <#if postalAddress.toName??>${uiLabelMap.CommonTo}: ${postalAddress.toName}</#if>
                   <#if postalAddress.attnName??>${uiLabelMap.PartyAddrAttnName}: ${postalAddress.attnName}</#if>
                   ${postalAddress.address1!}
                   <#if postalAddress.address2??>${postalAddress.address2}</#if>
@@ -113,14 +118,16 @@ under the License.
                 <#if partyContactMech.thruDate??>
                   ${uiLabelMap.CommonDelete}:&nbsp;${partyContactMech.thruDate.toString()}
                 </#if>
+                </label>
+                </div>
                 </div>
                 </div>
           </#list>
           <#if !postalAddressInfos?has_content && !curContactMech??>
                 <label>${uiLabelMap.PartyNoContactInformation}.</label>
           </#if>
-              <div class="input-group">
-              <input type="radio" class="mr-2" name="contactMechId" value="_NEW_" <#if !hasCurrent>checked="checked"</#if>/>
+              <div class="form-check">
+              <input type="radio" class="form-check-input mr-2" name="contactMechId" value="_NEW_" <#if !hasCurrent>checked="checked"</#if>/>
               <label>${uiLabelMap.PartyCreateNewBillingAddress}.</label>
               </div>
 </div>

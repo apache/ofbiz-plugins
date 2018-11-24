@@ -46,10 +46,12 @@ under the License.
     </#if>
       <div class="form-group">
         <div class="form-check">
-          <label class="form-check-label" for="SEARCH_OPERATOR_OR"><input type="radio" class="form-check-input" name="SEARCH_OPERATOR" id="SEARCH_OPERATOR_OR" value="OR" <#if "OR" == searchOperator>checked="checked"</#if> />${uiLabelMap.CommonAny}</label>
+          <input type="radio" class="form-check-input" name="SEARCH_OPERATOR" id="SEARCH_OPERATOR_OR" value="OR" <#if "OR" == searchOperator>checked="checked"</#if> />
+          <label class="form-check-label" for="SEARCH_OPERATOR_OR">${uiLabelMap.CommonAny}</label>
         </div>
         <div class="form-check">
-          <label class="form-check-label" for="SEARCH_OPERATOR_AND"><input type="radio" class="form-check-input" name="SEARCH_OPERATOR" id="SEARCH_OPERATOR_AND" value="AND" <#if "AND" == searchOperator>checked="checked"</#if> />${uiLabelMap.CommonAll}</label>
+          <input type="radio" class="form-check-input" name="SEARCH_OPERATOR" id="SEARCH_OPERATOR_AND" value="AND" <#if "AND" == searchOperator>checked="checked"</#if> />
+          <label class="form-check-label" for="SEARCH_OPERATOR_AND">${uiLabelMap.CommonAll}</label>
         </div>
       </div>
       <div class="form-group">

@@ -230,9 +230,9 @@ under the License.
            <table width="100%" border="0" cellpadding="1" cellspacing="0">
               <tr>
                 <td align="center" valign="top" colspan="3">
-                  <div>
-                    <input type="checkbox" class="checkbox" id="useShippingPostalAddressForBilling" name="useShippingPostalAddressForBilling" value="Y"/>
-                    ${uiLabelMap.FacilityBillingAddressSameShipping}
+                  <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="useShippingPostalAddressForBilling" name="useShippingPostalAddressForBilling" value="Y"/>
+                    <label>${uiLabelMap.FacilityBillingAddressSameShipping}</label>
                   </div>
                 </td>
               </tr>

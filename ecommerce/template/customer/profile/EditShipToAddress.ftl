@@ -98,10 +98,10 @@ under the License.
               maxlength="3"/>
       </div>
     </#if>
-    <div class="inline">
-      <label for="setBillingPurposeForShipping">${uiLabelMap.EcommerceMyDefaultBillingAddress}</label>
-      <input type="checkbox" name="setBillingPurpose" id="setBillingPurposeForShipping" value="Y"
+    <div class="form-check">
+      <input type="checkbox" name="setBillingPurpose" class="form-check-input" id="setBillingPurposeForShipping" value="Y"
           <#if setBillingPurpose??>checked="checked"</#if>/>
+      <label for="setBillingPurposeForShipping">${uiLabelMap.EcommerceMyDefaultBillingAddress}</label>
     </div>
     <#--
     <div>

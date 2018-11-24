@@ -38,9 +38,11 @@ under the License.
           <div>${uiLabelMap.ProductFeatures}:</div>
         </td>
         <td align="right" valign="middle">
-          <div>
-            ${uiLabelMap.CommonAll} <input type="radio" name="any_or_all" value="all" checked="checked" />
-            ${uiLabelMap.CommonAny} <input type="radio" name="any_or_all" value="any" />
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="any_or_all" value="all" checked="checked" /><label class="form-check-label">${uiLabelMap.CommonAll}</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="any_or_all" value="any" /><label class="form-check-label">${uiLabelMap.CommonAny}</label>
           </div>
         </td>
       </tr>
@@ -77,11 +79,13 @@ under the License.
               <div>&nbsp;-&nbsp;${searchConstraintString}</div>
             </#list>
             <div>${uiLabelMap.ProductSortedBy}: ${searchSortOrderString}</div>
-            <div>
-              ${uiLabelMap.ProductNewSearch}
-              <input type="radio" name="clearSearch" value="Y" checked="checked" />
-              ${uiLabelMap.CommonRefineSearch}
-              <input type="radio" name="clearSearch" value="N" />
+            <div class="form-check form-check-inline">
+              <input type="radio" class="form-check-input" name="clearSearch" value="Y" checked="checked" />
+              <label class="form-check-label">${uiLabelMap.ProductNewSearch}</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input type="radio" class="form-check-input" name="clearSearch" value="N" />
+              <label class="form-check-label">${uiLabelMap.CommonRefineSearch}</label>
             </div>
           </td>
         </tr>

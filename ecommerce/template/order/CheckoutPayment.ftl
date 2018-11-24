@@ -83,30 +83,26 @@ function submitForm(form, mode, value) {
               <#if productStorePaymentMethodTypeIdMap.EXT_OFFLINE??>
               </div>
               <div class="form-check">
-                  <label class="form-check-label" for="checkOutPaymentId_OFFLINE">
                   <input type="radio" class="form-check-input" id="checkOutPaymentId_OFFLINE" name="checkOutPaymentId" value="EXT_OFFLINE" <#if "EXT_OFFLINE" == checkOutPaymentId>checked="checked"</#if> />
-                  ${uiLabelMap.OrderMoneyOrder}</label>
+                  <label for="checkOutPaymentId_OFFLINE">${uiLabelMap.OrderMoneyOrder}</label>
               </div>
               </#if>
               <#if productStorePaymentMethodTypeIdMap.EXT_COD??>
               <div class="form-check">
-                  <label class="form-check-label" for="checkOutPaymentId_COD">
                   <input class="form-check-input" type="radio" id="checkOutPaymentId_COD" name="checkOutPaymentId" value="EXT_COD" <#if "EXT_COD" == checkOutPaymentId>checked="checked"</#if> />
-                  ${uiLabelMap.OrderCOD}</label>
+                  <label for="checkOutPaymentId_COD">${uiLabelMap.OrderCOD}</label>
               </div>
               </#if>
               <#if productStorePaymentMethodTypeIdMap.EXT_WORLDPAY??>
               <div class="form-check">
-                  <label class="form-check-label" for="checkOutPaymentId_WORLDPAY">
                   <input class="form-check-input" type="radio" id="checkOutPaymentId_WORLDPAY" name="checkOutPaymentId" value="EXT_WORLDPAY" <#if "EXT_WORLDPAY" == checkOutPaymentId>checked="checked"</#if> />
-                  ${uiLabelMap.AccountingPayWithWorldPay}</label>
+                  <label for="checkOutPaymentId_WORLDPAY">${uiLabelMap.AccountingPayWithWorldPay}</label>
               </div>
               </#if>
               <#if productStorePaymentMethodTypeIdMap.EXT_PAYPAL??>
               <div class="form-check">
-                  <label class="form-check-label" for="checkOutPaymentId_PAYPAL">
                   <input class="form-check-input" type="radio" id="checkOutPaymentId_PAYPAL" name="checkOutPaymentId" value="EXT_PAYPAL" <#if "EXT_PAYPAL" == checkOutPaymentId>checked="checked"</#if> />
-                  ${uiLabelMap.AccountingPayWithPayPal}</label>
+                  <label for="checkOutPaymentId_PAYPAL">${uiLabelMap.AccountingPayWithPayPal}</label>
               </div>
               </#if>
               <hr>
@@ -137,9 +133,9 @@ function submitForm(form, mode, value) {
                   </#if>
 
                   <div>
-                      <input type="checkbox" id="checkOutPayment_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if cart.isPaymentSelected(paymentMethod.paymentMethodId)>checked="checked"</#if> />
-                      <label for="checkOutPayment_${paymentMethod.paymentMethodId}">${uiLabelMap.AccountingGift}:${giftCardNumber}</label>
-                        <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
+                      <input type="checkbox" id="checkOutPayment_${paymentMethod.paymentMethodId}" class="form-check-input" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if cart.isPaymentSelected(paymentMethod.paymentMethodId)>checked="checked"</#if> />
+                      <label for="checkOutPayment_${paymentMethod.paymentMethodId}">${uiLabelMap.AccountingGift}:${giftCardNumber}
+                        <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if></label>
                         <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EG', '${paymentMethod.paymentMethodId}');" class="button">${uiLabelMap.CommonUpdate}</a>
                         <strong>${uiLabelMap.OrderBillUpTo}:</strong> <input type="text" size="5" class="inputBox" name="amount_${paymentMethod.paymentMethodId}" value="<#if (cart.getPaymentAmount(paymentMethod.paymentMethodId)?default(0) > 0)><@ofbizAmount amount=cart.getPaymentAmount(paymentMethod.paymentMethodId)!/></#if>"/>
                   </div>
@@ -148,9 +144,9 @@ function submitForm(form, mode, value) {
                  <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
                   <#assign creditCard = paymentMethod.getRelatedOne("CreditCard", false) />
                   <div>
-                      <input type="checkbox" id="checkOutPayment_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if cart.isPaymentSelected(paymentMethod.paymentMethodId)>checked="checked"</#if> />
-                      <label for="checkOutPayment_${paymentMethod.paymentMethodId}">CC:${Static["org.apache.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}</label>
-                        <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
+                      <input type="checkbox" id="checkOutPayment_${paymentMethod.paymentMethodId}" class="form-check-input" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if cart.isPaymentSelected(paymentMethod.paymentMethodId)>checked="checked"</#if> />
+                      <label for="checkOutPayment_${paymentMethod.paymentMethodId}">CC:${Static["org.apache.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
+                        <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if></label>
                         <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EC', '${paymentMethod.paymentMethodId}');" class="button">${uiLabelMap.CommonUpdate}</a>
                         <label for="amount_${paymentMethod.paymentMethodId}"><strong>${uiLabelMap.OrderBillUpTo}:</strong></label><input type="text" size="5" class="inputBox" id="amount_${paymentMethod.paymentMethodId}" name="amount_${paymentMethod.paymentMethodId}" value="<#if (cart.getPaymentAmount(paymentMethod.paymentMethodId)?default(0) > 0)><@ofbizAmount amount=cart.getPaymentAmount(paymentMethod.paymentMethodId)!/></#if>" />
                   </div>
@@ -158,11 +154,10 @@ function submitForm(form, mode, value) {
                 <#elseif "EFT_ACCOUNT" == paymentMethod.paymentMethodTypeId>
                  <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??>
                   <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount", false) />
-                  <div>
-                      <label for="checkOutPayment_${paymentMethod.paymentMethodId}">
-                      <input type="radio" id="checkOutPayment_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if paymentMethod.paymentMethodId == checkOutPaymentId>checked="checked"</#if> />
-                      ${uiLabelMap.AccountingEFTAccount}:${eftAccount.bankName!}: ${eftAccount.accountNumber!}</label>
-                        <#if paymentMethod.description?has_content><p>(${paymentMethod.description})</p></#if>
+                  <div class="form-check">
+                      <input type="radio" id="checkOutPayment_${paymentMethod.paymentMethodId}" class="form-check-input" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if paymentMethod.paymentMethodId == checkOutPaymentId>checked="checked"</#if> />
+                      <label for="checkOutPayment_${paymentMethod.paymentMethodId}">${uiLabelMap.AccountingEFTAccount}:${eftAccount.bankName!}: ${eftAccount.accountNumber!}
+                        <#if paymentMethod.description?has_content><p>(${paymentMethod.description})</p></#if></label>
                       <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EE', '${paymentMethod.paymentMethodId}');" class="button">${uiLabelMap.CommonUpdate}</a>
                   </div>
                  </#if>

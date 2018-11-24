@@ -406,9 +406,9 @@ will generally always be reserved for the logo at the top of the page.
       <@fieldErrors fieldName="USERNAME"/>
       <#if !requestParameters.preferredUsername?has_content>
         <div class="form-check">
-          <label class="form-check-label"></label>
-            <input type="checkbox" name="UNUSEEMAIL" class="checkbox form-check-input" id="UNUSEEMAIL" value="on"
-                onclick="setEmailUsername();" onfocus="setLastFocused(this);"/> ${uiLabelMap.EcommerceUseEmailAddress}
+            <input type="checkbox" name="UNUSEEMAIL" class="form-check-input" id="UNUSEEMAIL" value="on"
+                onclick="setEmailUsername();" onfocus="setLastFocused(this);"/>
+            <label>${uiLabelMap.EcommerceUseEmailAddress}</label>
         </div>
       </#if>
 
