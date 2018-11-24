@@ -118,9 +118,6 @@ under the License.
           <input type="text" class="form-control form-control-sm" name="quantity" id="quantity"
               value="${requestParameters.quantity?default("1")}" />
           <input type="submit" class="btn btn-outline-secondary btn-sm btn-sm" value="${uiLabelMap.OrderAddToCart}" />
-          <#-- <a href="javascript:document.quickaddform.submit()" class="btn btn-outline-secondary btn-sm">
-                 <span>[${uiLabelMap.OrderAddToCart}]</span>
-               </a> -->
         </div>
       </form>
     </div>
@@ -233,10 +230,6 @@ under the License.
               <#list shoppingCart.items() as cartLine>
                 <#assign cartLineIndex = shoppingCart.getItemIndex(cartLine) />
                 <#assign lineOptionalFeatures = cartLine.getOptionalProductFeatures() />
-                <#-- show adjustment info -->
-                <#list cartLine.getAdjustments() as cartLineAdjustment>
-                  <!-- cart line ${cartLineIndex} adjustment: ${cartLineAdjustment} -->
-                </#list>
                 <tr id="cartItemDisplayRow_${cartLineIndex}">
                   <td>
                     <#if cartLine.getShoppingListId()??>
@@ -670,8 +663,3 @@ under the License.
 <#if (shoppingCartSize?default(0) > 0)>
   ${screens.render("component://ecommerce/widget/CartScreens.xml#promoUseDetailsInline")}
 </#if>
-
-<!-- Internal cart info: productStoreId=${shoppingCart.getProductStoreId()!}
-       locale=${shoppingCart.getLocale()!} currencyUom=${shoppingCart.getCurrency()!}
-       userLoginId=${(shoppingCart.getUserLogin().getString("userLoginId"))!}
-       autoUserLogin=${(shoppingCart.getAutoUserLogin().getString("userLoginId"))!} -->
