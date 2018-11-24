@@ -31,7 +31,6 @@ under the License.
                 <entity-condition entity-name="Quote" list="quoteList">
                     <condition-list combine="and">
                         <condition-expr field-name="partyId" from-field="userLogin.partyId"/>
-                        <condition-expr field-name="statusId" operator="not-equals" value="QUO_CREATED"/>
                     </condition-list>
                     <order-by field-name="-validFromDate"/>
                 </entity-condition>
