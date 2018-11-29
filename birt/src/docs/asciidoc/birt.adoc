@@ -20,8 +20,11 @@ under the License.
 The Apache OFBiz Project
 Release 17.12
 :imagesdir: ./images
+// This does not work, I created OFBIZ-10677 for that
+//:title-logo-image: ../../../../../docs/asciidoc/images/OFBiz-Logo.svg[Apache OFBiz Logo, pdfwidth=4.25in, align=center]
+//:title-logo-image: image::OFBiz-Logo.svg[Apache OFBiz Logo, pdfwidth=4.25in, align=center]
 ifdef::backend-pdf[]
-:title-logo-image: image::OFBiz-Logo.svg[Apache OFBiz Logo, pdfwidth=4.25in, align=center]
+
 :source-highlighter: rouge
 endif::[]
 :toc:
