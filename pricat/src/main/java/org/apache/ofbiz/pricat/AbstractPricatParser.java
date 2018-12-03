@@ -33,12 +33,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.poi.hssf.usermodel.HSSFDataFormatter;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.ClientAnchor.AnchorType;
 import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.ss.util.WorkbookUtil;
-import org.apache.poi.xssf.usermodel.OFBizPricatUtil;
 import org.apache.poi.xssf.usermodel.XSSFAnchor;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
@@ -57,6 +57,7 @@ import org.apache.commons.fileupload.FileItem;
 
 import org.apache.ofbiz.htmlreport.InterfaceReport;
 import org.apache.ofbiz.order.finaccount.FinAccountHelper;
+import org.apache.ofbiz.pricat.util.OFBizPricatUtil;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.FileUtil;
 import org.apache.ofbiz.base.util.UtilDateTime;
@@ -295,22 +296,22 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
             XSSFCell cell = sourceRow.getCell(j);
             if (cell != null) {
                 XSSFCell newCell = targetRow.createCell(j);
-                int cellType = cell.getCellType();
+                CellType cellType = cell.getCellTypeEnum();
                 newCell.setCellType(cellType);
                 switch (cellType) {
-                    case XSSFCell.CELL_TYPE_BOOLEAN:
+                    case BOOLEAN:
                         newCell.setCellValue(cell.getBooleanCellValue());
                         break;
-                    case XSSFCell.CELL_TYPE_ERROR:
+                    case ERROR:
                         newCell.setCellErrorValue(cell.getErrorCellValue());
                         break;
-                    case XSSFCell.CELL_TYPE_FORMULA:
+                    case FORMULA:
                         newCell.setCellFormula(cell.getCellFormula());
                         break;
-                    case XSSFCell.CELL_TYPE_NUMERIC:
+                    case NUMERIC:
                         newCell.setCellValue(cell.getNumericCellValue());
                         break;
-                    case XSSFCell.CELL_TYPE_STRING:
+                    case STRING:
                         newCell.setCellValue(cell.getRichStringCellValue());
                         break;
                     default:
@@ -427,10 +428,10 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
                     cell = row.createCell(i);
                 }
             }
-            int cellType = cell.getCellType();
+            CellType cellType = cell.getCellTypeEnum();
             String cellValue = formatter.formatCellValue(cell);
             if (UtilValidate.isNotEmpty(cellValue)) {
-                if (cellType == XSSFCell.CELL_TYPE_FORMULA) {
+                if (cellType == CellType.FORMULA) {
                     cellValue = BigDecimal.valueOf(cell.getNumericCellValue()).setScale(FinAccountHelper.decimals, FinAccountHelper.rounding).toString();
                     report.print(((i == 0)?"":", ") + cellValue, InterfaceReport.FORMAT_NOTE);
                 } else {
@@ -446,13 +447,13 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
                 results.add(null);
                 continue;
             }
-            if (((Boolean) colNames.get(i)[2]).booleanValue() && cellType != (int) colNames.get(i)[1]) {
+            if ((Boolean) colNames.get(i)[2] && cellType != colNames.get(i)[1]) {
                 // String warningMessage = "";
-                if ((int) colNames.get(i)[1] == XSSFCell.CELL_TYPE_STRING) {
+                if (colNames.get(i)[1] == CellType.STRING) {
                     results.add(cellValue);
-                } else if ((int) colNames.get(i)[1] == XSSFCell.CELL_TYPE_NUMERIC) {
-                    if (cell.getCellType() != XSSFCell.CELL_TYPE_STRING) {
-                        cell.setCellType(XSSFCell.CELL_TYPE_STRING);
+                } else if (colNames.get(i)[1] == CellType.NUMERIC) {
+                    if (cell.getCellTypeEnum() != CellType.STRING) {
+                        cell.setCellType(CellType.STRING);
                     }
                     try {
                         results.add(BigDecimal.valueOf(Double.parseDouble(cell.getStringCellValue())).setScale(FinAccountHelper.decimals, FinAccountHelper.rounding));
@@ -466,21 +467,21 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
                     results.add(null);
                     continue;
                 }
-                if ((int) colNames.get(i)[1] == XSSFCell.CELL_TYPE_STRING) {
-                    if (cell.getCellType() == XSSFCell.CELL_TYPE_STRING) {
+                if (colNames.get(i)[1] == CellType.STRING) {
+                    if (cell.getCellTypeEnum() == CellType.STRING) {
                         results.add(cell.getStringCellValue());
                     } else {
                         results.add(cellValue);
                     }
-                } else if ((int) colNames.get(i)[1] == XSSFCell.CELL_TYPE_NUMERIC) {
-                    if (cell.getCellType() == XSSFCell.CELL_TYPE_STRING) {
+                } else if (colNames.get(i)[1] == CellType.NUMERIC) {
+                    if (cell.getCellTypeEnum() == CellType.STRING) {
                         try {
                             results.add(BigDecimal.valueOf(Double.valueOf(cell.getStringCellValue())));
                         } catch (NumberFormatException e) {
                             results.add(null);
                             errorMessages.put(new CellReference(cell), UtilProperties.getMessage(resource, "ErrorParseValueToNumeric", locale));
                         }
-                    } else if (cell.getCellType() == XSSFCell.CELL_TYPE_NUMERIC) {
+                    } else if (cell.getCellTypeEnum() == CellType.NUMERIC) {
                         try {
                             results.add(BigDecimal.valueOf(cell.getNumericCellValue()).setScale(FinAccountHelper.decimals, FinAccountHelper.rounding));
                         } catch (NumberFormatException e) {

@@ -42,8 +42,8 @@ import org.apache.ofbiz.order.finaccount.FinAccountHelper;
 import org.apache.ofbiz.pricat.AbstractPricatParser;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceUtil;
-import org.apache.poi.POIXMLException;
 import org.apache.poi.hssf.usermodel.HSSFDataFormatter;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -84,10 +84,6 @@ public class SamplePricatParser extends AbstractPricatParser {
                 workbook = new XSSFWorkbook(is);
                 report.println(UtilProperties.getMessage(resource, "ok", locale), InterfaceReport.FORMAT_OK);
             } catch(IOException e) {
-                report.println(e);
-                report.println(UtilProperties.getMessage(resource, "PricatSuggestion", locale), InterfaceReport.FORMAT_ERROR);
-                return;
-            } catch(POIXMLException e) {
                 report.println(e);
                 report.println(UtilProperties.getMessage(resource, "PricatSuggestion", locale), InterfaceReport.FORMAT_ERROR);
                 return;
@@ -478,54 +474,54 @@ public class SamplePricatParser extends AbstractPricatParser {
     private static List<Object[]> genExcelHeaderNamesV1_1() {
         List<Object[]> listHeaderName = new ArrayList<Object[]>();
         listHeaderName.add(new Object[] {"Facility Name", 
-                                         XSSFCell.CELL_TYPE_STRING,
+                                         CellType.STRING,
                                          Boolean.TRUE});
         listHeaderName.add(new Object[] {"FacilityId",
-                                         XSSFCell.CELL_TYPE_STRING,
+                                         CellType.STRING,
                                          Boolean.TRUE});
         listHeaderName.add(new Object[] {"Category L1",
-                                         XSSFCell.CELL_TYPE_STRING,
+                                         CellType.STRING,
                                          Boolean.FALSE});
         listHeaderName.add(new Object[] {"Category L2",
-                                         XSSFCell.CELL_TYPE_STRING,
+                                         CellType.STRING,
                                          Boolean.FALSE});
         listHeaderName.add(new Object[] {"Category L3",
-                                         XSSFCell.CELL_TYPE_STRING,
+                                         CellType.STRING,
                                          Boolean.FALSE});
         listHeaderName.add(new Object[] {"Category L4",
-                                         XSSFCell.CELL_TYPE_STRING,
+                                         CellType.STRING,
                                          Boolean.FALSE});
         listHeaderName.add(new Object[] {"Brand",
-                                         XSSFCell.CELL_TYPE_STRING,
+                                         CellType.STRING,
                                          Boolean.TRUE});
         listHeaderName.add(new Object[] {"Style No",
-                                         XSSFCell.CELL_TYPE_STRING,
+                                         CellType.STRING,
                                          Boolean.TRUE});
         listHeaderName.add(new Object[] {"Product Name",
-                                         XSSFCell.CELL_TYPE_STRING,
+                                         CellType.STRING,
                                          Boolean.TRUE});
         listHeaderName.add(new Object[] {"Color",
-                                         XSSFCell.CELL_TYPE_STRING,
+                                         CellType.STRING,
                                          Boolean.FALSE});
         listHeaderName.add(new Object[] {"Size",
-                                         XSSFCell.CELL_TYPE_STRING,
+                                         CellType.STRING,
                                          Boolean.FALSE});
         listHeaderName.add(new Object[] {"Barcode",
-                                         XSSFCell.CELL_TYPE_STRING,
+                                         CellType.STRING,
                                          Boolean.FALSE});
         listHeaderName.add(new Object[] {"Stock Qty",
-                                         XSSFCell.CELL_TYPE_NUMERIC,
+                                         CellType.NUMERIC,
                                          Boolean.TRUE});
         listHeaderName.add(new Object[] {"Average Cost",
-                                         XSSFCell.CELL_TYPE_NUMERIC,
+                                         CellType.NUMERIC,
                                          Boolean.TRUE,
                                          Boolean.TRUE});
         listHeaderName.add(new Object[] {"List Price",
-                                         XSSFCell.CELL_TYPE_NUMERIC,
+                                         CellType.NUMERIC,
                                          Boolean.TRUE,
                                          Boolean.TRUE});
         listHeaderName.add(new Object[] {"Member Price",
-                                            XSSFCell.CELL_TYPE_NUMERIC,
+                                            CellType.NUMERIC,
                                             Boolean.FALSE,
                                             Boolean.TRUE});
         return listHeaderName;
@@ -569,10 +565,10 @@ public class SamplePricatParser extends AbstractPricatParser {
                     cell = row.createCell(i);
                 }
             }
-            int cellType = cell.getCellType();
+            CellType cellType = cell.getCellTypeEnum();
             String cellValue = formatter.formatCellValue(cell);
             if (UtilValidate.isNotEmpty(cellValue) && UtilValidate.isNotEmpty(cellValue.trim())) {
-                if (cellType == XSSFCell.CELL_TYPE_FORMULA) {
+                if (cellType == CellType.FORMULA) {
                     try {
                         cellValue = BigDecimal.valueOf(cell.getNumericCellValue()).setScale(FinAccountHelper.decimals, FinAccountHelper.rounding).toString();
                     } catch (IllegalStateException e) {
@@ -596,17 +592,17 @@ public class SamplePricatParser extends AbstractPricatParser {
                 results.add(null);
                 continue;
             }
-            if (((Boolean) colNames.get(i)[2]).booleanValue() && cellType != (int) colNames.get(i)[1]) {
+            if ((Boolean) colNames.get(i)[2] && cellType != colNames.get(i)[1]) {
                 // String warningMessage = "";
-                if ((int) colNames.get(i)[1] == XSSFCell.CELL_TYPE_STRING) {
+                if (colNames.get(i)[1] == CellType.STRING) {
                     if (UtilValidate.isNotEmpty(cellValue) && UtilValidate.isNotEmpty(cellValue.trim())) {
                         results.add(cellValue);
                     } else {
                         results.add(null);
                     }
-                } else if ((int) colNames.get(i)[1] == XSSFCell.CELL_TYPE_NUMERIC) {
-                    if (cell.getCellType() != XSSFCell.CELL_TYPE_STRING) {
-                        cell.setCellType(XSSFCell.CELL_TYPE_STRING);
+                } else if (colNames.get(i)[1] == CellType.NUMERIC) {
+                    if (cell.getCellTypeEnum() != CellType.STRING) {
+                        cell.setCellType(CellType.STRING);
                     }
                     try {
                         results.add(BigDecimal.valueOf(Double.parseDouble(cell.getStringCellValue())).setScale(FinAccountHelper.decimals, FinAccountHelper.rounding));
@@ -620,22 +616,22 @@ public class SamplePricatParser extends AbstractPricatParser {
                     results.add(null);
                     continue;
                 }
-                if ((int) colNames.get(i)[1] == XSSFCell.CELL_TYPE_STRING) {
-                    if (cell.getCellType() == XSSFCell.CELL_TYPE_STRING) {
+                if (colNames.get(i)[1] == CellType.STRING) {
+                    if (cell.getCellTypeEnum() == CellType.STRING) {
                         cellValue = cell.getStringCellValue().trim();
                         results.add(cellValue);
                     } else {
                         results.add(cellValue.trim());
                     }
-                } else if ((int) colNames.get(i)[1] == XSSFCell.CELL_TYPE_NUMERIC) {
-                    if (cell.getCellType() == XSSFCell.CELL_TYPE_STRING) {
+                } else if (colNames.get(i)[1] == CellType.NUMERIC) {
+                    if (cell.getCellTypeEnum() == CellType.STRING) {
                         try {
                             results.add(BigDecimal.valueOf(Double.valueOf(cell.getStringCellValue())));
                         } catch (NumberFormatException e) {
                             results.add(null);
                             errorMessages.put(new CellReference(cell), UtilProperties.getMessage(resource, "ErrorParseValueToNumeric", locale));
                         }
-                    } else if (cell.getCellType() == XSSFCell.CELL_TYPE_NUMERIC) {
+                    } else if (cell.getCellTypeEnum() == CellType.NUMERIC) {
                         try {
                             results.add(BigDecimal.valueOf(cell.getNumericCellValue()).setScale(FinAccountHelper.decimals, FinAccountHelper.rounding));
                         } catch (NumberFormatException e) {
