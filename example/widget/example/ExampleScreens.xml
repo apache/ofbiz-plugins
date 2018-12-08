@@ -401,8 +401,8 @@ under the License.
                 <set field="geoPoints[1].lon" value="-122.1519"/>
                 <set field="geoPoints[+2].lat" value="37.4719"/>
                 <set field="geoPoints[2].lon" value="-122.1319"/>
-                <set field="geoCenter.lat" value="37.4419"/>
-                <set field="geoCenter.lon" value="-122.1419"/>
+                <set field="geoCenter.lat" value="37.4629"/>
+                <set field="geoCenter.lon" value="-122.1447"/>
                 <set field="geoCenter.zoom" value="13"/>
             </actions>
             <widgets>
