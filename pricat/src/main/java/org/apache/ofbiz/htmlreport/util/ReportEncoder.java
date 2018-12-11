@@ -632,7 +632,7 @@ public final class ReportEncoder {
      */
     public static String lookupEncoding(String encoding, String fallback) {
 
-        String result = (String) encodingCache.get(encoding);
+        String result = encodingCache.get(encoding);
         if (result != null) {
             return result;
         }

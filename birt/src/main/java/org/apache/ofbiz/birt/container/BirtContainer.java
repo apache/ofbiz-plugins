@@ -28,7 +28,6 @@ import org.eclipse.birt.report.engine.api.EngineConfig;
 import org.eclipse.birt.report.engine.api.IReportEngine;
 import org.eclipse.birt.report.engine.api.IReportEngineFactory;
 import org.apache.ofbiz.base.container.Container;
-import org.apache.ofbiz.base.container.ContainerConfig;
 import org.apache.ofbiz.base.container.ContainerException;
 import org.apache.ofbiz.base.start.StartupCommand;
 import org.apache.ofbiz.base.util.Debug;

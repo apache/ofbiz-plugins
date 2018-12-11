@@ -132,7 +132,8 @@ public abstract class SolrProductSearch {
         try {
             Debug.logInfo("Solr: Generating and indexing document for productId '" + productId + "'", module);
 
-            client = SolrUtil.getInstance().getHttpSolrClient(solrIndexName);
+            SolrUtil.getInstance();
+            client = SolrUtil.getHttpSolrClient(solrIndexName);
 
             // Construct Documents
             SolrInputDocument doc1 = SolrUtil.generateSolrDocument(context);
@@ -219,8 +220,9 @@ public abstract class SolrProductSearch {
                 }
                 docs.add(doc1);
             }
+            SolrUtil.getInstance();
             // push Documents to server
-            client = SolrUtil.getInstance().getHttpSolrClient(solrIndexName);
+            client = SolrUtil.getHttpSolrClient(solrIndexName);
             client.add(docs);
             client.commit();
 
@@ -281,7 +283,8 @@ public abstract class SolrProductSearch {
         String solrIndexName = (String) context.get("indexName");
         Map<String, Object> result;
         try {
-            client = SolrUtil.getInstance().getHttpSolrClient(solrIndexName);
+            SolrUtil.getInstance();
+            client = SolrUtil.getHttpSolrClient(solrIndexName);
             // create Query Object
             SolrQuery solrQuery = new SolrQuery();
             solrQuery.setQuery((String) context.get("query"));
@@ -548,14 +551,14 @@ public abstract class SolrProductSearch {
             result = ServiceUtil.returnSuccess();
             result.put("numFound", (long) 0);
             Map<String, Object> categories = new HashMap<String, Object>();
-            List<FacetField> catList = (List<FacetField>) cat.getFacetFields();
+            List<FacetField> catList = cat.getFacetFields();
             for (Iterator<FacetField> catIterator = catList.iterator(); catIterator.hasNext();) {
-                FacetField field = (FacetField) catIterator.next();
-                List<Count> catL = (List<Count>) field.getValues();
+                FacetField field = catIterator.next();
+                List<Count> catL = field.getValues();
                 if (catL != null) {
                     // Debug.logInfo("FacetFields = " + catL, module);
                     for (Iterator<Count> catIter = catL.iterator(); catIter.hasNext();) {
-                        FacetField.Count f = (FacetField.Count) catIter.next();
+                        FacetField.Count f = catIter.next();
                         if (f.getCount() > 0) {
                             categories.put(f.getName(), Long.toString(f.getCount()));
                         }
@@ -606,13 +609,13 @@ public abstract class SolrProductSearch {
                     QueryResponse cat = (QueryResponse) query.get("rows");
                     List<Map<String, Object>> categories = new ArrayList<Map<String, Object>>();
 
-                    List<FacetField> catList = (List<FacetField>) cat.getFacetFields();
+                    List<FacetField> catList = cat.getFacetFields();
                     for (Iterator<FacetField> catIterator = catList.iterator(); catIterator.hasNext();) {
-                        FacetField field = (FacetField) catIterator.next();
-                        List<Count> catL = (List<Count>) field.getValues();
+                        FacetField field = catIterator.next();
+                        List<Count> catL = field.getValues();
                         if (catL != null) {
                             for (Iterator<Count> catIter = catL.iterator(); catIter.hasNext();) {
-                                FacetField.Count f = (FacetField.Count) catIter.next();
+                                FacetField.Count f = catIter.next();
                                 if (f.getCount() > 0) {
                                     Map<String, Object> catMap = new HashMap<String, Object>();
                                     LinkedList<String> iName = new LinkedList<String>();
@@ -662,7 +665,8 @@ public abstract class SolrProductSearch {
         Boolean treatConnectErrorNonFatal = (Boolean) context.get("treatConnectErrorNonFatal");
 
         try {
-            client = SolrUtil.getInstance().getHttpSolrClient(solrIndexName);
+            SolrUtil.getInstance();
+            client = SolrUtil.getHttpSolrClient(solrIndexName);
 
             // now lets fetch all products
             List<Map<String, Object>> solrDocs = new ArrayList<Map<String, Object>>();

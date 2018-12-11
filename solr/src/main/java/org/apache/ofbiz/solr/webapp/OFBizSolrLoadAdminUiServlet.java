@@ -72,7 +72,13 @@ public class OFBizSolrLoadAdminUiServlet extends OFBizSolrRedirectServlet {
                 out.write(StringUtils.replaceEach(html, search, replace));
                 out.flush();
             } finally {
-                IOUtils.closeQuietly(in);
+                try {
+                    if (in != null) {
+                        in.close();
+                    }
+                } catch (final IOException ioe) {
+                    // ignore
+                }
             }
         } else {
             response.sendError(404);

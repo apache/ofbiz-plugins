@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
@@ -219,7 +218,6 @@ public final class BirtWorker {
             throw new GenericServiceException("Service and entity name cannot be both empty");
         }
 
-        String modelType = null;
         String modelElementName = null;
         String workflowType = null;
         if (UtilValidate.isEmpty(serviceName)) {
@@ -230,8 +228,6 @@ public final class BirtWorker {
             workflowType = "Service";
         }
 
-        //resolve the path location to store the RptDesign file, check if the file already exists under this name and increment index name if needed
-        List<GenericValue> listRptDesigns = null;
         EntityCondition entityConditionRpt = EntityCondition.makeCondition("contentTypeId", "RPTDESIGN");
         String templatePathLocation = BirtUtil.resolveTemplatePathLocation();
         File templatePathLocationDir = new File(templatePathLocation);

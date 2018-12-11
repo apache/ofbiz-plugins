@@ -81,10 +81,10 @@ public class BirtViewHandler implements ViewHandler {
 
             // add dynamic parameter for page
             if (UtilValidate.isEmpty(page) || "ExecuteFlexibleReport".equals(page)) {
-                page = (String) request.getParameter("rptDesignFile");
+                page = request.getParameter("rptDesignFile");
             }
             if (UtilValidate.isEmpty(page)) {
-                Locale locale = (Locale) request.getLocale();
+                Locale locale = request.getLocale();
                 throw new ViewHandlerException(UtilProperties.getMessage(resource_error, "BirtErrorNotPublishedReport", locale));
             }
             if (page.startsWith("component://")) {
@@ -112,13 +112,13 @@ public class BirtViewHandler implements ViewHandler {
             }
             
             // set override content type
-            String overrideContentType = (String) request.getParameter(BirtWorker.getBirtContentType());
+            String overrideContentType = request.getParameter(BirtWorker.getBirtContentType());
             if (UtilValidate.isNotEmpty(overrideContentType)) {
                 contentType = overrideContentType;
             }
             
             // set output file name to get also file extension
-            String outputFileName = (String) request.getParameter(BirtWorker.getBirtOutputFileName());
+            String outputFileName = request.getParameter(BirtWorker.getBirtOutputFileName());
             if (UtilValidate.isNotEmpty(outputFileName)) {
                 outputFileName = BirtUtil.encodeReportName(outputFileName);
                 String format = BirtUtil.getMimeTypeFileExtension(contentType);

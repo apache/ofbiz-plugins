@@ -183,7 +183,7 @@ public final class SolrUtil {
             List<String> category = UtilGenerics.<String>checkList(context.get("category"));
             Iterator<String> catIter = category.iterator();
             while (catIter.hasNext()) {
-                String cat = (String) catIter.next();
+                String cat = catIter.next();
                 doc1.addField("cat", cat);
             }
         }

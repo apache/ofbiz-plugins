@@ -20,7 +20,6 @@
 package org.apache.ofbiz.birt.flexible;
 
 import java.io.IOException;
-import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -87,10 +86,10 @@ public class ReportDesignGenerator {
     public ReportDesignGenerator(Map<String, Object> context, DispatchContext dctx) throws GeneralException, SemanticException {
         locale = (Locale) context.get("locale");
         dataMap = UtilGenerics.checkMap(context.get("dataMap"));
-        filterMap = (LinkedHashMap<String, String>) context.get("filterMap");
+        filterMap = UtilGenerics.cast(context.get("filterMap"));
         serviceName = (String) context.get("serviceName");
         fieldDisplayLabels = UtilGenerics.checkMap(context.get("fieldDisplayLabels"));
-        filterDisplayLabels = (LinkedHashMap<String, String>) context.get("filterDisplayLabels");
+        filterDisplayLabels = UtilGenerics.cast(context.get("filterDisplayLabels"));
         rptDesignName = (String) context.get("rptDesignName");
         String writeFilters = (String) context.get("writeFilters");
         if (UtilValidate.isEmpty(dataMap)) {
@@ -156,7 +155,7 @@ public class ReportDesignGenerator {
                 } else {
                     displayFilterName = filter;
                 }
-                ScalarParameterHandle scalParam = ((ElementFactory) factory).newScalarParameter(filter);
+                ScalarParameterHandle scalParam = factory.newScalarParameter(filter);
                 // scalParam.setDisplayName(displayFilterName); // TODO has no incidence at all right now, is only displayed when using birt's report parameter system. Not our case. I leave it here if any idea arise of how to translate these.
                 scalParam.setPromptText(displayFilterName);
                 if ("javaObject".equals(birtType)) { //Fields of type='blob' are rejected by Birt: org.eclipse.birt.report.model.api.metadata.PropertyValueException: The choice value "javaObject" is not allowed. 

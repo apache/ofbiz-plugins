@@ -44,7 +44,6 @@ import org.apache.ofbiz.birt.BirtFactory;
 import org.apache.ofbiz.birt.BirtWorker;
 import org.apache.ofbiz.common.email.NotificationServices;
 import org.apache.ofbiz.entity.Delegator;
-import org.apache.ofbiz.entity.util.EntityUtilProperties;
 import org.apache.ofbiz.security.Security;
 import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.LocalDispatcher;

@@ -94,7 +94,7 @@ public class PricatEvents {
         } else {
             String action = request.getParameter("action");
             if (UtilValidate.isNotEmpty(action) && "downloadPricat".equals(action)) {
-                String sequenceNumString = (String) request.getParameter("sequenceNum");
+                String sequenceNumString = request.getParameter("sequenceNum");
                 long sequenceNum = -1;
                 if (UtilValidate.isNotEmpty(sequenceNumString)) {
                     try {

@@ -154,7 +154,7 @@ public class GitHubAuthenticator implements Authenticator {
 
         GenericValue userLogin;
         try {
-            userLogin = EntityQuery.use(delegator).from("UserLogin").where("externalAuthId", (String) userMap.get("id")).queryFirst();
+            userLogin = EntityQuery.use(delegator).from("UserLogin").where("externalAuthId", userMap.get("id")).queryFirst();
         } catch (GenericEntityException e) {
             throw new AuthenticatorException(e.getMessage(), e);
         }

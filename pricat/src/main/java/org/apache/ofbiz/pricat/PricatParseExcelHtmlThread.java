@@ -112,8 +112,6 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
     
     private String selectedPricatType = DEFAULT_PRICAT_TYPE;
     
-    private String selectedFacilityId;
-    
     public static final Map<String, String> PricatTypeLabels = UtilMisc.toMap("sample_pricat", "SamplePricatTemplate",
                                                                               "ofbiz_pricat", "OFBizPricatTemplate");
     

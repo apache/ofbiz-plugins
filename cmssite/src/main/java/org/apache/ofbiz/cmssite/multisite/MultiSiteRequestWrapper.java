@@ -42,7 +42,6 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpUpgradeHandler;
 import javax.servlet.http.Part;
 
-import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.UtilHttp;
 
 
@@ -83,12 +82,12 @@ public class MultiSiteRequestWrapper implements HttpServletRequest {
     }
 
     @Override
-    public Enumeration getHeaderNames() {
+    public Enumeration<String> getHeaderNames() {
         return request.getHeaderNames();
     }
 
     @Override
-    public Enumeration getHeaders(String arg0) {
+    public Enumeration<String> getHeaders(String arg0) {
         return request.getHeaders(arg0);
     }
 
@@ -201,7 +200,7 @@ public class MultiSiteRequestWrapper implements HttpServletRequest {
     }
 
     @Override
-    public Enumeration getAttributeNames() {
+    public Enumeration<String> getAttributeNames() {
         return request.getAttributeNames();
     }
 
@@ -251,7 +250,7 @@ public class MultiSiteRequestWrapper implements HttpServletRequest {
     }
 
     @Override
-    public Enumeration getLocales() {
+    public Enumeration<Locale> getLocales() {
         return request.getLocales();
     }
 
@@ -261,12 +260,12 @@ public class MultiSiteRequestWrapper implements HttpServletRequest {
     }
 
     @Override
-    public Map getParameterMap() {
+    public Map<String, String[]> getParameterMap() {
         return request.getParameterMap();
     }
 
     @Override
-    public Enumeration getParameterNames() {
+    public Enumeration<String> getParameterNames() {
         return request.getParameterNames();
     }
 
@@ -406,7 +405,7 @@ public class MultiSiteRequestWrapper implements HttpServletRequest {
     }
 
     @Override
-    public HttpUpgradeHandler upgrade (Class handlerClass) throws IOException, ServletException {
+    public <T extends HttpUpgradeHandler> T upgrade (Class<T> handlerClass) throws IOException, ServletException {
         return request.upgrade(handlerClass);
     }
 }

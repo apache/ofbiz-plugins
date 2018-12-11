@@ -727,7 +727,7 @@ public class ImportOrdersFromEbay {
                 String contactMechId = "";
                 GenericValue partyAttribute = null;
                 if (UtilValidate.isNotEmpty(parameters.get("eiasTokenBuyer"))) {
-                    partyAttribute = EntityQuery.use(delegator).from("PartyAttribute").where("attrValue", (String)parameters.get("eiasTokenBuyer")).queryFirst();
+                    partyAttribute = EntityQuery.use(delegator).from("PartyAttribute").where("attrValue", parameters.get("eiasTokenBuyer")).queryFirst();
                 }
 
                 // if we get a party, check its contact information.

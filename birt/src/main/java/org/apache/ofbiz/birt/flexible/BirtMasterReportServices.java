@@ -87,7 +87,7 @@ public class BirtMasterReportServices {
     }
 
     public static Map<String, Object> workEffortPerPerson(DispatchContext dctx, Map<String, Object> context) {
-        Delegator delegator = (Delegator) dctx.getDelegator();
+        Delegator delegator = dctx.getDelegator();
         IReportContext reportContext = (IReportContext) context.get("reportContext");
         Map<String, Object> parameters = UtilGenerics.checkMap(reportContext.getParameterValue("parameters"));
         List<GenericValue> listWorkEffortTime = null;
@@ -208,7 +208,7 @@ public class BirtMasterReportServices {
     }
 
     public static Map<String, Object> turnOver(DispatchContext dctx, Map<String, Object> context) {
-        Delegator delegator = (Delegator) dctx.getDelegator();
+        Delegator delegator = dctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
         IReportContext reportContext = (IReportContext) context.get("reportContext");
         Map<String, Object> parameters = UtilGenerics.checkMap(reportContext.getParameterValue("parameters"));

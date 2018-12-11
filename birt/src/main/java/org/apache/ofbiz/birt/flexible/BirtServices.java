@@ -76,7 +76,6 @@ import org.eclipse.birt.report.model.api.SimpleMasterPageHandle;
 import org.eclipse.birt.report.model.api.SlotHandle;
 import org.eclipse.birt.report.model.api.VariableElementHandle;
 import org.eclipse.birt.report.model.api.activity.SemanticException;
-import org.eclipse.birt.report.model.elements.SimpleMasterPage;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -422,7 +421,7 @@ public class BirtServices {
             if (customMethod == null) {
                 return ServiceUtil.returnError("CustomMethod not exist : " + customMethodId); //TODO labelise
             }
-            String customMethodName = (String) customMethod.getString("customMethodName");
+            String customMethodName = customMethod.getString("customMethodName");
             if ("default".equalsIgnoreCase(serviceName)) {
                 serviceName = customMethodName + "PrepareFields";
             }
@@ -757,7 +756,7 @@ public class BirtServices {
         Iterator<DesignElementHandle> iterCube = cubesFromUser.iterator();
 
         while (iterCube.hasNext()) {
-            DesignElementHandle item = (DesignElementHandle) iterCube.next();
+            DesignElementHandle item = iterCube.next();
             DesignElementHandle copy = item.copy().getHandle(item.getModule());
             try {
                 designStored.getCubes().add(copy);
@@ -773,7 +772,7 @@ public class BirtServices {
         Iterator<DesignElementHandle> iter = bodyFromUser.iterator();
 
         while (iter.hasNext()) {
-            DesignElementHandle item = (DesignElementHandle) iter.next();
+            DesignElementHandle item = iter.next();
             DesignElementHandle copy = item.copy().getHandle(item.getModule());
             try {
                 designStored.getBody().add(copy);
@@ -798,7 +797,8 @@ public class BirtServices {
             List<DesignElementHandle> listMasterPages = designFromUser.getMasterPages().getContents();
             for (DesignElementHandle masterPage : listMasterPages) {
                 if (masterPage instanceof SimpleMasterPageHandle) {
-                    designStored.getMasterPages().add((SimpleMasterPage) ((SimpleMasterPageHandle) masterPage).copy()); // TODO check what to use in place of add (deprecated)
+                    SimpleMasterPageHandle masterPageHandle = (SimpleMasterPageHandle) masterPage;
+                    designStored.getMasterPages().add(masterPageHandle.copy().getHandle(masterPage.getModule()));
                 }
             }
         } catch (Exception e) {
@@ -826,7 +826,7 @@ public class BirtServices {
         @SuppressWarnings("unchecked")
         Iterator<DesignElementHandle> iterStored = stylesStored.iterator();
         while (iterStored.hasNext()) {
-            DesignElementHandle item = (DesignElementHandle) iterStored.next();
+            DesignElementHandle item = iterStored.next();
             listStyleNames.add(item.getName());
         }
 
@@ -835,7 +835,7 @@ public class BirtServices {
 
         // adding to styles those which are not already present
         while (iterUser.hasNext()) {
-            DesignElementHandle item = (DesignElementHandle) iterUser.next();
+            DesignElementHandle item = iterUser.next();
             if (!listStyleNames.contains(item.getName())) {
                 DesignElementHandle copy = item.copy().getHandle(item.getModule());
                 try {

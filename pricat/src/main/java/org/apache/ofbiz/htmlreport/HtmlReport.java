@@ -821,10 +821,10 @@ public class HtmlReport extends AbstractReport {
     public String paramsAsHidden(HttpServletRequest request, Collection<?> excludes) {
         StringBuffer result = new StringBuffer(512);
         Map<String, Object> params = paramValues(request);
-        Iterator<?> i = params.entrySet().iterator();
+        Iterator<Map.Entry<String, Object>> i = params.entrySet().iterator();
         while (i.hasNext()) {
-            Map.Entry entry = (Map.Entry)i.next();
-            String param = (String)entry.getKey();
+            Map.Entry<String, Object> entry = i.next();
+            String param = entry.getKey();
             if ((excludes == null) || (!excludes.contains(param))) {
                 result.append("<input type=\"hidden\" name=\"");
                 result.append(param);
@@ -850,7 +850,7 @@ public class HtmlReport extends AbstractReport {
         Map<String, Object> map = new HashMap<String, Object>(methods.size());
         Iterator<Method> i = methods.iterator();
         while (i.hasNext()) {
-            Method m = (Method)i.next();
+            Method m = i.next();
             Object o = null;
             try {
                 o = m.invoke(this, new Object[0]);

@@ -28,7 +28,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.solr.servlet.RedirectServlet;
 import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.entity.GenericValue;
-import org.apache.ofbiz.security.Security;
 import org.apache.ofbiz.webapp.control.LoginWorker;
 
 /**

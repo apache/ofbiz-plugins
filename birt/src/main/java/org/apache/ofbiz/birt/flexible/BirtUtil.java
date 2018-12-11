@@ -34,7 +34,6 @@ import org.apache.ofbiz.entity.condition.EntityCondition;
 import org.apache.ofbiz.entity.condition.EntityConditionList;
 import org.apache.ofbiz.entity.condition.EntityExpr;
 import org.apache.ofbiz.entity.util.EntityQuery;
-import org.eclipse.birt.report.engine.api.HTMLServerImageHandler;
 import org.eclipse.birt.report.engine.api.RenderOption;
 import org.eclipse.birt.report.model.api.elements.DesignChoiceConstants;
 
@@ -42,7 +41,6 @@ public final class BirtUtil {
 
     public final static String module = BirtUtil.class.getName();
 
-    private final static HTMLServerImageHandler imageHandler = new HTMLServerImageHandler(); // TODO not used yet or to remove
     private final static Map<String, String> entityFieldTypeBirtTypeMap = MapUtils.unmodifiableMap(UtilMisc.toMap(
             "id", DesignChoiceConstants.COLUMN_DATA_TYPE_STRING,
             "url", DesignChoiceConstants.COLUMN_DATA_TYPE_STRING,

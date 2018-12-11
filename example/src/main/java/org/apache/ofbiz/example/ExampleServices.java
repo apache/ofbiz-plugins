@@ -34,7 +34,7 @@ public class ExampleServices {
     public static Map<String, Object> sendExamplePushNotifications(DispatchContext dctx, Map<String, ? extends Object> context) {
         String exampleId = (String) context.get("exampleId");
         String message = (String) context.get("message");
-        Set<Session> clients = (Set<Session>) ExampleWebSockets.getClients();
+        Set<Session> clients = ExampleWebSockets.getClients();
         try {
             synchronized (clients) {
                 for (Session client : clients) {

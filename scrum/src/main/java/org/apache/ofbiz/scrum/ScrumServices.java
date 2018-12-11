@@ -122,8 +122,8 @@ public class ScrumServices {
      * @return Map with the result of the service, the output parameters.
      */
     public static Map<String, Object> viewScrumRevision(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Delegator delegator = ctx.getDelegator();
-        LocalDispatcher dispatcher = ctx.getDispatcher();
+        ctx.getDelegator();
+        ctx.getDispatcher();
         String revision = (String) context.get("revision");
         String repository = (String) context.get("repository");
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -264,7 +264,7 @@ public class ScrumServices {
      */
     public static Map<String, Object> removeDuplicateScrumRevision(DispatchContext ctx, Map<String, ? extends Object> context) {
         Delegator delegator = ctx.getDelegator();
-        LocalDispatcher dispatcher = ctx.getDispatcher();
+        ctx.getDispatcher();
         String repositoryRoot = (String) context.get("repositoryRoot");
         Map<String, Object> result = ServiceUtil.returnSuccess();
         try {

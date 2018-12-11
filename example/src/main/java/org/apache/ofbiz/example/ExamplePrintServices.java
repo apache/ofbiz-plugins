@@ -48,7 +48,6 @@ import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.GeneralException;
 import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.base.util.UtilProperties;
-import org.apache.ofbiz.entity.util.EntityUtilProperties;
 import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.ServiceUtil;
 import org.apache.ofbiz.webapp.view.ApacheFopWorker;

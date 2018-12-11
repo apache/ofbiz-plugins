@@ -19,10 +19,8 @@
 package org.apache.ofbiz.htmlreport;
 
 import java.io.IOException;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.JspException;
 
 import org.apache.ofbiz.htmlreport.util.ReportStringUtil;
 

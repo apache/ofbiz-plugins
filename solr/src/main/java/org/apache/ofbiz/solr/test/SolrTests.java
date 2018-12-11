@@ -25,23 +25,15 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.jasper.tagplugins.jstl.core.Remove;
-import org.apache.ofbiz.base.util.UtilMisc;
-import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.service.ServiceUtil;
 import org.apache.ofbiz.service.testtools.OFBizTestCase;
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.common.SolrDocument;
-import org.apache.solr.common.SolrDocumentList;
-import org.apache.solr.client.solrj.response.QueryResponse;
 
 public class SolrTests extends OFBizTestCase {
 
     protected GenericValue userLogin = null;
     private Map<String, Object> context;
-    private Map<String, Object> emptyContext = new HashMap<String, Object>();
     private Map<String, Object> response;
     private String validTestProductId = "GZ-1006";
     private String validTestProductId_2 = "GZ-1005";

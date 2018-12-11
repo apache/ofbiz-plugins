@@ -559,7 +559,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
             if (sequenceNum < 1L) {
                 historyValue = EntityQuery.use(delegator).from("ExcelImportHistory").where("userLoginId", userLoginId, "logFileName", logFileName).orderBy("sequenceNum DESC").filterByDate().queryFirst();
             } else {
-                historyValue = EntityQuery.use(delegator).from("ExcelImportHistory").where("userLoginId", userLoginId, "sequenceNum", (Long) sequenceNum).queryOne();
+                historyValue = EntityQuery.use(delegator).from("ExcelImportHistory").where("userLoginId", userLoginId, "sequenceNum", sequenceNum).queryOne();
             }
             Timestamp now = UtilDateTime.nowTimestamp();
             if (UtilValidate.isEmpty(historyValue)) {

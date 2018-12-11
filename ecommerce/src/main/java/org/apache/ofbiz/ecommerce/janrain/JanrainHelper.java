@@ -67,8 +67,8 @@ public class JanrainHelper {
     public JanrainHelper(String apiKey, String baseUrl) {
         while (baseUrl.endsWith("/"))
             baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
-        this.apiKey = apiKey;
-        this.baseUrl = baseUrl;
+        JanrainHelper.apiKey = apiKey;
+        JanrainHelper.baseUrl = baseUrl;
     }
     public String getApiKey() { return apiKey; }
     public String getBaseUrl() { return baseUrl; }
@@ -79,7 +79,7 @@ public class JanrainHelper {
     }
     public HashMap<String, List<String>> allMappings() {
         Element rsp = apiCall("all_mappings", null);
-        Element mappings_node = (Element)rsp.getFirstChild();
+        rsp.getFirstChild();
         HashMap<String, List<String>> result = new HashMap<String, List<String>>();
         NodeList mappings = getNodeList("/rsp/mappings/mapping", rsp);
         for (int i = 0; i < mappings.getLength(); i++) {
@@ -193,8 +193,7 @@ public class JanrainHelper {
         String token =  request.getParameter("token");
         String errMsg = "";
         if (UtilValidate.isNotEmpty(token)) {
-            JanrainHelper janrainHelper = new JanrainHelper(apiKey, baseUrl);
-            Element authInfo = janrainHelper.authInfo(token);
+            Element authInfo = JanrainHelper.authInfo(token);
             Element profileElement = UtilXml.firstChildElement(authInfo, "profile");
             Element nameElement = UtilXml.firstChildElement(profileElement, "name");
             

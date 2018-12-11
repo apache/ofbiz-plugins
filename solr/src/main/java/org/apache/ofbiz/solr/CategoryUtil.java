@@ -129,7 +129,7 @@ public final class CategoryUtil {
         int i = 0;
         for (List<String> trailElement : trailElements) {
             for (Iterator<String> trailIter = trailElement.iterator(); trailIter.hasNext();) {
-                String trailString = (String) trailIter.next();
+                String trailString = trailIter.next();
                 if (catMember.length() > 0){
                     catMember.append("/");
                     i++;

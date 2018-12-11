@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.UtilMisc;
@@ -88,7 +87,7 @@ public final class ProductUtil {
                 List<GenericValue> category = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition(UtilMisc.toMap("productId", productId)), null, null, null, false);
                 List<String> trails = new ArrayList<String>();
                 for (Iterator<GenericValue> catIterator = category.iterator(); catIterator.hasNext();) {
-                    GenericValue cat = (GenericValue) catIterator.next();
+                    GenericValue cat = catIterator.next();
                     String productCategoryId = (String) cat.get("productCategoryId");
                     List<List<String>> trailElements = CategoryUtil.getCategoryTrail(productCategoryId, dctx);
                     //Debug.log("trailElements ======> " + trailElements.toString());
@@ -98,7 +97,7 @@ public final class ProductUtil {
                         Iterator<String> trailIter = trailElement.iterator();
                        
                         while (trailIter.hasNext()) {
-                            String trailString = (String) trailIter.next();
+                            String trailString = trailIter.next();
                             if (catMember.length() > 0){
                                 catMember.append("/");
                                 i++;
@@ -136,7 +135,7 @@ public final class ProductUtil {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(featureSet));
                 }
                 if (featureSet != null) {
-                    dispatchContext.put("features", (Set<?>) featureSet.get("featureSet"));
+                    dispatchContext.put("features", featureSet.get("featureSet"));
                 }
 
                 Map<String, Object> productInventoryAvailable = dispatcher.runSync("getProductInventoryAvailable", UtilMisc.toMap("productId", productId));
