@@ -37,32 +37,10 @@ under the License.
                 <set field="visualThemeId" from-field="productStore.visualThemeId" default-value="EC_DEFAULT"/>
                 <script location="component://common/groovyScripts/InitTheme.groovy"/>
 
-                <!-- The default (global) shortcut icon -->
-                <set field="layoutSettings.shortcutIcon" value="/images/ofbiz.ico" global="true"/>
-
                 <!-- The default (main) java scripts -->
                 <!-- NOTE: this should be included on each screen that uses it to avoid including it in all screens: -->
-                <set field="layoutSettings.javaScripts[]" value="/common/js/util/OfbizUtil.js" global="true"/>
                 <set field="initialLocaleComplete" type="String" value="${groovy:parameters?.userLogin?.lastLocale}" default-value="${groovy:locale.toString()}"/>
                 <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.apache.ofbiz.common.JsLanguageFilesMapping.dateTime.getFilePath(initialLocaleComplete)}" global="true"/>
-
-                <set field="layoutSettings.javaScripts[+0]" value="/common/js/jquery/plugins/datetimepicker/jquery-ui-timepicker-addon-1.6.3.min.js" global="true"/>
-                <set field="layoutSettings.javaScripts[+0]" value="/common/js/jquery/ui/jquery-ui-1.12.1.min.js" global="true"/>
-                <set field="layoutSettings.javaScripts[+0]" value="/common/js/jquery/plugins/validate/additional-methods.min.js" global="true"/>
-                <set field="layoutSettings.javaScripts[+0]" value="/common/js/jquery/plugins/validate/jquery.validate.min.js" global="true"/>
-                <set field="layoutSettings.javaScripts[+0]" value="/common/js/jquery/plugins/browser-plugin/jquery.browser-0.1.0.min.js" global="true"/>
-                <set field="layoutSettings.javaScripts[+0]" value="/common/js/jquery/jquery-migrate-3.0.0.min.js" global="true"/>
-                <set field="layoutSettings.javaScripts[+0]" value="/common/js/jquery/jquery-3.2.1.min.js" global="true"/>
-                <set field="layoutSettings.javaScripts[]" value="/common/js/jquery/plugins/Readmore.js-master/readmore.js" global="true"/>
-                <set field="layoutSettings.javaScripts[]" value="/common/js/jquery/plugins/jquery-jgrowl/jquery.jgrowl-1.4.6.min.js" global="true"/>
-                
-                <set field="layoutSettings.styleSheets[+0]" value="/common/js/jquery/ui/jquery-ui-1.12.1.min.css" global="true" />
-                <set field="layoutSettings.styleSheets[+0]" value="/common/js/jquery/plugins/jquery-jgrowl/jquery.jgrowl-1.4.6.min.css" global="true" />
-                <set field="layoutSettings.styleSheets[+0]" value="/common/js/jquery/plugins/datetimepicker/jquery-ui-timepicker-addon-1.6.3.min.css" global="true" />
-
-                <set field="layoutSettings.styleSheets[+0]" value="/ecommerce/css/bootstrap.min.css" global="true" />
-                <set field="layoutSettings.javaScripts[]" value="/ecommerce/js/bootstrap.min.js" global="true"/>
-                <set field="layoutSettings.javaScripts[]" value="/ecommerce/js/bootstrap.bundle.min.js" global="true"/>
 
                 <!-- Get the store VisualTheme -->
                 <set field="headerTemplateLocation" from-field="layoutSettings.VT_HDR_TMPLT_LOC" default-value="component://ecommerce/template/includes/Header.ftl"/>
@@ -260,19 +238,6 @@ under the License.
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
 
                 <set field="MainColumnStyle" value="nocolumns" global="true"/>
-
-                <!-- The default (global) shortcut icon -->
-                <set field="layoutSettings.shortcutIcon" value="/images/ofbiz.ico" global="true"/>
-
-                <!-- The default (main) java scripts -->
-                <!-- NOTE: this should be included on each screen that uses it to avoid including it in all screens: -->
-                <set field="layoutSettings.javaScripts[]" value="/common/js/util/OfbizUtil.js" global="true"/>
-
-                <set field="layoutSettings.javaScripts[+0]" value="/common/js/jquery/plugins/validate/jquery.validate.min.js" global="true"/>
-                <set field="layoutSettings.javaScripts[+0]" value="/common/js/jquery/jquery-3.2.1.min.js" global="true"/>
-                <set field="layoutSettings.javaScripts[+0]" value="/common/js/jquery/jquery-migrate-3.0.0.min.js" global="true" />
-                <set field="layoutSettings.javaScripts[+0]" value="/common/js/jquery/plugins/browser-plugin/jquery.browser-0.1.0.min.js" global="true"/>
-
                 <script location="component://ecommerce/groovyScripts/EcommerceSetup.groovy"/>
 
                 <!-- Get the store VisualTheme -->
