@@ -66,14 +66,6 @@ under the License.
             <date-time type="date"/>
         </field>
         <!-- ***************** -->
-        <!-- ***   field3  *** -->
-        <!-- ***************** -->
-        <field name="field3"
-               title="${uiLabelMap.ExampleDateField3Title}"
-               tooltip="${uiLabelMap.ExampleToDo}" tooltip-style="button-text">
-            <date-time type="time"/>
-        </field>
-        <!-- ***************** -->
         <!-- ***   field4  *** -->
         <!-- ***************** -->
         <field name="field4"
