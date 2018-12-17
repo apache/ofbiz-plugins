@@ -28,11 +28,11 @@ under the License.
         <!-- ***************** -->
         <!-- ***   field1  *** -->
         <!-- ***************** -->
-        <field name="field1"
+        <!-- <field name="field1"
                title="${uiLabelMap.ExampleDateField1Title}"
                tooltip="${uiLabelMap.ExampleToDo}" tooltip-style="button-text">
             <date-time mask="Y"/>
-        </field>
+        </field> -->
         <!-- ***************** -->
         <!-- ***   field9  *** -->
         <!-- ***************** -->
