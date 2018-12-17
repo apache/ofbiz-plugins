@@ -29,8 +29,7 @@ under the License.
         <!-- ***   field1  *** -->
         <!-- ***************** -->
         <!-- <field name="field1"
-               title="${uiLabelMap.ExampleDateField1Title}"
-               tooltip="${uiLabelMap.ExampleToDo}" tooltip-style="button-text">
+               title="${uiLabelMap.ExampleDateField1Title}">
             <date-time mask="Y"/>
         </field> -->
         <!-- ***************** -->
@@ -61,8 +60,7 @@ under the License.
         <!-- ***   field2  *** -->
         <!-- ***************** -->
         <field name="field2"
-               title="${uiLabelMap.ExampleDateField2Title}"
-               tooltip="${uiLabelMap.ExampleToDo}" tooltip-style="button-text">
+               title="${uiLabelMap.ExampleDateField2Title}">
             <date-time type="date"/>
         </field>
         <!-- ***************** -->
@@ -86,8 +84,7 @@ under the License.
         <!-- ***************** -->
         <field name="field6"
                entry-name="exampleDateField"
-               title="${uiLabelMap.ExampleDateField6Title}"
-               tooltip="${uiLabelMap.ExampleToDo}" tooltip-style="button-text">
+               title="${uiLabelMap.ExampleDateField6Title}">
             <display type="date-time"/>
         </field>
         <!-- ***************** -->
