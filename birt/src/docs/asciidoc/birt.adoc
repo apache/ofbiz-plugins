@@ -24,8 +24,6 @@ ifdef::backend-pdf[]
 :title-logo-image: image::OFBiz-Logo.svg[Apache OFBiz Logo, pdfwidth=4.25in, align=center]
 :source-highlighter: rouge
 endif::[]
-:toc:
-:toclevels: 3
 
 The birt plugin is one of the OFBiz plugins.
 
