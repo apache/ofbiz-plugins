@@ -109,6 +109,20 @@
         <response name="error" type="none" />
     </request-map>
     
+    <!-- Change theme-->
+    <request-map uri="selectTheme">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="setUserPreference"/>
+        <response name="success" type="request" value="setSessionTheme"/>
+        <response name="error" type="request" value="main"/>
+    </request-map>
+    <request-map uri="setSessionTheme">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.apache.ofbiz.common.CommonEvents" invoke="setSessionTheme"/>
+        <response name="success" type="view-last" value="main"/>
+        <response name="error" type="request" value="main"/>
+    </request-map>
+    
     <!-- Request Mappings  -->
     <request-map uri="view">
         <security https="false" auth="false"/>
