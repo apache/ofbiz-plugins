@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 */
 jQuery(document).ready(function() {
-    jQuery('#removeCreditCardTotalPaid').bind('click', function(event) {
+    jQuery('#removeCreditCardTotalPaid').on('click', function(event) {
         pleaseWait('Y');
         var param = 'clearCash=N&clearCheck=N&clearGift=N&clearCredit=Y';
         jQuery.ajax({url: 'ClearPayment',
@@ -36,7 +36,7 @@ jQuery(document).ready(function() {
         return false;
     });
     
-    jQuery('#swipeCard').bind('click', function(event) {
+    jQuery('#swipeCard').on('click', function(event) {
         jQuery('#payCreditCard').show();
         if (jQuery('#swipeCard').val() == 'Y') {
             jQuery('#swipeCard').val('N');
@@ -56,7 +56,7 @@ jQuery(document).ready(function() {
         return false;
     });
     
-    jQuery('#swipeData').bind('keypress', function(event) {
+    jQuery('#swipeData').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;
         if (code.toString() == 13) {
             payCreditCardConfirm();
@@ -68,7 +68,7 @@ jQuery(document).ready(function() {
         }
     });
     
-    jQuery('#firstName').bind('keypress', function(event) {
+    jQuery('#firstName').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;
         if (code.toString() == 13) {
             payCreditCardConfirm();
@@ -80,7 +80,7 @@ jQuery(document).ready(function() {
         }
     });
     
-    jQuery('#lastName').bind('keypress', function(event) {
+    jQuery('#lastName').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;
         if (code.toString() == 13) {
             payCreditCardConfirm();
@@ -92,7 +92,7 @@ jQuery(document).ready(function() {
         }
     });
     
-    jQuery('#cardNum').bind('keypress', function(event) {
+    jQuery('#cardNum').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;
         if (code.toString() == 13) {
             payCreditCardConfirm();
@@ -104,7 +104,7 @@ jQuery(document).ready(function() {
         }
     });
     
-    jQuery('#securityCode').bind('keypress', function(event) {
+    jQuery('#securityCode').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;
         if (code.toString() == 13) {
             payCreditCardConfirm();
@@ -116,7 +116,7 @@ jQuery(document).ready(function() {
         }
     });
     
-    jQuery('#amountCreditCard').bind('keypress', function(event) {
+    jQuery('#amountCreditCard').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;
         if (code.toString() == 13) {
             payCreditCardConfirm();
@@ -128,7 +128,7 @@ jQuery(document).ready(function() {
         }
     });
     
-    jQuery('#postalCode').bind('keypress', function(event) {
+    jQuery('#postalCode').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;
         if (code.toString() == 13) {
             payCreditCardConfirm();
@@ -140,7 +140,7 @@ jQuery(document).ready(function() {
         }
     });
 
-    jQuery('#refNumCreditCard').bind('keypress', function(event) {
+    jQuery('#refNumCreditCard').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;
         if (code.toString() == 13) {
             payCreditCardConfirm();
@@ -152,12 +152,12 @@ jQuery(document).ready(function() {
         }
     });
     
-    jQuery('#payCreditCardConfirm').bind('click', function(event) {
+    jQuery('#payCreditCardConfirm').on('click', function(event) {
         payCreditCardConfirm();
         return false;
     });
     
-    jQuery('#payCreditCardCancel').bind('click', function(event) {
+    jQuery('#payCreditCardCancel').on('click', function(event) {
         productToSearchFocus();
         return false;
     });

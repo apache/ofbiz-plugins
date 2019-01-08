@@ -77,21 +77,21 @@ under the License.
         e.preventDefault();
         return false;
     });
-    WebPosHotkeys.bind("keydown", "f1", productToSearchFocus, "productToSearchFocus()", "${uiLabelMap.WebPosShortcutF1}");
-    WebPosHotkeys.bind("keydown", "f2", partyToSearchFocus, "partyToSearchFocus()", "${uiLabelMap.WebPosShortcutF2}");
-    WebPosHotkeys.bind("keydown", "f3", payCash, "payCash()", "${uiLabelMap.WebPosShortcutF3}");
-    WebPosHotkeys.bind("keydown", "f4", payCheck, "payCheck()", "${uiLabelMap.WebPosShortcutF4}");
+    WebPosHotkeys.on("keydown", "f1", productToSearchFocus, "productToSearchFocus()", "${uiLabelMap.WebPosShortcutF1}");
+    WebPosHotkeys.on("keydown", "f2", partyToSearchFocus, "partyToSearchFocus()", "${uiLabelMap.WebPosShortcutF2}");
+    WebPosHotkeys.on("keydown", "f3", payCash, "payCash()", "${uiLabelMap.WebPosShortcutF3}");
+    WebPosHotkeys.on("keydown", "f4", payCheck, "payCheck()", "${uiLabelMap.WebPosShortcutF4}");
     <!--TODO: To be implemented with OFBIZ-5241-->
-    <!--WebPosHotkeys.bind("keydown", "f5", payPin, "", "${uiLabelMap.WebPosShortcutF5}");-->
-    WebPosHotkeys.bind("keydown", "f6", payGiftCard, "payGiftCard()", "${uiLabelMap.WebPosShortcutF6}");
-    WebPosHotkeys.bind("keydown", "f7", payCreditCard, "payCreditCard()", "${uiLabelMap.WebPosShortcutF7}");
-    WebPosHotkeys.bind("keydown", "f8", payFinish, "payFinish()", "${uiLabelMap.WebPosShortcutF8}");
-    WebPosHotkeys.bind("keydown", "f9", itemQuantityFocus, "itemQuantityFocus()", "${uiLabelMap.WebPosShortcutF9}");
-    WebPosHotkeys.bind("keydown", "f10", incrementItemQuantity, "incrementItemQuantity()", "${uiLabelMap.WebPosShortcutF10}");
-    WebPosHotkeys.bind("keydown", "f11", decrementItemQuantity, "decrementItemQuantity()", "${uiLabelMap.WebPosShortcutF11}");
-    WebPosHotkeys.bind("keydown", "f12", emptyCart, "emptyCart()", "${uiLabelMap.WebPosShortcutF12}");
-    WebPosHotkeys.bind("keydown", "up", keyUp, "keyUp()", "${uiLabelMap.WebPosShortcutKeyUp}");
-    WebPosHotkeys.bind("keydown", "down", keyDown, "keyDown()", "${uiLabelMap.WebPosShortcutKeyDown}");
+    <!--WebPosHotkeys.on("keydown", "f5", payPin, "", "${uiLabelMap.WebPosShortcutF5}");-->
+    WebPosHotkeys.on("keydown", "f6", payGiftCard, "payGiftCard()", "${uiLabelMap.WebPosShortcutF6}");
+    WebPosHotkeys.on("keydown", "f7", payCreditCard, "payCreditCard()", "${uiLabelMap.WebPosShortcutF7}");
+    WebPosHotkeys.on("keydown", "f8", payFinish, "payFinish()", "${uiLabelMap.WebPosShortcutF8}");
+    WebPosHotkeys.on("keydown", "f9", itemQuantityFocus, "itemQuantityFocus()", "${uiLabelMap.WebPosShortcutF9}");
+    WebPosHotkeys.on("keydown", "f10", incrementItemQuantity, "incrementItemQuantity()", "${uiLabelMap.WebPosShortcutF10}");
+    WebPosHotkeys.on("keydown", "f11", decrementItemQuantity, "decrementItemQuantity()", "${uiLabelMap.WebPosShortcutF11}");
+    WebPosHotkeys.on("keydown", "f12", emptyCart, "emptyCart()", "${uiLabelMap.WebPosShortcutF12}");
+    WebPosHotkeys.on("keydown", "up", keyUp, "keyUp()", "${uiLabelMap.WebPosShortcutKeyUp}");
+    WebPosHotkeys.on("keydown", "down", keyDown, "keyDown()", "${uiLabelMap.WebPosShortcutKeyDown}");
     updateHotKeys();
   }
 </script>

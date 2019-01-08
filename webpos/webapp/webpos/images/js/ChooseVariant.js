@@ -19,7 +19,7 @@ under the License.
 var variantData = null;
 
 jQuery(document).ready(function() {
-    jQuery('#variantQuantity').bind('keypress', function(event) {
+    jQuery('#variantQuantity').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;
         if (code.toString() == 13) {
             variantConfirmed();
@@ -31,12 +31,12 @@ jQuery(document).ready(function() {
         }
     });
     
-    jQuery('#chooseVariantConfirm').bind('click', function(event) {
+    jQuery('#chooseVariantConfirm').on('click', function(event) {
         variantConfirmed();
         return false;
     });
     
-    jQuery('#chooseVariantCancel').bind('click', function(event) {
+    jQuery('#chooseVariantCancel').on('click', function(event) {
         productToSearchFocus();
         return false;
     });
@@ -179,7 +179,7 @@ function selectVariant(data, firstTime) {
                     jQuery.each(featureOrder, function(i, actualFeature) {
                         var feature = featureTypes[actualFeature];
                         featureValue = "FT" + feature;
-                        jQuery('#' + featureValue).bind('change', function(event) {
+                        jQuery('#' + featureValue).on('change', function(event) {
                             selectVariant(variantData, 'N');
                             return false;
                         });

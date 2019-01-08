@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 */
 jQuery(document).ready(function() {
-    jQuery('#endingDrawerCashAmount').bind('keypress', function(event) {
+    jQuery('#endingDrawerCashAmount').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;
         if (code.toString() == 13) {
             closeTerminalConfirm();
@@ -29,7 +29,7 @@ jQuery(document).ready(function() {
         }
     });
     
-    jQuery('#endingDrawerCheckAmount').bind('keypress', function(event) {
+    jQuery('#endingDrawerCheckAmount').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;
         if (code.toString() == 13) {
             closeTerminalConfirm();
@@ -41,7 +41,7 @@ jQuery(document).ready(function() {
         }
     });
     
-    jQuery('#endingDrawerCcAmount').bind('keypress', function(event) {
+    jQuery('#endingDrawerCcAmount').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;
         if (code.toString() == 13) {
             closeTerminalConfirm();
@@ -53,7 +53,7 @@ jQuery(document).ready(function() {
         }
     });
     
-    jQuery('#endingDrawerGcAmount').bind('keypress', function(event) {
+    jQuery('#endingDrawerGcAmount').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;
         if (code.toString() == 13) {
             closeTerminalConfirm();
@@ -65,7 +65,7 @@ jQuery(document).ready(function() {
         }
     });
     
-    jQuery('#endingDrawerOtherAmount').bind('keypress', function(event) {
+    jQuery('#endingDrawerOtherAmount').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;
         if (code.toString() == 13) {
             closeTerminalConfirm();
@@ -77,12 +77,12 @@ jQuery(document).ready(function() {
         }
     });
     
-    jQuery('#closeTerminalConfirm').bind('click', function(event) {
+    jQuery('#closeTerminalConfirm').on('click', function(event) {
          closeTerminalConfirm();
          return false;
     });
     
-    jQuery('#closeTerminalCancel').bind('click', function(event) {
+    jQuery('#closeTerminalCancel').on('click', function(event) {
          productToSearchFocus();
          return false;
     });

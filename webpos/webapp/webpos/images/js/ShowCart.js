@@ -21,7 +21,7 @@ function selectCartItem() {
         var id = jQuery(this).attr('id');
         if (id != '') {
             id = '#' + id;
-            jQuery(id).bind('click', function(event) {
+            jQuery(id).on('click', function(event) {
                 showCartItemSelected(id);
             });
         }
@@ -30,7 +30,7 @@ function selectCartItem() {
         var id = jQuery(this).attr('id');
         if (id != '') {
             id = '#' + id;
-            jQuery(id).bind('click', function(event) {
+            jQuery(id).on('click', function(event) {
                 showCartItemSelected(id);
             });
         }

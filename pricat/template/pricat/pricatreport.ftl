@@ -383,11 +383,7 @@ function doScroll() {
 }
 
 function isContinueChecked() {
-    if (document.main.continuereport && document.main.continuereport.checked == true) {
-        return true;
-    } else {
-        return false;
-    }
+    return document.main.continuereport && document.main.continuereport.checked == true;
 }
 
 function displayButtonRowContinue() {

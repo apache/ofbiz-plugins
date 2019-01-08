@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 */
 jQuery(document).ready(function() {
-    jQuery('#startingDrawerAmount').bind('keypress', function(event) {
+    jQuery('#startingDrawerAmount').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;
         if (code.toString() == 13) {
             openTerminalConfirm();
@@ -29,12 +29,12 @@ jQuery(document).ready(function() {
         }
     });
     
-    jQuery('#openTerminalConfirm').bind('click', function(event) {
+    jQuery('#openTerminalConfirm').on('click', function(event) {
         openTerminalConfirm();
         return false;
     });
     
-    jQuery('#openTerminalCancel').bind('click', function(event) {
+    jQuery('#openTerminalCancel').on('click', function(event) {
         productToSearchFocus();
         return false;
     });
