@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 */
 jQuery(document).ready(function() { 
-    jQuery('#searchByPartyIdValue').bind('keypress', function(event) {
+    jQuery('#searchByPartyIdValue').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;
         if (code.toString() == 13) {
             partySearchAgain();
@@ -29,7 +29,7 @@ jQuery(document).ready(function() {
         }
     });
     
-    jQuery('#searchByPartyLastName').bind('keypress', function(event) {
+    jQuery('#searchByPartyLastName').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;
         if (code.toString() == 13) {
             partySearchAgain();
@@ -41,7 +41,7 @@ jQuery(document).ready(function() {
         }
     });
     
-    jQuery('#searchByPartyFirstName').bind('keypress', function(event) {
+    jQuery('#searchByPartyFirstName').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;
         if (code.toString() == 13) {
             partySearchAgain();
@@ -53,12 +53,12 @@ jQuery(document).ready(function() {
         }
     });
     
-    jQuery('#searchPartiesResultsSearch').bind('click', function(event) {
+    jQuery('#searchPartiesResultsSearch').on('click', function(event) {
         partySearchAgain();
         return false;
     });
     
-    jQuery('#searchPartiesResultsCancel').bind('click', function(event) {
+    jQuery('#searchPartiesResultsCancel').on('click', function(event) {
         jQuery('#searchPartiesResults').hide();
         productToSearchFocus();
         return false;
@@ -155,7 +155,7 @@ function editAddressClick() {
         var id = jQuery(this).attr('id');
         if (id != '') {
             id = '#' + id;
-            jQuery(id).bind('click', function(event) {
+            jQuery(id).on('click', function(event) {
                 editAddress(jQuery('#selectedPartyId' + idx).val(), jQuery('#selectedContactMechId' + idx).val(), jQuery('#selectedContactMechPurposeTypeId' + idx).val());
                 return false;
             });

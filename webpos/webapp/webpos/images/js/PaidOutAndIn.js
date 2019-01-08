@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 */
 jQuery(document).ready(function() {
-    jQuery('#amountInOut').bind('keypress', function(event) {
+    jQuery('#amountInOut').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;
         if (code.toString() == 13) {
             paidOutAndInConfirm();
@@ -29,7 +29,7 @@ jQuery(document).ready(function() {
         }
     });
     
-    jQuery('#reasonCommentInOut').bind('keypress', function(event) {
+    jQuery('#reasonCommentInOut').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;
         if (code.toString() == 13) {
             paidOutAndInConfirm();
@@ -41,12 +41,12 @@ jQuery(document).ready(function() {
         }
     });
     
-    jQuery('#paidOutAndInConfirm').bind('click', function(event) {
+    jQuery('#paidOutAndInConfirm').on('click', function(event) {
         paidOutAndInConfirm();
         return false;
     });
     
-    jQuery('#paidOutAndInCancel').bind('click', function(event) {
+    jQuery('#paidOutAndInCancel').on('click', function(event) {
         productToSearchFocus();
         return false;
     });

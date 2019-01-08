@@ -297,12 +297,12 @@ function copyShipToBillAddress() {
 }
 
 function stopObservingShipToBillAddress() {
-    jQuery('#shipToAddress1').unbind('change');
-    jQuery('shipToAddress2').unbind('change');
-    jQuery('shipToCity').unbind('change');
-    jQuery('shipToStateProvinceGeoId').unbind('change');
-    jQuery('shipToCountryGeoId').unbind('change', copyShipToCountryToBillToCountry);
-    jQuery('shipToPostalCode').unbind('change');
+    jQuery('#shipToAddress1').off('change');
+    jQuery('shipToAddress2').off('change');
+    jQuery('shipToCity').off('change');
+    jQuery('shipToStateProvinceGeoId').off('change');
+    jQuery('shipToCountryGeoId').off('change', copyShipToCountryToBillToCountry);
+    jQuery('shipToPostalCode').off('change');
 }
 
 function showState(id) {

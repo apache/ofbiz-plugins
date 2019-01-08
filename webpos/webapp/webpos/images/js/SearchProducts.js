@@ -19,7 +19,7 @@ under the License.
 jQuery(document).ready(function() {
     productToSearchFocus();
     
-    jQuery('#productToSearch').bind('keypress', function(event) {
+    jQuery('#productToSearch').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;
         if (code.toString() == 13) {
             productSearch();
@@ -27,12 +27,12 @@ jQuery(document).ready(function() {
         }
     });
     
-    jQuery('#searchBy').bind('change', function(event) {
+    jQuery('#searchBy').on('change', function(event) {
         productToSearchFocus();
         return false;
     });
     
-    jQuery('#productSearchConfirm').bind('click', function(event) {
+    jQuery('#productSearchConfirm').on('click', function(event) {
         productSearch();
         return false;
     });

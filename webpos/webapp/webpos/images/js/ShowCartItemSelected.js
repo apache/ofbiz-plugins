@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 */
 function cartItemSelectedEvents(focusOnQuantity) {
-    jQuery('#itemQuantity').bind('keypress', function(event) {
+    jQuery('#itemQuantity').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;
         if (code.toString() == 13) {
             updateCartItem();
@@ -26,7 +26,7 @@ function cartItemSelectedEvents(focusOnQuantity) {
         } 
     });
     
-    jQuery('#modifyPrice').bind('keypress', function(event) {
+    jQuery('#modifyPrice').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;
         if (code.toString() == 13) {
             modifyPrice();
@@ -35,12 +35,12 @@ function cartItemSelectedEvents(focusOnQuantity) {
         } 
     });
     
-    jQuery('#incrementQuantity').bind('click', function(event) {
+    jQuery('#incrementQuantity').on('click', function(event) {
         incrementItemQuantity();
         return false;
     });
     
-    jQuery('#decrementQuantity').bind('click', function(event) {
+    jQuery('#decrementQuantity').on('click', function(event) {
         decrementItemQuantity();
         return false;
     });

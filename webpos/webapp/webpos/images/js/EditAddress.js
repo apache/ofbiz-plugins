@@ -18,7 +18,7 @@ under the License.
 */
 var uiLabelJsonObjects = null;
 jQuery(document).ready(function() {
-    jQuery('#editAddressCreateUpdate').bind('click', function(event) {
+    jQuery('#editAddressCreateUpdate').on('click', function(event) {
         pleaseWait('Y');
         var param = 'partyId=' + jQuery('#partyId').val() + '&firstName=' + jQuery('#personFirstName').val() + '&lastName=' + jQuery('#personLastName').val() + 
                     '&contactMechId=' + jQuery('#contactMechId').val() + '&contactMechPurposeTypeId=' + jQuery('#contactMechPurposeTypeId').val() + 
@@ -42,7 +42,7 @@ jQuery(document).ready(function() {
         return false;
     });
     
-    jQuery('#editAddressCancel').bind('click', function(event) {
+    jQuery('#editAddressCancel').on('click', function(event) {
         pleaseWait('Y');
         productToSearchFocus();
         pleaseWait('N');

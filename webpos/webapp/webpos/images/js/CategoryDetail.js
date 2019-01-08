@@ -21,11 +21,11 @@ function showSelectedButton() {
         var id = jQuery(this).attr('id');
         if (id != '') {
             id = '#' + id;
-            jQuery(id).bind('mouseover', function(event) {
+            jQuery(id).on('mouseover', function(event) {
                 jQuery(id).addClass("selectedButton");
                 jQuery(id).removeClass("notSelectedButton");
             });
-            jQuery(id).bind('mouseout', function(event) {
+            jQuery(id).on('mouseout', function(event) {
                 jQuery(id).addClass("notSelectedButton");
                 jQuery(id).removeClass("selectedButton");
             });

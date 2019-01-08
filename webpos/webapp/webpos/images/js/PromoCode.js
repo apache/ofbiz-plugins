@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 */
 jQuery(document).ready(function() {
-    jQuery('#promoCode').bind('keypress', function(event) {
+    jQuery('#promoCode').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;
         if (code.toString() == 13) {
             promoCodeConfirm();
@@ -29,12 +29,12 @@ jQuery(document).ready(function() {
         }
     });
     
-    jQuery('#promoCodeConfirm').bind('click', function(event) {
+    jQuery('#promoCodeConfirm').on('click', function(event) {
         promoCodeConfirm();
         return false;
     });
     
-    jQuery('#promoCodeCancel').bind('click', function(event) {
+    jQuery('#promoCodeCancel').on('click', function(event) {
         productToSearchFocus();
         return false;
     });

@@ -441,7 +441,7 @@ function initCartProcessObservers() {
     });
     var links = jQuery("#cartForm a[id^='removeItemLink_']");
     jQuery.each(links, function() {
-        jQuery(this).bind('click', function(){
+        jQuery(this).on('click', function(){
             removeItem(this);
         });
     });

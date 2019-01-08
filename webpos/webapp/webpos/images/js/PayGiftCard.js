@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 */
 jQuery(document).ready(function() {
-    jQuery('#removeGiftCardTotalPaid').bind('click', function(event) {
+    jQuery('#removeGiftCardTotalPaid').on('click', function(event) {
         pleaseWait('Y');
         var param = 'clearCash=N&clearCheck=N&clearGift=Y&clearCredit=N';
         jQuery.ajax({url: 'ClearPayment',
@@ -36,7 +36,7 @@ jQuery(document).ready(function() {
         return false;
     });
     
-    jQuery('#amountGiftCard').bind('keypress', function(event) {
+    jQuery('#amountGiftCard').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;
         if (code.toString() == 13) {
             payGiftCardConfirm();
@@ -48,7 +48,7 @@ jQuery(document).ready(function() {
         }
     });
     
-    jQuery('#refNumGiftCard').bind('keypress', function(event) {
+    jQuery('#refNumGiftCard').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;
         if (code.toString() == 13) {
             payGiftCardConfirm();
@@ -60,12 +60,12 @@ jQuery(document).ready(function() {
         }
     });
     
-    jQuery('#payGiftCardConfirm').bind('click', function(event) {
+    jQuery('#payGiftCardConfirm').on('click', function(event) {
         payGiftCardConfirm();
         return false;
     });
     
-    jQuery('#payGiftCardCancel').bind('click', function(event) {
+    jQuery('#payGiftCardCancel').on('click', function(event) {
         productToSearchFocus();
         return false;
     });

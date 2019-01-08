@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 */
 jQuery(document).ready(function() {
-    jQuery('#searchByProductIdValue').bind('keypress', function(event) {
+    jQuery('#searchByProductIdValue').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;   
         if (code.toString() == 13) {
             productSearchAgain();
@@ -29,7 +29,7 @@ jQuery(document).ready(function() {
         }
     });
     
-    jQuery('#searchByProductName').bind('keypress', function(event) {
+    jQuery('#searchByProductName').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;   
         if (code.toString() == 13) {
             productSearchAgain();
@@ -41,7 +41,7 @@ jQuery(document).ready(function() {
         }
     });
     
-    jQuery('#searchByProductDescription').bind('keypress', function(event) {
+    jQuery('#searchByProductDescription').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;   
         if (code.toString() == 13) {
             productSearchAgain();
@@ -53,11 +53,11 @@ jQuery(document).ready(function() {
         }
     });
     
-    jQuery('#searchProductsResultsSearch').bind('click', function(event) {
+    jQuery('#searchProductsResultsSearch').on('click', function(event) {
         productSearchAgain();
     });
         
-    jQuery('#searchProductsResultsCancel').bind('click', function(event) {
+    jQuery('#searchProductsResultsCancel').on('click', function(event) {
         jQuery('#searchProductsResults').hide();
         productToSearchFocus();
     });

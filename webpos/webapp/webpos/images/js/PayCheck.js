@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 */
 jQuery(document).ready(function() {
-    jQuery('#removeCheckTotalPaid').bind('click', function(event) {
+    jQuery('#removeCheckTotalPaid').on('click', function(event) {
         pleaseWait('Y');
         var param = 'clearCash=N&clearCheck=Y&clearGift=Y&clearCredit=N';
         jQuery.ajax({url: 'ClearPayment',
@@ -36,7 +36,7 @@ jQuery(document).ready(function() {
         return false;
     });
     
-    jQuery('#amountCheck').bind('keypress', function(event) {
+    jQuery('#amountCheck').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;
         if (code.toString() == 13) {
             payCheckConfirm();
@@ -48,7 +48,7 @@ jQuery(document).ready(function() {
         }
     });
     
-    jQuery('#refNumCheck').bind('keypress', function(event) {
+    jQuery('#refNumCheck').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;
         if (code.toString() == 13) {
             payCheckConfirm();
@@ -60,12 +60,12 @@ jQuery(document).ready(function() {
         }
     });
     
-    jQuery('#payCheckConfirm').bind('click', function(event) {
+    jQuery('#payCheckConfirm').on('click', function(event) {
         payCheckConfirm();
         return false;
     });
     
-    jQuery('#payCheckCancel').bind('click', function(event) {
+    jQuery('#payCheckCancel').on('click', function(event) {
         productToSearchFocus();
         return false;
     });

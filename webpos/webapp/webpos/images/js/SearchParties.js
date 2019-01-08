@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 */
 function partyKeyEvents() {
-    jQuery('#partyToSearch').bind('keypress', function(event) {
+    jQuery('#partyToSearch').on('keypress', function(event) {
         code = event.keyCode ? event.keyCode : event.which;
         if (code.toString() == 13) {
             partySearch();
@@ -25,7 +25,7 @@ function partyKeyEvents() {
         }
     });
     
-    jQuery('#billingAddressSelected').bind('click', function(event) {
+    jQuery('#billingAddressSelected').on('click', function(event) {
         jQuery('#billingAddress').show();
         jQuery('#shippingAddress').hide();
         jQuery('#billingLocation').val("Y");
@@ -34,7 +34,7 @@ function partyKeyEvents() {
         return false;
     });
     
-    jQuery('#shippingAddressSelected').bind('click', function(event) {
+    jQuery('#shippingAddressSelected').on('click', function(event) {
         jQuery('#billingAddress').hide();
         jQuery('#shippingAddress').show();
         jQuery('#billingLocation').val("N");
@@ -43,11 +43,11 @@ function partyKeyEvents() {
         return false;
     });
     
-    jQuery('#searchPartyBy').bind('change', function(event) {
+    jQuery('#searchPartyBy').on('change', function(event) {
         partyToSearchFocus();
     });
     
-    jQuery('#partySearchConfirm').bind('click', function(event) {
+    jQuery('#partySearchConfirm').on('click', function(event) {
         partySearch();
         return false;
     });    
@@ -83,7 +83,7 @@ function getShipMethods() {
     }
     jQuery('#billingPanel').hide();
     jQuery('#shipMethodPanel').show();
-    jQuery('#shipMethod').bind('change', function(event) {
+    jQuery('#shipMethod').on('change', function(event) {
         setShipMethod();
     });
     return result;
