@@ -23,54 +23,49 @@ under the License.
   <div id="wait-spinner" style="display:none">
     <div id="wait-spinner-image"></div>
   </div>
-  <div class="page-container">
+  <div class="container-fluid">
     <div class="header">
+
       <div class="header-top">
+        <div class="row align-items-center">
+          <div class="col">
+            <a class="navbar-brand" href="<@ofbizUrl>main</@ofbizUrl>">
+              <img src="/multiflex/images/ofbizLogo.gif" alt="Logo" height="32px"/>
+            </a>
+          </div>
+        </div>
 
-        <!-- Sitelogo and sitename -->
-        <a class="sitelogo" href="<@ofbizUrl>main</@ofbizUrl>" title="${uiLabelMap.CommonMain}"></a>
-        <div class="sitename">
+        <div class="col text-center d-none d-lg-block">
           <#if !productStore??>
-            <h1><a href="<@ofbizUrl>main</@ofbizUrl>" title="Go to Start page">${uiLabelMap.EcommerceNoProductStore}</a></h1>
+            <h3><a href="<@ofbizUrl>main</@ofbizUrl>" title="Go to Start page">${uiLabelMap.EcommerceNoProductStore}</a></h3>
           </#if>
-          <#if (productStore.title)??><h1><a href="<@ofbizUrl>main</@ofbizUrl>" title="Go to Start page">${productStore.title}</a></h1></#if>
-          <#if (productStore.subtitle)??><h2>${productStore.subtitle}</h2></#if>
-        </div>
-
-        <!-- Navigation Level 0 -->
-        <div class="nav0">
-          <ul>
-            <li><a href="<@ofbizUrl>setSessionLocale?newLocale=it</@ofbizUrl>"><img src="/multiflex/images/flag_it.gif" alt="" /></a></li>
-            <li><a href="<@ofbizUrl>setSessionLocale?newLocale=en</@ofbizUrl>"><img src="/multiflex/images/flag_en.gif" alt="" /></a></li>
-            <li><a href="<@ofbizUrl>setSessionLocale?newLocale=de</@ofbizUrl>"><img src="/multiflex/images/flag_de.gif" alt="" /></a></li>
-            <li><a href="<@ofbizUrl>setSessionLocale?newLocale=fr</@ofbizUrl>"><img src="/multiflex/images/flag_fr.gif" alt="" /></a></li>
-          </ul>
-        </div>
-
-        <!-- Navigation Level 1 -->
-        <div class="nav1">
-          <ul>
-            <li><a href="<@ofbizUrl>main</@ofbizUrl>">${uiLabelMap.CommonMain}</a></li>
-            <li><a href="<@ofbizUrl>contactus</@ofbizUrl>">${uiLabelMap.CommonContactUs}</a></li>
-            <li><a href="<@ofbizUrl>policies</@ofbizUrl>">${uiLabelMap.EcommerceSeeStorePoliciesHere}</a></li>
-          </ul>
+          <#if (productStore.title)??>
+            <h3><a href="<@ofbizUrl>main</@ofbizUrl>" title="Go to Start page">${productStore.title}</a></h3>
+           </#if>
+          <#if (productStore.subtitle)??>
+            <div id="company-subtitle"><h6>${productStore.subtitle}</h6></div>
+          </#if>
         </div>
       </div>
 
       <!-- A.2 HEADER MIDDLE -->
       <div class="header-middle">
-        <!-- Site message -->
-        <div class="sitemessage">
-          <h1>EASY &bull; FLEXIBLE &bull; ROBUST</h1>
-          <h2>
-          <#if sessionAttributes.autoName?has_content>
-            ${uiLabelMap.CommonWelcome}&nbsp;${sessionAttributes.autoName}!
-            (${uiLabelMap.CommonNotYou}?&nbsp;<a href="<@ofbizUrl>autoLogout</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonClickHere}</a>)
-          <#else>
-            ${uiLabelMap.CommonWelcome}!
-          </#if>
-          </h2>
-          <h3><a href="#">&rsaquo;&rsaquo;&nbsp;More details</a></h3>
+        <div class="row">
+          <div class="col-3 align-left">
+            <h4>EASY &bull; FLEXIBLE &bull; ROBUST</h4>
+          </div>
+          <div class="col-3 offset-6">
+          <span class="message">
+           <#if sessionAttributes.autoName?has_content>
+              ${uiLabelMap.CommonWelcome}&nbsp;${sessionAttributes.autoName}!
+              (${uiLabelMap.CommonNotYou}?&nbsp;<a href="<@ofbizUrl>autoLogout</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonClickHere}</a>)
+            <#else>
+              ${uiLabelMap.CommonWelcome}!
+            </#if>
+          </span>
+
+            <h5><a href="#">&rsaquo;&rsaquo;&nbsp;More details</a></h5>
+          </div>
         </div>
       </div>
 
@@ -103,6 +98,18 @@ under the License.
               <li id="header-bar-quickadd"><a href="<@ofbizUrl>quickadd</@ofbizUrl>">${uiLabelMap.CommonQuickAdd}</a></li>
             </ul>
           </#if>
+          <ul>
+            <li><a href="<@ofbizUrl>main</@ofbizUrl>">${uiLabelMap.CommonMain}</a></li>
+          </ul>
+          <ul>
+            <li><a href="<@ofbizUrl>contactus</@ofbizUrl>">${uiLabelMap.CommonContactUs}</a></li>
+          </ul>
+          <ul>
+            <li><a href="<@ofbizUrl>policies</@ofbizUrl>">${uiLabelMap.EcommerceSeeStorePoliciesHere}</a></li>
+          </ul>
+
+
+
 
           <#if userLogin?has_content && userLogin.userLoginId != "anonymous">
             <!-- Navigation item -->
@@ -121,9 +128,12 @@ under the License.
             </ul>
           </#if>
 
+           <ul class="flags">
+             <li><a href="<@ofbizUrl>setSessionLocale?newLocale=it</@ofbizUrl>"><img src="/multiflex/images/flag_it.gif" alt="" /></a></li>
+              <li><a href="<@ofbizUrl>setSessionLocale?newLocale=en</@ofbizUrl>"><img src="/multiflex/images/flag_en.gif" alt="" /></a></li>
+              <li><a href="<@ofbizUrl>setSessionLocale?newLocale=de</@ofbizUrl>"><img src="/multiflex/images/flag_de.gif" alt="" /></a></li>
+              <li><a href="<@ofbizUrl>setSessionLocale?newLocale=fr</@ofbizUrl>"><img src="/multiflex/images/flag_fr.gif" alt="" /></a></li>
+            </ul>
+
         </div>
       </div>
-
-      <!-- Breadcrumbs -->
-      <div class="header-breadcrumbs">
-    </div>
