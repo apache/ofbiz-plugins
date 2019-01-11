@@ -188,6 +188,10 @@
         <mime-type>application/xslt+xml</mime-type>
     </mime-mapping>
 
+    <session-config>
+        <session-timeout>60</session-timeout><!-- in minutes -->
+    </session-config>
+
     <welcome-file-list>
         <welcome-file>admin.html</welcome-file>
     </welcome-file-list>
