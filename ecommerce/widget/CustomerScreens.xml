@@ -24,16 +24,20 @@ under the License.
     <screen name="survey">
         <section>
             <actions>
-                <set field="leftbarScreenName" value="leftbar"/>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="center"/>
 
                 <set field="titleProperty" value="PageTitleAdditionalInfo"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-screen name="leftbar" location="component://ecommerce/widget/CommonScreens.xml"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://order/template/entry/Survey.ftl"/></html></platform-specific>
+                    </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -154,8 +158,6 @@ under the License.
     <screen name="giftcardbalance">
         <section>
             <actions>
-                <set field="leftbarScreenName" value="leftbar"/>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="center"/>
 
                 <set field="titleProperty" value="PageTitleGiftCardBalance"/>
@@ -163,8 +165,14 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-screen name="leftbar" location="component://ecommerce/widget/CommonScreens.xml"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/template/customer/GiftCardBalance.ftl"/></html></platform-specific>
+                    </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -173,8 +181,6 @@ under the License.
     <screen name="giftcardlink">
         <section>
             <actions>
-                <set field="leftbarScreenName" value="leftbar"/>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="center"/>
 
                 <set field="titleProperty" value="PageTitleGiftCardLink"/>
@@ -182,8 +188,14 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-screen name="leftbar" location="component://ecommerce/widget/CommonScreens.xml"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/template/customer/GiftCardLink.ftl"/></html></platform-specific>
+                    </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -210,7 +222,6 @@ under the License.
         <section>
             <actions>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="titleProperty" value="PageTitleLogin"/>
@@ -222,6 +233,9 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/template/customer/NewMsg.ftl"/></html></platform-specific>
+                    </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -635,7 +649,6 @@ under the License.
         <section>
             <actions>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="titleProperty" value="PageTitleLogin"/>
@@ -647,6 +660,9 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/template/customer/AnonContactus.ftl"/></html></platform-specific>
+                    </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

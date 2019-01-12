@@ -56,27 +56,49 @@ under the License.
                      <not><if-empty field="globalContext.productStore"/></not>
                   </condition>
                   <widgets>
-                     <platform-specific><html><html-template location="component://ecommerce/template/includes/HeaderHead.ftl"/></html></platform-specific>
-                     <platform-specific><html><html-template location="component://common-theme/template/includes/OpenHtmlBody.ftl"/></html></platform-specific>
-                     <!-- render header -->
-                     <container id="parentContainer">
-                     <container id="header"><platform-specific><html><html-template location="${headerTemplateLocation}"/></html></platform-specific></container>
+                    <platform-specific><html><html-template location="component://ecommerce/template/includes/HeaderHead.ftl"/></html></platform-specific>
+                    <platform-specific><html><html-template location="component://common-theme/template/includes/OpenHtmlBody.ftl"/></html></platform-specific>
+                      <!-- render header -->
+                      <container id="parentContainer">
+                          <container id="header">
+                              <platform-specific><html><html-template location="${headerTemplateLocation}"/></html></platform-specific>
+                          </container>
+                          <container id="ecom-mainarea" style="row mx-2">
+                            <section>
+                                <condition>
+                                    <not><if-empty-section section-name="left-column"/></not>
+                                </condition>
+                                <widgets>
+                                    <container id="div1" style="col-lg-3 order-lg-1 order-2">
+                                        <decorator-section-include name="left-column"/>
+                                    </container>
+                                </widgets>
+                            </section>
+                              <container id="div3" style="col-lg-6 order-lg-2 order-1">
+                              <!-- render messages -->
+                                  <platform-specific><html><html-template location="component://common-theme/template/includes/Messages.ftl"/></html></platform-specific>
+                                  <decorator-section-include name="body"/>
+                              </container>
+                              <section>
+                                  <condition>
+                                      <not>
+                                          <if-empty-section section-name="right-column"/>
+                                      </not>
+                                  </condition>
+                                  <widgets>
+                                      <container id="div2" style="col-lg-3 order-lg-3 order-3">
+                                          <decorator-section-include name="right-column"/>
+                                      </container>
+                                  </widgets>
+                              </section>
 
-                     <container id="ecom-mainarea" style="row mx-2">
-
-                         <container id="div1" style="col-lg-2 order-lg-1 order-2"><include-screen name="${leftbarScreenName}" location="${leftbarScreenLocation}"/></container>
-                         <container id="div3" style="col-lg-8 order-lg-2 order-1">
-                             <!-- render messages -->
-                             <platform-specific><html><html-template location="component://common-theme/template/includes/Messages.ftl"/></html></platform-specific>
-                             <decorator-section-include name="body"/>
-                         </container>
-                             <container id="div2" style="col-lg-2 order-lg-3 order-3"><include-screen name="${rightbarScreenName}" location="${rightbarScreenLocation}"/></container>
-                         <container id="div4" style="endcolumns"/>
-                    </container>
-
-                    <!-- render footer -->
-                    <container id="footer"><platform-specific><html><html-template location="${footerTemplateLocation}"/></html></platform-specific></container>
-                    </container>
+                              <container id="div4" style="endcolumns"/>
+                          </container>
+                          <!-- render footer -->
+                          <container id="footer">
+                              <platform-specific><html><html-template location="${footerTemplateLocation}"/></html></platform-specific>
+                          </container>
+                      </container>
                     <platform-specific><html><html-template location="component://common-theme/template/includes/CloseHtmlBody.ftl"/></html></platform-specific>
                   </widgets>
                   <fail-widgets>
@@ -141,11 +163,13 @@ under the License.
     <screen name="CommonLeftDecorator">
         <section>
             <actions>
-                <set field="leftbarScreenName" value="leftbar"/>
                 <set field="MainColumnStyle" value="center"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-screen name="leftbar"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
                     </decorator-section>
@@ -156,13 +180,15 @@ under the License.
     <screen name="CommonRightDecorator">
         <section>
             <actions>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="center"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
+                    </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -171,14 +197,18 @@ under the License.
     <screen name="CommonLeftRightDecorator">
         <section>
             <actions>
-                <set field="leftbarScreenName" value="leftbar"/>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="center"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-screen name="leftbar"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
+                    </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -189,15 +219,19 @@ under the License.
     <screen name="commonForumDecorator">
         <section>
             <actions>
-                <set field="leftbarScreenName" value="leftbar"/>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="center"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-screen name="leftbar"/>
+                    </decorator-section>
                     <decorator-section name="body">
                       <label style="head1" text="${uiLabelMap.${titleProperty}}"></label>
                       <decorator-section-include name="body"/>
+                    </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -208,17 +242,21 @@ under the License.
         <section>
             <actions>
                 <set field="currentMenuItemName" from-field="currentMenuItemName" default-value="all" from-scope="user"/>
-                <set field="leftbarScreenName" value="leftbar"/>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="center"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator">
+                    <decorator-section name="left-column">
+                        <include-screen name="leftbar"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <container style="blogs">
                             <include-screen name="CommonBlogTitle" location="component://ecommerce/widget/blog/BlogScreens.xml"/>
                             <decorator-section-include name="body"/>
                         </container>
+                    </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -270,8 +308,6 @@ under the License.
     <screen name="main">
         <section>
             <actions>
-                <set field="leftbarScreenName" value="leftbar"/>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="center"/>
 
                 <set field="titleProperty" value="PageTitleMain"/>
@@ -283,10 +319,16 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-screen name="leftbar"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://ecommerce/template/Main.ftl"/></html>
                         </platform-specific>
+                    </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

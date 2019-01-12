@@ -67,7 +67,6 @@ under the License.
     <screen name="showcart">
         <section>
             <actions>
-                <set field="leftbarScreenName" value="leftbar"/>
                 <set field="MainColumnStyle" value="center"/>
                 <!--set field="MainColumnStyle" value="leftonly"/-->
 
@@ -79,6 +78,9 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-screen name="leftbar" location="component://ecommerce/widget/CommonScreens.xml"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/template/cart/ShowCart.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -89,7 +91,6 @@ under the License.
     <screen name="showAllPromotions">
         <section>
             <actions>
-                <set field="leftbarScreenName" value="leftbar"/>
                 <set field="MainColumnStyle" value="leftonly"/>
 
                 <set field="promoUseDetailsInlineScreen" value="component://ecommerce/widget/CartScreens.xml#promoUseDetailsInline"/>
@@ -100,6 +101,9 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-screen name="leftbar" location="component://ecommerce/widget/CommonScreens.xml"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://order/template/entry/cart/ShowAllPromotions.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -110,8 +114,6 @@ under the License.
     <screen name="showPromotionDetails">
         <section>
             <actions>
-                <set field="leftbarScreenName" value="leftbar"/>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="center"/>
                 <set field="productsummaryScreen" value="component://ecommerce/widget/CatalogScreens.xml#productsummary"/>
                 <set field="titleProperty" value="PageTitleShowPromotionDetails"/>
@@ -119,8 +121,14 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-screen name="leftbar" location="component://ecommerce/widget/CommonScreens.xml"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <include-screen name="promotion" location="component://order/widget/ordermgr/OrderEntryCartScreens.xml"/>
+                    </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
