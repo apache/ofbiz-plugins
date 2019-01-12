@@ -52,8 +52,6 @@ under the License.
     <screen name="Showforum">
         <section>
             <actions>
-                <set field="leftbarScreenName" value="leftbar"/>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="center"/>
 
                 <set field="titleProperty" value="PageTitleForumSummary"/>
@@ -79,6 +77,9 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-screen name="leftbar" location="component://ecommerce/widget/CommonScreens.xml"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -104,6 +105,9 @@ under the License.
                             </widgets>
                         </section>
                     </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
+                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -111,8 +115,6 @@ under the License.
     <screen name="ViewForumMessage">
         <section>
             <actions>
-                <set field="leftbarScreenName" value="leftbar"/>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="center"/>
                 <set field="titleProperty" value="PageTitleForumArticle"/>
                 <set field="contentAssoc.contentId" from-field="parameters.responseContentId"/>
@@ -130,6 +132,9 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-screen name="leftbar" location="component://ecommerce/widget/CommonScreens.xml"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <label style="blogheader">${uiLabelMap.EcommerceBlogFullMessage}:</label>
                         <container style="blogcontentwrapper">
@@ -151,6 +156,9 @@ under the License.
                         <label style="blogheader">${uiLabelMap.EcommerceBlogMessageTree}:</label>
                         </container>
                         <include-tree name="ResponseTree" location="component://ecommerce/widget/ForumTrees.xml"/>
+                    </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

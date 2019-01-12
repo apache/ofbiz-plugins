@@ -23,7 +23,6 @@ under the License.
     <screen name="ListQuotes">
         <section>
             <actions>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="titleProperty" value="PageTitleListQuotes"/>
@@ -42,6 +41,9 @@ under the License.
                             <html><html-template location="component://ecommerce/template/quote/QuoteList.ftl"/></html>
                         </platform-specific>
                     </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
+                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -49,7 +51,6 @@ under the License.
     <screen name="ViewQuote">
         <section>
             <actions>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="titleProperty" value="PageTitleViewQuote"/>
@@ -83,6 +84,9 @@ under the License.
                                 <label style="h3">${uiLabelMap.OrderNoQuoteFound}</label>
                             </fail-widgets>
                         </section>
+                    </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
