@@ -93,7 +93,6 @@ under the License.
     <screen name="custsettings">
         <section>
             <actions>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="rightonly"/>
                 <set field="parameters.formNameValue" value="custsetupform" global="true"/>
 
@@ -105,6 +104,9 @@ under the License.
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/template/order/CustSettings.ftl"/></html></platform-specific>
                     </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
+                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -113,7 +115,6 @@ under the License.
     <screen name="shipsettings">
         <section>
             <actions>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="rightonly"/>
                 <set field="parameters.formNameValue" value="shipsetupform" global="true"/>
 
@@ -125,6 +126,9 @@ under the License.
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/template/order/ShipSettings.ftl"/></html></platform-specific>
                     </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
+                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -133,7 +137,6 @@ under the License.
     <screen name="optionsettings">
         <section>
             <actions>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="rightonly"/>
                 <set field="parameters.formNameValue" value="optsetupform" global="true"/>
 
@@ -145,6 +148,9 @@ under the License.
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/template/order/OptionSettings.ftl"/></html></platform-specific>
                     </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
+                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -153,7 +159,6 @@ under the License.
     <screen name="paymentoptions">
         <section>
             <actions>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="rightonly"/>
                 <set field="parameters.formNameValue" value="paymentoptions" global="true"/>
 
@@ -166,6 +171,9 @@ under the License.
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/template/order/PaymentOptions.ftl"/></html></platform-specific>
                     </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
+                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -174,7 +182,6 @@ under the License.
     <screen name="paymentinformation">
         <section>
             <actions>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="rightonly"/>
                 <set field="parameters.formNameValue" value="billsetupform"/>
 
@@ -186,6 +193,9 @@ under the License.
                 <decorator-screen name="anonymousCheckoutDecorator">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/template/order/PaymentInformation.ftl"/></html></platform-specific>
+                    </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -212,7 +222,6 @@ under the License.
     <screen name="billsettings">
         <section>
             <actions>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="titleProperty" value="PageTitleBillingInformation"/>
@@ -224,6 +233,9 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/template/order/BillSettings.ftl"/></html></platform-specific>
+                    </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -252,7 +264,6 @@ under the License.
     <screen name="checkoutshippingaddress">
         <section>
             <actions>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="titleProperty" value="PageTitleCheckoutOptions"/>
@@ -263,6 +274,9 @@ under the License.
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/template/order/CheckoutShippingAddress.ftl"/></html></platform-specific>
                     </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
+                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -271,7 +285,6 @@ under the License.
     <screen name="checkoutshippingoptions">
         <section>
             <actions>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="titleProperty" value="PageTitleCheckoutOptions"/>
@@ -281,6 +294,9 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/template/order/CheckoutShippingOptions.ftl"/></html></platform-specific>
+                    </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -339,7 +355,6 @@ under the License.
     <screen name="orderhistory">
         <section>
             <actions>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="titleProperty" value="PageTitleOrderHistory"/>
@@ -350,6 +365,9 @@ under the License.
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/template/order/OrderHistory.ftl"/></html></platform-specific>
                     </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
+                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -358,7 +376,6 @@ under the License.
     <screen name="orderstatus">
         <section>
             <actions>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="maySelectItems" value="Y"/>
@@ -370,6 +387,9 @@ under the License.
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/template/order/OrderStatus.ftl"/></html></platform-specific>
                     </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
+                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
@@ -378,7 +398,6 @@ under the License.
     <screen name="requestreturn">
         <section>
             <actions>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="titleProperty" value="PageTitleRequestReturn"/>
@@ -388,6 +407,9 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/template/order/RequestReturn.ftl"/></html></platform-specific>
+                    </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -439,7 +461,6 @@ under the License.
     <screen name="quickAnonCustSettings">
         <section>
             <actions>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="rightonly"/>
                 <set field="parameters.formNameValue" value="quickAnonCustSetupForm" global="true"/>
 
@@ -451,6 +472,9 @@ under the License.
                 <decorator-screen name="quickAnonCheckoutDecorator">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/template/order/QuickAnonCustSettings.ftl"/></html></platform-specific>
+                    </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -630,7 +654,6 @@ under the License.
     <screen name="checkoutpayment">
         <section>
             <actions>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="titleProperty" value="PageTitleCheckoutOptions"/>
@@ -641,6 +664,9 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/template/order/CheckoutPayment.ftl"/></html></platform-specific>
+                    </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

@@ -67,7 +67,6 @@ under the License.
     <screen name="defaultcontent">
         <section>
             <actions>
-                <set field="leftbarScreenName" value="leftbar"/>
                 <set field="MainColumnStyle" value="leftonly"/>
 
                 <set field="titleProperty" value="PageTitleContentPage"/>
@@ -77,6 +76,9 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-screen name="leftbar" location="component://ecommerce/widget/CommonScreens.xml"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/template/content/DefaultContent.ftl"/></html></platform-specific>
                     </decorator-section>
@@ -87,8 +89,6 @@ under the License.
     <screen name="showcontenttree">
         <section>
             <actions>
-                <set field="leftbarScreenName" value="leftbar"/>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="center"/>
 
                 <set field="titleProperty" value="PageTitleViewBlog"/>
@@ -100,8 +100,14 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-screen name="leftbar" location="component://ecommerce/widget/CommonScreens.xml"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/template/content/ShowContentTree.ftl"/></html></platform-specific>
+                    </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -110,8 +116,6 @@ under the License.
     <screen name="searchContent">
         <section>
             <actions>
-                <set field="leftbarScreenName" value="leftbar"/>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="center"/>
 
                 <set field="titleProperty" value="PageTitleShoppingCart"/>
@@ -128,9 +132,15 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-screen name="leftbar" location="component://ecommerce/widget/CommonScreens.xml"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/template/content/SearchContent.ftl"/></html></platform-specific>
                         <include-form name="SearchList" location="component://ecommerce/widget/ContentForms.xml"/>
+                    </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -139,8 +149,6 @@ under the License.
     <screen name="viewcontent">
         <section>
             <actions>
-                <set field="leftbarScreenName" value="leftbar"/>
-                <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="center"/>
 
                 <set field="titleProperty" value="PageTitleViewContent"/>
@@ -152,8 +160,14 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column">
+                        <include-screen name="leftbar" location="component://ecommerce/widget/CommonScreens.xml"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/template/content/ViewContent.ftl"/></html></platform-specific>
+                    </decorator-section>
+                    <decorator-section name="right-column">
+                        <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
