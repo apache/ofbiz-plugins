@@ -51,61 +51,61 @@ under the License.
                 <set field="layoutSettings.javaScripts[]" value="/common/js/util/miscAjaxFunctions.js" global="true" />
             </actions>
             <widgets>
-               <section>
-                  <condition>
-                     <not><if-empty field="globalContext.productStore"/></not>
-                  </condition>
-                  <widgets>
-                    <platform-specific><html><html-template location="component://ecommerce/template/includes/HeaderHead.ftl"/></html></platform-specific>
-                    <platform-specific><html><html-template location="component://common-theme/template/includes/OpenHtmlBody.ftl"/></html></platform-specific>
-                      <!-- render header -->
-                      <container id="parentContainer">
-                          <container id="header">
-                              <platform-specific><html><html-template location="${headerTemplateLocation}"/></html></platform-specific>
-                          </container>
-                          <container id="ecom-mainarea" style="row mx-2">
-                            <section>
-                                <condition>
-                                    <not><if-empty-section section-name="left-column"/></not>
-                                </condition>
-                                <widgets>
-                                    <container id="div1" style="col-lg-3 order-lg-1 order-2">
-                                        <decorator-section-include name="left-column"/>
-                                    </container>
-                                </widgets>
-                            </section>
-                              <container id="div3" style="col-lg-6 order-lg-2 order-1">
-                              <!-- render messages -->
-                                  <platform-specific><html><html-template location="component://common-theme/template/includes/Messages.ftl"/></html></platform-specific>
-                                  <decorator-section-include name="body"/>
-                              </container>
-                              <section>
-                                  <condition>
-                                      <not>
-                                          <if-empty-section section-name="right-column"/>
-                                      </not>
-                                  </condition>
-                                  <widgets>
-                                      <container id="div2" style="col-lg-3 order-lg-3 order-3">
-                                          <decorator-section-include name="right-column"/>
-                                      </container>
-                                  </widgets>
-                              </section>
+                <section>
+                    <condition>
+                        <not><if-empty field="globalContext.productStore"/></not>
+                    </condition>
+                    <widgets>
+                        <platform-specific><html><html-template location="component://ecommerce/template/includes/HeaderHead.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="component://common-theme/template/includes/OpenHtmlBody.ftl"/></html></platform-specific>
+                        <!-- render header -->
+                        <container id="parentContainer">
+                            <container id="header">
+                                <platform-specific><html><html-template location="${headerTemplateLocation}"/></html></platform-specific>
+                            </container>
+                            <container id="ecom-mainarea" style="row mx-2">
+                                <section>
+                                    <condition>
+                                        <not><if-empty-section section-name="left-column"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <container id="div1" style="col-lg-3 order-lg-1 order-2">
+                                            <decorator-section-include name="left-column"/>
+                                        </container>
+                                    </widgets>
+                                </section>
+                                <container id="div3" style="col-lg-6 order-lg-2 order-1">
+                                <!-- render messages -->
+                                    <platform-specific><html><html-template location="component://common-theme/template/includes/Messages.ftl"/></html></platform-specific>
+                                    <decorator-section-include name="body"/>
+                                </container>
+                                <section>
+                                    <condition>
+                                        <not>
+                                            <if-empty-section section-name="right-column"/>
+                                        </not>
+                                    </condition>
+                                    <widgets>
+                                        <container id="div2" style="col-lg-3 order-lg-3 order-3">
+                                            <decorator-section-include name="right-column"/>
+                                        </container>
+                                    </widgets>
+                                </section>
 
-                              <container id="div4" style="endcolumns"/>
-                          </container>
-                          <!-- render footer -->
-                          <container id="footer">
-                              <platform-specific><html><html-template location="${footerTemplateLocation}"/></html></platform-specific>
-                          </container>
-                      </container>
+                                <container id="div4" style="endcolumns"/>
+                            </container>
+                            <!-- render footer -->
+                            <container id="footer">
+                                <platform-specific><html><html-template location="${footerTemplateLocation}"/></html></platform-specific>
+                            </container>
+                        </container>
 
-                      <platform-specific><html><html-template location="component://common-theme/template/includes/CloseHtmlBody.ftl"/></html></platform-specific>
-                  </widgets>
-                  <fail-widgets>
-                     <label text="A Product Store has not been defined for this ecommerce site.  A Product Store can be created using the ofbizsetup wizard."/>
-                  </fail-widgets>
-               </section>
+                        <platform-specific><html><html-template location="component://common-theme/template/includes/CloseHtmlBody.ftl"/></html></platform-specific>
+                    </widgets>
+                    <fail-widgets>
+                        <label text="A Product Store has not been defined for this ecommerce site.  A Product Store can be created using the ofbizsetup wizard."/>
+                    </fail-widgets>
+                </section>
             </widgets>
         </section>
     </screen>
