@@ -40,7 +40,25 @@ body {
     border: solid 1px #969696;
     font-size: 1.0em;
 }
+.container-fluid #ecom-mainarea {
+    width:100%;
+}
+@media only screen and (min-width: 992px) {
+    .container-fluid  #div3 {
+        margin-left:-15px;
+    }
 
+}
+.products-card .card-title a {
+    word-break: break-word!important;
+    white-space: normal!important;
+}
+#ecom-mainarea {
+    background: none!important;
+}
+#ecom-mainarea .card .card-header {
+    background: #DCDCDC url(images/bg_head_bottom_nav.jpg);
+}
 div.popup {
     max-width: 1200px;
     width: 250px;
@@ -84,11 +102,11 @@ div.popup {
     overflow: hidden /*IE6*/;
 }
 
-.footer {
+footer {
     clear: both;
-    width: 900px;
     padding: 1.0em 0 1.0em 0;
     background: rgb(225, 225, 225) url(images/bg_foot.jpg) no-repeat;
+    background-size: 100% 50px;
     font-size: 1.0em;
     overflow: visible !important /*Firefox*/;
     overflow: hidden /*IE6*/;
@@ -96,24 +114,36 @@ div.popup {
 
 /* HEADER */
 .header {
-    width: 900px;
+    width: 100%;
     font-family: "trebuchet ms", arial, sans-serif;
 }
 
 .header-top {
-    width: 900px;
-    height: 80px;
-    background: #F0F0F0 url(images/bg_head_top.jpg);
+    width: 100%;
+    height: auto;
+    padding:10px;
+    background-color: #F0F0F0;
     overflow: visible !important /*Firefox*/;
     overflow: hidden /*IE6*/;
 }
 
 .header-middle {
-    width: 900px;
-    height: 150px;
+    width: 100%;
+    height: auto;
     background: #E6E6E6 url(images/bg_head_middle.jpg);
     overflow: visible !important /*Firefox*/;
     overflow: hidden /*IE6*/;
+    background-size: cover;
+}
+
+.header-middle h4 {
+  padding: 15px;
+  color: white;
+}
+
+.header-middle .message {
+  font-size: 17px;
+  color: #000099;
 }
 
 .header-middle .sitemessage h2 a {
@@ -122,15 +152,16 @@ div.popup {
 }
 
 .header-bottom {
-    width: 900px;
-    height: 40px;
+    width: 100%;
+    height: auto;
     background: #FFFFFF url(images/bg_head_breadcrumbs.jpg) repeat-y;
+    margin-bottom: 15px;
 }
 
 .header-breadcrumbs {
     clear: both;
-    width: 900px;
-    height: 10px;
+    width: 100%;
+    height: auto;
     padding: 1.0em 0 1.0em 0;
     background: #FFFFFF url(images/bg_head_breadcrumbs.jpg) repeat-y;
 }
@@ -144,35 +175,6 @@ div.popup {
     background: url(images/ofbizLogo.gif);
 }
 
-.sitename {
-    width: 400px;
-    height: 45px;
-    position: absolute;
-    z-index: 1;
-    margin: 20px 0 0 130px;
-    overflow: visible !important /*Firefox*/;
-    overflow: hidden /*IE6*/;
-}
-
-.sitename h1 {
-    font-size: 240%;
-}
-
-.sitename h2 {
-    margin: -4px 0 0 0;
-    color: #7D7D7D;
-    font-size: 120%;
-}
-
-.sitename a {
-    text-decoration: none;
-    color: #7D7D7D;
-}
-
-.sitename a:hover {
-    text-decoration: none;
-    color: #323232;
-}
 
 .microcart {
     width: 400px;
@@ -217,7 +219,7 @@ div.popup {
 }
 
 .nav1 {
-    width: 350px;
+    width: 100%;
     position: absolute;
     z-index: 3;
     margin: 45px 0 0 550px;
@@ -292,19 +294,34 @@ div.popup {
     color: rgb(50, 50, 50);
 }
 
+.align-left {
+  text-align: left;
+}
+
+.flags {
+  float:right;
+}
+
+.flags li {
+  border-right: none!important;
+}
+
 /*Drop-down menu*/
 .nav2 {
-    float: left;
-    width: 900px;
-    border: none;
-    background: #DCDCDC url(images/bg_head_bottom_nav.jpg) no-repeat;
-    color: #4B4B4B;
-    font-size: 130%;
+   float: left;
+   width: 100%;
+   border: none;
+   background: #DCDCDC url(images/bg_head_bottom_nav.jpg) no-repeat;
+   color: #4B4B4B;
+   font-size: 130%;
+   background-size: cover;
+   margin-bottom:15px;
 }
 
 /*Color navigation bar normal mode*/
 .nav2 ul {
     list-style-type: none;
+    margin-bottom: 0px;;
 }
 
 .nav2 ul li {
@@ -676,29 +693,34 @@ div.popup {
 /********************/
 /*  FOOTER SECTION  */
 /********************/
-.footer p {
+footer .d-flex {
     line-height: 1.3em;
     text-align: center;
     color: rgb(125, 125, 125);
     font-weight: bold;
-    font-size: 110%;
+    font-size: 107%;
+    margin-bottom: 1rem;
 }
 
-.footer p.credits {
+footer .align-items-center {
+    padding: 14px 0px 0px 0px;
+}
+
+footer .credits {
     font-weight: normal;
 }
 
-.footer a {
+footer a {
     text-decoration: underline;
     color: rgb(125, 125, 125);
 }
 
-.footer a:hover {
+footer a:hover {
     text-decoration: none;
     color: rgb(0, 0, 0);
 }
 
-.footer a:visited {
+footer a:visited {
     color: rgb(0, 0, 0);
 }
 
@@ -762,7 +784,7 @@ div.popup {
     visibility: hidden;
 }
 
-.footer:after,
+footer:after, footer div:after
 p:after {
     content: ".";
     display: block;
@@ -837,9 +859,8 @@ p:after {
 }
 
 @media print {
-    .footer {
+    footer {
         clear: both;
-        width: 900px;
         height: 3.7em;
         padding: 1.1em 0 0;
         background: rgb(240, 240, 240);
@@ -1577,12 +1598,6 @@ img {
     behavior: url("/images/pngbehavior.htc");
 }
 
-.endcolumns {
-    clear: both;
-    height: 0px;
-    visibility: hidden;
-}
-
 .hidden {
     visibility: hidden;
 }
@@ -1744,14 +1759,6 @@ A.tableheadbutton:hover {
 .browsecategorylist {
     margin-left: 10px;
 }
-
-.browsecategorytext {
-    font-weight: bold;
-    color: #467AA7;
-    padding-left: 10px;
-    background: url(images/bg_bullet_full_2.gif) no-repeat 0px 0.5em;
-}
-
 A.browsecategorybutton {
     font-weight: bold;
     color: #000099;

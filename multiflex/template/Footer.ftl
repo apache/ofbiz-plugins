@@ -19,15 +19,15 @@ under the License.
 
 <#assign nowTimestamp = Static["org.apache.ofbiz.base.util.UtilDateTime"].nowTimestamp()>
 
-<div class="footer">
-  <p align="center">
-    <p>Copyright (c) 2001-${nowTimestamp?string("yyyy")} The Apache Software Foundation - <a href="http://www.apache.org" target="_blank">www.apache.org</a></p>
-    <p>Powered by <a href="http://ofbiz.apache.org" target="_blank">Apache OFBiz</a></p>
-  </p>
+<footer>
+    <div class="d-flex align-items-center flex-column">
+        <div class="d-flex mb-16">Copyright (c) 2001-${nowTimestamp?string("yyyy")} The Apache Software Foundation - <a href="http://www.apache.org" target="_blank">www.apache.org</a></div>
+        <div class="d-flex mb-16">Powered by <a href="http://ofbiz.apache.org" target="_blank">Apache OFBiz</a></div>
+    </div>
   <#if layoutSettings.VT_FTR_JAVASCRIPT?has_content>
     <#list layoutSettings.VT_FTR_JAVASCRIPT as javaScript>
-      <script type="text/javascript" src="<@ofbizContentUrl>${StringUtil.wrapString(javaScript)}</@ofbizContentUrl>" type="text/javascript"></script>
+      <script type="application/javascript" src="<@ofbizContentUrl>${StringUtil.wrapString(javaScript)}</@ofbizContentUrl>" type="application/javascript"></script>
     </#list>
   </#if>
-</div>
+</footer>
 </div>
