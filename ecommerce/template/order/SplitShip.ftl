@@ -156,23 +156,23 @@ function submitForm(form, mode, value) {
         <div class="h3">${uiLabelMap.EcommerceAssignItems}</div>
     </div>
     <div class="screenlet-body">
-        <table width="100%" cellspacing="0" cellpadding="1" border="0">
-          <tr>
-            <td><div><b>${uiLabelMap.OrderProduct}</b></div></td>
-            <td align="center"><div><b>${uiLabelMap.OrderTotalQty}</b></div></td>
-            <td>&nbsp;</td>
-            <td align="center"><div><b>${uiLabelMap.OrderMoveQty}</b></div></td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-          </tr>
-
+      <table width="100%" cellspacing="0" cellpadding="1" border="0" class="table table-striped">
+        <thead>
+          <th>${uiLabelMap.OrderProduct}</th>
+          <th align="center">${uiLabelMap.OrderTotalQty}</th>
+          <th>&nbsp;</th>
+          <th align="center">${uiLabelMap.OrderMoveQty}</th>
+          <th>&nbsp;</th>
+          <th align="center">${uiLabelMap.CommonFrom}</th>
+          <th align="center">${uiLabelMap.CommonTo}</th>
+        </thead>
+        <tbody>
           <#list cart.items() as cartLine>
             <#assign cartLineIndex = cart.getItemIndex(cartLine)>
             <tr>
               <form method="post" action="<@ofbizUrl>updatesplit</@ofbizUrl>" name="editgroupform" style="margin: 0;">
                 <input type="hidden" name="itemIndex" value="${cartLineIndex}"/>
                 <td>
-                  <div>
                     <#if cartLine.getProductId()??>
                       <#-- product item -->
                       <#-- start code to display a small image of the product -->
@@ -207,11 +207,9 @@ function submitForm(form, mode, value) {
                       <#-- this is a non-product item -->
                       <b>${cartLine.getItemTypeDescription()!}</b> : ${cartLine.getName(dispatcher)!}
                     </#if>
-                  </div>
-
                 </td>
                 <td align="right">
-                  <div>${cartLine.getQuantity()?string.number}&nbsp;&nbsp;&nbsp;</div>
+                  ${cartLine.getQuantity()?string.number}&nbsp;&nbsp;&nbsp;
                 </td>
                 <td>
                   <div>&nbsp;</div>
@@ -223,17 +221,14 @@ function submitForm(form, mode, value) {
                   <div>&nbsp;</div>
                 </td>
                 <td>
-                  <div>${uiLabelMap.CommonFrom}:
                     <select name="fromGroupIndex" class="selectBox">
                       <#list itemShipGroups.entrySet() as group>
                         <#assign groupNumber = group.getKey() + 1>
                         <option value="${group.getKey()}">${uiLabelMap.CommonGroup} ${groupNumber}</option>
                       </#list>
                     </select>
-                  </div>
                 </td>
                 <td>
-                  <div>${uiLabelMap.CommonTo}:
                     <select name="toGroupIndex" class="selectBox">
                       <#list 0..(cart.getShipGroupSize() - 1) as groupIdx>
                         <#assign groupNumber = groupIdx + 1>
@@ -241,13 +236,13 @@ function submitForm(form, mode, value) {
                       </#list>
                       <option value="-1">${uiLabelMap.CommonNew} ${uiLabelMap.CommonGroup}</option>
                     </select>
-                  </div>
                 </td>
                 <td><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonSubmit}"/></td>
               </form>
             </tr>
           </#list>
-        </table>
+        </tbody>
+      </table>
     </div>
 </div>
 
