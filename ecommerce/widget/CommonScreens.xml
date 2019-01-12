@@ -49,6 +49,11 @@ under the License.
                     <field-map field-name="webSiteId"/>
                 </entity-and>
                 <set field="layoutSettings.javaScripts[]" value="/common/js/util/miscAjaxFunctions.js" global="true" />
+                <set field="bodyStyle" value="${groovy:
+                        if(sections?.get(&quot;left-column&quot;) &amp;&amp; sections?.get(&quot;right-column&quot;)) &quot;col-lg-6&quot;
+                        else if (sections?.get(&quot;left-column&quot;) || sections?.get(&quot;right-column&quot;)) &quot;col-lg-9&quot;
+                        else &quot;col-lg-12&quot;
+                }"/>
             </actions>
             <widgets>
                 <section>
@@ -74,7 +79,7 @@ under the License.
                                         </container>
                                     </widgets>
                                 </section>
-                                <container id="div3" style="col-lg-6 order-lg-2 order-1">
+                                <container id="div3" style="${bodyStyle} order-lg-2 order-1">
                                 <!-- render messages -->
                                     <platform-specific><html><html-template location="component://common-theme/template/includes/Messages.ftl"/></html></platform-specific>
                                     <decorator-section-include name="body"/>
