@@ -105,7 +105,7 @@ under the License.
                         <include-screen name="leftbar" location="component://ecommerce/widget/CommonScreens.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://order/template/entry/cart/ShowAllPromotions.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="component://ecommerce/template/cart/ShowAllPromotions.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -125,13 +125,29 @@ under the License.
                         <include-screen name="leftbar" location="component://ecommerce/widget/CommonScreens.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
-                        <include-screen name="promotion" location="component://order/widget/ordermgr/OrderEntryCartScreens.xml"/>
+                        <include-screen name="promotion"></include-screen>
                     </decorator-section>
                     <decorator-section name="right-column">
                         <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
+        </section>
+    </screen>
+
+    <screen name="promotion">
+        <section>
+            <condition>
+                <not><if-empty field="productPromo"/></not>
+            </condition>
+            <widgets>
+                <platform-specific><html><html-template location="component://ecommerce/template/cart/PromotionDetails.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="component://ecommerce/template/cart/PromotionCategories.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="component://ecommerce/template/cart/PromotionProducts.ftl"/></html></platform-specific>
+            </widgets>
+            <fail-widgets>
+                <label text="${uiLabelMap.OrderErrorNoPromotionFoundWithID} [${productPromoId?if_exists}]" style="h2"/>
+            </fail-widgets>
         </section>
     </screen>
 
