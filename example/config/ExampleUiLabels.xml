@@ -175,6 +175,15 @@
         <value xml:lang="zh">使用步长=1 (缺省), 5, 10, 15, 30</value>
         <value xml:lang="zh-TW">使用步長=1 (預設), 5, 10, 15, 30</value>
     </property>
+    <property key="ExampleDateField13Title">
+        <value xml:lang="en">Field13: Date Find Field (Default type: timestamp)</value>
+    </property>
+    <property key="ExampleDateField14Title">
+        <value xml:lang="en">Field14: Date Find Field of type date</value>
+    </property>
+    <property key="ExampleDateField15Title">
+        <value xml:lang="en">Field14: Date Find Field of type time</value>
+    </property>
     <property key="ExampleDateField1Title">
         <value xml:lang="en">Field1: date and time selection field</value>
         <value xml:lang="fr">Champ 1 : sélection de date et temps</value>
