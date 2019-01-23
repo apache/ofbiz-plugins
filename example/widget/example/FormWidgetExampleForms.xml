@@ -435,7 +435,7 @@ under the License.
         <!-- ***   Layered-modal  *** -->
         <!-- ************************ -->
         <actions>
-            <set field="targetUrl" value="javascript:sendJWT('${webappName}', 'https://demo-trunk.ofbiz.apache.org/content/control/main')"/>
+            <set field="targetUrl" value="javascript:sendJWT('https://demo-trunk.ofbiz.apache.org/content/control/main')"/>
         </actions>
         <field name="emptyField0" title=" "><display/></field>
         <field name="newExample" title=" " widget-area-style="smallSubmit" position="1">
