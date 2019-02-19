@@ -1978,7 +1978,7 @@ public class EbayStore {
         double reservPrice = 0;
         if (UtilValidate.isNotEmpty(sst)) {
             AmountType amt = sst.getCurrentPrice();
-            currentPrice = amt != null ? (new Double(amt.getValue())) : 0;
+            currentPrice = amt != null ? (Double.parseDouble(amt.getValue())) : 0;
             bidCount = sst.getBidCount() != null ? sst.getBidCount() : 0;
         }
         cols.put("buyItNowPrice", item.getBuyItNowPrice().getValue());
@@ -2010,7 +2010,7 @@ public class EbayStore {
         java.util.Calendar startTime = item.getListingDetails() == null ? null : item.getListingDetails().getStartTime();
         cols.put("startTime", startTime != null ? eBayUtil.toAPITimeString(startTime.getTime()) : "");
         AmountType amt = item.getStartPrice();
-        cols.put("StartPrice", amt != null ? (new Double(amt.getValue()).toString()) : "");
+        cols.put("StartPrice", amt != null ? (Double.toString(amt.getValue())) : "");
 
         Integer quantity = item.getQuantity();
         String quantityStr = null;
@@ -2033,7 +2033,7 @@ public class EbayStore {
         cols.put("title", item.getTitle() != null ? item.getTitle() : "");
 
         AmountType amt = item.getStartPrice();
-        cols.put("price", amt != null ? (new Double(amt.getValue()).toString()) : "");
+        cols.put("price", amt != null ? (Double.toString(amt.getValue())) : "");
 
         java.util.Calendar startTime = item.getListingDetails() == null ? null : item.getListingDetails().getStartTime();
         cols.put("startTime", startTime != null ? eBayUtil.toAPITimeString(startTime.getTime()) : "");
@@ -2216,7 +2216,7 @@ public class EbayStore {
             result.put("title", title);
             result.put("description", description);
             AmountType amt = item.getStartPrice();
-            result.put("price", amt != null ? (new Double(amt.getValue()).toString()) : "");
+            result.put("price", amt != null ? (Double.toString(amt.getValue())) : "");
             result.put("currencyId", amt.getCurrencyID().toString());
             result.put("listingType", listingType);
         } catch (Exception e) {

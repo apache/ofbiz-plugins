@@ -565,7 +565,7 @@ public class SamplePricatParser extends AbstractPricatParser {
                     cell = row.createCell(i);
                 }
             }
-            CellType cellType = cell.getCellTypeEnum();
+            CellType cellType = cell.getCellType();
             String cellValue = formatter.formatCellValue(cell);
             if (UtilValidate.isNotEmpty(cellValue) && UtilValidate.isNotEmpty(cellValue.trim())) {
                 if (cellType == CellType.FORMULA) {
@@ -601,7 +601,7 @@ public class SamplePricatParser extends AbstractPricatParser {
                         results.add(null);
                     }
                 } else if (colNames.get(i)[1] == CellType.NUMERIC) {
-                    if (cell.getCellTypeEnum() != CellType.STRING) {
+                    if (cell.getCellType() != CellType.STRING) {
                         cell.setCellType(CellType.STRING);
                     }
                     try {
@@ -617,21 +617,21 @@ public class SamplePricatParser extends AbstractPricatParser {
                     continue;
                 }
                 if (colNames.get(i)[1] == CellType.STRING) {
-                    if (cell.getCellTypeEnum() == CellType.STRING) {
+                    if (cell.getCellType() == CellType.STRING) {
                         cellValue = cell.getStringCellValue().trim();
                         results.add(cellValue);
                     } else {
                         results.add(cellValue.trim());
                     }
                 } else if (colNames.get(i)[1] == CellType.NUMERIC) {
-                    if (cell.getCellTypeEnum() == CellType.STRING) {
+                    if (cell.getCellType() == CellType.STRING) {
                         try {
                             results.add(BigDecimal.valueOf(Double.valueOf(cell.getStringCellValue())));
                         } catch (NumberFormatException e) {
                             results.add(null);
                             errorMessages.put(new CellReference(cell), UtilProperties.getMessage(resource, "ErrorParseValueToNumeric", locale));
                         }
-                    } else if (cell.getCellTypeEnum() == CellType.NUMERIC) {
+                    } else if (cell.getCellType() == CellType.NUMERIC) {
                         try {
                             results.add(BigDecimal.valueOf(cell.getNumericCellValue()).setScale(FinAccountHelper.decimals, FinAccountHelper.rounding));
                         } catch (NumberFormatException e) {
