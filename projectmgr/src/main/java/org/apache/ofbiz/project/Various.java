@@ -62,7 +62,7 @@ public class Various {
             List<GenericValue> standards = task.getRelated("WorkEffortSkillStandard", null, null, false);
             for (GenericValue standard : standards) {
                 if (standard.getDouble("estimatedNumPeople") == null) {
-                    standard.put("estimatedNumPeople", new Double("1"));
+                    standard.put("estimatedNumPeople", Double.valueOf("1"));
                 }
                 if (standard.get("estimatedDuration") != null) {
                     plannedHours += standard.getDouble("estimatedDuration") / standard.getDouble("estimatedNumPeople");
@@ -73,7 +73,7 @@ public class Various {
             Debug.logError("Could not updte task: " + e.getMessage(), module);
         }
         if (plannedHours == 0.00) {
-            plannedHours = new Double("24.00"); // default length of task is 3 days.
+            plannedHours = Double.valueOf("24.00"); // default length of task is 3 days.
         }
 
         // only add days which are not saturday(7) or sunday(1)

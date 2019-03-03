@@ -296,7 +296,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
             XSSFCell cell = sourceRow.getCell(j);
             if (cell != null) {
                 XSSFCell newCell = targetRow.createCell(j);
-                CellType cellType = cell.getCellTypeEnum();
+                CellType cellType = cell.getCellType();
                 newCell.setCellType(cellType);
                 switch (cellType) {
                     case BOOLEAN:
@@ -428,7 +428,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
                     cell = row.createCell(i);
                 }
             }
-            CellType cellType = cell.getCellTypeEnum();
+            CellType cellType = cell.getCellType();
             String cellValue = formatter.formatCellValue(cell);
             if (UtilValidate.isNotEmpty(cellValue)) {
                 if (cellType == CellType.FORMULA) {
@@ -452,7 +452,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
                 if (colNames.get(i)[1] == CellType.STRING) {
                     results.add(cellValue);
                 } else if (colNames.get(i)[1] == CellType.NUMERIC) {
-                    if (cell.getCellTypeEnum() != CellType.STRING) {
+                    if (cell.getCellType() != CellType.STRING) {
                         cell.setCellType(CellType.STRING);
                     }
                     try {
@@ -468,20 +468,20 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
                     continue;
                 }
                 if (colNames.get(i)[1] == CellType.STRING) {
-                    if (cell.getCellTypeEnum() == CellType.STRING) {
+                    if (cell.getCellType() == CellType.STRING) {
                         results.add(cell.getStringCellValue());
                     } else {
                         results.add(cellValue);
                     }
                 } else if (colNames.get(i)[1] == CellType.NUMERIC) {
-                    if (cell.getCellTypeEnum() == CellType.STRING) {
+                    if (cell.getCellType() == CellType.STRING) {
                         try {
                             results.add(BigDecimal.valueOf(Double.valueOf(cell.getStringCellValue())));
                         } catch (NumberFormatException e) {
                             results.add(null);
                             errorMessages.put(new CellReference(cell), UtilProperties.getMessage(resource, "ErrorParseValueToNumeric", locale));
                         }
-                    } else if (cell.getCellTypeEnum() == CellType.NUMERIC) {
+                    } else if (cell.getCellType() == CellType.NUMERIC) {
                         try {
                             results.add(BigDecimal.valueOf(cell.getNumericCellValue()).setScale(FinAccountHelper.decimals, FinAccountHelper.rounding));
                         } catch (NumberFormatException e) {

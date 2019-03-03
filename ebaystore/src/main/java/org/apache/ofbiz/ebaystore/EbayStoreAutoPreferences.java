@@ -1334,7 +1334,7 @@ public class EbayStoreAutoPreferences {
                                 UserType buyer = bestOfferType.getBuyer();
                                 String buyerUserID = buyer.getUserID();
                                 AmountType price = bestOfferType.getPrice();
-                                String offerPrice = new Double(price.getValue()).toString();
+                                String offerPrice = Double.toString(price.getValue());
                                 Double doCerrentPrice = Double.parseDouble(offerPrice);
                                 int offerQuantity = bestOfferType.getQuantity();
                                 String[] bestOfferIDs = { bestOfferID };
