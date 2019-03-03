@@ -73,23 +73,8 @@ public class LdapLoginWorker extends LoginWorker {
                 String className = UtilXml.childElementValue(rootElement, "AuthenticationHandler", "org.apache.ofbiz.ldap.openldap.OFBizLdapAuthenticationHandler");
                 try {
                     Class<?> handlerClass = Class.forName(className);
-                    InterfaceOFBizAuthenticationHandler authenticationHandler = (InterfaceOFBizAuthenticationHandler) handlerClass.newInstance();
+                    InterfaceOFBizAuthenticationHandler authenticationHandler = (InterfaceOFBizAuthenticationHandler) handlerClass.getDeclaredConstructor().newInstance();
                     hasLdapLoggedOut = authenticationHandler.hasLdapLoggedOut(request, response, rootElement);
-                } catch (ClassNotFoundException e) {
-                    Debug.logError(e, "Error calling checkLogin service", module);
-                    Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
-                    String errMsg = UtilProperties.getMessage(resourceWebapp, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
-                    request.setAttribute("_ERROR_MESSAGE_", errMsg);
-                } catch (InstantiationException e) {
-                    Debug.logError(e, "Error calling checkLogin service", module);
-                    Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
-                    String errMsg = UtilProperties.getMessage(resourceWebapp, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
-                    request.setAttribute("_ERROR_MESSAGE_", errMsg);
-                } catch (IllegalAccessException e) {
-                    Debug.logError(e, "Error calling checkLogin service", module);
-                    Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
-                    String errMsg = UtilProperties.getMessage(resourceWebapp, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
-                    request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 } catch (Exception e) {
                     Debug.logError(e, "Error calling checkLogin service", module);
                     Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
@@ -128,28 +113,8 @@ public class LdapLoginWorker extends LoginWorker {
             String className = UtilXml.childElementValue(rootElement, "AuthenticationHandler", "org.apache.ofbiz.ldap.openldap.OFBizLdapAuthenticationHandler");
             try {
                 Class<?> handlerClass = Class.forName(className);
-                InterfaceOFBizAuthenticationHandler authenticationHandler = (InterfaceOFBizAuthenticationHandler) handlerClass.newInstance();
+                InterfaceOFBizAuthenticationHandler authenticationHandler = (InterfaceOFBizAuthenticationHandler) handlerClass.getDeclaredConstructor().newInstance();
                 result = authenticationHandler.login(request, response, rootElement);
-            } catch (ClassNotFoundException e) {
-                Debug.logError(e, "Error calling userLogin service", module);
-                Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
-                String errMsg = UtilProperties.getMessage(resourceWebapp, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
-                request.setAttribute("_ERROR_MESSAGE_", errMsg);
-            } catch (InstantiationException e) {
-                Debug.logError(e, "Error calling userLogin service", module);
-                Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
-                String errMsg = UtilProperties.getMessage(resourceWebapp, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
-                request.setAttribute("_ERROR_MESSAGE_", errMsg);
-            } catch (IllegalAccessException e) {
-                Debug.logError(e, "Error calling userLogin service", module);
-                Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
-                String errMsg = UtilProperties.getMessage(resourceWebapp, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
-                request.setAttribute("_ERROR_MESSAGE_", errMsg);
-            } catch (NamingException e) {
-                Debug.logError(e, "Error calling userLogin service", module);
-                Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
-                String errMsg = UtilProperties.getMessage(resourceWebapp, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
-                request.setAttribute("_ERROR_MESSAGE_", errMsg);
             } catch (Exception e) {
                 Debug.logError(e, "Error calling userLogin service", module);
                 Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
@@ -192,23 +157,8 @@ public class LdapLoginWorker extends LoginWorker {
             String className = UtilXml.childElementValue(rootElement, "AuthenticationHandler", "org.apache.ofbiz.ldap.openldap.OFBizLdapAuthenticationHandler");
             try {
                 Class<?> handlerClass = Class.forName(className);
-                InterfaceOFBizAuthenticationHandler authenticationHandler = (InterfaceOFBizAuthenticationHandler) handlerClass.newInstance();
+                InterfaceOFBizAuthenticationHandler authenticationHandler = (InterfaceOFBizAuthenticationHandler) handlerClass.getDeclaredConstructor().newInstance();
                 result = authenticationHandler.logout(request, response, rootElement);
-            } catch (ClassNotFoundException e) {
-                Debug.logError(e, "Error calling userLogin service", module);
-                Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
-                String errMsg = UtilProperties.getMessage(resourceWebapp, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
-                request.setAttribute("_ERROR_MESSAGE_", errMsg);
-            } catch (InstantiationException e) {
-                Debug.logError(e, "Error calling userLogin service", module);
-                Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
-                String errMsg = UtilProperties.getMessage(resourceWebapp, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
-                request.setAttribute("_ERROR_MESSAGE_", errMsg);
-            } catch (IllegalAccessException e) {
-                Debug.logError(e, "Error calling userLogin service", module);
-                Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
-                String errMsg = UtilProperties.getMessage(resourceWebapp, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
-                request.setAttribute("_ERROR_MESSAGE_", errMsg);
             } catch (Exception e) {
                 Debug.logError(e, "Error calling userLogin service", module);
                 Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
