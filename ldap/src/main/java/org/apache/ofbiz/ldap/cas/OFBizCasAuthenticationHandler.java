@@ -163,13 +163,9 @@ public final class OFBizCasAuthenticationHandler extends AbstractOFBizAuthentica
         String className = UtilXml.childElementValue(rootElement, "CasLdapHandler", "org.apache.ofbiz.ldap.openldap.OFBizLdapAuthenticationHandler");
         try {
             Class<?> handlerClass = Class.forName(className);
-            InterfaceOFBizAuthenticationHandler casLdapHandler = (InterfaceOFBizAuthenticationHandler) handlerClass.newInstance();
+            InterfaceOFBizAuthenticationHandler casLdapHandler = (InterfaceOFBizAuthenticationHandler) handlerClass.getDeclaredConstructor().newInstance();
             return casLdapHandler.getLdapSearchResult(username, password, rootElement, bindRequired);
-        } catch (ClassNotFoundException e) {
-            throw new NamingException(e.getLocalizedMessage());
-        } catch (InstantiationException e) {
-            throw new NamingException(e.getLocalizedMessage());
-        } catch (IllegalAccessException e) {
+        } catch (ReflectiveOperationException e) {
             throw new NamingException(e.getLocalizedMessage());
         }
     }
