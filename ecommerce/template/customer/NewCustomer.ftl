@@ -23,7 +23,6 @@ under the License.
   lastFocusedName = null;
   function setLastFocused(formElement) {
     lastFocusedName = formElement.name;
-    document.write.lastFocusedName;
   }
   function clickUsername() {
     if (document.getElementById('UNUSEEMAIL').checked) {
