@@ -34,13 +34,13 @@ under the License.
         <div id="shippingSummaryPanel" class="card-body" style="display: none;">
           <div id="shippingCompleted">
             <h4>${uiLabelMap.OrderShipTo}</h4>
-            <ul>
+            <ul class="list-unstyled">
               <li id="completedShipToAttn"></li>
               <li id="completedShippingContactNumber"></li>
               <li id="completedEmailAddress"></li>
             </ul>
             <h4>${uiLabelMap.EcommerceLocation}</h4>
-            <ul>
+            <ul class="list-unstyled">
               <li id="completedShipToAddress1"></li>
               <li id="completedShipToAddress2"></li>
               <li id="completedShipToGeo"></li>
@@ -562,7 +562,7 @@ under the License.
           <form id="orderSubmitForm" action="<@ofbizUrl>onePageProcessOrder</@ofbizUrl>" method="post">
               <input type="button" id="processOrderButton" class="btn btn-primary" name="processOrderButton"
                   value="${uiLabelMap.OrderSubmitOrder}"/>
-              <input type="button" style="display: none;" id="processingOrderButton" name="processingOrderButton"
+              <input type="button" style="display: none;" class="btn btn-info" id="processingOrderButton" name="processingOrderButton"
                   value="${uiLabelMap.OrderSubmittingOrder}"/>
           </form>
         </div>

@@ -249,19 +249,20 @@ under the License.
         <#-- now cancel reason and comment field -->
         <#if "Y" == maySelectItems?default("N") && (orderHeader.statusId != "ORDER_SENT" && orderItem.statusId != "ITEM_COMPLETED" && orderItem.statusId != "ITEM_CANCELLED" && pickedQty == 0)>
           <tr>
-            <td colspan="7">${uiLabelMap.OrderReturnReason}
-              <select name="irm_${orderItem.orderItemSeqId}" class="selectBox">
+            <td class="row"><label class="col-sm-3 col-form-label">${uiLabelMap.OrderReturnReason}</label>
+              <select name="irm_${orderItem.orderItemSeqId}" class="form-control custom-select col-sm-4">
                 <option value=""></option>
                 <#list orderItemChangeReasons as reason>
                   <option value="${reason.enumId}">${reason.get("description",locale)?default(reason.enumId)}</option>
                 </#list>
               </select>
-            ${uiLabelMap.CommonComments}
-              <input class="inputBox" type="text" name="icm_${orderItem.orderItemSeqId}" value="" size="30" maxlength="60"/>
+              <label class="col-sm-3 col-form-label">${uiLabelMap.CommonComments}</label>
+              <input class="form-control col-sm-2" type="text" name="icm_${orderItem.orderItemSeqId}" value="" size="30" maxlength="60"/>
             </td>
-            <td colspan="4"><a
+            <td>
+              <a
                 href="javascript:document.addCommonToCartForm.action='<@ofbizUrl>cancelOrderItem</@ofbizUrl>';document.addCommonToCartForm.submit()"
-                class="buttontext">${uiLabelMap.CommonCancel}</a>
+                class="d-inline-block mt-2">${uiLabelMap.CommonCancel}</a>
               <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
             </td>
           </tr>

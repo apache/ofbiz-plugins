@@ -25,8 +25,8 @@ under the License.
   <#assign paymentMethod = requestParameters>
 </#if>
 
-<label class="mt-2">${uiLabelMap.AccountingCompanyNameCard}</label>
-<div class="row">
+<label class="mt-2 d-block">${uiLabelMap.AccountingCompanyNameCard}</label>
+<div class="row my-2">
   <div class="col-sm-6">
     <input type="text" class="form-control" maxlength="60" name="companyNameOnCard" value="${creditCard.companyNameOnCard!}"/>
   </div>
@@ -34,7 +34,7 @@ under the License.
 <label>${uiLabelMap.AccountingPrefixCard}</label>
 <div class="row">
   <div class="col-sm-6">
-    <select name="titleOnCard" class="form-control custom-select">
+    <select name="titleOnCard" class="form-control custom-select mb-2">
       <option value="">${uiLabelMap.CommonSelectOne}</option>
       <option<#if ("${uiLabelMap.CommonTitleMr}" == (creditCard.titleOnCard)?default(""))> selected="selected"</#if>>${uiLabelMap.CommonTitleMr}</option>
       <option<#if ("Mrs." == (creditCard.titleOnCard)?default(""))> selected="selected"</#if>>${uiLabelMap.CommonTitleMrs}</option>
@@ -46,27 +46,27 @@ under the License.
 <label class="required">${uiLabelMap.AccountingFirstNameCard}</label>
 <div class="row">
   <div class="col-sm-6">
-    <input type="text" class="form-control" maxlength="60" name="firstNameOnCard" value="${(creditCard.firstNameOnCard)!}"/>
+    <input type="text" class="form-control mb-2" maxlength="60" name="firstNameOnCard" value="${(creditCard.firstNameOnCard)!}"/>
   <#if showToolTip?has_content><span class="tooltip">${uiLabelMap.CommonRequired}</span></#if></td>
   </div>
 </div>
 <label>${uiLabelMap.AccountingMiddleNameCard}</label>
 <div class="row">
   <div class="col-sm-6">
-    <input type="text" class="form-control" maxlength="60" name="middleNameOnCard" value="${(creditCard.middleNameOnCard)!}"/>
+    <input type="text" class="form-control mb-2" maxlength="60" name="middleNameOnCard" value="${(creditCard.middleNameOnCard)!}"/>
   </div>
 </div>
 <label class="required">${uiLabelMap.AccountingLastNameCard}</label>
 <div class="row">
   <div class="col-sm-6">
-    <input type="text" class="form-control" maxlength="60" name="lastNameOnCard" value="${(creditCard.lastNameOnCard)!}"/>
+    <input type="text" class="form-control mb-2" maxlength="60" name="lastNameOnCard" value="${(creditCard.lastNameOnCard)!}"/>
   <#if showToolTip?has_content><span class="tooltip">${uiLabelMap.CommonRequired}</span></#if>
   </div>
 </div>
 <label>${uiLabelMap.AccountingSuffixCard}</label>
 <div class="row">
   <div class="col-sm-6">
-    <select name="suffixOnCard" class="form-control custom-select">
+    <select name="suffixOnCard" class="form-control custom-select mb-2">
       <option value="">${uiLabelMap.CommonSelectOne}</option>
       <option<#if ("Jr." == (creditCard.suffixOnCard)?default(""))> selected="selected"</#if>>Jr.</option>
       <option<#if ("Sr." == (creditCard.suffixOnCard)?default(""))> selected="selected"</#if>>Sr.</option>
@@ -81,7 +81,7 @@ under the License.
 <label class="required">${uiLabelMap.AccountingCardType}</label>
 <div class="row">
   <div class="col-sm-6">
-    <select name="cardType" class="custom-select form-control">
+    <select name="cardType" class="custom-select form-control mb-2">
     <#if creditCard.cardType??>
       <option>${creditCard.cardType}</option>
       <option value="${creditCard.cardType}">---</option>
@@ -111,12 +111,12 @@ under the License.
           <#assign cardNumberDisplay = cardNumber>
         </#if>
       </#if>
-      <input type="text" class="required form-control"maxlength="30" name="cardNumber" onfocus="javascript:this.value = '';" value="${cardNumberDisplay!}" />
+      <input type="text" class="required form-control mb-2"maxlength="30" name="cardNumber" onfocus="javascript:this.value = '';" value="${cardNumberDisplay!}" />
     <#else>
-      <input type="text" class="form-control" maxlength="30" name="cardNumber" value="${creditCard.cardNumber!}"/>
+      <input type="text" class="form-control mb-2" maxlength="30" name="cardNumber" value="${creditCard.cardNumber!}"/>
     </#if>
   <#else>
-    <input type="text" class="form-control" maxlength="30" name="cardNumber" value="${creditCard.cardNumber!}"/>
+    <input type="text" class="form-control mb-2" maxlength="30" name="cardNumber" value="${creditCard.cardNumber!}"/>
   </#if>
   <#if showToolTip?has_content><span class="tooltip">${uiLabelMap.CommonRequired}</span></#if>
   </div>
@@ -131,7 +131,7 @@ under the License.
       <#assign expYear = expDate.substring(expDate.indexOf("/")+1)>
     </#if>
   </#if>
-<div class="row">
+<div class="row mb-2">
   <div class="col-sm-3">
   <select name="expMonth" class="custom-select form-control">
     <option>${uiLabelMap.CommonSelect}</option>
@@ -163,7 +163,7 @@ under the License.
 </div>
 </div>
 <label>${uiLabelMap.CommonDescription}</label>
-<div class="row">
+<div class="row mb-2">
   <div class="col-sm-6">
     <input type="text" size="20" class="form-control" name="description" value="${paymentMethod.description!}"/>
   </div>
