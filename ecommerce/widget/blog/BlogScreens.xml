@@ -39,19 +39,19 @@
                 <set field="crPerm.contentPurposeTypeId" value="ARTICLE"/>
             </actions>
             <widgets>
-                <container style="bloghr">
-                    <container style="leftjustify">
-                        <link text="${blogContent.contentName} - ${blogContent.description}" target="MainBlog" style="blogtitle">
+                <container style="card">
+                    <container style="card-header">
+                        <link text="${blogContent.contentName} - ${blogContent.description}" target="MainBlog">
                             <parameter param-name="blogContentId"/>
                         </link>
                     </container>
-                    <container style="rightjustify">
+                    <container style="card-body">
                         <section>
                             <condition>
                                 <if-service-permission service-name="genericContentPermission" main-action="CREATE" context-map="crPerm"/>
                             </condition>
                             <widgets>
-                                <link text="${uiLabelMap.CommonAddNew}" target="NewBlogArticle" style="buttontext">
+                                <link text="${uiLabelMap.CommonAddNew}" target="NewBlogArticle">
                                     <parameter param-name="blogContentId"/>
                                 </link>
                             </widgets>
@@ -114,7 +114,7 @@
                                     <if-compare field="itemIndex" operator="equals" type="Integer" value="0"/>
                                 </condition>
                                 <widgets>
-                                    <container style="blogwrapper">
+                                    <container style="card">
                                         <include-menu name="ViewEdit" location="component://ecommerce/widget/blog/BlogMenus.xml"/>
                                         <platform-specific><html><html-template location="component://ecommerce/template/blog/BlogContentAltLink.ftl"/></html></platform-specific>
                                         <!--<link text="${blog.contentName} [${blog.contentId}]" target="ViewBlogArticle" style="blogheader">
@@ -126,7 +126,7 @@
                                                 <parameter param-name="ownerContentId" from-field="blog.ownerContentId"/>
                                             </link>
                                         -->
-                                        <container style="blogtext">
+                                        <container style="card-body">
                                             <sub-content map-key="SUMMARY" content-id="${blog.contentId}"/>
                                         </container>
                                     </container>
@@ -137,7 +137,7 @@
                                     <if-compare field="itemIndex" operator="greater" type="Integer" value="0"/>
                                 </condition>
                                 <widgets>
-                                    <container style="blogwrapper">
+                                    <container style="card-body">
                                         <include-menu name="ViewEdit" location="component://ecommerce/widget/blog/BlogMenus.xml"/>
                                         <!--<label text="${blog.contentName} [${blog.contentId}]" style="blogheader"/>-->
                                         <platform-specific><html><html-template location="component://ecommerce/template/blog/BlogContentAltLink.ftl"/></html></platform-specific>
@@ -150,8 +150,8 @@
                                                 <parameter param-name="ownerContentId" from-field="blog.ownerContentId"/>
                                             </link>
                                         -->
-                                        <container style="blogtext">
-                                            <label text="${blog.description}" style="blogtext"/>
+                                        <container style="card-body">
+                                            <label text="${blog.description}"/>
                                         </container>
                                     </container>
                                 </widgets>

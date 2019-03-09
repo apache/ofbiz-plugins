@@ -19,7 +19,7 @@
   -->
 
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://ofbiz.apache.org/Widget-Menu" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Menu http://ofbiz.apache.org/dtds/widget-menu.xsd">
-    <menu name="ViewEdit" default-title-style="tabButton" default-selected-style="tabButtonSelected" default-menu-item-name="all" orientation="horizontal" menu-width="100%" default-widget-style="tabButton" menu-container-style="blogmenuwrapper" title="" type="simple">
+    <menu name="ViewEdit" default-title-style="tabButton" default-selected-style="tabButtonSelected" default-menu-item-name="all" orientation="horizontal" menu-width="100%" default-widget-style="tabButton" menu-container-style="card-header" title="" type="simple">
         <menu-item name="edit" title="${uiLabelMap.CommonEdit}">
             <condition>
                 <or>
@@ -27,7 +27,7 @@
                     <if-entity-permission entity-id="${blog.contentId}" entity-name="Content" target-operation="CONTENT_UPDATE"/>
                 </or>
             </condition>
-            <link text="${uiLabelMap.CommonEdit}" target="EditBlogArticle" style="buttontext">
+            <link text="${uiLabelMap.CommonEdit}" target="EditBlogArticle">
                 <parameter param-name="contentId" from-field="blog.contentId"/>
                 <parameter param-name="blogContentId" from-field="parameters.blogContentId"/>
             </link>
