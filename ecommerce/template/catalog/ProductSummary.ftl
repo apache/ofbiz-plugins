@@ -74,13 +74,13 @@
 
               <div class="col-md-4 products-card">
                 <div class="card text-center">
-                  <a href="${productUrl}">
+                  <a href="${productUrl}" class="mt-2">
                     <img class="card-img-top" src="<@ofbizContentUrl>${contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl>" alt="Small Image">
                   </a>
                   <div class="card-body">
                     <h4 class="card-title"><a href="${productUrl}" class="btn btn-link">${productContentWrapper.get("PRODUCT_NAME", "html")!}</a></h4>
                     <div class="cart-text">
-                      <div>${productContentWrapper.get("DESCRIPTION", "html")!}<#if daysToShip??>&nbsp;-&nbsp;${uiLabelMap.ProductUsuallyShipsIn} <b>${daysToShip}</b> ${uiLabelMap.CommonDays}!</#if></div>
+                      ${productContentWrapper.get("DESCRIPTION", "html")!}<#if daysToShip??>&nbsp;-&nbsp;${uiLabelMap.ProductUsuallyShipsIn} <b>${daysToShip}</b> ${uiLabelMap.CommonDays}!</#if>
 
                       <#-- Display category-specific product comments -->
                         <#if prodCatMem?? && prodCatMem.comments?has_content>
@@ -119,7 +119,7 @@
                               ${uiLabelMap.ProductListPrice}: <span class="basePrice"><@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/></span>
                             </p>
   </#if>
-  <b>
+    <strong>
     <#if price.isSale?? && price.isSale>
       <p class="badge badge-info">${uiLabelMap.OrderOnSale}!</p>
       <#assign priceStyle = "salePrice">
@@ -130,7 +130,7 @@
     <#if (price.price?default(0) > 0 && "N" == product.requireAmount?default("N"))>
       <p>${uiLabelMap.OrderYourPrice}: <#if "Y" = product.isVirtual!> ${uiLabelMap.CommonFrom} </#if><span class="${priceStyle}"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span></p>
     </#if>
-  </b>
+    </strong>
   <#if price.listPrice?? && price.price?? && price.price?double < price.listPrice?double>
   <#assign priceSaved = price.listPrice?double - price.price?double>
     <#assign percentSaved = (priceSaved?double / price.listPrice?double) * 100>

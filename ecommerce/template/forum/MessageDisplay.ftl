@@ -26,15 +26,15 @@ under the License.
 <#else>
   <#assign contentId = forumMessage.contentId>
 </#if>
-<div class="tableheadtext">
+<p>
   ${uiLabelMap.CommonTitle} : ${forumMessage.contentName!} ${uiLabelMap.CommonBy}:${forumMessage.createdByUserLogin!}
   ${uiLabelMap.CommonAt}: ${(forumMessage.createdDate.toString().substring(0,16))!}
   <a href="ViewForumMessage?forumId=${parameters.forumId}&amp;responseContentId=${forumMessage.contentId}&amp;threadContentId=${threadContentId!}"
       class="buttontext">${uiLabelMap.CommonView}</a>
-</div>
-<div class="tableheadtext">
+</p>
+<p>
   ${forumMessage.description!}
-</div>
+</p>
 
 <#--
   <#assign result = dispatcher.runSync("getPublicForumMessage", Static["org.apache.ofbiz.base.util.UtilMisc"]

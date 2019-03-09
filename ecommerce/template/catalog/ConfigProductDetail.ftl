@@ -363,8 +363,8 @@ ${virtualJavaScript!}
             <#assign hiddenStyle = "hidden">
           </#if>
           <div id="add_amount" class="${hiddenStyle}">
-            <span style="white-space: nowrap;"><b>Amount:</b></span>&nbsp;
-            <input type="text" size="5" name="add_amount" value=""/>
+            <label>Amount</label>
+            <input type="text" size="5" class="form-control mb-2" name="add_amount" value=""/>
           </div>
           <#if !configwrapper.isCompleted()>
             <div>[${uiLabelMap.EcommerceProductNotConfigured}]&nbsp;
