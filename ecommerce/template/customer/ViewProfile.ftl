@@ -457,7 +457,7 @@ under the License.
       <#else>
         <p class="card-text">${uiLabelMap.EcommerceNoFiles}</p>
       </#if>
-      <form method="post" class="form-inline" enctype="multipart/form-data" action="<@ofbizUrl>uploadPartyContent</@ofbizUrl>">
+      <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>uploadPartyContent</@ofbizUrl>">
         <input type="hidden" name="partyId" value="${party.partyId}"/>
         <input type="hidden" name="dataCategoryId" value="PERSONAL"/>
         <input type="hidden" name="contentTypeId" value="DOCUMENT"/>
@@ -466,7 +466,7 @@ under the License.
         <label class="mr-2">${uiLabelMap.EcommerceUploadNewFile}</label>
         <label class="custom-file mr-2">
           <input type="file" name="uploadedFile" class="custom-file-input"/>
-          <span class="custom-file-control"></span>
+          <label class="custom-file-label" for="customFile">Choose file</label>
         </label>
         <select name="partyContentTypeId" class="custom-select mr-2">
           <option value="">${uiLabelMap.PartySelectPurpose}</option>
