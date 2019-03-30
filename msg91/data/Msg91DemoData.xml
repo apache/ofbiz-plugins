@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<entity-engine-xml>
+    <Enumeration enumId="ORDER_SMS" description="Order Placed SMS" enumTypeId="TELECOM_MSG" sequenceId="01"/>
+    <Enumeration enumId="INVOICE_SMS" description="Invoice Generated SMS" enumTypeId="TELECOM_MSG" sequenceId="02"/>
+    <Enumeration enumId="SHIPMENT_SMS" description="Shipment Initiated SMS" enumTypeId="TELECOM_MSG" sequenceId="03"/>
+
+    <TelecomGatewayConfig telecomGatewayConfigId="MSG91" description="MSG91 SMS Gateway Configuration"/>
+
+    <CustomMethod customMethodId="TG_MSG91" customMethodName="sendMsg91Sms" customMethodTypeId="TELECOM_GATEWAY" description="Service to send SMS using MSG91 Gateway"/>
+
+    <ProductStoreTelecomSetting productStoreId="9000" telecomMethodTypeId="SMS" telecomMsgTypeEnumId="ORDER_SMS" telecomCustomMethodId="TG_MSG91" telecomGatewayConfigId="MSG91" />
+    
+    <Msg91GatewayConfig telecomGatewayConfigId="MSG91" apiUrl="http://api.msg91.com/api/sendhttp.php" country="" route="4" authkey="" sender="IOFBIZ"/>
+</entity-engine-xml>
