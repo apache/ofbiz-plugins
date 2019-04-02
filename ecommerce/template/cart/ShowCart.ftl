@@ -142,7 +142,7 @@ under the License.
             </a>-->
         <#if (shoppingCartSize > 0)>
           <li class="list-inline-item">
-          <a href=";">
+          <a href="javascript:document.cartform.submit();">
             ${uiLabelMap.EcommerceRecalculateCart}
           </a>
           </li>
