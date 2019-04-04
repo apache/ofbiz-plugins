@@ -1566,12 +1566,6 @@ under the License.
         <response name="success" type="request" value="showcart"/>
         <response name="error" type="request" value="showcart"/>
     </request-map>
-    <request-map uri="createQuoteFromCart">
-        <security https="true" auth="true"/>
-        <event type="java" path="org.apache.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="createQuoteFromCart"/>
-        <response name="success" type="request" value="showcart"/>
-        <response name="error" type="request" value="showcart"/>
-    </request-map>
     <request-map uri="createCustRequestFromShoppingList">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCustRequestFromShoppingList"/>

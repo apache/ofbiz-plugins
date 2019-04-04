@@ -562,9 +562,7 @@ under the License.
                 <#if sessionAttributes.userLogin?has_content && sessionAttributes.userLogin.userLoginId != "anonymous">
                   <a href="<@ofbizUrl>createCustRequestFromCart</@ofbizUrl>" class="btn btn-outline-secondary btn-sm">
                     ${uiLabelMap.OrderCreateCustRequestFromCart}
-                  </a>&nbsp;&nbsp;&nbsp;&nbsp;
-                  <a href="<@ofbizUrl>createQuoteFromCart</@ofbizUrl>" class="btn btn-outline-secondary btn-sm">
-                    ${uiLabelMap.OrderCreateQuoteFromCart}</a>&nbsp;&nbsp;
+                  </a>
                 <#else>
                   ${uiLabelMap.OrderYouMust}
                   <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="btn btn-outline-secondary btn-sm">
