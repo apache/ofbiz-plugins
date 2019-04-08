@@ -114,3 +114,8 @@ label.required:after {
 button.jGrowl-close {
     float: right;
 }
+
+.hidden {
+    height: 0;
+    visibility: hidden;
+}

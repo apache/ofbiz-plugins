@@ -124,10 +124,12 @@ ${virtualVariantJavaScript!}
     function toggleAmt(toggle) {
         if (toggle == 'Y') {
             changeObjectVisibility("add_amount", "visible");
+            document.getElementById("add_amount").style.height = "auto";
         }
 
         if (toggle == 'N') {
             changeObjectVisibility("add_amount", "hidden");
+            document.getElementById("add_amount").style.height = "0px";
         }
     }
 
@@ -669,7 +671,6 @@ $(function(){
         </#if>
         <#-- Variant Selection -->
         <div class="form-group">
-        <label>${uiLabelMap.CommonAmount}:</label>
         <#if "Y" == product.isVirtual!?upper_case>
           <#if "VV_FEATURETREE" == product.virtualVariantMethodEnum! && featureLists?has_content>
             <#list featureLists as featureList>
@@ -769,6 +770,7 @@ $(function(){
               <#assign hiddenStyle = "hidden"/>
             </#if>
             <div id="add_amount" class="${hiddenStyle} form-group">
+              <label>${uiLabelMap.CommonAmount}:</label>
               <input type="text" class="form-control" name="add_amount" value=""/>
             </div>
             <#if "ASSET_USAGE" == product.productTypeId! || "ASSET_USAGE_OUT_IN" == product.productTypeId!>
