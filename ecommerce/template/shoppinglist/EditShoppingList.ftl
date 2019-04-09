@@ -125,8 +125,6 @@ under the License.
   <div class="card-header">
     <strong>${uiLabelMap.EcommerceShoppingListDetail} - ${shoppingList.listName}</strong>
           <a class="float-right ml-2" href='javascript:document.createCustRequestFromShoppingList.submit();'>${uiLabelMap.OrderCreateCustRequestFromShoppingList}</a>
-          <a class="float-right ml-2" href='javascript:document.createQuoteFromShoppingList.submit();'>${uiLabelMap.OrderCreateQuoteFromShoppingList}</a>
-          <a href="javascript:document.updateList.submit();" class="float-right ml-2">${uiLabelMap.CommonSave}</a>
   </div>
     <div class="card-body">
       <form name= "createCustRequestFromShoppingList" method= "post" action= "<@ofbizUrl>createCustRequestFromShoppingList</@ofbizUrl>">
