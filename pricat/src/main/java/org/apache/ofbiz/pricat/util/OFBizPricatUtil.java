@@ -66,7 +66,7 @@ public final class OFBizPricatUtil {
                 CTShape ctshape = (CTShape) FindCommentShapeMethod.invoke(vml, cell.getRow(), cell.getCol());
                 ctshape.setType("#_x0000_t202");
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                Debug.logError(e, module);;
+                Debug.logError(e, module)
             }
         }
     }
@@ -81,7 +81,7 @@ public final class OFBizPricatUtil {
                 CTShape ctshape = (CTShape) FindCommentShapeMethod.invoke(vml, rowNum, colNum);
                 ctshape.setType("#_x0000_t202");
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                Debug.logError(e, module);;
+                Debug.logError(e, module)
             }
         }
     }
