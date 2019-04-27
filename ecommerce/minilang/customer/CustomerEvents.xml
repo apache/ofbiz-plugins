@@ -550,7 +550,7 @@ under the License.
                 <process field="gender"><copy/></process>
 
                 <process field="residenceStatusEnumId"><copy/></process>
-                <process field="maritalStatus"><copy/></process>
+                <process field="maritalStatusEnumId"><copy/></process>
                 <process field="employmentStatusEnumId"><copy/></process>
                 <process field="occupation"><copy/></process>
                 <process field="yearsWithEmployer"><convert type="Long"><fail-property resource="EcommerceUiLabels" property="EcommerceYearsWithEmployeeNotValid"/></convert></process>
