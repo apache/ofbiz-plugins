@@ -52,7 +52,7 @@ under the License.
               <#else>
                 <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId/>"
                     class="browsecategorybutton">
-                  ${category.description!}
+                  ${category.description?default(categoryId)!}
                 </a>
               </#if>
             </li>

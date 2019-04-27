@@ -17,6 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+
 <#if additionalFields?has_content>
   <#list additionalFields.keySet() as field>
     <input type="hidden" name="${field}" value="${additionalFields.get(field)}"/>
@@ -54,10 +55,10 @@ under the License.
     </tr>
 
       <tr>
-        <td align="center">
+        <td>
           <#if "BOOLEAN" == surveyQuestionAndAppl.surveyQuestionTypeId>
             <#assign selectedOption = (answer.booleanResponse)?default("Y")>
-            <select class="selectBox" name="answers_${surveyQuestionAndAppl.surveyQuestionId}">
+            <select class="form-control form-control-sm" name="answers_${surveyQuestionAndAppl.surveyQuestionId}">
               <#if surveyQuestionAndAppl.requiredField?default("N") != "Y">
                 <option value=""></option>
               </#if>
@@ -91,7 +92,7 @@ under the License.
           <#elseif "OPTION" == surveyQuestionAndAppl.surveyQuestionTypeId>
             <#assign options = surveyQuestionAndAppl.getRelated("SurveyQuestionOption", null, sequenceSort, false)!>
             <#assign selectedOption = (answer.surveyOptionSeqId)?default("_NA_")>
-            <select class="selectBox" name="answers_${surveyQuestionAndAppl.surveyQuestionId}">
+            <select class="form-control form-control-sm" name="answers_${surveyQuestionAndAppl.surveyQuestionId}">
               <#if surveyQuestionAndAppl.requiredField?default("N") != "Y">
                 <option value=""></option>
               </#if>
@@ -116,6 +117,6 @@ under the License.
     </tr>
   </#list>
   <tr>
-    <td align="center"><input type="submit" value="<#if survey.submitCaption?has_content>${survey.submitCaption}<#else>Submit</#if>" class="smallSubmit"/></td>
+    <td><input type="submit" value="<#if survey.submitCaption?has_content>${survey.submitCaption}<#else>Submit</#if>" class="btn btn-outline-secondary"/></td>
   </tr>
 </table>
