@@ -72,26 +72,28 @@ under the License.
 </script>
 <#assign fixedAssetExist = shoppingCart.containAnyWorkEffortCartItems() />
 <#-- change display format when rental items exist in the shoppingcart -->
-<div>
-    <#if ((sessionAttributes.lastViewedProducts)?has_content && sessionAttributes.lastViewedProducts?size > 0)>
-      <#assign continueLink = "/product?product_id=" + sessionAttributes.lastViewedProducts.get(0) />
-    <#else>
-      <#assign continueLink = "/main" />
-    </#if>
-    <a href="<@ofbizUrl>${continueLink}</@ofbizUrl>" class="submenutext">
-      ${uiLabelMap.EcommerceContinueShopping}
-    </a>
-    <#if (shoppingCartSize > 0)>
-      <a href="<@ofbizUrl>checkoutoptions</@ofbizUrl>" class="submenutext">
-        ${uiLabelMap.OrderCheckout}
+<div class="card">
+    <div class="card-header">
+      <#if ((sessionAttributes.lastViewedProducts)?has_content && sessionAttributes.lastViewedProducts?size > 0)>
+        <#assign continueLink = "/product?product_id=" + sessionAttributes.lastViewedProducts.get(0) />
+      <#else>
+        <#assign continueLink = "/main" />
+      </#if>
+      <a href="<@ofbizUrl>${continueLink}</@ofbizUrl>" class="submenutext">
+        ${uiLabelMap.EcommerceContinueShopping}
       </a>
-    <#else>
-      <span class="submenutextrightdisabled">
-        ${uiLabelMap.OrderCheckout}
-      </span>
-    </#if>
-    ${uiLabelMap.CommonQuickAdd}
-  <div>
+      <#if (shoppingCartSize > 0)>
+        <a href="<@ofbizUrl>checkoutoptions</@ofbizUrl>" class="submenutext">
+          ${uiLabelMap.OrderCheckout}
+        </a>
+      <#else>
+        <span class="submenutextrightdisabled">
+          ${uiLabelMap.OrderCheckout}
+        </span>
+      </#if>
+      ${uiLabelMap.CommonQuickAdd}
+    </div>
+  <div class="card-body">
     <div>
       <form method="post"
           action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" class="form-inline"
