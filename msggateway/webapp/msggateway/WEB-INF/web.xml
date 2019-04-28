@@ -19,8 +19,8 @@ under the License.
 -->
 
 <web-app version="3.0">
-    <display-name>Apache OFBiz - Msg91 Component</display-name>
-    <description>Msg91 Component of the Apache OFBiz Project</description>
+    <display-name>Apache OFBiz - MsgGateway Component</display-name>
+    <description>MsgGateway Component of the Apache OFBiz Project</description>
 
     <!-- context-param>
         <param-name>webSiteId</param-name>
@@ -38,7 +38,7 @@ under the License.
     <context-param>
         <description>The location of the main-decorator screen to use for this webapp; referred to as a context variable in screen def XML files.</description>
         <param-name>mainDecoratorLocation</param-name>
-        <param-value>component://msg91/widget/CommonScreens.xml</param-value>
+        <param-value>component://msggateway/widget/CommonScreens.xml</param-value>
     </context-param>
     <context-param>
         <description>Remove unnecessary whitespace from HTML output.</description>

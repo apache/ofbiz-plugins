@@ -44,5 +44,6 @@ under the License.
         server="default-server"
            location="webapp/msggateway"
         base-permission="OFBTOOLS,MSGGATEWAY"
-        mount-point="/msggateway"/>
+        mount-point="/msggateway"
+        app-bar-display="false"/>
 </ofbiz-component>
