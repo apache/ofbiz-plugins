@@ -19,14 +19,5 @@ under the License.
 -->
 
 <entity-engine-xml>
-    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FULLADMIN" permissionId="MSGGATEWAY_ADMIN"/>
-    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FLEXADMIN" permissionId="MSGGATEWAY_CREATE"/>
-    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FLEXADMIN" permissionId="MSGGATEWAY_DELETE"/>
-    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FLEXADMIN" permissionId="MSGGATEWAY_UPDATE"/>
-    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FLEXADMIN" permissionId="MSGGATEWAY_VIEW"/>
-    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="VIEWADMIN" permissionId="MSGGATEWAY_VIEW"/>
-    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="BIZADMIN" permissionId="MSGGATEWAY_ADMIN"/>
-
-    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SUPER" permissionId="MSGGATEWAY_ADMIN"/>
 
 </entity-engine-xml>
