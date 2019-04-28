@@ -23,7 +23,7 @@ under the License.
     xmlns:xi="http://www.w3.org/2001/XInclude"
     xsi:schemaLocation="http://docbook.org/ns/docbook ../../../content/dtd/docbook.xsd"
     xmlns="http://docbook.org/ns/docbook">
-    <title>Msg91  Overview</title>
-    <para>The Msg91 Help file template.</para>
+    <title>MsgGateway  Overview</title>
+    <para>The MsgGateway Help file template.</para>
 </section>
 

@@ -24,12 +24,12 @@ under the License.
 
     <!-- context-param>
         <param-name>webSiteId</param-name>
-        <param-value>msg91Site</param-value>
+        <param-value>msggatewaySite</param-value>
         <description>A unique ID used to look up the WebSite entity. Only for component using a WebSite entity, like ecommerce</description>
     </context-param-->
     <context-param>
         <description>A unique name used to identify/recognize the local dispatcher for the Service Engine</description>
-        <param-name>localDispatcherName</param-name><param-value>msg91</param-value>
+        <param-name>localDispatcherName</param-name><param-value>msggateway</param-value>
     </context-param>
     <context-param>
         <description>The Name of the Entity Delegator to use, defined in entityengine.xml</description>

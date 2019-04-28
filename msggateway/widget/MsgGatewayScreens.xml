@@ -27,7 +27,7 @@ under the License.
                 <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
             </actions>
             <widgets>
-                <decorator-screen name="Msg91CommonDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="MsgGatewayCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                     </decorator-section>
                 </decorator-screen>
