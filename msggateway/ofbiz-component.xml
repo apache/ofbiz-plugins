@@ -18,7 +18,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<ofbiz-component name="msg91"
+<ofbiz-component name="msggateway"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-component.xsd">
     <!-- define resource loaders; most common is to use the component resource loader -->
@@ -31,21 +31,20 @@ under the License.
     <!-- entity resources: model(s), eca(s), group, and data definitions -->
     <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel.xml"/>
     <!-- <entity-resource type="eca" reader-name="main" loader="main" location="entitydef/eecas.xml"/> -->
-    <entity-resource type="data" reader-name="seed" loader="main" location="data/Msg91SeedData.xml"/>
-    <entity-resource type="data" reader-name="seed" loader="main" location="data/Msg91SecurityPermissionSeedData.xml"/>
-    <entity-resource type="data" reader-name="demo" loader="main" location="data/Msg91SecurityGroupDemoData.xml"/>
-    <entity-resource type="data" reader-name="demo" loader="main" location="data/Msg91DemoData.xml"/>
-
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/MsgGatewaySeedData.xml"/>
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/MsgGatewaySecurityPermissionSeedData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/MsgGatewaySecurityGroupDemoData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/MsgGatewayDemoData.xml"/>
     <!-- service resources: model(s), eca(s) and group definitions -->
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
 
-    <test-suite loader="main" location="testdef/Msg91Tests.xml"/>
+    <test-suite loader="main" location="testdef/MsgGatewayTests.xml"/>
 
     <!-- web applications; will be mounted when using the embedded container -->
-    <webapp name="msg91"
-        title="Msg91"
+    <webapp name="msggateway"
+        title="Msggateway"
         server="default-server"
-        location="webapp/msg91"
-        base-permission="OFBTOOLS,MSG91"
-        mount-point="/msg91"/>
+           location="webapp/msggateway"
+        base-permission="OFBTOOLS,MSGGATEWAY"
+        mount-point="/msggateway"/>
 </ofbiz-component>

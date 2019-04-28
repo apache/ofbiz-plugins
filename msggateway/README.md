@@ -2,10 +2,10 @@
 
     Build and start the server.
     Reload the fresh data or you can load the data from following XML files.
-    - Msg91SeedData.xml
-    - Msg91SecurityPermissionSeedData.xml
-    - Msg91SecurityGroupDemoData.xml
-    - Msg91DemoData.xml
+    - MsgGatewaySeedData.xml
+    - MsgGatewaySecurityPermissionSeedData.xml
+    - MsgGatewaySecurityGroupDemoData.xml
+    - MsgGatewayDemoData.xml
 
     Sign up to the msg91 services to get the authkey and free SMS quota.
     - http://control.msg91.com/signup/?source=developer-SMS
