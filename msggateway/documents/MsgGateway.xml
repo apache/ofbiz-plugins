@@ -23,13 +23,13 @@ under the License.
     xmlns:xi="http://www.w3.org/2001/XInclude"
     xsi:schemaLocation="http://docbook.org/ns/docbook ../../../applications/content/dtd/docbook.xsd"
     xmlns="http://docbook.org/ns/docbook">
-    
-    <title><anchor xml:id="Msg91"/>The Msg91 Component</title>
+
+    <title><anchor xml:id="MsgGateway"/>The MsgGateway Component</title>
     <section>
         <title>Introduction</title>
         <para>
         </para>
     </section>
-        <xi:include href="../data/helpdata/HELP_Msg91.xml" />
+        <xi:include href="../data/helpdata/HELP_MsgGateway.xml" />
     
 </chapter>

@@ -24,16 +24,16 @@ under the License.
     <screen name="main-decorator">
         <section>
             <actions>
-                <property-map resource="Msg91UiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="MsgGatewayUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
 
-                <set field="layoutSettings.companyName" from-field="uiLabelMap.Msg91CompanyName" global="true"/>
-                <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.Msg91CompanySubtitle" global="true"/>
+                <set field="layoutSettings.companyName" from-field="uiLabelMap.MsgGatewayCompanyName" global="true"/>
+                <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.MsgGatewayCompanySubtitle" global="true"/>
 
-                <set field="activeApp" value="msg91" global="true"/>
+                <set field="activeApp" value="msggateway" global="true"/>
                 <set field="applicationMenuName" value="MainAppBar" global="true"/>
-                <set field="applicationMenuLocation" value="component://msg91/widget/Msg91Menus.xml" global="true"/>
-                <set field="applicationTitle" from-field="uiLabelMap.Msg91Application" global="true"/>
+                <set field="applicationMenuLocation" value="component://msggateway/widget/MsgGatewayMenus.xml" global="true"/>
+                <set field="applicationTitle" from-field="uiLabelMap.MsgGatewayApplication" global="true"/>
             </actions>
             <widgets>
                 <include-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml"/>
@@ -41,7 +41,7 @@ under the License.
         </section>
     </screen>
 
-    <screen name="Msg91CommonDecorator">
+    <screen name="MsgGatewayCommonDecorator">
         <section>
             <actions>
             </actions>
@@ -50,13 +50,13 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-has-permission permission="MSG91" action="_VIEW"/>
+                                <if-has-permission permission="MSGGATEWAY" action="_VIEW"/>
                             </condition>
                             <widgets>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="h3">${uiLabelMap.Msg91ViewPermissionError}</label>
+                                <label style="h3">${uiLabelMap.MsgGatewayViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

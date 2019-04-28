@@ -19,12 +19,14 @@ under the License.
 -->
 
 <entity-engine-xml>
-    <SecurityPermission description="View operations in the Msg91 Component." permissionId="MSG91_VIEW"/>
-    <SecurityPermission description="Create operations in the Msg91 Component." permissionId="MSG91_CREATE"/>
-    <SecurityPermission description="Update operations in the Msg91 Component." permissionId="MSG91_UPDATE"/>
-    <SecurityPermission description="Delete operations in the Msg91 Component." permissionId="MSG91_DELETE"/>
-    <SecurityPermission description="ALL operations in the Msg91 Component." permissionId="MSG91_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FULLADMIN" permissionId="MSGGATEWAY_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FLEXADMIN" permissionId="MSGGATEWAY_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FLEXADMIN" permissionId="MSGGATEWAY_DELETE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FLEXADMIN" permissionId="MSGGATEWAY_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FLEXADMIN" permissionId="MSGGATEWAY_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="VIEWADMIN" permissionId="MSGGATEWAY_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="BIZADMIN" permissionId="MSGGATEWAY_ADMIN"/>
 
-    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SUPER" permissionId="MSG91_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SUPER" permissionId="MSGGATEWAY_ADMIN"/>
 
 </entity-engine-xml>
