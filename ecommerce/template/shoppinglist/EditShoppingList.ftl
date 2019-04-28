@@ -492,12 +492,12 @@ under the License.
                         <a href="javascript:TimestampSubmit(listform_${shoppingListItem.shoppingListItemSeqId});" class="btn btn-outline-secondary">${uiLabelMap.CommonUpdate}</a>
                       </div>
                       <div class="btn-group">
-                        <a href="javascript:document.removeFromShoppingList.submit();" class="btn btn-outline-secondary">${uiLabelMap.CommonRemove}</a>
+                          <form name="removeFromShoppingList" method="post" action="<@ofbizUrl>removeFromShoppingList</@ofbizUrl>">
+                              <input type="hidden" name="shoppingListId" value="${shoppingListItem.shoppingListId!}">
+                              <input type="hidden" name="shoppingListItemSeqId" value="${shoppingListItem.shoppingListItemSeqId}">
+                              <input type="submit" value="${uiLabelMap.CommonRemove}" class="btn btn-outline-secondary"/>
+                          </form>
                       </div>
-                        <form name="removeFromShoppingList" method="post" action="<@ofbizUrl>removeFromShoppingList</@ofbizUrl>">
-                            <input type="hidden" name="shoppingListId" value="${shoppingListItem.shoppingListId!}">
-                            <input type="hidden" name="shoppingListItemSeqId" value="${shoppingListItem.shoppingListItemSeqId}">
-                        </form>
                       <#if isVirtual && productVariantAssocs?has_content>
                         <#assign replaceItemAction = "/replaceShoppingListItem/" + requestAttributes._CURRENT_VIEW_?if_exists />
                         <#assign addToCartAction = "/additem/" + requestAttributes._CURRENT_VIEW_?if_exists />
