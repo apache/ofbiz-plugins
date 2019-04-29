@@ -614,10 +614,8 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
             return false;
         }
         File file = FileUtil.getFile(tempFilesFolder + userLoginId + "/" + sequenceNum + ".xlsx");
-        if (file.exists()) {
-            return true;
-        }
-        return false;
+
+        return file.exists();
     }
 
     protected void cleanupLogAndCommentedExcel() {

@@ -114,10 +114,7 @@ public final class SolrUtil {
     }
 
     private static boolean getTrustSelfSignedCert() {
-        if ("true".equals(trustSelfSignedCertString)) {
-            return true;
-        }
-        return false;
+        return "true".equals(trustSelfSignedCertString);
     }
 
     public static boolean isSolrEcaEnabled() {
