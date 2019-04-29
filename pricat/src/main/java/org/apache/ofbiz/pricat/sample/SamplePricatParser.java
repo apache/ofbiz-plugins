@@ -346,20 +346,20 @@ public class SamplePricatParser extends AbstractPricatParser {
     public boolean isFacilityOk(XSSFRow row, String facilityName, String facilityId) {
         if (!facilities.containsKey(facilityId)) {
             if (UtilValidate.isEmpty(facilityId) && facilities.keySet().size() == 1) {
-
-                return UtilValidate.isEmpty(facilityName);
-
-                String theFacilityId = (String) facilities.keySet().toArray()[0];
-                String name = facilities.get(theFacilityId)[0];
-                if (!name.equals(facilityName)) {
-                    String errorMessage = UtilProperties.getMessage(resource, "FacilityNameNotMatchId", new Object[]{theFacilityId, name, facilityName}, locale);
-                    report.println();
-                    report.print(errorMessage, InterfaceReport.FORMAT_ERROR);
-                    XSSFCell cell = row.getCell(0);
-                    errorMessages.put(new CellReference(cell), errorMessage);
-                    return false;
+                if (UtilValidate.isEmpty(facilityName)) {
+                    return true;
+                } else {
+                    String theFacilityId = (String) facilities.keySet().toArray()[0];
+                    String name = facilities.get(theFacilityId)[0];
+                    if (!name.equals(facilityName)) {
+                        String errorMessage = UtilProperties.getMessage(resource, "FacilityNameNotMatchId", new Object[]{theFacilityId, name, facilityName}, locale);
+                        report.println();
+                        report.print(errorMessage, InterfaceReport.FORMAT_ERROR);
+                        XSSFCell cell = row.getCell(0);
+                        errorMessages.put(new CellReference(cell), errorMessage);
+                        return false;
+                    }
                 }
-
             } else {
                 String errorMessage = UtilProperties.getMessage(resource, "FacilityNotBelongToYou", new Object[]{facilityName, facilityId}, locale);
                 report.println();
