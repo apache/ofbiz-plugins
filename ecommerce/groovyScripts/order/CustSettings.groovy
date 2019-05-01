@@ -47,7 +47,7 @@ if (partyId) {
 
             //Parameters not in use, Do we really need these here or should be removed.
             parameters.residenceStatusEnumId = person.residenceStatusEnumId
-            parameters.maritalStatus = person.maritalStatus
+            parameters.maritalStatusEnumId = person.maritalStatusEnumId
             parameters.employmentStatusEnumId = person.employmentStatusEnumId
             parameters.occupation = person.occupation
             parameters.yearsWithEmployer = person.yearsWithEmployer
