@@ -23,9 +23,9 @@ under the License.
       <ul>
         <li class="h3">&nbsp;${uiLabelMap.WorkEffortNotes}</li>
           <#--if project?has_content>
-            <li><a href="<@ofbizUrl>newNotesForProject?workEffortId=${project.workEffortId!}&amp;showForm=Y</@ofbizUrl>">${uiLabelMap.ProjectMgrNotesCreateNew}</a></li>
+            <li><a href="<@ofbizUrl>newNotesForProject?workEffortId=${project.workEffortId!}&amp;showForm=Y</@ofbizUrl>">${uiLabelMap.CommonCreate}</a></li>
           <#else>
-            <li><a href="<@ofbizUrl>newNotesForTask?workEffortId=${task.workEffortId!}&amp;showForm=Y</@ofbizUrl>">${uiLabelMap.ProjectMgrNotesCreateNew}</a></li>
+            <li><a href="<@ofbizUrl>newNotesForTask?workEffortId=${task.workEffortId!}&amp;showForm=Y</@ofbizUrl>">${uiLabelMap.CommonCreate}</a></li>
           </#if-->
       </ul>
       <br class="clear" />

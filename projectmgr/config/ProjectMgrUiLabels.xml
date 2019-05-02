@@ -1703,18 +1703,6 @@
         <value xml:lang="zh">实际工时没有记账</value>
         <value xml:lang="zh-TW">實際工時沒有記帳</value>
     </property>
-    <property key="ProjectMgrNotesCreateNew">
-        <value xml:lang="de">Neu erstellen</value>
-        <value xml:lang="en">Create New</value>
-        <value xml:lang="fr">Créer une nouvelle note</value>
-        <value xml:lang="it">Creare nuovo</value>
-        <value xml:lang="ja">新規作成</value>
-        <value xml:lang="nl">Nieuwe aanmaken</value>
-        <value xml:lang="th">สร้างใหม่</value>
-        <value xml:lang="vi">Tạo mới</value>
-        <value xml:lang="zh">创建新的</value>
-        <value xml:lang="zh-TW">新建新的</value>
-    </property>
     <property key="ProjectMgrParentProjectName">
         <value xml:lang="de">Name des übergeordneten Projektes</value>
         <value xml:lang="en">Parent Project Name</value>
