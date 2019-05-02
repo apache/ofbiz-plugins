@@ -146,7 +146,7 @@ under the License.
   <div class="card-header">
     <div class="row">
       <div class="col-lg-3"><strong>${uiLabelMap.PartyContactInformation}</strong></div>
-      <div class="col-lg-9 text-right"><a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="card-link">${uiLabelMap.CommonCreateNew}</a></div>
+      <div class="col-lg-9 text-right"><a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="card-link">${uiLabelMap.CommonCreate}</a></div>
     </div>
   </div>
 

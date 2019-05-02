@@ -85,7 +85,7 @@ under the License.
     <strong>${uiLabelMap.EcommerceShoppingLists}</strong>
     <form id="createEmptyShoppingList" action="<@ofbizUrl>createEmptyShoppingList</@ofbizUrl>" method="post">
        <input type="hidden" name="productStoreId" value="${productStoreId!}" />
-       <a href="javascript:document.getElementById('createEmptyShoppingList').submit();" class="float-right">${uiLabelMap.CommonCreateNew}</a>
+       <a href="javascript:document.getElementById('createEmptyShoppingList').submit();" class="float-right">${uiLabelMap.CommonCreate}</a>
     </form>
   </div>
     <div class="card-body">
@@ -112,7 +112,7 @@ under the License.
           <label class="mb-2">${uiLabelMap.EcommerceNoShoppingListsCreate}.</label>
           <form id="createEmptyShoppingList" action="<@ofbizUrl>createEmptyShoppingList</@ofbizUrl>" method="post">
              <input type="hidden" name="productStoreId" value="${productStoreId!}" />
-             <input type="submit" name="submit" class="btn btn-primary" value="${uiLabelMap.CommonCreateNew}"/>
+             <input type="submit" name="submit" class="btn btn-primary" value="${uiLabelMap.CommonCreate}"/>
           </form>
         </#if>
     </div>

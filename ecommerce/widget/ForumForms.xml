@@ -325,7 +325,7 @@ under the License.
         <field name="lastModifiedDate" position="2"><display/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="createLink" title=" " widget-style="buttontext" position="1">
-            <hyperlink also-hidden="false" description="${uiLabelMap.CommonCreateNew}"  target="AddContent"/>
+            <hyperlink also-hidden="false" description="${uiLabelMap.CommonCreate}"  target="AddContent"/>
         </field>
         <field name="findContent" title=" " widget-style="buttontext" position="2">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonFind}"  target="FindContent"/>
