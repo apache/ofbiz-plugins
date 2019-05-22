@@ -46,8 +46,8 @@ import org.apache.ofbiz.common.email.NotificationServices;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.security.Security;
 import org.apache.ofbiz.service.DispatchContext;
-import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.GenericServiceException;
+import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceUtil;
 import org.apache.ofbiz.widget.model.ThemeFactory;
 import org.apache.ofbiz.widget.renderer.ScreenRenderer;
@@ -90,6 +90,9 @@ public class BirtEmailServices {
         String birtImageDirectory = (String) serviceContext.remove(BirtWorker.getBirtImageDirectory());
         String birtContentType = (String) serviceContext.remove(BirtWorker.getBirtContentType());
         VisualTheme visualTheme = (VisualTheme) context.get("visualTheme");
+        if (visualTheme == null) {
+            visualTheme = ThemeFactory.resolveVisualTheme(null);
+        }        
         if (visualTheme == null) visualTheme = ThemeFactory.resolveVisualTheme(null);
         if (bodyParameters == null) {
             bodyParameters = MapStack.create();
