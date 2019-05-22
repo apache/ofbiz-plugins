@@ -69,6 +69,9 @@ public class ExamplePrintServices {
         String screenLocation = "component://example/widget/example/ExampleReportScreens.xml";
         String reportScreenName = "ExampleReport";
         VisualTheme visualTheme = (VisualTheme) context.get("visualTheme");
+        if (visualTheme == null) {
+            visualTheme = ThemeFactory.resolveVisualTheme(null);
+        }        
         if (visualTheme == null) visualTheme = ThemeFactory.resolveVisualTheme(null);
         Map<String, Object> workContext = new HashMap<String, Object>();
         workContext.putAll(context);
