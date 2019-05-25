@@ -205,7 +205,7 @@ public final class ProductUtil {
                 // dispatchContext.put("keywords", "");
                 // dispatchContext.put("last_modified", "");
 
-                if (product != null && "AGGREGATED".equals(product.getString("productTypeId"))) {
+                if ("AGGREGATED".equals(product.getString("productTypeId"))) {
                     ProductConfigWrapper configWrapper = new ProductConfigWrapper(delegator, dispatcher, productId, null, null, null, null, locale, userLogin);
                     String listPrice = configWrapper.getTotalListPrice().setScale(2, RoundingMode.HALF_DOWN).toString();
                     if (listPrice != null)
