@@ -133,6 +133,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
         initBasicConds(UtilMisc.toList(userLogin.getString("partyId")));
     }
     
+    @Override
     public void writeCommentsToFile(XSSFWorkbook workbook, XSSFSheet sheet) {
         report.println();
         report.print(UtilProperties.getMessage(resource, "WriteCommentsBackToExcel", locale), InterfaceReport.FORMAT_NOTE);
@@ -339,6 +340,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
         }
     }
 
+    @Override
     public void initBasicConds(List<String> orgPartyIds) {
         basicCategoryConds = new ArrayList<>();
         basicCategoryConds.add(EntityCondition.makeCondition("isPublic", "N"));
@@ -358,10 +360,12 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
         }
     }
 
+    @Override
     public Map<String, Object> updateSkuPrice(String skuId, String ownerPartyId, BigDecimal memberPrice) {
         return ServiceUtil.returnSuccess();
     }
 
+    @Override
     public Map<String, Object> updateColorAndDimension(String productId, String ownerPartyId, String color, String dimension) {
         Map<String, Object> results = ServiceUtil.returnSuccess();
         results.put("colorId", "sampleColorId");
@@ -369,12 +373,14 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
         return results;
     }
 
+    @Override
     public Map<String, Object> getDimensionIds(String productId, String ownerPartyId, String dimension) {
         Map<String, Object> results = ServiceUtil.returnSuccess();
         results.put("dimensionId", "sampleDimensionId");
         return results;
     }
 
+    @Override
     public Map<String, Object> getColorIds(String productId, String ownerPartyId, String color) {
         Map<String, Object> results = ServiceUtil.returnSuccess();
         results.put("foundColor", Boolean.TRUE);
@@ -382,10 +388,12 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
         return results;
     }
 
+    @Override
     public String getBrandId(String brandName, String ownerPartyId) {
         return "sampleBrandId";
     }
 
+    @Override
     public boolean isNumOfSheetsOK(XSSFWorkbook workbook) {
         report.print(UtilProperties.getMessage(resource, "CheckPricatHasSheet", locale), InterfaceReport.FORMAT_NOTE);
         int sheets = workbook.getNumberOfSheets();
@@ -407,6 +415,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
      * @param size 
      * @return
      */
+    @Override
     public List<Object> getCellContents(XSSFRow row, List<Object[]> colNames, int size) {
         List<Object> results = new ArrayList<>();
         boolean foundError = false;
@@ -505,6 +514,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
         return results;
     }
 
+    @Override
     public void setFacilityId(String selectedFacilityId) {
         this.selectedFacilityId = selectedFacilityId;
     }
@@ -545,6 +555,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
     protected abstract int getHeaderRowNo();
     
 
+    @Override
     public synchronized void endExcelImportHistory(String logFileName, String thruReasonId) {
         Thread currentThread = Thread.currentThread();
         String threadName = null;
@@ -580,6 +591,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
         }
     }
     
+    @Override
     public boolean hasErrorMessages() {
         return !errorMessages.keySet().isEmpty();
     }

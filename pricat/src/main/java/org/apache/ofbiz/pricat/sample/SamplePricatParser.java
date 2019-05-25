@@ -151,6 +151,7 @@ public class SamplePricatParser extends AbstractPricatParser {
         }
     }
 
+    @Override
     public boolean existsCurrencyId(XSSFSheet sheet) {
         report.print(UtilProperties.getMessage(resource, "StartCheckCurrencyId", locale), InterfaceReport.FORMAT_NOTE);
         XSSFCell currencyIdCell = sheet.getRow(2).getCell(1);
@@ -181,6 +182,7 @@ public class SamplePricatParser extends AbstractPricatParser {
         return true;
     }
 
+    @Override
     public void parseRowByRow(XSSFSheet sheet) {
         int rows = sheet.getLastRowNum() + 1;
         List<Object[]> colNames = ColNamesList.get(pricatFileVersion);
@@ -236,6 +238,7 @@ public class SamplePricatParser extends AbstractPricatParser {
      * @return
      * @throws GenericTransactionException 
      */
+    @Override
     public boolean parseCellContentsAndStore(XSSFRow row, List<Object> cellContents) throws GenericTransactionException {
         if (UtilValidate.isEmpty(cellContents)) {
             return false;
@@ -323,15 +326,18 @@ public class SamplePricatParser extends AbstractPricatParser {
     }
 
 
+    @Override
     public String updateSku(XSSFRow row, String productId, String ownerPartyId, String facilityId, String barcode, BigDecimal inventory,
             String colorId, String color, String dimensionId, String dimension, BigDecimal listPrice, BigDecimal averageCost) {
         return "sampleSkuId";
     }
 
+    @Override
     public String getProductId(XSSFRow row, String brandId, String modelName, String productName, String productCategoryId, String ownerPartyId, BigDecimal listPrice) {
         return "sampleProductId";
     }
 
+    @Override
     public Object getCellContent(List<Object> cellContents, String colName) {
         if (UtilValidate.isNotEmpty(headerColNames) && headerColNames.contains(colName)) {
             return cellContents.get(headerColNames.indexOf(colName));
@@ -339,10 +345,12 @@ public class SamplePricatParser extends AbstractPricatParser {
         return null;
     }
 
+    @Override
     public String getProductCategoryId(List<Object> cellContents, String ownerPartyId) {
         return "sampleProductCategoryId";
     }
 
+    @Override
     public boolean isFacilityOk(XSSFRow row, String facilityName, String facilityId) {
         if (!facilities.containsKey(facilityId)) {
             if (UtilValidate.isEmpty(facilityId) && facilities.keySet().size() == 1) {
@@ -382,6 +390,7 @@ public class SamplePricatParser extends AbstractPricatParser {
         return true;
     }
 
+    @Override
     public boolean isTableHeaderMatched(XSSFSheet sheet) {
         List<Object[]> columnNames = ColNamesList.get(pricatFileVersion);
         short cols = sheet.getRow(headerRowNo).getLastCellNum();
@@ -423,6 +432,7 @@ public class SamplePricatParser extends AbstractPricatParser {
         return true;
     }
 
+    @Override
     public boolean isVersionSupported(XSSFSheet sheet) {
         report.print(UtilProperties.getMessage(resource, "StartCheckPricatVersion", locale), InterfaceReport.FORMAT_NOTE);
         pricatFileVersion = sheet.getRow(2).getCell(0).getStringCellValue().trim();
@@ -437,6 +447,7 @@ public class SamplePricatParser extends AbstractPricatParser {
         return true;
     }
 
+    @Override
     public boolean containsDataRows(XSSFSheet sheet) {
         int rows = sheet.getPhysicalNumberOfRows();
         if (rows > headerRowNo + 1) {
@@ -540,6 +551,7 @@ public class SamplePricatParser extends AbstractPricatParser {
      * @param size 
      * @return
      */
+    @Override
     public List<Object> getCellContents(XSSFRow row, List<Object[]> colNames, int size) {
         List<Object> results = new ArrayList<>();
         boolean foundError = false;
@@ -655,6 +667,7 @@ public class SamplePricatParser extends AbstractPricatParser {
         return results;
     }
 
+    @Override
     protected int getHeaderRowNo() {
         return headerRowNo;
     }

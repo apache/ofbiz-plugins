@@ -65,16 +65,19 @@ public abstract class AbstractOFBizAuthenticationHandler implements InterfaceOFB
 
     }
 
+    @Override
     public Object getPartyId(Element rootElement, SearchResult result) {
         Object partyId = UtilXml.childElementValue(rootElement, "AutoPartyId", "admin");
         return partyId;
     }
 
+    @Override
     public Object getSecurityGroup(Element rootElement, SearchResult result) {
         Object securityGroupId = UtilXml.childElementValue(rootElement, "AutoSecurityGroupId", "FULLADMIN");
         return securityGroupId;
     }
 
+    @Override
     public String login(HttpServletRequest request, HttpServletResponse response, Element rootElement) throws Exception {
 
         String username = request.getParameter("USERNAME");
@@ -87,10 +90,12 @@ public abstract class AbstractOFBizAuthenticationHandler implements InterfaceOFB
         return "error";
     }
 
+    @Override
     public String logout(HttpServletRequest request, HttpServletResponse response, Element rootElement) {
         return "success";
     }
 
+    @Override
     public abstract SearchResult getLdapSearchResult(String username, String password, Element rootElement, boolean bindRequired) throws NamingException;
 
     public String login(HttpServletRequest request, HttpServletResponse response, String username, String password, Element rootElement, SearchResult result) throws Exception {
@@ -157,6 +162,7 @@ public abstract class AbstractOFBizAuthenticationHandler implements InterfaceOFB
      * @param rootElement Element root element of ldap config file
      * @return true if the user has logged out from ldap; otherwise, false.
      */
+    @Override
     public boolean hasLdapLoggedOut(HttpServletRequest request, HttpServletResponse response, Element rootElement) {
         return false;
     }

@@ -55,6 +55,7 @@ public class PricatParseExcelHtmlReport extends AbstractHtmlReport {
         return wp;
     }
     
+    @Override
     public InterfaceReportThread initializeThread(HttpServletRequest request, HttpServletResponse response, String name) {
 
         if (name == null) {
@@ -117,6 +118,7 @@ public class PricatParseExcelHtmlReport extends AbstractHtmlReport {
      * 
      * @throws IOException 
      */
+    @Override
     public void prepareDisplayReport(HttpServletRequest request, HttpServletResponse response, String name, String dialogUri) throws IOException {
 
         if (ReportStringUtil.isNotEmpty(dialogUri)) {

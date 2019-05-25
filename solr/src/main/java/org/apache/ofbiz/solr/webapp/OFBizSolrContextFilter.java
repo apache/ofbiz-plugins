@@ -61,9 +61,7 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
     
     private static final String resource = "SolrUiLabels";
 
-    /**
-     * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
-     */
+    @Override
     public void init(FilterConfig config) throws ServletException {
         Properties props = System.getProperties();
         props.setProperty("solr.log.dir", UtilProperties.getPropertyValue("solrconfig", "solr.log.dir", "runtime/logs/solr"));
@@ -71,9 +69,7 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
         super.init(config);
     }
 
-    /**
-     * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
-     */
+    @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
@@ -152,9 +148,7 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
         if (Debug.timingOn() && rname != null) timer.timerString("[" + rname + "(Domain:" + request.getScheme() + "://" + request.getServerName() + ")] Request Done", module);
     }
 
-    /**
-     * @see javax.servlet.Filter#destroy()
-     */
+    @Override
     public void destroy() {
         super.destroy();
     }
@@ -163,6 +157,7 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
      * Override this to change CoreContainer initialization
      * @return a CoreContainer to hold this server's cores
      */
+    @Override
     protected CoreContainer createCoreContainer(Path solrHome, Properties extraProperties) {
         NodeConfig nodeConfig = null;
         try {

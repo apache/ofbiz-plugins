@@ -61,10 +61,12 @@ public class ProductDocument implements LuceneDocument {
         return getDocumentIdentifier().toString();
     }
 
+    @Override
     public Term getDocumentIdentifier() {
         return documentIdentifier;
     }
 
+    @Override
     public Document prepareDocument(Delegator delegator) {
         String productId = getDocumentIdentifier().text();
         try {

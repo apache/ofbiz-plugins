@@ -63,10 +63,12 @@ public class ContentDocument implements LuceneDocument {
         return getDocumentIdentifier().toString();
     }
 
+    @Override
     public Term getDocumentIdentifier() {
         return documentIdentifier;
     }
 
+    @Override
     public Document prepareDocument(Delegator delegator) {
         Document doc;
         // make a new, empty document

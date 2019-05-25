@@ -54,16 +54,19 @@ public abstract class AbstractReport implements InterfaceReport {
     
     public static final String SESSION_REPORT_CLASS = "OFBIZ_HTML_REPORT";
 
+    @Override
     public void addError(Object obj) {
 
         errors.add(obj);
     }
 
+    @Override
     public void addWarning(Object obj) {
 
         warnings.add(obj);
     }
 
+    @Override
     public String formatRuntime() {
 
         long runtime = getRuntime();
@@ -101,30 +104,37 @@ public abstract class AbstractReport implements InterfaceReport {
         return strBuf.toString();
     }
 
+    @Override
     public List<Object> getErrors() {
         return errors;
     }
 
+    @Override
     public Locale getLocale() {
         return locale;
     }
 
+    @Override
     public long getRuntime() {
         return System.currentTimeMillis() - startTime;
     }
 
+    @Override
     public List<Object> getWarnings() {
         return warnings;
     }
 
+    @Override
     public boolean hasError() {
         return (errors.size() > 0);
     }
     
+    @Override
     public boolean hasWarning() {
         return (warnings.size() > 0);
     }
 
+    @Override
     public void resetRuntime() {
         startTime = System.currentTimeMillis();
     }
@@ -145,6 +155,7 @@ public abstract class AbstractReport implements InterfaceReport {
      *
      * @param value the String to add
      */
+    @Override
     public void print(String value) {
         print(value, FORMAT_DEFAULT);
     }
@@ -158,6 +169,7 @@ public abstract class AbstractReport implements InterfaceReport {
      * @param value the message container to add
      * @param format the formatting to use for the output
      */
+    @Override
     public abstract void print(String value, int format);
 
     /**
@@ -165,6 +177,7 @@ public abstract class AbstractReport implements InterfaceReport {
      * 
      * @param value the message container to add
      */
+    @Override
     public void println(String value) {
 
         println(value, FORMAT_DEFAULT);
@@ -179,6 +192,7 @@ public abstract class AbstractReport implements InterfaceReport {
      * @param value the String to add
      * @param format the formatting to use for the output
      */
+    @Override
     public void println(String value, int format) {
         print(value, format);
         println();

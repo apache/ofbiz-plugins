@@ -79,6 +79,7 @@ public class LinkedInAuthenticator implements Authenticator {
      *
      * @param dispatcher The ServiceDispatcher to use for this Authenticator
      */
+    @Override
     public void initialize(LocalDispatcher dispatcher) {
         this.dispatcher = dispatcher;
         this.delegator = dispatcher.getDelegator();
@@ -98,6 +99,7 @@ public class LinkedInAuthenticator implements Authenticator {
      * @throws org.apache.ofbiz.common.authentication.api.AuthenticatorException
      *          when a fatal error occurs during authentication
      */
+    @Override
     public boolean authenticate(String userLoginId, String password, boolean isServiceAuth) throws AuthenticatorException {
         Document user = null;
         HttpGet getMethod = null;
@@ -139,6 +141,7 @@ public class LinkedInAuthenticator implements Authenticator {
      * @throws org.apache.ofbiz.common.authentication.api.AuthenticatorException
      *          when logout fails
      */
+    @Override
     public void logout(String username) throws AuthenticatorException {
     }
 
@@ -149,6 +152,7 @@ public class LinkedInAuthenticator implements Authenticator {
      * @throws org.apache.ofbiz.common.authentication.api.AuthenticatorException
      *          user synchronization fails
      */
+    @Override
     public void syncUser(String userLoginId) throws AuthenticatorException {
         Document user = getLinkedInUserinfo(userLoginId);
 
@@ -356,6 +360,7 @@ public class LinkedInAuthenticator implements Authenticator {
      * @throws org.apache.ofbiz.common.authentication.api.AuthenticatorException
      *          when update password fails
      */
+    @Override
     public void updatePassword(String username, String password, String newPassword) throws AuthenticatorException {
         Debug.logInfo("Calling LinkedIn:updatePassword() - ignored!!!", module);
     }
@@ -365,6 +370,7 @@ public class LinkedInAuthenticator implements Authenticator {
      *
      * @return the weight of this Authenicator
      */
+    @Override
     public float getWeight() {
         return 1;
     }
@@ -374,6 +380,7 @@ public class LinkedInAuthenticator implements Authenticator {
      *
      * @return true if the user record is copied to the OFB database
      */
+    @Override
     public boolean isUserSynchronized() {
         return true;
     }
@@ -383,6 +390,7 @@ public class LinkedInAuthenticator implements Authenticator {
      *
      * @return true if this is expected to be the only Authenticator
      */
+    @Override
     public boolean isSingleAuthenticator() {
         return false;
     }
@@ -392,6 +400,7 @@ public class LinkedInAuthenticator implements Authenticator {
      *
      * @return true if the Authenticator is enabled
      */
+    @Override
     public boolean isEnabled() {
         return "true".equalsIgnoreCase(UtilProperties.getPropertyValue(props, "linked.authenticator.enabled", "true"));
     }

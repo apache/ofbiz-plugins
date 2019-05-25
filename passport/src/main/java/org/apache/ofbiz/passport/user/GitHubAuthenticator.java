@@ -78,6 +78,7 @@ public class GitHubAuthenticator implements Authenticator {
      *
      * @param dispatcher The ServiceDispatcher to use for this Authenticator
      */
+    @Override
     public void initialize(LocalDispatcher dispatcher) {
         this.dispatcher = dispatcher;
         this.delegator = dispatcher.getDelegator();
@@ -97,6 +98,7 @@ public class GitHubAuthenticator implements Authenticator {
      * @throws org.apache.ofbiz.common.authentication.api.AuthenticatorException
      *          when a fatal error occurs during authentication
      */
+    @Override
     public boolean authenticate(String userLoginId, String password, boolean isServiceAuth) throws AuthenticatorException {
         Map<String, Object> user = null;
         HttpGet getMethod = null;
@@ -133,6 +135,7 @@ public class GitHubAuthenticator implements Authenticator {
      * @throws org.apache.ofbiz.common.authentication.api.AuthenticatorException
      *          when logout fails
      */
+    @Override
     public void logout(String username) throws AuthenticatorException {
     }
 
@@ -143,6 +146,7 @@ public class GitHubAuthenticator implements Authenticator {
      * @throws org.apache.ofbiz.common.authentication.api.AuthenticatorException
      *          user synchronization fails
      */
+    @Override
     public void syncUser(String userLoginId) throws AuthenticatorException {
         Map<String, Object> userMap = getGitHubUserinfo(userLoginId);
         GenericValue system;
@@ -336,6 +340,7 @@ public class GitHubAuthenticator implements Authenticator {
      * @throws org.apache.ofbiz.common.authentication.api.AuthenticatorException
      *          when update password fails
      */
+    @Override
     public void updatePassword(String username, String password, String newPassword) throws AuthenticatorException {
         Debug.logInfo("Calling GitHub:updatePassword() - ignored!!!", module);
     }
@@ -345,6 +350,7 @@ public class GitHubAuthenticator implements Authenticator {
      *
      * @return the weight of this Authenicator
      */
+    @Override
     public float getWeight() {
         return 1;
     }
@@ -354,6 +360,7 @@ public class GitHubAuthenticator implements Authenticator {
      *
      * @return true if the user record is copied to the OFB database
      */
+    @Override
     public boolean isUserSynchronized() {
         return true;
     }
@@ -363,6 +370,7 @@ public class GitHubAuthenticator implements Authenticator {
      *
      * @return true if this is expected to be the only Authenticator
      */
+    @Override
     public boolean isSingleAuthenticator() {
         return false;
     }
@@ -372,6 +380,7 @@ public class GitHubAuthenticator implements Authenticator {
      *
      * @return true if the Authenticator is enabled
      */
+    @Override
     public boolean isEnabled() {
         return "true".equalsIgnoreCase(UtilProperties.getPropertyValue(props, "github.authenticator.enabled", "true"));
     }

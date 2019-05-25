@@ -69,6 +69,7 @@ public abstract class AbstractReportThread extends Thread implements InterfaceRe
     }
     
     
+    @Override
     public UUID getUUID() {
         return uuid;
     }

@@ -51,6 +51,7 @@ public class SampleHtmlReport extends AbstractHtmlReport {
         return wp;
     }
     
+    @Override
     public InterfaceReportThread initializeThread(HttpServletRequest request, HttpServletResponse response, String name) {
 
         if (name == null) {

@@ -58,18 +58,22 @@ public class BirtViewHandler implements ViewHandler {
 
     private String name = "birt";
 
+    @Override
     public void init(ServletContext context) throws ViewHandlerException {
         this.servletContext = context;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }
 
+    @Override
     public void render(String name, String page, String info,
             String contentType, String encoding, HttpServletRequest request,
             HttpServletResponse response) throws ViewHandlerException {

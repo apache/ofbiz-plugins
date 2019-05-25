@@ -252,6 +252,7 @@ public class HtmlReport extends AbstractReport {
         paramThread = name;
     }
 
+    @Override
     public synchronized String getReportUpdate() {
         StringBuffer result = new StringBuffer();
         StringBuffer logResult = new StringBuffer();
@@ -302,6 +303,7 @@ public class HtmlReport extends AbstractReport {
         return writeHtml;
     }
 
+    @Override
     public synchronized void print(String value, int format) {
         StringBuffer buf = null;
         value = ReportStringUtil.escapeJavaScript(value);
@@ -393,10 +395,12 @@ public class HtmlReport extends AbstractReport {
         logContent.add(buf.toString());
     }
 
+    @Override
     public void println() {
         print(getLineBreak());
     }
 
+    @Override
     public synchronized void println(Throwable t) {
         addError(t.getMessage());
         content.add(getExceptionElementJS(t));
@@ -476,10 +480,12 @@ public class HtmlReport extends AbstractReport {
         return buf;
     }
 
+    @Override
     public void printMessageWithParam(String uiLabel, Object param) {
         print(uiLabel, InterfaceReport.FORMAT_NOTE);
     }
 
+    @Override
     public void printMessageWithParam(int m, int n, String uiLabel, Object param) {
         print(uiLabel, InterfaceReport.FORMAT_NOTE);
     }
@@ -1301,6 +1307,7 @@ public class HtmlReport extends AbstractReport {
         return (String) request.getAttribute(FORM_URI);
     }
 
+    @Override
     public void addLogFile(String logFileName) {
         if (logFile == null || logFileOutputStream == null) {
             this.logFileName = logFileName;
@@ -1313,6 +1320,7 @@ public class HtmlReport extends AbstractReport {
         }
     }
     
+    @Override
     public String closeLogFile() {
         if (logFileOutputStream != null) {
             try {
@@ -1337,10 +1345,12 @@ public class HtmlReport extends AbstractReport {
         return logFileName;
     }
     
+    @Override
     public long getSequenceNum() {
         return sequenceNum;
     }
 
+    @Override
     public void setSequenceNum(long sequenceNum) {
         this.sequenceNum = sequenceNum;
     }

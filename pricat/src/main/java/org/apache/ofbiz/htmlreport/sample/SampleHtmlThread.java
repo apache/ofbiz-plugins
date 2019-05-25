@@ -59,13 +59,12 @@ public class SampleHtmlThread extends AbstractReportThread {
         initHtmlReport(request, response);
     }
 
+    @Override
     public String getReportUpdate() {
         return getReport().getReportUpdate();
     }
 
-    /**
-     * @see java.lang.Runnable#run()
-     */
+    @Override
     public void run() {
         try {
             if (getName().startsWith(COUNT_DOWN)) {

@@ -166,14 +166,13 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
         }
     }
 
+    @Override
     public String getReportUpdate() {
 
         return getReport().getReportUpdate();
     }
 
-    /**
-     * @see java.lang.Runnable#run()
-     */
+    @Override
     public void run() {
 
         try {
