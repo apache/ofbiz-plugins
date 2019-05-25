@@ -16,51 +16,54 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div class="card m-3">
-<#if product??>
-  <div class="card-header">
-    <strong>
-      ${product.productId}
-    </strong>
-  </div>
-  <div class="card-body">
-  <div class="row">
-  <div class="col-sm-10">
-      <a href="<@ofbizUrl>product?product_id=${product.productId}</@ofbizUrl>" >${productContentWrapper.get("PRODUCT_NAME", "html")!}</a>
-  </div>
-  <div class="col-sm-10">
-      <#if price.listPrice?? && price.price?? && price.price?double < price.listPrice?double>
-        ${uiLabelMap.ProductListPrice}: <@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/>
-      <#else>
-        &nbsp;
-      </#if>
-  </div>
-  <div class="col-sm-10">
-    <#if totalPrice??>
-        <div>${uiLabelMap.ProductAggregatedPrice}: <span class='basePrice'><@ofbizCurrency amount=totalPrice isoCode=totalPrice.currencyUsed/></span></div>
-    <#else>
-      <div class="<#if price.isSale?? && price.isSale>salePrice<#else>normalPrice</#if>">
-        <b><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></b>
-      </div>
-    </#if>
-  </div>
-  <div class="col-sm-10">
-    <#-- check to see if introductionDate hasn't passed yet -->
-    <#if product.introductionDate?? && nowTimestamp.before(product.introductionDate)>
-      ${uiLabelMap.ProductNotYetAvailable}
-    <#-- check to see if salesDiscontinuationDate has passed -->
-    <#elseif product.salesDiscontinuationDate?? && nowTimestamp.before(product.salesDiscontinuationDate)>
-      ${uiLabelMap.ProductNoLongerAvailable}
-    <#-- check to see if the product is a virtual product -->
-    <#elseif "Y" == product.isVirtual?default("N")>
-        <a href="<@ofbizUrl>product?<#if categoryId??>category_id=${categoryId}&amp;</#if>product_id=${product.productId}</@ofbizUrl>">${uiLabelMap.OrderChooseVariations}...</a>
-    <#else>
-        <input type="text" size="5" class="form-control form-control-sm" name="quantity_${product.productId}" value=""/>
-    </#if>
-  </div>
-  </div>
-<#else>
-  <div class="alert alert-light" role="alert">${uiLabelMap.ProductErrorProductNotFound}.</div>
+
+<#if productCategory?has_content>
+<h2>${productCategory.categoryName!}</h2>
+<form name="choosequickaddform" method="post" action="<@ofbizUrl>quickadd</@ofbizUrl>" style='margin: 0;'>
+  <select name='category_id'>
+    <option value='${productCategory.productCategoryId}'>${productCategory.categoryName!}</option>
+    <option value='${productCategory.productCategoryId}'>--</option>
+    <#list quickAddCats as quickAddCatalogId>
+    <#assign loopCategory = delegator.findOne("ProductCategory", Static["org.apache.ofbiz.base.util.UtilMisc"].toMap("productCategoryId", quickAddCatalogId), true)>
+    <#if loopCategory?has_content>
+    <option value='${quickAddCatalogId}'>${loopCategory.categoryName!}</option>
+  </#if>
+</#list>
+</select>
+<div><a href="javascript:document.choosequickaddform.submit()" class="buttontext">${uiLabelMap.ProductChooseQuickAddCategory}</a></div>
+</form>
+<#if productCategory.categoryImageUrl?? || productCategory.longDescription??>
+<div>
+  <#if productCategory.categoryImageUrl??>
+  <img src="<@ofbizContentUrl>${productCategory.categoryImageUrl}</@ofbizContentUrl>" vspace="5" hspace="5" class="cssImgLarge" alt="" />
 </#if>
+${productCategory.longDescription!}
 </div>
-</div>
+</#if>
+</#if>
+
+<#if productCategoryMembers?? && 0 < productCategoryMembers?size>
+<form method="post" action="<@ofbizUrl>addtocartbulk</@ofbizUrl>" name="bulkaddform">
+  <fieldset>
+    <input type='hidden' name='category_id' value='${categoryId}' />
+    <div class="quickaddall">
+      <a href="javascript:document.bulkaddform.submit()" class="buttontext">${uiLabelMap.OrderAddAllToCart}</a>
+    </div>
+    <div class="quickaddtable">
+      <#list productCategoryMembers as productCategoryMember>
+      <#assign product = productCategoryMember.getRelatedOne("Product", true)>
+      <p>
+        ${setRequestAttribute("optProductId", productCategoryMember.productId)}
+        ${screens.render(quickaddsummaryScreen)}
+      </p>
+    </#list>
+    </div>
+    <div class="quickaddall">
+      <a href="javascript:document.bulkaddform.submit()" class="buttontext">${uiLabelMap.OrderAddAllToCart}</a>
+    </div>
+  </fieldset>
+</form>
+<#else>
+<label>${uiLabelMap.ProductNoProductsInThisCategory}.</label>
+</#if>
+
