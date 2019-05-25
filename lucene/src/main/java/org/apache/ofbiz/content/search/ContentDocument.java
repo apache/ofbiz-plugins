@@ -89,7 +89,7 @@ public class ContentDocument implements LuceneDocument {
         String description = content.getString("description");
         if (UtilValidate.isNotEmpty(description))
             doc.add(new TextField("description", description, Store.YES));
-        List<String> ancestorList = new ArrayList<String>();
+        List<String> ancestorList = new ArrayList<>();
         ContentWorker.getContentAncestryAll(content.getDelegator(), contentId, "WEB_SITE_PUB_PT", "TO", ancestorList);
         String ancestorString = StringUtil.join(ancestorList, " ");
         if (UtilValidate.isNotEmpty(ancestorString)) {
@@ -145,7 +145,7 @@ public class ContentDocument implements LuceneDocument {
             Debug.logError(e, module);
             return false;
         }
-        List<String> featureList = new ArrayList<String>();
+        List<String> featureList = new ArrayList<>();
         for (GenericValue productFeatureDataResource : featureDataResourceList) {
             String feature = productFeatureDataResource.getString("productFeatureId");
             featureList.add(feature);

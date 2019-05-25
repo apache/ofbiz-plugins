@@ -49,7 +49,7 @@ public final class CategoryUtil {
      * This method is a supplement to CatalogWorker methods. 
      */
     public static List<String> getCatalogIdsByCategoryId(Delegator delegator, String productCategoryId) {
-        List<String> catalogIds = new ArrayList<String>();
+        List<String> catalogIds = new ArrayList<>();
         List<GenericValue> catalogs = null;
         try {
             EntityCondition condition = EntityCondition.makeCondition(UtilMisc.toMap("productCategoryId", productCategoryId));
@@ -68,23 +68,23 @@ public final class CategoryUtil {
     
     public static List<List<String>> getCategoryTrail(String productCategoryId, DispatchContext dctx) {
        GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
-        List<List<String>> trailElements = new ArrayList<List<String>>();
+        List<List<String>> trailElements = new ArrayList<>();
         String parentProductCategoryId = productCategoryId;
         while (UtilValidate.isNotEmpty(parentProductCategoryId)) {
             // find product category rollup
             try {
-                List<EntityCondition> rolllupConds = new ArrayList<EntityCondition>();
+                List<EntityCondition> rolllupConds = new ArrayList<>();
                 rolllupConds.add(EntityCondition.makeCondition("productCategoryId", parentProductCategoryId));
                 rolllupConds.add(EntityUtil.getFilterByDateExpr());
                 List<GenericValue> productCategoryRollups = delegator.findList("ProductCategoryRollup", EntityCondition.makeCondition(rolllupConds), null, UtilMisc.toList("-fromDate"), null, true);
                 if (UtilValidate.isNotEmpty(productCategoryRollups)) {
-                    List<List<String>> trailElementsAux = new ArrayList<List<String>>();
+                    List<List<String>> trailElementsAux = new ArrayList<>();
                     trailElementsAux.addAll(trailElements);
                     // add only categories that belong to the top category to trail
                     for (GenericValue productCategoryRollup : productCategoryRollups) {
                         String trailCategoryId = productCategoryRollup.getString("parentProductCategoryId");
                         parentProductCategoryId = trailCategoryId;
-                        List<String> trailElement = new ArrayList<String>();
+                        List<String> trailElement = new ArrayList<>();
                         if (!trailElements.isEmpty()) {
                             for (List<String> trailList : trailElementsAux) {
                                 trailElement.add(trailCategoryId);
@@ -107,7 +107,7 @@ public final class CategoryUtil {
             }
         }
         if (trailElements.size() == 0) {
-            List<String> trailElement = new ArrayList<String>();
+            List<String> trailElement = new ArrayList<>();
             trailElement.add(productCategoryId);
             trailElements.add(trailElement);
         }

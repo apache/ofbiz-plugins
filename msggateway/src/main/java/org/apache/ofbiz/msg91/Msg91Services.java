@@ -29,7 +29,7 @@ public class Msg91Services {
         try {
             GenericValue msg91GatewayConfig = EntityQuery.use(delegator).from("Msg91GatewayConfig").queryFirst();
             if (msg91GatewayConfig != null) {
-                Map<String, Object> paramMap = new HashMap<String, Object>();
+                Map<String, Object> paramMap = new HashMap<>();
                 paramMap.put("country", msg91GatewayConfig.getString("country"));
                 paramMap.put("sender", msg91GatewayConfig.getString("sender"));
                 paramMap.put("route", msg91GatewayConfig.getString("route"));

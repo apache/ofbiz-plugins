@@ -180,7 +180,7 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
     private void sendJsonHeaderMessage(HttpServletRequest httpRequest, HttpServletResponse httpResponse, GenericValue userLogin, String notLoginMessage, String noPermissionMessage, Locale locale) throws IOException {
         httpResponse.setContentType("application/json");
         MapToJSON mapToJson = new MapToJSON();
-        Map<String, Object> responseHeader = new HashMap<String, Object>();
+        Map<String, Object> responseHeader = new HashMap<>();
         JSON json;
         String message = "";
         OutputStream os = null;

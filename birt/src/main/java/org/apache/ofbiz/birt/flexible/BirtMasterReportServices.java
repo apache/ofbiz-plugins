@@ -62,7 +62,7 @@ public class BirtMasterReportServices {
                 "hours", "floating-point", 
                 "fromDate", "date-time", 
                 "thruDate", "date-time");
-        LinkedHashMap<String, String> filterMap = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> filterMap = new LinkedHashMap<>();
         filterMap.put("firstName", "name");
         filterMap.put("lastName", "name");
         filterMap.put("fromDate", "date-time");
@@ -73,7 +73,7 @@ public class BirtMasterReportServices {
                 "hours", "Hours", 
                 "fromDate", "From date", 
                 "thruDate", "Thru date");
-        LinkedHashMap<String, String> filterDisplayLabels = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> filterDisplayLabels = new LinkedHashMap<>();
         filterDisplayLabels.put("firstName", "First name");
         filterDisplayLabels.put("lastName", "Last name");
         filterDisplayLabels.put("fromDate", "From date");
@@ -98,7 +98,7 @@ public class BirtMasterReportServices {
         List<GenericValue> listPersons = null;
         try {
             // TODO: translate labels
-            List<EntityExpr> listConditions = new ArrayList<EntityExpr>();
+            List<EntityExpr> listConditions = new ArrayList<>();
             if (UtilValidate.isNotEmpty(parameters.get("firstName"))) {
                 EntityExpr conditionFirstName = EntityCondition.makeCondition("firstName", parameters.get("firstName"));
                 listConditions.add(conditionFirstName);
@@ -119,7 +119,7 @@ public class BirtMasterReportServices {
             }
             String partyId = person.getString("partyId");
 
-            List<EntityExpr> listConditionsWorkEffort = new ArrayList<EntityExpr>();
+            List<EntityExpr> listConditionsWorkEffort = new ArrayList<>();
             Timestamp thruDate = null;
             Timestamp fromDate = null;
             if (UtilValidate.isEmpty(parameters.get("fromDate"))) {
@@ -147,7 +147,7 @@ public class BirtMasterReportServices {
             Debug.logError(e, module);
             ServiceUtil.returnError("Error getting party from person name.");
         }
-        List<GenericValue> listCompiled = new ArrayList<GenericValue>();
+        List<GenericValue> listCompiled = new ArrayList<>();
         if (UtilValidate.isNotEmpty(listWorkEffortTime)) listCompiled.addAll(listWorkEffortTime);
         if (UtilValidate.isNotEmpty(listPersons)) listCompiled.addAll(listPersons);
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -188,12 +188,12 @@ public class BirtMasterReportServices {
                 "amount", "Amount", 
                 "productStoreId", "Product Store", 
                 "storeName", "Product store name");
-        LinkedHashMap<String, String> filterMap = new LinkedHashMap<String, String>(); 
+        LinkedHashMap<String, String> filterMap = new LinkedHashMap<>();
         filterMap.put("productCategoryId", "short-varchar");
         filterMap.put("productStoreId", "short-varchar");
         filterMap.put("fromDate", "date");
         filterMap.put("thruDate", "date");
-        LinkedHashMap<String, String> filterDisplayLabels = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> filterDisplayLabels = new LinkedHashMap<>();
         //it's better to use Label Map, maybe an improvement point !
         filterDisplayLabels.put("productCategoryId", "product Category");
         filterDisplayLabels.put("productStoreId", "product Store");
@@ -214,8 +214,8 @@ public class BirtMasterReportServices {
         Map<String, Object> parameters = UtilGenerics.checkMap(reportContext.getParameterValue("parameters"));
 
         List<GenericValue> listTurnOver = null;
-        List<Map<String, Object>> listInvoiceEditable = new ArrayList<Map<String, Object>>();
-        List<EntityCondition> listAllConditions = new ArrayList<EntityCondition>();
+        List<Map<String, Object>> listInvoiceEditable = new ArrayList<>();
+        List<EntityCondition> listAllConditions = new ArrayList<>();
         try {
             // treating fromDate field condition
             if (UtilValidate.isNotEmpty(parameters.get("fromDate"))) {
@@ -237,7 +237,7 @@ public class BirtMasterReportServices {
 
             // product category field condition
             if (UtilValidate.isNotEmpty(parameters.get("productCategoryId"))) {
-                List<String> productCategoryList = new ArrayList<String>();
+                List<String> productCategoryList = new ArrayList<>();
                 if (parameters.get("productCategoryId") instanceof String) {
                     String productCategoryId = (String) parameters.get("productCategoryId");
                     productCategoryList.add(productCategoryId);
@@ -260,7 +260,7 @@ public class BirtMasterReportServices {
             }
 
             // productStoreId condition
-            List<String> productStoreList = new ArrayList<String>();
+            List<String> productStoreList = new ArrayList<>();
             if (UtilValidate.isNotEmpty(parameters.get("productStoreId"))) {
                 if (parameters.get("productStoreId") instanceof String) {
                     String productStoreId = (String) parameters.get("productStoreId");
@@ -330,7 +330,7 @@ public class BirtMasterReportServices {
             for (GenericValue invoice : listTurnOver) {
                 Map<String, Object> invoiceEditableTemp = UtilGenerics.checkMap(invoice.clone());
                 invoiceEditableTemp.remove("GenericEntity");
-                Map<String, Object> invoiceEditable = new HashMap<String, Object>();
+                Map<String, Object> invoiceEditable = new HashMap<>();
                 invoiceEditable.putAll(invoiceEditableTemp);
                 invoiceEditable.put("partyName", PartyHelper.getPartyName(delegator, invoice.getString("partyId"), false));
 

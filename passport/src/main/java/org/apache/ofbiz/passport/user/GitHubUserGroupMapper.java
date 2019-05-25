@@ -40,7 +40,7 @@ public class GitHubUserGroupMapper {
 
     public GitHubUserGroupMapper(String group) {
         if (groups == null) {
-            groups = new ArrayList<String>();
+            groups = new ArrayList<>();
         }
         groups.add(group);
     }
@@ -48,7 +48,7 @@ public class GitHubUserGroupMapper {
     public Set<String> getSecurityGroups() {
         Properties props = UtilProperties.getProperties(GitHubAuthenticator.props);
 
-        Set<String> secGroups = new HashSet<String>();
+        Set<String> secGroups = new HashSet<>();
         boolean running = true;
         int index = 1;
 

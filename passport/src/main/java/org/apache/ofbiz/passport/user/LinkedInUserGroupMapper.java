@@ -40,7 +40,7 @@ public class LinkedInUserGroupMapper {
 
     public LinkedInUserGroupMapper(String group) {
         if (groups == null) {
-            groups = new ArrayList<String>();
+            groups = new ArrayList<>();
         }
         groups.add(group);
     }
@@ -48,7 +48,7 @@ public class LinkedInUserGroupMapper {
     public Set<String> getSecurityGroups() {
         Properties props = UtilProperties.getProperties(LinkedInAuthenticator.props);
 
-        Set<String> secGroups = new HashSet<String>();
+        Set<String> secGroups = new HashSet<>();
         boolean running = true;
         int index = 1;
 

@@ -41,8 +41,8 @@ public class DocumentIndexer extends Thread {
 
     public static final String module = DocumentIndexer.class.getName();
 
-    private static Map<String, DocumentIndexer> documentIndexerMap = new HashMap<String, DocumentIndexer>();
-    private LinkedBlockingQueue<LuceneDocument> documentIndexQueue = new LinkedBlockingQueue<LuceneDocument>();
+    private static Map<String, DocumentIndexer> documentIndexerMap = new HashMap<>();
+    private LinkedBlockingQueue<LuceneDocument> documentIndexQueue = new LinkedBlockingQueue<>();
     private Delegator delegator;
     private Directory indexDirectory;
     // TODO: Move to property file

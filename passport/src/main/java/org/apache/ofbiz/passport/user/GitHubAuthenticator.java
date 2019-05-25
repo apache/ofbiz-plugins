@@ -238,7 +238,7 @@ public class GitHubAuthenticator implements Authenticator {
     
     private String createUser(Map<String, Object> userMap, GenericValue system) throws AuthenticatorException {
         // create person + userLogin
-        Map<String, Serializable> createPersonUlMap = new HashMap<String, Serializable>();
+        Map<String, Serializable> createPersonUlMap = new HashMap<>();
         String userLoginId = delegator.getNextSeqId("UserLogin");
         if (userMap.containsKey("name")) {
             // use github's name as OFBiz's lastName
@@ -274,7 +274,7 @@ public class GitHubAuthenticator implements Authenticator {
 
         // create email
         if (userMap.containsKey("email")) {
-            Map<String, Serializable> createEmailMap = new HashMap<String, Serializable>();
+            Map<String, Serializable> createEmailMap = new HashMap<>();
             createEmailMap.put("emailAddress", (String) userMap.get("email"));
             createEmailMap.put("contactMechPurposeTypeId", "PRIMARY_EMAIL");
             createEmailMap.put("partyId", partyId);
@@ -303,7 +303,7 @@ public class GitHubAuthenticator implements Authenticator {
 
             // add it to the user if it exists
             if (secGroup != null) {
-                Map<String, Serializable> createSecGrpMap = new HashMap<String, Serializable>();
+                Map<String, Serializable> createSecGrpMap = new HashMap<>();
                 createSecGrpMap.put("userLoginId", userLoginId);
                 createSecGrpMap.put("groupId", securityGroup);
                 createSecGrpMap.put("fromDate", now);

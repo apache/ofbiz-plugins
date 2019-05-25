@@ -60,7 +60,7 @@ public class ImportOrdersFromEbay {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         try {
             Map<String, Object> eBayConfigResult = EbayHelper.buildEbayConfig(context, delegator);
             StringBuffer sellerTransactionsItemsXml = new StringBuffer();
@@ -84,8 +84,8 @@ public class ImportOrdersFromEbay {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
-        Map<String, Object> order = new HashMap<String, Object>();
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> order = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
         try {
             order.put("productStoreId", context.get("productStoreId"));
             order.put("userLogin", context.get("userLogin"));
@@ -129,7 +129,7 @@ public class ImportOrdersFromEbay {
         String orderId = (String) context.get("orderId");
         String externalId = (String) context.get("externalId");
         String transactionId = "";
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         try {
             if (orderId == null && externalId == null) {
                 Debug.logError("orderId or externalId must be filled", module);
@@ -204,7 +204,7 @@ public class ImportOrdersFromEbay {
                     order.put("errorMessage", "");
                 }
             }
-            Map<String, Object> result = new HashMap<String, Object>();
+            Map<String, Object> result = new HashMap<>();
             result.put("responseMessage", ModelService.RESPOND_SUCCESS);
             result.put("orderList", orders);
             return result;
@@ -352,7 +352,7 @@ public class ImportOrdersFromEbay {
             }
 
             if (ack != null && "Success".equals(ack)) {
-                orders = new LinkedList<Map<String,Object>>();
+                orders = new LinkedList<>();
                 if (totalOrders > 0) {
                     // retrieve transaction array
                     List<? extends Element> transactions = UtilXml.childElementList(elemResponse, "TransactionArray");
@@ -364,7 +364,7 @@ public class ImportOrdersFromEbay {
                         List<? extends Element> transaction = UtilXml.childElementList(transactionsElement, "Transaction");
                         Iterator<? extends Element> transactionElemIter = transaction.iterator();
                         while (transactionElemIter.hasNext()) {
-                            Map<String, Object> order = new HashMap<String, Object>();
+                            Map<String, Object> order = new HashMap<>();
                             String itemId = "";
 
                             Element transactionElement = transactionElemIter.next();

@@ -95,7 +95,7 @@ public class FixedAssetMaintServices {
                 } else {
                     issueQuantity = requestedQty;
                 }
-                Map<String, Object> itemIssuanceCtx = new HashMap<String, Object>();
+                Map<String, Object> itemIssuanceCtx = new HashMap<>();
                 itemIssuanceCtx.put("userLogin", userLogin);
                 itemIssuanceCtx.put("inventoryItemId", inventoryItemId);
                 itemIssuanceCtx.put("fixedAssetId", fixedAssetId);

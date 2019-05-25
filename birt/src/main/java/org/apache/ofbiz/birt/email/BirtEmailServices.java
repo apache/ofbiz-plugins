@@ -163,7 +163,7 @@ public class BirtEmailServices {
                 // create the output stream for the generation
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-                Map<String, Object> birtContext = new HashMap<String, Object>();
+                Map<String, Object> birtContext = new HashMap<>();
                 if (birtLocale == null) {
                     birtLocale = locale;
                 }
@@ -191,7 +191,7 @@ public class BirtEmailServices {
                 baos.close();
 
                 // store in the list of maps for sendmail....
-                List<Map<String, ? extends Object>> bodyParts = new LinkedList<Map<String,? extends Object>>();
+                List<Map<String, ? extends Object>> bodyParts = new LinkedList<>();
                 if (bodyText != null) {
                     bodyText = FlexibleStringExpander.expandString(bodyText, screenContext,  locale);
                     bodyParts.add(UtilMisc.toMap("content", bodyText, "type", "text/html"));

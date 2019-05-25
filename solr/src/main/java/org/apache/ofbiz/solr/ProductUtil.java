@@ -54,7 +54,7 @@ public final class ProductUtil {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String productId = (String) product.get("productId");
-        Map<String, Object> dispatchContext = new HashMap<String, Object>();
+        Map<String, Object> dispatchContext = new HashMap<>();
         Locale locale = new Locale("de_DE");
 
         if (Debug.verboseOn()) {
@@ -85,7 +85,7 @@ public final class ProductUtil {
 
                 // Trying to set a correctand trail
                 List<GenericValue> category = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition(UtilMisc.toMap("productId", productId)), null, null, null, false);
-                List<String> trails = new ArrayList<String>();
+                List<String> trails = new ArrayList<>();
                 for (Iterator<GenericValue> catIterator = category.iterator(); catIterator.hasNext();) {
                     GenericValue cat = catIterator.next();
                     String productCategoryId = (String) cat.get("productCategoryId");
@@ -116,7 +116,7 @@ public final class ProductUtil {
                 dispatchContext.put("category", trails);
 
                 // Get the catalogs that have associated the categories
-                List<String> catalogs = new ArrayList<String>();
+                List<String> catalogs = new ArrayList<>();
                 for (String trail : trails) {
                     String productCategoryId = (trail.split("/").length > 0) ? trail.split("/")[1] : trail;
                     List<String> catalogMembers = CategoryUtil.getCatalogIdsByCategoryId(delegator, productCategoryId);
@@ -159,7 +159,7 @@ public final class ProductUtil {
                 if (isPhysical)
                     dispatchContext.put("isPhysical", isPhysical);
 
-                Map<String, String> title = new HashMap<String, String>();
+                Map<String, String> title = new HashMap<>();
                 String detitle = productContentDe.get("PRODUCT_NAME", "html").toString();
                 if (detitle != null)
                     title.put("de", detitle);
@@ -177,7 +177,7 @@ public final class ProductUtil {
                     title.put("fr", (String) product.get("productName"));
                 dispatchContext.put("title", title);
 
-                Map<String, String> description = new HashMap<String, String>();
+                Map<String, String> description = new HashMap<>();
                 String dedescription = productContentDe.get("DESCRIPTION", "html").toString();
                 if (dedescription != null)
                     description.put("de", dedescription);
@@ -189,7 +189,7 @@ public final class ProductUtil {
                     description.put("fr", frdescription);
                 dispatchContext.put("description", description);
 
-                Map<String, String> longDescription = new HashMap<String, String>();
+                Map<String, String> longDescription = new HashMap<>();
                 String delongDescription = productContentDe.get("LONG_DESCRIPTION", "html").toString();
                 if (delongDescription != null)
                     longDescription.put("de", delongDescription);

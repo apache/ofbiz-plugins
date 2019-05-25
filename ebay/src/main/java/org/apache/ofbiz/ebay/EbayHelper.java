@@ -63,7 +63,7 @@ public class EbayHelper {
     public static final String resource = "EbayUiLabels";
 
     public static Map<String, Object> buildEbayConfig(Map<String, Object> context, Delegator delegator) {
-        Map<String, Object> buildEbayConfigContext = new HashMap<String, Object>();
+        Map<String, Object> buildEbayConfigContext = new HashMap<>();
         Locale locale = (Locale) context.get("locale");
         String productStoreId = (String) context.get("productStoreId");
         if (UtilValidate.isNotEmpty(productStoreId)) {
@@ -125,7 +125,7 @@ public class EbayHelper {
 
         int responseCode = connection.getResponseCode();
         InputStream inputStream = null;
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         String response = null;
 
         if (responseCode == HttpURLConnection.HTTP_CREATED || responseCode == HttpURLConnection.HTTP_OK) {
@@ -338,7 +338,7 @@ public class EbayHelper {
         Debug.logInfo("Creating postal address with input map: " + address, module);
         String contactMechId = null;
         try {
-            Map<String, Object> context = new HashMap<String, Object>();
+            Map<String, Object> context = new HashMap<>();
             context.put("partyId", partyId);
             context.put("toName", address.get("buyerName"));
             context.put("address1", address.get("shippingAddressStreet1"));
@@ -359,7 +359,7 @@ public class EbayHelper {
             }
             contactMechId = (String) summaryResult.get("contactMechId");
             // Set also as a billing address
-            context = new HashMap<String, Object>();
+            context = new HashMap<>();
             context.put("partyId", partyId);
             context.put("contactMechId", contactMechId);
             context.put("contactMechPurposeTypeId", "BILLING_LOCATION");
@@ -414,8 +414,8 @@ public class EbayHelper {
 
     public static String createPartyPhone(LocalDispatcher dispatcher, String partyId, String phoneNumber,
             GenericValue userLogin) {
-        Map<String, Object> summaryResult = new HashMap<String, Object>();
-        Map<String, Object> context = new HashMap<String, Object>();
+        Map<String, Object> summaryResult = new HashMap<>();
+        Map<String, Object> context = new HashMap<>();
         String phoneContactMechId = null;
 
         try {
@@ -436,8 +436,8 @@ public class EbayHelper {
     }
 
     public static String createPartyEmail(LocalDispatcher dispatcher, String partyId, String email, GenericValue userLogin) {
-        Map<String, Object> context = new HashMap<String, Object>();
-        Map<String, Object> summaryResult = new HashMap<String, Object>();
+        Map<String, Object> context = new HashMap<>();
+        Map<String, Object> summaryResult = new HashMap<>();
         String emailContactMechId = null;
 
         try {
@@ -470,8 +470,8 @@ public class EbayHelper {
 
     public static void createEbayCustomer(LocalDispatcher dispatcher, String partyId, String ebayUserIdBuyer, String eias,
             GenericValue userLogin) {
-        Map<String, Object> context = new HashMap<String, Object>();
-        Map<String, Object> summaryResult = new HashMap<String, Object>();
+        Map<String, Object> context = new HashMap<>();
+        Map<String, Object> summaryResult = new HashMap<>();
         if (UtilValidate.isNotEmpty(eias)) {
             try {
                 context.put("partyId", partyId);

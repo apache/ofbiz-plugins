@@ -55,7 +55,7 @@ public final class SearchWorker {
                 List<GenericValue> subContentList = ContentWorker.getAssociatedContent(siteContent, "To", UtilMisc.toList("SUBSITE", "PUBLISH_LINK", "SUB_CONTENT"), null, UtilDateTime.nowTimestamp().toString(), null);
 
                 if (subContentList != null) {
-                    List<String> contentIdList = new ArrayList<String>();
+                    List<String> contentIdList = new ArrayList<>();
                     for (GenericValue subContent : subContentList) {
                         contentIdList.add(subContent.getString("contentId"));
                     }
@@ -73,7 +73,7 @@ public final class SearchWorker {
 
     public static void indexContentList(LocalDispatcher dispatcher, Delegator delegator, List<String> idList) throws Exception {
         DocumentIndexer indexer = DocumentIndexer.getInstance(delegator, "content");
-        List<GenericValue> contentList = new ArrayList<GenericValue>();
+        List<GenericValue> contentList = new ArrayList<>();
         for (String id : idList) {
             try {
                 GenericValue content = EntityQuery.use(delegator).from("Content").where("contentId", id).cache(true).queryOne();

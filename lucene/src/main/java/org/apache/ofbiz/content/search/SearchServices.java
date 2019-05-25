@@ -95,7 +95,7 @@ public class SearchServices {
 
     public static Map<String, Object> indexProductsFromProductAssoc(DispatchContext dctx, Map<String, ? extends Object> context) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         try {
             result = dispatcher.runSync("indexProduct", UtilMisc.toMap("productId", context.get("productId")));
             if (ServiceUtil.isError(result)) {
@@ -114,7 +114,7 @@ public class SearchServices {
     public static Map<String, Object> indexProductsFromDataResource(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         try {
             List<GenericValue> contents = EntityQuery.use(delegator).from("Content").where("dataResourceId", context.get("dataResourceId")).queryList();
             for (GenericValue content : contents) {

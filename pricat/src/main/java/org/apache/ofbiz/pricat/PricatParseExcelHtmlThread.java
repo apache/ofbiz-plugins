@@ -100,7 +100,7 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
     
     private GenericValue userLogin;
     
-    private Map<String, String[]> facilities = new HashMap<String, String[]>();
+    private Map<String, String[]> facilities = new HashMap<>();
     
     public static final String resource = "PricatUiLabels";
     
@@ -281,11 +281,11 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
     private Map<String, String[]> getCurrentUserLoginFacilities() {
         getReport().println();
         getReport().println(UtilProperties.getMessage(resource, "GetCurrentUserLoginFacility", getLocale()), InterfaceReport.FORMAT_DEFAULT);
-        Map<String, Object> context = new HashMap<String, Object>();
+        Map<String, Object> context = new HashMap<>();
         context.put("userLogin", userLogin);
         context.put("locale", getLocale());
         try {
-            List<EntityCondition> orgConditions = new LinkedList<EntityCondition>();
+            List<EntityCondition> orgConditions = new LinkedList<>();
             orgConditions.add(EntityCondition.makeCondition("onePartyIdFrom", EntityOperator.EQUALS, userLogin.getString("partyId")));
             orgConditions.add(EntityCondition.makeCondition("twoRoleTypeIdFrom", EntityOperator.EQUALS, "INTERNAL_ORGANIZATIO"));
             orgConditions.add(EntityCondition.makeCondition("twoRoleTypeIdTo", EntityOperator.EQUALS, "EMPLOYEE"));
@@ -295,8 +295,8 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
             organizations = EntityUtil.filterByDate(organizations, now, "twoFromDate", "twoThruDate", true);
             organizations = EntityUtil.filterByDate(organizations, now, "oneFromDate", "oneThruDate", true);
             
-            List<EntityCondition> ownerPartyConditions = new LinkedList<EntityCondition>();
-            Set<String> orgPartyIds = new HashSet<String>();
+            List<EntityCondition> ownerPartyConditions = new LinkedList<>();
+            Set<String> orgPartyIds = new HashSet<>();
             for (GenericValue organization : organizations) {
                 String orgPartyId = organization.getString("onePartyIdTo");
                 if (!orgPartyIds.contains(orgPartyId)) {

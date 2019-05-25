@@ -249,7 +249,7 @@ public class ProductDocument implements LuceneDocument {
                 // Index ProductSuppliers
                 List<GenericValue> supplierProducts = product.getRelated("SupplierProduct", null, null, false);
                 supplierProducts = this.filterByThruDate(supplierProducts, "availableThruDate");
-                Set<String> supplierPartyIds = new TreeSet<String>();
+                Set<String> supplierPartyIds = new TreeSet<>();
                 for (GenericValue supplierProduct : supplierProducts) {
                     Timestamp fromDate = supplierProduct.getTimestamp("availableFromDate");
                     Timestamp thruDate = supplierProduct.getTimestamp("availableThruDate");
@@ -325,7 +325,7 @@ public class ProductDocument implements LuceneDocument {
 
     private Timestamp populateCategoryData(Document doc, GenericValue product) throws GenericEntityException {
         Timestamp nextReIndex = null;
-        Set<String> indexedCategoryIds = new TreeSet<String>();
+        Set<String> indexedCategoryIds = new TreeSet<>();
         List<GenericValue> productCategoryMembers = product.getRelated("ProductCategoryMember", null, null, false);
         productCategoryMembers = this.filterByThruDate(productCategoryMembers);
 

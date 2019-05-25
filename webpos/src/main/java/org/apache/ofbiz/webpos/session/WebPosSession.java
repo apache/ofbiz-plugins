@@ -43,7 +43,7 @@ public class WebPosSession {
     public static final String module = WebPosSession.class.getName();
 
     private String id = null;
-    private Map<String, Object> attributes = new HashMap<String, Object>();
+    private Map<String, Object> attributes = new HashMap<>();
     private GenericValue userLogin = null;
     private Locale locale = null;
     private String productStoreId = null;

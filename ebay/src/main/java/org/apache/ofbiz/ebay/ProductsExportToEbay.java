@@ -59,8 +59,8 @@ public class ProductsExportToEbay {
     private static final String resource = "EbayUiLabels";
     private static final String configFileName = "ebayExport.properties";
     private static final String module = ProductsExportToEbay.class.getName();
-    private static List<String> productExportSuccessMessageList = new LinkedList<String>();
-    private static List<String> productExportFailureMessageList = new LinkedList<String>();
+    private static List<String> productExportSuccessMessageList = new LinkedList<>();
+    private static List<String> productExportFailureMessageList = new LinkedList<>();
 
 
     public static Map<String, Object> exportToEbay(DispatchContext dctx, Map<String, Object> context) {
@@ -68,7 +68,7 @@ public class ProductsExportToEbay {
         Delegator delegator = dctx.getDelegator();
         productExportSuccessMessageList.clear();
         productExportFailureMessageList.clear();
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         Map<String, Object> response = null;
         try {
             List<String> selectResult = UtilGenerics.checkList(context.get("selectResult"), String.class);
@@ -152,7 +152,7 @@ public class ProductsExportToEbay {
         outputStream.close();
         int responseCode = connection.getResponseCode();
         InputStream inputStream;
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         String response = null;
 
         if (responseCode == HttpURLConnection.HTTP_CREATED ||
@@ -548,7 +548,7 @@ public class ProductsExportToEbay {
 
     private static Map<String, Object> readEbayCategoriesResponse(String msg, Locale locale) {
         Map<String, Object> results = null;
-        List<Map<String, Object>> categories = new LinkedList<Map<String,Object>>();
+        List<Map<String, Object>> categories = new LinkedList<>();
         try {
             Document docResponse = UtilXml.readXmlDocument(msg, true);
             Element elemResponse = docResponse.getDocumentElement();
@@ -564,7 +564,7 @@ public class ProductsExportToEbay {
                 for (Element categoryArrayElement : UtilXml.childElementList(elemResponse, "CategoryArray")) {
                     // retrieve Category
                     for (Element categoryElement : UtilXml.childElementList(categoryArrayElement, "Category")) {
-                        Map<String, Object> categ = new HashMap<String, Object>();
+                        Map<String, Object> categ = new HashMap<>();
 
                         String categoryCode = ("true".equalsIgnoreCase((UtilXml.childElementValue(categoryElement, "LeafCategory", "").trim())) ? "Y" : "N") + "_" +
                                               UtilXml.childElementValue(categoryElement, "CategoryID", "").trim() + "_" +

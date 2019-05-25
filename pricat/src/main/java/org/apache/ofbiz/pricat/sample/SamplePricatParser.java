@@ -62,7 +62,7 @@ public class SamplePricatParser extends AbstractPricatParser {
 
     public static final int headerRowNo = 4;
     
-    private List<String> headerColNames = new ArrayList<String>();
+    private List<String> headerColNames = new ArrayList<>();
     
     public SamplePricatParser(LocalDispatcher dispatcher, Delegator delegator, Locale locale, InterfaceReport report, Map<String, String[]> facilities, File pricatFile, GenericValue userLogin) {
         super(dispatcher, delegator, locale, report, facilities, pricatFile, userLogin);
@@ -472,7 +472,7 @@ public class SamplePricatParser extends AbstractPricatParser {
      * @return list of Object[]
      */
     private static List<Object[]> genExcelHeaderNamesV1_1() {
-        List<Object[]> listHeaderName = new ArrayList<Object[]>();
+        List<Object[]> listHeaderName = new ArrayList<>();
         listHeaderName.add(new Object[] {"Facility Name", 
                                          CellType.STRING,
                                          Boolean.TRUE});
@@ -541,7 +541,7 @@ public class SamplePricatParser extends AbstractPricatParser {
      * @return
      */
     public List<Object> getCellContents(XSSFRow row, List<Object[]> colNames, int size) {
-        List<Object> results = new ArrayList<Object>();
+        List<Object> results = new ArrayList<>();
         boolean foundError = false;
         if (isEmptyRow(row, size, true)) {
             return null;

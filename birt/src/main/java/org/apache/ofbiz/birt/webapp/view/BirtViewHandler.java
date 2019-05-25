@@ -97,7 +97,7 @@ public class BirtViewHandler implements ViewHandler {
             Map<String, Object> appContext = UtilGenerics.cast(engine.getConfig().getAppContext());
             BirtWorker.setWebContextObjects(appContext, request, response);
 
-            Map<String, Object> context = new HashMap<String, Object>();
+            Map<String, Object> context = new HashMap<>();
             // set parameters from request
              Map<String, Object> parameters = UtilGenerics.cast(request.getAttribute(BirtWorker.getBirtParameters()));
             if (parameters != null) {

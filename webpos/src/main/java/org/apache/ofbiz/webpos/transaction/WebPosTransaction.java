@@ -418,7 +418,7 @@ public class WebPosTransaction {
             expYear = "20" + expYear;
         }
 
-        Map<String, Object> svcCtx = new HashMap<String, Object>();
+        Map<String, Object> svcCtx = new HashMap<>();
         svcCtx.put("userLogin", webPosSession.getUserLogin());
         svcCtx.put("partyId", partyId);
         svcCtx.put("cardNumber", cardNumber);

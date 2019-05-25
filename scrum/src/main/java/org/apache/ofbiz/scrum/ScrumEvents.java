@@ -56,7 +56,7 @@ public class ScrumEvents {
         HttpSession session = request.getSession();
         Delegator delegator = (Delegator) session.getAttribute("delegator");
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-        List<Map<String, Object>> noTimeEntryList = new LinkedList<Map<String,Object>>();
+        List<Map<String, Object>> noTimeEntryList = new LinkedList<>();
         String partyId = userLogin.getString("partyId");
         Timestamp now = UtilDateTime.nowTimestamp();
         Timestamp weekStart = UtilDateTime.getWeekStart(now);
@@ -87,7 +87,7 @@ public class ScrumEvents {
                                 //check EmplLeave
                                 List<GenericValue> emplLeaveList = EntityQuery.use(delegator).from("EmplLeave").where("partyId", partyId, "fromDate", realTimeDate).cache(true).queryList();
                                 if (UtilValidate.isEmpty(timeEntryList) && UtilValidate.isEmpty(emplLeaveList)) {
-                                    Map<String, Object> noEntryMap = new HashMap<String, Object>();
+                                    Map<String, Object> noEntryMap = new HashMap<>();
                                     noEntryMap.put("timesheetId", timesheetId);
                                     noTimeEntryList.add(noEntryMap);
                                     break;

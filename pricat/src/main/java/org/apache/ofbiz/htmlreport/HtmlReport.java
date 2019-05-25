@@ -205,8 +205,8 @@ public class HtmlReport extends AbstractReport {
     public HtmlReport(HttpServletRequest request, HttpServletResponse response, boolean writeHtml, boolean isTransient) {
 
         init(UtilHttp.getLocale(request));
-        content = new ArrayList<Serializable>(256);
-        logContent = new ArrayList<Serializable>(256);
+        content = new ArrayList<>(256);
+        logContent = new ArrayList<>(256);
         showExceptionStackTrace = true;
         this.writeHtml = writeHtml;
         this.isTransient = isTransient;
@@ -847,7 +847,7 @@ public class HtmlReport extends AbstractReport {
      */
     protected Map<String, Object> paramValues(HttpServletRequest request) {
         List<Method> methods = paramGetMethods();
-        Map<String, Object> map = new HashMap<String, Object>(methods.size());
+        Map<String, Object> map = new HashMap<>(methods.size());
         Iterator<Method> i = methods.iterator();
         while (i.hasNext()) {
             Method m = i.next();
@@ -874,7 +874,7 @@ public class HtmlReport extends AbstractReport {
      * start with "getParam" and have no parameters
      */
     private List<Method> paramGetMethods() {
-        List<Method> list = new ArrayList<Method>();
+        List<Method> list = new ArrayList<>();
         Method[] methods = this.getClass().getMethods();
         int length = methods.length;
         for (int i = 0; i < length; i++) {
@@ -1177,7 +1177,7 @@ public class HtmlReport extends AbstractReport {
                 Collections.sort(resourceList);
             } else {
                 // this is a single resource operation, create list containing the resource name
-                resourceList = new ArrayList<String>(1);
+                resourceList = new ArrayList<>(1);
                 String resource = getParamResource(request);
                 if (ReportStringUtil.isNotEmptyOrWhitespaceOnly(resource)) {
                     resourceList.add(resource);

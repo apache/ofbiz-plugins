@@ -44,7 +44,7 @@ public class SearchEvents {
     public static String indexContentTree(HttpServletRequest request, HttpServletResponse response) {
 
         Map<String, Object> result;
-        Map<String, Object> serviceInMap = new HashMap<String, Object>();
+        Map<String, Object> serviceInMap = new HashMap<>();
         HttpSession session = request.getSession();
         GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
         serviceInMap.put("userLogin", userLogin);

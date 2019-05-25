@@ -141,7 +141,7 @@ public class ThirdPartyEvents {
                 String distributorId = (String) request.getSession().getAttribute(DISTRIBUTOR_ID);
 
                 if (UtilValidate.isNotEmpty(distributorId)) {
-                    List<GenericValue> toBeStored = new LinkedList<GenericValue>();
+                    List<GenericValue> toBeStored = new LinkedList<>();
 
                     // create distributor Party ?? why?
                     // create distributor PartyRole ?? why?

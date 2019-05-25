@@ -137,7 +137,7 @@ public abstract class SolrProductSearch {
 
             // Construct Documents
             SolrInputDocument doc1 = SolrUtil.generateSolrDocument(context);
-            Collection<SolrInputDocument> docs = new ArrayList<SolrInputDocument>();
+            Collection<SolrInputDocument> docs = new ArrayList<>();
 
             if (Debug.verboseOn()) {
                 Debug.logVerbose("Solr: Indexing document: " + doc1.toString(), module);
@@ -206,7 +206,7 @@ public abstract class SolrProductSearch {
         Map<String, Object> result;
         Boolean treatConnectErrorNonFatal = (Boolean) context.get("treatConnectErrorNonFatal");
         try {
-            Collection<SolrInputDocument> docs = new ArrayList<SolrInputDocument>();
+            Collection<SolrInputDocument> docs = new ArrayList<>();
 
             // Construct Documents
             List<Map<String, Object>> fieldList = UtilGenerics.<Map<String, Object>> checkList(context.get("fieldList"));
@@ -393,7 +393,7 @@ public abstract class SolrProductSearch {
         String solrIndexName = (String) context.get("indexName");
 
         try {
-            Map<String, Object> dispatchMap = new HashMap<String, Object>();
+            Map<String, Object> dispatchMap = new HashMap<>();
             if (UtilValidate.isNotEmpty(context.get("productCategoryId"))) {
                 String productCategoryId = (String) context.get("productCategoryId");
                 dispatchMap.put("query", "cat:*" + productCategoryId + "*");
@@ -448,7 +448,7 @@ public abstract class SolrProductSearch {
             if (context.get("query") == null || context.get("query").equals(""))
                 context.put("query", "*:*");
 
-            Map<String, Object> dispatchMap = new HashMap<String, Object>();
+            Map<String, Object> dispatchMap = new HashMap<>();
             if (context.get("viewSize") != null)
                 dispatchMap.put("viewSize", Integer.parseInt(((String) context.get("viewSize"))));
             if (context.get("viewIndex") != null)
@@ -466,7 +466,7 @@ public abstract class SolrProductSearch {
             }
             QueryResponse queryResult = (QueryResponse) searchResult.get("queryResult");
 
-            List<List<String>> suggestions = new ArrayList<List<String>>();
+            List<List<String>> suggestions = new ArrayList<>();
             if (queryResult.getSpellCheckResponse() != null && queryResult.getSpellCheckResponse().getSuggestions() != null) {
                 Iterator<Suggestion> iter = queryResult.getSpellCheckResponse().getSuggestions().iterator();
                 while (iter.hasNext()) {
@@ -485,16 +485,16 @@ public abstract class SolrProductSearch {
             result.put("isCorrectlySpelled", isCorrectlySpelled);
 
             Map<String, Integer> facetQuery = queryResult.getFacetQuery();
-            Map<String, String> facetQueries = new HashMap<String, String>();
+            Map<String, String> facetQueries = new HashMap<>();
             for (String fq : facetQuery.keySet()) {
                 if (facetQuery.get(fq) > 0)
                     facetQueries.put(fq, fq.replaceAll("^.*\\u005B(.*)\\u005D", "$1") + " (" + facetQuery.get(fq) + ")");
             }
 
-            Map<String, Map<String, Long>> facetFields = new HashMap<String, Map<String, Long>>();
+            Map<String, Map<String, Long>> facetFields = new HashMap<>();
             List<FacetField> facets = queryResult.getFacetFields();
             for (FacetField facet : facets) {
-                Map<String, Long> facetEntry = new HashMap<String, Long>();
+                Map<String, Long> facetEntry = new HashMap<>();
                 List<FacetField.Count> facetEntries = facet.getValues();
                 if (UtilValidate.isNotEmpty(facetEntries)) {
                     for (FacetField.Count fcount : facetEntries)
@@ -550,7 +550,7 @@ public abstract class SolrProductSearch {
             QueryResponse cat = (QueryResponse) query.get("rows");
             result = ServiceUtil.returnSuccess();
             result.put("numFound", (long) 0);
-            Map<String, Object> categories = new HashMap<String, Object>();
+            Map<String, Object> categories = new HashMap<>();
             List<FacetField> catList = cat.getFacetFields();
             for (Iterator<FacetField> catIterator = catList.iterator(); catIterator.hasNext();) {
                 FacetField field = catIterator.next();
@@ -590,7 +590,7 @@ public abstract class SolrProductSearch {
             String productCategoryId = (String) context.get("productCategoryId") != null ? CategoryUtil.getCategoryNameWithTrail((String) context.get("productCategoryId"), dctx)
                     : null;
             result = ServiceUtil.returnSuccess();
-            Map<String, List<Map<String, Object>>> catLevel = new HashMap<String, List<Map<String, Object>>>();
+            Map<String, List<Map<String, Object>>> catLevel = new HashMap<>();
             Debug.logInfo("productCategoryId: " + productCategoryId, module);
 
             //Add toplevel categories
@@ -607,7 +607,7 @@ public abstract class SolrProductSearch {
                     String facetQuery = CategoryUtil.getFacetFilterForCategory(categoryPath, dctx);
                     Map<String, Object> query = SolrUtil.categoriesAvailable(catalogId, categoryPath, null, facetQuery, false, 0, 0, solrIndexName);
                     QueryResponse cat = (QueryResponse) query.get("rows");
-                    List<Map<String, Object>> categories = new ArrayList<Map<String, Object>>();
+                    List<Map<String, Object>> categories = new ArrayList<>();
 
                     List<FacetField> catList = cat.getFacetFields();
                     for (Iterator<FacetField> catIterator = catList.iterator(); catIterator.hasNext();) {
@@ -617,8 +617,8 @@ public abstract class SolrProductSearch {
                             for (Iterator<Count> catIter = catL.iterator(); catIter.hasNext();) {
                                 FacetField.Count f = catIter.next();
                                 if (f.getCount() > 0) {
-                                    Map<String, Object> catMap = new HashMap<String, Object>();
-                                    LinkedList<String> iName = new LinkedList<String>();
+                                    Map<String, Object> catMap = new HashMap<>();
+                                    LinkedList<String> iName = new LinkedList<>();
                                     iName.addAll(Arrays.asList(f.getName().split("/")));
                                     catMap.put("catId", iName.getLast());
                                     iName.removeFirst();
@@ -669,7 +669,7 @@ public abstract class SolrProductSearch {
             client = SolrUtil.getHttpSolrClient(solrIndexName);
 
             // now lets fetch all products
-            List<Map<String, Object>> solrDocs = new ArrayList<Map<String, Object>>();
+            List<Map<String, Object>> solrDocs = new ArrayList<>();
             List<GenericValue> products = delegator.findList("Product", null, null, null, null, true);
             int numDocs = 0;
             if (products != null) {

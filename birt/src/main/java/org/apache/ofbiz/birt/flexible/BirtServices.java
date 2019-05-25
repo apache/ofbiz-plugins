@@ -119,10 +119,10 @@ public class BirtServices {
     public static Map<String, Object> prepareFlexibleReportOptionFieldsFromEntity(DispatchContext dctx, Map<String, Object> context) {
         String entityViewName = (String) context.get("entityViewName");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        List<String> listMultiFields = new ArrayList<String>();
+        List<String> listMultiFields = new ArrayList<>();
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         Locale locale = (Locale) context.get("locale");
 
         ModelEntity modelEntity = delegator.getModelEntity(entityViewName);
@@ -171,7 +171,7 @@ public class BirtServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String entityViewName = (String) reportContext.getParameterValue("modelElementName");
         Map<String, Object> inputFields = UtilGenerics.checkMap(reportContext.getParameterValue("parameters"));
-        Map<String, Object> resultPerformFind = new HashMap<String, Object>();
+        Map<String, Object> resultPerformFind = new HashMap<>();
         Map<String, Object> resultToBirt = null;
         List<GenericValue> list = null;
 
@@ -470,13 +470,13 @@ public class BirtServices {
         Locale locale = (Locale) context.get("locale");
         ModelEntity modelEntity = (ModelEntity) context.get("modelEntity");
 
-        Map<String, String> dataMap = new HashMap<String, String>();
-        Map<String, String> fieldDisplayLabels = new HashMap<String, String>();
-        LinkedHashMap<String, String> filterMap = new LinkedHashMap<String, String>();
-        LinkedHashMap<String, String> filterDisplayLabels = new LinkedHashMap<String, String>();
+        Map<String, String> dataMap = new HashMap<>();
+        Map<String, String> fieldDisplayLabels = new HashMap<>();
+        LinkedHashMap<String, String> filterMap = new LinkedHashMap<>();
+        LinkedHashMap<String, String> filterDisplayLabels = new LinkedHashMap<>();
 
         List<String> listEntityFields = modelEntity.getAllFieldNames();
-        Map<Object, Object> uiLabelMap = new HashMap<Object, Object>();
+        Map<Object, Object> uiLabelMap = new HashMap<>();
         final String[] resourceGlob = {"OrderUiLabels", "ProductUiLabels", "PartyUiLabels", "ContentUiLabels", "AccountingUiLabels", "CommonUiLabels", "BirtUiLabels"};
         for (String res : resourceGlob) {
             uiLabelMap.putAll(UtilProperties.getProperties(res, locale));
@@ -668,7 +668,7 @@ public class BirtServices {
         Locale locale = (Locale) context.get("locale");
         Delegator delegator = dctx.getDelegator();
         Map<String, Object> result = null;
-        List<String> listSuccessMessage = new ArrayList<String>();
+        List<String> listSuccessMessage = new ArrayList<>();
 
         // the idea is to allow only design to be uploaded. We use the stored file and add the new design from the uploaded file within.
         DesignConfig config = new DesignConfig();
@@ -822,7 +822,7 @@ public class BirtServices {
         SlotHandle stylesStored = designStored.getStyles();
 
         // getting style names from stored report
-        List<String> listStyleNames = new ArrayList<String>();
+        List<String> listStyleNames = new ArrayList<>();
         @SuppressWarnings("unchecked")
         Iterator<DesignElementHandle> iterStored = stylesStored.iterator();
         while (iterStored.hasNext()) {

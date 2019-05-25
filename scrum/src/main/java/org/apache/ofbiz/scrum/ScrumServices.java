@@ -178,7 +178,7 @@ public class ScrumServices {
                 Integer revision = Integer.parseInt(latestRevision.trim());
                 for (int i = 1; i <= revision; i++) {
                     String logline = null;
-                    List<String> logMessageList = new LinkedList<String>();
+                    List<String> logMessageList = new LinkedList<>();
                     String logCommand = "svn log -r" + i + " " + repositoryRoot;
                     Process logProcess = Runtime.getRuntime().exec(logCommand);
                     BufferedReader logIn = new BufferedReader(new InputStreamReader(logProcess.getInputStream()));
@@ -210,10 +210,10 @@ public class ScrumServices {
                         if (UtilValidate.isNotEmpty(taskId)) {
                             String version = "R" + i;
                             List <GenericValue> workeffContentList = EntityQuery.use(delegator).from("WorkEffortAndContentDataResource").where("contentName",version.trim() ,"drObjectInfo", revisionLink.trim()).queryList();
-                            List<EntityCondition> exprsAnd = new LinkedList<EntityCondition>();
+                            List<EntityCondition> exprsAnd = new LinkedList<>();
                             exprsAnd.add(EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS, taskId));
 
-                            List<EntityCondition> exprsOr = new LinkedList<EntityCondition>();
+                            List<EntityCondition> exprsOr = new LinkedList<>();
                             exprsOr.add(EntityCondition.makeCondition("workEffortTypeId", EntityOperator.EQUALS, "SCRUM_TASK_ERROR"));
                             exprsOr.add(EntityCondition.makeCondition("workEffortTypeId", EntityOperator.EQUALS, "SCRUM_TASK_TEST"));
                             exprsOr.add(EntityCondition.makeCondition("workEffortTypeId", EntityOperator.EQUALS, "SCRUM_TASK_IMPL"));
@@ -222,7 +222,7 @@ public class ScrumServices {
 
                             List<GenericValue> workEffortList = EntityQuery.use(delegator).from("WorkEffort").where(exprsAnd).queryList();
                             if (UtilValidate.isEmpty(workeffContentList) && UtilValidate.isNotEmpty(workEffortList)) {
-                                Map<String, Object> inputMap = new HashMap<String, Object>();
+                                Map<String, Object> inputMap = new HashMap<>();
                                 inputMap.put("taskId", taskId);
                                 inputMap.put("user", user);
                                 inputMap.put("revisionNumber", Integer.toString(i));
@@ -268,7 +268,7 @@ public class ScrumServices {
         String repositoryRoot = (String) context.get("repositoryRoot");
         Map<String, Object> result = ServiceUtil.returnSuccess();
         try {
-            List<EntityCondition> exprsAnd = new LinkedList<EntityCondition>();
+            List<EntityCondition> exprsAnd = new LinkedList<>();
             String revisionLink = repositoryRoot.substring(repositoryRoot.lastIndexOf("svn/") + 4, repositoryRoot.length()) + "&revision=";
             exprsAnd.add(EntityCondition.makeCondition("workEffortContentTypeId", EntityOperator.EQUALS, "TASK_SUB_INFO"));
             exprsAnd.add(EntityCondition.makeCondition("contentTypeId", EntityOperator.EQUALS, "DOCUMENT"));
@@ -276,8 +276,8 @@ public class ScrumServices {
             List<GenericValue> workEffortDataResourceList = EntityQuery.use(delegator).from("WorkEffortAndContentDataResource").where(exprsAnd).queryList();
             if (UtilValidate.isNotEmpty(workEffortDataResourceList)) {
                 Debug.logInfo("Total Content Size ============== >>>>>>>>>>> "+ workEffortDataResourceList.size(), module);
-                Set<String> keys = new HashSet<String>();
-                Set<GenericValue> exclusions = new HashSet<GenericValue>();
+                Set<String> keys = new HashSet<>();
+                Set<GenericValue> exclusions = new HashSet<>();
                 for (GenericValue workEffort : workEffortDataResourceList) {
                     String drObjectInfo = workEffort.getString("drObjectInfo");
                     if (keys.contains(drObjectInfo)) {

@@ -97,11 +97,11 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
     
     protected String currencyId;
     
-    protected Map<CellReference, String> errorMessages = new HashMap<CellReference, String>();
+    protected Map<CellReference, String> errorMessages = new HashMap<>();
     
     protected HSSFDataFormatter formatter = new HSSFDataFormatter();
     
-    protected Map<String, String[]> facilities = new HashMap<String, String[]>();
+    protected Map<String, String[]> facilities = new HashMap<>();
     
     protected HttpSession session;
     
@@ -232,7 +232,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
             // set comments in the new error sheet
             XSSFDrawing errorPatriarch = errorSheet.getDrawingPatriarch();
             int newRowNum = getHeaderRowNo() + 1;
-            Map<Integer, Integer> rowMapping = new HashMap<Integer, Integer>();
+            Map<Integer, Integer> rowMapping = new HashMap<>();
             for (CellReference cell : errorMessages.keySet()) {
                 if (cell != null && errorMessages.get(cell) != null) {
                     XSSFRow row = sheet.getRow(cell.getRow());
@@ -340,15 +340,15 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
     }
 
     public void initBasicConds(List<String> orgPartyIds) {
-        basicCategoryConds = new ArrayList<EntityCondition>();
+        basicCategoryConds = new ArrayList<>();
         basicCategoryConds.add(EntityCondition.makeCondition("isPublic", "N"));
         //basicCategoryConds.add(EntityCondition.makeCondition("isDefault", "Y"));
         
-        basicBrandConds = new ArrayList<EntityCondition>();
+        basicBrandConds = new ArrayList<>();
         basicBrandConds.add(EntityCondition.makeCondition("isPublic", "N"));
         basicBrandConds.add(EntityCondition.makeCondition("productFeatureTypeId", "BRAND"));
         
-        List<EntityCondition> partyIdConds = new ArrayList<EntityCondition>();
+        List<EntityCondition> partyIdConds = new ArrayList<>();
         for (String orgPartyId : orgPartyIds) {
             partyIdConds.add(EntityCondition.makeCondition("ownerPartyId", orgPartyId));
         }
@@ -408,7 +408,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
      * @return
      */
     public List<Object> getCellContents(XSSFRow row, List<Object[]> colNames, int size) {
-        List<Object> results = new ArrayList<Object>();
+        List<Object> results = new ArrayList<>();
         boolean foundError = false;
         if (isEmptyRow(row, size, true)) {
             return null;
@@ -627,7 +627,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
                 report.println(" ... " + UtilProperties.getMessage(resource, "skipped", locale), InterfaceReport.FORMAT_NOTE);
             } else {
                 report.print(" ... " + UtilProperties.getMessage(resource, "HistoryEntryToRemove", new Object[] {historyValues.size() - HISTORY_MAX_FILENUMBER}, locale), InterfaceReport.FORMAT_NOTE);
-                List<GenericValue> valuesToRemove = new ArrayList<GenericValue>();
+                List<GenericValue> valuesToRemove = new ArrayList<>();
                 for (int i = HISTORY_MAX_FILENUMBER; i < historyValues.size(); i++) {
                     GenericValue historyValue = historyValues.get(i);
                     valuesToRemove.add(historyValue);

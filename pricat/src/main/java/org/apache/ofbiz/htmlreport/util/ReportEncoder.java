@@ -69,7 +69,7 @@ public final class ReportEncoder {
     private static final String ENTITY_REPLACEMENT = "$$";
 
     /** A cache for encoding name lookup. */
-    private static Map<String, String> encodingCache = new HashMap<String, String>(16);
+    private static Map<String, String> encodingCache = new HashMap<>(16);
 
     /** The plus entity. */
     private static final String PLUS_ENTITY = ENTITY_PREFIX + "043;";

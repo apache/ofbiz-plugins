@@ -238,7 +238,7 @@ public final class SolrUtil {
 
     public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId, String facetPrefix, boolean displayproducts, int viewIndex, int viewSize, String solrIndexName) {
         // create the data model
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         HttpSolrClient client = null;
         QueryResponse returnMap = new QueryResponse();
         try {

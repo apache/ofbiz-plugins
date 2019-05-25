@@ -73,18 +73,18 @@ public class JanrainHelper {
     public String getApiKey() { return apiKey; }
     public String getBaseUrl() { return baseUrl; }
     public static Element authInfo(String token) {
-        Map<String, Object> query = new HashMap<String, Object>();
+        Map<String, Object> query = new HashMap<>();
         query.put("token", token);
         return apiCall("auth_info", query);
     }
     public HashMap<String, List<String>> allMappings() {
         Element rsp = apiCall("all_mappings", null);
         rsp.getFirstChild();
-        HashMap<String, List<String>> result = new HashMap<String, List<String>>();
+        HashMap<String, List<String>> result = new HashMap<>();
         NodeList mappings = getNodeList("/rsp/mappings/mapping", rsp);
         for (int i = 0; i < mappings.getLength(); i++) {
             Element mapping = (Element)mappings.item(i);
-            List<String> identifiers = new ArrayList<String>();
+            List<String> identifiers = new ArrayList<>();
             NodeList rk_list = getNodeList("primaryKey", mapping);
             NodeList id_list = getNodeList("identifiers/identifier", mapping);
             String remote_key = ((Element)rk_list.item(0)).getTextContent();
@@ -106,11 +106,11 @@ public class JanrainHelper {
         }
     }
     public List<String> mappings(Object primaryKey) {
-        Map<String, Object> query = new HashMap<String, Object>();
+        Map<String, Object> query = new HashMap<>();
         query.put("primaryKey", primaryKey);
         Element rsp = apiCall("mappings", query);
         Element oids = (Element)rsp.getFirstChild();
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         NodeList nl = oids.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
             Element e = (Element)nl.item(i);
@@ -119,13 +119,13 @@ public class JanrainHelper {
         return result;
     }
     public void map(String identifier, Object primaryKey) {
-        Map<String, Object> query = new HashMap<String, Object>();
+        Map<String, Object> query = new HashMap<>();
         query.put("identifier", identifier);
         query.put("primaryKey", primaryKey);
         apiCall("map", query);
     }
     public void unmap(String identifier, Object primaryKey) {
-        Map<String, Object> query = new HashMap<String, Object>();
+        Map<String, Object> query = new HashMap<>();
         query.put("identifier", identifier);
         query.put("primaryKey", primaryKey);
         apiCall("unmap", query);
@@ -133,9 +133,9 @@ public class JanrainHelper {
     private static Element apiCall(String methodName, Map<String, Object> partialQuery) {
         Map<String, Object> query = null;
         if (partialQuery == null) {
-            query = new HashMap<String, Object>();
+            query = new HashMap<>();
         } else {
-            query = new HashMap<String, Object>(partialQuery);
+            query = new HashMap<>(partialQuery);
         }
         query.put("format", "xml");
         query.put("apiKey", apiKey);
@@ -216,7 +216,7 @@ public class JanrainHelper {
                 return "error";
             }
             
-            Map<String, String> result = new HashMap<String, String>();
+            Map<String, String> result = new HashMap<>();
             result.put("displayName", displayName);
             result.put("email", email);
             result.put("identifier", identifier);

@@ -51,7 +51,7 @@ public class WebPosSearch {
         String goodIdentificationTypeId = (String) context.get("goodIdentificationTypeId");
         Map<String, Object> result = ServiceUtil.returnSuccess();
         
-        List<EntityCondition> andExprs = new LinkedList<EntityCondition>();
+        List<EntityCondition> andExprs = new LinkedList<>();
         EntityCondition mainCond = null;
         String entityName = "Product";
         
@@ -95,10 +95,10 @@ public class WebPosSearch {
         String shippingLocation = (String) context.get("shippingLocation");
         Map<String, Object> result = ServiceUtil.returnSuccess();
         
-        List<EntityCondition> andExprs = new LinkedList<EntityCondition>();
-        List<EntityCondition> orExprs = new LinkedList<EntityCondition>();
+        List<EntityCondition> andExprs = new LinkedList<>();
+        List<EntityCondition> orExprs = new LinkedList<>();
         EntityCondition mainCond = null;
-        List<String> orderBy = new LinkedList<String>();
+        List<String> orderBy = new LinkedList<>();
         
         // default view settings
         DynamicViewEntity dynamicView = new DynamicViewEntity();

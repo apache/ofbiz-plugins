@@ -155,7 +155,7 @@ public class WebPosEvents {
     public static String getProductType(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> featureMap = null;
         Map<String, Object> variantTreeMap = null;
-        Map<String, Object> featureTypes = new HashMap<String, Object>();
+        Map<String, Object> featureTypes = new HashMap<>();
         WebPosSession webPosSession = getWebPosSession(request, null);
         if (webPosSession != null) {
             Delegator delegator = webPosSession.getDelegator();
@@ -197,7 +197,7 @@ public class WebPosEvents {
                                         if (UtilValidate.isNotEmpty(variantTree)) {
                                             request.setAttribute("variantTree", variantTree);
                                             request.setAttribute("variantTreeSize", variantTree.size());
-                                            List<String> featureOrder = new LinkedList<String>();
+                                            List<String> featureOrder = new LinkedList<>();
                                             featureOrder = UtilMisc.toList(featureSet);
                                             for (int i=0; i < featureOrder.size(); i++) {
                                                 String featureKey = featureOrder.get(i);
@@ -217,7 +217,7 @@ public class WebPosEvents {
                                         }
                                         Map<String, Object> imageMap = UtilGenerics.cast(variantTreeMap.get("variantSample"));
                                         if (UtilValidate.isNotEmpty(imageMap)) {
-                                            List<String> variantSampleList = new LinkedList<String>();
+                                            List<String> variantSampleList = new LinkedList<>();
                                             variantSampleList = UtilMisc.toList(imageMap.keySet());
                                             request.setAttribute("variantSample", imageMap);
                                             request.setAttribute("variantSampleList", variantSampleList);

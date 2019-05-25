@@ -62,7 +62,7 @@ public class LuceneTests extends OFBizTestCase {
     }
 
     public void testSearchTermHand() throws Exception {
-        Map<String, Object> ctx = new HashMap<String, Object>();
+        Map<String, Object> ctx = new HashMap<>();
         ctx.put("contentId", "LuceneCONTENT");
         ctx.put("userLogin", userLogin);
         Map<String, Object> resp = dispatcher.runSync("indexContentTree", ctx);

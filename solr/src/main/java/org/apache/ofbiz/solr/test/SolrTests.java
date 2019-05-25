@@ -56,7 +56,7 @@ public class SolrTests extends OFBizTestCase {
 
         GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", validTestProductId).queryOne();
 
-        Map<String, Object> ctx = new HashMap<String, Object>();
+        Map<String, Object> ctx = new HashMap<>();
         ctx.put("instance", product);
 
         Map<String, Object> resp = dispatcher.runSync("addToSolr", ctx);
@@ -66,7 +66,7 @@ public class SolrTests extends OFBizTestCase {
         }
         assertTrue("Could not init search index", ServiceUtil.isSuccess(resp));
 
-        Map<String, Object> sctx = new HashMap<String, Object>();
+        Map<String, Object> sctx = new HashMap<>();
         sctx.put("productCategoryId", "102");
 
         Map<String, Object> sresp = dispatcher.runSync("solrProductsSearch", sctx);
