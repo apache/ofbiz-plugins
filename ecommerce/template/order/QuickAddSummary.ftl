@@ -25,17 +25,17 @@ under the License.
   </div>
   <div class="card-body">
   <div class="row">
-  <div class="col-sm-10">
+  <div class="col-sm-3">
       <a href="<@ofbizUrl>product?product_id=${product.productId}</@ofbizUrl>" >${productContentWrapper.get("PRODUCT_NAME", "html")!}</a>
   </div>
-  <div class="col-sm-10">
+  <div class="col-sm-3">
       <#if price.listPrice?? && price.price?? && price.price?double < price.listPrice?double>
         ${uiLabelMap.ProductListPrice}: <@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/>
       <#else>
         &nbsp;
       </#if>
   </div>
-  <div class="col-sm-10">
+  <div class="col-sm-3">
     <#if totalPrice??>
         <div>${uiLabelMap.ProductAggregatedPrice}: <span class='basePrice'><@ofbizCurrency amount=totalPrice isoCode=totalPrice.currencyUsed/></span></div>
     <#else>
@@ -44,7 +44,7 @@ under the License.
       </div>
     </#if>
   </div>
-  <div class="col-sm-10">
+  <div class="col-sm-3">
     <#-- check to see if introductionDate hasn't passed yet -->
     <#if product.introductionDate?? && nowTimestamp.before(product.introductionDate)>
       ${uiLabelMap.ProductNotYetAvailable}
