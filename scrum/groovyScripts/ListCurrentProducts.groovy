@@ -40,16 +40,16 @@ if(!security.hasEntityPermission("SCRUM", "_ADMIN", session)){
 }
 
 if (userLogin) {
-    if(UtilValidate.isNotEmpty(partyId)){
+    if(partyId){
         paramCond.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId))
     }
-    if(UtilValidate.isNotEmpty(productId)){
+    if(productId){
         paramCond.add(EntityCondition.makeCondition("productId", EntityOperator.LIKE, productId + "%"))
     }
-    if(UtilValidate.isNotEmpty(internalName)){
+    if(internalName){
         paramCond.add(EntityCondition.makeCondition("internalName", EntityOperator.LIKE, "%" + internalName + "%"))
     }
-    if(UtilValidate.isNotEmpty(statusId)){
+    if(statusId){
         if ("PRODUCT_ACTIVE".equals(statusId)) {
             paramCond.add(EntityCondition.makeCondition("supportDiscontinuationDate", EntityOperator.EQUALS, null))
         } else {

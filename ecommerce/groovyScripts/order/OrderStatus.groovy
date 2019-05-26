@@ -54,7 +54,7 @@ if (!userLogin) {
             } else {
                 filteredOrderStatusList = EntityUtil.filterByCondition(orderStatuses, EntityCondition.makeCondition("statusId", EntityOperator.IN, ["ORDER_COMPLETED", "ORDER_APPROVED"]))
             }            
-            if (UtilValidate.isNotEmpty(filteredOrderStatusList)) {
+            if (filteredOrderStatusList) {
                 if (filteredOrderStatusList.size() < 2) {
                     statusUserLogin = EntityUtil.getFirst(filteredOrderStatusList).statusUserLogin
                     userLogin = from("UserLogin").where("userLoginId", statusUserLogin).queryOne()

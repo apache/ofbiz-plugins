@@ -32,9 +32,9 @@ if (webPosSession) {
     context.isOpen = webPosSession.getCurrentTransaction().isOpen();
     
     context.person = null;
-    if (UtilValidate.isNotEmpty(shoppingCart)) {
+    if (shoppingCart) {
         placingCustomerParty = from("PartyAndPerson").where("partyId", shoppingCart.getPlacingCustomerPartyId()).queryOne();
-        if (UtilValidate.isNotEmpty(placingCustomerParty)) {
+        if (placingCustomerParty) {
             context.person = placingCustomerParty.lastName + " " + placingCustomerParty.firstName;
         }
     }

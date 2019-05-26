@@ -43,7 +43,7 @@ productKeywords = select("keyword", "keywordTypeId", "statusId")
                     .distinct(true)
                     .queryList()
 
-if (UtilValidate.isNotEmpty(productKeywords)) {
+if (productKeywords) {
     productKeywords.each { productKeyword ->
         productTags = from("ProductKeyword").where("keyword", productKeyword.keyword, "keywordTypeId", "KWT_TAG", "statusId", "KW_APPROVED").queryList()
         searchResult = [:]

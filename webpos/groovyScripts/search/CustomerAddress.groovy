@@ -23,24 +23,24 @@ webPosSession = WebPosEvents.getWebPosSession(request, null)
 if (webPosSession) {
     shoppingCart = webPosSession.getCart()
     shipToCustomerPartyId = shoppingCart.getShipToCustomerPartyId()
-    if (UtilValidate.isNotEmpty(shipToCustomerPartyId)) {
+    if (shipToCustomerPartyId) {
         context.personShipTo = from("Person").where("partyId", shipToCustomerPartyId).queryOne()
     }
     shippingContactMechId = shoppingCart.getContactMech("SHIPPING_LOCATION")
-    if (UtilValidate.isNotEmpty(shippingContactMechId)) {
+    if (shippingContactMechId) {
         contactMech = from("ContactMech").where("contactMechId", shippingContactMechId).queryOne()
-        if (UtilValidate.isNotEmpty(contactMech) && "POSTAL_ADDRESS".equals(contactMech.contactMechTypeId)) {
+        if (contactMech && "POSTAL_ADDRESS".equals(contactMech.contactMechTypeId)) {
             context.shippingPostalAddress = contactMech.getRelatedOne("PostalAddress", false)
         }
     }
     billToCustomerPartyId = shoppingCart.getBillToCustomerPartyId()
-    if (UtilValidate.isNotEmpty(billToCustomerPartyId)) {
+    if (billToCustomerPartyId) {
         context.personBillTo = from("Person").where("partyId", billToCustomerPartyId).queryOne()
     }
     billingContactMechId = shoppingCart.getContactMech("BILLING_LOCATION")
-    if (UtilValidate.isNotEmpty(billingContactMechId)) {
+    if (billingContactMechId) {
         contactMech = from("ContactMech").where("contactMechId", billingContactMechId).queryOne()
-        if (UtilValidate.isNotEmpty(contactMech) && "POSTAL_ADDRESS".equals(contactMech.contactMechTypeId)) {
+        if (contactMech && "POSTAL_ADDRESS".equals(contactMech.contactMechTypeId)) {
             context.billingPostalAddress = contactMech.getRelatedOne("PostalAddress", false)
         }
     }

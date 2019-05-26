@@ -22,7 +22,7 @@ import org.apache.ofbiz.base.util.UtilValidate
 reportBy = parameters.reportBy
 exportType = parameters.exportType
 
-if (UtilValidate.isEmpty(parameters.fromDate)) {
+if (!parameters.fromDate) {
     request.setAttribute("_ERROR_MESSAGE_", "Please select From Date.")
     return "error"
 }

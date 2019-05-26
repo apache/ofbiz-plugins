@@ -119,7 +119,7 @@ if (phases) {
                     latestTaskIds.add(wf.workEffortId)
                 }
                 count = 0
-                if (UtilValidate.isNotEmpty(latestTaskIds)) {
+                if (latestTaskIds) {
                     taskInfo.preDecessor = ""
                     for (i in latestTaskIds) {
                         if (count > 0) {

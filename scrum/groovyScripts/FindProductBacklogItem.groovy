@@ -88,7 +88,7 @@ if ("Y".equals(parameters.noConditionFind)) {
     
     conditionsBacklog = EntityCondition.makeCondition(conditionBacklogList, EntityOperator.AND)
     
-    if(UtilValidate.isNotEmpty(orConditionsBacklog)){
+    if(orConditionsBacklog){
         mainConditionBacklogList.add(orConditionsBacklog)
     }
     

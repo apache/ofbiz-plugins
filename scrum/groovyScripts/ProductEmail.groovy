@@ -27,8 +27,8 @@ loginPartyId = userLogin.partyId
 communicationEventId = parameters.communicationEventId
 now = UtilDateTime.nowTimestamp()
 try{
-    if (UtilValidate.isNotEmpty(loginPartyId)) {
-        if (UtilValidate.isNotEmpty(productId)) {
+    if (loginPartyId) {
+        if (productId) {
         context.product = from("Product").where("productId", productId).queryOne()
         }
         communicationEvent = from("CommunicationEvent").where("communicationEventId", communicationEventId).queryOne()

@@ -25,7 +25,7 @@ import org.apache.ofbiz.product.category.*
 catalogId = CatalogWorker.getCurrentCatalogId(request)
 bestSellerCates = []
 
-if (UtilValidate.isNotEmpty(catalogId)) {
+if (catalogId) {
     prodCatalogCategoryList = CatalogWorker.getProdCatalogCategories(request, catalogId, "PCCT_BEST_SELL")
     if (prodCatalogCategoryList.size() > 0) {
         for (int i = 0; i < prodCatalogCategoryList.size(); i++) {

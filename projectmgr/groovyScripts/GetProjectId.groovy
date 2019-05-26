@@ -22,7 +22,7 @@ import org.apache.ofbiz.base.util.UtilValidate
 if (parameters.workEffortId) {
     workEffortId = parameters.workEffortId
     projects = from("ProjectAndPhaseAndTask").where("workEffortId", workEffortId).queryList()
-    if (UtilValidate.isNotEmpty(projects)) {
+    if (projects) {
         context.put("projectId", projects.get(0).getString("projectId"))
         context.put("projectName", projects.get(0).getString("projectName"))
         context.put("phaseName", projects.get(0).getString("phaseName"))
