@@ -224,7 +224,7 @@ under the License.
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="MainColumnStyle" value="rightonly"/>
 
-                <set field="titleProperty" value="PageTitleLogin"/>
+                <set field="titleProperty" from-field="uiLabelMap.CommonContactUs"/>
                 <set field="pageHeader" from-field="uiLabelMap.CommonContactUs"/>
                 <set field="headerItem" value="contactus"/>
                 <set field="submitRequest" value="contactsubmit"/>
@@ -651,7 +651,7 @@ under the License.
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="MainColumnStyle" value="rightonly"/>
 
-                <set field="titleProperty" value="PageTitleLogin"/>
+                <set field="titleProperty" from-field="uiLabelMap.CommonContactUs"/>
                 <set field="pageHeader" from-field="uiLabelMap.CommonContactUs"/>
                 <set field="headerItem" value="contactus"/>
                 <set field="submitRequest" value="contactsubmit"/>
