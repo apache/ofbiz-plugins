@@ -96,7 +96,7 @@ public class JanrainHelper {
         }
         return result;
     }
-    private NodeList getNodeList(String xpath_expr, Element root) {
+    private static NodeList getNodeList(String xpath_expr, Element root) {
         XPathFactory factory = XPathFactory.newInstance();
         XPath xpath = factory.newXPath();
         try {
