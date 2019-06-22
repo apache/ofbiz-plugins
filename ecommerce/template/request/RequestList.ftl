@@ -21,8 +21,8 @@ under the License.
     <div class="card-header">
       <strong>${uiLabelMap.EcommerceRequestHistory}</strong>
     </div>
-    <div class="card-body">
-        <table class="table table-responsive-sm">
+    <div class="col-12 col-sm-12 col-lg-12 card-body" >
+        <table class="table table-responsive">
             <thead class="thead-light">
             <tr>
                 <th>
