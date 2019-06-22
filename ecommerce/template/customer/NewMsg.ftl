@@ -46,10 +46,10 @@ under the License.
         <input type="hidden" name="origCommEventId" value="${orgComm}"/>
       </#if>
       <div class="row">
-        <div class="col-1">
+        <div class="col-2">
           <strong>${uiLabelMap.CommonFrom} :</strong>
         </div>
-        <div class="col-11">
+        <div class="col-10">
           ${sessionAttributes.autoName!} [${userLogin.partyId}] (${uiLabelMap.CommonNotYou}?&nbsp;<a
                           href="<@ofbizUrl>autoLogout</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonClickHere}</a>)
         </div>
@@ -60,13 +60,14 @@ under the License.
             Static["org.apache.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyIdTo, true)>
         <input type="hidden" name="partyIdTo" value="${partyIdTo}"/>
         <div class="row">
-          <div class="col-1">
+          <div class="col-2">
             <strong>${uiLabelMap.CommonTo} :</strong>
           </div>
-          <div class="col-11">
+          <div class="col-10">
             ${partyToName?default("N/A")}
           </div>
         </div>
+        <hr/>
       </#if>
       <#assign defaultSubject = (communicationEvent.subject)?default("")>
       <#if (defaultSubject?length == 0)>
@@ -79,19 +80,19 @@ under the License.
         </#if>
       </#if>
       <div class="row">
-        <div class="col-1">
+        <div class="col-2">
           <strong>${uiLabelMap.EcommerceSubject} :</strong>
         </div>
-        <div class="col-11">
+        <div class="col-10">
           <input type="input" class="inputBox form-control form-control-sm" name="subject" size="20" value="${defaultSubject}"/>
         </div>
       </div>
       <hr/>
       <div class="row">
-        <div class="col-1">
+        <div class="col-2">
           <strong>${uiLabelMap.CommonMessage} :</strong>
         </div>
-        <div class="col-11">
+        <div class="col-10">
           <textarea name="content" class="textAreaBox form-control form-control-sm" rows="5"></textarea>
         </div>
       </div>
