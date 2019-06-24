@@ -293,8 +293,8 @@
     <ElectronicText dataResourceId="DRSERV-001DESCFR" textData="Prestations de service"/>
     <ElectronicText dataResourceId="DRSERV-001DESCEN" textData="Services"/>
 
-    <Content contentId="CSERV-001DESCFR" contentTypeId="DOCUMENT" dataResourceId="DRPROMO-001DESCFR" description="DESCRIPTION FR Prestations de service" localeString="fr"/>
-    <Content contentId="CSERV-001DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRPROMO-001DESCEN" description="DESCRIPTION EN Services" localeString="en"/>
+    <Content contentId="CSERV-001DESCFR" contentTypeId="DOCUMENT" dataResourceId="DRSERV-001DESCFR" description="DESCRIPTION FR Prestations de service" localeString="fr"/>
+    <Content contentId="CSERV-001DESCEN" contentTypeId="DOCUMENT" dataResourceId="DRSERV-001DESCEN" description="DESCRIPTION EN Services" localeString="en"/>
 
     <ProductCategoryContent productCategoryId="SERV-001" contentId="CSERV-001DESCEN" prodCatContentTypeId="CATEGORY_NAME" fromDate="2007-12-28 00:00:00.0"/>
 
