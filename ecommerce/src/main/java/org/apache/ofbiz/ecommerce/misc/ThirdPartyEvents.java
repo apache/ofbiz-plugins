@@ -22,7 +22,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -110,7 +109,7 @@ public class ThirdPartyEvents {
         java.net.URL ecommercePropertiesUrl = null;
 
         try {
-            ecommercePropertiesUrl = ((ServletContext) request.getAttribute("servletContext")).getResource("/WEB-INF/ecommerce.properties");
+            ecommercePropertiesUrl = request.getServletContext().getResource("/WEB-INF/ecommerce.properties");
         } catch (java.net.MalformedURLException e) {
             Debug.logWarning(e, module);
         }
@@ -190,7 +189,7 @@ public class ThirdPartyEvents {
         java.net.URL ecommercePropertiesUrl = null;
 
         try {
-            ecommercePropertiesUrl = ((ServletContext) request.getAttribute("servletContext")).getResource("/WEB-INF/ecommerce.properties");
+            ecommercePropertiesUrl = request.getServletContext().getResource("/WEB-INF/ecommerce.properties");
         } catch (java.net.MalformedURLException e) {
             Debug.logWarning(e, module);
         }
