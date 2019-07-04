@@ -1221,6 +1221,10 @@
         <value xml:lang="en">Navigate to another domain with automated signed in authentication</value>
         <value xml:lang="fr">Naviguer vers un autre domaine avec authentification automatique</value>
     </property>
+    <property key="SignedInAuthToAnotherDomainTooltip">
+        <value xml:lang="en">To make this work you have to set the security.internal.sso.enabled and security.token.key SystemProperty entities locally and on trunk demo server</value>
+        <value xml:lang="fr">Pour que cela fonctionne, vous devez définir les entités SystemProperty security.internal.sso.enabled et security.token.key localement et sur le serveur de démonstration du "trunk"</value>
+    </property>
     <property key="TargetURL">
         <value xml:lang="en">Target URL</value>
         <value xml:lang="fr">URL cible</value>
