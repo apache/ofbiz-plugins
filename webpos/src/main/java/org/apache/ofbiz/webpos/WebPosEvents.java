@@ -197,8 +197,7 @@ public class WebPosEvents {
                                         if (UtilValidate.isNotEmpty(variantTree)) {
                                             request.setAttribute("variantTree", variantTree);
                                             request.setAttribute("variantTreeSize", variantTree.size());
-                                            List<String> featureOrder = new LinkedList<>();
-                                            featureOrder = UtilMisc.toList(featureSet);
+                                            List<String> featureOrder = new LinkedList<>(featureSet);
                                             for (int i=0; i < featureOrder.size(); i++) {
                                                 String featureKey = featureOrder.get(i);
                                                 GenericValue featureValue = EntityQuery.use(delegator).from("ProductFeatureType").where("productFeatureTypeId", featureOrder.get(i)).cache().queryOne();
@@ -218,7 +217,7 @@ public class WebPosEvents {
                                         Map<String, Object> imageMap = UtilGenerics.cast(variantTreeMap.get("variantSample"));
                                         if (UtilValidate.isNotEmpty(imageMap)) {
                                             List<String> variantSampleList = new LinkedList<>();
-                                            variantSampleList = UtilMisc.toList(imageMap.keySet());
+                                            variantSampleList = new LinkedList<>(imageMap.keySet());
                                             request.setAttribute("variantSample", imageMap);
                                             request.setAttribute("variantSampleList", variantSampleList);
                                             request.setAttribute("variantSampleSize", imageMap.size());
