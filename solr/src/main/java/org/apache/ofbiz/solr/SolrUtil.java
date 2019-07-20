@@ -207,7 +207,7 @@ public final class SolrUtil {
 
         // add title
         if (context.get("title") != null) {
-            Map<String, String> title = UtilGenerics.<String, String>checkMap(context.get("title"));
+            Map<String, String> title = UtilGenerics.cast(context.get("title"));
             for (Map.Entry<String, String> entry : title.entrySet()) {
                 doc1.addField("title_i18n_" + entry.getKey(), entry.getValue());
             }
@@ -215,7 +215,7 @@ public final class SolrUtil {
 
         // add short_description
         if (context.get("description") != null) {
-            Map<String, String> description = UtilGenerics.<String, String>checkMap(context.get("description"));
+            Map<String, String> description = UtilGenerics.cast(context.get("description"));
             for (Map.Entry<String, String> entry : description.entrySet()) {
                 doc1.addField("description_i18n_" + entry.getKey(), entry.getValue());
             }
@@ -223,7 +223,7 @@ public final class SolrUtil {
 
         // add short_description
         if (context.get("longDescription") != null) {
-            Map<String, String> longDescription = UtilGenerics.<String, String>checkMap(context.get("longDescription"));
+            Map<String, String> longDescription = UtilGenerics.cast(context.get("longDescription"));
             for (Map.Entry<String, String> entry : longDescription.entrySet()) {
                 doc1.addField("longdescription_i18n_" + entry.getKey(), entry.getValue());
             }

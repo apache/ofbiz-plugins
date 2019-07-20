@@ -85,10 +85,10 @@ public class ReportDesignGenerator {
 
     public ReportDesignGenerator(Map<String, Object> context, DispatchContext dctx) throws GeneralException, SemanticException {
         locale = (Locale) context.get("locale");
-        dataMap = UtilGenerics.checkMap(context.get("dataMap"));
+        dataMap = UtilGenerics.cast(context.get("dataMap"));
         filterMap = UtilGenerics.cast(context.get("filterMap"));
         serviceName = (String) context.get("serviceName");
-        fieldDisplayLabels = UtilGenerics.checkMap(context.get("fieldDisplayLabels"));
+        fieldDisplayLabels = UtilGenerics.cast(context.get("fieldDisplayLabels"));
         filterDisplayLabels = UtilGenerics.cast(context.get("filterDisplayLabels"));
         rptDesignName = (String) context.get("rptDesignName");
         String writeFilters = (String) context.get("writeFilters");

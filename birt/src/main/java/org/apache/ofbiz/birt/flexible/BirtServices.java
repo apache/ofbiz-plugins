@@ -170,7 +170,7 @@ public class BirtServices {
         Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String entityViewName = (String) reportContext.getParameterValue("modelElementName");
-        Map<String, Object> inputFields = UtilGenerics.checkMap(reportContext.getParameterValue("parameters"));
+        Map<String, Object> inputFields = UtilGenerics.cast(reportContext.getParameterValue("parameters"));
         Map<String, Object> resultPerformFind = new HashMap<>();
         Map<String, Object> resultToBirt = null;
         List<GenericValue> list = null;
@@ -353,18 +353,18 @@ public class BirtServices {
             if (ServiceUtil.isError(resultMapsForGeneration)) {
                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultMapsForGeneration));
             }
-            Map<String, String> dataMap = UtilGenerics.checkMap(resultMapsForGeneration.get("dataMap"));
+            Map<String, String> dataMap = UtilGenerics.cast(resultMapsForGeneration.get("dataMap"));
             Map<String, String> fieldDisplayLabels = null;
             if (UtilValidate.isNotEmpty(resultMapsForGeneration.get("fieldDisplayLabels"))) {
-                fieldDisplayLabels = UtilGenerics.checkMap(resultMapsForGeneration.get("fieldDisplayLabels"));
+                fieldDisplayLabels = UtilGenerics.cast(resultMapsForGeneration.get("fieldDisplayLabels"));
             }
             Map<String, String> filterMap = null;
             if (UtilValidate.isNotEmpty(resultMapsForGeneration.get("filterMap"))) {
-                filterMap = UtilGenerics.checkMap(resultMapsForGeneration.get("filterMap"));
+                filterMap = UtilGenerics.cast(resultMapsForGeneration.get("filterMap"));
             }
             Map<String, String> filterDisplayLabels = null;
             if (UtilValidate.isNotEmpty(resultMapsForGeneration.get("filterDisplayLabels"))) {
-                filterDisplayLabels = UtilGenerics.checkMap(resultMapsForGeneration.get("filterDisplayLabels"));
+                filterDisplayLabels = UtilGenerics.cast(resultMapsForGeneration.get("filterDisplayLabels"));
             }
             contentId = BirtWorker.recordReportContent(delegator, dispatcher, context);
             // callPerformFindFromBirt is the customMethod for Entity workflow
@@ -438,10 +438,10 @@ public class BirtServices {
             if (ServiceUtil.isError(serviceResult)) {
                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
             }
-            Map<String, String> dataMap = UtilGenerics.checkMap(serviceResult.get("dataMap"));
-            Map<String, String> filterMap = UtilGenerics.checkMap(serviceResult.get("filterMap"));
-            Map<String, String> fieldDisplayLabels = UtilGenerics.checkMap(serviceResult.get("fieldDisplayLabels"));
-            Map<String, String> filterDisplayLabels = UtilGenerics.checkMap(serviceResult.get("filterDisplayLabels"));
+            Map<String, String> dataMap = UtilGenerics.cast(serviceResult.get("dataMap"));
+            Map<String, String> filterMap = UtilGenerics.cast(serviceResult.get("filterMap"));
+            Map<String, String> fieldDisplayLabels = UtilGenerics.cast(serviceResult.get("fieldDisplayLabels"));
+            Map<String, String> filterDisplayLabels = UtilGenerics.cast(serviceResult.get("filterDisplayLabels"));
             Map<String, Object> resultGeneration = dispatcher.runSync("createFlexibleReport", UtilMisc.toMap(
                     "locale", locale,
                     "dataMap", dataMap,

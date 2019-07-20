@@ -1059,7 +1059,7 @@ public class EbayOrderServices {
                 cart.setBillFromVendorPartyId(payToPartyId);
             }
             // Apply shipping costs as order adjustment
-            Map<String, Object> shippingServiceSelectedCtx =  UtilGenerics.checkMap(context.get("shippingServiceSelectedCtx"));
+            Map<String, Object> shippingServiceSelectedCtx =  UtilGenerics.cast(context.get("shippingServiceSelectedCtx"));
 
             String shippingCost = (String) shippingServiceSelectedCtx.get("shippingServiceCost");
             if (UtilValidate.isNotEmpty(shippingCost)) {
@@ -1083,7 +1083,7 @@ public class EbayOrderServices {
                 }
             }
             // Apply sales tax as order adjustment
-            Map<String, Object> shippingDetailsCtx = UtilGenerics.checkMap(context.get("shippingDetailsCtx"));
+            Map<String, Object> shippingDetailsCtx = UtilGenerics.cast(context.get("shippingDetailsCtx"));
             String salesTaxAmount = (String) shippingDetailsCtx.get("salesTaxAmount");
             String salesTaxPercent = (String) shippingDetailsCtx.get("salesTaxPercent");
             if (UtilValidate.isNotEmpty(salesTaxAmount)) {
@@ -1106,7 +1106,7 @@ public class EbayOrderServices {
                 String partyId = null;
                 String contactMechId = null;
 
-                Map<String, Object> shippingAddressCtx = UtilGenerics.checkMap(context.get("shippingAddressCtx"));
+                Map<String, Object> shippingAddressCtx = UtilGenerics.cast(context.get("shippingAddressCtx"));
                 if (UtilValidate.isNotEmpty(shippingAddressCtx)) {
                     String buyerName = (String) shippingAddressCtx.get("buyerName");
                     String firstName = buyerName.substring(0, buyerName.indexOf(" "));
@@ -1171,7 +1171,7 @@ public class EbayOrderServices {
 
                 // create new party's contact information
                 if (UtilValidate.isEmpty(contactMechId)) {
-                    Map<String, Object> buyerCtx = UtilGenerics.checkMap(context.get("buyerCtx"));
+                    Map<String, Object> buyerCtx = UtilGenerics.cast(context.get("buyerCtx"));
                     String eiasTokenBuyer = null;
                     if (UtilValidate.isNotEmpty(buyerCtx)) {
                         eiasTokenBuyer = (String) buyerCtx.get("eiasTokenBuyer");

@@ -89,7 +89,7 @@ public class BirtMasterReportServices {
     public static Map<String, Object> workEffortPerPerson(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = dctx.getDelegator();
         IReportContext reportContext = (IReportContext) context.get("reportContext");
-        Map<String, Object> parameters = UtilGenerics.checkMap(reportContext.getParameterValue("parameters"));
+        Map<String, Object> parameters = UtilGenerics.cast(reportContext.getParameterValue("parameters"));
         List<GenericValue> listWorkEffortTime = null;
 
         if (UtilValidate.isEmpty(parameters.get("firstName")) && UtilValidate.isEmpty(parameters.get("lastName"))) {
@@ -211,7 +211,7 @@ public class BirtMasterReportServices {
         Delegator delegator = dctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
         IReportContext reportContext = (IReportContext) context.get("reportContext");
-        Map<String, Object> parameters = UtilGenerics.checkMap(reportContext.getParameterValue("parameters"));
+        Map<String, Object> parameters = UtilGenerics.cast(reportContext.getParameterValue("parameters"));
 
         List<GenericValue> listTurnOver = null;
         List<Map<String, Object>> listInvoiceEditable = new ArrayList<>();
@@ -328,7 +328,7 @@ public class BirtMasterReportServices {
 
             // adding missing fields
             for (GenericValue invoice : listTurnOver) {
-                Map<String, Object> invoiceEditableTemp = UtilGenerics.checkMap(invoice.clone());
+                Map<String, Object> invoiceEditableTemp = UtilGenerics.cast(invoice.clone());
                 invoiceEditableTemp.remove("GenericEntity");
                 Map<String, Object> invoiceEditable = new HashMap<>();
                 invoiceEditable.putAll(invoiceEditableTemp);
