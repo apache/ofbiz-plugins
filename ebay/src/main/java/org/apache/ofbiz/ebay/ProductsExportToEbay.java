@@ -71,7 +71,7 @@ public class ProductsExportToEbay {
         Map<String, Object> result = new HashMap<>();
         Map<String, Object> response = null;
         try {
-            List<String> selectResult = UtilGenerics.checkList(context.get("selectResult"), String.class);
+            List<String> selectResult = UtilGenerics.checkCollection(context.get("selectResult"), String.class);
             List<GenericValue> productsList  = EntityQuery.use(delegator).from("Product").where(EntityCondition.makeCondition("productId", EntityOperator.IN, selectResult)).queryList();
             if (UtilValidate.isNotEmpty(productsList)) {
                 for (GenericValue product : productsList) {

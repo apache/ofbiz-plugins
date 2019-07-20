@@ -1214,7 +1214,7 @@ public class EbayOrderServices {
                 Map<?, ?> orderCreate = checkout.createOrder(userLogin);
 
                 if ("error".equals(orderCreate.get("responseMessage"))) {
-                    List<String> errorMessageList = UtilGenerics.checkList(orderCreate.get("errorMessageList"), String.class);
+                    List<String> errorMessageList = UtilGenerics.checkCollection(orderCreate.get("errorMessageList"), String.class);
                     return ServiceUtil.returnError(errorMessageList);
                 }
                 String orderId = (String) orderCreate.get("orderId");

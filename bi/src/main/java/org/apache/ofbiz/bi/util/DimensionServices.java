@@ -65,7 +65,7 @@ public class DimensionServices {
     public static Map<String, Object> storeGenericDimension(DispatchContext ctx, Map<String, ? extends Object> context) {
         Delegator delegator = ctx.getDelegator();
         GenericValue dimensionValue = (GenericValue) context.get("dimensionValue");
-        List<String> naturalKeyFields = UtilGenerics.checkList(context.get("naturalKeyFields"), String.class);
+        List<String> naturalKeyFields = UtilGenerics.checkCollection(context.get("naturalKeyFields"), String.class);
         String updateMode = (String) context.get("updateMode");
         Locale locale = (Locale) context.get("locale");
 
