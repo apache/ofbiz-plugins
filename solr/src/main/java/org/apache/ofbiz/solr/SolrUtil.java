@@ -187,7 +187,7 @@ public final class SolrUtil {
 
         // add features
         if (context.get("features") != null) {
-            Set<String> features = UtilGenerics.<String>checkSet(context.get("features"));
+            Set<String> features = UtilGenerics.cast(context.get("features"));
             Iterator<String> featIter = features.iterator();
             while (featIter.hasNext()) {
                 String feat = featIter.next();
