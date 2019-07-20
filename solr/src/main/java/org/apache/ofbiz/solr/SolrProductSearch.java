@@ -209,7 +209,7 @@ public abstract class SolrProductSearch {
             Collection<SolrInputDocument> docs = new ArrayList<>();
 
             // Construct Documents
-            List<Map<String, Object>> fieldList = UtilGenerics.<Map<String, Object>> checkList(context.get("fieldList"));
+            List<Map<String, Object>> fieldList = UtilGenerics.cast(context.get("fieldList"));
 
             Debug.logInfo("Solr: Generating and adding " + fieldList.size() + " documents to solr index", module);
 

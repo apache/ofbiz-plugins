@@ -125,7 +125,7 @@ public class EbayOrderServices {
         Locale locale = (Locale) context.get("locale");
         Map<String, Object> result = new HashMap<>();
         String externalId = (String) context.get("externalId");
-        List<Map<String, Object>> orderList = UtilGenerics.checkList(context.get("orderList"));
+        List<Map<String, Object>> orderList = UtilGenerics.cast(context.get("orderList"));
         try {
             if (UtilValidate.isNotEmpty(orderList)) {
                 Iterator<Map<String, Object>> orderListIter = orderList.iterator();
@@ -1047,7 +1047,7 @@ public class EbayOrderServices {
                 return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "ordersImportFromEbay.paymentIsStillNotReceived", locale));
             }
 
-            List<Map<String, Object>> orderItemList = UtilGenerics.checkList(context.get("orderItemList"));
+            List<Map<String, Object>> orderItemList = UtilGenerics.cast(context.get("orderItemList"));
             Iterator<Map<String, Object>> orderItemIter = orderItemList.iterator();
             while (orderItemIter.hasNext()) {
                 Map<String, Object> orderItem = orderItemIter.next();

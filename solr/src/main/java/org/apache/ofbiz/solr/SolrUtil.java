@@ -169,7 +169,7 @@ public final class SolrUtil {
 
         // add catalog
         if (context.get("catalog") != null) {
-            List<String> catalog = UtilGenerics.<String>checkList(context.get("catalog"));
+            List<String> catalog = UtilGenerics.cast(context.get("catalog"));
             for (String c : catalog) {
                 doc1.addField("catalog", c);
             }
@@ -177,7 +177,7 @@ public final class SolrUtil {
 
         // add categories
         if (context.get("category") != null) {
-            List<String> category = UtilGenerics.<String>checkList(context.get("category"));
+            List<String> category = UtilGenerics.cast(context.get("category"));
             Iterator<String> catIter = category.iterator();
             while (catIter.hasNext()) {
                 String cat = catIter.next();
@@ -197,7 +197,7 @@ public final class SolrUtil {
 
         // add attributes
         if (context.get("attributes") != null) {
-            List<String> attributes = UtilGenerics.<String>checkList(context.get("attributes"));
+            List<String> attributes = UtilGenerics.cast(context.get("attributes"));
             Iterator<String> attrIter = attributes.iterator();
             while (attrIter.hasNext()) {
                 String attr = attrIter.next();

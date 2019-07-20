@@ -155,7 +155,7 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
         try {
             getReport().print(UtilProperties.getMessage(resource, "StartStoreExcel", getLocale()), InterfaceReport.FORMAT_HEADLINE);
             ServletFileUpload dfu = new ServletFileUpload(new DiskFileItemFactory(10240, userFolder));
-            fileItems = UtilGenerics.checkList(dfu.parseRequest(request));
+            fileItems = UtilGenerics.cast(dfu.parseRequest(request));
         } catch (FileUploadException e) {
             getReport().addError(e);
         }

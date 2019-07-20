@@ -242,7 +242,7 @@ public class BirtMasterReportServices {
                     String productCategoryId = (String) parameters.get("productCategoryId");
                     productCategoryList.add(productCategoryId);
                 } else if (parameters.get("productStoreId") instanceof String) {
-                    productCategoryList = UtilGenerics.checkList(parameters.get("productCategoryId"));
+                    productCategoryList = UtilGenerics.cast(parameters.get("productCategoryId"));
                 }
                 // getting productIds in these categories
                 EntityExpr conditionProductCategory = EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.IN, productCategoryList);
@@ -266,7 +266,7 @@ public class BirtMasterReportServices {
                     String productStoreId = (String) parameters.get("productStoreId");
                     productStoreList.add(productStoreId);
                 } else if (parameters.get("productStoreId") instanceof List) {
-                    productStoreList = UtilGenerics.checkList(parameters.get("productStoreId"));
+                    productStoreList = UtilGenerics.cast(parameters.get("productStoreId"));
                 }
                 // getting list of invoice Ids linked to these productStore
                 EntityExpr conditionProductStoreId = EntityCondition.makeCondition("productStoreId", EntityOperator.IN, productStoreList);

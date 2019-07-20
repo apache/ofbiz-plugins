@@ -41,7 +41,7 @@ public class Msg91Services {
         Delegator delegator = ctx.getDelegator();
         Map<String, Object> result = ServiceUtil.returnSuccess();
         
-        List<String> numbers = UtilGenerics.checkList(context.get("numbers"));
+        List<String> numbers = UtilGenerics.cast(context.get("numbers"));
         String message = (String) context.get("message");
 
         try {
