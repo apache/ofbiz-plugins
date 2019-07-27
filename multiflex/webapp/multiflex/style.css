@@ -4208,3 +4208,7 @@ button.ui-button::-moz-focus-inner {
     margin: -1px;
     height: 100%;
 }
+/* The custom CSS to show mouse pointer on links using featherlight plugin  */
+a[data-featherlight] {
+    cursor: pointer;
+}
