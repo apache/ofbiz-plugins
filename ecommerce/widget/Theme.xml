@@ -35,11 +35,11 @@ under the License.
         <property name="VT_HDR_JAVASCRIPT['add']" value="/common/js/jquery/plugins/validate/additional-methods.min.js"/>
         <property name="VT_HDR_JAVASCRIPT['add']" value="/common/js/jquery/plugins/Readmore.js-master/readmore.js"/>
         <property name="VT_HDR_JAVASCRIPT['add']" value="/common/js/jquery/plugins/jquery-jgrowl/jquery.jgrowl-1.4.6.min.js"/>
-        <property name="VT_HDR_JAVASCRIPT['add']" value="/ecommerce/js/bootstrap.min.js"/>
-        <property name="VT_HDR_JAVASCRIPT['add']" value="/ecommerce/js/bootstrap.bundle.min.js"/>
+        <property name="VT_HDR_JAVASCRIPT['add']" value="/ecommerce/js/bootstrap/js/bootstrap-4.3.1.min.js"/>
+        <property name="VT_HDR_JAVASCRIPT['add']" value="/ecommerce/js/bootstrap/js/bootstrap.bundle-4.3.1.min.js"/>
 
         <!--Css style-->
-        <property name="VT_STYLESHEET['add']" value="/ecommerce/css/bootstrap.min.css"/>
+        <property name="VT_STYLESHEET['add']" value="/ecommerce/js/bootstrap/css/bootstrap-4.3.1.min.css"/>
         <property name="VT_STYLESHEET['add']" value="/common/js/jquery/plugins/jquery-jgrowl/jquery.jgrowl-1.4.6.min.css"/>
         <property name="VT_STYLESHEET['add']" value="/contentimages/css/contentForum.css"/>
         <property name="VT_STYLESHEET['add']" value="/ecommerce/images/blog.css"/>
