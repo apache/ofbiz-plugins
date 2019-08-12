@@ -20,8 +20,6 @@
 package org.apache.ofbiz.content.test;
 
 import java.io.File;
-import java.lang.Object;
-import java.lang.String;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,12 +34,12 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.content.search.SearchWorker;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.service.ServiceUtil;
 import org.apache.ofbiz.service.testtools.OFBizTestCase;
-import org.apache.ofbiz.base.util.Debug;
 
 public class LuceneTests extends OFBizTestCase {
 
@@ -99,7 +97,7 @@ public class LuceneTests extends OFBizTestCase {
         combQueryBuilder.add(query, BooleanClause.Occur.MUST);
         BooleanQuery combQuery = combQueryBuilder.build();
 
-        TopScoreDocCollector collector = TopScoreDocCollector.create(10);
+        TopScoreDocCollector collector = TopScoreDocCollector.create(10, 10);
         searcher.search(combQuery, collector);
 
         assertEquals("Only 1 result expected from the testdata", 1, collector.getTotalHits());
