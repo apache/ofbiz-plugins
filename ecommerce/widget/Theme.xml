@@ -23,7 +23,7 @@ under the License.
        xmlns="http://ofbiz.apache.org/Widget-Theme" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Theme http://ofbiz.apache.org/dtds/widget-theme.xsd">
     <visual-themes>
         <visual-theme id="EC_DEFAULT" display-name="Ecommerce Default">
-            <description>${str:label('CommonEntityLabels', 'VisualTheme.description.EC_DEFAULT', locale)}</description>
+            <description>${util:label('CommonEntityLabels', 'VisualTheme.description.EC_DEFAULT', locale)}</description>
             <screenshot location="/images/ecdefaulttheme.jpg"/>
         </visual-theme>
     </visual-themes>
