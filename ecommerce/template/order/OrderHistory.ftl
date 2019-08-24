@@ -50,7 +50,7 @@ under the License.
                   <td>
                     <#list distinctInvoiceIds as invoiceId>
                        <a href="<@ofbizUrl>invoice.pdf?invoiceId=${invoiceId}</@ofbizUrl>" class="buttontext">
-                         (${invoiceId} PDF)
+                         (${invoiceId} ${uiLabelMap.CommonPdf})
                        </a>
                     </#list>
                   </td>
