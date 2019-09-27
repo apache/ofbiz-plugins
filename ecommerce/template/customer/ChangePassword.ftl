@@ -26,12 +26,16 @@ under the License.
     ${uiLabelMap.CommonSave}
     </a>
     <form id="changepasswordform" method="post" action="<@ofbizUrl>updatePassword/${donePage}</@ofbizUrl>">
+        <#if !parameters.TOKEN?has_content>
           <label class="mt-4 asteriskInput" for="currentPassword">${uiLabelMap.PartyOldPassword}</label>
           <div class="row">
             <div class="col-sm-6">
               <input type="password" class="form-control" name="currentPassword" autocomplete="off" id="currentPassword"/>
             </div>
           </div>
+        <#else>
+          <input type="hidden" name="TOKEN" value="${parameters.TOKEN}"/>
+        </#if>
           <label  class="required" for="newPassword">${uiLabelMap.PartyNewPassword}</label>
           <div class="row">
             <div class="col-sm-6">
