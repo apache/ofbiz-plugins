@@ -379,7 +379,7 @@ under the License.
         <strong>${uiLabelMap.CommonUsername} &amp; ${uiLabelMap.CommonPassword}</strong>
       </div>
       <div class="col-lg-9 text-right">
-        <a href="<@ofbizUrl>changepassword</@ofbizUrl>">${uiLabelMap.PartyChangePassword}</a>
+        <a href="<@ofbizUrl>passwordChange</@ofbizUrl>">${uiLabelMap.PartyChangePassword}</a>
       </div>
     </div>
   </div>

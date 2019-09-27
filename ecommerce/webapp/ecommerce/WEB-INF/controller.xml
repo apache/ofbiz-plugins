@@ -1138,16 +1138,16 @@ under the License.
         <response name="error" type="view" value="viewprofile"/>
     </request-map>
 
-    <request-map uri="changepassword">
+    <request-map uri="passwordChange">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="changepassword"/>
+        <response name="success" type="view" value="passwordChange"/>
     </request-map>
 
     <request-map uri="updatePassword">
         <security https="true" auth="true"/>
         <event type="simple" path="component://securityext/minilang/login/LoginSimpleEvents.xml" invoke="updatePassword"/>
-        <response name="success" type="view" value="changepassword"/>
-        <response name="error" type="view" value="changepassword"/>
+        <response name="success" type="view" value="passwordChange"/>
+        <response name="error" type="view" value="passwordChange"/>
     </request-map>
 
     <request-map uri="forgotpassword">
@@ -1927,7 +1927,7 @@ under the License.
     <view-map name="editcreditcard" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#editcreditcard"/>
     <view-map name="editeftaccount" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#editeftaccount"/>
     <view-map name="editgiftcard" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#editgiftcard"/>
-    <view-map name="changepassword" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#changepassword"/>
+    <view-map name="passwordChange" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#passwordChange"/>
     <view-map name="editperson" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#editperson"/>
     <view-map name="giftcardbalance" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#giftcardbalance"/>
     <view-map name="giftcardlink" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#giftcardlink"/>
