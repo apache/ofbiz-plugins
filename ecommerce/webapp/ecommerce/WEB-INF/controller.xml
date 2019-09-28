@@ -1982,7 +1982,7 @@ under the License.
 
     <!-- One Page Checkout -->
     <view-map name="OnePageCheckout" type="screen" page="component://ecommerce/widget/OrderScreens.xml#OnePageCheckout"/>
-    <view-map name="compareProducts" type="screen" page="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#compareProducts"/>
+    <view-map name="compareProducts" type="screen" page="component://ecommerce/widget/OrderScreens.xml#compareProducts"/>
     
     <!-- Product in the different UOM -->
     <view-map name="ProductUomDropDownOnly" type="screen" page="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#ProductUomDropDownOnly"/>

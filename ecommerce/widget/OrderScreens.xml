@@ -672,4 +672,26 @@ under the License.
             </widgets>
         </section>
     </screen>
+
+    <screen name="compareProducts">
+        <section>
+            <actions>
+                <set field="titleProperty" value="ProductCompareProducts"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="title" from-field="uiLabelMap.ProductCompareProducts"/>
+                <script location="component://order/groovyScripts/entry/catalog/CompareProducts.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPopUpDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html>
+                                <html-template location="component://ecommerce/template/order/CompareProducts.ftl"/>
+                            </html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>
