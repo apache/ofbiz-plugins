@@ -476,6 +476,7 @@ ${virtualJavaScript!}
       </td>
     </tr>
   <#-- Long description of product -->
+  <#if productContentWrapper.get("LONG_DESCRIPTION", "html") != "">
     <tr>
       <td colspan="2">
         <div>${productContentWrapper.get("LONG_DESCRIPTION", "html")!}</div>
@@ -486,6 +487,7 @@ ${virtualJavaScript!}
         <hr class='sepbar'/>
       </td>
     </tr>
+  </#if>
   <#-- Any attributes/etc may go here -->
   <#-- Product Configurator -->
     <tr>
@@ -676,6 +678,7 @@ ${virtualJavaScript!}
       </td>
     </tr>
   <#-- Product Reviews -->
+    <#if productReviews?has_content>
     <tr>
       <td colspan="2">
         <div>${uiLabelMap.OrderCustomerReviews}:</div>
@@ -691,7 +694,6 @@ ${virtualJavaScript!}
         <hr class='sepbar'/>
       </td>
     </tr>
-  <#if productReviews?has_content>
     <#list productReviews as productReview>
       <#assign postedUserLogin = productReview.getRelatedOne("UserLogin", false)>
       <#assign postedPerson = postedUserLogin.getRelatedOne("Person", false)!>
