@@ -25,7 +25,6 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="EcommerceSubscriptionVerifyEmail"/>
-                <!--<set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/ecommerce/control/"/>-->
                 <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseLocation}/control"/>
                 <entity-one entity-name="PartyNameView" value-field="partyName" auto-field-map="false">
                     <field-map field-name="partyId" from-field="contactListParty.partyId"/>
@@ -67,8 +66,7 @@ under the License.
             <actions>
                 <entity-one entity-name="ContactList" value-field="contactList"/>
                 <entity-one entity-name="PartyNameView" value-field="partyName"/>
-                <!--<set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/ecommerce/control/"/>-->
-                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseLocation}/control"/>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseLocation}/control/"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://ecommerce/template/email/ContactListSubscribeEmail.ftl"/></html></platform-specific>
@@ -81,8 +79,7 @@ under the License.
             <actions>
                 <entity-one entity-name="ContactList" value-field="contactList"/>
                 <entity-one entity-name="PartyNameView" value-field="partyName"/>
-                <!--<set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/ecommerce/control/"/>-->
-                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseLocation}/control"/>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseLocation}/control/"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://ecommerce/template/email/ContactListUnsubscribeVerifyEmail.ftl"/></html></platform-specific>
@@ -95,8 +92,7 @@ under the License.
             <actions>
                 <entity-one entity-name="ContactList" value-field="contactList"/>
                 <entity-one entity-name="PartyNameView" value-field="partyName"/>
-                <!--<set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/ecommerce/control/"/>-->
-                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseLocation}/control"/>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseLocation}/control/"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://ecommerce/template/email/ContactListUnsubscribeEmail.ftl"/></html></platform-specific>
@@ -109,8 +105,7 @@ under the License.
             <actions>
                 <entity-one entity-name="ContactList" value-field="contactList"/>
                 <entity-one entity-name="PartyNameView" value-field="partyName"/>
-                <!--<set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/ecommerce/control/"/>-->
-                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseLocation}/control"/>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseLocation}/control/"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://ecommerce/template/email/ContactListEmailTemplate.ftl"/></html></platform-specific>
