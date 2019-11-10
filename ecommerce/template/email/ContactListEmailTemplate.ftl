@@ -21,18 +21,14 @@ under the License.
     <div>
       ${content}
     </div>
-    <#assign verifyUrl = baseEcommerceSecureUrl + "updateContactListPartyNoUserLogin" />
-    <form method="post" action="${verifyUrl}">
-      <fieldset>
-        <label>E-mail: ${emailAddress}</label>
-        <input type="hidden" name="contactListId" value="${contactListId}"/>
-        <input type="hidden" name="partyId" value="${partyId}"/>
-        <input type="hidden" name="preferredContactMechId" value="${preferredContactMechId!}"/>
-        <input type="hidden" name="fromDate" value="${fromDate}"/>
-        <input type="hidden" name="statusId" value="CLPT_UNSUBS_PENDING"/>
-        <input type="hidden" name="optInVerifyCode" value="${optInVerifyCode!}"/>
-        <input type="submit" name="submitButton" value="Click here to unsubscribe your newsletter subscription."/>
-      </fieldset>
-    </form>
+  <#if baseLocation == "/ecomseo">
+    <#assign baseLocation = "/ecommerce">
+  </#if>
+  <#assign verifyUrl = baseEcommerceSecureUrl +'updateContactListPartyNoUserLogin?contactListId='+contactListId+'&amp;partyId='+partyId+'&amp;fromDate='+fromDate+'&amp;statusId=CLPT_UNSUBS_PENDING&amp;optInVerifyCode='+optInVerifyCode+'&amp;baseLocation='+baseLocation!>
+  <#if preferredContactMechId??>
+    <#assign verifyUrl= verifyUrl+"&amp;preferredContactMechId="+preferredContactMechId>
+  </#if>
+  <a href="${verifyUrl}">Click here to unsubscribe your newsletter subscription.</a>
+
   </body>
 </html>
