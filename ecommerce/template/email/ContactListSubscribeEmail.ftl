@@ -20,7 +20,9 @@ under the License.
 <body>
   <p>Hello ${partyName.firstName!} ${partyName.lastName!} ${partyName.groupName!}!</p>
   <p>Successfully subscribed from ${contactList.contactListName} contact list.</p>
-
+  <#if baseLocation == "/ecomseo">
+    <#assign baseLocation = "/ecommerce">
+  </#if>
   <#assign verifyUrl = baseEcommerceSecureUrl +'updateContactListPartyNoUserLogin?contactListId='+contactListParty.contactListId+'&amp;partyId='+contactListParty.partyId+'&amp;fromDate='+contactListParty.fromDate+'&amp;statusId=CLPT_UNSUBS_PENDING&amp;optInVerifyCode='+contactListPartyStatus.optInVerifyCode+'&amp;baseLocation='+baseLocation!>
   <#if (contactListParty.preferredContactMechId)??>
     <#assign verifyUrl= verifyUrl+"&amp;preferredContactMechId="+contactListParty.preferredContactMechId>
