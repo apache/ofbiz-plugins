@@ -99,6 +99,9 @@ under the License.
 
     <screen name="main">
         <section>
+            <condition>
+                <if-has-permission permission="BI" action="_VIEW"/>
+            </condition>
             <actions>
                 <set field="titleProperty" value="BusinessIntelligenceMainPage"/>
                 <set field="headerItem" value="main"/>
