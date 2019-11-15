@@ -23,6 +23,9 @@ under the License.
     
     <screen name="Main">
         <section>
+            <condition>
+                <if-has-permission permission="WEBPOS" action="_VIEW"/>
+            </condition>
             <actions>
                 <set field="titleProperty" value="WebPosMenuMain"/>
                 <set field="leftbarScreenName" value="LeftBar"/>

@@ -1542,6 +1542,9 @@ under the License.
     </screen>
     <screen name="ScrumProduct">
         <section>
+            <condition>
+                <if-has-permission permission="SCRUM" action="_VIEW"/>
+            </condition>
             <actions>
                 <set field="titleProperty" value="PageTitleProduct"/>
                 <set field="noConditionFind" value="Y"/>
