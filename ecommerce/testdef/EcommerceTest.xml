@@ -25,6 +25,6 @@ under the License.
         <entity-xml action="load" entity-xml-url="component://order/testdef/data/OrderTestData.xml"/>
     </test-case>
     <test-case case-name="ecommerce-notification-tests">
-        <junit-test-suite class-name="org.apache.ofbiz.order.OrderNotificationTests"/>
+        <junit-test-suite class-name="org.apache.ofbiz.ecommerce.OrderNotificationTests"/>
     </test-case>
 </test-suite>

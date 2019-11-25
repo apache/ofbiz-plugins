@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.ofbiz.order
+package org.apache.ofbiz.ecommerce
 
 import org.apache.ofbiz.service.ServiceUtil
 import org.apache.ofbiz.service.testtools.OFBizTestCase
