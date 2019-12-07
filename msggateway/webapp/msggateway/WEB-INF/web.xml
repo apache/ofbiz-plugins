@@ -19,13 +19,18 @@ under the License.
 -->
 
 <web-app version="4.0" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
-    <display-name>Apache OFBiz - BIRT Component</display-name>
-    <description>BIRT Component of the Apache OFBiz Project</description>
-    
+    <display-name>Apache OFBiz - MsgGateway Component</display-name>
+    <description>MsgGateway Component of the Apache OFBiz Project</description>
+
+    <!-- context-param>
+        <param-name>webSiteId</param-name>
+        <param-value>msggatewaySite</param-value>
+        <description>A unique ID used to look up the WebSite entity. Only for component using a WebSite entity, like ecommerce</description>
+    </context-param-->
     <context-param>
         <description>A unique name used to identify/recognize the local dispatcher for the Service Engine</description>
-        <param-name>localDispatcherName</param-name><param-value>birt</param-value>
-    </context-param>    
+        <param-name>localDispatcherName</param-name><param-value>msggateway</param-value>
+    </context-param>
     <context-param>
         <description>The Name of the Entity Delegator to use, defined in entityengine.xml</description>
         <param-name>entityDelegatorName</param-name><param-value>default</param-value>
@@ -33,46 +38,37 @@ under the License.
     <context-param>
         <description>The location of the main-decorator screen to use for this webapp; referred to as a context variable in screen def XML files.</description>
         <param-name>mainDecoratorLocation</param-name>
-        <param-value>component://birt/widget/birt/BirtScreens.xml</param-value>
+        <param-value>component://msggateway/widget/CommonScreens.xml</param-value>
     </context-param>
-    
+    <context-param>
+        <description>Remove unnecessary whitespace from HTML output.</description>
+        <param-name>compressHTML</param-name>
+        <param-value>false</param-value>
+    </context-param>
+
     <filter>
         <display-name>ControlFilter</display-name>
         <filter-name>ControlFilter</filter-name>
         <filter-class>org.apache.ofbiz.webapp.control.ControlFilter</filter-class>
         <init-param>
             <param-name>allowedPaths</param-name>
-            <param-value>/error:/control:/select:/index.html:/index.jsp:/default.html:/default.jsp:/images:/frameset:/run:/preview:/download:/parameter:/document:/output:/extract:/webcontent:/CancelTask.jsp</param-value>
+            <param-value>/error:/control:/select:/index.html:/index.jsp:/default.html:/default.jsp:/images</param-value>
         </init-param>
-        <init-param>
-            <param-name>redirectPath</param-name>
-            <param-value>/control/main</param-value>
-        </init-param>
+        <init-param><param-name>redirectPath</param-name><param-value>/control/main</param-value></init-param>
     </filter>
     <filter>
         <display-name>ContextFilter</display-name>
         <filter-name>ContextFilter</filter-name>
         <filter-class>org.apache.ofbiz.webapp.control.ContextFilter</filter-class>
     </filter>
-    <filter-mapping>
-        <filter-name>ControlFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-    <filter-mapping>
-        <filter-name>ContextFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
+    <filter-mapping><filter-name>ControlFilter</filter-name><url-pattern>/*</url-pattern></filter-mapping>
+    <filter-mapping><filter-name>ContextFilter</filter-name><url-pattern>/*</url-pattern></filter-mapping>
 
     <listener><listener-class>org.apache.ofbiz.webapp.control.ControlEventListener</listener-class></listener>
     <listener><listener-class>org.apache.ofbiz.webapp.control.LoginEventListener</listener-class></listener>
     <!-- NOTE: not all app servers support mounting implementations of the HttpSessionActivationListener interface -->
     <!-- <listener><listener-class>org.apache.ofbiz.webapp.control.ControlActivationEventListener</listener-class></listener> -->
 
-    <!-- Viewer HttpSession Listener -->
-    <listener>
-        <listener-class>org.eclipse.birt.report.listener.ViewerHttpSessionListener</listener-class>
-    </listener>
-  
     <servlet>
         <description>Main Control Servlet</description>
         <display-name>ControlServlet</display-name>
@@ -80,61 +76,7 @@ under the License.
         <servlet-class>org.apache.ofbiz.webapp.control.ControlServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
-    <!-- Viewer Servlet, Supports SOAP -->
-    <servlet>
-        <servlet-name>ViewerServlet</servlet-name>
-        <servlet-class>org.apache.ofbiz.birt.report.servlet.BirtViewerServlet</servlet-class>
-    </servlet>
-    <!-- Engine Servlet -->
-    <servlet>
-        <servlet-name>EngineServlet</servlet-name>
-        <servlet-class>org.apache.ofbiz.birt.report.servlet.BirtEngineServlet</servlet-class>
-    </servlet>
     <servlet-mapping><servlet-name>ControlServlet</servlet-name><url-pattern>/control/*</url-pattern></servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>ViewerServlet</servlet-name>
-        <url-pattern>/frameset</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>ViewerServlet</servlet-name>
-        <url-pattern>/run</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>EngineServlet</servlet-name>
-        <url-pattern>/preview</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>EngineServlet</servlet-name>
-        <url-pattern>/download</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>EngineServlet</servlet-name>
-        <url-pattern>/parameter</url-pattern>
-    </servlet-mapping>  
-
-    <servlet-mapping>
-        <servlet-name>EngineServlet</servlet-name>
-        <url-pattern>/document</url-pattern>
-    </servlet-mapping>  
-
-    <servlet-mapping>
-        <servlet-name>EngineServlet</servlet-name>
-        <url-pattern>/output</url-pattern>
-    </servlet-mapping>  
-    
-    <servlet-mapping>
-        <servlet-name>EngineServlet</servlet-name>
-        <url-pattern>/extract</url-pattern>
-    </servlet-mapping>
-
-    <session-config>
-        <session-timeout>60</session-timeout><!-- in minutes -->
-    </session-config>
 
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
