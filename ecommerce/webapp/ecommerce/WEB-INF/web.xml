@@ -19,7 +19,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<web-app version="3.0">
+<web-app version="4.0" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
 
     <display-name>Apache OFBiz - demostore</display-name>
     <description>Demo Store for the Apache OFBiz Project</description>
@@ -111,9 +111,9 @@ under the License.
     <listener><listener-class>org.apache.ofbiz.webapp.control.LoginEventListener</listener-class></listener>
 
     <servlet>
+        <description>Main Control Servlet</description>
         <display-name>ControlServlet</display-name>
         <servlet-name>ControlServlet</servlet-name>
-        <description>Main Control Servlet</description>
         <servlet-class>org.apache.ofbiz.webapp.control.ControlServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
