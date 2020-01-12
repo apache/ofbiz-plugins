@@ -41,7 +41,7 @@ under the License.
                 <#assign survey = productStoreSurveyAppl.getRelatedOne("Survey", false)>
                 <tr>
                   <form method="post" action="<@ofbizUrl>updateWorkEffortSurveyAppl</@ofbizUrl>" name="editWorkEffortSurveyAppl_${workEffortSurveyAppl_index}">
-                  <td><a href="/content/control/EditSurvey?surveyId=${workEffortSurveyAppl.surveyId!}" class="buttontext">${workEffortSurveyAppl.surveyId!} - ${survey.surveyName!}</a></td>
+                  <td><a href="<@ofbizUrl controlPath="/content/control">EditSurvey?surveyId=${workEffortSurveyAppl.surveyId!}</@ofbizUrl>" class="buttontext">${workEffortSurveyAppl.surveyId!} - ${survey.surveyName!}</a></td>
                   <td>${workEffortSurveyAppl.fromDate!}</td>
                   <td>
                     <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(workEffortSurveyAppl.thruDate)!}" size="25" maxlength="30" id="thruDate_${workEffortSurveyAppl_index}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
