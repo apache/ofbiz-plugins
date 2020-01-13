@@ -45,7 +45,7 @@ under the License.
   ${screens.render("component://ecommerce/widget/OrderScreens.xml#orderitems")}
   <div class="row">
     <div class="col-auto ml-auto">
-      <form type="post" action="<@ofbizUrl>processorder</@ofbizUrl>" name="${parameters.formNameValue}">
+      <form method="post" action="<@ofbizUrl>processorder</@ofbizUrl>" name="${parameters.formNameValue}">
         <#if (requestParameters.checkoutpage)?has_content>
           <input type="hidden" name="checkoutpage" value="${requestParameters.checkoutpage}"/>
         </#if>
