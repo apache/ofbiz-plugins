@@ -53,7 +53,7 @@ under the License.
   ${screens.render("component://ecommerce/widget/OrderScreens.xml#quickAnonOrderHeader")}
   <br />
   <div id="orderItemsSection">${screens.render("component://ecommerce/widget/OrderScreens.xml#orderitems")}</div>
-<form type="post" action="<@ofbizUrl>processorder</@ofbizUrl>" name="${parameters.formNameValue}">
+<form method="post" action="<@ofbizUrl>processorder</@ofbizUrl>" name="${parameters.formNameValue}">
   <table border="0" cellpadding="1" width="100%">
    <tr>
       <td colspan="4">
