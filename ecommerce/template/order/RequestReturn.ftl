@@ -57,7 +57,7 @@ under the License.
             <#if returnableItems?has_content>
               <#assign rowCount = 0>
               <#list returnableItems.keySet() as orderItem>
-              <#if !orderItem.orderAdjustmentId?has_content>    <#-- filter orderAdjustments -->
+              <#if "OrderAdjustment" != orderItem.getEntityName()>    <#-- filter orderAdjustments -->
                 <input type="hidden" name="orderId_o_${rowCount}" value="${orderItem.orderId}"/>
                 <input type="hidden" name="orderItemSeqId_o_${rowCount}" value="${orderItem.orderItemSeqId}"/>
                 <input type="hidden" name="description_o_${rowCount}" value="${orderItem.itemDescription!}"/>
