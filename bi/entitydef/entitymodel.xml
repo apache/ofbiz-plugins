@@ -29,6 +29,19 @@ under the License.
     <!-- ========================================================= -->
     <!-- Dimensions                                                -->
     <!-- ========================================================= -->
+    <entity entity-name="AssetDimension" package-name="org.ofbiz.bi.dimension" title="Assets Dimension">
+        <description>Dimension of (fixed) assets. The natural key is [assetId]</description>
+        <field name="dimensionId" type="id">
+            <description>Unique identifier of the dimension record</description>
+        </field>
+        <field name="assetId" type="id">
+            <description>The asset (Id). The natural key. From the FixedAsset entity</description>
+        </field>
+        <field name="assetName" type="description">
+            <description>The name of the asset</description>
+        </field>
+        <prim-key field="dimensionId"/>
+    </entity>
     <entity entity-name="CountryDimension" package-name="org.apache.ofbiz.bi.dimension" title="Country Dimension">
         <description>Country dimension. Based on ISO 3166-1. The natural key is [geoId]</description>
         <field name="dimensionId" type="id">
