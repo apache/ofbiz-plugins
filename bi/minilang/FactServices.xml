@@ -354,6 +354,16 @@ under the License.
             <!-- =============== -->
             <!-- facts handling  -->
             <!-- =============== -->
+            <script>groovy:
+                import org.apache.ofbiz.order.order.OrderReadHelper
+
+                orderReadHelper = new OrderReadHelper(orderHeader)
+                billFromParty = orderReadHelper.getBillFromParty()
+            </script>
+            <set field="partyAccountingPreferencesCallMap.organizationPartyId" from-field="billFromParty.partyId"/>
+            <call-service service-name="getPartyAccountingPreferences" in-map-name="partyAccountingPreferencesCallMap">
+                <result-to-field result-name="partyAccountingPreference" field="accPref"/>
+            </call-service>
             <set field="fact.quantity" from-field="orderItem.quantity" type="BigDecimal"/>
             <set field="fact.extGrossAmount" value="0" type="BigDecimal"/>
             <set field="fact.extGrossCost" value="0" type="BigDecimal"/>
@@ -374,7 +384,7 @@ under the License.
 
             <!-- extGrossAmount -->
             <set field="convertUomCurrencyMap.uomId" from-field="orderHeader.currencyUom"/>
-            <set field="convertUomCurrencyMap.uomIdTo" value="USD"/>
+            <set field="convertUomCurrencyMap.uomIdTo" from-field="accPref.baseCurrencyUomId"/>
             <set field="convertUomCurrencyMap.nowDate" from-field="orderStatus.statusDatetime"/>
             <call-service service-name="convertUomCurrency" in-map-name="convertUomCurrencyMap">
                 <result-to-field result-name="conversionFactor" field="exchangeRate"/>
@@ -406,7 +416,7 @@ under the License.
                 <first-from-list list="costs" entry="cost"/>
 
                 <set field="convertUomCurrencyMap.uomId" from-field="cost.currencyUomId"/>
-                <set field="convertUomCurrencyMap.uomIdTo" value="USD"/>
+                <set field="convertUomCurrencyMap.uomIdTo" from-field="accPref.baseCurrencyUomId"/>
                 <set field="convertUomCurrencyMap.nowDate" from-field="orderStatus.statusDatetime"/>
                 <call-service service-name="convertUomCurrency" in-map-name="convertUomCurrencyMap">
                     <result-to-field result-name="conversionFactor" field="exchangeRate"/>
@@ -492,7 +502,7 @@ under the License.
             </iterate>
             <if-compare field="countGS" operator="equals" value="0">
                 <set field="convertUomCurrencyMap.uomId" from-field="orderHeader.currencyUom"/>
-                <set field="convertUomCurrencyMap.uomIdTo" value="USD"/>
+                <set field="convertUomCurrencyMap.uomIdTo" from-field="accPref.baseCurrencyUomId"/>
                 <set field="convertUomCurrencyMap.nowDate" from-field="orderStatus.statusDatetime"/>
                 <call-service service-name="convertUomCurrency" in-map-name="convertUomCurrencyMap">
                     <result-to-field result-name="conversionFactor" field="exchangeRate"/>
@@ -555,7 +565,7 @@ under the License.
                 </calculate>
 
                 <set field="convertUomCurrencyMap.uomId" from-field="orderHeader.currencyUom"/>
-                <set field="convertUomCurrencyMap.uomIdTo" value="USD"/>
+                <set field="convertUomCurrencyMap.uomIdTo" from-field="accPref.baseCurrencyUomId"/>
                 <set field="convertUomCurrencyMap.nowDate" from-field="orderStatus.statusDatetime"/>
                 <call-service service-name="convertUomCurrency" in-map-name="convertUomCurrencyMap">
                     <result-to-field result-name="conversionFactor" field="exchangeRate"/>
