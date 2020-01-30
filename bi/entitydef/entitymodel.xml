@@ -29,6 +29,31 @@ under the License.
     <!-- ========================================================= -->
     <!-- Dimensions                                                -->
     <!-- ========================================================= -->
+    <entity entity-name="CountryDimension" package-name="org.apache.ofbiz.bi.dimension" title="Country Dimension">
+        <description>Country dimension. Based on ISO 3166-1. The natural key is [geoId]</description>
+        <field name="dimensionId" type="id">
+            <description>Unique identifier of the Date dimension record</description>
+        </field>
+        <field name="geoId" type="id">
+            <description>The natural key, based on ISO 3166-1 alpha-3</description>
+        </field>
+        <field name="geoName" type="name">
+            <description>The name of the country, based on ISO 3166</description>
+        </field>
+        <field name="geoCode" type="short-varchar">
+            <description>The ISO 3166-1 alpha-2 code of the country</description>
+        </field>
+        <field name="abbreviation" type="short-varchar">
+            <description>Based on the ISO 3166-1 alpha-3 code of the country</description>
+        </field>
+        <field name="telCountryCode" type="short-varchar">
+            <description>The telephone country code. Based on ITU.E123 and ITU.164</description>
+        </field>
+        <field name="ccTld" type="short-varchar">
+            <description>The country code top-level domain for the country. Base on IANA rfc1591</description>
+        </field>
+        <prim-key field="dimensionId"/>
+    </entity>
     <entity entity-name="DateDimension" package-name="org.apache.ofbiz.bi.dimension" title="Date Dimension">
         <description>Date (days) dimension. The natural key is [dateValue]</description>
         <field name="dimensionId" type="id">
