@@ -25,11 +25,14 @@ under the License.
         <set-service-fields service-name="loadDateDimension" map="parameters" to-map="inMap"/>
         <call-service service-name="loadDateDimension" in-map-name="inMap"/>
         <check-errors/>
-
+        <!-- loads all currencies in the CurrencyDimension -->
         <clear-field field="inMap"/>
         <call-service service-name="loadCurrencyDimension" in-map-name="inMap"/>
         <check-errors/>
-
+        <!-- loads all countries in the CountryDimension -->
+        <clear-field field="inMap"/>
+        <call-service service-name="loadCountryDimension" in-map-name="inMap"/>
+        <check-errors/>
         <!-- loads all products in the ProductDimension -->
         <clear-field field="inMap"/>
         <call-service service-name="loadAllProductsInProductDimension" in-map-name="inMap"/>
