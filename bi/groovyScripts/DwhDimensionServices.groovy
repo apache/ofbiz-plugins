@@ -22,7 +22,7 @@ import org.apache.ofbiz.base.util.Debug;
 // Dimension table(s) related functions
 
 def loadCountryDimension(){
-    queryListIterator = from("Geo").where("geoTypeId","COUNTRY")queryIterator();
+    queryListIterator = from("Geo").where("geoTypeId","COUNTRY").queryIterator();
     while(country = queryListIterator.next()){
         countryId = country.geoId;
         dimRecord = getDimensionRecord("CountryDimension","countryId", countryId);
