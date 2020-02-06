@@ -358,7 +358,7 @@ under the License.
                 import org.apache.ofbiz.order.order.OrderReadHelper
 
                 orderReadHelper = new OrderReadHelper(orderHeader)
-                billFromParty = orderReadHelper.getBillFromParty()
+                context.billFromParty = orderReadHelper.getBillFromParty()
             </script>
             <set field="partyAccountingPreferencesCallMap.organizationPartyId" from-field="billFromParty.partyId"/>
             <call-service service-name="getPartyAccountingPreferences" in-map-name="partyAccountingPreferencesCallMap">
