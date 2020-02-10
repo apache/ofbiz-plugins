@@ -423,4 +423,16 @@ under the License.
             </widgets>
         </section>
     </screen>
+
+    <screen name="CookiePolicy">
+        <section>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <sub-content content-id="WebStoreCONTENT" map-key="cookiePolicy"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>
