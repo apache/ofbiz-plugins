@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+    <style>
+        .jumbotron {
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="jumbotron">
+                    <h1 class="display-4">bsgdprcookies by Aleksander Woźnica</h1>
+                    <p class="lead">A jQuery based plugin that shows bootstrap modal with cookie info. It is GDPR/RODO compatible. The plugin shows the message on the users first visit and then every 30 days (by default).</p>
+                    <hr class="my-4">
+                    <button id="cookiesBtn" class="btn btn-primary btn-lg" role="button">Advanced Version</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+    <!-- Cookies JavaScript -->
+    <script src="jquery.bs.gdpr.cookies.js"></script>
+    <script type="text/javascript">
+        var settings = {
+            message: 'This is your cookies message. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam scelerisque, magna quis iaculis vulputate, ipsum sem commodo risus, sed egestas ipsum neque ut orci. Nulla ultrices dignissim pharetra. Pellentesque nec placerat dui. Mauris porta risus vitae nulla rutrum convallis. Aliquam elementum consequat ligula, sed malesuada nunc. Nam imperdiet a eros ac imperdiet. <b> Read more  ',
+            moreLinkLabel: 'here.</b>',
+            messageMaxHeightPercent: 30,
+            delay: 1000,
+            allowAdvancedOptions: true,
+            OnAccept : function() {
+                console.log('Yay! User accepted your cookies window!');
+                console.log('User preferences');
+                var preferences = $.fn.bsgdprcookies.GetUserPreferences();
+                console.log(preferences);
+
+            }
+        }
+
+        $(document).ready(function() {
+            $('body').bsgdprcookies(settings);
+
+            $('#cookiesBtn').on('click', function(){
+                $('body').bsgdprcookies(settings, 'reinit');
+            });
+        });
+    </script>
+</body>
+</html>
