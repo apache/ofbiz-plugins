@@ -789,6 +789,21 @@
         <value xml:lang="zh">继续步骤</value>
         <value xml:lang="zh-TW">繼續步驟</value>
     </property>
+    <property key="EcommerceCookieConsentTitle">
+        <value xml:lang="en">This website uses cookies</value>
+    </property>
+    <property key="EcommerceCookieConsentMessage">
+        <value xml:lang="en">We use cookies to provide our services. By using this website, you agree to this.</value>
+    </property>
+    <property key="EcommerceCookieConsentMoreLinkLabel">
+        <value xml:lang="en">More</value>
+    </property>
+    <property key="EcommerceCookieConsentAcceptButtonLabel">
+        <value xml:lang="en">Accept</value>
+    </property>
+    <property key="EcommerceCookieConsentAdvancedButtonLabel">
+        <value xml:lang="en">Customize</value>
+    </property>
     <property key="EcommerceDataResourceId">
         <value xml:lang="da">Dataresurse ID</value>
         <value xml:lang="de">Datenressource ID</value>

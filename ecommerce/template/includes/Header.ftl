@@ -16,6 +16,21 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<script>
+$(document).ready(function() {
+  if (jQuery.fn.bsgdprcookies !== undefined) {
+    jQuery('body').bsgdprcookies({
+        title: '${uiLabelMap.EcommerceCookieConsentTitle}',
+        message: '${uiLabelMap.EcommerceCookieConsentMessage}',
+        moreLink: '/ecommerce/control/CookiePolicy',
+        moreLinkLabel: ' ${uiLabelMap.EcommerceCookieConsentMoreLinkLabel}',
+        acceptButtonLabel: '${uiLabelMap.EcommerceCookieConsentAcceptButtonLabel}',
+        advancedButtonLabel: '${uiLabelMap.EcommerceCookieConsentAdvancedButtonLabel}',
+        allowAdvancedOptions: false
+    });
+  }
+});
+</script>
 <div class="container-fluid">
   <div class="row align-items-center">
     <div class="col">
