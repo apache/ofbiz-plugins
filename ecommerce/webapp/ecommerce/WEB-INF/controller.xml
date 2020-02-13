@@ -1820,13 +1820,18 @@ under the License.
         <response name="success" type="view-last" value="main"/>
         <response name="error" type="view" value="main"/>
     </request-map>
-    <request-map uri="stream">
+
+<!--  A vulnerability has been reported to the OFBiz security team. We were able to quickly and quietly fix it in supported versions, 
+      but in the ecommerce component. To be able to release the 17.12.01 version with this vulnerability fixed we need to temporarily
+      comment out the "stream" request-map in ecommerce controller. We will later fix the specific issue in ecommerce to put back the 
+      functionnalities allowed by the "stream" request-map in ecommerce controller.  See OFBIZ-11348 -->
+<!--     <request-map uri="stream">
         <event type="java" path="org.apache.ofbiz.content.data.DataEvents" invoke="serveObjectData"/>
         <response name="success" type="none"/>
         <response name="error" type="view" value="error"/>
         <response name="io-error" type="none"/>
     </request-map>
-
+ -->
      <request-map uri="showShoppingList">
         <security https="false" auth="false"/>
         <response name="success" type="view" value="showShoppingList" save-current-view="true"/>
