@@ -88,7 +88,7 @@ under the License.
           <#if curPostalAddress??>
           <div class="row">
             <div class="col-sm-12">
-              <input type="radio" name="contactMechId" value="${curContactMechId}" checked="checked" class="form-control"/>
+              <input type="radio" name="contactMechId" value="${curContactMechId}" checked="checked"/>
                 <label><strong>${uiLabelMap.PartyUseCurrentAddress}:</strong></label>
                 <#list curPartyContactMechPurposes as curPartyContactMechPurpose>
                   <#assign curContactMechPurposeType =
@@ -99,11 +99,14 @@ under the License.
                     </#if>
                 </#list>
                   <#if curPostalAddress.toName??>
+                    </br>
                     <strong>${uiLabelMap.CommonTo}:</strong> ${curPostalAddress.toName}
                   </#if>
                   <#if curPostalAddress.attnName??>
+                    </br>
                     <strong>${uiLabelMap.PartyAddrAttnName}:</strong> ${curPostalAddress.attnName}
                   </#if>
+                </br>
                   ${curPostalAddress.address1!}<br/>
                   <#if curPostalAddress.address2??>${curPostalAddress.address2}<br/></#if>
                   ${curPostalAddress.city}
