@@ -25,11 +25,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.solr.servlet.RedirectServlet;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.security.Security;
 import org.apache.ofbiz.webapp.control.LoginWorker;
+import org.apache.solr.servlet.RedirectServlet;
 
 /**
  * OFBizSolrRedirectServlet.java - Master servlet for the ofbiz-solr application.
@@ -68,11 +69,11 @@ public class OFBizSolrRedirectServlet extends RedirectServlet {
             String contextPath = request.getContextPath();
             String uri = request.getRequestURI();
             if (UtilValidate.isNotEmpty(contextPath) && uri.startsWith(contextPath)) {
-                uri = uri.replaceFirst(request.getContextPath(), "");
+                uri = StringUtils.replaceOnce(uri, request.getContextPath(), "");
             }
             String servletPath = request.getServletPath();
             if (UtilValidate.isNotEmpty(servletPath) && uri.startsWith(servletPath)) {
-                uri = uri.replaceFirst(servletPath, "");
+                uri = StringUtils.replaceOnce(uri, servletPath, "");
             }
             response.sendRedirect(contextPath + "/control/checkLogin" + uri);
             return true;
