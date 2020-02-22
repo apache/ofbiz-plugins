@@ -57,7 +57,8 @@ under the License.
 
     <form name="SaleOrdersByChannel" type="single" target="OrdersByChannel.pdf" target-window="_BLANK">
         <field name="SalesChannel" title="${uiLabelMap.OrderSalesChannel}">
-            <drop-down allow-empty="true">
+            <drop-down allow-empty="false">
+                <option key="" description="${uiLabelMap.CommonAll}"/>
                 <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
                     <entity-constraint name="enumTypeId" operator="equals" value="ORDER_SALES_CHANNEL"/>
                 </entity-options>
