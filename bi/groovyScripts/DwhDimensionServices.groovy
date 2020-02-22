@@ -33,6 +33,7 @@ def loadCountryDimension(){
             newEntity.countryId = countryId;
             newEntity.countryCode = country.geoCode;
             newEntity.countryNumCode = country.geoSecCode;
+            newEntity.tld = country.geoCode;
             countryTeleRecord = from("CountryTeleCode").where("countryCode", country.geoCode).queryOne();
             if(countryTeleRecord){
                 newEntity.countryTeleCode = countryTeleRecord.teleCode;
@@ -42,4 +43,12 @@ def loadCountryDimension(){
         };
     };
     queryListIterator.close();
+};
+
+
+def getDimensionRecord(dimensionEntityName, naturalKeyName, keyValue){
+    dimensionRecord = from(dimensionEntityName).where(naturalKeyName, keyValue).queryOne();
+    if(dimensionRecord){
+        return dimensionRecord;
+    };
 };

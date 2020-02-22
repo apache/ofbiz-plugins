@@ -29,28 +29,31 @@ under the License.
     <!-- ========================================================= -->
     <!-- Dimensions                                                -->
     <!-- ========================================================= -->
-    <entity entity-name="CountryDimension" package-name="org.apache.ofbiz.bi.dimension" title="Country Dimension">
-        <description>Country dimension. Based on ISO 3166-1. The natural key is [geoId]</description>
+    <entity entity-name="CountryDimension" package-name="org.ofbiz.bi.dimension" title="Countries Dimension">
+        <description>Dimension of countries. The natural key is [countryId]</description>
         <field name="dimensionId" type="id">
-            <description>Unique identifier of the Date dimension record</description>
+            <description>Unique identifier of the dimension record</description>
         </field>
-        <field name="geoId" type="id">
-            <description>The natural key, based on ISO 3166-1 alpha-3</description>
+        <field name="countryId" type="id">
+            <description>The country id (natural key). The ISO 3166-1 alpha-3 code of the Country</description>
         </field>
-        <field name="geoName" type="name">
-            <description>The name of the country, based on ISO 3166</description>
+        <field name="countryCode" type="short-varchar">
+            <description>The ISO 3166-1 alpha-2 code of the Country</description>
         </field>
-        <field name="geoCode" type="short-varchar">
-            <description>The ISO 3166-1 alpha-2 code of the country</description>
+        <field name="countryNumCode" type="short-varchar">
+            <description>The ISO 3166-1 numeric code of the Country</description>
         </field>
-        <field name="abbreviation" type="short-varchar">
-            <description>Based on the ISO 3166-1 alpha-3 code of the country</description>
+        <field name="countryName" type="description">
+            <description>The name of the Country</description>
         </field>
-        <field name="telCountryCode" type="short-varchar">
-            <description>The telephone country code. Based on ITU.E123 and ITU.164</description>
+        <field name="countryTeleCode" type="short-varchar">
+            <description>The country calling code of the Country</description>
         </field>
-        <field name="ccTld" type="short-varchar">
-            <description>The country code top-level domain for the country. Base on IANA rfc1591</description>
+        <field name="tld" type="short-varchar">
+            <description>The country code top-level domain of the Country</description>
+        </field>
+        <field name="description" type="description">
+            <description>description of the record</description>
         </field>
         <prim-key field="dimensionId"/>
     </entity>
