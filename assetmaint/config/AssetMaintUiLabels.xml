@@ -155,16 +155,6 @@
         <value xml:lang="zh">添加交付明细</value>
         <value xml:lang="zh-TW">增加交付細項</value>
     </property>
-    <property key="PageTitleChildWorkEfforts">
-        <value xml:lang="en">Task Breakdown</value>
-        <value xml:lang="fr">Décomposition de tâche</value>
-        <value xml:lang="it">Scoposizione compito</value>
-        <value xml:lang="ja">タスクブレークダウン</value>
-        <value xml:lang="th">งานหยุด</value>
-        <value xml:lang="vi">Phân nhỏ Tác vụ</value>
-        <value xml:lang="zh">任务分解</value>
-        <value xml:lang="zh-TW">任務分解</value>
-    </property>
     <property key="PageTitleFindFixedAssetMaints">
         <value xml:lang="de">Verwaltungen finden</value>
         <value xml:lang="en">Find Maintenances</value>
@@ -175,16 +165,6 @@
         <value xml:lang="vi">Tìm Bảo trì</value>
         <value xml:lang="zh">查找维修保养</value>
         <value xml:lang="zh-TW">尋找維修保養</value>
-    </property>
-    <property key="PageTitleFindFixedAssets">
-        <value xml:lang="en">Find Equipments</value>
-        <value xml:lang="fr">Chercher des équipements</value>
-        <value xml:lang="it">Ricerca cespite</value>
-        <value xml:lang="ja">設備を検索</value>
-        <value xml:lang="th">ค้นหาเครื่องมือ</value>
-        <value xml:lang="vi">Tìm Thiết bị</value>
-        <value xml:lang="zh">查找设备</value>
-        <value xml:lang="zh-TW">尋找設備</value>
     </property>
     <property key="PageTitleListItemIssuance">
         <value xml:lang="en">Parts List</value>
