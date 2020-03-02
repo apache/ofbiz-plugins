@@ -136,6 +136,45 @@
         <value xml:lang="zh">导入单个交易</value>
         <value xml:lang="zh-TW">匯入單個交易</value>
     </property>
+    <property key="EbayRequiredFieldMissingCountry">
+        <value xml:lang="en">Required Field is missing : Country</value>
+    </property>
+    <property key="EbayRequiredFieldMissingCreatedDate">
+        <value xml:lang="en">Required Field is missing : Created Date</value>
+    </property>
+    <property key="EbayRequiredFieldMissingExternalId">
+        <value xml:lang="en">Required Field is missing : External Id</value>
+    </property>
+    <property key="EbayRequiredFieldMissingFromDate">
+        <value xml:lang="en">Required Field is missing : From Date</value>
+    </property>
+    <property key="EbayRequiredFieldMissingListingDuration">
+        <value xml:lang="en">Required Field is missing : Listing Duration</value>
+    </property>
+    <property key="EbayRequiredFieldMissingProductStoreId">
+        <value xml:lang="en">Required Field is missing : Product Store Id</value>
+    </property>
+    <property key="EbayRequiredFieldMissingQuantityPurchased">
+        <value xml:lang="en">Required Field is missing : Quantity Purchased</value>
+    </property>
+    <property key="EbayRequiredFieldMissingSelectResult">
+        <value xml:lang="en">Product is missing</value>
+    </property>
+    <property key="EbayRequiredFieldMissingShipmentMethodName">
+        <value xml:lang="en">Required Field is missing : Shipment Method Name</value>
+    </property>
+    <property key="EbayRequiredFieldMissingThruDate">
+        <value xml:lang="en">Required Field is missing : Thru Date</value>
+    </property>
+    <property key="EbayRequiredFieldMissingTransactionId">
+        <value xml:lang="en">Required Field is missing : Transaction Id</value>
+    </property>
+    <property key="EbayRequiredFieldMissingTransactionPrice">
+        <value xml:lang="en">Required Field is missing : Transaction Price</value>
+    </property>
+    <property key="EbayRequiredFieldMissingWebSiteUrl">
+        <value xml:lang="en">Required Field is missing : Web Site Url</value>
+    </property>
     <property key="EbayShippingMethodConfigurations">
         <value xml:lang="en">Shipping Method Configurations</value>
         <value xml:lang="it">Configurazioni metodi di spedizione</value>
@@ -689,4 +728,5 @@
         <value xml:lang="zh">产品明细被正确发送到了eBay</value>
         <value xml:lang="zh-TW">產品細項被正確發送到了eBay</value>
     </property>
+
 </resource>
