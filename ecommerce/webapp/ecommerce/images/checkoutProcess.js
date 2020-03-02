@@ -595,7 +595,11 @@ function updateShippingSummary() {
     jQuery('#completedShippingContactNumber').html(shippingContactPhoneNumber);
     jQuery('#completedEmailAddress').html(jQuery('#emailAddress').val());
     jQuery('#completedShipToAddress1').html(jQuery('#shipToAddress1').val());
-    jQuery('#completedShipToAddress2').html(jQuery('#shipToAddress2').val());
+    if (jQuery('#shipToAddress2').val()) {
+        jQuery('#completedShipToAddress2').show().html(jQuery('#shipToAddress2').val());
+    } else {
+        jQuery('#completedShipToAddress2').hide();
+    }
     if (jQuery('#shipToStateProvinceGeoId').val() == "_NA_") {
         var shipToGeo = jQuery('#shipToCity').val()+", "+jQuery('#shipToCountryGeoId').val()+" "+jQuery('#shipToPostalCode').val();
     }
