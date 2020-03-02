@@ -86,7 +86,7 @@ under the License.
           </#if>
           <tr id="cartItemDisplayRow_${cartLine_index}">
             <td headers="orderItem">
-              <img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl>"
+              <img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix!}${StringUtil.wrapString(smallImageUrl!)!}</@ofbizContentUrl>"
                   alt = "Product Image" /></td>
             <td headers="description">${cartLine.getName(dispatcher)!}</td>
             <td class="amount" headers="unitPrice">${cartLine.getDisplayPrice()}</td>
@@ -184,7 +184,7 @@ under the License.
                         locale, dispatcher, "url")! />
                     <#if !smallImageUrl?string?has_content><#assign smallImageUrl = "" /></#if>
                     <#if smallImageUrl?string?has_content>
-                      <img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl>"
+                      <img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix!}${StringUtil.wrapString(smallImageUrl!)!}</@ofbizContentUrl>"
                           alt="Product Image" />
                     </#if>
                   </#if>
