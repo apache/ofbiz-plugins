@@ -40,8 +40,8 @@ def quickInitDataWarehouse() {
     // loads the invoice items in the SalesInvoiceItemFact fact entity
     entryExprs = EntityCondition.makeCondition([
             EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"),
-            EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN, parameters.fromDate),
-            EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN, parameters.thruDate)
+            EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, parameters.fromDate),
+            EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, parameters.thruDate)
     ], EntityOperator.AND)
     EntityListIterator listIterator = from("Invoice").where(entryExprs).queryIterator()
     GenericValue iterator
@@ -54,8 +54,8 @@ def quickInitDataWarehouse() {
     // loads the order items in the SalesOrderItemFact fact entity
     entryExprs = EntityCondition.makeCondition([
             EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER"),
-            EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN, parameters.fromDate),
-            EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN, parameters.thruDate)
+            EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, parameters.fromDate),
+            EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, parameters.thruDate)
     ], EntityOperator.AND)
     listIterator = from("OrderHeader").where(entryExprs).queryIterator()
     inMap.clear()
