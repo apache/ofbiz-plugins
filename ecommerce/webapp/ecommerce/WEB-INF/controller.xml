@@ -1605,7 +1605,7 @@ under the License.
     </request-map>
 
     <request-map uri="getAssociatedStateList">
-        <security https="true" auth="false"/>
+        <security https="true" auth="true"/>
         <event type="service" invoke="getAssociatedStateList"/>
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
