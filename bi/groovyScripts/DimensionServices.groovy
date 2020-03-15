@@ -25,12 +25,30 @@ import org.apache.ofbiz.service.ModelService
 import org.apache.ofbiz.service.ServiceUtil
 
 def quickInitDataWarehouse() {
+    // load records  in the Date Dimension
     Map inMap = dispatcher.getDispatchContext().makeValidContext("loadDateDimension", ModelService.IN_PARAM, parameters)
     serviceResult = run service: "loadDateDimension", with: inMap
     if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
-
+    // load records in the Country Dimension
+    inMap.clear()
+    serviceResult = run service: "loadCountryDimension", with: inMap
+    if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+    // load records in the Currency Dimension
     inMap.clear()
     serviceResult = run service: "loadCurrencyDimension", with: inMap
+    if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+   // load records in the Facility Dimension
+    inMap.clear()
+    serviceResult = run service: "loadFacilityDimension", with: inMap
+    if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+    // load records in the Organisation Dimension
+    inMap.clear()
+    serviceResult = run service: "loadOrganisationDimension", with: inMap
+    if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+    // load records in the Customer Dimension
+    inMap.clear()
+    inMap.role="Customer"
+    serviceResult = run service: "loadRolePartyDimension", with: inMap
     if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
 
     // loads all products in the ProductDimension
@@ -75,26 +93,112 @@ def quickInitDataWarehouse() {
     }
 }
 
-def loadCurrencyDimension() {
-    // Initialize the CurrencyDimension using the update strategy of 'type 1
-    EntityListIterator listIterator = from("Uom").where("uomTypeId", "CURRENCY_MEASURE").queryIterator()
-    GenericValue currency
-    while (currency = listIterator.next()) {
-        currencyDims = from("CurrencyDimension").where("currencyId", currency.uomId).queryList()
-        if (currencyDims) {
-            for (GenericValue currencyDim: currencyDims) {
-                currencyDim.description = currency.description
-                currencyDim.store()
+def loadCountryDimension(){
+    // Initialize the CountryDimension using the update strategy of 'type 1
+    queryListIterator = from("Geo").where("geoTypeId","COUNTRY").queryIterator()
+    while(country = queryListIterator.next()){
+        countryId = country.geoId
+        dimRecord = getDimensionRecord("CountryDimension","countryId", countryId)
+        if(!dimRecord){
+            dimensionId = countryId
+            newEntity = makeValue("CountryDimension")
+            newEntity.dimensionId = dimensionId
+            newEntity.countryId = countryId
+            newEntity.countryCode = country.geoCode
+            newEntity.countryNumCode = country.geoSecCode
+            countryTeleRecord = from("CountryTeleCode").where("countryCode", country.geoCode).queryOne()
+            if(countryTeleRecord){
+                newEntity.countryTeleCode = countryTeleRecord.teleCode
             }
-        } else {
-            currencyDim = delegator.makeValue("CurrencyDimension")
-            currencyDim.currencyId = currency.uomId
-            currencyDim.description = currency.description
-            currencyDim.create()
+            newEntity.countryName = country.geoName
+            newEntity.create()
         }
     }
+    queryListIterator.close()
 }
 
+def loadCurrencyDimension() {
+    dimensionEntityName = "CurrencyDimension"
+    queryListIterator = from("Uom").where("uomTypeId","CURRENCY_MEASURE ").queryIterator()
+    while(currency = queryListIterator.next()){
+        currencyId = currency.uomId
+        dimRecord = getDimensionRecord(dimensionEntityName,"currencyId", currencyId)
+        if(!dimRecord) {
+            dimensionId = currencyId
+            newEntity = makeValue(dimensionEntityName)
+            newEntity.dimensionId = dimensionId
+            newEntity.currencyId = dimensionId
+            newEntity.description = currency.description
+            newEntity.create()
+        }
+    }
+    queryListIterator.close()
+}
+
+def loadFacilityDimension() {
+    // Initialize the FacilityDimension using the update strategy of 'type 1
+    dimensionEntityName = "FacilityDimension";
+    queryListIterator = from("Facility").queryIterator();
+    while(facility = queryListIterator.next()){
+        facilityId = facility.facilityId;
+        dimRecord = getDimensionRecord(dimensionEntityName,"facilityId", facilityId);
+        if(!dimRecord) {
+            dimensionId = delegator.getNextSeqId(dimensionEntityName);
+            newEntity = makeValue(dimensionEntityName);
+            newEntity.dimensionId = dimensionId;
+            newEntity.facilityId = facilityId;
+            newEntity.facilityName = facility.facilityName;
+            newEntity.create();
+        };
+    };
+    queryListIterator.close();
+};
+def loadOrganisationDimension(){
+    // Initialize the OrganisationDimension using the update strategy of 'type 1
+    organisationListIterator = from("PartyAcctgPrefAndGroup").where("roleTypeId", "INTERNAL_ORGANIZATIO").queryIterator();
+    while(organisation = organisationListIterator.next()){
+        partyId = organisation.partyId;
+        dimRecord = getDimensionRecord("OrganisationDimension","partyId", partyId);
+        if(!dimRecord){
+            dimensionId = delegator.getNextSeqId("OrganisationDimension");
+            newEntity = makeValue("OrganisationDimension");
+            newEntity.dimensionId = dimensionId;
+            newEntity.partyId = partyId;
+            newEntity.partyName = organisation.groupName;
+            newEntity.baseCurrencyDimId = organisation.baseCurrencyUomId;
+            newEntity.create();
+        };
+    };
+};
+def loadRolePartyDimension(role){
+    // Initialize the appropriate 'Role'Dimension using the update strategy of 'type 1
+    role = parameters.role;
+    dimensionName = role + "Dimension";
+    roleTypeId = role.toUpperCase();
+    partyListIterator = from("PartyRoleAndPartyDetail").where("roleTypeId", roleTypeId).queryIterator();
+    while(party = partyListIterator.next()){
+        partyId = party.partyId;
+        dimRecord = getDimensionRecord(dimensionName,"partyId", partyId);
+        if(!dimensionRecord){
+            dimensionId = delegator.getNextSeqId(dimensionName);
+            partyTypeId = party.partyTypeId;
+            if("PARTY_GROUP" == partyTypeId){
+                partyName = party.groupName;
+            }else if("PERSON" == partyTypeId){
+                partyName = party.firstName + " " + party.middleName + " " + party.lastName;
+            } else {
+                 partyName = party.groupName + " " + party.firstName + " " + party.middleInitial + " " + party.lastName;
+            };
+            partyName = partyName.replace("null","").trim();
+            newEntity = makeValue(dimensionName);
+            newEntity.dimensionId = dimensionId;
+            newEntity.partyId = partyId;
+            newEntity.partyName = partyName;
+            newEntity.create();
+        };
+    };
+    partyListIterator.close();
+};
 def prepareProductDimensionData() {
     GenericValue product = from("Product").where("productId", parameters.productId).queryOne()
     if (product == null) {
@@ -131,5 +235,12 @@ def loadAllProductsInProductDimension() {
         inMap = dispatcher.getDispatchContext().makeValidContext("loadProductInProductDimension", ModelService.IN_PARAM, parameters)
         inMap.productId = product.productId
         run service: "loadProductInProductDimension", with: inMap
+    }
+}
+
+def getDimensionRecord(dimensionEntityName, naturalKeyName, keyValue){
+    dimensionRecord = from(dimensionEntityName).where(naturalKeyName, keyValue).queryOne()
+    if(dimensionRecord){
+        return dimensionRecord
     }
 }
