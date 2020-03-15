@@ -88,7 +88,7 @@ def quickInitDataWarehouse() {
     inMap.clear()
     while (iterator = listIterator.next()) {
         inMap.inventoryItemId = iterator.inventoryItemId
-        serviceResult = run service: "loadInventoryFact", with: inMap
+        serviceResult = run service: "loadInventoryItemFact", with: inMap
         if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
     }
 }

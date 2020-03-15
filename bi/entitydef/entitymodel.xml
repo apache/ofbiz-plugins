@@ -201,7 +201,7 @@ under the License.
         <field name="invoiceId" type="id"></field> <!-- degenerate dimension -->
         <field name="invoiceItemSeqId" type="id"></field> <!-- degenerate dimension -->
         <field name="orderId" type="id"></field> <!-- degenerate dimension -->
-        <field name="invoiceDateDimId" type="id"></field>
+        <field name="invoiceDateDimId" type="integer"></field>
         <field name="productDimId" type="id"></field>
         <field name="billToCustomerDimId" type="id"></field> <!-- TODO: implement the dimension -->
         <field name="origCurrencyDimId" type="id"></field>
@@ -284,7 +284,7 @@ under the License.
         <description>A transaction fact entity with order item grain.</description>
         <field name="orderId" type="id"></field> <!-- degenerate dimension -->
         <field name="orderItemSeqId" type="id"></field> <!-- degenerate dimension -->
-        <field name="orderDateDimId" type="id"></field>
+        <field name="orderDateDimId" type="integer"></field>
         <field name="productDimId" type="id"></field>
         <field name="origCurrencyDimId" type="id"></field>
         <field name="billToCustomerDimId" type="id"></field> <!-- TODO: implement the dimension -->
@@ -365,27 +365,35 @@ under the License.
 
     </entity>
 
-    <entity entity-name="InventoryItemFact" package-name="org.apache.ofbiz.bi.fact.product" title="Inventory Item Fact">
-        <description>A transaction fact entity with inventory item.</description>
+    <entity entity-name="InventoryItemFact" package-name="org.apache.ofbiz.bi.fact" title="Inventory Item Fact">
+        <description>A transaction fact entity with inventory items.</description>
         <field name="inventoryItemId" type="id"></field>
-        <field name="facilityId" type="id"></field>
-        <field name="productDimId" type="id"></field>
+        <field name="inventoryDateDimId" type="integer"></field>
+        <field name="organisationDimId" type="id"></field>
         <field name="origCurrencyDimId" type="id"></field>
-        <field name="inventoryDateDimId" type="id"></field>
-
+        <field name="facilityDimId" type="id"></field>
+        <field name="productDimId" type="id"></field>
         <field name="quantityOnHandTotal" type="fixed-point"></field>
         <field name="availableToPromiseTotal" type="fixed-point"></field>
         <field name="unitCost" type="fixed-point"></field>
         <field name="soldoutAmount" type="fixed-point"></field>
+
         <prim-key field="inventoryItemId"/>
-        <relation type="one" fk-name="IIF_INVPRODUCT" rel-entity-name="ProductDimension">
-            <key-map field-name="productDimId" rel-field-name="dimensionId"/>
-        </relation>
+
         <relation type="one" fk-name="IIF_INVCURRENCY" rel-entity-name="CurrencyDimension">
             <key-map field-name="origCurrencyDimId" rel-field-name="dimensionId"/>
         </relation>
         <relation type="one" fk-name="IIF_INVDATE" rel-entity-name="DateDimension">
             <key-map field-name="inventoryDateDimId" rel-field-name="dimensionId"/>
+        </relation>
+        <relation type="one" fk-name="IIF_INVFACILITY" rel-entity-name="FacilityDimension">
+            <key-map field-name="facilityDimId" rel-field-name="dimensionId"/>
+        </relation>
+        <relation type="one" fk-name="IIF_INVINTORG" rel-entity-name="OrganisationDimension">
+            <key-map field-name="organisationDimId" rel-field-name="dimensionId"/>
+        </relation>
+        <relation type="one" fk-name="IIF_INVPRODUCT" rel-entity-name="ProductDimension">
+            <key-map field-name="productDimId" rel-field-name="dimensionId"/>
         </relation>
     </entity>
 
@@ -493,10 +501,12 @@ under the License.
         </view-link>
     </view-entity>
 
-    <view-entity entity-name="InventoryItemSchema" package-name="org.apache.ofbiz.bi.starschema.product" title="Inventory Item Schema">
-        <description>"Inventory Item Schema.</description>
+    <view-entity entity-name="InventoryItemStarSchema" package-name="org.apache.ofbiz.bi.starschema" title="Inventory Item Schema">
+        <description>"Inventory Item StarSchema.</description>
         <member-entity entity-alias="IIF" entity-name="InventoryItemFact"/>
         <!--member-entity entity-alias="SIIF" entity-name="SalesOrderItemFact"/-->
+        <member-entity entity-alias="IISS_FD" entity-name="FacilityDimension"/>
+        <member-entity entity-alias="IISS_OD" entity-name="OrganisationDimension"/>
         <member-entity entity-alias="PD" entity-name="ProductDimension"/>
         <member-entity entity-alias="IDD" entity-name="DateDimension"/>
         <member-entity entity-alias="CD" entity-name="CurrencyDimension"/>
@@ -504,7 +514,8 @@ under the License.
         <alias-all entity-alias="IIF" function="sum">
             <exclude field="inventoryItemId"/>
             <exclude field="orderId"/>
-            <exclude field="facilityId"/>
+            <exclude field="facilityDimId"/>
+            <exclude field="organisationDimId"/>
             <exclude field="inventoryDateDimId"/>
             <exclude field="productDimId"/>
             <exclude field="origCurrencyDimId"/>
@@ -529,10 +540,16 @@ under the License.
         <alias-all entity-alias="CD" prefix="currency" group-by="true">
             <exclude field="dimensionId"/>
         </alias-all>
+        <alias-all entity-alias="IISS_FD" prefix="wh" group-by="true">
+            <exclude field="dimensionId"/>
+        </alias-all>
+        <alias-all entity-alias="IISS_OD" prefix="intOrg" group-by="true">
+            <exclude field="dimensionId"/>
+        </alias-all>
         <alias entity-alias="IIF" name="inventoryItemId" group-by="true">
             <description>Inventory Item Id</description>
         </alias>
-        <alias entity-alias="IIF" name="facilityId" group-by="true">
+        <alias entity-alias="IIF" name="facilityDimId" group-by="true">
             <description>Facility Id</description>
         </alias>
         <alias entity-alias="PD" name="productId" group-by="true">
@@ -540,6 +557,12 @@ under the License.
         </alias>
         <view-link entity-alias="IIF" rel-entity-alias="PD" rel-optional="true">
             <key-map field-name="productDimId" rel-field-name="dimensionId"/>
+        </view-link>
+        <view-link entity-alias="IIF" rel-entity-alias="IISS_FD" rel-optional="true">
+            <key-map field-name="facilityDimId" rel-field-name="dimensionId"/>
+        </view-link>
+        <view-link entity-alias="IIF" rel-entity-alias="IISS_OD" rel-optional="true">
+            <key-map field-name="organisationDimId" rel-field-name="dimensionId"/>
         </view-link>
         <!--view-link entity-alias="PD" rel-entity-alias="SIIF" rel-optional="true">
             <key-map field-name="dimensionId" rel-field-name="productDimId"/>
