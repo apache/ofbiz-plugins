@@ -29,34 +29,63 @@ under the License.
     <!-- ========================================================= -->
     <!-- Dimensions                                                -->
     <!-- ========================================================= -->
-    <entity entity-name="CountryDimension" package-name="org.apache.ofbiz.bi.dimension" title="Country Dimension">
-        <description>Country dimension. Based on ISO 3166-1. The natural key is [geoId]</description>
+    <entity entity-name="CountryDimension" package-name="org.apache.ofbiz.bi.dimension" title="Countries Dimension">
+        <description>Dimension of countries. The natural key is [countryId]</description>
         <field name="dimensionId" type="id">
-            <description>Unique identifier of the Date dimension record</description>
+            <description>Unique identifier of the dimension record</description>
         </field>
-        <field name="geoId" type="id">
-            <description>The natural key, based on ISO 3166-1 alpha-3</description>
+        <field name="countryId" type="id">
+            <description>The country id (natural key). The ISO 3166-1 alpha-3 code of the Country</description>
         </field>
-        <field name="geoName" type="name">
-            <description>The name of the country, based on ISO 3166</description>
+        <field name="countryCode" type="short-varchar">
+            <description>The ISO 3166-1 alpha-2 code of the Country</description>
         </field>
-        <field name="geoCode" type="short-varchar">
-            <description>The ISO 3166-1 alpha-2 code of the country</description>
+        <field name="countryNumCode" type="short-varchar">
+            <description>The ISO 3166-1 numeric code of the Country</description>
         </field>
-        <field name="abbreviation" type="short-varchar">
-            <description>Based on the ISO 3166-1 alpha-3 code of the country</description>
+        <field name="countryName" type="description">
+            <description>The name of the Country</description>
         </field>
-        <field name="telCountryCode" type="short-varchar">
-            <description>The telephone country code. Based on ITU.E123 and ITU.164</description>
+        <field name="countryTeleCode" type="short-varchar">
+            <description>The country calling code of the Country</description>
         </field>
-        <field name="ccTld" type="short-varchar">
-            <description>The country code top-level domain for the country. Base on IANA rfc1591</description>
+        <field name="tld" type="short-varchar">
+            <description>The country code top-level domain of the Country</description>
+        </field>
+        <field name="description" type="description">
+            <description>description of the record</description>
         </field>
         <prim-key field="dimensionId"/>
     </entity>
-    <entity entity-name="DateDimension" package-name="org.apache.ofbiz.bi.dimension" title="Date Dimension">
-        <description>Date (days) dimension. The natural key is [dateValue]</description>
+    <entity entity-name="CurrencyDimension" package-name="org.apache.ofbiz.bi.dimension" title="Currencies Dimension">
+        <description>Dimension of currencies. The natural key is [currencyId]</description>
         <field name="dimensionId" type="id">
+            <description>Unique identifier of the Currency dimension record</description>
+        </field>
+        <field name="currencyId" type="id">
+            <description>The currency id (natural key).</description>
+        </field>
+        <field name="description" type="description">
+            <description>description of the record</description>
+        </field>
+        <prim-key field="dimensionId"/>
+    </entity>
+    <entity entity-name="CustomerDimension" package-name="org.apache.ofbiz.bi.dimension" title="Customers Dimension">
+        <description>Dimension of customers. The natural key is [partyId]</description>
+        <field name="dimensionId" type="id">
+            <description>Unique identifier of the Product dimension record</description>
+        </field>
+        <field name="partyId" type="id">
+            <description>The natural key. From PartyRoleAndPartyDetail.partyId</description>
+        </field>
+        <field name="partyName" type="description">
+            <description>Name of the customer. From PartyRoleAndPartyDetail. Dependent on PartyTypeId</description>
+        </field>
+        <prim-key field="dimensionId"/>
+    </entity>
+    <entity entity-name="DateDimension" package-name="org.apache.ofbiz.bi.dimension" title="Dates Dimension">
+        <description>Dimension of dates. The natural key is [dateValue]</description>
+        <field name="dimensionId" type="integer">
             <description>Unique identifier of the Date dimension record</description>
         </field>
         <field name="dateValue" type="date">
@@ -100,23 +129,37 @@ under the License.
         </field>
         <prim-key field="dimensionId"/>
     </entity>
-
-    <entity entity-name="CurrencyDimension" package-name="org.apache.ofbiz.bi.dimension" title="Currency Dimension">
-        <description>Currency dimension. The natural key is [currencyId]</description>
+    <entity entity-name="FacilityDimension" package-name="org.apache.ofbiz.bi.dimension" title="Facilities Dimension">
+        <description>Dimension of facilities. The natural key is [facilityId]</description>
         <field name="dimensionId" type="id">
-            <description>Unique identifier of the Currency dimension record</description>
+            <description>Unique identifier of the dimension record</description>
         </field>
-        <field name="currencyId" type="id">
-            <description>The currency id (natural key).</description>
+        <field name="facilityId" type="id">
+            <description>The natural key. From facility.facilityId</description>
         </field>
-        <field name="description" type="description">
-            <description>Full currency description</description>
+        <field name="facilityName" type="description">
+            <description>The name of the facility</description>
         </field>
         <prim-key field="dimensionId"/>
     </entity>
-
-    <entity entity-name="ProductDimension" package-name="org.apache.ofbiz.bi.dimension.product" title="Product Dimension">
-        <description>Product dimension. The natural key is [productId]</description>
+    <entity entity-name="OrganisationDimension" package-name="org.apache.ofbiz.bi.dimension" title="Internal Organisations Dimension">
+        <description>Dimension of internal (accounting) parties. The natural key is [partyId]</description>
+        <field name="dimensionId" type="id">
+            <description>Unique identifier of the dimension record</description>
+        </field>
+        <field name="partyId" type="id">
+            <description>The natural key. From party.partyId</description>
+        </field>
+        <field name="partyName" type="description">
+            <description>The name of the party</description>
+        </field>
+        <field name="baseCurrencyDimId" type="id">
+            <description>the currency of the organisaiton.</description>
+        </field>
+        <prim-key field="dimensionId"/>
+    </entity>
+    <entity entity-name="ProductDimension" package-name="org.apache.ofbiz.bi.dimension" title="Products Dimension">
+        <description>Dimension of Products. The natural key is [productId]</description>
         <field name="dimensionId" type="id">
             <description>Unique identifier of the Product dimension record</description>
         </field>
@@ -128,6 +171,25 @@ under the License.
         </field>
         <field name="brandName" type="name"></field>
         <field name="internalName" type="description"></field>
+        <prim-key field="dimensionId"/>
+    </entity>
+    <entity entity-name="TimeDimension" package-name="org.apache.ofbiz.bi.dimension" title="Times Dimension">
+        <description>Dimension of time slots. The natural key is [hh:mm]</description>
+        <field name="dimensionId" type="integer">
+        <description>Unique identifier of the dimension record</description>
+        </field>
+        <field name="timeValue" type="time">
+            <description>The natural key (hh:mm).</description>
+        </field>
+        <field name="hr" type="integer">
+            <description>The hour value</description>
+        </field>
+        <field name="mn" type="integer">
+            <description>The minute value</description>
+        </field>
+        <field name="description" type="description">
+            <description>Description of the record</description>
+        </field>
         <prim-key field="dimensionId"/>
     </entity>
 

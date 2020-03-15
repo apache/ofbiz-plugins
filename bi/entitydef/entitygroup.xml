@@ -22,12 +22,16 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entitygroup.xsd">
 
     <!-- ========================================================= -->
-    <!-- Dimensions                                                     -->
+    <!-- Dimensions                                                -->
     <!-- ========================================================= -->
     <entity-group group="org.apache.ofbiz.olap" entity="CountryDimension"/>
     <entity-group group="org.apache.ofbiz.olap" entity="CurrencyDimension"/>
+    <entity-group group="org.apache.ofbiz.olap" entity="CustomerDimension"/>
     <entity-group group="org.apache.ofbiz.olap" entity="DateDimension"/>
+    <entity-group group="org.apache.ofbiz.olap" entity="FacilityDimension"/>
+    <entity-group group="org.apache.ofbiz.olap" entity="OrganisationDimension"/>
     <entity-group group="org.apache.ofbiz.olap" entity="ProductDimension"/>
+    <entity-group group="org.apache.ofbiz.olap" entity="TimeDimension"/>
 
     <!-- ========================================================= -->
     <!-- Facts                                                     -->
