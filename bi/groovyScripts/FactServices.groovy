@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat
 import java.sql.Date
 
 import org.apache.ofbiz.base.util.UtilDateTime
+import org.apache.ofbiz.base.util.UtilNumber
 import org.apache.ofbiz.base.util.UtilProperties
 import org.apache.ofbiz.base.util.UtilValidate
 import org.apache.ofbiz.entity.GenericValue
@@ -591,38 +592,53 @@ def convertUomCurrency() {
 }
 
 
-def loadInventoryFact() {
+def loadInventoryItemFact() {
     GenericValue inventory = from("InventoryItem").where(inventoryItemId: parameters.inventoryItemId).queryOne()
     GenericValue fact = from("InventoryItemFact").where(inventoryItemId: parameters.inventoryItemId).queryOne()
 
     Map inMap = [:]
     Map naturalKeyFields = [:]
     Map serviceResult
+    SimpleDateFormat dateDimensionIdFormat = new SimpleDateFormat("yyyyMMdd")
     if (!fact) {
         fact = makeValue("InventoryItemFact")
         fact.inventoryItemId = inventory.inventoryItemId
         // conversion of the inventory date
         if (inventory?.createdStamp) {
-            inMap = [:]
-            naturalKeyFields = [:]
-            inMap.dimensionEntityName = "DateDimension"
             Date createdStampDatetime = new Date(inventory.createdStamp.getTime())
-            naturalKeyFields.dateValue = createdStampDatetime
-            inMap.naturalKeyFields = naturalKeyFields
-            serviceResult = run service:"getDimensionIdFromNaturalKey", with: inMap
-            fact.inventoryDateDimId = serviceResult.dimensionId
-            if (!fact.inventoryDateDimId) {
-                fact.inventoryDateDimId = "_NF_"
-            }
+            Integer factDateDimensionId = Integer.parseInt(dateDimensionIdFormat.format(createdStampDatetime));
+            fact.inventoryDateDimId = factDateDimensionId
+        }
+        // conversion of the facilityId
+        naturalKeyFields = [:]
+        naturalKeyFields.facilityId = inventory.facilityId
+        inMap = [:]
+        inMap.dimensionEntityName = "FacilityDimension"
+        inMap.naturalKeyFields = naturalKeyFields
+        serviceResult = run service:"getDimensionIdFromNaturalKey", with: inMap
+        if(serviceResult) {
+            fact.facilityDimId = serviceResult.dimensionId
         } else {
-            fact.inventoryDateDimId = "_NA_"
+            fact.facilityDimId = "_NF_"
+        }
+        // conversion of the organisationId
+        naturalKeyFields = [:]
+        naturalKeyFields.partyId = inventory.ownerPartyId
+        inMap = [:]
+        inMap.dimensionEntityName = "OrganisationDimension"
+        inMap.naturalKeyFields = naturalKeyFields
+        serviceResult = run service:"getDimensionIdFromNaturalKey", with: inMap
+        if(serviceResult) {
+            fact.organisationDimId = serviceResult.dimensionId
+        } else {
+            fact.organisationDimId = "_NF_"
         }
         // conversion of the productId
         if (inventory?.productId) {
-            inMap = [:]
             naturalKeyFields = [:]
-            inMap.dimensionEntityName = "ProductDimension"
             naturalKeyFields.productId = inventory.productId
+            inMap = [:]
+            inMap.dimensionEntityName = "ProductDimension"
             inMap.naturalKeyFields = naturalKeyFields
             serviceResult = run service:"getDimensionIdFromNaturalKey", with: inMap
             fact.productDimId = serviceResult.dimensionId
@@ -650,7 +666,6 @@ def loadInventoryFact() {
         fact.create()
     }
 
-    fact.facilityId = inventory.facilityId
     fact.inventoryItemId = inventory.inventoryItemId
     fact.quantityOnHandTotal = inventory.quantityOnHandTotal
     fact.availableToPromiseTotal = inventory.availableToPromiseTotal

@@ -45,7 +45,7 @@ under the License.
     <!-- ========================================================= -->
     <entity-group group="org.apache.ofbiz.olap" entity="SalesInvoiceItemStarSchema"/>
     <entity-group group="org.apache.ofbiz.olap" entity="SalesOrderItemStarSchema"/>
-    <entity-group group="org.apache.ofbiz.olap" entity="InventoryItemSchema"/>
+    <entity-group group="org.apache.ofbiz.olap" entity="InventoryItemStarSchema"/>
 
 </entitygroup>
 

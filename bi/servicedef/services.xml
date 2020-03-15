@@ -158,8 +158,8 @@ under the License.
     </service>
 
     <!-- Inventory Facts -->
-    <service name="loadInventoryFact" auth="true" engine="groovy"
-        location="component://bi/groovyScripts/FactServices.groovy" invoke="loadInventoryFact">
+    <service name="loadInventoryItemFact" auth="true" engine="groovy"
+        location="component://bi/groovyScripts/FactServices.groovy" invoke="loadInventoryItemFact">
         <attribute name="inventoryItemId" type="String" mode="IN" optional="true"/>
     </service>
 
