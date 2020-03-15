@@ -120,6 +120,7 @@ public class DimensionServices {
         Date fromDate = (Date) context.get("fromDate");
         Date thruDate = (Date) context.get("thruDate");
 
+        SimpleDateFormat dateDimensionIdFormat = new SimpleDateFormat("yyyyMMdd");
         SimpleDateFormat monthNameFormat = new SimpleDateFormat("MMMM");
         SimpleDateFormat dayNameFormat = new SimpleDateFormat("EEEE");
         SimpleDateFormat dayDescriptionFormat = new SimpleDateFormat("MMMM d, yyyy");
@@ -134,16 +135,17 @@ public class DimensionServices {
         calendar.set(Calendar.MILLISECOND, 0);
         java.sql.Date currentDate = new java.sql.Date(calendar.getTimeInMillis());
         while (currentDate.compareTo(thruDate) <= 0) {
+            Integer dimensionId = Integer.parseInt(dateDimensionIdFormat.format(currentDate));
             GenericValue dateValue = null;
             try {
-                dateValue = EntityQuery.use(delegator).from("DateDimension").where("dateValue", currentDate).queryFirst();
+                dateValue = EntityQuery.use(delegator).from("DateDimension").where("dimensionId", dimensionId).queryFirst();
             } catch (GenericEntityException gee) {
                 return ServiceUtil.returnError(gee.getMessage());
             }
             boolean newValue = (dateValue == null);
             if (newValue) {
                 dateValue = delegator.makeValue("DateDimension");
-                dateValue.set("dimensionId", delegator.getNextSeqId("DateDimension"));
+                dateValue.set("dimensionId", dimensionId);
                 dateValue.set("dateValue", new java.sql.Date(currentDate.getTime()));
             }
             dateValue.set("description", dayDescriptionFormat.format(currentDate));
