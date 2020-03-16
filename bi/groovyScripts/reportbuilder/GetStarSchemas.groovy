@@ -30,11 +30,9 @@ while (entitiesIt.hasNext()) {
     if (!packageName.contains("starschema")) {
         continue;
     }
-
     entityMap = [:];
     entityMap.name = entity.getEntityName();
     entityMap.title = entity.getTitle();
-
     starSchemas.add(entityMap);
 }
 context.starSchemas = starSchemas;
