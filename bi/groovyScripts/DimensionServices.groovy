@@ -30,20 +30,16 @@ def quickInitDataWarehouse() {
     serviceResult = run service: "loadDateDimension", with: inMap
     if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
     // load records in the Country Dimension
-    inMap.clear()
-    serviceResult = run service: "loadCountryDimension", with: inMap
+    serviceResult = run service: "loadCountryDimension"
     if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
     // load records in the Currency Dimension
-    inMap.clear()
-    serviceResult = run service: "loadCurrencyDimension", with: inMap
+    serviceResult = run service: "loadCurrencyDimension"
     if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
    // load records in the Facility Dimension
-    inMap.clear()
-    serviceResult = run service: "loadFacilityDimension", with: inMap
+    serviceResult = run service: "loadFacilityDimension"
     if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
     // load records in the Organisation Dimension
-    inMap.clear()
-    serviceResult = run service: "loadOrganisationDimension", with: inMap
+    serviceResult = run service: "loadOrganisationDimension"
     if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
     // load records in the Customer Dimension
     inMap.clear()
@@ -55,9 +51,8 @@ def quickInitDataWarehouse() {
     inMap.role="Supplier"
     serviceResult = run service: "loadRolePartyDimension", with: inMap
     if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
-
     // loads all products in the ProductDimension
-    serviceResult = run service: "loadAllProductsInProductDimension", with: inMap
+    serviceResult = run service: "loadAllProductsInProductDimension"
     if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
 
     // loads the invoice items in the SalesInvoiceItemFact fact entity
