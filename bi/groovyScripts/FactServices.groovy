@@ -31,7 +31,6 @@ import org.apache.ofbiz.entity.condition.EntityOperator
 import org.apache.ofbiz.order.order.OrderReadHelper
 import org.apache.ofbiz.service.ServiceUtil
 
-
 def loadSalesInvoiceFact() {
     GenericValue invoice = from("Invoice").where(parameters).queryOne()
     if (!invoice) {
@@ -53,6 +52,7 @@ def loadSalesInvoiceFact() {
 def loadSalesInvoiceItemFact() {
     GenericValue invoice = parameters.invoice
     GenericValue invoiceItem = parameters.invoiceItem
+    SimpleDateFormat dateDimensionIdFormat = new SimpleDateFormat("yyyyMMdd")
     if (!invoice) {
         invoice = from("Invoice").where(parameters).queryOne()
     }
@@ -81,64 +81,73 @@ def loadSalesInvoiceItemFact() {
             fact = makeValue("SalesInvoiceItemFact")
             fact.invoiceId = invoice.invoiceId
             fact.invoiceItemSeqId = invoiceItem.invoiceItemSeqId
+            invoiceDate = invoice.invoiceDate
             // conversion of the invoice date
-            if (invoice.invoiceDate) {
-                inMap = [:]
+            if (invoiceDate) {
+                Date invoiceDateValue = new Date(invoiceDate.getTime())
+                fact.invoiceDateDimId = Integer.parseInt(dateDimensionIdFormat.format(invoiceDateValue));
+            }
+            // conversion of the invoice currency
+            if (invoice.currencyUomId) {
+                fact.origCurrencyDimId = invoice.currencyUomId
+            } else {
+                fact.origCurrencyDimId = "_NA_"
+            }
+            // conversion of the internal organisation id
+            if (invoice.partyIdFrom) {
                 naturalKeyFields = [:]
-                inMap.dimensionEntityName = "DateDimension"
-                Date invoiceDate = new Date(invoice.invoiceDate.getTime())
-                naturalKeyFields.dateValue = invoiceDate
+                naturalKeyFields.partyId = invoice.partyIdFrom
+                inMap = [:]
+                inMap.dimensionEntityName = "OrganisationDimension"
                 inMap.naturalKeyFields = naturalKeyFields
                 serviceResult = run service: "getDimensionIdFromNaturalKey", with: inMap
-                fact.invoiceDateDimId = serviceResult.dimensionId
-                if (!fact.invoiceDateDimId) {
-                    fact.invoiceDateDimId = "_NF_"
+                fact.organisationDimId = serviceResult.dimensionId
+                if (!fact.organisationDimId) {
+                    fact.organisationDimId = "_NF_"
                 }
             } else {
-                fact.invoiceDateDimId = "_NA_"
+                fact.organisationDimId = "_NA_"
             }
-
+            // conversion of the customer id
+            if (invoice.partyId) {
+                naturalKeyFields = [:]
+                naturalKeyFields.partyId = invoice.partyId
+                inMap = [:]
+                inMap.dimensionEntityName = "CustomerDimension"
+                inMap.naturalKeyFields = naturalKeyFields
+                serviceResult = run service: "getDimensionIdFromNaturalKey", with: inMap
+                fact.customerDimId = serviceResult.dimensionId
+                if (!fact.customerDimId) {
+                    fact.customerDimId = "_NF_"
+                }
+            } else {
+                fact.customerDimId = "_NA_"
+            }
             // conversion of the product id
             if (invoiceItem.productId) {
-                inMap = [:]
                 naturalKeyFields = [:]
-                inMap.dimensionEntityName = "ProductDimension"
                 naturalKeyFields.productId = invoiceItem.productId
+                inMap = [:]
+                inMap.dimensionEntityName = "ProductDimension"
                 inMap.naturalKeyFields = naturalKeyFields
                 serviceResult = run service: "getDimensionIdFromNaturalKey", with: inMap
                 fact.productDimId = serviceResult.dimensionId
-                if (!act.productDimId) {
+                if (!fact.productDimId) {
                     fact.productDimId = "_NF_"
                 }
             } else {
                 fact.productDimId = "_NA_"
             }
 
-            // conversion of the invoice currency
-            if (invoice.currencyUomId) {
-                inMap = [:]
-                naturalKeyFields = [:]
-                inMap.dimensionEntityName = "CurrencyDimension"
-                naturalKeyFields.currencyId = invoice.currencyUomId
-                inMap.naturalKeyFields = naturalKeyFields
-                serviceResult = run service: "getDimensionIdFromNaturalKey", with: inMap
-                fact.origCurrencyDimId = serviceResult.dimensionId
-                if (!fact.origCurrencyDimId) {
-                    fact.origCurrencyDimId = "_NF_"
-                }
-            } else {
-                fact.origCurrencyDimId = "_NA_"
-            }
-
             // TODO
             fact.orderId = "_NA_"
-            fact.billToCustomerDimId = "_NA_"
             fact.create()
         }
         /*
          * facts handling
          */
         fact.quantity = (BigDecimal) invoiceItem.quantity
+        fact.amount = (BigDecimal) invoiceItem.amount
         fact.extGrossAmount = (BigDecimal) 0
         fact.extDiscountAmount = (BigDecimal) 0
         fact.extTaxAmount = (BigDecimal) 0
@@ -214,6 +223,7 @@ def loadSalesOrderItemFact() {
     GenericValue orderHeader = parameters.orderHeader
     GenericValue orderItem = parameters.orderItem
     GenericValue orderAdjustment = parameters.orderAdjustment
+    SimpleDateFormat dateDimensionIdFormat = new SimpleDateFormat("yyyyMMdd")
 
     List orderAdjustments
     GenericValue orderStatus
@@ -275,19 +285,8 @@ def loadSalesOrderItemFact() {
                 .orderBy("-statusDatetime")
                 .queryFirst()
             if (orderStatus.statusDatetime) {
-                inMap = [:]
-                naturalKeyFields = [:]
-                inMap.dimensionEntityName = "DateDimension"
                 Date statusDatetime = new Date(orderStatus.statusDatetime.getTime())
-                naturalKeyFields.dateValue = statusDatetime
-                inMap.naturalKeyFields = naturalKeyFields
-                serviceResult = run service: "getDimensionIdFromNaturalKey", with: inMap
-                fact.orderDateDimId = serviceResult.dimensionId
-                if (!fact.orderDateDimId) {
-                    fact.orderDateDimId = "_NF_"
-                }
-            } else {
-                fact.orderDateDimId = "_NA_"
+                fact.orderDateDimId = Integer.parseInt(dateDimensionIdFormat.format(statusDatetime));
             }
 
             // conversion of the product id
@@ -606,8 +605,7 @@ def loadInventoryItemFact() {
         // conversion of the inventory date
         if (inventory?.createdStamp) {
             Date createdStampDatetime = new Date(inventory.createdStamp.getTime())
-            Integer factDateDimensionId = Integer.parseInt(dateDimensionIdFormat.format(createdStampDatetime));
-            fact.inventoryDateDimId = factDateDimensionId
+            fact.inventoryDateDimId = Integer.parseInt(dateDimensionIdFormat.format(createdStampDatetime));
         }
         // conversion of the facilityId
         naturalKeyFields = [:]
