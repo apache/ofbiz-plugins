@@ -546,7 +546,7 @@ under the License.
         </view-link>
     </view-entity>
 
-    <view-entity entity-name="InventoryItemStarSchema" package-name="org.apache.ofbiz.bi.starschema" title="Inventory Item Schema">
+    <view-entity entity-name="InventoryItemStarSchema" package-name="org.apache.ofbiz.bi.starschema" title="Inventory Item Star Schema">
         <description>"Inventory Item StarSchema.</description>
         <member-entity entity-alias="IISS_IIF" entity-name="InventoryItemFact"/>
         <!--member-entity entity-alias="SIIF" entity-name="SalesOrderItemFact"/-->
