@@ -50,6 +50,11 @@ def quickInitDataWarehouse() {
     inMap.role="Customer"
     serviceResult = run service: "loadRolePartyDimension", with: inMap
     if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+    // load records in the Customer Dimension
+    inMap.clear()
+    inMap.role="Supplier"
+    serviceResult = run service: "loadRolePartyDimension", with: inMap
+    if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
 
     // loads all products in the ProductDimension
     serviceResult = run service: "loadAllProductsInProductDimension", with: inMap
