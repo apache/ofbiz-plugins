@@ -73,7 +73,7 @@ under the License.
     <entity entity-name="CustomerDimension" package-name="org.apache.ofbiz.bi.dimension" title="Customers Dimension">
         <description>Dimension of customers. The natural key is [partyId]</description>
         <field name="dimensionId" type="id">
-            <description>Unique identifier of the Product dimension record</description>
+            <description>Unique identifier of the Customer dimension record</description>
         </field>
         <field name="partyId" type="id">
             <description>The natural key. From PartyRoleAndPartyDetail.partyId</description>
