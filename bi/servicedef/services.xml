@@ -102,7 +102,7 @@ under the License.
         <attribute name="updateMode" type="String" mode="IN" optional="true" default-value="TYPE1"/>
     </service>
 
-    <!-- Accounting Facts -->
+    <!-- Invoice Facts -->
     <service name="loadSalesInvoiceItemFact" auth="true" engine="groovy"
         location="component://bi/groovyScripts/FactServices.groovy" invoke="loadSalesInvoiceItemFact">
         <description>

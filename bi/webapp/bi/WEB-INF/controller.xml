@@ -57,7 +57,6 @@
 
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://bi/widget/BiScreens.xml#main"/>
-
     <view-map name="reportbuilder" type="screen" page="component://bi/widget/BiScreens.xml#ReportBuilder"/>
     <view-map name="getAssociatedFieldList" type="screen" page="component://bi/widget/BiScreens.xml#AssociatedFieldList"/>
     <view-map name="reportStarSchema" type="screen" page="component://bi/widget/BiScreens.xml#StarSchemaReport"/>
