@@ -175,6 +175,7 @@ def loadOrganisationDimension(){
         };
     };
 };
+
 def loadRolePartyDimension(role){
     // Initialize the appropriate 'Role'Dimension using the update strategy of 'type 1
     role = parameters.role;

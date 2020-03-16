@@ -18,11 +18,11 @@ under the License.
 -->
 <div id="FieldsOverview">
 <form name="FieldsOverview" action="<@ofbizUrl>report</@ofbizUrl>" target="_BLANK">
-	<input type="hidden" name="basisUrl" value="<@ofbizUrl>report?field=</@ofbizUrl>"/>
-	<input type="hidden" name="selectedFields" value=""/>
-	<input type="hidden" name="fieldCount" value=""/>
-	<input type="checkbox" class="check" name="fieldId" value="" style="display:none;"/>
-	<input type="hidden" name="selectionWarning" value="${uiLabelMap.SelectionWarning}"/>
+    <input type="hidden" name="basisUrl" value="<@ofbizUrl>report?field=</@ofbizUrl>"/>
+    <input type="hidden" name="selectedFields" value=""/>
+    <input type="hidden" name="fieldCount" value=""/>
+    <input type="checkbox" class="check" name="fieldId" value="" style="display:none;"/>
+    <input type="hidden" name="selectionWarning" value="${uiLabelMap.SelectionWarning}"/>
     <input type="hidden" name="starSchemaName" value="${starSchemaName}"/>
     <table cellspacing="0" class="basic-table hover-bar">
         <tr class="header-row">
@@ -54,8 +54,8 @@ under the License.
         </#list>
         <tr>
             <td colspan="3">
-            	<hr/>
-            	<a href="javascript:generateReport();" class="buttontext">${uiLabelMap.Report}</a>
+                <hr/>
+                <a href="javascript:generateReport();" class="buttontext">${uiLabelMap.Report}</a>
             </td>
         </tr>
     </table>
