@@ -177,6 +177,19 @@ under the License.
         </field>
         <prim-key field="dimensionId"/>
     </entity>
+    <entity entity-name="SupplierDimension" package-name="org.apache.ofbiz.bi.dimension" title="Suppliers Dimension">
+        <description>Dimension of customers. The natural key is [partyId]</description>
+        <field name="dimensionId" type="id">
+            <description>Unique identifier of the Supplier dimension record</description>
+        </field>
+        <field name="partyId" type="id">
+            <description>The natural key. From PartyRoleAndPartyDetail.partyId</description>
+        </field>
+        <field name="partyName" type="description">
+            <description>Name of the supplier. From PartyRoleAndPartyDetail. Dependent on PartyTypeId</description>
+        </field>
+        <prim-key field="dimensionId"/>
+    </entity>
     <entity entity-name="TimeDimension" package-name="org.apache.ofbiz.bi.dimension" title="Times Dimension">
         <description>Dimension of time slots. The natural key is [hh:mm]</description>
         <field name="dimensionId" type="integer">
