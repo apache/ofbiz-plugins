@@ -40,17 +40,17 @@
         <response name="success" type="view" value="main"/>
     </request-map>
 
-    <request-map uri="ReportBuilderSelectStarSchema">
+    <request-map uri="reportbuilder">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="ReportBuilderSelectStarSchema"/>
+        <response name="success" type="view" value="reportbuilder"/>
     </request-map>
-    <request-map uri="ReportBuilderSelectStarSchemaFields">
+    <request-map uri="getAssociatedFieldList">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="ReportBuilderSelectStarSchemaFields"/>
+        <response name="success" type="view" value="getAssociatedFieldList"/>
     </request-map>
-    <request-map uri="ReportBuilderRenderStarSchemaReport">
+    <request-map uri="reportStarSchema">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="ReportBuilderRenderStarSchemaReport"/>
+        <response name="success" type="view" value="reportStarSchema"/>
     </request-map>
 
     <!-- end of request mappings -->
@@ -58,9 +58,9 @@
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://bi/widget/BiScreens.xml#main"/>
 
-    <view-map name="ReportBuilderSelectStarSchema" type="screen" page="component://bi/widget/BiScreens.xml#ReportBuilderSelectStarSchema"/>
-    <view-map name="ReportBuilderSelectStarSchemaFields" type="screen" page="component://bi/widget/BiScreens.xml#ReportBuilderSelectStarSchemaFields"/>
-    <view-map name="ReportBuilderRenderStarSchemaReport" type="screen" page="component://bi/widget/BiScreens.xml#ReportBuilderRenderStarSchemaReport"/>
-
+    <view-map name="reportbuilder" type="screen" page="component://bi/widget/BiScreens.xml#ReportBuilder"/>
+    <view-map name="getAssociatedFieldList" type="screen" page="component://bi/widget/BiScreens.xml#AssociatedFieldList"/>
+    <view-map name="reportStarSchema" type="screen" page="component://bi/widget/BiScreens.xml#StarSchemaReport"/>
+    
     <!-- end of view mappings -->
 </site-conf>

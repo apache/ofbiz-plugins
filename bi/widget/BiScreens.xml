@@ -30,6 +30,7 @@ under the License.
                 <set field="layoutSettings.companyName" from-field="uiLabelMap.BusinessIntelligenceCompanyName" global="true"/>
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.BusinessIntelligenceCompanySubtitle" global="true"/>
                 <set field="activeApp" value="bi" global="true"/>
+                <set field="layoutSettings.javaScripts[]" value="/${activeApp}/images/${activeApp}.js" global="true"/>
                 <set field="applicationMenuName" value="BiAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://bi/widget/BiMenus.xml" global="true"/>
                 <set field="applicationTitle" from-field="uiLabelMap.BusinessIntelligenceApplication" global="true"/>
@@ -39,64 +40,6 @@ under the License.
             </widgets>
         </section>
     </screen>
-    <screen name="ReportBuilderSelectStarSchema">
-        <section>
-            <actions>
-                <set field="titleProperty" value="BusinessIntelligenceReportBuilderSelectStarSchema"/>
-                <set field="headerItem" value="reportbuilder"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.BusinessIntelligenceReportBuilderSelectStarSchema}">
-                            <include-form name="SelectStarSchema" location="component://bi/widget/BiForms.xml"/>
-                        </screenlet>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="ReportBuilderSelectStarSchemaFields">
-        <section>
-            <actions>
-                <set field="titleProperty" value="BusinessIntelligenceReportBuilderSelectStarSchemaFields"/>
-                <set field="headerItem" value="reportbuilder"/>
-                <script location="component://bi/groovyScripts/GetStarSchemaFields.groovy"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.BusinessIntelligenceReportBuilderSelectStarSchemaFields}">
-                            <platform-specific>
-                                <html><html-template location="component://bi/template/reportbuilder/SelectStarSchemaFields.ftl"/></html>
-                            </platform-specific>
-                        </screenlet>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="ReportBuilderRenderStarSchemaReport">
-        <section>
-            <actions>
-                <set field="titleProperty" value="BusinessIntelligenceReportBuilderRenderStarSchemaReport"/>
-                <set field="headerItem" value="reportbuilder"/>
-                <script location="component://bi/groovyScripts/RunStarSchemaQuery.groovy"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.BusinessIntelligenceReportBuilderRenderStarSchemaReport}">
-                            <platform-specific>
-                                <html><html-template location="component://bi/template/reportbuilder/RenderStarSchemaReport.ftl"/></html>
-                            </platform-specific>
-                        </screenlet>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
     <screen name="main">
         <section>
             <condition>
@@ -137,4 +80,58 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <screen name="ReportBuilder">
+        <section>
+            <actions>
+                <set field="titleProperty" value="BusinessIntelligenceReportBuilder"/>
+                <set field="headerItem" value="reportbuilder"/>
+                <script location="component://bi/groovyScripts/reportBuilder/GetStarSchemas.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="${uiLabelMap.BusinessIntelligenceReportBuilderSelectStarSchema}">
+                            <platform-specific>
+                                <html><html-template location="component://bi/template/reportbuilder/SelectStarSchema.ftl"/></html>
+                            </platform-specific>
+                        </screenlet>
+                        <container id="fieldSelector"/>
+                        <container id="report"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="AssociatedFieldList">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://bi/groovyScripts/reportbuilder/GetStarSchemaFields.groovy"/>
+            </actions>
+            <widgets>
+                <screenlet title="${uiLabelMap.Fields}" id="fields" collapsible="true">
+                <platform-specific>
+                    <html><html-template location="component://bi/template/reportbuilder/StarSchemaFields.ftl"/></html>
+                </platform-specific>
+                </screenlet>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="StarSchemaReport">
+        <section>
+            <actions>
+                <set field="titleProperty" value="BusinessIntelligenceReportBuilderRenderStarSchemaReport"/>
+                <set field="headerItem" value="reportbuilder"/>
+                <script location="component://bi/groovyScripts/reportbuilder/RunStarSchemaQuery.groovy"/>
+            </actions>
+            <widgets>
+                <screenlet>
+                    <platform-specific>
+                        <html><html-template location="component://bi/template/reportbuilder/RenderStarSchemaReport.ftl"/></html>
+                    </platform-specific>
+                </screenlet>
+            </widgets>
+        </section>
+    </screen>
+
 </screens>

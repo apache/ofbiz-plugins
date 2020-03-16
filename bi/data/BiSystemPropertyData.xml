@@ -20,16 +20,16 @@ under the License.
 <entity-engine-xml>
 <!-- 
 # The fromDate value for business intelligence
-bi.properties setting is: fromDate=2013-09-01
+bi.properties setting is: fromDate=2000-01-01
 -->
-    <SystemProperty systemResourceId="bi" systemPropertyId="fromDate" systemPropertyValue="2013-09-01"
+    <SystemProperty systemResourceId="bi" systemPropertyId="fromDate" systemPropertyValue="2000-01-01"
     description="The fromDate value for business intelligence. Convention: yyyy-mm-dd"
     />
     <!-- 
-# The thruDate value for for business intelligence
-bi.properties setting is: 2023-09-01
+# The thruDate value for business intelligence
+bi.properties setting is: 2029-12-31
 -->
-    <SystemProperty systemResourceId="bi" systemPropertyId="thruDate" systemPropertyValue="2023-09-01"
+    <SystemProperty systemResourceId="bi" systemPropertyId="thruDate" systemPropertyValue="2029-12-31"
     description="The thruDate value for business intelligence. Convention: yyyy-mm-dd"
     />
     

@@ -16,8 +16,13 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-<form action="<@ofbizUrl>report</@ofbizUrl>" target="_BLANK">
+<div id="FieldsOverview">
+<form name="FieldsOverview" action="<@ofbizUrl>report</@ofbizUrl>" target="_BLANK">
+	<input type="hidden" name="basisUrl" value="<@ofbizUrl>report?field=</@ofbizUrl>"/>
+	<input type="hidden" name="selectedFields" value=""/>
+	<input type="hidden" name="fieldCount" value=""/>
+	<input type="checkbox" class="check" name="fieldId" value="" style="display:none;"/>
+	<input type="hidden" name="selectionWarning" value="${uiLabelMap.SelectionWarning}"/>
     <input type="hidden" name="starSchemaName" value="${starSchemaName}"/>
     <table cellspacing="0" class="basic-table hover-bar">
         <tr class="header-row">
@@ -25,7 +30,7 @@ under the License.
                 ${uiLabelMap.Select}
             </td>
             <td>
-                ${uiLabelMap.FieldName}
+                ${uiLabelMap.CommonName}
             </td>
             <td>
                 ${uiLabelMap.CommonDescription}
@@ -35,8 +40,7 @@ under the License.
         <#list starSchemaFields as starSchemaField>
         <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
             <td>
-                <input name="selectedFieldName_o_${starSchemaField_index}" value="${starSchemaField.name}" type="hidden"/>
-                <input name="_rowSubmit_o_${starSchemaField_index}" value="Y" type="checkbox"/>
+                <div> <input type="checkbox" class="check" name="fieldId" value="${starSchemaField.name?if_exists}" onClick="checkSelectedFields(document.FieldsOverview.fieldId)"/> </div>
             </td>
             <td>
                 ${starSchemaField.name}
@@ -50,8 +54,10 @@ under the License.
         </#list>
         <tr>
             <td colspan="3">
-                <input name="submitButton" type="submit" value="${uiLabelMap.Generate}"/>
+            	<hr/>
+            	<a href="javascript:generateReport();" class="buttontext">${uiLabelMap.Report}</a>
             </td>
         </tr>
     </table>
 </form>
+</div>
