@@ -169,8 +169,12 @@ under the License.
         <field name="productType" type="description">
             <description>The product type. From ProductType.description</description>
         </field>
-        <field name="brandName" type="name"></field>
-        <field name="internalName" type="description"></field>
+        <field name="internalName" type="description">
+            <description>The internal name of the product</description>
+        </field>
+        <field name="brandName" type="name">
+            <description>The brand name of the prdouct</description>
+        </field>
         <prim-key field="dimensionId"/>
     </entity>
     <entity entity-name="TimeDimension" package-name="org.apache.ofbiz.bi.dimension" title="Times Dimension">
@@ -220,13 +224,14 @@ under the License.
             <description>The currency of the invoice</description>
         </field>
         <field name="productDimId" type="id">
-            <description>The associated product.</description>
+            <description>The associated product</description>
         </field>
-
         <field name="quantity" type="fixed-point">
             <description>Quantity invoiced. From InvoiceItem.quantity</description>
         </field>
-
+        <field name="amount" type="fixed-point">
+            <description>Amount invoiced. From InvoiceItem.amount</description>
+        </field>
         <field name="extGrossAmount" type="currency-precise">
             <description>Extended gross amount: quantity invoiced multiplied by the list unit price.</description>
         </field>
@@ -435,6 +440,12 @@ under the License.
         <alias-all entity-alias="SIISS_IDD" prefix="invoiceDate" group-by="true">
             <exclude field="dimensionId"/>
         </alias-all>
+        <alias-all entity-alias="SIISS_CUSTOMER" prefix="customer" group-by="true">
+            <exclude field="dimensionId"/>
+        </alias-all>
+        <alias-all entity-alias="SIISS_INTORG" prefix="intOrg" group-by="true">
+            <exclude field="dimensionId"/>
+        </alias-all>
         <alias-all entity-alias="SIISS_PD" prefix="product" group-by="true">
             <exclude field="dimensionId"/>
         </alias-all>
@@ -459,6 +470,7 @@ under the License.
         <alias entity-alias="SIISS_SIIF" name="orderId" group-by="true"/>
         <alias entity-alias="SIISS_SIIF" name="organisationDimId" group-by="true"/>
         <alias entity-alias="SIISS_SIIF" name="customerDimId" group-by="true"/>
+        <alias entity-alias="SIISS_SIIF" name="productDimId" group-by="true"/>
 
         <view-link entity-alias="SIISS_SIIF" rel-entity-alias="SIISS_IDD">
             <key-map field-name="invoiceDateDimId" rel-field-name="dimensionId"/>
