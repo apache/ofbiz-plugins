@@ -548,15 +548,15 @@ under the License.
 
     <view-entity entity-name="InventoryItemStarSchema" package-name="org.apache.ofbiz.bi.starschema" title="Inventory Item Schema">
         <description>"Inventory Item StarSchema.</description>
-        <member-entity entity-alias="IIF" entity-name="InventoryItemFact"/>
+        <member-entity entity-alias="IISS_IIF" entity-name="InventoryItemFact"/>
         <!--member-entity entity-alias="SIIF" entity-name="SalesOrderItemFact"/-->
-        <member-entity entity-alias="IISS_FD" entity-name="FacilityDimension"/>
-        <member-entity entity-alias="IISS_OD" entity-name="OrganisationDimension"/>
-        <member-entity entity-alias="PD" entity-name="ProductDimension"/>
-        <member-entity entity-alias="IDD" entity-name="DateDimension"/>
-        <member-entity entity-alias="CD" entity-name="CurrencyDimension"/>
+        <member-entity entity-alias="IISS_FACILITY" entity-name="FacilityDimension"/>
+        <member-entity entity-alias="IISS_INTORG" entity-name="OrganisationDimension"/>
+        <member-entity entity-alias="IISS_PD" entity-name="ProductDimension"/>
+        <member-entity entity-alias="IISS_IDD" entity-name="DateDimension"/>
+        <member-entity entity-alias="IISS_CD" entity-name="CurrencyDimension"/>
 
-        <alias-all entity-alias="IIF" function="sum">
+        <alias-all entity-alias="IISS_IIF" function="sum">
             <exclude field="inventoryItemId"/>
             <exclude field="orderId"/>
             <exclude field="facilityDimId"/>
@@ -576,46 +576,53 @@ under the License.
             <exclude field="orderStatus"/>
             <exclude field="saleChanel"/>
         </alias-all-->
-        <alias-all entity-alias="PD" prefix="product" group-by="true">
+        <alias-all entity-alias="IISS_PD" prefix="product" group-by="true">
             <exclude field="dimensionId"/>
         </alias-all>
-        <alias-all entity-alias="IDD" prefix="inventoryDate" group-by="true">
+        <alias-all entity-alias="IISS_IDD" prefix="inventoryDate" group-by="true">
             <exclude field="dimensionId"/>
         </alias-all>
-        <alias-all entity-alias="CD" prefix="currency" group-by="true">
+        <alias-all entity-alias="IISS_CD" prefix="currency" group-by="true">
+            <exclude field="dimensionId"/>
+            <exclude field="currencyId"/>
+        </alias-all>
+        <alias-all entity-alias="IISS_FACILITY" prefix="wh" group-by="true">
             <exclude field="dimensionId"/>
         </alias-all>
-        <alias-all entity-alias="IISS_FD" prefix="wh" group-by="true">
+        <alias-all entity-alias="IISS_INTORG" prefix="intOrg" group-by="true">
             <exclude field="dimensionId"/>
         </alias-all>
-        <alias-all entity-alias="IISS_OD" prefix="intOrg" group-by="true">
-            <exclude field="dimensionId"/>
-        </alias-all>
-        <alias entity-alias="IIF" name="inventoryItemId" group-by="true">
+        <alias entity-alias="IISS_IIF" name="inventoryItemId" group-by="true">
             <description>Inventory Item Id</description>
         </alias>
-        <alias entity-alias="IIF" name="facilityDimId" group-by="true">
-            <description>Facility Id</description>
+        <alias entity-alias="IISS_IIF" name="inventoryDateDimId" group-by="true">
+            <description>DimensionId of the inventory date</description>
         </alias>
-        <alias entity-alias="PD" name="productId" group-by="true">
-            <description>Product id</description>
+        <alias entity-alias="IISS_IIF" name="organisationDimId" group-by="true">
+            <description>DimensionId of the internal organisation</description>
         </alias>
-        <view-link entity-alias="IIF" rel-entity-alias="PD" rel-optional="true">
+        <alias entity-alias="IISS_IIF" name="facilityDimId" group-by="true">
+            <description>DimensionId of the facility</description>
+        </alias>
+        <alias entity-alias="IISS_IIF" name="productDimId" group-by="true">
+            <description>DimensionId of the product</description>
+        </alias>
+        <view-link entity-alias="IISS_IIF" rel-entity-alias="IISS_PD" rel-optional="true">
             <key-map field-name="productDimId" rel-field-name="dimensionId"/>
         </view-link>
-        <view-link entity-alias="IIF" rel-entity-alias="IISS_FD" rel-optional="true">
+        <view-link entity-alias="IISS_IIF" rel-entity-alias="IISS_FACILITY" rel-optional="true">
             <key-map field-name="facilityDimId" rel-field-name="dimensionId"/>
         </view-link>
-        <view-link entity-alias="IIF" rel-entity-alias="IISS_OD" rel-optional="true">
+        <view-link entity-alias="IISS_IIF" rel-entity-alias="IISS_INTORG" rel-optional="true">
             <key-map field-name="organisationDimId" rel-field-name="dimensionId"/>
         </view-link>
         <!--view-link entity-alias="PD" rel-entity-alias="SIIF" rel-optional="true">
             <key-map field-name="dimensionId" rel-field-name="productDimId"/>
         </view-link-->
-        <view-link entity-alias="IIF" rel-entity-alias="IDD">
+        <view-link entity-alias="IISS_IIF" rel-entity-alias="IISS_IDD">
             <key-map field-name="inventoryDateDimId" rel-field-name="dimensionId"/>
         </view-link>
-        <view-link entity-alias="IIF" rel-entity-alias="CD">
+        <view-link entity-alias="IISS_IIF" rel-entity-alias="IISS_CD">
             <key-map field-name="origCurrencyDimId" rel-field-name="dimensionId"/>
         </view-link>
     </view-entity>
