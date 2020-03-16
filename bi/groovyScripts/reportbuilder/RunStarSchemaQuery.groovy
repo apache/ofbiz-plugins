@@ -1,3 +1,4 @@
+package plugins.bi.groovyScripts.reportbuilder;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,17 +18,18 @@
  * under the License.
  */
 
-import org.apache.ofbiz.base.util.UtilHttp
-
 starSchemaName = parameters.starSchemaName
-selectedFieldList = UtilHttp.parseMultiFormData(parameters)
-
+fieldCount = parameters.fieldCount
+field = parameters.field
 columnNames = [] as Set
-selectedFieldList.each { selectedField ->
-  columnNames.add(selectedField.selectedFieldName)
+if("1" == fieldCount) {
+    columnNames.add(field)
+} else {
+    field.each { field ->
+        columnNames.add(field)
+    }
 }
 context.columnNames = columnNames
 List records = []
 records = select(context.columnNames).from(starSchemaName).distinct(false).queryList()
-
 context.records = records
