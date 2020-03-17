@@ -620,6 +620,9 @@ under the License.
         <alias entity-alias="IISS_IIF" name="productDimId" group-by="true">
             <description>DimensionId of the product</description>
         </alias>
+        <alias entity-alias="IISS_IIF" name="origCurrencyDimId" group-by="true">
+            <description>DimensionId of the currency</description>
+        </alias>
         <view-link entity-alias="IISS_IIF" rel-entity-alias="IISS_PD" rel-optional="true">
             <key-map field-name="productDimId" rel-field-name="dimensionId"/>
         </view-link>
