@@ -207,7 +207,8 @@ def prepareProductDimensionData() {
     }
     productDimension = delegator.makeValue("ProductDimension")
     productDimension.setNonPKFields(parameters)
-    GenericValue productType = select("description").from("Product").where("productId", parameters.productId).queryOne()
+    productDimension.setNonPKFields(product)
+    GenericValue productType = select("description").from("ProductType").where("productTypeId", product.productTypeId).queryOne()
     productDimension.productType = productType.description
     Map result = success()
     result.productDimension = productDimension
