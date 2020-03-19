@@ -20,58 +20,57 @@
 function schemaSelection(){
     var schemas = document.getElementsByName('schemaId');
     if(!schemas){
-        alert('Hello schema: ' + schema_value);
+        alert('Selected schema: ' + schema_value)
     }
     var schema_value;
     for(var i = 0; i < schemas.length; i++){
         if(schemas[i].checked){
-            schema_value = schemas[i].value;
+            schema_value = schemas[i].value
         }
     }
-    getAssocFieldList(schema_value);
-};
+    getAssocFieldList(schema_value)
+}
 
 function getAssocFieldList(schemaId){
     if(!schemaId){
         alert('No Schema Selected!')
     } else{
-        var param='starSchemaName='+ schemaId;
+        var param='starSchemaName='+ schemaId
         jQuery.ajax({
             url: 'getAssociatedFieldList',
             data: param,
             type: 'get',
             async: false,
             success: function(data) {
-                jQuery('#fieldSelector').html(data);
+                jQuery('#fieldSelector').html(data)
             },
             error: function(data) {
-                alert("Error during schema selection");
+                alert("Error during schema selection")
             }
         })
     }
     
-};
+}
 
 function checkSelectedFields(chk)
 {
-    var urlString = document.FieldsOverview.basisUrl.value;
-    document.FieldsOverview.selectedFields.value = "";
-    var strValue = "";
+    document.FieldsOverview.selectedFields.value = ""
+    var strValue = ""
     var fieldCount = 0
+    var i = 0;
     for (i = 0; i < chk.length; i++)
         if(chk[i].checked == true){
             if (strValue == "") {
-                strValue = chk[i].value;
+                strValue = chk[i].value
             }
             else {
-                strValue = strValue +"&field=" + chk[i].value;
+                strValue = strValue +"&field=" + chk[i].value
             }
             fieldCount = fieldCount +1
         }
-    var selectedFields = strValue;
-    document.FieldsOverview.selectedFields.value = selectedFields;
-    document.FieldsOverview.fieldCount.value = fieldCount;
-};
+    document.FieldsOverview.selectedFields.value = strValue
+    document.FieldsOverview.fieldCount.value = fieldCount
+}
 
 function generateReport() {
     var schemaQuery = '&starSchemaName='+ document.FieldsOverview.starSchemaName.value
@@ -81,18 +80,18 @@ function generateReport() {
         alert("No Field(s) selected!")
     }
     else {
-        var param= schemaQuery + '&field=' + queryString + '&fieldCount=' + fieldCount;
+        var param= schemaQuery + '&field=' + queryString + '&fieldCount=' + fieldCount
         jQuery.ajax({
             url: 'reportStarSchema',
             data: param,
             type: 'get',
             async: false,
             success: function(data) {
-                jQuery('#report').html(data);
+                jQuery('#report').html(data)
             },
             error: function(data) {
-                alert("Error during schema selection");
+                alert("Error during schema selection")
             }
         })
     }
-};
+}
