@@ -49,7 +49,6 @@ function getAssocFieldList(schemaId){
             }
         })
     }
-    
 }
 
 function checkSelectedFields(chk)
@@ -57,8 +56,7 @@ function checkSelectedFields(chk)
     document.FieldsOverview.selectedFields.value = ""
     var strValue = ""
     var fieldCount = 0
-    var i = 0;
-    for (i = 0; i < chk.length; i++)
+    for (var i = 0; i < chk.length; i++)
         if(chk[i].checked == true){
             if (strValue == "") {
                 strValue = chk[i].value

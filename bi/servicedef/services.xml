@@ -32,12 +32,14 @@ under the License.
         location="org.apache.ofbiz.bi.util.DimensionServices" invoke="getDimensionIdFromNaturalKey" auth="true">
         <description>Generic service to get the dimensionId for a natural key.</description>
         <attribute name="dimensionEntityName" type="String" mode="IN" optional="false"/>
-        <attribute name="naturalKeyFields" type="Map" mode="IN" optional="false"/> <!-- the names/values pairs of the fields that compose the natural key of the dimension -->
+        <attribute name="naturalKeyFields" type="Map" mode="IN" optional="false">
+            <description>the names/values pairs of the fields that compose the natural key of the dimension</description>
+        </attribute>
         <attribute name="dimensionId" type="String" mode="OUT" optional="true"/>
     </service>
     <service name="quickInitDataWarehouse" auth="true" engine="groovy"
         location="component://bi/groovyScripts/DimensionServices.groovy" invoke="quickInitDataWarehouse">
-        <description>Quickly initialize the dimensions (Currency, Date, Product) and facts (SalesInvoiceItem): useful to quickly initialize the datawarehouse.</description>
+        <description>Initialize the dimension and fact tables: do an initial load of records.</description>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
@@ -45,25 +47,25 @@ under the License.
     <!-- Common Dimensions -->
     <service name="loadCountryDimension" auth="true" engine="groovy"
         location="component://bi/groovyScripts/DimensionServices.groovy" invoke="loadCountryDimension">
-        <description>Loads records in the CountryDimension entity (olap entity) using the update strategy of 'type 1': overwrite the values of the attributes</description>
+        <description>Load records in the CountryDimension entity using the update strategy of 'type 1': overwrite the values of the attributes</description>
     </service>
     <service name="loadCurrencyDimension" auth="true" engine="groovy"
         location="component://bi/groovyScripts/DimensionServices.groovy" invoke="loadCurrencyDimension">
-        <description>Loads records in the CurrencyDimension entity (olap entity) using the update strategy of 'type 1': overwrite the values of the attributes</description>
+        <description>Load records in the CurrencyDimension entity using the update strategy of 'type 1': overwrite the values of the attributes</description>
     </service>
     <service name="loadDateDimension" engine="java" transaction-timeout="300"
         location="org.apache.ofbiz.bi.util.DimensionServices" invoke="loadDateDimension" auth="true">
-        <description>Loads records in the DateDimension entity (olap entity) using the update strategy of 'type 1': overwrite the values of the attributes</description>
+        <description>Load records in the DateDimension entity using the update strategy of 'type 1': overwrite the values of the attributes</description>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
     <service name="loadFacilityDimension" auth="true" engine="groovy"
         location="component://bi/groovyScripts/DimensionServices.groovy" invoke="loadFacilityDimension">
-        <description>Loads records in the FacilityDimension entity (olap entity) using the update strategy of 'type 1': overwrite the values of the attributes</description>
+        <description>Load records in the FacilityDimension entity using the update strategy of 'type 1': overwrite the values of the attributes</description>
     </service>
     <service name="loadOrganisationDimension" auth="true" engine="groovy"
         location="component://bi/groovyScripts/DimensionServices.groovy" invoke="loadOrganisationDimension">
-        <description>Loads records in the OrganisationDimension entity (olap entity) using the update strategy of 'type 1': overwrite the values of the attributes</description>
+        <description>Load records in the OrganisationDimension entity using the update strategy of 'type 1': overwrite the values of the attributes</description>
     </service>
     <service name="loadRolePartyDimension" auth="true" engine="groovy" transaction-timeout="600"
         location="component://bi/groovyScripts/DimensionServices.groovy" invoke="loadRolePartyDimension">
@@ -100,6 +102,11 @@ under the License.
         location="component://bi/groovyScripts/DimensionServices.groovy" invoke="loadAllProductsInProductDimension">
         <description>Calls the loadProductInProductDimension service for all the products.</description>
         <attribute name="updateMode" type="String" mode="IN" optional="true" default-value="TYPE1"/>
+    </service>
+    <!-- StoreDimension -->
+    <service name="loadStoreDimension" auth="true" engine="groovy"
+        location="component://bi/groovyScripts/DimensionServices.groovy" invoke="loadStoreDimension">
+        <description>Load records in the StoreDimension entity using the update strategy of 'type 1': overwrite the values of the attributes</description>
     </service>
 
     <!-- Invoice Facts -->

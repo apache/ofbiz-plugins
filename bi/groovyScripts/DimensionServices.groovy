@@ -54,6 +54,9 @@ def quickInitDataWarehouse() {
     // loads all products in the ProductDimension
     serviceResult = run service: "loadAllProductsInProductDimension"
     if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+    // load records in the Store Dimension
+    serviceResult = run service: "loadStoreDimension"
+    if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
 
     // loads the invoice items in the SalesInvoiceItemFact fact entity
     entryExprs = EntityCondition.makeCondition([
@@ -153,6 +156,7 @@ def loadFacilityDimension() {
     };
     queryListIterator.close();
 };
+
 def loadOrganisationDimension(){
     // Initialize the OrganisationDimension using the update strategy of 'type 1
     organisationListIterator = from("PartyAcctgPrefAndGroup").where("roleTypeId", "INTERNAL_ORGANIZATIO").queryIterator();
@@ -200,6 +204,26 @@ def loadRolePartyDimension(role){
     };
     partyListIterator.close();
 };
+
+def loadStoreDimension(){
+    // Initialize the FacilityDimension using the update strategy of 'type 1
+    dimensionEntityName = "StoreDimension"
+    queryListIterator = from("ProductStore").queryIterator()
+    while(store = queryListIterator.next()){
+        productStoreId = store.productStoreId
+        dimRecord = getDimensionRecord(dimensionEntityName,"productStoreId", productStoreId)
+        if(!dimRecord) {
+            dimensionId = delegator.getNextSeqId(dimensionEntityName)
+            newEntity = makeValue(dimensionEntityName)
+            newEntity.dimensionId = dimensionId
+            newEntity.productStoreId = store.productStoreId
+            newEntity.storeName = store.storeName
+            newEntity.create()
+        };
+    };
+    queryListIterator.close()
+}
+
 def prepareProductDimensionData() {
     GenericValue product = from("Product").where("productId", parameters.productId).queryOne()
     if (product == null) {

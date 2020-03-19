@@ -201,7 +201,6 @@ under the License.
         <field name="storeName" type="description">
             <description>Name of the store. From ProductStore.storeName.</description>
         </field>
-        
         <prim-key field="dimensionId"/>
     </entity>
     <entity entity-name="TimeDimension" package-name="org.apache.ofbiz.bi.dimension" title="Times Dimension">
@@ -227,6 +226,7 @@ under the License.
     <!-- ========================================================= -->
     <!-- Facts                                                     -->
     <!-- ========================================================= -->
+
     <entity entity-name="SalesInvoiceItemFact" package-name="org.apache.ofbiz.bi.fact" title="Sales Invoice Item Fact">
         <description>A transaction fact entity with invoice item grain.</description>
         <field name="invoiceId" type="id">
@@ -454,6 +454,7 @@ under the License.
     <!-- ========================================================= -->
     <!-- Star Schemas                                              -->
     <!-- ========================================================= -->
+
     <view-entity entity-name="SalesInvoiceItemStarSchema" package-name="org.apache.ofbiz.bi.starschema" title="Sales Invoice Item Star Schema">
         <description>Invoice Item star schema (Profit and Loss Statement).</description>
 
