@@ -230,9 +230,9 @@ def prepareProductDimensionData() {
         return error(UtilProperties.getMessage('ProductUiLabels', 'ProductProductNotFoundWithProduct', locale))
     }
     productDimension = delegator.makeValue("ProductDimension")
-    productDimension.setNonPKFields(parameters)
     productDimension.setNonPKFields(product)
-    GenericValue productType = select("description").from("ProductType").where("productTypeId", product.productTypeId).queryOne()
+    GenericValue productType = select("description").from("ProductType")
+            .where("productTypeId", product.productTypeId).cache().queryOne()
     productDimension.productType = productType.description
     Map result = success()
     result.productDimension = productDimension
