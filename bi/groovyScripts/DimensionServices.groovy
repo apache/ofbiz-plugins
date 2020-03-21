@@ -87,8 +87,7 @@ def loadCurrencyDimension() {
                 currencyDim.store()
             }
         } else {
-            currencyDim = delegator.makeValue("CurrencyDimension")
-            delegator.setNextSeqId(currencyDim)
+            currencyDim = delegator.makeValue("CurrencyDimension",["dimensionId":currency.uomId])
             currencyDim.currencyId = currency.uomId
             currencyDim.description = currency.description
             currencyDim.create()
