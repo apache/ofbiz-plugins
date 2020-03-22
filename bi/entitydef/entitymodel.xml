@@ -490,30 +490,30 @@ under the License.
             <exclude field="origCurrencyDimId"/>
             <exclude field="productDimId"/>
         </alias-all>
-        <alias entity-alias="SIISS_SIIF" name="invoiceId" group-by="true">
-            <description>Invoice id</description>
-        </alias>
+        <alias entity-alias="SIISS_SIIF" name="invoiceId" group-by="true"/>
         <alias entity-alias="SIISS_SIIF" name="invoiceItemSeqId" group-by="true"/>
         <alias entity-alias="SIISS_SIIF" name="invoiceDateDimId" group-by="true"/>
+        <alias entity-alias="SIISS_SIIF" name="origCurrencyDimId" group-by="true"/>
         <alias entity-alias="SIISS_SIIF" name="orderId" group-by="true"/>
         <alias entity-alias="SIISS_SIIF" name="organisationDimId" group-by="true"/>
         <alias entity-alias="SIISS_SIIF" name="customerDimId" group-by="true"/>
         <alias entity-alias="SIISS_SIIF" name="productDimId" group-by="true"/>
 
-        <view-link entity-alias="SIISS_SIIF" rel-entity-alias="SIISS_IDD">
-            <key-map field-name="invoiceDateDimId" rel-field-name="dimensionId"/>
-        </view-link>
+        
         <view-link entity-alias="SIISS_SIIF" rel-entity-alias="SIISS_CUSTOMER">
             <key-map field-name="customerDimId" rel-field-name="dimensionId"/>
+        </view-link>
+        <view-link entity-alias="SIISS_SIIF" rel-entity-alias="SIISS_IDD">
+            <key-map field-name="invoiceDateDimId" rel-field-name="dimensionId"/>
         </view-link>
         <view-link entity-alias="SIISS_SIIF" rel-entity-alias="SIISS_INTORG">
             <key-map field-name="organisationDimId" rel-field-name="dimensionId"/>
         </view-link>
-        <view-link entity-alias="SIISS_SIIF" rel-entity-alias="SIISS_PD">
-            <key-map field-name="productDimId" rel-field-name="dimensionId"/>
-        </view-link>
         <view-link entity-alias="SIISS_SIIF" rel-entity-alias="SIISS_CD">
             <key-map field-name="origCurrencyDimId" rel-field-name="dimensionId"/>
+        </view-link>
+        <view-link entity-alias="SIISS_SIIF" rel-entity-alias="SIISS_PD">
+            <key-map field-name="productDimId" rel-field-name="dimensionId"/>
         </view-link>
     </view-entity>
 
