@@ -41,12 +41,17 @@ def quickInitDataWarehouse() {
     // load records in the Organisation Dimension
     serviceResult = run service: "loadOrganisationDimension"
     if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+    // load records in the Carrier Dimension
+    inMap.clear()
+    inMap.role="Carrier"
+    serviceResult = run service: "loadRolePartyDimension", with: inMap
+    if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
     // load records in the Customer Dimension
     inMap.clear()
     inMap.role="Customer"
     serviceResult = run service: "loadRolePartyDimension", with: inMap
     if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
-    // load records in the Customer Dimension
+    // load records in the Supplier Dimension
     inMap.clear()
     inMap.role="Supplier"
     serviceResult = run service: "loadRolePartyDimension", with: inMap
