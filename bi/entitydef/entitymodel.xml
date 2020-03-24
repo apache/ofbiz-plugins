@@ -72,7 +72,7 @@ under the License.
     </entity>
     <entity entity-name="CustomerDimension" package-name="org.apache.ofbiz.bi.dimension" title="Customers Dimension">
         <description>Dimension of customers. The natural key is [partyId]</description>
-        <field name="dimensionId" type="id">
+        <field name="dimensionId" type="integer">
             <description>Unique identifier of the Customer dimension record</description>
         </field>
         <field name="partyId" type="id">
@@ -131,7 +131,7 @@ under the License.
     </entity>
     <entity entity-name="FacilityDimension" package-name="org.apache.ofbiz.bi.dimension" title="Facilities Dimension">
         <description>Dimension of facilities. The natural key is [facilityId]</description>
-        <field name="dimensionId" type="id">
+        <field name="dimensionId" type="integer">
             <description>Unique identifier of the dimension record</description>
         </field>
         <field name="facilityId" type="id">
@@ -144,7 +144,7 @@ under the License.
     </entity>
     <entity entity-name="OrganisationDimension" package-name="org.apache.ofbiz.bi.dimension" title="Internal Organisations Dimension">
         <description>Dimension of internal (accounting) parties. The natural key is [partyId]</description>
-        <field name="dimensionId" type="id">
+        <field name="dimensionId" type="integer">
             <description>Unique identifier of the dimension record</description>
         </field>
         <field name="partyId" type="id">
@@ -160,7 +160,7 @@ under the License.
     </entity>
     <entity entity-name="ProductDimension" package-name="org.apache.ofbiz.bi.dimension" title="Products Dimension">
         <description>Dimension of Products. The natural key is [productId]</description>
-        <field name="dimensionId" type="id">
+        <field name="dimensionId" type="integer">
             <description>Unique identifier of the Product dimension record</description>
         </field>
         <field name="productId" type="id">
@@ -179,7 +179,7 @@ under the License.
     </entity>
     <entity entity-name="SupplierDimension" package-name="org.apache.ofbiz.bi.dimension" title="Suppliers Dimension">
         <description>Dimension of customers. The natural key is [partyId]</description>
-        <field name="dimensionId" type="id">
+        <field name="dimensionId" type="integer">
             <description>Unique identifier of the Supplier dimension record</description>
         </field>
         <field name="partyId" type="id">
@@ -192,7 +192,7 @@ under the License.
     </entity>
     <entity entity-name="StoreDimension" package-name="org.apache.ofbiz.bi.dimension" title="Stores Dimension">
         <description>Dimension of stores. The natural key is [productStoreId]</description>
-        <field name="dimensionId" type="id">
+        <field name="dimensionId" type="integer">
             <description>Unique identifier of the dimension record</description>
         </field>
         <field name="productStoreId" type="id">
@@ -241,16 +241,16 @@ under the License.
         <field name="invoiceDateDimId" type="integer">
             <description>The date of the invoice</description>
         </field>
-        <field name="organisationDimId" type="id">
+        <field name="organisationDimId" type="integer">
             <description>The associated internal organisation</description>
         </field>
-        <field name="customerDimId" type="id">
+        <field name="customerDimId" type="integer">
             <description>The associated customer</description>
         </field>
         <field name="origCurrencyDimId" type="id">
             <description>The currency of the invoice</description>
         </field>
-        <field name="productDimId" type="id">
+        <field name="productDimId" type="integer">
             <description>The associated product</description>
         </field>
         <field name="quantity" type="fixed-point">
@@ -339,9 +339,9 @@ under the License.
         <field name="orderId" type="id"></field> <!-- degenerate dimension -->
         <field name="orderItemSeqId" type="id"></field> <!-- degenerate dimension -->
         <field name="orderDateDimId" type="integer"></field>
-        <field name="productDimId" type="id"></field>
+        <field name="productDimId" type="integer"></field>
         <field name="origCurrencyDimId" type="id"></field>
-        <field name="billToCustomerDimId" type="id"></field> <!-- TODO: implement the dimension -->
+        <field name="billToCustomerDimId" type="integer"></field> <!-- TODO: implement the dimension -->
 
         <field name="productCategoryId" type="id"></field>
         <field name="productStoreId" type="id"></field>
@@ -423,10 +423,10 @@ under the License.
         <description>A transaction fact entity with inventory items.</description>
         <field name="inventoryItemId" type="id"></field>
         <field name="inventoryDateDimId" type="integer"></field>
-        <field name="organisationDimId" type="id"></field>
+        <field name="organisationDimId" type="integer"></field>
         <field name="origCurrencyDimId" type="id"></field>
-        <field name="facilityDimId" type="id"></field>
-        <field name="productDimId" type="id"></field>
+        <field name="facilityDimId" type="integer"></field>
+        <field name="productDimId" type="integer"></field>
         <field name="quantityOnHandTotal" type="fixed-point"></field>
         <field name="availableToPromiseTotal" type="fixed-point"></field>
         <field name="unitCost" type="fixed-point"></field>

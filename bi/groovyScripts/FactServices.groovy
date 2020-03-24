@@ -103,10 +103,10 @@ def loadSalesInvoiceItemFact() {
                 serviceResult = run service: "getDimensionIdFromNaturalKey", with: inMap
                 fact.organisationDimId = serviceResult.dimensionId
                 if (!fact.organisationDimId) {
-                    fact.organisationDimId = "_NF_"
+                    fact.organisationDimId = "0"
                 }
             } else {
-                fact.organisationDimId = "_NA_"
+                fact.organisationDimId = "1"
             }
             // conversion of the customer id
             if (invoice.partyId) {
@@ -118,10 +118,10 @@ def loadSalesInvoiceItemFact() {
                 serviceResult = run service: "getDimensionIdFromNaturalKey", with: inMap
                 fact.customerDimId = serviceResult.dimensionId
                 if (!fact.customerDimId) {
-                    fact.customerDimId = "_NF_"
+                    fact.customerDimId = "0"
                 }
             } else {
-                fact.customerDimId = "_NA_"
+                fact.customerDimId = "1"
             }
             // conversion of the product id
             if (invoiceItem.productId) {
@@ -133,10 +133,10 @@ def loadSalesInvoiceItemFact() {
                 serviceResult = run service: "getDimensionIdFromNaturalKey", with: inMap
                 fact.productDimId = serviceResult.dimensionId
                 if (!fact.productDimId) {
-                    fact.productDimId = "_NF_"
+                    fact.productDimId = "0"
                 }
             } else {
-                fact.productDimId = "_NA_"
+                fact.productDimId = "1"
             }
 
             // TODO
@@ -299,10 +299,10 @@ def loadSalesOrderItemFact() {
                 serviceResult = run service: "getDimensionIdFromNaturalKey", with: inMap
                 fact.productDimId = serviceResult.dimensionId
                 if (!fact.productDimId) {
-                    fact.productDimId = "_NF_"
+                    fact.productDimId = "0"
                 }
             } else {
-                fact.productDimId = "_NA_"
+                fact.productDimId = "1"
             }
 
             // conversion of the order currency
@@ -328,7 +328,7 @@ def loadSalesOrderItemFact() {
             }
 
             // TODO
-            fact.billToCustomerDimId = "_NA_"
+            fact.billToCustomerDimId = "1"
 
             fact.create()
         }
@@ -617,7 +617,7 @@ def loadInventoryItemFact() {
         if(serviceResult) {
             fact.facilityDimId = serviceResult.dimensionId
         } else {
-            fact.facilityDimId = "_NF_"
+            fact.facilityDimId = "0"
         }
         // conversion of the organisationId
         naturalKeyFields = [:]
@@ -629,7 +629,7 @@ def loadInventoryItemFact() {
         if(serviceResult) {
             fact.organisationDimId = serviceResult.dimensionId
         } else {
-            fact.organisationDimId = "_NF_"
+            fact.organisationDimId = "0"
         }
         // conversion of the productId
         if (inventory?.productId) {
@@ -641,10 +641,10 @@ def loadInventoryItemFact() {
             serviceResult = run service:"getDimensionIdFromNaturalKey", with: inMap
             fact.productDimId = serviceResult.dimensionId
             if (!fact.productDimId) {
-                fact.productDimId = "_NF_"
+                fact.productDimId = "0"
             }
         } else {
-            fact.productDimId = "_NA_"
+            fact.productDimId = "1"
         }
         // conversion of the order currency
         if (inventory?.currencyUomId) {

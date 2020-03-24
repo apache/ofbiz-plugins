@@ -25,17 +25,17 @@ under the License.
     <CurrencyDimension dimensionId="_NF_" currencyId="_NF_" description="Currency Not Found."/>
     <CurrencyDimension dimensionId="_NA_" currencyId="_NA_" description="Currency Not Set."/>
 
-    <CustomerDimension dimensionId="_NF_" partyId= "_NF_" partyName="Customer Not Found."/>
-    <CustomerDimension dimensionId="_NA_" partyId= "_NA_" partyName="Customer Not Set."/>
+    <CustomerDimension dimensionId="0" partyId= "_NF_" partyName="Customer Not Found."/>
+    <CustomerDimension dimensionId="1" partyId= "_NA_" partyName="Customer Not Set."/>
 
-    <FacilityDimension dimensionId="_NF_" facilityId="_NF_" facilityName="Facility Not Found"/>
-    <FacilityDimension dimensionId="_NA_" facilityId="_NA_" facilityName="Facility Not Set"/>
+    <FacilityDimension dimensionId="0" facilityId="_NF_" facilityName="Facility Not Found"/>
+    <FacilityDimension dimensionId="1" facilityId="_NA_" facilityName="Facility Not Set"/>
 
-    <OrganisationDimension dimensionId="_NF_" partyId= "_NF_" partyName="Organisation Not Found."/>
-    <OrganisationDimension dimensionId="_NA_" partyId= "_NA_" partyName="Organisation Not Set."/>
+    <OrganisationDimension dimensionId="0" partyId= "_NF_" partyName="Organisation Not Found."/>
+    <OrganisationDimension dimensionId="1" partyId= "_NA_" partyName="Organisation Not Set."/>
 
-    <ProductDimension dimensionId="_NF_" productId= "_NF_" internalName="Product Not Found."/>
-    <ProductDimension dimensionId="_NA_" productId= "_NA_" internalName="Product Not Set."/>
+    <ProductDimension dimensionId="0" productId= "_NF_" internalName="Product Not Found."/>
+    <ProductDimension dimensionId="1" productId= "_NA_" internalName="Product Not Set."/>
 
     <TimeDimension dimensionId="2359" timeValue="23:59:00" hr="23" mn="59"/>
     <TimeDimension dimensionId="2358" timeValue="23:58:00" hr="23" mn="58"/>
