@@ -29,6 +29,19 @@ under the License.
     <!-- ========================================================= -->
     <!-- Dimensions                                                -->
     <!-- ========================================================= -->
+    <entity entity-name="CarrierDimension" package-name="org.apache.ofbiz.bi.dimension" title="Carriers Dimension">
+        <description>Dimension of carriers. The natural key is [partyId]</description>
+        <field name="dimensionId" type="integer">
+            <description>Unique identifier of the Carrier dimension record</description>
+        </field>
+        <field name="partyId" type="id">
+            <description>The natural key. From PartyRoleAndPartyDetail.partyId</description>
+        </field>
+        <field name="partyName" type="description">
+            <description>Name of the customer. From PartyRoleAndPartyDetail. Dependent on PartyTypeId</description>
+        </field>
+        <prim-key field="dimensionId"/>
+    </entity>
     <entity entity-name="CountryDimension" package-name="org.apache.ofbiz.bi.dimension" title="Countries Dimension">
         <description>Dimension of countries. The natural key is [countryId]</description>
         <field name="dimensionId" type="id">

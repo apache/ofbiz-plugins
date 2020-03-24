@@ -19,6 +19,9 @@ under the License.
 -->
 
 <entity-engine-xml>
+    <CarrierDimension dimensionId="0" partyId= "_NF_" partyName="Carrier Not Found."/>
+    <CarrierDimension dimensionId="1" partyId= "_NA_" partyName="Carrier Not Set."/>
+
     <CountryDimension dimensionId="_NF_" countryId="_NF_" description="Country Not Found."/>
     <CountryDimension dimensionId="_NA_" countryId="_NA_" description="Country Not Set."/>
 
