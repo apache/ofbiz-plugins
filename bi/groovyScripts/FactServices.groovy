@@ -106,7 +106,7 @@ def loadSalesInvoiceItemFact() {
                 inMap.naturalKeyFields = naturalKeyFields
                 serviceResult = run service: "getDimensionIdFromNaturalKey", with: inMap
                 fact.productDimId = serviceResult.dimensionId
-                if (!act.productDimId) {
+                if (!fact.productDimId) {
                     fact.productDimId = "_NF_"
                 }
             } else {
