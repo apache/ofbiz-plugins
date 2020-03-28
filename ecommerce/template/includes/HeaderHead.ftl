@@ -25,6 +25,11 @@ under the License.
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <#assign csrfDefenseStrategy = Static["org.apache.ofbiz.entity.util.EntityUtilProperties"].getPropertyValue("security", "csrf.defense.strategy", delegator)>
+  <#if csrfDefenseStrategy != "org.apache.ofbiz.security.NoCsrfDefenseStrategy">
+    <meta name="csrf-token" content="<@csrfTokenAjax/>"/>
+  </#if>
+  
   <title><#if title?has_content>${title}<#elseif titleProperty?has_content>${uiLabelMap.get(titleProperty)}</#if>
     : ${(productStore.storeName)!}
   </title>
