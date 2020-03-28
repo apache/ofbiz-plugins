@@ -352,12 +352,13 @@ under the License.
         <field name="orderId" type="id"></field> <!-- degenerate dimension -->
         <field name="orderItemSeqId" type="id"></field> <!-- degenerate dimension -->
         <field name="orderDateDimId" type="integer"></field>
+        <field name="organisationDimId" type="integer"></field>
+        <field name="customerDimId" type="integer"></field>
+        <field name="storeDimId" type="integer"></field>
         <field name="productDimId" type="integer"></field>
         <field name="origCurrencyDimId" type="id"></field>
-        <field name="billToCustomerDimId" type="integer"></field> <!-- TODO: implement the dimension -->
 
         <field name="productCategoryId" type="id"></field>
-        <field name="productStoreId" type="id"></field>
         <field name="salesChannelEnumId" type="id"></field>
         <field name="statusId" type="id"></field>
 
@@ -553,9 +554,9 @@ under the License.
             <exclude field="orderDateDimId"/>
             <exclude field="productDimId"/>
             <exclude field="origCurrencyDimId"/>
-            <exclude field="billToCustomerDimId"/>
+            <exclude field="customerDimId"/>
             <exclude field="productCategoryId"/>
-            <exclude field="productStoreId"/>
+            <exclude field="storeDimId"/>
             <exclude field="salesChannelEnumId"/>
             <exclude field="statusId"/>
             <exclude field="brand"/>
@@ -563,13 +564,10 @@ under the License.
             <exclude field="account"/>
             <exclude field="productPromoCode"/>
         </alias-all>
-        <alias entity-alias="SOIF" name="orderId" group-by="true">
-            <description>Order id</description>
-        </alias>
+        <alias entity-alias="SOIF" name="orderId" group-by="true"/>
         <alias entity-alias="SOIF" name="productPromoCode" group-by="true"/>
         <alias entity-alias="SOIF" name="orderItemSeqId" group-by="true"/>
         <alias entity-alias="SOIF" name="productCategoryId" group-by="true"/>
-        <alias entity-alias="SOIF" name="productStoreId" group-by="true"/>
         <alias entity-alias="SOIF" name="salesChannelEnumId" group-by="true"/>
         <alias entity-alias="SOIF" name="statusId" group-by="true"/>
         <alias entity-alias="SOIF" name="brand" group-by="true"/>
