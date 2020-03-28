@@ -21,6 +21,7 @@ import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.sql.Date
 
+import org.apache.ofbiz.base.util.Debug
 import org.apache.ofbiz.base.util.UtilDateTime
 import org.apache.ofbiz.base.util.UtilNumber
 import org.apache.ofbiz.base.util.UtilProperties
@@ -232,6 +233,7 @@ def loadSalesOrderItemFact() {
     if (!orderHeader) {
         orderHeader = from("OrderHeader").where(parameters).queryOne()
     }
+    orderId = orderHeader.orderId
     if (!orderItem) {
         orderItem = from("OrderItem").where(parameters).queryOne()
     }
@@ -248,24 +250,71 @@ def loadSalesOrderItemFact() {
         logError(errorMessage)
         return error(errorMessage)
     }
+    Map partyAccountingPreferencesCallMap = [:]
+    OrderReadHelper orderReadHelper = new OrderReadHelper(orderHeader)
+    Map billFromParty = orderReadHelper.getBillFromParty()
+    billFromVendor = billFromParty.partyId
+    Map billToParty = orderReadHelper.getBillToParty()
+    billToCustomer = billToParty.partyId
+    partyAccountingPreferencesCallMap.organizationPartyId = billFromVendor
+    Map accountResult = run service:"getPartyAccountingPreferences", with: partyAccountingPreferencesCallMap
+    GenericValue accPref = accountResult.partyAccountingPreference
 
     if ("ORDER_APPROVED".equals(orderHeader.statusId)) {
-        GenericValue fact = from("SalesOrderItemFact").where(orderId: orderItem.orderId, orderItemSeqId: orderItem.orderItemSeqId).queryOne()
+        GenericValue fact = from("SalesOrderItemFact").where(orderId: orderId, orderItemSeqId: orderItem.orderItemSeqId).queryOne()
         // key handling
         if (!fact) {
             fact = makeValue("SalesOrderItemFact")
-            fact.orderId = orderHeader.orderId
+            fact.orderId = orderId
             fact.orderItemSeqId = orderItem.orderItemSeqId
-            fact.productStoreId = orderHeader.productStoreId
             fact.salesChannelEnumId = orderHeader.salesChannelEnumId
             fact.statusId = orderItem.statusId
-
-            // account
-            if (orderHeader.productStoreId) {
-                GenericValue account =  from("ProductStore").where(productStoreId: orderHeader.productStoreId).queryOne()
-                fact.account = account.storeName
+            
+            // Convert billFromVendor
+            if(billFromVendor) {
+                naturalKeyFields = [:]
+                naturalKeyFields.partyId = billFromVendor
+                inMap = [:]
+                inMap.dimensionEntityName = "OrganisationDimension"
+                inMap.naturalKeyFields = naturalKeyFields
+                serviceResult = run service: "getDimensionIdFromNaturalKey", with: inMap
+                fact.organisationDimId = serviceResult.dimensionId
+                if (!fact.organisationDimId) {
+                    fact.organisationDimId = "0"
+                }
+            } else {
+                fact.organisationDimId = "1"
             }
-
+            // Convert billToCustomer
+            if(billToCustomer) {
+                naturalKeyFields = [:]
+                naturalKeyFields.partyId = billToCustomer
+                inMap = [:]
+                inMap.dimensionEntityName = "CustomerDimension"
+                inMap.naturalKeyFields = naturalKeyFields
+                serviceResult = run service: "getDimensionIdFromNaturalKey", with: inMap
+                fact.customerDimId = serviceResult.dimensionId
+                if (!fact.customerDimId) {
+                    fact.customerDimId = "0"
+                }
+            } else {
+                fact.customerDimId = "1"
+            }
+            // store
+            if (orderHeader.productStoreId) {
+                naturalKeyFields = [:]
+                naturalKeyFields.productStoreId = orderHeader.productStoreId
+                inMap = [:]
+                inMap.dimensionEntityName = "StoreDimension"
+                inMap.naturalKeyFields = naturalKeyFields
+                serviceResult = run service: "getDimensionIdFromNaturalKey", with: inMap
+                fact.storeDimId = serviceResult.dimensionId
+                if (!fact.storeDimId) {
+                    fact.storeDimId = "0"
+                }
+            } else {
+                fact.storeDimId = "1"
+            }
             // pod
             if ("EUR".equals(orderHeader.currencyUom)) {
                 fact.pod = "Latin"
@@ -304,7 +353,6 @@ def loadSalesOrderItemFact() {
             } else {
                 fact.productDimId = "1"
             }
-
             // conversion of the order currency
             if (orderHeader.currencyUom) {
                 inMap = [:]
@@ -328,20 +376,11 @@ def loadSalesOrderItemFact() {
             }
 
             // TODO
-            fact.billToCustomerDimId = "1"
-
             fact.create()
         }
         /*
          * facts handling
          */
-        Map partyAccountingPreferencesCallMap = [:]
-
-        OrderReadHelper orderReadHelper = new OrderReadHelper(orderHeader)
-        Map billFromParty = orderReadHelper.getBillFromParty()
-        partyAccountingPreferencesCallMap.organizationPartyId = billFromParty.partyId
-        Map accountResult = run service:"getPartyAccountingPreferences", with: partyAccountingPreferencesCallMap
-        GenericValue accPref = accountResult.partyAccountingPreference
 
         fact.quantity = (BigDecimal) orderItem.quantity
         fact.extGrossAmount = (BigDecimal) 0
