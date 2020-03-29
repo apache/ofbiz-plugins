@@ -34,9 +34,9 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="main"/>
     </request-map>
-    <request-map uri="quickInitDataWarehouse">
+    <request-map uri="initDwh">
         <security https="true" auth="true"/>
-        <event type="service" invoke="quickInitDataWarehouse"/>
+        <event type="service" invoke="initDwh"/>
         <response name="success" type="view" value="main"/>
     </request-map>
 

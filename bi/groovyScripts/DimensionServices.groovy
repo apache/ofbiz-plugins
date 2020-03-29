@@ -24,7 +24,7 @@ import org.apache.ofbiz.entity.util.EntityListIterator
 import org.apache.ofbiz.service.ModelService
 import org.apache.ofbiz.service.ServiceUtil
 
-def quickInitDataWarehouse() {
+def initDwh() {
     // load records  in the Date Dimension
     Map inMap = dispatcher.getDispatchContext().makeValidContext("loadDateDimension", ModelService.IN_PARAM, parameters)
     serviceResult = run service: "loadDateDimension", with: inMap

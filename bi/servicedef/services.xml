@@ -37,9 +37,9 @@ under the License.
         </attribute>
         <attribute name="dimensionId" type="String" mode="OUT" optional="true"/>
     </service>
-    <service name="quickInitDataWarehouse" auth="true" engine="groovy"
-        location="component://bi/groovyScripts/DimensionServices.groovy" invoke="quickInitDataWarehouse">
-        <description>Initialize the dimension and fact tables: do an initial load of records.</description>
+    <service name="initDwh" auth="true" engine="groovy"
+        location="component://bi/groovyScripts/DimensionServices.groovy" invoke="initDwh">
+        <description>Initialize the DataWareHouse.Do an initial load of records into dimension and fact tables.</description>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
