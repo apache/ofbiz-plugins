@@ -20,26 +20,6 @@ under the License.
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="http://ofbiz.apache.org/Widget-Screen" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Screen http://ofbiz.apache.org/dtds/widget-screen.xsd">
-    <screen name="main-decorator">
-        <section>
-            <actions>
-                <!-- base/top/specific map first, then more common map added for shared labels -->
-                <property-map resource="BiUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-
-                <set field="layoutSettings.companyName" from-field="uiLabelMap.BiCompanyName" global="true"/>
-                <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.BiCompanySubtitle" global="true"/>
-                <set field="activeApp" value="bi" global="true"/>
-                <set field="layoutSettings.javaScripts[]" value="/${activeApp}/images/${activeApp}.js" global="true"/>
-                <set field="applicationMenuName" value="BiAppBar" global="true"/>
-                <set field="applicationMenuLocation" value="component://bi/widget/BiMenus.xml" global="true"/>
-                <set field="applicationTitle" from-field="uiLabelMap.BiApplication" global="true"/>
-            </actions>
-            <widgets>
-                <include-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml"/>
-            </widgets>
-        </section>
-    </screen>
     <screen name="main">
         <section>
             <condition>
