@@ -19,6 +19,9 @@ under the License.
 -->
 
 <entity-engine-xml>
+    <AssetDimension dimensionId="0" fixedAssetId= "_NF_" fixedAssetName="Asset Not Found."/>
+    <AssetDimension dimensionId="1" fixedAssetId= "_NA_" fixedAssetName="Asset Not Set."/>
+
     <CarrierDimension dimensionId="0" partyId= "_NF_" partyName="Carrier Not Found."/>
     <CarrierDimension dimensionId="1" partyId= "_NA_" partyName="Carrier Not Set."/>
 
