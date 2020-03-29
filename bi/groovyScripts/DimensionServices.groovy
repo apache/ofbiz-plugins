@@ -54,6 +54,9 @@ def initDwh() {
     inMap.role="Customer"
     serviceResult = run service: "loadRolePartyDimension", with: inMap
     if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+    // load records in the Project Dimension
+    serviceResult = run service: "loadProjectDimension"
+    if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
     // load records in the Supplier Dimension
     inMap.clear()
     inMap.role="Supplier"
@@ -233,7 +236,7 @@ def loadRolePartyDimension(role){
 };
 
 def loadStoreDimension(){
-    // Initialize the FacilityDimension using the update strategy of 'type 1
+    // Initialize the StoreDimension using the update strategy of 'type 1
     dimensionEntityName = "StoreDimension"
     queryListIterator = from("ProductStore").queryIterator()
     while(store = queryListIterator.next()){
@@ -289,6 +292,25 @@ def loadAllProductsInProductDimension() {
         inMap.productId = product.productId
         run service: "loadProductInProductDimension", with: inMap
     }
+}
+
+def loadProjectDimension() {
+    // Initialize the ProjectDimension using the update strategy of 'type 1
+    dimensionEntityName = "ProjectDimension"
+    queryListIterator = from("WorkEffort").where("workEffortTypeId": "PROJECT").queryIterator()
+    while(workEffort = queryListIterator.next()){
+        projectId = workEffort.workEffortId
+        dimRecord = getDimensionRecord(dimensionEntityName,"projectId", projectId)
+        if(!dimRecord) {
+            dimensionId = delegator.getNextSeqId(dimensionEntityName)
+            newEntity = makeValue(dimensionEntityName)
+            newEntity.dimensionId = dimensionId
+            newEntity.projectId = projectId
+            newEntity.projectName = workEffort.workEffortName
+            newEntity.create()
+        };
+    };
+    queryListIterator.close()
 }
 
 def getDimensionRecord(dimensionEntityName, naturalKeyName, keyValue){
