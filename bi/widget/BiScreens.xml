@@ -27,13 +27,13 @@ under the License.
                 <property-map resource="BiUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
 
-                <set field="layoutSettings.companyName" from-field="uiLabelMap.BusinessIntelligenceCompanyName" global="true"/>
-                <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.BusinessIntelligenceCompanySubtitle" global="true"/>
+                <set field="layoutSettings.companyName" from-field="uiLabelMap.BiCompanyName" global="true"/>
+                <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.BiCompanySubtitle" global="true"/>
                 <set field="activeApp" value="bi" global="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/${activeApp}/images/${activeApp}.js" global="true"/>
                 <set field="applicationMenuName" value="BiAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://bi/widget/BiMenus.xml" global="true"/>
-                <set field="applicationTitle" from-field="uiLabelMap.BusinessIntelligenceApplication" global="true"/>
+                <set field="applicationTitle" from-field="uiLabelMap.BiApplication" global="true"/>
             </actions>
             <widgets>
                 <include-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml"/>
@@ -46,7 +46,7 @@ under the License.
                 <if-has-permission permission="BI" action="_VIEW"/>
             </condition>
             <actions>
-                <set field="titleProperty" value="BusinessIntelligenceMainPage"/>
+                <set field="titleProperty" value="BiMainPage"/>
                 <set field="headerItem" value="main"/>
                 <property-to-field resource="bi" property="fromDate" field="fromDateProp" no-locale="true"/>
                 <property-to-field resource="bi" property="thruDate" field="thruDateProp" no-locale="true"/>
@@ -63,15 +63,15 @@ under the License.
                                 </platform-specific>
                             </container>
                             <container>
-                                <link target="initDwh" text="${uiLabelMap.BusinessIntelligenceQuickInitDataWarehouse}" style="buttontext">
+                                <link target="initDwh" text="${uiLabelMap.BiQuickInitDataWarehouse}" style="buttontext">
                                     <parameter param-name="fromDate"/>
                                     <parameter param-name="thruDate"/>
                                 </link>
                                 <label style="note"> (${uiLabelMap.CommonFromDate} ${fromDate} ${uiLabelMap.CommonThruDate} ${thruDate})</label>
                                 <label style="note">
-                                    ${uiLabelMap.BusinessIntelligenceNote29}
-                                    ${uiLabelMap.BusinessIntelligenceNote30}
-                                    ${uiLabelMap.BusinessIntelligenceNote31}
+                                    ${uiLabelMap.BiNote29}
+                                    ${uiLabelMap.BiNote30}
+                                    ${uiLabelMap.BiNote31}
                                 </label>
                             </container>
                         </screenlet>
@@ -83,14 +83,14 @@ under the License.
     <screen name="ReportBuilder">
         <section>
             <actions>
-                <set field="titleProperty" value="BusinessIntelligenceReportBuilder"/>
+                <set field="titleProperty" value="BiReportBuilder"/>
                 <set field="headerItem" value="reportbuilder"/>
                 <script location="component://bi/groovyScripts/reportBuilder/GetStarSchemas.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.BusinessIntelligenceReportBuilderSelectStarSchema}">
+                        <screenlet title="${uiLabelMap.BiReportBuilderSelectStarSchema}">
                             <platform-specific>
                                 <html><html-template location="component://bi/template/reportbuilder/SelectStarSchema.ftl"/></html>
                             </platform-specific>
@@ -120,7 +120,7 @@ under the License.
     <screen name="StarSchemaReport">
         <section>
             <actions>
-                <set field="titleProperty" value="BusinessIntelligenceReportBuilderRenderStarSchemaReport"/>
+                <set field="titleProperty" value="BiReportBuilderRenderStarSchemaReport"/>
                 <set field="headerItem" value="reportbuilder"/>
                 <script location="component://bi/groovyScripts/reportbuilder/RunStarSchemaQuery.groovy"/>
             </actions>
