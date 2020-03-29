@@ -29,6 +29,19 @@ under the License.
     <!-- ========================================================= -->
     <!-- Dimensions                                                -->
     <!-- ========================================================= -->
+    <entity entity-name="AssetDimension" package-name="org.apache.ofbiz.bi.dimension" title="Assets Dimension">
+        <description>Dimension of assets. The natural key is [fixedAssetId]</description>
+        <field name="dimensionId" type="integer">
+            <description>Unique identifier of the Asset dimension record</description>
+        </field>
+        <field name="fixedAssetId" type="id">
+            <description>The natural key. From FixedAsset.fixedAssetId</description>
+        </field>
+        <field name="fixedAssetName" type="description">
+            <description>Name of the fixed asset.</description>
+        </field>
+        <prim-key field="dimensionId"/>
+    </entity>
     <entity entity-name="CarrierDimension" package-name="org.apache.ofbiz.bi.dimension" title="Carriers Dimension">
         <description>Dimension of carriers. The natural key is [partyId]</description>
         <field name="dimensionId" type="integer">
