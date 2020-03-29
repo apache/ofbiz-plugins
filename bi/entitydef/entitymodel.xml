@@ -349,15 +349,30 @@ under the License.
 
     <entity entity-name="SalesOrderItemFact" package-name="org.apache.ofbiz.bi.fact.order" title="Sales Order Item Fact">
         <description>A transaction fact entity with order item grain.</description>
-        <field name="orderId" type="id"></field> <!-- degenerate dimension -->
-        <field name="orderItemSeqId" type="id"></field> <!-- degenerate dimension -->
-        <field name="orderDateDimId" type="integer"></field>
-        <field name="organisationDimId" type="integer"></field>
-        <field name="customerDimId" type="integer"></field>
-        <field name="storeDimId" type="integer"></field>
-        <field name="productDimId" type="integer"></field>
-        <field name="origCurrencyDimId" type="id"></field>
-
+        <field name="orderId" type="id">
+            <description>The order id. A degenerate dimension</description>
+        </field>
+        <field name="orderItemSeqId" type="id">
+            <description>The order line item. A degenerate dimension</description>
+        </field>
+        <field name="orderDateDimId" type="integer">
+            <description>The date of the order</description>
+        </field>
+        <field name="organisationDimId" type="integer">
+            <description>The associated internal organisation</description>
+        </field>
+        <field name="customerDimId" type="integer">
+            <description>The associated customer</description>
+        </field>
+        <field name="storeDimId" type="integer">
+            <description>The associated store</description>
+        </field>
+        <field name="productDimId" type="integer">
+            <description>The associated product</description>
+        </field>
+        <field name="origCurrencyDimId" type="id">
+            <description>The associated currency</description>
+        </field>
         <field name="productCategoryId" type="id"></field>
         <field name="salesChannelEnumId" type="id"></field>
         <field name="statusId" type="id"></field>
@@ -531,30 +546,44 @@ under the License.
         </view-link>
     </view-entity>
 
-    <view-entity entity-name="SalesOrderItemStarSchema" package-name="org.apache.ofbiz.bi.starschema.order" title="Sales Order Item Star Schema">
+    <view-entity entity-name="SalesOrderItemStarSchema" package-name="org.apache.ofbiz.bi.starschema" title="Sales Order Item Star Schema">
         <description>Order Item star schema (Profit and Loss Statement).</description>
 
-        <member-entity entity-alias="SOIF" entity-name="SalesOrderItemFact"/>
-        <member-entity entity-alias="ODD" entity-name="DateDimension"/>
-        <member-entity entity-alias="PD" entity-name="ProductDimension"/>
-        <member-entity entity-alias="CD" entity-name="CurrencyDimension"/>
+        <member-entity entity-alias="SOISS_SOIF" entity-name="SalesOrderItemFact"/>
+        <member-entity entity-alias="SOISS_CD" entity-name="CurrencyDimension"/>
+        <member-entity entity-alias="SOISS_CUSTD" entity-name="CustomerDimension"/>
+        <member-entity entity-alias="SOISS_DD" entity-name="DateDimension"/>
+        <member-entity entity-alias="SOISS_INTORGD" entity-name="OrganisationDimension"/>
+        <member-entity entity-alias="SOISS_STORED" entity-name="StoreDimension"/>
+        <member-entity entity-alias="SOISS_PD" entity-name="ProductDimension"/>
 
-        <alias-all entity-alias="ODD" prefix="orderDate" group-by="true">
+        <alias-all entity-alias="SOISS_CD" prefix="currency" group-by="true">
             <exclude field="dimensionId"/>
         </alias-all>
-        <alias-all entity-alias="PD" prefix="product" group-by="true">
+        <alias-all entity-alias="SOISS_CUSTD" prefix="customer" group-by="true">
             <exclude field="dimensionId"/>
         </alias-all>
-        <alias-all entity-alias="CD" prefix="currency" group-by="true">
+        <alias-all entity-alias="SOISS_DD" prefix="date" group-by="true">
             <exclude field="dimensionId"/>
         </alias-all>
-        <alias-all entity-alias="SOIF" function="sum">
+        <alias-all entity-alias="SOISS_INTORGD" prefix="intOrg" group-by="true">
+            <exclude field="dimensionId"/>
+        </alias-all>
+        <alias-all entity-alias="SOISS_STORED" prefix="store" group-by="true">
+            <exclude field="dimensionId"/>
+        </alias-all>
+        <alias-all entity-alias="SOISS_PD" prefix="product" group-by="true">
+            <exclude field="dimensionId"/>
+        </alias-all>
+
+        <alias-all entity-alias="SOISS_SOIF" function="sum">
             <exclude field="orderId"/>
             <exclude field="orderItemSeqId"/>
             <exclude field="orderDateDimId"/>
+            <exclude field="organisationDimId"/>
+            <exclude field="customerDimId"/>
             <exclude field="productDimId"/>
             <exclude field="origCurrencyDimId"/>
-            <exclude field="customerDimId"/>
             <exclude field="productCategoryId"/>
             <exclude field="storeDimId"/>
             <exclude field="salesChannelEnumId"/>
@@ -564,24 +593,37 @@ under the License.
             <exclude field="account"/>
             <exclude field="productPromoCode"/>
         </alias-all>
-        <alias entity-alias="SOIF" name="orderId" group-by="true"/>
-        <alias entity-alias="SOIF" name="productPromoCode" group-by="true"/>
-        <alias entity-alias="SOIF" name="orderItemSeqId" group-by="true"/>
-        <alias entity-alias="SOIF" name="productCategoryId" group-by="true"/>
-        <alias entity-alias="SOIF" name="salesChannelEnumId" group-by="true"/>
-        <alias entity-alias="SOIF" name="statusId" group-by="true"/>
-        <alias entity-alias="SOIF" name="brand" group-by="true"/>
-        <alias entity-alias="SOIF" name="pod" group-by="true"/>
-        <alias entity-alias="SOIF" name="account" group-by="true"/>
+        <alias entity-alias="SOISS_SOIF" name="orderId" group-by="true"/>
+        <alias entity-alias="SOISS_SOIF" name="orderItemSeqId" group-by="true"/>
+        <alias entity-alias="SOISS_SOIF" name="organisationDimId" group-by="true"/>
+        <alias entity-alias="SOISS_SOIF" name="storeDimId" group-by="true"/>
+        <alias entity-alias="SOISS_SOIF" name="customerDimId" group-by="true"/>
+        <alias entity-alias="SOISS_SOIF" name="productDimId" group-by="true"/>
+        <alias entity-alias="SOISS_SOIF" name="productPromoCode" group-by="true"/>
+        <alias entity-alias="SOISS_SOIF" name="productCategoryId" group-by="true"/>
+        <alias entity-alias="SOISS_SOIF" name="salesChannelEnumId" group-by="true"/>
+        <alias entity-alias="SOISS_SOIF" name="statusId" group-by="true"/>
+        <alias entity-alias="SOISS_SOIF" name="brand" group-by="true"/>
+        <alias entity-alias="SOISS_SOIF" name="pod" group-by="true"/>
+        <alias entity-alias="SOISS_SOIF" name="account" group-by="true"/>
 
-        <view-link entity-alias="SOIF" rel-entity-alias="ODD">
+        <view-link entity-alias="SOISS_SOIF" rel-entity-alias="SOISS_DD">
             <key-map field-name="orderDateDimId" rel-field-name="dimensionId"/>
         </view-link>
-        <view-link entity-alias="SOIF" rel-entity-alias="PD">
+        <view-link entity-alias="SOISS_SOIF" rel-entity-alias="SOISS_CD">
+            <key-map field-name="origCurrencyDimId" rel-field-name="dimensionId"/>
+        </view-link>
+        <view-link entity-alias="SOISS_SOIF" rel-entity-alias="SOISS_CUSTD">
+            <key-map field-name="customerDimId" rel-field-name="dimensionId"/>
+        </view-link>
+        <view-link entity-alias="SOISS_SOIF" rel-entity-alias="SOISS_INTORGD">
+            <key-map field-name="organisationDimId" rel-field-name="dimensionId"/>
+        </view-link>
+        <view-link entity-alias="SOISS_SOIF" rel-entity-alias="SOISS_PD">
             <key-map field-name="productDimId" rel-field-name="dimensionId"/>
         </view-link>
-        <view-link entity-alias="SOIF" rel-entity-alias="CD">
-            <key-map field-name="origCurrencyDimId" rel-field-name="dimensionId"/>
+        <view-link entity-alias="SOISS_SOIF" rel-entity-alias="SOISS_STORED">
+            <key-map field-name="storeDimId" rel-field-name="dimensionId"/>
         </view-link>
     </view-entity>
 
