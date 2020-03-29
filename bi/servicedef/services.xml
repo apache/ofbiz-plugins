@@ -45,6 +45,10 @@ under the License.
     </service>
 
     <!-- Common Dimensions -->
+    <service name="loadAssetDimension" auth="true" engine="groovy"
+        location="component://bi/groovyScripts/DimensionServices.groovy" invoke="loadAssetDimension">
+        <description>Load records in the AssetDimension entity using the update strategy of 'type 1': overwrite the values of the attributes</description>
+    </service>
     <service name="loadCountryDimension" auth="true" engine="groovy"
         location="component://bi/groovyScripts/DimensionServices.groovy" invoke="loadCountryDimension">
         <description>Load records in the CountryDimension entity using the update strategy of 'type 1': overwrite the values of the attributes</description>

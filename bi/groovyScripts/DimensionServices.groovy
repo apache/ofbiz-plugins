@@ -29,6 +29,9 @@ def quickInitDataWarehouse() {
     Map inMap = dispatcher.getDispatchContext().makeValidContext("loadDateDimension", ModelService.IN_PARAM, parameters)
     serviceResult = run service: "loadDateDimension", with: inMap
     if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+    // load records in the Asset Dimension
+    serviceResult = run service: "loadAssetDimension"
+    if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
     // load records in the Country Dimension
     serviceResult = run service: "loadCountryDimension"
     if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
@@ -100,6 +103,25 @@ def quickInitDataWarehouse() {
         if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
     }
 }
+
+def loadAssetDimension() {
+    // Initialize the AssetDimension using the update strategy of 'type 1
+    dimensionEntityName = "AssetDimension";
+    queryListIterator = from("FixedAsset").queryIterator();
+    while(fixedAsset = queryListIterator.next()){
+        fixedAssetId = fixedAsset.fixedAssetId;
+        dimRecord = getDimensionRecord(dimensionEntityName,"fixedAssetId", fixedAssetId);
+        if(!dimRecord) {
+            dimensionId = delegator.getNextSeqId(dimensionEntityName);
+            newEntity = makeValue(dimensionEntityName);
+            newEntity.dimensionId = dimensionId;
+            newEntity.fixedAssetId = fixedAssetId;
+            newEntity.fixedAssetName = fixedAsset.fixedAssetName;
+            newEntity.create();
+        };
+    };
+    queryListIterator.close();
+};
 
 def loadCountryDimension(){
     // Initialize the CountryDimension using the update strategy of 'type 1
