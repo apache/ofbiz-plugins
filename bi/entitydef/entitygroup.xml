@@ -33,6 +33,7 @@ under the License.
     <entity-group group="org.apache.ofbiz.olap" entity="FacilityDimension"/>
     <entity-group group="org.apache.ofbiz.olap" entity="OrganisationDimension"/>
     <entity-group group="org.apache.ofbiz.olap" entity="ProductDimension"/>
+    <entity-group group="org.apache.ofbiz.olap" entity="ProjectDimension"/>
     <entity-group group="org.apache.ofbiz.olap" entity="StoreDimension"/>
     <entity-group group="org.apache.ofbiz.olap" entity="TimeDimension"/>
 
