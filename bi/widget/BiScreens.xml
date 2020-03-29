@@ -37,22 +37,17 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
+                            <content content-id="BI_MAIN"/>
+                        </screenlet>
+                        <container>
+                            <link target="initDwh" text="${uiLabelMap.BiInitialiseDwh}" style="buttontext">
+                                <parameter param-name="fromDate"/>
+                                <parameter param-name="thruDate"/>
+                            </link>
+                        </container>
+                        <screenlet>
                             <container>
-                                <platform-specific>
-                                    <html><html-template location="component://bi/template/Main.ftl"/></html>
-                                </platform-specific>
-                            </container>
-                            <container>
-                                <link target="initDwh" text="${uiLabelMap.BiQuickInitDataWarehouse}" style="buttontext">
-                                    <parameter param-name="fromDate"/>
-                                    <parameter param-name="thruDate"/>
-                                </link>
                                 <label style="note"> (${uiLabelMap.CommonFromDate} ${fromDate} ${uiLabelMap.CommonThruDate} ${thruDate})</label>
-                                <label style="note">
-                                    ${uiLabelMap.BiNote29}
-                                    ${uiLabelMap.BiNote30}
-                                    ${uiLabelMap.BiNote31}
-                                </label>
                             </container>
                         </screenlet>
                     </decorator-section>
