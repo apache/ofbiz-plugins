@@ -267,7 +267,6 @@ def loadSalesOrderItemFact() {
             fact = makeValue("SalesOrderItemFact")
             fact.orderId = orderId
             fact.orderItemSeqId = orderItem.orderItemSeqId
-            fact.salesChannelEnumId = orderHeader.salesChannelEnumId
             fact.statusId = orderItem.statusId
             
             // Convert billFromVendor
@@ -300,7 +299,7 @@ def loadSalesOrderItemFact() {
             } else {
                 fact.customerDimId = "1"
             }
-            // store
+            // Convert storeId
             if (orderHeader.productStoreId) {
                 naturalKeyFields = [:]
                 naturalKeyFields.productStoreId = orderHeader.productStoreId
@@ -314,6 +313,21 @@ def loadSalesOrderItemFact() {
                 }
             } else {
                 fact.storeDimId = "1"
+            }
+            // Convert salesChannelId
+            if (orderHeader.salesChannelEnumId) {
+                naturalKeyFields = [:]
+                naturalKeyFields.salesChannelId = orderHeader.salesChannelEnumId
+                inMap = [:]
+                inMap.dimensionEntityName = "SalesChannelDimension"
+                inMap.naturalKeyFields = naturalKeyFields
+                serviceResult = run service: "getDimensionIdFromNaturalKey", with: inMap
+                fact.salesChannelDimId = serviceResult.dimensionId
+                if (!fact.salesChannelDimId) {
+                    fact.salesChannelDimId = "0"
+                }
+            } else {
+                fact.salesChannelDimId = "1"
             }
             // pod
             if ("EUR".equals(orderHeader.currencyUom)) {
