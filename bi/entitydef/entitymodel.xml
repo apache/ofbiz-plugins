@@ -609,6 +609,7 @@ under the License.
         <member-entity entity-alias="SOISS_DD" entity-name="DateDimension"/>
         <member-entity entity-alias="SOISS_INTORGD" entity-name="OrganisationDimension"/>
         <member-entity entity-alias="SOISS_STORED" entity-name="StoreDimension"/>
+        <member-entity entity-alias="SOISS_CHAND" entity-name="SalesChannelDimension"/>
         <member-entity entity-alias="SOISS_PD" entity-name="ProductDimension"/>
 
         <alias-all entity-alias="SOISS_CD" prefix="currency" group-by="true">
@@ -626,6 +627,9 @@ under the License.
         <alias-all entity-alias="SOISS_STORED" prefix="store" group-by="true">
             <exclude field="dimensionId"/>
         </alias-all>
+        <alias-all entity-alias="SOISS_CHAND" prefix="channel" group-by="true">
+            <exclude field="dimensionId"/>
+        </alias-all>
         <alias-all entity-alias="SOISS_PD" prefix="product" group-by="true">
             <exclude field="dimensionId"/>
         </alias-all>
@@ -639,8 +643,8 @@ under the License.
             <exclude field="productDimId"/>
             <exclude field="origCurrencyDimId"/>
             <exclude field="productCategoryId"/>
+            <exclude field="salesChannelDimId"/>
             <exclude field="storeDimId"/>
-            <exclude field="salesChannelEnumId"/>
             <exclude field="statusId"/>
             <exclude field="brand"/>
             <exclude field="pod"/>
@@ -651,11 +655,11 @@ under the License.
         <alias entity-alias="SOISS_SOIF" name="orderItemSeqId" group-by="true"/>
         <alias entity-alias="SOISS_SOIF" name="organisationDimId" group-by="true"/>
         <alias entity-alias="SOISS_SOIF" name="storeDimId" group-by="true"/>
+        <alias entity-alias="SOISS_SOIF" name="salesChannelDimId" group-by="true"/>
         <alias entity-alias="SOISS_SOIF" name="customerDimId" group-by="true"/>
         <alias entity-alias="SOISS_SOIF" name="productDimId" group-by="true"/>
         <alias entity-alias="SOISS_SOIF" name="productPromoCode" group-by="true"/>
         <alias entity-alias="SOISS_SOIF" name="productCategoryId" group-by="true"/>
-        <alias entity-alias="SOISS_SOIF" name="salesChannelEnumId" group-by="true"/>
         <alias entity-alias="SOISS_SOIF" name="statusId" group-by="true"/>
         <alias entity-alias="SOISS_SOIF" name="brand" group-by="true"/>
         <alias entity-alias="SOISS_SOIF" name="pod" group-by="true"/>
@@ -678,6 +682,9 @@ under the License.
         </view-link>
         <view-link entity-alias="SOISS_SOIF" rel-entity-alias="SOISS_STORED">
             <key-map field-name="storeDimId" rel-field-name="dimensionId"/>
+        </view-link>
+        <view-link entity-alias="SOISS_SOIF" rel-entity-alias="SOISS_CHAND">
+            <key-map field-name="salesChannelDimId" rel-field-name="dimensionId"/>
         </view-link>
     </view-entity>
 
