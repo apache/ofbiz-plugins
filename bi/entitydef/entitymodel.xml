@@ -429,7 +429,6 @@ under the License.
             <description>The associated currency</description>
         </field>
         <field name="productCategoryId" type="id"></field>
-        <field name="salesChannelEnumId" type="id"></field>
         <field name="statusId" type="id"></field>
 
         <field name="brand" type="name"></field>
