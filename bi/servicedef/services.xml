@@ -117,6 +117,11 @@ under the License.
         location="component://bi/groovyScripts/DimensionServices.groovy" invoke="loadProjectDimension">
         <description>Load records in the ProjectDimension entity using the update strategy of 'type 1': overwrite the values of the attributes</description>
     </service>
+    <!-- SalesChannelDimension -->
+    <service name="loadSalesChannelDimension" auth="true" engine="groovy"
+        location="component://bi/groovyScripts/DimensionServices.groovy" invoke="loadSalesChannelDimension">
+        <description>Load records in the SalesChannelDimension entity using the update strategy of 'type 1': overwrite the values of the attributes</description>
+    </service>
 
     <!-- Invoice Facts -->
     <service name="loadSalesInvoiceItemFact" auth="true" engine="groovy"

@@ -57,6 +57,9 @@ def initDwh() {
     // load records in the Project Dimension
     serviceResult = run service: "loadProjectDimension"
     if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+    // load records in the Sales Channel Dimension
+    serviceResult = run service: "loadSalesChannelDimension"
+    if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
     // load records in the Supplier Dimension
     inMap.clear()
     inMap.role="Supplier"
@@ -307,6 +310,25 @@ def loadProjectDimension() {
             newEntity.dimensionId = dimensionId
             newEntity.projectId = projectId
             newEntity.projectName = workEffort.workEffortName
+            newEntity.create()
+       };
+    };
+    queryListIterator.close()
+}
+
+def loadSalesChannelDimension() {
+    // Initialize the Sales Channel Dimension using the update strategy of 'type 1
+    dimensionEntityName = "SalesChannelDimension"
+    queryListIterator = from("Enumeration").where(enumTypeId: "ORDER_SALES_CHANNEL").queryIterator()
+    while(enumeration = queryListIterator.next()){
+        enumId = enumeration.enumId
+        dimRecord = getDimensionRecord(dimensionEntityName,"salesChannelId", enumId)
+        if(!dimRecord) {
+            dimensionId = delegator.getNextSeqId(dimensionEntityName)
+            newEntity = makeValue(dimensionEntityName)
+            newEntity.dimensionId = dimensionId
+            newEntity.salesChannelId = enumId
+            newEntity.description = enumeration.description
             newEntity.create()
         };
     };
