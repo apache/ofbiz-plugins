@@ -419,6 +419,9 @@ under the License.
         <field name="storeDimId" type="integer">
             <description>The associated store</description>
         </field>
+        <field name="salesChannelDimId" type="integer">
+            <description>The associated sales channel</description>
+        </field>
         <field name="productDimId" type="integer">
             <description>The associated product</description>
         </field>
