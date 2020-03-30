@@ -51,6 +51,26 @@
     <ProductDimension dimensionId="1" productId="_NA_"
         internalName="Product Not Set." />
 
+    <ProjectDimension dimensionId="0" projectId="_NF_"
+        internalName="Project Not Found." />
+    <ProjectDimension dimensionId="1" projectId="_NA_"
+        internalName="Project Not Set." />
+
+    <ProjectTaskDimension dimensionId="0" projectTaskId="_NF_"
+        internalName="Project Task Not Found." />
+    <ProjectTaskDimension dimensionId="1" projectTaskId="_NA_"
+        internalName="Project Task Not Set." />
+
+    <SalesChannelDimension dimensionId="0" salesChannelId="_NF_"
+        description="Sales Channel Not Found." />
+    <SalesChannelDimension dimensionId="1" salesChannelId="_NA_"
+        description="Sales Channel Not Set." />
+
+    <StoreDimension dimensionId="0" storeId="_NF_"
+        internalName="Store Not Found." />
+    <StoreDimension dimensionId="1" storeId="_NA_"
+        internalName="Store Not Set." />
+
     <TimeDimension dimensionId="2359" timeValue="23:59:00"
         hr="23" mn="59" />
     <TimeDimension dimensionId="2358" timeValue="23:58:00"

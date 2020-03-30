@@ -242,6 +242,19 @@ under the License.
         </field>
         <prim-key field="dimensionId"/>
     </entity>
+    <entity entity-name="SalesChannelDimension" package-name="org.apache.ofbiz.bi.dimension" title="Sales Channels Dimension">
+        <description>Dimension of sales channels. The natural key is [enumId]</description>
+        <field name="dimensionId" type="integer">
+            <description>Unique identifier of the dimension record</description>
+        </field>
+        <field name="salesChannelId" type="id">
+            <description>The natural key. From Enumeration.enumId</description>
+        </field>
+        <field name="description" type="description">
+            <description>Description. From Enumeration.description.</description>
+        </field>
+        <prim-key field="dimensionId"/>
+    </entity>
     <entity entity-name="StoreDimension" package-name="org.apache.ofbiz.bi.dimension" title="Stores Dimension">
         <description>Dimension of stores. The natural key is [productStoreId]</description>
         <field name="dimensionId" type="integer">
