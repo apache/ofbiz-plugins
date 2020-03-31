@@ -60,6 +60,9 @@ def initDwh() {
     // load records in the Sales Channel Dimension
     serviceResult = run service: "loadSalesChannelDimension"
     if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+    // load records in the Sales Promo Dimension
+    serviceResult = run service: "loadSalesPromoDimension"
+    if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
     // load records in the Supplier Dimension
     inMap.clear()
     inMap.role="Supplier"
@@ -329,6 +332,25 @@ def loadSalesChannelDimension() {
             newEntity.dimensionId = dimensionId
             newEntity.salesChannelId = enumId
             newEntity.description = enumeration.description
+            newEntity.create()
+        };
+    };
+    queryListIterator.close()
+}
+
+def loadSalesPromoDimension() {
+    // Initialize the Sales Promo Dimension using the update strategy of 'type 1
+    dimensionEntityName = "SalesPromoDimension"
+    queryListIterator = from("ProductPromo").queryIterator()
+    while(promo = queryListIterator.next()){
+        promoId = promo.productPromoId
+        dimRecord = getDimensionRecord(dimensionEntityName,"salesPromoId", promoId)
+        if(!dimRecord) {
+            dimensionId = delegator.getNextSeqId(dimensionEntityName)
+            newEntity = makeValue(dimensionEntityName)
+            newEntity.dimensionId = dimensionId
+            newEntity.salesPromoId = promoId
+            newEntity.salesPromoName = promo.promoName
             newEntity.create()
         };
     };
