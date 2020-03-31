@@ -36,6 +36,7 @@ under the License.
     <entity-group group="org.apache.ofbiz.olap" entity="ProjectDimension"/>
     <entity-group group="org.apache.ofbiz.olap" entity="ProjectTaskDimension"/>
     <entity-group group="org.apache.ofbiz.olap" entity="SalesChannelDimension"/>
+    <entity-group group="org.apache.ofbiz.olap" entity="SalesPromoDimension"/>
     <entity-group group="org.apache.ofbiz.olap" entity="StoreDimension"/>
     <entity-group group="org.apache.ofbiz.olap" entity="TimeDimension"/>
 
