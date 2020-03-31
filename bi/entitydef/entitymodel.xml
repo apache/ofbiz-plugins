@@ -351,33 +351,6 @@ under the License.
         <field name="contributionAmount" type="currency-precise">
             <description>Extended net amount less all the costs.</description>
         </field>
-        <!--
-        TODO: implement multi-currency fields
-        <field name="extGrossAmountOrig" type="currency-precise">
-            <description>Extended gross amount in the original currency: quantity invoiced multiplied by the list unit price.</description>
-        </field>
-        <field name="extDiscountAmountOrig" type="currency-precise">
-            <description>Extended discount amount in the original currency.</description>
-        </field>
-        <field name="extNetAmountOrig" type="currency-precise">
-            <description>Extended net amount in the original currency: gross amount less discounts.</description>
-        </field>
-        <field name="extManFixedCostOrig" type="currency-precise">
-            <description>Extended manufacturing fixed cost in the original currency.</description>
-        </field>
-        <field name="extManVarCostOrig" type="currency-precise">
-            <description>Extended manufacturing variable cost in the original currency.</description>
-        </field>
-        <field name="extStorageCostOrig" type="currency-precise">
-            <description>Extended storage cost in the original currency.</description>
-        </field>
-        <field name="extDistributionCostOrig" type="currency-precise">
-            <description>Extended distribution cost in the original currency.</description>
-        </field>
-        <field name="contributionAmountOrig" type="currency-precise">
-            <description>Extended net amount less all the costs in the original currency.</description>
-        </field>
-        -->
 
         <prim-key field="invoiceId"/>
         <prim-key field="invoiceItemSeqId"/>
@@ -691,7 +664,6 @@ under the License.
     <view-entity entity-name="InventoryItemStarSchema" package-name="org.apache.ofbiz.bi.starschema" title="Inventory Item Star Schema">
         <description>"Inventory Item StarSchema.</description>
         <member-entity entity-alias="IISS_IIF" entity-name="InventoryItemFact"/>
-        <!--member-entity entity-alias="SIIF" entity-name="SalesOrderItemFact"/-->
         <member-entity entity-alias="IISS_FACILITY" entity-name="FacilityDimension"/>
         <member-entity entity-alias="IISS_INTORG" entity-name="OrganisationDimension"/>
         <member-entity entity-alias="IISS_PD" entity-name="ProductDimension"/>
@@ -707,17 +679,6 @@ under the License.
             <exclude field="productDimId"/>
             <exclude field="origCurrencyDimId"/>
         </alias-all>
-        <!--alias-all entity-alias="SIIF" function="sum">
-            <exclude field="orderItemSeqId"/>
-            <exclude field="orderDateDimId"/>
-            <exclude field="productDimId"/>
-            <exclude field="billToCustomerDimId"/>
-            <exclude field="origCurrencyDimId"/>
-            <exclude field="orderId"/>
-            <exclude field="orderItemSeqId"/>
-            <exclude field="orderStatus"/>
-            <exclude field="saleChanel"/>
-        </alias-all-->
         <alias-all entity-alias="IISS_PD" prefix="product" group-by="true">
             <exclude field="dimensionId"/>
         </alias-all>
@@ -761,9 +722,6 @@ under the License.
         <view-link entity-alias="IISS_IIF" rel-entity-alias="IISS_INTORG" rel-optional="true">
             <key-map field-name="organisationDimId" rel-field-name="dimensionId"/>
         </view-link>
-        <!--view-link entity-alias="PD" rel-entity-alias="SIIF" rel-optional="true">
-            <key-map field-name="dimensionId" rel-field-name="productDimId"/>
-        </view-link-->
         <view-link entity-alias="IISS_IIF" rel-entity-alias="IISS_IDD">
             <key-map field-name="inventoryDateDimId" rel-field-name="dimensionId"/>
         </view-link>
