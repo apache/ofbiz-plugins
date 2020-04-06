@@ -117,7 +117,7 @@ import com.ebay.soap.eBLBaseComponents.TransactionType;
 import com.ebay.soap.eBLBaseComponents.UserType;
 
 public class EbayStoreAutoPreferences {
-    public static String module = EbayStoreAutoPreferences.class.getName();
+    public static String MODULE = EbayStoreAutoPreferences.class.getName();
     private static final String resource = "EbayStoreUiLabels";
 
     public EbayStoreAutoPreferences() {
@@ -204,7 +204,7 @@ public class EbayStoreAutoPreferences {
                                     leaveFeedbackCall.setTargetUser(item.getBuyerID());
                                     leaveFeedbackCall.setTransactionID(String.valueOf(soldTran.getTransactionID()));
                                     leaveFeedbackCall.leaveFeedback();
-                                    Debug.logInfo("Auto leave feedback with site ".concat(apiContext.getSite().value()).concat("itemId ".concat(soldTran.getItemID())).concat(" comment is ".concat(comment)), module);
+                                    Debug.logInfo("Auto leave feedback with site ".concat(apiContext.getSite().value()).concat("itemId ".concat(soldTran.getItemID())).concat(" comment is ".concat(comment)), MODULE);
                                 }
                             }
                         }
@@ -286,7 +286,7 @@ public class EbayStoreAutoPreferences {
                 if (ServiceUtil.isError(resultMap)) {
                     String errorMessage = ServiceUtil.getErrorMessage(resultMap);
                     request.setAttribute("_ERROR_MESSAGE_", errorMessage);
-                    Debug.logError(errorMessage, module);
+                    Debug.logError(errorMessage, MODULE);
                     return "error";
                 }
             } else {
@@ -294,7 +294,7 @@ public class EbayStoreAutoPreferences {
                 if (ServiceUtil.isError(resultMap)) {
                     String errorMessage = ServiceUtil.getErrorMessage(resultMap);
                     request.setAttribute("_ERROR_MESSAGE_", errorMessage);
-                    Debug.logError(errorMessage, module);
+                    Debug.logError(errorMessage, MODULE);
                     return "error";
                 }
             }
@@ -355,7 +355,7 @@ public class EbayStoreAutoPreferences {
                                     Calendar afterShippedTime = orderStatus.getShippedTime();
                                     afterShippedTime.add(Calendar.DAY_OF_MONTH, afterDays);
                                     Debug.logInfo("Verify date for send reminder feedback eamil by auto service: buyer " + solditem.getBuyerID() + " seller shippedTime " +
-                                            "" + formatter.format(shippedTime) + " codition days " + afterDays + " after shippedTime :" + formatter.format(afterShippedTime) + " now date" + formatter.format(right_now), module);
+                                            "" + formatter.format(shippedTime) + " codition days " + afterDays + " after shippedTime :" + formatter.format(afterShippedTime) + " now date" + formatter.format(right_now), MODULE);
                                     // if now date is after shipped time follow after days condition would be send reminder email to buyer
                                     if (right_now.after(afterShippedTime)) {
                                         items.add(solditem);
@@ -387,7 +387,7 @@ public class EbayStoreAutoPreferences {
                             try {
                                 dispatcher.runAsync("sendMailFromScreen", sendMap);
                             } catch (GenericServiceException e) {
-                                Debug.logError(e, module);
+                                Debug.logError(e, MODULE);
                                 return ServiceUtil.returnError(e.getMessage());
                             }
                         }
@@ -519,7 +519,7 @@ public class EbayStoreAutoPreferences {
                             GenericValue productStore = EntityQuery.use(delegator).from("Product").where("productId", product.getString("productId")).queryOne();
                             productStore.set("isVirtual", "Y");
                             productStore.store();
-                            Debug.logInfo("Relisted Item - " + product.getString("productId"), module);
+                            Debug.logInfo("Relisted Item - " + product.getString("productId"), MODULE);
                         }
                     }
                 }
@@ -747,7 +747,7 @@ public class EbayStoreAutoPreferences {
                             try {
                                 dispatcher.runAsync("sendMailFromScreen", sendMap);
                             } catch (GenericServiceException e) {
-                                Debug.logError(e, module);
+                                Debug.logError(e, MODULE);
                                 return ServiceUtil.returnError(e.getMessage());
                             }
                         }
@@ -901,7 +901,7 @@ public class EbayStoreAutoPreferences {
                                         resp = (AddOrderResponseType) call.execute(req);
                                         if (resp != null && "SUCCESS".equals(resp.getAck().toString())) {
                                             String orderId = resp.getOrderID();
-                                            Debug.logInfo(":: new order id is = " + orderId, module);
+                                            Debug.logInfo(":: new order id is = " + orderId, MODULE);
                                         } else {
                                             EbayStoreHelper.createErrorLogMessage(userLogin, dispatcher, productStoreId, resp.getAck().toString(), "Add order : runCombineOrders", resp.getErrors(0).getLongMessage());
                                         }
@@ -1009,7 +1009,7 @@ public class EbayStoreAutoPreferences {
                                 try {
                                     dispatcher.runAsync("sendMailFromScreen", sendMap);
                                 } catch (GenericServiceException e) {
-                                    Debug.logError(e, module);
+                                    Debug.logError(e, MODULE);
                                     return ServiceUtil.returnError(e.getMessage());
                                 }
                             }
@@ -1072,7 +1072,7 @@ public class EbayStoreAutoPreferences {
                          try {
                              dispatcher.runAsync("sendMailFromScreen", sendMap);
                          } catch (Exception e) {
-                             Debug.logError(e, module);
+                             Debug.logError(e, MODULE);
                              return ServiceUtil.returnError(e.getMessage());
                          }
                         

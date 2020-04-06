@@ -28,7 +28,7 @@ import org.apache.ofbiz.base.util.Debug;
 
 public class PassportUtil {
 
-    public static final String module = PassportUtil.class.getName();
+    public static final String MODULE = PassportUtil.class.getName();
     
     public static final String ClientIdLabel = "ClientId";
     
@@ -113,7 +113,7 @@ public class PassportUtil {
             }
             prefix = "live";
         } catch (UnknownHostException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         }
         return prefix;
     }

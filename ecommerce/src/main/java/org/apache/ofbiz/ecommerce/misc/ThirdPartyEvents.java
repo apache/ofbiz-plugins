@@ -39,7 +39,7 @@ import org.apache.ofbiz.entity.util.EntityUtil;
 
 public class ThirdPartyEvents {
 
-    public static final String module = ThirdPartyEvents.class.getName();
+    public static final String MODULE = ThirdPartyEvents.class.getName();
 
     public final static String DISTRIBUTOR_ID = "_DISTRIBUTOR_ID_";
     public final static String AFFILIATE_ID = "_AFFILIATE_ID_";
@@ -111,7 +111,7 @@ public class ThirdPartyEvents {
         try {
             ecommercePropertiesUrl = request.getServletContext().getResource("/WEB-INF/ecommerce.properties");
         } catch (java.net.MalformedURLException e) {
-            Debug.logWarning(e, module);
+            Debug.logWarning(e, MODULE);
         }
 
         String store = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "distributor.store.customer");
@@ -129,7 +129,7 @@ public class ThirdPartyEvents {
         try {
             party = userLogin == null ? null : userLogin.getRelatedOne("Party", false);
         } catch (GenericEntityException gee) {
-            Debug.logWarning(gee, module);
+            Debug.logWarning(gee, MODULE);
         }
 
         if (party != null) {
@@ -155,13 +155,13 @@ public class ThirdPartyEvents {
                     toBeStored.add(delegator.makeValue("PartyRole", UtilMisc.toMap("partyId", distributorId, "roleTypeId", "DISTRIBUTOR")));
                     try {
                         delegator.storeAll(toBeStored);
-                        if (Debug.infoOn()) Debug.logInfo("Distributor for user " + party.getString("partyId") + " set to " + distributorId, module);
+                        if (Debug.infoOn()) Debug.logInfo("Distributor for user " + party.getString("partyId") + " set to " + distributorId, MODULE);
                     } catch (GenericEntityException gee) {
-                        Debug.logWarning(gee, module);
+                        Debug.logWarning(gee, MODULE);
                     }
                 } else {
                     // no distributorId is available
-                    Debug.logInfo("No distributor in session or already associated with user " + userLogin.getString("partyId"), module);
+                    Debug.logInfo("No distributor in session or already associated with user " + userLogin.getString("partyId"), MODULE);
                     return "success";
                 }
             } else {
@@ -171,7 +171,7 @@ public class ThirdPartyEvents {
             return "success";
         } else {
             // not logged in
-            Debug.logWarning("Cannot associate distributor since not logged in yet", module);
+            Debug.logWarning("Cannot associate distributor since not logged in yet", MODULE);
             return "success";
         }
     }
@@ -191,7 +191,7 @@ public class ThirdPartyEvents {
         try {
             ecommercePropertiesUrl = request.getServletContext().getResource("/WEB-INF/ecommerce.properties");
         } catch (java.net.MalformedURLException e) {
-            Debug.logWarning(e, module);
+            Debug.logWarning(e, MODULE);
         }
 
         String store = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "affiliate.store.customer");
@@ -206,7 +206,7 @@ public class ThirdPartyEvents {
         try {
             party = userLogin == null ? null : userLogin.getRelatedOne("Party", false);
         } catch (GenericEntityException gee) {
-            Debug.logWarning(gee, module);
+            Debug.logWarning(gee, MODULE);
         }
 
         if (party != null) {
@@ -224,13 +224,13 @@ public class ThirdPartyEvents {
                     partyRelationship.set("partyRelationshipTypeId", "SALES_AFFILIATE");
                     try {
                         delegator.create(partyRelationship);
-                        if (Debug.infoOn()) Debug.logInfo("Affiliate for user " + party.getString("partyId") + " set to " + affiliateId, module);
+                        if (Debug.infoOn()) Debug.logInfo("Affiliate for user " + party.getString("partyId") + " set to " + affiliateId, MODULE);
                     } catch (GenericEntityException gee) {
-                        Debug.logWarning(gee, module);
+                        Debug.logWarning(gee, MODULE);
                     }
                 } else {
                     // no distributorId is available
-                    Debug.logInfo("No affiliate in session or already associated with user " + userLogin.getString("partyId"), module);
+                    Debug.logInfo("No affiliate in session or already associated with user " + userLogin.getString("partyId"), MODULE);
                     return "success";
                 }
             } else {
@@ -240,7 +240,7 @@ public class ThirdPartyEvents {
             return "success";
         } else {
             // not logged in
-            Debug.logWarning("Cannot associate affiliate since not logged in yet", module);
+            Debug.logWarning("Cannot associate affiliate since not logged in yet", MODULE);
             return "success";
         }
     }
@@ -249,7 +249,7 @@ public class ThirdPartyEvents {
         try {
             return EntityUtil.getFirst(EntityUtil.filterByDate(party.getRelated("FromPartyRelationship", UtilMisc.toMap("roleTypeIdTo", roleTypeTo), null, false), true));
         } catch (GenericEntityException gee) {
-            Debug.logWarning(gee, module);
+            Debug.logWarning(gee, MODULE);
         }
         return null;
     }

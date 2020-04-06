@@ -54,7 +54,7 @@ import com.ebay.soap.eBLBaseComponents.StoreCustomCategoryType;
 
 public class EbayStoreOptions {
 
-    private static final String module = EbayStoreOptions.class.getName();
+    private static final String MODULE = EbayStoreOptions.class.getName();
     
     public static String retrieveThemeColorSchemeByThemeId(HttpServletRequest request, HttpServletResponse response) {
         Locale locale = UtilHttp.getLocale(request);
@@ -192,15 +192,15 @@ public class EbayStoreOptions {
                 }
             }
         } catch (GenericServiceException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         } catch (EventHandlerException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         } catch (ApiException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         } catch (SdkException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         } catch (Exception e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         }
         return "success";
     }
@@ -248,15 +248,15 @@ public class EbayStoreOptions {
                 }
             }
         } catch (GenericServiceException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         } catch (EventHandlerException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         } catch (ApiException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         } catch (SdkException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         } catch (Exception e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         }
         return "success";
     }

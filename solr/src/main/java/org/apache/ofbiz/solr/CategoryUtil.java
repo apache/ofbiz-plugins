@@ -39,7 +39,7 @@ import org.apache.ofbiz.service.DispatchContext;
  */
 public final class CategoryUtil {
     
-    public static final String module = CategoryUtil.class.getName();
+    public static final String MODULE = CategoryUtil.class.getName();
 
     private CategoryUtil () {}
 
@@ -56,7 +56,7 @@ public final class CategoryUtil {
             // catalogs = delegator.findList("ProdCatalog", null, null, UtilMisc.toList("catalogName"), null, false);
             catalogs = delegator.findList("ProdCatalogCategory", condition, null, null, null, false);
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error looking up all catalogs", module);
+            Debug.logError(e, "Error looking up all catalogs", MODULE);
         }
         if (catalogs != null) {
             for (GenericValue c : catalogs) {
@@ -103,7 +103,7 @@ public final class CategoryUtil {
                 }
 
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Cannot generate trail from product category", module);
+                Debug.logError(e, "Cannot generate trail from product category", MODULE);
             }
         }
         if (trailElements.size() == 0) {
@@ -146,7 +146,7 @@ public final class CategoryUtil {
         } else {
             cm = catMember.toString();
         }
-        //Debug.logInfo("catMember "+cm,module);
+        //Debug.logInfo("catMember "+cm,MODULE);
         return cm;
     }
     

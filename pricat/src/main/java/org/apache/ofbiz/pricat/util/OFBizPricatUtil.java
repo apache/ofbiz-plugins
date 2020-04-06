@@ -30,7 +30,7 @@ import com.microsoft.schemas.vml.CTShape;
 
 public final class OFBizPricatUtil {
     
-    public static final String module = OFBizPricatUtil.class.getName();
+    public static final String MODULE = OFBizPricatUtil.class.getName();
     
     protected static Method VMLDrawingMethod;
     
@@ -66,7 +66,7 @@ public final class OFBizPricatUtil {
                 CTShape ctshape = (CTShape) FindCommentShapeMethod.invoke(vml, cell.getRow(), cell.getCol());
                 ctshape.setType("#_x0000_t202");
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                Debug.logError(e, module);
+                Debug.logError(e, MODULE);
             }
         }
     }
@@ -81,7 +81,7 @@ public final class OFBizPricatUtil {
                 CTShape ctshape = (CTShape) FindCommentShapeMethod.invoke(vml, rowNum, colNum);
                 ctshape.setType("#_x0000_t202");
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                Debug.logError(e, module);
+                Debug.logError(e, MODULE);
             }
         }
     }

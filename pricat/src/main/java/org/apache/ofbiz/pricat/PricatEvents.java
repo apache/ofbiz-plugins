@@ -43,7 +43,7 @@ import org.apache.ofbiz.entity.util.EntityQuery;
 
 public class PricatEvents {
     
-    public static final String module = PricatEvents.class.getName();
+    public static final String MODULE = PricatEvents.class.getName();
     
     public static final String PricatLatestVersion = UtilProperties.getPropertyValue("pricat", "pricat.latest.version", "V1.1");
     
@@ -75,10 +75,10 @@ public class PricatEvents {
             byte[] bytes = Files.readAllBytes(file);
             UtilHttp.streamContentToBrowser(response, bytes, "application/octet-stream", URLEncoder.encode(fileName, "UTF-8"));
         } catch (MalformedURLException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
             return "error";
         } catch (IOException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
             return "error";
         }
         return "success";
@@ -117,10 +117,10 @@ public class PricatEvents {
                         path = Paths.get(originalPricatFileName);
                         UtilHttp.streamContentToBrowser(response, bytes, "application/octet-stream", URLEncoder.encode(path.getName(path.getNameCount() - 1).toString(), "UTF-8"));
                     } catch (MalformedURLException e) {
-                        Debug.logError(e.getMessage(), module);
+                        Debug.logError(e.getMessage(), MODULE);
                         return "error";
                     } catch (IOException e) {
-                        Debug.logError(e.getMessage(), module);
+                        Debug.logError(e.getMessage(), MODULE);
                         return "error";
                     }
                     request.getSession().removeAttribute(PricatParseExcelHtmlThread.PRICAT_FILE);
@@ -142,7 +142,7 @@ public class PricatEvents {
         String sequenceNum = request.getParameter("sequenceNum");
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
         if (UtilValidate.isEmpty(sequenceNum) || UtilValidate.isEmpty(userLogin)) {
-            Debug.logError("sequenceNum[" + sequenceNum + "] or userLogin is empty", module);
+            Debug.logError("sequenceNum[" + sequenceNum + "] or userLogin is empty", MODULE);
             return "error";
         }
         String userLoginId = userLogin.getString("userLoginId");
@@ -151,14 +151,14 @@ public class PricatEvents {
         try {
             historyValue = EntityQuery.use(delegator).from("ExcelImportHistory").where("userLoginId", userLoginId, "sequenceNum", Long.valueOf(sequenceNum)).queryOne();
         } catch (NumberFormatException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
             return "error";
         } catch (GenericEntityException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
             return "error";
         }
         if (UtilValidate.isEmpty(historyValue)) {
-            Debug.logError("No ExcelImportHistory value found by sequenceNum[" + sequenceNum + "] and userLoginId[" + userLoginId + "].", module);
+            Debug.logError("No ExcelImportHistory value found by sequenceNum[" + sequenceNum + "] and userLoginId[" + userLoginId + "].", MODULE);
             return "error";
         }
         String fileName = historyValue.getString("fileName");
@@ -173,10 +173,10 @@ public class PricatEvents {
                 UtilHttp.streamContentToBrowser(response, bytes, "application/octet-stream", URLEncoder.encode(fileName, "UTF-8"));
             }
         } catch (MalformedURLException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
             return "error";
         } catch (IOException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
             return "error";
         }
         return "success";

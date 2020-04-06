@@ -62,7 +62,7 @@ import org.apache.ofbiz.service.ServiceValidationException;
  */
 public abstract class SolrProductSearch {
 
-    public static final String module = SolrProductSearch.class.getName();
+    public static final String MODULE = SolrProductSearch.class.getName();
     public static final String resource = "SolrUiLabels";
 
     /**
@@ -78,7 +78,7 @@ public abstract class SolrProductSearch {
         String solrIndexName = (String) context.get("indexName");
 
         if (SolrUtil.isSolrEcaEnabled()) {
-            // Debug.logVerbose("Solr: addToSolr: Running indexing for productId '" + productId + "'", module);
+            // Debug.logVerbose("Solr: addToSolr: Running indexing for productId '" + productId + "'", MODULE);
             try {
                 GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne();
                 Map<String, Object> dispatchContext = ProductUtil.getProductContent(product, dctx, context);
@@ -98,20 +98,20 @@ public abstract class SolrProductSearch {
                 }
             }
             catch (GenericEntityException gee) {
-                Debug.logError(gee, gee.getMessage(), module);
+                Debug.logError(gee, gee.getMessage(), MODULE);
                 result = ServiceUtil.returnError(gee.toString());
             }
             catch (GenericServiceException gse) {
-                Debug.logError(gse, gse.getMessage(), module);
+                Debug.logError(gse, gse.getMessage(), MODULE);
                 result = ServiceUtil.returnError(gse.toString());
             }
             catch (Exception e) {
-                Debug.logError(e, e.getMessage(), module);
+                Debug.logError(e, e.getMessage(), MODULE);
                 result = ServiceUtil.returnError(e.toString());
             }
         } else {
             final String statusMsg = "Solr ECA indexing disabled; skipping indexing for productId '" + productId + "'";
-            if (Debug.verboseOn()) Debug.logVerbose("Solr: addToSolr: " + statusMsg, module);
+            if (Debug.verboseOn()) Debug.logVerbose("Solr: addToSolr: " + statusMsg, MODULE);
             result = ServiceUtil.returnSuccess();
         }
         return result;
@@ -130,7 +130,7 @@ public abstract class SolrProductSearch {
         // don't want to return error and abort transactions in these cases.
         Boolean treatConnectErrorNonFatal = (Boolean) context.get("treatConnectErrorNonFatal");
         try {
-            Debug.logInfo("Solr: Generating and indexing document for productId '" + productId + "'", module);
+            Debug.logInfo("Solr: Generating and indexing document for productId '" + productId + "'", MODULE);
 
             SolrUtil.getInstance();
             client = SolrUtil.getHttpSolrClient(solrIndexName);
@@ -140,7 +140,7 @@ public abstract class SolrProductSearch {
             Collection<SolrInputDocument> docs = new ArrayList<>();
 
             if (Debug.verboseOn()) {
-                Debug.logVerbose("Solr: Indexing document: " + doc1.toString(), module);
+                Debug.logVerbose("Solr: Indexing document: " + doc1.toString(), MODULE);
             }
 
             docs.add(doc1);
@@ -150,11 +150,11 @@ public abstract class SolrProductSearch {
             client.commit();
 
             final String statusStr = UtilProperties.getMessage(resource, "SolrDocumentForProductIdAddedToSolrIndex", UtilMisc.toMap("productId", context.get("productId")), locale);
-            Debug.logInfo("Solr: " + statusStr, module);
+            Debug.logInfo("Solr: " + statusStr, MODULE);
             result = ServiceUtil.returnSuccess(statusStr);
         }
         catch (MalformedURLException e) {
-            Debug.logError(e, e.getMessage(), module);
+            Debug.logError(e, e.getMessage(), MODULE);
             result = ServiceUtil.returnError(e.toString());
             result.put("errorType", "urlError");
         }
@@ -163,21 +163,21 @@ public abstract class SolrProductSearch {
                 final String statusStr = UtilProperties.getMessage(resource, "SolrFailureConnectingToSolrServerToCommitProductId",
                         UtilMisc.toMap("productId", context.get("productId")), locale);
                 if (Boolean.TRUE.equals(treatConnectErrorNonFatal)) {
-                    Debug.logWarning(e, "Solr: " + statusStr, module);
+                    Debug.logWarning(e, "Solr: " + statusStr, MODULE);
                     result = ServiceUtil.returnFailure(statusStr);
                 } else {
-                    Debug.logError(e, "Solr: " + statusStr, module);
+                    Debug.logError(e, "Solr: " + statusStr, MODULE);
                     result = ServiceUtil.returnError(statusStr);
                 }
                 result.put("errorType", "connectError");
             } else {
-                Debug.logError(e, e.getMessage(), module);
+                Debug.logError(e, e.getMessage(), MODULE);
                 result = ServiceUtil.returnError(e.toString());
                 result.put("errorType", "solrServerError");
             }
         }
         catch (IOException e) {
-            Debug.logError(e, e.getMessage(), module);
+            Debug.logError(e, e.getMessage(), MODULE);
             result = ServiceUtil.returnError(e.toString());
             result.put("errorType", "ioError");
         }
@@ -211,12 +211,12 @@ public abstract class SolrProductSearch {
             // Construct Documents
             List<Map<String, Object>> fieldList = UtilGenerics.cast(context.get("fieldList"));
 
-            Debug.logInfo("Solr: Generating and adding " + fieldList.size() + " documents to solr index", module);
+            Debug.logInfo("Solr: Generating and adding " + fieldList.size() + " documents to solr index", MODULE);
 
             for (Iterator<Map<String, Object>> fieldListIterator = fieldList.iterator(); fieldListIterator.hasNext();) {
                 SolrInputDocument doc1 = SolrUtil.generateSolrDocument(fieldListIterator.next());
                 if (Debug.verboseOn()) {
-                    Debug.logVerbose("Solr: Indexing document: " + doc1.toString(), module);
+                    Debug.logVerbose("Solr: Indexing document: " + doc1.toString(), MODULE);
                 }
                 docs.add(doc1);
             }
@@ -227,11 +227,11 @@ public abstract class SolrProductSearch {
             client.commit();
 
             final String statusStr = UtilProperties.getMessage(resource, "SolrAddedDocumentsToSolrIndex", UtilMisc.toMap("fieldList", fieldList.size()), locale);
-            Debug.logInfo("Solr: " + statusStr, module);
+            Debug.logInfo("Solr: " + statusStr, MODULE);
             result = ServiceUtil.returnSuccess(statusStr);
         }
         catch (MalformedURLException e) {
-            Debug.logError(e, e.getMessage(), module);
+            Debug.logError(e, e.getMessage(), MODULE);
             result = ServiceUtil.returnError(e.toString());
             result.put("errorType", "urlError");
         }
@@ -240,21 +240,21 @@ public abstract class SolrProductSearch {
                 final String statusStr = UtilProperties.getMessage(resource, "SolrFailureConnectingToSolrServerToCommitProductList",
                         UtilMisc.toMap("productId", context.get("productId")), locale);
                 if (Boolean.TRUE.equals(treatConnectErrorNonFatal)) {
-                    Debug.logWarning(e, "Solr: " + statusStr, module);
+                    Debug.logWarning(e, "Solr: " + statusStr, MODULE);
                     result = ServiceUtil.returnFailure(statusStr);
                 } else {
-                    Debug.logError(e, "Solr: " + statusStr, module);
+                    Debug.logError(e, "Solr: " + statusStr, MODULE);
                     result = ServiceUtil.returnError(statusStr);
                 }
                 result.put("errorType", "connectError");
             } else {
-                Debug.logError(e, e.getMessage(), module);
+                Debug.logError(e, e.getMessage(), MODULE);
                 result = ServiceUtil.returnError(e.toString());
                 result.put("errorType", "solrServerError");
             }
         }
         catch (IOException e) {
-            Debug.logError(e, e.getMessage(), module);
+            Debug.logError(e, e.getMessage(), MODULE);
             result = ServiceUtil.returnError(e.toString());
             result.put("errorType", "ioError");
         }
@@ -367,7 +367,7 @@ public abstract class SolrProductSearch {
             result.put("queryResult", rsp);
         }
         catch (Exception e) {
-            Debug.logError(e, e.getMessage(), module);
+            Debug.logError(e, e.getMessage(), MODULE);
             result = ServiceUtil.returnError(e.toString());
         }
         finally {
@@ -428,7 +428,7 @@ public abstract class SolrProductSearch {
             }
         }
         catch (Exception e) {
-            Debug.logError(e, e.getMessage(), module);
+            Debug.logError(e, e.getMessage(), MODULE);
             result = ServiceUtil.returnError(e.toString());
         }
         return result;
@@ -471,7 +471,7 @@ public abstract class SolrProductSearch {
                 Iterator<Suggestion> iter = queryResult.getSpellCheckResponse().getSuggestions().iterator();
                 while (iter.hasNext()) {
                     Suggestion resultDoc = iter.next();
-                    Debug.logInfo("Suggestion " + resultDoc.getAlternatives(), module);
+                    Debug.logInfo("Suggestion " + resultDoc.getAlternatives(), MODULE);
                     suggestions.add(resultDoc.getAlternatives());
                 }
             }
@@ -514,7 +514,7 @@ public abstract class SolrProductSearch {
 
         }
         catch (Exception e) {
-            Debug.logError(e, e.getMessage(), module);
+            Debug.logError(e, e.getMessage(), MODULE);
             result = ServiceUtil.returnError(e.toString());
         }
         return result;
@@ -543,7 +543,7 @@ public abstract class SolrProductSearch {
 
             String productCategoryId = (String) context.get("productCategoryId") != null ? CategoryUtil.getCategoryNameWithTrail((String) context.get("productCategoryId"), dctx)
                     : null;
-            Debug.logInfo("productCategoryId " + productCategoryId, module);
+            Debug.logInfo("productCategoryId " + productCategoryId, MODULE);
             Map<String, Object> query = SolrUtil.categoriesAvailable(catalogId, productCategoryId, (String) context.get("productId"), displayProducts, viewIndex, viewSize,
                     solrIndexName);
 
@@ -556,7 +556,7 @@ public abstract class SolrProductSearch {
                 FacetField field = catIterator.next();
                 List<Count> catL = field.getValues();
                 if (catL != null) {
-                    // Debug.logInfo("FacetFields = " + catL, module);
+                    // Debug.logInfo("FacetFields = " + catL, MODULE);
                     for (Iterator<Count> catIter = catL.iterator(); catIter.hasNext();) {
                         FacetField.Count f = catIter.next();
                         if (f.getCount() > 0) {
@@ -565,7 +565,7 @@ public abstract class SolrProductSearch {
                     }
                     result.put("categories", categories);
                     result.put("numFound", cat.getResults().getNumFound());
-                    // Debug.logInfo("The returned map is this:" + result, module);
+                    // Debug.logInfo("The returned map is this:" + result, MODULE);
                 }
             }
         }
@@ -591,7 +591,7 @@ public abstract class SolrProductSearch {
                     : null;
             result = ServiceUtil.returnSuccess();
             Map<String, List<Map<String, Object>>> catLevel = new HashMap<>();
-            Debug.logInfo("productCategoryId: " + productCategoryId, module);
+            Debug.logInfo("productCategoryId: " + productCategoryId, MODULE);
 
             //Add toplevel categories
             String[] trailElements = productCategoryId.split("/");
@@ -600,7 +600,7 @@ public abstract class SolrProductSearch {
             for (String elements : trailElements) {
                 //catIds must be greater than 3 chars
                 if (elements.length() > 3) {
-                    Debug.logInfo("elements: " + elements, module);
+                    Debug.logInfo("elements: " + elements, MODULE);
                     String categoryPath = CategoryUtil.getCategoryNameWithTrail(elements, dctx);
                     String[] categoryPathArray = categoryPath.split("/");
                     int level = Integer.parseInt(categoryPathArray[0]);
@@ -676,7 +676,7 @@ public abstract class SolrProductSearch {
                 numDocs = products.size();
             }
 
-            Debug.logInfo("Solr: Clearing solr index and rebuilding with " + numDocs + " found products", module);
+            Debug.logInfo("Solr: Clearing solr index and rebuilding with " + numDocs + " found products", MODULE);
 
             Iterator<GenericValue> productIterator = products.iterator();
             while (productIterator.hasNext()) {
@@ -709,42 +709,42 @@ public abstract class SolrProductSearch {
             }
         }
         catch (MalformedURLException e) {
-            Debug.logError(e, e.getMessage(), module);
+            Debug.logError(e, e.getMessage(), MODULE);
             result = ServiceUtil.returnError(e.toString());
         }
         catch (SolrServerException e) {
             if (e.getCause() != null && e.getCause() instanceof ConnectException) {
                 final String statusStr = UtilProperties.getMessage(resource, "SolrFailureConnectingToSolrServerToRebuildIndex", locale);
                 if (Boolean.TRUE.equals(treatConnectErrorNonFatal)) {
-                    Debug.logWarning(e, "Solr: " + statusStr, module);
+                    Debug.logWarning(e, "Solr: " + statusStr, MODULE);
                     result = ServiceUtil.returnFailure(statusStr);
                 } else {
-                    Debug.logError(e, "Solr: " + statusStr, module);
+                    Debug.logError(e, "Solr: " + statusStr, MODULE);
                     result = ServiceUtil.returnError(statusStr);
                 }
             } else {
-                Debug.logError(e, e.getMessage(), module);
+                Debug.logError(e, e.getMessage(), MODULE);
                 result = ServiceUtil.returnError(e.toString());
             }
         }
         catch (IOException e) {
-            Debug.logError(e, e.getMessage(), module);
+            Debug.logError(e, e.getMessage(), MODULE);
             result = ServiceUtil.returnError(e.toString());
         }
         catch (ServiceAuthException e) {
-            Debug.logError(e, e.getMessage(), module);
+            Debug.logError(e, e.getMessage(), MODULE);
             result = ServiceUtil.returnError(e.toString());
         }
         catch (ServiceValidationException e) {
-            Debug.logError(e, e.getMessage(), module);
+            Debug.logError(e, e.getMessage(), MODULE);
             result = ServiceUtil.returnError(e.toString());
         }
         catch (GenericServiceException e) {
-            Debug.logError(e, e.getMessage(), module);
+            Debug.logError(e, e.getMessage(), MODULE);
             result = ServiceUtil.returnError(e.toString());
         }
         catch (Exception e) {
-            Debug.logError(e, e.getMessage(), module);
+            Debug.logError(e, e.getMessage(), MODULE);
             result = ServiceUtil.returnError(e.toString());
         }
         finally {

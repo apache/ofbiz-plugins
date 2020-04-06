@@ -39,7 +39,7 @@ import org.apache.ofbiz.webapp.view.ViewHandlerException;
  */
 public class JspViewHandler extends AbstractViewHandler {
 
-    public static final String module = JspViewHandler.class.getName();
+    public static final String MODULE = JspViewHandler.class.getName();
 
     protected ServletContext context;
 
@@ -60,7 +60,7 @@ public class JspViewHandler extends AbstractViewHandler {
             throw new ViewHandlerException("Null or empty source");
         }
 
-        // Debug.logInfo("Requested Page : " + page, module);
+        // Debug.logInfo("Requested Page : " + page, MODULE);
         // Debug.logInfo("Physical Path  : " + context.getRealPath(page));
 
         // tell the ControlFilter we are forwarding
@@ -68,10 +68,10 @@ public class JspViewHandler extends AbstractViewHandler {
         RequestDispatcher rd = request.getRequestDispatcher(page);
 
         if (rd == null) {
-            Debug.logInfo("HttpServletRequest.getRequestDispatcher() failed; trying ServletContext", module);
+            Debug.logInfo("HttpServletRequest.getRequestDispatcher() failed; trying ServletContext", MODULE);
             rd = context.getRequestDispatcher(page);
             if (rd == null) {
-                Debug.logInfo("ServletContext.getRequestDispatcher() failed; trying ServletContext.getNamedDispatcher(\"jsp\")", module);
+                Debug.logInfo("ServletContext.getRequestDispatcher() failed; trying ServletContext.getNamedDispatcher(\"jsp\")", MODULE);
                 rd = context.getNamedDispatcher("jsp");
                 if (rd == null) {
                     throw new ViewHandlerException("Source returned a null dispatcher (" + page + ")");
@@ -98,7 +98,7 @@ public class JspViewHandler extends AbstractViewHandler {
 
                 throwable = jspe.getCause() != null ? jspe.getCause() : jspe;
             }
-            Debug.logError(throwable, "ServletException rendering JSP view", module);
+            Debug.logError(throwable, "ServletException rendering JSP view", MODULE);
             throw new ViewHandlerException(e.getMessage(), throwable);
         }
     }

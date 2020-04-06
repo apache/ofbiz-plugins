@@ -45,7 +45,7 @@ import org.apache.ofbiz.service.ServiceUtil;
  * Product utility class for solr.
  */
 public final class ProductUtil {
-    public static final String module = ProductUtil.class.getName();
+    public static final String MODULE = ProductUtil.class.getName();
 
     private ProductUtil () {}
 
@@ -58,7 +58,7 @@ public final class ProductUtil {
         Locale locale = new Locale("de_DE");
 
         if (Debug.verboseOn()) {
-            Debug.logVerbose("Solr: Getting product content for productId '" + productId + "'", module);
+            Debug.logVerbose("Solr: Getting product content for productId '" + productId + "'", MODULE);
         }
         
         try {
@@ -105,7 +105,7 @@ public final class ProductUtil {
                             catMember.append(trailString);
                             String cm = i +"/"+ catMember.toString();
                             if (!trails.contains(cm)) {
-                                //Debug.logInfo("cm : "+cm, module);
+                                //Debug.logInfo("cm : "+cm, MODULE);
                                 trails.add(cm);
                                 // Debug.log("trail for product " + productId + " ====> " + catMember.toString());
                             }
@@ -231,9 +231,9 @@ public final class ProductUtil {
                 }
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e, e.getMessage(), module);
+            Debug.logError(e, e.getMessage(), MODULE);
         } catch (Exception e) {
-            Debug.logError(e, e.getMessage(), module);
+            Debug.logError(e, e.getMessage(), MODULE);
         }
         return dispatchContext;
     }

@@ -29,7 +29,7 @@ import org.apache.ofbiz.webapp.control.LoginWorker;
  */
 public class OFBizSolrLoginWorker extends LoginWorker {
 
-    public final static String module = OFBizSolrLoginWorker.class.getName();
+    public final static String MODULE = OFBizSolrLoginWorker.class.getName();
 
     /**
      * An HTTP WebEvent handler that logs in a userLogin. This should run before the security check.
@@ -48,7 +48,7 @@ public class OFBizSolrLoginWorker extends LoginWorker {
                 response.setHeader("Location", request.getContextPath());
                 response.setHeader("Connection", "close");
             } catch (IllegalStateException ise) {
-                Debug.logError(ise.getMessage(), module);
+                Debug.logError(ise.getMessage(), MODULE);
                 return "error";
             }
         }
@@ -64,7 +64,7 @@ public class OFBizSolrLoginWorker extends LoginWorker {
                 response.setHeader("Location", request.getContextPath());
                 response.setHeader("Connection", "close");
             } catch (IllegalStateException ise) {
-                Debug.logError(ise.getMessage(), module);
+                Debug.logError(ise.getMessage(), MODULE);
                 return "error";
             }
         }

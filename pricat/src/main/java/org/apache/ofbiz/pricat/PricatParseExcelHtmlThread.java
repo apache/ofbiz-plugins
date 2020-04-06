@@ -66,7 +66,7 @@ import org.apache.ofbiz.service.LocalDispatcher;
  */
 public class PricatParseExcelHtmlThread extends AbstractReportThread {
     
-    public static final String module = PricatParseExcelHtmlThread.class.getName();
+    public static final String MODULE = PricatParseExcelHtmlThread.class.getName();
 
     public static final String PARSE_EXCEL = "parse_excel";
     
@@ -192,12 +192,12 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
                 }
             } else {
                 getReport().println(getName(), InterfaceReport.FORMAT_ERROR);
-                Debug.logError(getName(), module);
+                Debug.logError(getName(), MODULE);
                 thruReasonId = "EXCEL_IMPORT_ERROR";
             }
         } catch (Exception e) {
             getReport().println(e);
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
             thruReasonId = "EXCEL_IMPORT_ERROR";
         } finally {
             // wait 5 seconds to wait page output
@@ -323,7 +323,7 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
                 }
             }
         }catch (GenericEntityException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         }
         return facilities;
     }
@@ -348,7 +348,7 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
                                                                 "fromDate", UtilDateTime.nowTimestamp(), "threadName", getName(), "logFileName", InterfacePricatParser.tempFilesFolder + userLoginId + "/" + latestId + ".log"));
             newHistoryValue.create();
         } catch (GenericEntityException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
             return -1;
         }
         return latestId;

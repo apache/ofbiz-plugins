@@ -39,7 +39,7 @@ import org.apache.lucene.store.LockObtainFailedException;
 
 public class DocumentIndexer extends Thread {
 
-    public static final String module = DocumentIndexer.class.getName();
+    public static final String MODULE = DocumentIndexer.class.getName();
 
     private static Map<String, DocumentIndexer> documentIndexerMap = new HashMap<>();
     private LinkedBlockingQueue<LuceneDocument> documentIndexQueue = new LinkedBlockingQueue<>();
@@ -53,11 +53,11 @@ public class DocumentIndexer extends Thread {
         try {
             this.indexDirectory = FSDirectory.open(new File(SearchWorker.getIndexPath(indexName)).toPath());
         } catch (CorruptIndexException e) {
-            Debug.logError("Corrupted lucene index: "  + e.getMessage(), module);
+            Debug.logError("Corrupted lucene index: "  + e.getMessage(), MODULE);
         } catch (LockObtainFailedException e) {
-            Debug.logError("Could not obtain Lock on lucene index "  + e.getMessage(), module);
+            Debug.logError("Could not obtain Lock on lucene index "  + e.getMessage(), MODULE);
         } catch (IOException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         }
     }
 
@@ -83,13 +83,13 @@ public class DocumentIndexer extends Thread {
                 // Execution will pause here until the queue receives a LuceneDocument for indexing
                 ofbizDocument = documentIndexQueue.take();
             } catch (InterruptedException e) {
-                Debug.logError(e, module);
+                Debug.logError(e, MODULE);
                 if (indexWriter != null) {
                     try {
                         indexWriter.close();
                         indexWriter = null;
                     } catch(IOException ioe) {
-                        Debug.logError(ioe, module);
+                        Debug.logError(ioe, MODULE);
                     }
                 }
                 break;
@@ -102,33 +102,33 @@ public class DocumentIndexer extends Thread {
                 	analyzer.setVersion(SearchWorker.getLuceneVersion());
                     indexWriter  = new IndexWriter(this.indexDirectory, new IndexWriterConfig(analyzer));
                 } catch (CorruptIndexException e) {
-                    Debug.logError("Corrupted lucene index: "  + e.getMessage(), module);
+                    Debug.logError("Corrupted lucene index: "  + e.getMessage(), MODULE);
                     break;
                 } catch (LockObtainFailedException e) {
-                    Debug.logError("Could not obtain Lock on lucene index "  + e.getMessage(), module);
+                    Debug.logError("Could not obtain Lock on lucene index "  + e.getMessage(), MODULE);
                     // TODO: put the thread to sleep waiting for the locked to be released
                     break;
                 } catch (IOException e) {
-                    Debug.logError(e.getMessage(), module);
+                    Debug.logError(e.getMessage(), MODULE);
                     break;
                 }
             }
             try {
                 if (document == null) {
                     indexWriter.deleteDocuments(documentIdentifier);
-                    if (Debug.infoOn()) Debug.logInfo(getName() + ": deleted Lucene document: " + ofbizDocument, module);
+                    if (Debug.infoOn()) Debug.logInfo(getName() + ": deleted Lucene document: " + ofbizDocument, MODULE);
                 } else {
                     indexWriter.updateDocument(documentIdentifier, document);
-                    if (Debug.infoOn()) Debug.logInfo(getName() + ": indexed Lucene document: " + ofbizDocument, module);
+                    if (Debug.infoOn()) Debug.logInfo(getName() + ": indexed Lucene document: " + ofbizDocument, MODULE);
                 }
             } catch(Exception e) {
-                Debug.logError(e, getName() + ": error processing Lucene document: " + ofbizDocument, module);
+                Debug.logError(e, getName() + ": error processing Lucene document: " + ofbizDocument, MODULE);
                 if (documentIndexQueue.peek() == null) {
                     try {
                         indexWriter.close();
                         indexWriter = null;
                     } catch(IOException ioe) {
-                        Debug.logError(ioe, module);
+                        Debug.logError(ioe, MODULE);
                     }
                 }
                 continue;
@@ -139,7 +139,7 @@ public class DocumentIndexer extends Thread {
                 try {
                     indexWriter.commit();
                 } catch (IOException e) {
-                    Debug.logError(e, module);
+                    Debug.logError(e, MODULE);
                 }
                 uncommittedDocs = 0;
             }
@@ -148,7 +148,7 @@ public class DocumentIndexer extends Thread {
                     indexWriter.close();
                     indexWriter = null;
                 } catch (IOException e) {
-                    Debug.logError(e, module);
+                    Debug.logError(e, MODULE);
                 }
             }
         }

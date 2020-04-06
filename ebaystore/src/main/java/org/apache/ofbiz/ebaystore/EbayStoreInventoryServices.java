@@ -60,7 +60,7 @@ import com.ebay.soap.eBLBaseComponents.SellingManagerProductInventoryStatusType;
 import com.ebay.soap.eBLBaseComponents.SellingManagerProductType;
 
 public class EbayStoreInventoryServices {
-    private static final String module = EbayStoreInventoryServices.class.getName();
+    private static final String MODULE = EbayStoreInventoryServices.class.getName();
     public static final String resource = "EbayStoreUiLabels";
     private static final String defaultFolderName = "OFBizProducts";
     private static String folderId = null;
@@ -115,7 +115,7 @@ public class EbayStoreInventoryServices {
                     status = createNewProductInEbayInventoryFolder(dctx,context);
                 }
                 if (status) {
-                    Debug.logInfo("Done to updated product ".concat(context.get("productId").toString()), module);
+                    Debug.logInfo("Done to updated product ".concat(context.get("productId").toString()), MODULE);
                     result = ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "EbayStoreInventoryFolderIdUpdated", UtilMisc.toMap("folderId", context.get("folderId")), locale));
                 } else {
                     result = ServiceUtil.returnError(UtilProperties.getMessage(resource, "EbayStoreInventoryFolderIdUpdatedFailed", locale));
@@ -169,17 +169,17 @@ public class EbayStoreInventoryServices {
                     ebayProductStoreInventory.store();
                 } else {
                     EbayStoreHelper.createErrorLogMessage(userLogin, dctx.getDispatcher(), context.get("productStoreId").toString(), productResp.getAck().toString(), "AddSellingManagerProductCall : createNewProductInEbayInventoryFolder", productResp.getErrors(0).getLongMessage());
-                    Debug.logError("Fail to  create inventory product ".concat(productId).concat("in productStore ").concat(context.get("productStoreId").toString()).concat(" message from ebay : ").concat(productResp.getMessage()), module);
+                    Debug.logError("Fail to  create inventory product ".concat(productId).concat("in productStore ").concat(context.get("productStoreId").toString()).concat(" message from ebay : ").concat(productResp.getMessage()), MODULE);
                 }
             }
         } catch (ApiException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         } catch (SdkSoapException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         } catch (SdkException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         } catch (GenericEntityException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         }
         return flag;
     }
@@ -203,7 +203,7 @@ public class EbayStoreInventoryServices {
                 GenericValue ebayProductStoreInventory = EntityQuery.use(delegator).from("EbayProductStoreInventory").where("productId", productId, "facilityId", context.get("facilityId"), "productStoreId", context.get("productStoreId")).queryOne();
                 Long ebayProductId = null;
                 if (ebayProductStoreInventory != null && ebayProductStoreInventory.getLong("ebayProductId") == null) {
-                    Debug.logError("Can not update product "+productId+" has no ebay product Id in EbayProductStoreInventory. ", module);
+                    Debug.logError("Can not update product "+productId+" has no ebay product Id in EbayProductStoreInventory. ", MODULE);
                     return flag;
                 }
                 if (ebayProductStoreInventory != null && ebayProductStoreInventory.getLong("ebayProductId") != null) {
@@ -225,17 +225,17 @@ public class EbayStoreInventoryServices {
                     ebayProductStoreInventory.store();
                 } else {
                     EbayStoreHelper.createErrorLogMessage(userLogin, dctx.getDispatcher(), context.get("productStoreId").toString(), resp.getAck().toString(), "ReviseSellingManagerProductCall : updateProductInEbayInventoryFolder", resp.getErrors(0).getLongMessage());
-                    Debug.logError("Fail to  update inventory product ".concat(productId).concat("in productStore ").concat(context.get("productStoreId").toString()).concat(" message from ebay : ").concat(resp.getMessage()), module);
+                    Debug.logError("Fail to  update inventory product ".concat(productId).concat("in productStore ").concat(context.get("productStoreId").toString()).concat(" message from ebay : ").concat(resp.getMessage()), MODULE);
                 }
             }
         } catch (ApiException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         } catch (SdkSoapException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         } catch (SdkException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         } catch (GenericEntityException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         }
         return flag;
     }
@@ -259,7 +259,7 @@ public class EbayStoreInventoryServices {
                     if (sellingManagerFolderDetailsType != null) {
                         SellingManagerFolderDetailsType[] SellingManagerFolderDetailsTypeList = sellingManagerFolderDetailsType.getChildFolder();
                         for (SellingManagerFolderDetailsType sellingManagerFolderDetails : SellingManagerFolderDetailsTypeList) {
-                            Debug.logInfo("ebay inventory folders name ".concat(sellingManagerFolderDetails.getFolderName()), module);
+                            Debug.logInfo("ebay inventory folders name ".concat(sellingManagerFolderDetails.getFolderName()), MODULE);
                             if (sellingManagerFolderDetails.getFolderName().equals(defaultFolderName)) {
                                 folderId = String.valueOf(sellingManagerFolderDetails.getFolderID());
                                 flag = true;
@@ -284,7 +284,7 @@ public class EbayStoreInventoryServices {
         }
         if (result.get("responseMessage") != null && "fail".equals(result.get("responseMessage"))) folderId = null;
         result.put("folderId", folderId);
-        Debug.logInfo("service return result "+ result, module);
+        Debug.logInfo("service return result "+ result, MODULE);
         return result;
     }
 
@@ -306,16 +306,16 @@ public class EbayStoreInventoryServices {
                     folderId = String.valueOf(resp.getFolderID());
                 } else {
                     EbayStoreHelper.createErrorLogMessage(userLogin, dctx.getDispatcher(), context.get("productStoreId").toString(), resp.getAck().toString(), "AddSellingManagerInventoryFolderCall : createNewFolderInEbayStoreInventory", resp.getErrors(0).getLongMessage());
-                    Debug.logError("The problem with create new folder on ebay site.", module);
+                    Debug.logError("The problem with create new folder on ebay site.", MODULE);
                     return folderId;
                 }
             }
         } catch (ApiException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         } catch (SdkSoapException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         } catch (SdkException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         }
         return folderId;
     }
@@ -361,7 +361,7 @@ public class EbayStoreInventoryServices {
                     }
                 } else {
                     EbayStoreHelper.createErrorLogMessage(userLogin, dctx.getDispatcher(), context.get("productStoreId").toString(), resp.getAck().toString(), "GetSellingManagerInventoryCall : updateEbayInventoryStatusByProductId", resp.getErrors(0).getLongMessage());
-                    Debug.logError("The problem with get manage inventory detail from ebay site.", module);
+                    Debug.logError("The problem with get manage inventory detail from ebay site.", MODULE);
                 }
             }
         } catch (ApiException e) {

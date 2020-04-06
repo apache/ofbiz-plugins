@@ -55,7 +55,7 @@ import com.ebay.soap.eBLBaseComponents.StoreOwnerExtendedListingDurationsType;
 import com.ebay.soap.eBLBaseComponents.ThemeGroupType;
 
 public class EbayStoreCategoryFacade {
-    public static final String module = EbayStoreCategoryFacade.class.getName();
+    public static final String MODULE = EbayStoreCategoryFacade.class.getName();
     private ApiContext apiContext = null;
     private String catId = null;
     private IAttributesMaster attrMaster = null;
@@ -229,7 +229,7 @@ public class EbayStoreCategoryFacade {
         resp = (GetDescriptionTemplatesResponseType) call.execute(req);
         if (resp != null && "SUCCESS".equals(resp.getAck().toString())) {
             DescriptionTemplateType[] descriptionTemplateTypeList = resp.getDescriptionTemplate();
-            Debug.logInfo("layout of category "+ this.catId +":"+ resp.getLayoutTotal(), module);
+            Debug.logInfo("layout of category "+ this.catId +":"+ resp.getLayoutTotal(), MODULE);
             for (DescriptionTemplateType descTemplateType : descriptionTemplateTypeList) {
                 List<Map<String,Object>> templateList = null;
                 Map<String,Object> templateGroup = null;

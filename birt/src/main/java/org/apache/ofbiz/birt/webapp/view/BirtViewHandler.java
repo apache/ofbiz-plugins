@@ -51,7 +51,7 @@ import org.xml.sax.SAXException;
 
 public class BirtViewHandler implements ViewHandler {
 
-    public static final String module = BirtViewHandler.class.getName();
+    public static final String MODULE = BirtViewHandler.class.getName();
     public static final String resource_error = "BirtErrorUiLabels";
 
     protected ServletContext servletContext = null;
@@ -155,11 +155,11 @@ public class BirtViewHandler implements ViewHandler {
             throw new ViewHandlerException("general error: " + e.toString(), e);
         } catch (SAXException se) {
             String errMsg = "Error SAX rendering " + page + " view handler: " + se.toString();
-            Debug.logError(se, errMsg, module);
+            Debug.logError(se, errMsg, MODULE);
             throw new ViewHandlerException(errMsg, se);
         } catch (ParserConfigurationException pe) {
             String errMsg = "Error parser rendering " + page + " view handler: " + pe.toString();
-            Debug.logError(pe, errMsg, module);
+            Debug.logError(pe, errMsg, MODULE);
             throw new ViewHandlerException(errMsg, pe);
         }
     }

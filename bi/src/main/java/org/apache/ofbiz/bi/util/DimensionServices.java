@@ -41,7 +41,7 @@ import org.apache.ofbiz.service.ServiceUtil;
 
 public class DimensionServices {
 
-    public static final String module = DimensionServices.class.getName();
+    public static final String MODULE = DimensionServices.class.getName();
     public static final String resource = "BiUiLabels";
 
     public static Map<String, Object> getDimensionIdFromNaturalKey(DispatchContext ctx, Map<String, ? extends Object> context) {

@@ -37,7 +37,7 @@ import org.apache.ofbiz.service.ServiceUtil;
 
 public class EbayBestOfferAutoPref {
 
-    public static final String module = EbayBestOfferAutoPref.class.getName();
+    public static final String MODULE = EbayBestOfferAutoPref.class.getName();
     public static final String resource = "EbayStoreUiLabels";
     public static Map<String, Object> ebayBestOfferPrefCond(DispatchContext dctx, Map<String, ? extends Object> context) {
 

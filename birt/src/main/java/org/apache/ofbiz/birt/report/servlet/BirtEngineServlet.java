@@ -36,7 +36,7 @@ import org.apache.ofbiz.birt.BirtWorker;
 @SuppressWarnings("serial")
 public class BirtEngineServlet extends org.eclipse.birt.report.servlet.BirtEngineServlet {
 
-    public final static String module = BirtEngineServlet.class.getName();
+    public final static String MODULE = BirtEngineServlet.class.getName();
 
     @Override
     protected IContext __getContext(HttpServletRequest request, HttpServletResponse response) throws BirtException {

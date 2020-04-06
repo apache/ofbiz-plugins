@@ -53,7 +53,7 @@ import org.apache.ofbiz.entity.GenericEntityException;
 public final class SolrUtil {
     
     private SolrUtil() {}
-    public static final String module = SolrUtil.class.getName();
+    public static final String MODULE = SolrUtil.class.getName();
     private static final String[] solrProdAttribute = { "productId", "internalName", "manu", "size", "smallImage", "mediumImage", "largeImage", "listPrice", "defaultPrice", "inStock", "isVirtual" };
 
     private static final String solrConfigName = "solrconfig.properties";
@@ -276,12 +276,12 @@ public final class SolrUtil {
             solrQuery.setFacet(true);
             solrQuery.addFacetField("cat");
             solrQuery.setFacetLimit(-1);
-            if (Debug.verboseOn()) Debug.logVerbose("solr: solrQuery: " + solrQuery, module);
+            if (Debug.verboseOn()) Debug.logVerbose("solr: solrQuery: " + solrQuery, MODULE);
             returnMap = client.query(solrQuery, METHOD.POST);
             result.put("rows", returnMap);
             result.put("numFound", returnMap.getResults().getNumFound());
         } catch (Exception e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         }
         return result;
     }

@@ -61,7 +61,7 @@ import org.xml.sax.SAXException;
  */
 public class JanrainHelper {
 
-    public static final String module = JanrainHelper.class.getName();
+    public static final String MODULE = JanrainHelper.class.getName();
     private static String apiKey = UtilProperties.getPropertyValue("ecommerce", "janrain.apiKey");
     private static String baseUrl = UtilProperties.getPropertyValue("ecommerce", "janrain.baseUrl");
     public JanrainHelper(String apiKey, String baseUrl) {
@@ -239,7 +239,7 @@ public class JanrainHelper {
                     return "userLoginMissing";
                 }
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Error finding the userLogin for distributed cache clear", module);
+                Debug.logError(e, "Error finding the userLogin for distributed cache clear", MODULE);
             }
         }
         return "success";

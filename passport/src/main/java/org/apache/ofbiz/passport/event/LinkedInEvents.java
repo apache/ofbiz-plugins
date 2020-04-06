@@ -71,7 +71,7 @@ import org.xml.sax.SAXException;
  */
 public class LinkedInEvents {
 
-    public static final String module = LinkedInEvents.class.getName();
+    public static final String MODULE = LinkedInEvents.class.getName();
     
     public static final String resource = "PassportUiLabels";
     
@@ -153,7 +153,7 @@ public class LinkedInEvents {
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
-        // Debug.logInfo("LinkedIn authorization code: " + authorizationCode, module);
+        // Debug.logInfo("LinkedIn authorization code: " + authorizationCode, MODULE);
         
         GenericValue oauth2LinkedIn = getOAuth2LinkedInConfig(request);
         if (UtilValidate.isEmpty(oauth2LinkedIn)) {
@@ -182,19 +182,19 @@ public class LinkedInEvents {
                     .build();
             HttpPost postMethod = new HttpPost(uri);
             CloseableHttpClient jsonClient = HttpClients.custom().build();
-            // Debug.logInfo("LinkedIn get access token query string: " + postMethod.getURI(), module);
+            // Debug.logInfo("LinkedIn get access token query string: " + postMethod.getURI(), MODULE);
             postMethod.setConfig(PassportUtil.StandardRequestConfig);
             CloseableHttpResponse postResponse = jsonClient.execute(postMethod);
             String responseString = new BasicResponseHandler().handleResponse(postResponse);
-            // Debug.logInfo("LinkedIn get access token response code: " + postResponse.getStatusLine().getStatusCode(), module);
-            // Debug.logInfo("LinkedIn get access token response content: " + responseString, module);
+            // Debug.logInfo("LinkedIn get access token response code: " + postResponse.getStatusLine().getStatusCode(), MODULE);
+            // Debug.logInfo("LinkedIn get access token response content: " + responseString, MODULE);
             if (postResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                // Debug.logInfo("Json Response from LinkedIn: " + responseString, module);
+                // Debug.logInfo("Json Response from LinkedIn: " + responseString, MODULE);
                 JSON jsonObject = JSON.from(responseString);
                 JSONToMap jsonMap = new JSONToMap();
                 Map<String, Object> userMap = jsonMap.convert(jsonObject);
                 accessToken = (String) userMap.get("access_token");
-                // Debug.logInfo("Generated Access Token : " + accessToken, module);
+                // Debug.logInfo("Generated Access Token : " + accessToken, MODULE);
             } else {
                 String errMsg = UtilProperties.getMessage(resource, "LinkedInGetOAuth2AccessTokenError", UtilMisc.toMap("error", responseString), UtilHttp.getLocale(request));
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
@@ -234,7 +234,7 @@ public class LinkedInEvents {
         } finally {
             getMethod.releaseConnection();
         }
-        // Debug.logInfo("LinkedIn User Info:" + userInfo, module);
+        // Debug.logInfo("LinkedIn User Info:" + userInfo, MODULE);
         
         // Store the user info and check login the user
         return checkLoginLinkedInUser(request, userInfo, accessToken);
@@ -270,7 +270,7 @@ public class LinkedInEvents {
                 try {
                     linkedInUser.store();
                 } catch (GenericEntityException e) {
-                    Debug.logError(e.getMessage(), module);
+                    Debug.logError(e.getMessage(), MODULE);
                 }
             }
         } else {
@@ -281,7 +281,7 @@ public class LinkedInEvents {
             try {
                 linkedInUser.create();
             } catch (GenericEntityException e) {
-                Debug.logError(e.getMessage(), module);
+                Debug.logError(e.getMessage(), MODULE);
             }
         }
         try {
@@ -299,11 +299,11 @@ public class LinkedInEvents {
             request.setAttribute("USERNAME", userLogin.getString("userLoginId"));
             request.setAttribute("PASSWORD", autoPassword);
         } catch (GenericEntityException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
             request.setAttribute("_ERROR_MESSAGE_", e.toString());
             return "error";
         } catch (AuthenticatorException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
             request.setAttribute("_ERROR_MESSAGE_", e.toString());
             return "error";
         }

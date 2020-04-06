@@ -39,7 +39,7 @@ import org.eclipse.birt.report.model.api.elements.DesignChoiceConstants;
 
 public final class BirtUtil {
 
-    public final static String module = BirtUtil.class.getName();
+    public final static String MODULE = BirtUtil.class.getName();
 
     private final static Map<String, String> entityFieldTypeBirtTypeMap = MapUtils.unmodifiableMap(UtilMisc.toMap(
             "id", DesignChoiceConstants.COLUMN_DATA_TYPE_STRING,

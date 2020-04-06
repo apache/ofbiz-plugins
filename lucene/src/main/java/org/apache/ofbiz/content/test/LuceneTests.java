@@ -44,7 +44,7 @@ import org.apache.ofbiz.service.testtools.OFBizTestCase;
 public class LuceneTests extends OFBizTestCase {
 
     protected GenericValue userLogin = null;
-    public final static String module = LuceneTests.class.getName();
+    public final static String MODULE = LuceneTests.class.getName();
 
     public LuceneTests(String name) {
         super(name);
@@ -73,7 +73,7 @@ public class LuceneTests extends OFBizTestCase {
         try {
             Thread.sleep(3000); // sleep 3 seconds to give enough time to the indexer to process the entries
         } catch (InterruptedException e) {
-            Debug.logError("Thread interrupted :" + e, module);
+            Debug.logError("Thread interrupted :" + e, MODULE);
         }
         
         Directory directory = FSDirectory.open(new File(SearchWorker.getIndexPath("content")).toPath());

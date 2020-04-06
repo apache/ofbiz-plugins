@@ -63,7 +63,7 @@ import org.xml.sax.SAXException;
  */
 public class LinkedInAuthenticator implements Authenticator {
 
-    private static final String module = LinkedInAuthenticator.class.getName();
+    private static final String MODULE = LinkedInAuthenticator.class.getName();
 
     public static final String props = "linkedInAuth.properties";
 
@@ -130,7 +130,7 @@ public class LinkedInAuthenticator implements Authenticator {
             }
         }
 
-        Debug.logInfo("LinkedIn auth called; returned user info: " + user, module);
+        Debug.logInfo("LinkedIn auth called; returned user info: " + user, MODULE);
         return user != null;
     }
 
@@ -178,7 +178,7 @@ public class LinkedInAuthenticator implements Authenticator {
             try {
                 parentTx = TransactionUtil.suspend();
             } catch (GenericTransactionException e) {
-                Debug.logError(e, "Could not suspend transaction: " + e.getMessage(), module);
+                Debug.logError(e, "Could not suspend transaction: " + e.getMessage(), MODULE);
             }
 
             try {
@@ -193,12 +193,12 @@ public class LinkedInAuthenticator implements Authenticator {
                 }
 
             } catch (GenericTransactionException e) {
-                Debug.logError(e, "Could not suspend transaction: " + e.getMessage(), module);
+                Debug.logError(e, "Could not suspend transaction: " + e.getMessage(), MODULE);
             } finally {
                 try {
                     TransactionUtil.commit(beganTransaction);
                 } catch (GenericTransactionException e) {
-                    Debug.logError(e, "Could not commit nested transaction: " + e.getMessage(), module);
+                    Debug.logError(e, "Could not commit nested transaction: " + e.getMessage(), MODULE);
                 }
             }
         } finally {
@@ -206,9 +206,9 @@ public class LinkedInAuthenticator implements Authenticator {
             if (parentTx != null) {
                 try {
                     TransactionUtil.resume(parentTx);
-                    if (Debug.verboseOn()) Debug.logVerbose("Resumed the parent transaction.", module);
+                    if (Debug.verboseOn()) Debug.logVerbose("Resumed the parent transaction.", MODULE);
                 } catch (GenericTransactionException e) {
-                    Debug.logError(e, "Could not resume parent nested transaction: " + e.getMessage(), module);
+                    Debug.logError(e, "Could not resume parent nested transaction: " + e.getMessage(), MODULE);
                 }
             }
         }
@@ -292,7 +292,7 @@ public class LinkedInAuthenticator implements Authenticator {
         try {
             delegator.create(partyRole);
         } catch (GenericEntityException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
             throw new AuthenticatorException(e.getMessage(), e);
         }
 
@@ -322,7 +322,7 @@ public class LinkedInAuthenticator implements Authenticator {
             try {
                 secGroup = EntityQuery.use(delegator).from("SecurityGroup").where("groupId", securityGroup).cache().queryOne();
             } catch (GenericEntityException e) {
-                Debug.logError(e, e.getMessage(), module);
+                Debug.logError(e, e.getMessage(), MODULE);
             }
 
             // add it to the user if it exists
@@ -362,7 +362,7 @@ public class LinkedInAuthenticator implements Authenticator {
      */
     @Override
     public void updatePassword(String username, String password, String newPassword) throws AuthenticatorException {
-        Debug.logInfo("Calling LinkedIn:updatePassword() - ignored!!!", module);
+        Debug.logInfo("Calling LinkedIn:updatePassword() - ignored!!!", MODULE);
     }
 
     /**
@@ -412,7 +412,7 @@ public class LinkedInAuthenticator implements Authenticator {
         CloseableHttpResponse getResponse = jsonClient.execute(httpGet);
         String responseString = new BasicResponseHandler().handleResponse(getResponse);
         if (getResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-            // Debug.logInfo("Json Response from LinkedIn: " + responseString, module);
+            // Debug.logInfo("Json Response from LinkedIn: " + responseString, MODULE);
             userInfo = UtilXml.readXmlDocument(responseString);
         } else {
             String errMsg = UtilProperties.getMessage(resource, "GetOAuth2AccessTokenError", UtilMisc.toMap("error", responseString), locale);
@@ -433,7 +433,7 @@ public class LinkedInAuthenticator implements Authenticator {
             if (UtilValidate.isNotEmpty(urlContent)) {
                 String id = urlContent.substring(urlContent.indexOf("?id="));
                 id = id.substring(0, id.indexOf("&"));
-                Debug.logInfo("LinkedIn user id: " + id, module);
+                Debug.logInfo("LinkedIn user id: " + id, MODULE);
                 return id;
             }
         }
@@ -454,7 +454,7 @@ public class LinkedInAuthenticator implements Authenticator {
             if (UtilValidate.isNotEmpty(urlContent)) {
                 String id = urlContent.substring(urlContent.indexOf("?id="));
                 id = id.substring(0, id.indexOf("&"));
-                Debug.logInfo("LinkedIn user id: " + id, module);
+                Debug.logInfo("LinkedIn user id: " + id, MODULE);
                 results.put("userId", id);
             }
         }

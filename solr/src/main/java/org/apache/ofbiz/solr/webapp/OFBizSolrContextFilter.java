@@ -57,7 +57,7 @@ import org.apache.solr.servlet.SolrDispatchFilter;
  */
 public class OFBizSolrContextFilter extends SolrDispatchFilter {
 
-    public static final String module = OFBizSolrContextFilter.class.getName();
+    public static final String MODULE = OFBizSolrContextFilter.class.getName();
     
     private static final String resource = "SolrUiLabels";
 
@@ -99,9 +99,9 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
                     } else {
                         message = UtilProperties.getMessage(resource, "SolrErrorNoManagePermission", locale);
                     }
-                    Debug.logInfo("[" + httpRequest.getRequestURI().substring(1) + "(Domain:" + request.getScheme() + "://" + request.getServerName() + ")] Request error: " + message, module);
+                    Debug.logInfo("[" + httpRequest.getRequestURI().substring(1) + "(Domain:" + request.getScheme() + "://" + request.getServerName() + ")] Request error: " + message, MODULE);
                 } catch (ConversionException e) {
-                    Debug.logError("Error while converting Solr ofbizLogin map to JSON.", module);
+                    Debug.logError("Error while converting Solr ofbizLogin map to JSON.", MODULE);
                 } finally {
                     if (os != null) {
                         os.close();
@@ -142,11 +142,11 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
         if (Debug.timingOn() && rname != null) {
             timer = new UtilTimer();
             timer.setLog(true);
-            timer.timerString("[" + rname + "(Domain:" + request.getScheme() + "://" + request.getServerName() + ")] Request Begun, encoding=[" + charset + "]", module);
+            timer.timerString("[" + rname + "(Domain:" + request.getScheme() + "://" + request.getServerName() + ")] Request Begun, encoding=[" + charset + "]", MODULE);
         }
         // NOTE: there's a chain.doFilter in SolrDispatchFilter's doFilter
         super.doFilter(request, response, chain);
-        if (Debug.timingOn() && rname != null) timer.timerString("[" + rname + "(Domain:" + request.getScheme() + "://" + request.getServerName() + ")] Request Done", module);
+        if (Debug.timingOn() && rname != null) timer.timerString("[" + rname + "(Domain:" + request.getScheme() + "://" + request.getServerName() + ")] Request Done", MODULE);
     }
 
     @Override
@@ -199,9 +199,9 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
             json = mapToJson.convert(UtilMisc.toMap("responseHeader", (Object) responseHeader));
             os.write(json.toString().getBytes());
             os.flush();
-            Debug.logInfo("[" + httpRequest.getRequestURI().substring(1) + "(Domain:" + httpRequest.getScheme() + "://" + httpRequest.getServerName() + ")] Request error: " + message, module);
+            Debug.logInfo("[" + httpRequest.getRequestURI().substring(1) + "(Domain:" + httpRequest.getScheme() + "://" + httpRequest.getServerName() + ")] Request error: " + message, MODULE);
         } catch (ConversionException e) {
-            Debug.logError("Error while converting responseHeader map to JSON.", module);
+            Debug.logError("Error while converting responseHeader map to JSON.", MODULE);
         } finally {
             if (os != null) {
                 os.close();

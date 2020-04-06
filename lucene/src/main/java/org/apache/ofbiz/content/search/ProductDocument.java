@@ -48,7 +48,7 @@ import org.apache.ofbiz.entity.util.EntityUtil;
 import org.apache.ofbiz.entity.util.EntityUtilProperties;
 
 public class ProductDocument implements LuceneDocument {
-    private static final String module = ProductDocument.class.getName();
+    private static final String MODULE = ProductDocument.class.getName();
     private static final String NULL_STRING = "NULL";
     private final Term documentIdentifier;
 
@@ -185,7 +185,7 @@ public class ProductDocument implements LuceneDocument {
                     try {
                         EntityUtilProperties.getPropertyAsInteger("prodsearch", "index.weight.ProductContent." + productContentTypeId, 1);
                     } catch (Exception e) {
-                        Debug.logWarning("Could not parse weight number: " + e.toString(), module);
+                        Debug.logWarning("Could not parse weight number: " + e.toString(), MODULE);
                     }
 
                     List<GenericValue> productContentAndInfos = EntityQuery.use(delegator).from("ProductContentAndInfo").where("productId", productId, "productContentTypeId", productContentTypeId).queryList();
@@ -205,9 +205,9 @@ public class ProductDocument implements LuceneDocument {
                             String contentText = DataResourceWorker.renderDataResourceAsText(null, delegator, productContentAndInfo.getString("dataResourceId"), drContext, null, null, false);
                             addTextField(doc, "content", contentText, false, "fullText", delegator);
                         } catch (IOException e1) {
-                            Debug.logError(e1, "Error getting content text to index", module);
+                            Debug.logError(e1, "Error getting content text to index", MODULE);
                         } catch (GeneralException e1) {
-                            Debug.logError(e1, "Error getting content text to index", module);
+                            Debug.logError(e1, "Error getting content text to index", MODULE);
                         }
 
                         // TODO: Not indexing alternate locales, needs special handling
@@ -273,7 +273,7 @@ public class ProductDocument implements LuceneDocument {
                 return doc;
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
         }
         return null;
     }

@@ -36,7 +36,7 @@ import org.apache.ofbiz.birt.BirtWorker;
 
 public class BirtContainer implements Container {
 
-    public static final String module = BirtContainer.class.getName();
+    public static final String MODULE = BirtContainer.class.getName();
 
     protected String configFile;
 
@@ -53,7 +53,7 @@ public class BirtContainer implements Container {
      */
     @Override
     public boolean start() throws ContainerException {
-        Debug.logInfo("Start BIRT container", module);
+        Debug.logInfo("Start BIRT container", MODULE);
 
         // make sure the subclass sets the config name
         if (getName() == null) {
@@ -73,20 +73,20 @@ public class BirtContainer implements Container {
 
         // startup platform
         try {
-            Debug.logInfo("Startup BIRT platform", module);
+            Debug.logInfo("Startup BIRT platform", MODULE);
             Platform.startup(config);
         } catch (BirtException e) {
             throw new ContainerException(e);
         }
 
         // create report engine
-        Debug.logInfo("Create factory object", module);
+        Debug.logInfo("Create factory object", MODULE);
         IReportEngineFactory factory = (IReportEngineFactory) Platform
               .createFactoryObject(IReportEngineFactory.EXTENSION_REPORT_ENGINE_FACTORY);
         if (factory == null) {
             throw new ContainerException("can not create birt engine factory");
         }
-        Debug.logInfo("Create report engine", module);
+        Debug.logInfo("Create report engine", MODULE);
         IReportEngine engine = factory.createReportEngine(config);
         BirtFactory.setReportEngine(engine);
 
@@ -100,7 +100,7 @@ public class BirtContainer implements Container {
                 formatList = supportedFormat;
             }
         }
-        Debug.logInfo("BIRT supported formats: " + formatList, module);
+        Debug.logInfo("BIRT supported formats: " + formatList, MODULE);
         return false;
     }
 

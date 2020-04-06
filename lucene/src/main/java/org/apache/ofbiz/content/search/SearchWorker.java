@@ -39,7 +39,7 @@ import org.apache.ofbiz.service.LocalDispatcher;
  */
 public final class SearchWorker {
 
-    public static final String module = SearchWorker.class.getName();
+    public static final String MODULE = SearchWorker.class.getName();
 
     private static final Version LUCENE_VERSION = Version.LUCENE_8_2_0;
 
@@ -81,7 +81,7 @@ public final class SearchWorker {
                     contentList.add(content);
                 }
             } catch (GenericEntityException e) {
-                Debug.logError(e, module);
+                Debug.logError(e, MODULE);
                 return;
             }
         }

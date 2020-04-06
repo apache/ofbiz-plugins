@@ -40,7 +40,7 @@ import org.apache.ofbiz.webpos.transaction.WebPosTransaction;
 
 public class WebPosSession {
 
-    public static final String module = WebPosSession.class.getName();
+    public static final String MODULE = WebPosSession.class.getName();
 
     private String id = null;
     private Map<String, Object> attributes = new HashMap<>();
@@ -75,7 +75,7 @@ public class WebPosSession {
 
         this.dispatcher = dispatcher;
         this.cart = cart;
-        Debug.logInfo("Created WebPosSession [" + id + "]", module);
+        Debug.logInfo("Created WebPosSession [" + id + "]", MODULE);
     }
 
     public GenericValue getUserLogin() {
@@ -193,10 +193,10 @@ public class WebPosSession {
         try {
             result = dispatcher.runSync("userLogin", UtilMisc.toMap("login.username", username, "login.password", password));
         } catch (GenericServiceException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
             throw new UserLoginFailure(e);
         } catch (Throwable t) {
-            Debug.logError(t, "Throwable caught!", module);
+            Debug.logError(t, "Throwable caught!", MODULE);
         }
 
         // check for errors
@@ -220,7 +220,7 @@ public class WebPosSession {
         try {
             partyRole = getDelegator().findOne("PartyRole", false, "partyId", partyId, "roleTypeId", roleTypeId);
         } catch (GenericEntityException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
             return false;
         }
 

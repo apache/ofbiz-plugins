@@ -56,7 +56,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  */
 public class SamplePricatParser extends AbstractPricatParser {
     
-    public static final String module = SamplePricatParser.class.getName();
+    public static final String MODULE = SamplePricatParser.class.getName();
 
     public static final Map<String, List<Object[]>> ColNamesList = UtilMisc.toMap("V1.1", genExcelHeaderNames("V1.1"));
 
@@ -131,7 +131,7 @@ public class SamplePricatParser extends AbstractPricatParser {
             cleanupLogAndCommentedExcel();
         } catch (IOException e) {
             report.println(e);
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
         } finally {
             if (UtilValidate.isNotEmpty(fileItems)) {
                 // remove tmp files
@@ -145,7 +145,7 @@ public class SamplePricatParser extends AbstractPricatParser {
                 try {
                     workbook.close();
                 } catch (IOException e) {
-                    Debug.logError(e, module);
+                    Debug.logError(e, MODULE);
                 }
             }
         }

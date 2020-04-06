@@ -52,7 +52,7 @@ import com.ebay.soap.eBLBaseComponents.StoreCustomCategoryType;
 import com.ebay.soap.eBLBaseComponents.StoreType;
 
 public class EbayStoreSiteFacade {
-    public static final String module = EbayStoreSiteFacade.class.getName();
+    public static final String MODULE = EbayStoreSiteFacade.class.getName();
     private ApiContext apiContext = null;
     private IAttributesMaster attrMaster = null;
     private static final int MAP_SIZE = 30000;

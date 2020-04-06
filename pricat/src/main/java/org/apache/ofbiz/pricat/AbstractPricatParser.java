@@ -79,7 +79,7 @@ import org.apache.ofbiz.service.ServiceUtil;
  */
 public abstract class AbstractPricatParser implements InterfacePricatParser {
     
-    public static final String module = AbstractPricatParser.class.getName();
+    public static final String MODULE = AbstractPricatParser.class.getName();
     
     protected LocalDispatcher dispatcher;
     
@@ -268,23 +268,23 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
             workbook.close();
         } catch (FileNotFoundException e) {
             report.println(e);
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
         } catch (IOException e) {
             report.println(e);
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
         } finally {
             if (fos != null) {
                 try {
                     fos.close();
                 } catch (IOException e) {
-                    Debug.logError(e, module);
+                    Debug.logError(e, MODULE);
                 }
             }
             if (workbook != null) {
                 try {
                     workbook.close();
                 } catch (IOException e) {
-                    Debug.logError(e, module);
+                    Debug.logError(e, MODULE);
                 }
             }
         }
@@ -606,7 +606,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
     public static boolean isCommentedExcelExists(HttpServletRequest request, Long sequenceNum) {
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
         if (UtilValidate.isEmpty(sequenceNum) || UtilValidate.isEmpty(userLogin)) {
-            Debug.logError("sequenceNum[" + sequenceNum + "] or userLogin is empty", module);
+            Debug.logError("sequenceNum[" + sequenceNum + "] or userLogin is empty", MODULE);
             return false;
         }
         String userLoginId = userLogin.getString("userLoginId");
@@ -615,14 +615,14 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
         try {
             historyValue = EntityQuery.use(delegator).from("ExcelImportHistory").where("userLoginId", userLoginId, "sequenceNum", Long.valueOf(sequenceNum)).queryOne();
         } catch (NumberFormatException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
             return false;
         } catch (GenericEntityException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
             return false;
         }
         if (UtilValidate.isEmpty(historyValue)) {
-            Debug.logError("No ExcelImportHistory value found by sequenceNum[" + sequenceNum + "] and userLoginId[" + userLoginId + "].", module);
+            Debug.logError("No ExcelImportHistory value found by sequenceNum[" + sequenceNum + "] and userLoginId[" + userLoginId + "].", MODULE);
             return false;
         }
         File file = FileUtil.getFile(tempFilesFolder + userLoginId + "/" + sequenceNum + ".xlsx");
@@ -648,7 +648,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
                         try {
                             excelFile.delete();
                         } catch (SecurityException e) {
-                            Debug.logError(e.getMessage(), module);
+                            Debug.logError(e.getMessage(), MODULE);
                             report.print(e.getMessage(), InterfaceReport.FORMAT_ERROR);
                         }
                     }
@@ -657,7 +657,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
                         try {
                             logFile.delete();
                         } catch (SecurityException e) {
-                            Debug.logError(e.getMessage(), module);
+                            Debug.logError(e.getMessage(), MODULE);
                             report.print(e.getMessage(), InterfaceReport.FORMAT_ERROR);
                         }
                     }
@@ -667,7 +667,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
             }
             report.println();
         } catch (GenericEntityException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         }
     }
 }

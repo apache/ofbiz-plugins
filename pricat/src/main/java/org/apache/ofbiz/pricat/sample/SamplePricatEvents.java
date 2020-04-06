@@ -37,7 +37,7 @@ import org.apache.ofbiz.pricat.PricatEvents;
 
 public class SamplePricatEvents extends PricatEvents {
     
-    public static final String module = SamplePricatEvents.class.getName();
+    public static final String MODULE = SamplePricatEvents.class.getName();
     
     public static final String PricatLatestVersion = UtilProperties.getPropertyValue("pricat", "pricat.latest.version", "V1.1");
     
@@ -70,10 +70,10 @@ public class SamplePricatEvents extends PricatEvents {
             byte[] bytes = Files.readAllBytes(file);
             UtilHttp.streamContentToBrowser(response, bytes, "application/octet-stream", URLEncoder.encode(fileName, "UTF-8"));
         } catch (MalformedURLException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
             return "error";
         } catch (IOException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
             return "error";
         }
         return "success";

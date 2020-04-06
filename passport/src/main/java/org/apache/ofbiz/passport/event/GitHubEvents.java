@@ -68,7 +68,7 @@ import org.apache.ofbiz.service.LocalDispatcher;
  */
 public class GitHubEvents {
 
-    public static final String module = GitHubEvents.class.getName();
+    public static final String MODULE = GitHubEvents.class.getName();
     
     public static final String resource = "PassportUiLabels";
     
@@ -111,7 +111,7 @@ public class GitHubEvents {
                     + "&scope=" + DEFAULT_SCOPE
                     + "&redirect_uri=" + URLEncoder.encode(returnURI, "UTF-8")
                     + "&state=" + state;
-            Debug.logInfo("Request to GitHub: " + redirectUrl, module);
+            Debug.logInfo("Request to GitHub: " + redirectUrl, MODULE);
             response.sendRedirect(redirectUrl);
         } catch (NullPointerException e) {
             String errMsg = UtilProperties.getMessage(resource, "GitHubRedirectToOAuth2NullException", UtilHttp.getLocale(request));
@@ -152,7 +152,7 @@ public class GitHubEvents {
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
-        Debug.logInfo("GitHub authorization code: " + authorizationCode, module);
+        Debug.logInfo("GitHub authorization code: " + authorizationCode, MODULE);
         
         GenericValue oauth2GitHub = getOAuth2GitHubConfig(request);
         if (UtilValidate.isEmpty(oauth2GitHub)) {
@@ -181,22 +181,22 @@ public class GitHubEvents {
                     .build();
             HttpPost postMethod = new HttpPost(uri);
             CloseableHttpClient jsonClient = HttpClients.custom().build();
-            // Debug.logInfo("GitHub get access token query string: " + postMethod.getURI(), module);
+            // Debug.logInfo("GitHub get access token query string: " + postMethod.getURI(), MODULE);
             postMethod.setConfig(PassportUtil.StandardRequestConfig);
             postMethod.setHeader(PassportUtil.ACCEPT_HEADER, "application/json");
             CloseableHttpResponse postResponse = jsonClient.execute(postMethod);
             String responseString = new BasicResponseHandler().handleResponse(postResponse);
-            // Debug.logInfo("GitHub get access token response code: " + postResponse.getStatusLine().getStatusCode(), module);
-            // Debug.logInfo("GitHub get access token response content: " + responseString, module);
+            // Debug.logInfo("GitHub get access token response code: " + postResponse.getStatusLine().getStatusCode(), MODULE);
+            // Debug.logInfo("GitHub get access token response content: " + responseString, MODULE);
             if (postResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                Debug.logInfo("Json Response from GitHub: " + responseString, module);
+                Debug.logInfo("Json Response from GitHub: " + responseString, MODULE);
                 JSON jsonObject = JSON.from(responseString);
                 JSONToMap jsonMap = new JSONToMap();
                 Map<String, Object> userMap = jsonMap.convert(jsonObject);
                 accessToken = (String) userMap.get("access_token");
                 tokenType = (String) userMap.get("token_type");
-                // Debug.logInfo("Generated Access Token : " + accessToken, module);
-                // Debug.logInfo("Token Type: " + tokenType, module);
+                // Debug.logInfo("Generated Access Token : " + accessToken, MODULE);
+                // Debug.logInfo("Token Type: " + tokenType, MODULE);
             } else {
                 String errMsg = UtilProperties.getMessage(resource, "GitHubGetOAuth2AccessTokenError", UtilMisc.toMap("error", responseString), UtilHttp.getLocale(request));
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
@@ -227,7 +227,7 @@ public class GitHubEvents {
         } finally {
             getMethod.releaseConnection();
         }
-        // Debug.logInfo("GitHub User Info:" + userInfo, module);
+        // Debug.logInfo("GitHub User Info:" + userInfo, MODULE);
         
         // Store the user info and check login the user
         return checkLoginGitHubUser(request, userInfo, accessToken);
@@ -263,7 +263,7 @@ public class GitHubEvents {
                 try {
                     gitHubUser.store();
                 } catch (GenericEntityException e) {
-                    Debug.logError(e.getMessage(), module);
+                    Debug.logError(e.getMessage(), MODULE);
                 }
             }
         } else {
@@ -274,7 +274,7 @@ public class GitHubEvents {
             try {
                 gitHubUser.create();
             } catch (GenericEntityException e) {
-                Debug.logError(e.getMessage(), module);
+                Debug.logError(e.getMessage(), MODULE);
             }
         }
         try {
@@ -292,11 +292,11 @@ public class GitHubEvents {
             request.setAttribute("USERNAME", userLogin.getString("userLoginId"));
             request.setAttribute("PASSWORD", autoPassword);
         } catch (GenericEntityException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
             request.setAttribute("_ERROR_MESSAGE_", e.toString());
             return "error";
         } catch (AuthenticatorException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
             request.setAttribute("_ERROR_MESSAGE_", e.toString());
             return "error";
         }

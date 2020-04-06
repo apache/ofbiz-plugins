@@ -58,7 +58,7 @@ public class ProductsExportToEbay {
 
     private static final String resource = "EbayUiLabels";
     private static final String configFileName = "ebayExport.properties";
-    private static final String module = ProductsExportToEbay.class.getName();
+    private static final String MODULE = ProductsExportToEbay.class.getName();
     private static List<String> productExportSuccessMessageList = new LinkedList<>();
     private static List<String> productExportFailureMessageList = new LinkedList<>();
 
@@ -99,7 +99,7 @@ public class ProductsExportToEbay {
                 }
             }
         } catch (Exception e) {
-            Debug.logError("Exception in exportToEbay " + e, module);
+            Debug.logError("Exception in exportToEbay " + e, MODULE);
             return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "productsExportToEbay.exceptionInExportToEbay", locale));
         }
         if (UtilValidate.isNotEmpty(productExportSuccessMessageList)) {
@@ -133,7 +133,7 @@ public class ProductsExportToEbay {
     private static Map<String, Object> postItem(String postItemsUrl, StringBuffer dataItems, String devID, String appID, String certID,
                                 String callName, String compatibilityLevel, String siteID) throws IOException {
         if (Debug.verboseOn()) {
-            Debug.logVerbose("Request of " + callName + " To eBay:\n" + dataItems.toString(), module);
+            Debug.logVerbose("Request of " + callName + " To eBay:\n" + dataItems.toString(), MODULE);
         }
         HttpURLConnection connection = (HttpURLConnection)(new URL(postItemsUrl)).openConnection();
         connection.setDoInput(true);
@@ -167,7 +167,7 @@ public class ProductsExportToEbay {
         }
 
         if (Debug.verboseOn()) {
-            Debug.logVerbose("Response of " + callName + " From eBay:\n" + response, module);
+            Debug.logVerbose("Response of " + callName + " From eBay:\n" + response, MODULE);
         }
 
         return result;
@@ -320,14 +320,14 @@ public class ProductsExportToEbay {
                 UtilXml.addChildElementValue(nameValueListElem, "Name", "Condition", itemDocument);
                 UtilXml.addChildElementValue(nameValueListElem, "Value", "New: With Tags", itemDocument);
 
-                //Debug.logInfo("The generated string is ======= " + UtilXml.writeXmlDocument(itemDocument), module);
+                //Debug.logInfo("The generated string is ======= " + UtilXml.writeXmlDocument(itemDocument), MODULE);
                 dataItemsXml.append(UtilXml.writeXmlDocument(itemDocument));
             } catch (Exception e) {
-                Debug.logError("Exception during building data items to eBay: " + e.getMessage(), module);
+                Debug.logError("Exception during building data items to eBay: " + e.getMessage(), MODULE);
                 return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "productsExportToEbay.exceptionDuringBuildingDataItemsToEbay", locale));
             }
         } catch (Exception e) {
-            Debug.logError("Exception during building data items to eBay: " + e.getMessage(), module);
+            Debug.logError("Exception during building data items to eBay: " + e.getMessage(), MODULE);
             return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "productsExportToEbay.exceptionDuringBuildingDataItemsToEbay", locale));
         }
         return ServiceUtil.returnSuccess();
@@ -358,7 +358,7 @@ public class ProductsExportToEbay {
 
             dataItemsXml.append(UtilXml.writeXmlDocument(itemRequest));
         } catch (Exception e) {
-            Debug.logError("Exception during building data items to eBay", module);
+            Debug.logError("Exception during building data items to eBay", MODULE);
             return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "productsExportToEbay.exceptionDuringBuildingGetCategoriesRequest", locale));
         }
         return ServiceUtil.returnSuccess();
@@ -383,7 +383,7 @@ public class ProductsExportToEbay {
 
             setTaxTableRequestXml.append(UtilXml.writeXmlDocument(taxRequestDocument));
         } catch (Exception e) {
-            Debug.logError("Exception during building request set tax table to eBay", module);
+            Debug.logError("Exception during building request set tax table to eBay", MODULE);
             return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "productsExportToEbay.exceptionDuringBuildingRequestSetTaxTableToEbay", locale));
         }
         return ServiceUtil.returnSuccess();
@@ -408,9 +408,9 @@ public class ProductsExportToEbay {
             UtilXml.addChildElementValue(transElem, "RecipientUserID", "buyer_anytime", transDoc);
 
             dataItemsXml.append(UtilXml.writeXmlDocument(transDoc));
-            Debug.logInfo(dataItemsXml.toString(), module);
+            Debug.logInfo(dataItemsXml.toString(), MODULE);
         } catch (Exception e) {
-            Debug.logError("Exception during building AddTransactionConfirmationItemRequest eBay", module);
+            Debug.logError("Exception during building AddTransactionConfirmationItemRequest eBay", MODULE);
             return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "productsExportToEbay.exceptionDuringBuildingAddTransactionConfirmationItemRequestToEbay", locale));
         }
         return ServiceUtil.returnSuccess();
@@ -540,7 +540,7 @@ public class ProductsExportToEbay {
                 }
             }
         } catch (Exception e) {
-            Debug.logError("Exception in GetEbayCategories " + e, module);
+            Debug.logError("Exception in GetEbayCategories " + e, MODULE);
             return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "productsExportToEbay.exceptionInGetEbayCategories", locale));
         }
         return result;
@@ -600,7 +600,7 @@ public class ProductsExportToEbay {
                 productExportSuccessMessageList.add(productSuccessfullyExportedMsg);
             }
         } catch (Exception e) {
-            Debug.logError("Error in processing xml string" + e.getMessage(), module);
+            Debug.logError("Error in processing xml string" + e.getMessage(), MODULE);
             return ServiceUtil.returnFailure();
         }
         return result;

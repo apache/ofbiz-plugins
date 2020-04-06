@@ -31,7 +31,7 @@ import org.apache.ofbiz.entity.util.EntityQuery;
 
 public class Various {
 
-    public static final String module = Various.class.getName();
+    public static final String MODULE = Various.class.getName();
 
     public static void setDatesFollowingTasks(GenericValue task) {
 
@@ -51,7 +51,7 @@ public class Various {
             }
 
         } catch (GenericEntityException e) {
-            Debug.logError("Could not updte task: " + e.getMessage(), module);
+            Debug.logError("Could not updte task: " + e.getMessage(), MODULE);
         }
     }
 
@@ -70,7 +70,7 @@ public class Various {
             }
 
         } catch (GenericEntityException e) {
-            Debug.logError("Could not updte task: " + e.getMessage(), module);
+            Debug.logError("Could not updte task: " + e.getMessage(), MODULE);
         }
         if (plannedHours == 0.00) {
             plannedHours = Double.valueOf("24.00"); // default length of task is 3 days.

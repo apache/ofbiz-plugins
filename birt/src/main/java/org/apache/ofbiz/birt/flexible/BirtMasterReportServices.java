@@ -50,7 +50,7 @@ import org.eclipse.birt.report.engine.api.script.IReportContext;
 
 public class BirtMasterReportServices {
 
-    public static final String module = BirtServices.class.getName();
+    public static final String MODULE = BirtServices.class.getName();
     public static final String resource = "BirtUiLabels";
     public static final String resource_error = "BirtErrorUiLabels";
 
@@ -144,7 +144,7 @@ public class BirtMasterReportServices {
                     .where(ecl).select("hours", "fromDate", "thruDate")
                     .queryList();
         } catch (GenericEntityException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
             ServiceUtil.returnError("Error getting party from person name.");
         }
         List<GenericValue> listCompiled = new ArrayList<>();
@@ -362,7 +362,7 @@ public class BirtMasterReportServices {
                 listInvoiceEditable.add(invoiceEditable);
             }
         } catch (Exception e) {
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "BirtErrorRetrievingTurnOver", locale));
         }
         Map<String, Object> result = ServiceUtil.returnSuccess();

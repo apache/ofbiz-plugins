@@ -154,7 +154,7 @@ import com.ibm.icu.text.SimpleDateFormat;
 
 public class EbayStore {
     private static final String resource = "EbayStoreUiLabels";
-    private static final String module = ProductsExportToEbay.class.getName();
+    private static final String MODULE = ProductsExportToEbay.class.getName();
     public static ProductsExportToEbay productExportEbay = new ProductsExportToEbay();
 
     private static void appendRequesterCredentials(Element elem, Document doc, String token) {
@@ -165,7 +165,7 @@ public class EbayStore {
     private static Map<String, Object> postItem(String postItemsUrl, StringBuffer dataItems, String devID, String appID, String certID,
             String callName, String compatibilityLevel, String siteID) throws IOException {
         if (Debug.verboseOn()) {
-            Debug.logVerbose("Request of " + callName + " To eBay:\n" + dataItems.toString(), module);
+            Debug.logVerbose("Request of " + callName + " To eBay:\n" + dataItems.toString(), MODULE);
         }
         HttpURLConnection connection = (HttpURLConnection)(new URL(postItemsUrl)).openConnection();
         connection.setDoInput(true);
@@ -199,7 +199,7 @@ public class EbayStore {
         }
 
         if (Debug.verboseOn()) {
-            Debug.logVerbose("Response of " + callName + " From eBay:\n" + response, module);
+            Debug.logVerbose("Response of " + callName + " From eBay:\n" + response, MODULE);
         }
 
         return result;
@@ -378,7 +378,7 @@ public class EbayStore {
                 }
             }
         } catch (Exception e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
             // TODO why is there an Exception catching here? 
         }
         return storeCustomCategoryTypeArry;
@@ -400,7 +400,7 @@ public class EbayStore {
                             for (GenericValue productCategory : productCategoryList) {
                                 if (EbayStoreHelper.veriflyCategoryInCatalog(delegator,catalogCategories,productCategory.getString("productCategoryId"))) {
                                     if (EbayStoreHelper.createEbayCategoryIdByPartyId(delegator, productCategory.getString("productCategoryId"), partyId, String.valueOf(returnCategoryType.getCategoryID()))) {
-                                        Debug.logInfo("Create new ProductCategoryRollup with partyId "+partyId+" categoryId "+productCategory.getString("productCategoryId")+ " and ebayCategoryId "+String.valueOf(returnCategoryType.getCategoryID()), module);
+                                        Debug.logInfo("Create new ProductCategoryRollup with partyId "+partyId+" categoryId "+productCategory.getString("productCategoryId")+ " and ebayCategoryId "+String.valueOf(returnCategoryType.getCategoryID()), MODULE);
                                     }
                                     break;
                                 }
@@ -452,7 +452,7 @@ public class EbayStore {
                 dataStoreXml.append(UtilXml.writeXmlDocument(storeDocument));
 
         } catch (Exception e) {
-            Debug.logError("Exception during building data items to eBay: " + e.getMessage(), module);
+            Debug.logError("Exception during building data items to eBay: " + e.getMessage(), MODULE);
             return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "productsExportToEbay.exceptionDuringBuildingDataItemsToEbay", locale));
         }
         return ServiceUtil.returnSuccess();
@@ -477,7 +477,7 @@ public class EbayStore {
                 result = "Successfully exported with ID (" + productStoreId + ").";
             }
         } catch (Exception e) {
-            Debug.logError("Error in processing xml string" + e.getMessage(), module);
+            Debug.logError("Error in processing xml string" + e.getMessage(), MODULE);
             result =  "Failure";
         }
         return result;
@@ -496,7 +496,7 @@ public class EbayStore {
             UtilXml.addChildElementValue(storeRequestElem, "LevelLimit", "1", storeDocument);
             dataStoreXml.append(UtilXml.writeXmlDocument(storeDocument));
         } catch (Exception e) {
-            Debug.logError("Exception during building data to eBay: " + e.getMessage(), module);
+            Debug.logError("Exception during building data to eBay: " + e.getMessage(), MODULE);
             return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "productsExportToEbay.exceptionDuringBuildingDataItemsToEbay", locale));
         }
         return ServiceUtil.returnSuccess();
@@ -532,7 +532,7 @@ public class EbayStore {
             dataStoreXml.append(UtilXml.writeXmlDocument(storeDocument));
 
         } catch (Exception e) {
-            Debug.logError("Exception during building data to eBay: " + e.getMessage(), module);
+            Debug.logError("Exception during building data to eBay: " + e.getMessage(), MODULE);
             return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "productsExportToEbay.exceptionDuringBuildingDataItemsToEbay", locale));
         }
         return ServiceUtil.returnSuccess();
@@ -636,7 +636,7 @@ public class EbayStore {
             } catch (GenericEntityException e1) {
                 e1.printStackTrace();
             }
-            Debug.logInfo("userLoginId is "+userLoginId+" and productStoreId is "+ context.get("productStoreId"), module);
+            Debug.logInfo("userLoginId is "+userLoginId+" and productStoreId is "+ context.get("productStoreId"), MODULE);
             GetStoreCall call = new GetStoreCall(EbayStoreHelper.getApiContext((String)context.get("productStoreId"), locale, delegator));
             //call.setSite(EbayHelper.getSiteCodeType((String)context.get("productStoreId"), locale, delegator));
             call.setCategoryStructureOnly(false);
@@ -865,7 +865,7 @@ public class EbayStore {
                 }
             }
         } catch (GenericServiceException e) {
-            Debug.logError("error message"+e, module);
+            Debug.logError("error message"+e, MODULE);
         }
     }
 
@@ -1804,7 +1804,7 @@ public class EbayStore {
               }
             result.put("allBidders", allBidders);
         } catch (Exception e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
             result.put("allBidders", allBidders);
             return result;
         }

@@ -61,7 +61,7 @@ import org.eclipse.birt.report.engine.api.RenderOption;
 
 public final class BirtWorker {
 
-    public final static String module = BirtWorker.class.getName();
+    public final static String MODULE = BirtWorker.class.getName();
 
     private final static String BIRT_PARAMETERS = "birtParameters";
     private final static String BIRT_LOCALE = "birtLocale";
@@ -110,19 +110,19 @@ public final class BirtWorker {
         if (birtImageDirectory == null) {
             birtImageDirectory = "/";
         }
-        Debug.logInfo("Get report engine", module);
+        Debug.logInfo("Get report engine", MODULE);
         IReportEngine engine = BirtFactory.getReportEngine();
 
         IRunAndRenderTask task = engine.createRunAndRenderTask(design);
         if (birtLocale != null) {
-            Debug.logInfo("Set BIRT locale:" + birtLocale, module);
+            Debug.logInfo("Set BIRT locale:" + birtLocale, MODULE);
             task.setLocale(birtLocale);
         }
 
         // set parameters if exists
         Map<String, Object> parameters = UtilGenerics.cast(context.get(BirtWorker.getBirtParameters()));
         if (parameters != null) {
-            //Debug.logInfo("Set BIRT parameters:" + parameters, module);
+            //Debug.logInfo("Set BIRT parameters:" + parameters, MODULE);
             task.setParameterValues(parameters);
         }
 
@@ -151,8 +151,8 @@ public final class BirtWorker {
 
         // run report
         if (Debug.infoOn()) {
-            Debug.logInfo("BIRT's locale is: " + task.getLocale(), module);
-            Debug.logInfo("Run report's task", module);
+            Debug.logInfo("BIRT's locale is: " + task.getLocale(), MODULE);
+            Debug.logInfo("Run report's task", MODULE);
         }
         task.run();
         task.close();

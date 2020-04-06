@@ -43,7 +43,7 @@ import com.ebay.soap.eBLBaseComponents.UserType;
 
 public class EbayStoreCustomerService {
 
-    public static String module = EbayStoreCustomerService.class.getName();
+    public static String MODULE = EbayStoreCustomerService.class.getName();
     private static final String resource = "EbayStoreUiLabels";
 
     public static Map<String, Object> listBestOfferIncludeMessage(DispatchContext dctx, Map<String, ? extends Object> context) {

@@ -35,7 +35,7 @@ import org.apache.ofbiz.base.util.Debug;
 @ServerEndpoint("/ws/pushNotifications")
 public class ExampleWebSockets {
 
-    public static final String module = ExampleWebSockets.class.getName();
+    public static final String MODULE = ExampleWebSockets.class.getName();
     private static Set<Session> clients = Collections.synchronizedSet(new HashSet<Session>());
     
 
@@ -55,7 +55,7 @@ public class ExampleWebSockets {
             try {
                 session.close();
             } catch (IOException ioe) {
-                Debug.logError(ioe.getMessage(), module);
+                Debug.logError(ioe.getMessage(), MODULE);
             }
         }
     }

@@ -39,7 +39,7 @@ import org.apache.ofbiz.service.ServiceUtil;
  */
 public class SearchEvents {
 
-    public static final String module = SearchEvents.class.getName();
+    public static final String MODULE = SearchEvents.class.getName();
 
     public static String indexContentTree(HttpServletRequest request, HttpServletResponse response) {
 
@@ -57,12 +57,12 @@ public class SearchEvents {
             if (ServiceUtil.isError(result)) {
                 String errorMessage = ServiceUtil.getErrorMessage(result);
                 request.setAttribute("_ERROR_MESSAGE_", errorMessage);
-                Debug.logError(errorMessage, module);
+                Debug.logError(errorMessage, MODULE);
                 return "error";
             }
         } catch (GenericServiceException e) {
             String errorMsg = "Error calling the indexContentTree service." + e.toString();
-            Debug.logError(e, errorMsg, module);
+            Debug.logError(e, errorMsg, MODULE);
             request.setAttribute("_ERROR_MESSAGE_", errorMsg + e.toString());
             return "error";
         }

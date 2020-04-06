@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
  */
 public class BirtFactory {
 
-    public final static String module = BirtFactory.class.getName();
+    public final static String MODULE = BirtFactory.class.getName();
 
     private static IReportEngine engine;
 
@@ -82,7 +82,7 @@ public class BirtFactory {
             }
             reportInputStream = reportFileUrl.openStream();
             double totalSeconds = (System.currentTimeMillis() - startTime)/1000.0;
-            Debug.logInfo("Got report in " + totalSeconds + "s from: " + reportFileUrl.toExternalForm(), module);
+            Debug.logInfo("Got report in " + totalSeconds + "s from: " + reportFileUrl.toExternalForm(), MODULE);
         }
 
         if (reportInputStream == null) {

@@ -41,7 +41,7 @@ import org.apache.ofbiz.service.ServiceUtil;
 
 public class WebPosSearch {
 
-    public static final String module = WebPosSearch.class.getName();
+    public static final String MODULE = WebPosSearch.class.getName();
     
     public static Map<String, Object> findProducts(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
@@ -79,7 +79,7 @@ public class WebPosSearch {
         try {
             products = EntityQuery.use(delegator).from(entityName).where(mainCond).orderBy("productName", "description").queryList();
         } catch (GenericEntityException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
         }
         result.put("productsList", products);
         return result;
@@ -178,7 +178,7 @@ public class WebPosSearch {
         try (EntityListIterator pli = delegator.findListIteratorByCondition(dynamicView, mainCond, null, null, orderBy, null)) {
             parties = EntityUtil.filterByDate(pli.getCompleteList(), true);
         } catch (GenericEntityException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
         }
         result.put("partiesList", parties);
         return result;

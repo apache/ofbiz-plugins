@@ -59,7 +59,7 @@ import org.w3c.dom.Element;
 
 public class EbayHelper {
     private static final String configFileName = "ebayExport.properties";
-    private static final String module = EbayHelper.class.getName();
+    private static final String MODULE = EbayHelper.class.getName();
     public static final String resource = "EbayUiLabels";
 
     public static Map<String, Object> buildEbayConfig(Map<String, Object> context, Delegator delegator) {
@@ -105,7 +105,7 @@ public class EbayHelper {
     public static Map<String, Object> postItem(String postItemsUrl, StringBuffer generatedXmlData, String devID, String appID, String certID,
             String callName, String compatibilityLevel, String siteID) throws IOException {
         if (Debug.verboseOn()) {
-            Debug.logVerbose("Request of " + callName + " To eBay:\n" + generatedXmlData.toString(), module);
+            Debug.logVerbose("Request of " + callName + " To eBay:\n" + generatedXmlData.toString(), MODULE);
         }
         HttpURLConnection connection = (HttpURLConnection) (new URL(postItemsUrl)).openConnection();
         connection.setDoInput(true);
@@ -137,7 +137,7 @@ public class EbayHelper {
             result = ServiceUtil.returnFailure(EbayHelper.toString(inputStream));
         }
         if (Debug.verboseOn()) {
-            Debug.logVerbose("Response of " + callName + " From eBay:\n" + response, module);
+            Debug.logVerbose("Response of " + callName + " From eBay:\n" + response, MODULE);
         }
         return result;
     }
@@ -184,7 +184,7 @@ public class EbayHelper {
                 shipmentMethodTypeId = ebayShippingMethod.getString("shipmentMethodTypeId");
             }
         } catch (GenericEntityException e) {
-            Debug.logInfo("Unable to find EbayShippingMethod", module);
+            Debug.logInfo("Unable to find EbayShippingMethod", MODULE);
         }
         cart.setAllCarrierPartyId(partyId);
         cart.setAllShipmentMethodTypeId(shipmentMethodTypeId);
@@ -222,10 +222,10 @@ public class EbayHelper {
                 }
             } 
         } catch (GenericEntityException gee) {
-            Debug.logError(gee, "Cannot get payment preferences for order #" + orderId, module);
+            Debug.logError(gee, "Cannot get payment preferences for order #" + orderId, MODULE);
             return false;
         } catch (Exception e) {
-            Debug.logError(e, "Cannot get payment preferences for order #" + orderId, module);
+            Debug.logError(e, "Cannot get payment preferences for order #" + orderId, MODULE);
             return false;
         }
         return true;
@@ -254,19 +254,19 @@ public class EbayHelper {
                     "orderPaymentPreferenceId", paymentPreference.get("orderPaymentPreferenceId"), "paymentFromId",
                     partyIdFrom, "paymentRefNum", externalId, "comments", "Payment receive via eBay"));
             if (ServiceUtil.isError(results)) {
-                Debug.logError(ServiceUtil.getErrorMessage(results) + " - " + results, module);
+                Debug.logError(ServiceUtil.getErrorMessage(results) + " - " + results, MODULE);
             }
 
             if ((results == null) || (results.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR))) {
-                Debug.logError((String) results.get(ModelService.ERROR_MESSAGE), module);
+                Debug.logError((String) results.get(ModelService.ERROR_MESSAGE), MODULE);
                 return false;
             }
             return true;
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Failed to create the payment for order " + orderId, module);
+            Debug.logError(e, "Failed to create the payment for order " + orderId, MODULE);
             return false;
         } catch (GenericServiceException e) {
-            Debug.logError(e, "Failed to create the payment for order " + orderId, module);
+            Debug.logError(e, "Failed to create the payment for order " + orderId, MODULE);
             return false;
         }
     }
@@ -291,7 +291,7 @@ public class EbayHelper {
             }
             orderAdjustment = delegator.makeValue("OrderAdjustment", inputMap);
         } catch (Exception e) {
-            Debug.logError(e, "Failed to made order adjustment for order " + orderId, module);
+            Debug.logError(e, "Failed to made order adjustment for order " + orderId, MODULE);
         }
         return orderAdjustment;
     }
@@ -301,7 +301,7 @@ public class EbayHelper {
 
         try {
             if (UtilValidate.isNotEmpty(name) && userLogin != null) {
-                if (Debug.verboseOn()) Debug.logVerbose("Creating Customer Party: " + name, module);
+                if (Debug.verboseOn()) Debug.logVerbose("Creating Customer Party: " + name, MODULE);
 
                 // Try to split the lastname from the firstname
                 String firstName = "";
@@ -319,23 +319,23 @@ public class EbayHelper {
                         name, "firstName", firstName, "lastName", lastName, "userLogin", userLogin, "comments",
                         "Created via eBay"));
                 if (ServiceUtil.isError(summaryResult)) {
-                    Debug.logError(ServiceUtil.getErrorMessage(summaryResult) + " - " + summaryResult, module);
+                    Debug.logError(ServiceUtil.getErrorMessage(summaryResult) + " - " + summaryResult, MODULE);
                     return null;
                 }
                 partyId = (String) summaryResult.get("partyId");
-                if (Debug.verboseOn()) Debug.logVerbose("Created Customer Party: " + partyId, module);
+                if (Debug.verboseOn()) Debug.logVerbose("Created Customer Party: " + partyId, MODULE);
             }
         } catch (GenericServiceException e) {
-            Debug.logError(e, "Failed to createPerson", module);
+            Debug.logError(e, "Failed to createPerson", MODULE);
         } catch (Exception e) {
-            Debug.logError(e, "Failed to createPerson", module);
+            Debug.logError(e, "Failed to createPerson", MODULE);
         }
         return partyId;
     }
 
     public static String createAddress(LocalDispatcher dispatcher, String partyId, GenericValue userLogin,
             String contactMechPurposeTypeId, Map<String, Object> address) {
-        Debug.logInfo("Creating postal address with input map: " + address, module);
+        Debug.logInfo("Creating postal address with input map: " + address, MODULE);
         String contactMechId = null;
         try {
             Map<String, Object> context = new HashMap<>();
@@ -354,7 +354,7 @@ public class EbayHelper {
 
             Map<String, Object> summaryResult = dispatcher.runSync("createPartyPostalAddress", context);
             if (ServiceUtil.isError(summaryResult)) {
-                Debug.logError(ServiceUtil.getErrorMessage(summaryResult) + " - " + summaryResult, module);
+                Debug.logError(ServiceUtil.getErrorMessage(summaryResult) + " - " + summaryResult, MODULE);
                 return null;
             }
             contactMechId = (String) summaryResult.get("contactMechId");
@@ -366,11 +366,11 @@ public class EbayHelper {
             context.put("userLogin", userLogin);
             summaryResult = dispatcher.runSync("createPartyContactMechPurpose", context);
             if (ServiceUtil.isError(summaryResult)) {
-                Debug.logError(ServiceUtil.getErrorMessage(summaryResult) + " - " + summaryResult, module);
+                Debug.logError(ServiceUtil.getErrorMessage(summaryResult) + " - " + summaryResult, MODULE);
                 return null;
             }
         } catch (GenericServiceException e) {
-            Debug.logError(e, "Failed to createAddress", module);
+            Debug.logError(e, "Failed to createAddress", MODULE);
         }
         return contactMechId;
     }
@@ -378,7 +378,7 @@ public class EbayHelper {
     public static void correctCityStateCountry(LocalDispatcher dispatcher, Map<String, Object> map, String city, String state, String country) {
         try {
             String geoCode = null;
-            Debug.logInfo("correctCityStateCountry params: " + city + ", " + state + ", " + country, module);
+            Debug.logInfo("correctCityStateCountry params: " + city + ", " + state + ", " + country, MODULE);
             if (UtilValidate.isEmpty(country)) {
                 geoCode = "US";
             }
@@ -389,7 +389,7 @@ public class EbayHelper {
             if (UtilValidate.isEmpty(geoCode)) {
                 geoCode = country;
             }
-            Debug.logInfo("GeoCode: " + geoCode, module);
+            Debug.logInfo("GeoCode: " + geoCode, MODULE);
             Map<String, Object> outMap = getCountryGeoId(dispatcher.getDelegator(), geoCode);
             String geoId = (String) outMap.get("geoId");
             if (UtilValidate.isEmpty(geoId)) {
@@ -397,7 +397,7 @@ public class EbayHelper {
             }
             map.put("countryGeoId", geoId);
             country = geoId;
-            Debug.logInfo("Country geoid: " + geoId, module);
+            Debug.logInfo("Country geoid: " + geoId, MODULE);
             if ("USA".equals(geoId) || "CAN".equals(geoId)) {
                 if (UtilValidate.isNotEmpty(state)) {
                     map.put("stateProvinceGeoId", state.toUpperCase());
@@ -406,9 +406,9 @@ public class EbayHelper {
             } else {
                 map.put("city", city + ", " + state);
             }
-            Debug.logInfo("State geoid: " + state, module);
+            Debug.logInfo("State geoid: " + state, MODULE);
         } catch (Exception e) {
-            Debug.logError(e, "Failed to correctCityStateCountry", module);
+            Debug.logError(e, "Failed to correctCityStateCountry", MODULE);
         }
     }
 
@@ -425,12 +425,12 @@ public class EbayHelper {
             context.put("contactMechPurposeTypeId", "PHONE_SHIPPING");
             summaryResult = dispatcher.runSync("createPartyTelecomNumber", context);
             if (ServiceUtil.isError(summaryResult)) {
-                Debug.logError(ServiceUtil.getErrorMessage(summaryResult) + " - " + summaryResult, module);
+                Debug.logError(ServiceUtil.getErrorMessage(summaryResult) + " - " + summaryResult, MODULE);
                 return null;
             }
             phoneContactMechId = (String) summaryResult.get("contactMechId");
         } catch (GenericServiceException e) {
-            Debug.logError(e, "Failed to createPartyPhone", module);
+            Debug.logError(e, "Failed to createPartyPhone", MODULE);
         }
         return phoneContactMechId;
     }
@@ -448,7 +448,7 @@ public class EbayHelper {
                 context.put("contactMechTypeId", "EMAIL_ADDRESS");
                 summaryResult = dispatcher.runSync("createEmailAddress", context);
                 if (ServiceUtil.isError(summaryResult)) {
-                    Debug.logError(ServiceUtil.getErrorMessage(summaryResult) + " - " + summaryResult, module);
+                    Debug.logError(ServiceUtil.getErrorMessage(summaryResult) + " - " + summaryResult, MODULE);
                 }
                 emailContactMechId = (String) summaryResult.get("contactMechId");
 
@@ -459,11 +459,11 @@ public class EbayHelper {
                 context.put("userLogin", userLogin);
                 summaryResult = dispatcher.runSync("createPartyContactMech", context);
                 if (ServiceUtil.isError(summaryResult)) {
-                    Debug.logError(ServiceUtil.getErrorMessage(summaryResult) + " - " + summaryResult, module);
+                    Debug.logError(ServiceUtil.getErrorMessage(summaryResult) + " - " + summaryResult, MODULE);
                 }
             }
         } catch (GenericServiceException e) {
-            Debug.logError(e, "Failed to createPartyEmail", module);
+            Debug.logError(e, "Failed to createPartyEmail", MODULE);
         }
         return emailContactMechId;
     }
@@ -480,7 +480,7 @@ public class EbayHelper {
                 context.put("userLogin", userLogin);
                 summaryResult = dispatcher.runSync("createPartyAttribute", context);
                 if (ServiceUtil.isError(summaryResult)) {
-                    Debug.logError(ServiceUtil.getErrorMessage(summaryResult) + " - " + summaryResult, module);
+                    Debug.logError(ServiceUtil.getErrorMessage(summaryResult) + " - " + summaryResult, MODULE);
                 }
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Failed to create eBay EIAS party attribute");
@@ -496,7 +496,7 @@ public class EbayHelper {
                 context.put("userLogin", userLogin);
                 summaryResult = dispatcher.runSync("createPartyAttribute", context);
                 if (ServiceUtil.isError(summaryResult)) {
-                    Debug.logError(ServiceUtil.getErrorMessage(summaryResult) + " - " + summaryResult, module);
+                    Debug.logError(ServiceUtil.getErrorMessage(summaryResult) + " - " + summaryResult, MODULE);
                 }
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Failed to create eBay userId party attribute");
@@ -507,10 +507,10 @@ public class EbayHelper {
     public static Map<String, Object> getCountryGeoId(Delegator delegator, String geoCode) {
         GenericValue geo = null;
         try {
-            Debug.logInfo("geocode: " + geoCode, module);
+            Debug.logInfo("geocode: " + geoCode, MODULE);
 
             geo = EntityQuery.use(delegator).from("Geo").where("geoCode", geoCode.toUpperCase(), "geoTypeId", "COUNTRY").queryFirst();
-            Debug.logInfo("Found a geo entity " + geo, module);
+            Debug.logInfo("Found a geo entity " + geo, MODULE);
             if (UtilValidate.isEmpty(geo)) {
                 geo = delegator.makeValue("Geo");
                 geo.set("geoId", geoCode + "_IMPORTED");
@@ -519,11 +519,11 @@ public class EbayHelper {
                 geo.set("geoCode", geoCode + "_IMPORTED");
                 geo.set("abbreviation", geoCode + "_IMPORTED");
                 delegator.create(geo);
-                Debug.logInfo("Creating new geo entity: " + geo, module);
+                Debug.logInfo("Creating new geo entity: " + geo, MODULE);
             }
         } catch (GenericEntityException e) {
             String errMsg = "Failed to find/setup geo id";
-            Debug.logError(e, errMsg, module);
+            Debug.logError(e, errMsg, MODULE);
             return ServiceUtil.returnError(errMsg);
         }
 
@@ -571,12 +571,12 @@ public class EbayHelper {
                     return contactMechId;
                 }
             } catch (Exception e) {
-                Debug.logError(e, "Problem with verifying postal addresses for contactMechId " + contactMechId + ".", module);
+                Debug.logError(e, "Problem with verifying postal addresses for contactMechId " + contactMechId + ".", MODULE);
             }
         }
         // none of the existing contact mechs/postal addresses match (or none
         // were found). Create a new one and return the related contact mech id.
-        Debug.logInfo("Unable to find matching postal address for partyId " + partyId + ". Creating a new one.", module);
+        Debug.logInfo("Unable to find matching postal address for partyId " + partyId + ". Creating a new one.", MODULE);
         return createAddress(dispatcher, partyId, userLogin, "SHIPPING_LOCATION", context);
     }
 
@@ -601,7 +601,7 @@ public class EbayHelper {
         }
         // none of the existing contact mechs/email addresses match (or none
         // were found). Create a new one and return the related contact mech id.
-        Debug.logInfo("Unable to find matching postal address for partyId " + partyId + ". Creating a new one.", module);
+        Debug.logInfo("Unable to find matching postal address for partyId " + partyId + ". Creating a new one.", MODULE);
         return createPartyEmail(dispatcher, partyId, (String) context.get("emailBuyer"), userLogin);
     }
 
@@ -630,12 +630,12 @@ public class EbayHelper {
                     return contactMechId;
                 }
             } catch (GenericEntityException e) {
-                Debug.logError("Problem with verifying phone number for contactMechId " + contactMechId + ".", module);
+                Debug.logError("Problem with verifying phone number for contactMechId " + contactMechId + ".", MODULE);
             }
         }
         // none of the existing contact mechs/email addresses match (or none
         // were found). Create a new one and return the related contact mech id.
-        Debug.logInfo("Unable to find matching postal address for partyId " + partyId + ". Creating a new one.", module);
+        Debug.logInfo("Unable to find matching postal address for partyId " + partyId + ". Creating a new one.", MODULE);
         return createPartyPhone(dispatcher, partyId, (String) context.get("shippingAddressPhone"), userLogin);
     }
 

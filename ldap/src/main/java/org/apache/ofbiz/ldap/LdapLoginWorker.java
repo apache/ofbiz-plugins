@@ -75,7 +75,7 @@ public class LdapLoginWorker extends LoginWorker {
                     InterfaceOFBizAuthenticationHandler authenticationHandler = (InterfaceOFBizAuthenticationHandler) handlerClass.getDeclaredConstructor().newInstance();
                     hasLdapLoggedOut = authenticationHandler.hasLdapLoggedOut(request, response, rootElement);
                 } catch (Exception e) {
-                    Debug.logError(e, "Error calling checkLogin service", module);
+                    Debug.logError(e, "Error calling checkLogin service", MODULE);
                     Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
                     String errMsg = UtilProperties.getMessage(resourceWebapp, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
                     request.setAttribute("_ERROR_MESSAGE_", errMsg);
@@ -83,7 +83,7 @@ public class LdapLoginWorker extends LoginWorker {
             }
 
             if (!hasBasePermission(userLogin, request) || isFlaggedLoggedOut(userLogin, userLogin.getDelegator()) || hasLdapLoggedOut) {
-                Debug.logInfo("User does not have permission or is flagged as logged out", module);
+                Debug.logInfo("User does not have permission or is flagged as logged out", MODULE);
                 doBasicLogout(userLogin, request, response);
                 userLogin = null;
             }
@@ -115,7 +115,7 @@ public class LdapLoginWorker extends LoginWorker {
                 InterfaceOFBizAuthenticationHandler authenticationHandler = (InterfaceOFBizAuthenticationHandler) handlerClass.getDeclaredConstructor().newInstance();
                 result = authenticationHandler.login(request, response, rootElement);
             } catch (Exception e) {
-                Debug.logError(e, "Error calling userLogin service", module);
+                Debug.logError(e, "Error calling userLogin service", MODULE);
                 Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
                 String errMsg = UtilProperties.getMessage(resourceWebapp, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
@@ -159,7 +159,7 @@ public class LdapLoginWorker extends LoginWorker {
                 InterfaceOFBizAuthenticationHandler authenticationHandler = (InterfaceOFBizAuthenticationHandler) handlerClass.getDeclaredConstructor().newInstance();
                 result = authenticationHandler.logout(request, response, rootElement);
             } catch (Exception e) {
-                Debug.logError(e, "Error calling userLogin service", module);
+                Debug.logError(e, "Error calling userLogin service", MODULE);
                 Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
                 String errMsg = UtilProperties.getMessage(resourceWebapp, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
@@ -174,7 +174,7 @@ public class LdapLoginWorker extends LoginWorker {
 
     protected static Element getRootElement(HttpServletRequest request) {
         if (Debug.infoOn()) {
-            Debug.logInfo("LDAP config file: " + ldapConfig, module);
+            Debug.logInfo("LDAP config file: " + ldapConfig, MODULE);
         }
         File configFile = new File(ldapConfig);
         FileInputStream configFileIS = null;
@@ -184,22 +184,22 @@ public class LdapLoginWorker extends LoginWorker {
             Document configDoc = UtilXml.readXmlDocument(configFileIS, "LDAP configuration file " + ldapConfig);
             rootElement = configDoc.getDocumentElement();
         } catch (FileNotFoundException e) {
-            Debug.logError(e, "Error calling userLogin service", module);
+            Debug.logError(e, "Error calling userLogin service", MODULE);
             Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
             String errMsg = UtilProperties.getMessage(resourceWebapp, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
         } catch (SAXException e) {
-            Debug.logError(e, "Error calling userLogin service", module);
+            Debug.logError(e, "Error calling userLogin service", MODULE);
             Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
             String errMsg = UtilProperties.getMessage(resourceWebapp, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
         } catch (ParserConfigurationException e) {
-            Debug.logError(e, "Error calling userLogin service", module);
+            Debug.logError(e, "Error calling userLogin service", MODULE);
             Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
             String errMsg = UtilProperties.getMessage(resourceWebapp, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
         } catch (IOException e) {
-            Debug.logError(e, "Error calling userLogin service", module);
+            Debug.logError(e, "Error calling userLogin service", MODULE);
             Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
             String errMsg = UtilProperties.getMessage(resourceWebapp, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);

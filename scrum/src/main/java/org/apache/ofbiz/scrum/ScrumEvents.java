@@ -50,7 +50,7 @@ import org.apache.ofbiz.entity.util.EntityQuery;
  */
 public class ScrumEvents {
 
-    public static final String module = ScrumEvents.class.getName();
+    public static final String MODULE = ScrumEvents.class.getName();
 
     public static String timeSheetChecker(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -99,7 +99,7 @@ public class ScrumEvents {
             }
         } catch (GenericEntityException EntEx) {
             EntEx.printStackTrace();
-            Debug.logError(EntEx.getMessage(), module);
+            Debug.logError(EntEx.getMessage(), MODULE);
         }
         if (UtilValidate.isNotEmpty(noTimeEntryList)) {
             StringBuilder warningDataBuffer = new StringBuilder();
@@ -113,7 +113,7 @@ public class ScrumEvents {
                 warningDataBuffer.append(dataMap.get("timesheetId"));
             }
             String warningData = warningDataBuffer.toString();
-            Debug.logInfo("The following time sheet no time entry: [" + warningData + "]", module);
+            Debug.logInfo("The following time sheet no time entry: [" + warningData + "]", MODULE);
             request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("scrumUiLabels", "ScrumTimesheetWarningMessage", UtilMisc.toMap("warningMessage", warningData), UtilHttp.getLocale(request)));
         }
         return "success";

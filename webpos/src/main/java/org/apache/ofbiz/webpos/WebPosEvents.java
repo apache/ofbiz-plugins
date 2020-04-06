@@ -51,7 +51,7 @@ import org.apache.ofbiz.service.ServiceUtil;
 
 public class WebPosEvents {
 
-    public static String module = WebPosEvents.class.getName();
+    public static String MODULE = WebPosEvents.class.getName();
 
     public static String posLogin(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
         HttpSession session = request.getSession(true);
@@ -115,7 +115,7 @@ public class WebPosEvents {
                 webPosSession = new WebPosSession(posTerminalId, null, userLogin, request.getLocale(), productStoreId, facilityId, currencyUomId, delegator, dispatcher, cart);
                 session.setAttribute("webPosSession", webPosSession);
             } else {
-                Debug.logError("PosTerminalId is empty cannot create a webPosSession", module);
+                Debug.logError("PosTerminalId is empty cannot create a webPosSession", MODULE);
             }  
         }
         return webPosSession;
@@ -178,7 +178,7 @@ public class WebPosEvents {
                                 if (ServiceUtil.isError(featureMap)) {
                                     String errorMessage = ServiceUtil.getErrorMessage(featureMap);
                                     request.setAttribute("_ERROR_MESSAGE_", errorMessage);
-                                    Debug.logError(errorMessage, module);
+                                    Debug.logError(errorMessage, MODULE);
                                     return "error";
                                 }
                                 Set<String> featureSet = UtilGenerics.cast(featureMap.get("featureSet"));
@@ -190,7 +190,7 @@ public class WebPosEvents {
                                         if (ServiceUtil.isError(variantTreeMap)) {
                                             String errorMessage = ServiceUtil.getErrorMessage(variantTreeMap);
                                             request.setAttribute("_ERROR_MESSAGE_", errorMessage);
-                                            Debug.logError(errorMessage, module);
+                                            Debug.logError(errorMessage, MODULE);
                                             return "error";
                                         }
                                         Map<String, Object> variantTree = UtilGenerics.cast(variantTreeMap.get("variantTree"));
@@ -223,12 +223,12 @@ public class WebPosEvents {
                                             request.setAttribute("variantSampleSize", imageMap.size());
                                         }
                                     } catch (GenericServiceException e) {
-                                        Debug.logError(e, module);
+                                        Debug.logError(e, MODULE);
                                         return "error";
                                     }
                                 }
                             } catch (GenericServiceException e) {
-                                Debug.logError(e, module);
+                                Debug.logError(e, MODULE);
                                 return "error";
                             }
                         }
@@ -238,7 +238,7 @@ public class WebPosEvents {
                     }
                 }
             } catch (GenericEntityException e) {
-                Debug.logError(e, module);
+                Debug.logError(e, MODULE);
                 return "error";
             }
         }

@@ -43,7 +43,7 @@ import java.util.HashMap;
  */
 public class SearchServices {
 
-    public static final String module = SearchServices.class.getName();
+    public static final String MODULE = SearchServices.class.getName();
     public static final String resource = "ContentUiLabels";
 
     public static Map<String, Object> indexContentTree(DispatchContext dctx, Map<String, ? extends Object> context) {
@@ -54,7 +54,7 @@ public class SearchServices {
         try {
             SearchWorker.indexContentTree(dispatcher, delegator, siteId);
         } catch (Exception e) {
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource,
                     "ContentIndexingTreeError", UtilMisc.toMap("errorString", e.toString()), locale));
         }
@@ -83,12 +83,12 @@ public class SearchServices {
                         return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
                     }
                 } catch (GenericServiceException e) {
-                    Debug.logError(e, module);
+                    Debug.logError(e, MODULE);
                 }
             }
 
         } catch (GenericEntityException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
         }
         return ServiceUtil.returnSuccess();
     }
@@ -106,7 +106,7 @@ public class SearchServices {
                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
             }
         } catch (GenericServiceException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
         }
         return ServiceUtil.returnSuccess();
     }
@@ -127,9 +127,9 @@ public class SearchServices {
                 }
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
         } catch (GenericServiceException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
         }
         return ServiceUtil.returnSuccess();
     }
@@ -145,11 +145,11 @@ public class SearchServices {
                         return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
                     }
                 } catch (GenericServiceException e) {
-                    Debug.logError(e, module);
+                    Debug.logError(e, MODULE);
                 }
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
         }
         return ServiceUtil.returnSuccess();
     }
@@ -161,7 +161,7 @@ public class SearchServices {
             indexProductCategoryMembers(productCategoryId, delegator, dispatcher);
             indexProductCategoryRollup(productCategoryId, delegator, dispatcher, UtilMisc.<String>toSet(productCategoryId));
         } catch (GenericEntityException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
         }
         return ServiceUtil.returnSuccess();
     }
@@ -188,7 +188,7 @@ public class SearchServices {
                     throw new GenericEntityException(ServiceUtil.getErrorMessage(result));
                 }
             } catch (GenericServiceException e) {
-                Debug.logError(e, module);
+                Debug.logError(e, MODULE);
             }
         }
     }

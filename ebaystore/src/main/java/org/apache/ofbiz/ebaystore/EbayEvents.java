@@ -92,7 +92,7 @@ import com.ebay.soap.eBLBaseComponents.AddItemResponseType;
 public class EbayEvents {
 
     private static final int SHIPPING_SERVICE_ID_LIMIT = 50000;
-    public static final String module = EbayEvents.class.getName();
+    public static final String MODULE = EbayEvents.class.getName();
 
     public static String sendLeaveFeedback(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(true);
@@ -137,11 +137,11 @@ public class EbayEvents {
                     if (ServiceUtil.isError(resultMap)) {
                         String errorMessage = ServiceUtil.getErrorMessage(resultMap);
                         request.setAttribute("_ERROR_MESSAGE_", errorMessage);
-                        Debug.logError(errorMessage, module);
+                        Debug.logError(errorMessage, MODULE);
                         return "error";
                     }
                 } catch (GenericServiceException e) {
-                    Debug.logError(e, module);
+                    Debug.logError(e, MODULE);
                     request.setAttribute("_ERROR_MESSAGE_","Exception: ".concat(e.getMessage()));
                     return "error";
                 }
@@ -196,7 +196,7 @@ public class EbayEvents {
                         }
                     }
                 }
-                Debug.logInfo("run in with productIds "+productIds, module);
+                Debug.logInfo("run in with productIds "+productIds, MODULE);
                 for (String productId : productIds) {
                     AddItemCall addItemCall = new AddItemCall(apiContext);
                     ItemType item = new ItemType();
@@ -263,7 +263,7 @@ public class EbayEvents {
                 }
                 addItemObject.put("itemListing", itemObjs);
             } catch (Exception e) {
-                Debug.logError(e.getMessage(), module);
+                Debug.logError(e.getMessage(), MODULE);
                 request.setAttribute("_ERROR_MESSAGE_","Exception: ".concat(e.getMessage()));
                 return "error";
             }
@@ -307,7 +307,7 @@ public class EbayEvents {
         EbayStoreSiteFacade siteFacade = null;
 
         if (request.getParameter("productStoreId") == null) {
-            Debug.logError("Required productStoreId for get ebay information.", module);
+            Debug.logError("Required productStoreId for get ebay information.", MODULE);
             return siteFacade;
         }
 
@@ -324,7 +324,7 @@ public class EbayEvents {
         } else {
             siteFacade = (EbayStoreSiteFacade)session.getAttribute(siteFacadeName);
         }
-        Debug.logInfo("loaded session for ebay site Facade is ".concat(siteFacadeName).concat(session.getAttribute(siteFacadeName).toString()),module);
+        Debug.logInfo("loaded session for ebay site Facade is ".concat(siteFacadeName).concat(session.getAttribute(siteFacadeName).toString()),MODULE);
         return siteFacade;
     }
 
@@ -333,7 +333,7 @@ public class EbayEvents {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
 
         if (request.getParameter("productStoreId") == null && request.getAttribute("productStoreId") == null) {
-            Debug.logError("Required productStoreId for get ebay API config data.", module);
+            Debug.logError("Required productStoreId for get ebay API config data.", MODULE);
             return null;
         }
         ApiContext apiContext = EbayStoreHelper.getApiContext(request.getParameter("productStoreId") != null ? request.getParameter("productStoreId"):(String)request.getAttribute("productStoreId"), locale, delegator);
@@ -377,14 +377,14 @@ public class EbayEvents {
         String categoryId = null;
 
         if (request.getParameter("productStoreId") == null && request.getAttribute("productStoreId") == null) {
-            Debug.logError("Required productStoreId for get ebay LeafCategories.", module);
+            Debug.logError("Required productStoreId for get ebay LeafCategories.", MODULE);
             return categories;
         }
         if (request.getParameter("categoryId") != null || request.getAttribute("categoryId") != null) {
             categoryId = request.getParameter("categoryId") != null ? request.getParameter("categoryId") : (String) request.getAttribute("categoryId");
-            Debug.logInfo("Load child categories from session following site id and categoryId is ".concat(categoryId), module);
+            Debug.logInfo("Load child categories from session following site id and categoryId is ".concat(categoryId), MODULE);
         } else {
-            Debug.logWarning("No categoryId to get child categories.", module);
+            Debug.logWarning("No categoryId to get child categories.", MODULE);
         }
 
         ApiContext apiContext = getApiContext(request);
@@ -436,14 +436,14 @@ public class EbayEvents {
         String categoryId = null;
 
         if (UtilValidate.isEmpty(request.getParameter("productStoreId")) && UtilValidate.isEmpty(request.getAttribute("productStoreId"))) {
-            Debug.logError("Required productStoreId for get ebay LeafCategories.", module);
+            Debug.logError("Required productStoreId for get ebay LeafCategories.", MODULE);
             return categories;
         }
         if (UtilValidate.isNotEmpty(request.getParameter("categoryId")) || UtilValidate.isNotEmpty(request.getAttribute("categoryId"))) {
             categoryId = request.getParameter("categoryId") != null ? request.getParameter("categoryId") : (String) request.getAttribute("categoryId");
-            Debug.logInfo("Load child categories from session following site id and categoryId is ".concat(categoryId), module);
+            Debug.logInfo("Load child categories from session following site id and categoryId is ".concat(categoryId), MODULE);
         } else {
-            Debug.logWarning("No categoryId to get child categories.", module);
+            Debug.logWarning("No categoryId to get child categories.", MODULE);
         }
 
         ApiContext apiContext = getApiContext(request);
@@ -489,14 +489,14 @@ public class EbayEvents {
         CategoryType cate = null;
 
         if (request.getParameter("productStoreId") == null && request.getAttribute("productStoreId") == null) {
-            Debug.logError("Required productStoreId for get ebay LeafCategories.", module);
+            Debug.logError("Required productStoreId for get ebay LeafCategories.", MODULE);
             return null;
         }
         if (request.getParameter("categoryId") != null || request.getAttribute("categoryId") != null) {
             categoryId = request.getParameter("categoryId") != null ? request.getParameter("categoryId") : (String)request.getAttribute("categoryId");
-            Debug.logInfo("Load child categories from session following site id and categoryId is ".concat(categoryId), module);
+            Debug.logInfo("Load child categories from session following site id and categoryId is ".concat(categoryId), MODULE);
         } else {
-            Debug.logWarning("No categoryId to get child categories.", module);
+            Debug.logWarning("No categoryId to get child categories.", MODULE);
             return null;
         }
 
@@ -561,7 +561,7 @@ public class EbayEvents {
                             request.setAttribute("categoryId", categoryId);
                             CategoryType csCate = getCsCategoriesMapped(request);
                             if (UtilValidate.isNotEmpty(csCate)) {
-                                Debug.logInfo("Set selected ebay category ".concat(csCate.getCategoryID().toString().concat(csCate.getCategoryName()).concat(String.valueOf((csCate.isLeafCategory())))), module);
+                                Debug.logInfo("Set selected ebay category ".concat(csCate.getCategoryID().toString().concat(csCate.getCategoryName()).concat(String.valueOf((csCate.isLeafCategory())))), MODULE);
                                 item.setPrimaryCategory(csCate);
                                 // get category feature and attributes
                                 sf = getSiteFacade(apiContext, request);
@@ -572,7 +572,7 @@ public class EbayEvents {
                                 }
                                 request.setAttribute("_EVENT_MESSAGE_","Set selected ebay category ".concat(csCate.getCategoryID().toString()).concat(" with product ".concat(productId).concat(" successed."))); 
                             } else {
-                                Debug.logWarning(categoryId.concat(" This category is not leaf category or ?"), module);
+                                Debug.logWarning(categoryId.concat(" This category is not leaf category or ?"), MODULE);
                             }
                             break;
                         }
@@ -580,7 +580,7 @@ public class EbayEvents {
                 }
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
             return "error";
         } catch (ApiException e) {
             request.setAttribute("_ERROR_MESSAGE_","ApiException ".concat(e.getMessage()));
@@ -890,11 +890,11 @@ public class EbayEvents {
                                         if (ServiceUtil.isError(resultMap)) {
                                             String errorMessage = ServiceUtil.getErrorMessage(resultMap);
                                             request.setAttribute("_ERROR_MESSAGE_", errorMessage);
-                                            Debug.logError(errorMessage, module);
+                                            Debug.logError(errorMessage, MODULE);
                                             return "error";
                                         }
                                     } catch (GenericServiceException ex) {
-                                        Debug.logError(ex.getMessage(), module);
+                                        Debug.logError(ex.getMessage(), MODULE);
                                         request.setAttribute("_ERROR_MESSAGE_","Exception: ".concat(ex.getMessage()));
                                         return "error";
                                     }
@@ -924,7 +924,7 @@ public class EbayEvents {
                                 }
                             }
                         } catch (GenericEntityException ex) {
-                            Debug.logError(ex.getMessage(), module);
+                            Debug.logError(ex.getMessage(), MODULE);
                             request.setAttribute("_ERROR_MESSAGE_","Exception: ".concat(ex.getMessage()));
                             return "error";
                         }
@@ -936,14 +936,14 @@ public class EbayEvents {
                                 if (ServiceUtil.isError(result)) {
                                     String errorMessage = ServiceUtil.getErrorMessage(result);
                                     request.setAttribute("_ERROR_MESSAGE_", errorMessage);
-                                    Debug.logError(errorMessage, module);
+                                    Debug.logError(errorMessage, MODULE);
                                     return "error";
                                 }
                                 productListingId = result.get("productListingId").toString();
                                 itemObj.put("productListingId", productListingId);
                                 itemObj.put("isSaved", "Y");
                             } catch (GenericServiceException ex) {
-                                Debug.logError(ex.getMessage(), module);
+                                Debug.logError(ex.getMessage(), MODULE);
                                 request.setAttribute("_ERROR_MESSAGE_","Exception: ".concat(ex.getMessage()));
                                 return "error";
                             }
@@ -955,11 +955,11 @@ public class EbayEvents {
                                 if (ServiceUtil.isError(result)) {
                                     String errorMessage = ServiceUtil.getErrorMessage(result);
                                     request.setAttribute("_ERROR_MESSAGE_", errorMessage);
-                                    Debug.logError(errorMessage, module);
+                                    Debug.logError(errorMessage, MODULE);
                                     return "error";
                                 }
                             } catch (GenericServiceException ex) {
-                                Debug.logError(ex.getMessage(), module);
+                                Debug.logError(ex.getMessage(), MODULE);
                                 request.setAttribute("_ERROR_MESSAGE_","Exception: ".concat(ex.getMessage()));
                                 return "error";
                             }
@@ -977,11 +977,11 @@ public class EbayEvents {
                                 if (ServiceUtil.isError(result)) {
                                     String errorMessage = ServiceUtil.getErrorMessage(result);
                                     request.setAttribute("_ERROR_MESSAGE_", errorMessage);
-                                    Debug.logError(errorMessage, module);
+                                    Debug.logError(errorMessage, MODULE);
                                     return "error";
                                 }
                             } catch (GenericServiceException ex) {
-                                Debug.logError(ex.getMessage(), module);
+                                Debug.logError(ex.getMessage(), MODULE);
                                 request.setAttribute("_ERROR_MESSAGE_","Exception: ".concat(ex.getMessage()));
                                 return "error";
                             }
@@ -991,7 +991,7 @@ public class EbayEvents {
             }
             request.setAttribute("productStoreId", requestParams.get("productStoreId"));
         } catch(Exception e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
             request.setAttribute("_ERROR_MESSAGE_","Exception: ".concat(e.getMessage()));
             return "error";
         }
@@ -1056,7 +1056,7 @@ public class EbayEvents {
             //request.setAttribute("itemFee", feesummary);
             request.setAttribute("productStoreId", requestParams.get("productStoreId"));
         } catch (Exception e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
             request.setAttribute("_ERROR_MESSAGE_","Exception: ".concat(e.getMessage()));
             return "error";
         }
@@ -1095,7 +1095,7 @@ public class EbayEvents {
             }
             request.setAttribute("productStoreId", requestParams.get("productStoreId"));
         } catch (Exception e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
             request.setAttribute("_ERROR_MESSAGE_","Exception: ".concat(e.getMessage()));
             return "error";
         }
@@ -1125,16 +1125,16 @@ public class EbayEvents {
                 if (ServiceUtil.isError(result)) {
                     String errorMessage = ServiceUtil.getErrorMessage(result);
                     request.setAttribute("_ERROR_MESSAGE_", errorMessage);
-                    Debug.logError(errorMessage, module);
+                    Debug.logError(errorMessage, MODULE);
                     return "error";
                 }
             }
         } catch (GenericServiceException gse) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
             request.setAttribute("_ERROR_MESSAGE_","Exception: ".concat(gse.getMessage()));
             return "error";
         } catch (Exception e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
             request.setAttribute("_ERROR_MESSAGE_","Exception: ".concat(e.getMessage()));
             return "error";
         }
@@ -1168,7 +1168,7 @@ public class EbayEvents {
                                 revReq.setSellingManagerProductDetails(prodDetailType);
                                 revResp = (ReviseSellingManagerProductResponseType) revProdCall.execute(revReq);
                                 if (revResp != null && "SUCCESS".equals(revResp.getAck().toString())) {
-                                    Debug.logInfo("  Already update quantity on eBay inventory with product id ::"+revResp.getSellingManagerProductDetails().getProductID(), module);
+                                    Debug.logInfo("  Already update quantity on eBay inventory with product id ::"+revResp.getSellingManagerProductDetails().getProductID(), MODULE);
                                 } else {
                                     EbayStoreHelper.createErrorLogMessage(userLogin, dispatcher, productStoreId, revResp.getAck().toString(), "ReviseSellingManagerProductCall : updateQuantityInventoryProduct", revResp.getErrors(0).getLongMessage());
                                 }
@@ -1180,7 +1180,7 @@ public class EbayEvents {
                 }
             }
         } catch (Exception e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         }
     }
     
@@ -1220,7 +1220,7 @@ public class EbayEvents {
                 recommendationMap.put("categorySpecifics", nameRecommendationMap);
             }
         } catch (Exception e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
             return null;
         }
         return recommendationMap;

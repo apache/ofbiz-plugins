@@ -91,7 +91,7 @@ import com.ebay.soap.eBLBaseComponents.VATDetailsType;
 import com.ibm.icu.text.SimpleDateFormat;
 
 public class EbayStoreHelper {
-    private static final String module = EbayStoreHelper.class.getName();
+    private static final String MODULE = EbayStoreHelper.class.getName();
     public static final String resource = "EbayStoreUiLabels";
 
     public static ApiContext getApiContext(String productStoreId,Locale locale, Delegator delegator) {
@@ -168,16 +168,16 @@ public class EbayStoreHelper {
         GenericValue partyRole = null;
         try {
             if (partyId == null) {
-                Debug.logError("Require field partyId.",module);
+                Debug.logError("Require field partyId.",MODULE);
                 return false;
             }
             partyRole = EntityQuery.use(delegator).from("PartyRole").where("partyId", partyId, "roleTypeId", "EBAY_ACCOUNT").queryOne();
             if (partyRole == null) {
-                Debug.logError("Party Id ".concat(partyId).concat("not have roleTypeId EBAY_ACCOUNT"),module);
+                Debug.logError("Party Id ".concat(partyId).concat("not have roleTypeId EBAY_ACCOUNT"),MODULE);
                 return false;
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
             return false;
         }
         return true;
@@ -188,7 +188,7 @@ public class EbayStoreHelper {
         List<GenericValue> productCategoryRoles = null;
         try {
             if (partyId == null) {
-                Debug.logError("Require field partyId.",module);
+                Debug.logError("Require field partyId.",MODULE);
                 return ebayCategoryId;
             }
             productCategoryRoles = EntityQuery.use(delegator).from("ProductCategoryRole").where("productCategoryId", productCategoryId, "partyId", partyId, "roleTypeId", "EBAY_ACCOUNT").queryList();
@@ -197,11 +197,11 @@ public class EbayStoreHelper {
                     ebayCategoryId = productCategoryRole.getString("comments");
                 }
             } else {
-                Debug.logInfo("Party Id ".concat(partyId).concat(" Not found productCategoryRole with productCategoryId "+ productCategoryId),module);
+                Debug.logInfo("Party Id ".concat(partyId).concat(" Not found productCategoryRole with productCategoryId "+ productCategoryId),MODULE);
                 return ebayCategoryId;
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         }
         return ebayCategoryId;
     }
@@ -209,7 +209,7 @@ public class EbayStoreHelper {
     public static boolean createEbayCategoryIdByPartyId(Delegator delegator, String productCategoryId, String partyId, String ebayCategoryId) {
         try {
             if (partyId == null && ebayCategoryId != null) {
-                Debug.logError("Require field partyId and ebayCategoryId.",module);
+                Debug.logError("Require field partyId and ebayCategoryId.",MODULE);
                 return false;
             }
             GenericValue productCategoryRole = delegator.makeValue("ProductCategoryRole");
@@ -220,7 +220,7 @@ public class EbayStoreHelper {
             productCategoryRole.put("comments",ebayCategoryId);
             productCategoryRole.create();
         } catch (GenericEntityException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
             return false;
         }
         return true;
@@ -255,7 +255,7 @@ public class EbayStoreHelper {
                 }
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
             return false;
         }
         return flag;
@@ -428,7 +428,7 @@ public class EbayStoreHelper {
                 }
             }
         } catch(Exception e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         }
     }
 
@@ -461,7 +461,7 @@ public class EbayStoreHelper {
                         return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
                     }
                 } catch (GenericServiceException ex) {
-                    Debug.logError(ex.getMessage(), module);
+                    Debug.logError(ex.getMessage(), MODULE);
                     return ServiceUtil.returnError(ex.getMessage());
                 }
             }
@@ -620,7 +620,7 @@ public class EbayStoreHelper {
                 }
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
             return null;
         }
         return item;
@@ -697,7 +697,7 @@ public class EbayStoreHelper {
                             addReq.setOrder(newOrder);
                             addResp = (AddOrderResponseType) addOrderCall.execute(addReq);
                             if (addResp != null && "SUCCESS".equals(addResp.getAck().toString())) {
-                                Debug.logInfo("Upload tracking code to eBay success...", module);
+                                Debug.logInfo("Upload tracking code to eBay success...", MODULE);
                             } else {
                                 createErrorLogMessage(userLogin, dctx.getDispatcher(), productStoreId, addResp.getAck().toString(), "Update order : uploadTrackingInfoBackToEbay", addResp.getErrors(0).getLongMessage());
                             }
@@ -731,7 +731,7 @@ public class EbayStoreHelper {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
                 }
             } catch (Exception ex) {
-                Debug.logError("Error from create error log messages : "+ex.getMessage(), module);
+                Debug.logError("Error from create error log messages : "+ex.getMessage(), MODULE);
             }
         }
     }
@@ -748,7 +748,7 @@ public class EbayStoreHelper {
                 }
             }
         } catch (Exception ex) {
-            Debug.logError("Error from get eBay Inventory data : "+ ex.getMessage(), module);
+            Debug.logError("Error from get eBay Inventory data : "+ ex.getMessage(), MODULE);
         }
         return isReserve;
     }

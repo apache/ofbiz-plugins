@@ -47,7 +47,7 @@ import org.apache.ofbiz.service.LocalDispatcher;
 
 public class ContentDocument implements LuceneDocument {
 
-    private static final String module = ContentDocument.class.getName();
+    private static final String MODULE = ContentDocument.class.getName();
     private final Term documentIdentifier;
     private final LocalDispatcher dispatcher;
     private final GenericValue content;
@@ -111,7 +111,7 @@ public class ContentDocument implements LuceneDocument {
         try {
             dataResource = content.getRelatedOne("DataResource", true);
         } catch (GenericEntityException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
             return false;
         }
         if (dataResource == null) {
@@ -130,10 +130,10 @@ public class ContentDocument implements LuceneDocument {
         try {
             text = ContentWorker.renderContentAsText(dispatcher, contentId, null, locale, mimeTypeId, true);
         } catch (GeneralException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
             return false;
         } catch (IOException e2) {
-            Debug.logError(e2, module);
+            Debug.logError(e2, MODULE);
             return false;
         }
         if (UtilValidate.isNotEmpty(text)) {
@@ -144,7 +144,7 @@ public class ContentDocument implements LuceneDocument {
         try {
             featureDataResourceList = content.getRelated("ProductFeatureDataResource", null, null, true);
         } catch (GenericEntityException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
             return false;
         }
         List<String> featureList = new ArrayList<>();

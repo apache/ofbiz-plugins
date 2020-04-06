@@ -43,7 +43,7 @@ import org.apache.ofbiz.service.ServiceUtil;
 
 public class FixedAssetMaintServices {
 
-    public static final String module = FixedAssetMaintServices.class.getName();
+    public static final String MODULE = FixedAssetMaintServices.class.getName();
     public static final String resource = "AssetMaintUiLabels";
 
     public static Map<String, Object> addPartFixedAssetMaint(DispatchContext ctx, Map<String, Object> context) {
@@ -109,9 +109,9 @@ public class FixedAssetMaintServices {
                 requestedQty = requestedQty - issueQuantity;
             }
         } catch (GenericEntityException e) {
-            Debug.logError("Problem in retriving data from database", module);
+            Debug.logError("Problem in retriving data from database", MODULE);
         } catch (GenericServiceException e) {
-            Debug.logError("Problem in calling service issueInventoryItemToFixedAssetMaint", module);
+            Debug.logError("Problem in calling service issueInventoryItemToFixedAssetMaint", MODULE);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "AssetMaintProblemCallingService", locale));
         }
         return ServiceUtil.returnSuccess();

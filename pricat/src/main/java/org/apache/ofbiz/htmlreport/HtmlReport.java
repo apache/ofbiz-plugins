@@ -50,7 +50,7 @@ import org.apache.ofbiz.htmlreport.util.ReportStringUtil;
  */
 public class HtmlReport extends AbstractReport {
 
-    public static final String module = HtmlReport.class.getName();
+    public static final String MODULE = HtmlReport.class.getName();
 
     /** The delimiter that is used in the resource list request parameter. */
     public static final String DELIMITER_RESOURCES = "|";
@@ -288,7 +288,7 @@ public class HtmlReport extends AbstractReport {
                 logFileOutputStream.write((logResult.toString() + "\n").getBytes());
                 logFileOutputStream.flush();
             } catch (IOException e) {
-                Debug.logError(e.getMessage(), module);
+                Debug.logError(e.getMessage(), MODULE);
             }
         }
         return result.toString();
@@ -886,7 +886,7 @@ public class HtmlReport extends AbstractReport {
         for (int i = 0; i < length; i++) {
             Method method = methods[i];
             if (method.getName().startsWith("getParam") && (method.getParameterTypes().length == 0)) {
-                // Debug.logInfo("getMethod: " + method.getName(), module);
+                // Debug.logInfo("getMethod: " + method.getName(), MODULE);
                 list.add(method);
             }
         }
@@ -1333,7 +1333,7 @@ public class HtmlReport extends AbstractReport {
                         logFileOutputStream.close();
                     } catch (IOException e) {
                         // do nothing
-                        Debug.logError(e, HtmlReport.module);
+                        Debug.logError(e, HtmlReport.MODULE);
                     }
                 }
             }

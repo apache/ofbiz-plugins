@@ -49,7 +49,7 @@ import org.apache.ofbiz.webpos.session.WebPosSession;
 public class WebPosTransaction {
 
     public static final String resource = "WebPosUiLabels";
-    public static final String module = WebPosTransaction.class.getName();
+    public static final String MODULE = WebPosTransaction.class.getName();
     public static final int NO_PAYMENT = 0;
     public static final int INTERNAL_PAYMENT = 1;
     public static final int EXTERNAL_PAYMENT = 2;
@@ -91,10 +91,10 @@ public class WebPosTransaction {
             txLog.create();
             cart.setTransactionId(transactionId);
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Unable to create TX log - not fatal", module);
+            Debug.logError(e, "Unable to create TX log - not fatal", MODULE);
         }
 
-        Debug.logInfo("Created WebPosTransaction [" + this.transactionId + "]", module);
+        Debug.logInfo("Created WebPosTransaction [" + this.transactionId + "]", MODULE);
     }
 
     public String getUserLoginId() {
@@ -138,7 +138,7 @@ public class WebPosTransaction {
         try {
             states = delegator.findList("PosTerminalState", EntityCondition.makeCondition(UtilMisc.toMap("posTerminalId", webPosSession.getId(), "startingTxId", getTransactionId())), null, null, null, false);
         } catch (GenericEntityException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
         }
         states = EntityUtil.filterByDate(states, UtilDateTime.nowTimestamp(), "openedDate", "closedDate", true);
         return EntityUtil.getFirst(states);
@@ -152,10 +152,10 @@ public class WebPosTransaction {
             try {
                 txLog.store();
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Unable to store TX log - not fatal", module);
+                Debug.logError(e, "Unable to store TX log - not fatal", MODULE);
             }
             getCart().clear();
-            Debug.logInfo("Transaction closed", module);
+            Debug.logInfo("Transaction closed", MODULE);
         }
     }
 
@@ -166,20 +166,20 @@ public class WebPosTransaction {
             try {
                 txLog.store();
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Unable to store TX log - not fatal", module);
+                Debug.logError(e, "Unable to store TX log - not fatal", MODULE);
             }
             webPosSession.setCurrentTransaction(null);
-            Debug.logInfo("Paid "+ type, module);
+            Debug.logInfo("Paid "+ type, MODULE);
         }
     }
 
     public void modifyPrice(int cartLineIdx, BigDecimal price) {
         ShoppingCartItem item = getCart().findCartItem(cartLineIdx);
         if (UtilValidate.isNotEmpty(item)) {
-            Debug.logInfo("Modify item price " + item.getProductId() + "/" + price, module);
+            Debug.logInfo("Modify item price " + item.getProductId() + "/" + price, MODULE);
             item.setBasePrice(price);
         } else {
-            Debug.logInfo("Item " + cartLineIdx + " not found", module);
+            Debug.logInfo("Item " + cartLineIdx + " not found", MODULE);
         }
     }
 
@@ -187,12 +187,12 @@ public class WebPosTransaction {
         try {
             ch.calcAndAddTax(this.getStoreOrgAddress());
         } catch (GeneralException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
         }
     }
 
     public BigDecimal processSale() throws GeneralException {
-        Debug.logInfo("Process sale", module);
+        Debug.logInfo("Process sale", MODULE);
         BigDecimal grandTotal = this.getGrandTotal();
         BigDecimal paymentAmt = this.getPaymentTotal();
         if (grandTotal.compareTo(paymentAmt) > 0) {
@@ -203,14 +203,14 @@ public class WebPosTransaction {
         getCart().setOrderPartyId(partyId);
 
         // validate payment methods
-        Debug.logInfo("Validating payment methods", module);
+        Debug.logInfo("Validating payment methods", MODULE);
         Map<String, ? extends Object> valRes = UtilGenerics.cast(ch.validatePaymentMethods());
         if (valRes != null && ServiceUtil.isError(valRes)) {
             throw new GeneralException(ServiceUtil.getErrorMessage(valRes));
         }
 
         // store the order
-        Debug.logInfo("Store order", module);
+        Debug.logInfo("Store order", MODULE);
         Map<String, ? extends Object> orderRes = UtilGenerics.cast(ch.createOrder(webPosSession.getUserLogin()));
 
         if (orderRes != null && ServiceUtil.isError(orderRes)) {
@@ -220,12 +220,12 @@ public class WebPosTransaction {
         }
 
         // process the payment(s)
-        Debug.logInfo("Processing the payment(s)", module);
+        Debug.logInfo("Processing the payment(s)", MODULE);
         Map<String, ? extends Object> payRes = null;
         try {
             payRes = UtilGenerics.cast(ch.processPayment(ProductStoreWorker.getProductStore(webPosSession.getProductStoreId(), webPosSession.getDelegator()), webPosSession.getUserLogin(), true));
         } catch (GeneralException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
             throw e;
         }
 
@@ -250,7 +250,7 @@ public class WebPosTransaction {
         try {
             txLog.store();
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Unable to store TX log - not fatal", module);
+            Debug.logError(e, "Unable to store TX log - not fatal", MODULE);
         }
 
         return change;
@@ -263,7 +263,7 @@ public class WebPosTransaction {
             try {
                 facility = webPosSession.getDelegator().findOne("Facility", UtilMisc.toMap("facilityId", webPosSession.getFacilityId()), false);
             } catch (GenericEntityException e) {
-                Debug.logError(e, module);
+                Debug.logError(e, MODULE);
             }
             if (UtilValidate.isEmpty(facility)) {
                 return null;
@@ -273,7 +273,7 @@ public class WebPosTransaction {
             try {
                 fcp = facility.getRelated("FacilityContactMechPurpose", UtilMisc.toMap("contactMechPurposeTypeId", "SHIP_ORIG_LOCATION"), null, false);
             } catch (GenericEntityException e) {
-                Debug.logError(e, module);
+                Debug.logError(e, MODULE);
             }
             fcp = EntityUtil.filterByDate(fcp);
             GenericValue purp = EntityUtil.getFirst(fcp);
@@ -282,7 +282,7 @@ public class WebPosTransaction {
                     this.shipAddress = webPosSession.getDelegator().findOne("PostalAddress",
                             UtilMisc.toMap("contactMechId", purp.getString("contactMechId")), false);
                 } catch (GenericEntityException e) {
-                    Debug.logError(e, module);
+                    Debug.logError(e, MODULE);
                 }
             }
         }
@@ -290,17 +290,17 @@ public class WebPosTransaction {
     }
 
     public void clearPayments() {
-        Debug.logInfo("all payments cleared from sale", module);
+        Debug.logInfo("all payments cleared from sale", MODULE);
         getCart().clearPayments();
     }
 
     public void clearPayment(int index) {
-        Debug.logInfo("removing payment " + index, module);
+        Debug.logInfo("removing payment " + index, MODULE);
         getCart().clearPayment(index);
     }
 
     public void clearPayment(String id) {
-        Debug.logInfo("removing payment " + id, module);
+        Debug.logInfo("removing payment " + id, MODULE);
         getCart().clearPayment(id);
     }
 
@@ -318,7 +318,7 @@ public class WebPosTransaction {
         try {
             values = webPosSession.getDelegator().findList("ProductStorePaymentSetting", EntityCondition.makeCondition(fields), null, null, null, true);
         } catch (GenericEntityException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
         }
 
         final String externalCode = "PRDS_PAY_EXTERNAL";
@@ -329,7 +329,7 @@ public class WebPosTransaction {
             Iterator<GenericValue> i = values.iterator();
             while (i.hasNext() && isExternal) {
                 GenericValue v = i.next();
-                //Debug.logInfo("Testing [" + paymentMethodTypeId + "] - " + v, module);
+                //Debug.logInfo("Testing [" + paymentMethodTypeId + "] - " + v, MODULE);
                 if (!externalCode.equals(v.getString("paymentServiceTypeEnumId"))) {
                     isExternal = false;
                 }
@@ -360,7 +360,7 @@ public class WebPosTransaction {
     }
 
     public BigDecimal addPayment(String id, BigDecimal amount, String refNum, String authCode) {
-        Debug.logInfo("Added payment " + id + "/" + amount, module);
+        Debug.logInfo("Added payment " + id + "/" + amount, MODULE);
         if ("CASH".equals(id)) {
             // clear cash payments first; so there is only one
             getCart().clearPayment(id);
@@ -371,7 +371,7 @@ public class WebPosTransaction {
 
     public BigDecimal processAmount(BigDecimal amount) throws GeneralException {
         if (UtilValidate.isEmpty(amount)) {
-            Debug.logInfo("Amount is empty; assumption is full amount : " + this.getTotalDue(), module);
+            Debug.logInfo("Amount is empty; assumption is full amount : " + this.getTotalDue(), MODULE);
             amount = this.getTotalDue();
             if (amount.compareTo(BigDecimal.ZERO) <= 0) {
                 throw new GeneralException();
@@ -383,7 +383,7 @@ public class WebPosTransaction {
     public synchronized void processNoPayment(String paymentMethodTypeId) {
         try {
             BigDecimal amount = processAmount(null);
-            Debug.logInfo("Processing [" + paymentMethodTypeId + "] Amount : " + amount, module);
+            Debug.logInfo("Processing [" + paymentMethodTypeId + "] Amount : " + amount, MODULE);
 
             // add the payment
             addPayment(paymentMethodTypeId, amount, null, null);
@@ -400,7 +400,7 @@ public class WebPosTransaction {
 
         try {
             amount = processAmount(amount);
-            Debug.logInfo("Processing [" + paymentMethodTypeId + "] Amount : " + amount, module);
+            Debug.logInfo("Processing [" + paymentMethodTypeId + "] Amount : " + amount, MODULE);
 
             // add the payment
             addPayment(paymentMethodTypeId, amount, refNum, null);
@@ -432,11 +432,11 @@ public class WebPosTransaction {
         try {
             svcRes = dispatcher.runSync("createCreditCard", svcCtx);
         } catch (GenericServiceException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
             return null;
         }
         if (ServiceUtil.isError(svcRes)) {
-            Debug.logError(ServiceUtil.getErrorMessage(svcRes) + " - " + svcRes, module);
+            Debug.logError(ServiceUtil.getErrorMessage(svcRes) + " - " + svcRes, MODULE);
             return null;
         } else {
             return (String) svcRes.get("paymentMethodId");
@@ -444,7 +444,7 @@ public class WebPosTransaction {
     }
 
     public void setPaymentRefNum(int paymentIndex, String refNum, String authCode) {
-        Debug.logInfo("setting payment index reference number " + paymentIndex + " / " + refNum + " / " + authCode, module);
+        Debug.logInfo("setting payment index reference number " + paymentIndex + " / " + refNum + " / " + authCode, MODULE);
         ShoppingCart.CartPaymentInfo inf = getCart().getPaymentInfo(paymentIndex);
         inf.refNum[0] = refNum;
         inf.refNum[1] = authCode;
@@ -452,7 +452,7 @@ public class WebPosTransaction {
 
     /* CVV2 code should be entered when a card can't be swiped */
     public void setPaymentSecurityCode(String paymentId, String refNum, String securityCode) {
-        Debug.logInfo("setting payment security code " + paymentId, module);
+        Debug.logInfo("setting payment security code " + paymentId, MODULE);
         int paymentIndex = getCart().getPaymentInfoIndex(paymentId, refNum);
         ShoppingCart.CartPaymentInfo inf = getCart().getPaymentInfo(paymentIndex);
         inf.securityCode = securityCode;
@@ -461,7 +461,7 @@ public class WebPosTransaction {
 
     /* Track2 data should be sent to processor when a card is swiped. */
     public void setPaymentTrack2(String paymentId, String refNum, String securityCode) {
-        Debug.logInfo("setting payment security code " + paymentId, module);
+        Debug.logInfo("setting payment security code " + paymentId, MODULE);
         int paymentIndex = getCart().getPaymentInfoIndex(paymentId, refNum);
         ShoppingCart.CartPaymentInfo inf = getCart().getPaymentInfo(paymentIndex);
         inf.securityCode = securityCode;
@@ -470,7 +470,7 @@ public class WebPosTransaction {
 
     /* Postal code should be entered when a card can't be swiped */
     public void setPaymentPostalCode(String paymentId, String refNum, String postalCode) {
-        Debug.logInfo("setting payment security code " + paymentId, module);
+        Debug.logInfo("setting payment security code " + paymentId, MODULE);
         int paymentIndex = getCart().getPaymentInfoIndex(paymentId, refNum);
         ShoppingCart.CartPaymentInfo inf = getCart().getPaymentInfo(paymentIndex);
         inf.postalCode = postalCode;
