@@ -20,5 +20,23 @@ under the License.
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xmlns="http://ofbiz.apache.org/Widget-Form" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Form http://ofbiz.apache.org/dtds/widget-form.xsd">
-
+    <form name="PrepareDwhInit" type="single" target="initialiseDwh">
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time type="date"/></field>
+        <field name="dummy1" title=" "><display/></field>
+        <field name="useTimeUomId">
+            <drop-down no-current-selected-key="${.useTimeUomId}">
+                <option key="TF_yr" description="${uiLabelMap.CommonYear}"/>
+                <option key="TF_mon" description="${uiLabelMap.CommonMonth}"/>
+            </drop-down>
+        </field>
+        <field name="futureIncrement" position="2">
+            <text/>
+        </field><field name="dummy99" title=" "><display/></field>
+        <field name="search" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="PrepareDwhUpdate" type="single" target="updateDwh">
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time type="date"/></field>
+        <field name="dummy99" title=" "><display/></field>
+        <field name="search" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
 </forms>

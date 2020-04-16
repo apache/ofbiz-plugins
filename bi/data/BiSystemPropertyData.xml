@@ -18,18 +18,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 <entity-engine-xml>
-<!-- 
-# The fromDate value for business intelligence
-bi.properties setting is: fromDate=2000-01-01
--->
-    <SystemProperty systemResourceId="bi" systemPropertyId="fromDate" systemPropertyValue="2000-01-01"
-    description="The fromDate value for business intelligence. Convention: yyyy-mm-dd"
-    />
-<!--
-# The thruDate value for business intelligence
-bi.properties setting is: 2029-12-31
--->
-    <SystemProperty systemResourceId="bi" systemPropertyId="thruDate" systemPropertyValue="2029-12-31"
-    description="The thruDate value for business intelligence. Convention: yyyy-mm-dd"
-    />
+    <SystemProperty systemResourceId="bi" systemPropertyId="dwh.initialised" systemPropertyValue="false"
+        description="Whether the dwh has been initalised with past data. Choices are: 'true' or 'false'"/>
+    <SystemProperty systemResourceId="bi" systemPropertyId="dwh.fromDate" systemPropertyValue="2000-01-01"
+        description="The 'standard' start date for the initialisation of the DWH"/>
+    <SystemProperty systemResourceId="bi" systemPropertyId="dwh.useTimeUomId" systemPropertyValue="TF_yr"
+        description="The Time Frequecy UomId for future increments To determine future dates for the Date Dimension"/>
+    <SystemProperty systemResourceId="bi" systemPropertyId="dwh.futureIncrement" systemPropertyValue="1"
+        description="How many units for the Time Frequecy UomId. To determine future dates for the Date Dimension"/>
+    <SystemProperty systemResourceId="bi" systemPropertyId="dwh.updateMode" systemPropertyValue="TYPE1"
+        description="Update mode for DWH records. Per the DWT book."/>
 </entity-engine-xml>

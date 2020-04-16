@@ -177,4 +177,7 @@
         <value xml:lang="zh">还不支持更新状态：${updateMode}。</value>
         <value xml:lang="zh-TW">還不支援更新狀態:${updateMode}.</value>
     </property>
+    <property key="BiUpdateDwh">
+        <value xml:lang="en">Update DataWarehouse</value>
+    </property>
 </resource>

@@ -34,21 +34,44 @@ under the License.
                 <set field="thruDate" from-field="thruDateProp" type="Timestamp"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonBiDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <content content-id="BI_MAIN"/>
                         </screenlet>
-                        <container>
-                            <link target="initDwh" text="${uiLabelMap.BiInitialiseDwh}" style="buttontext">
-                                <parameter param-name="fromDate"/>
-                                <parameter param-name="thruDate"/>
-                            </link>
-                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="PrepareDwhInit">
+        <section>
+            <actions>
+                <set field="titleProperty" value="BiInitialiseDwh"/>
+                <set field="headerItem" value="reportbuilder"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonBiDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
                         <screenlet>
-                            <container>
-                                <label style="note"> (${uiLabelMap.CommonFromDate} ${fromDate} ${uiLabelMap.CommonThruDate} ${thruDate})</label>
-                            </container>
+                            <include-form location="component://bi/widget/BiForms.xml" name="PrepareDwhInit"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="PrepareDwhUpdate">
+        <section>
+            <actions>
+                <set field="titleProperty" value="BiUpdateDwh"/>
+                <set field="headerItem" value="reportbuilder"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonBiDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet>
+                            <include-form location="component://bi/widget/BiForms.xml" name="PrepareDwhUpdate"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -63,7 +86,7 @@ under the License.
                 <script location="component://bi/groovyScripts/reportBuilder/GetStarSchemas.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonBiDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.BiReportBuilderSelectStarSchema}">
                             <platform-specific>

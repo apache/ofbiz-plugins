@@ -25,4 +25,36 @@ under the License.
             <link target="reportbuilder"/>
         </menu-item>
     </menu>
+    
+    <menu name="MainActionMenu" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        menu-container-style="button-bar button-style-2 no-clear">
+        <actions>
+            <property-to-field resource="bi" property="dwh.initialised" field="dwhInitialised" no-locale="true"/>
+        </actions>
+        <menu-item name="prepareDwhInit" title="${uiLabelMap.BiInitialiseDwh}">
+            <condition>
+                <and>
+                    <or>
+                        <if-has-permission permission="BI" action="_ADMIN"/>
+                        <if-has-permission permission="BI" action="_CREATE"/>
+                    </or>
+                    <if-compare field="dwhInitialised" operator="equals" value="false"/>
+                </and>
+            </condition>
+            <link target="prepareDwhInit"/>
+        </menu-item>
+        <menu-item name="prepareDwhUpdate" title="${uiLabelMap.BiUpdateDwh}">
+            <condition>
+                <and>
+                    <or>
+                        <if-has-permission permission="BI" action="_ADMIN"/>
+                        <if-has-permission permission="BI" action="_UPDATE"/>
+                    </or>
+                    <if-compare field="dwhInitialised" operator="equals" value="true"/>
+                </and>
+            </condition>
+            <link target="prepareDwhUpdate"/>
+        </menu-item>
+    </menu>
+    
 </menus>

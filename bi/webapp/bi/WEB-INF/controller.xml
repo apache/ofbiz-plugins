@@ -34,15 +34,30 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="main"/>
     </request-map>
-    <request-map uri="initDwh">
+    <request-map uri="prepareDwhInit">
         <security https="true" auth="true"/>
-        <event type="service" invoke="initDwh"/>
-        <response name="success" type="view" value="main"/>
+        <response name="success" type="view" value="prepareDwhInit"/>
+    </request-map>
+    <request-map uri="initialiseDwh">
+        <description>Initialise the Dwh by loading the Dimension and Fact tables.</description>
+        <security https="true" auth="true"/>
+        <event type="service" invoke="initialiseDwh"/>
+        <response name="success" type="view" value="reportBuilder"/>
+    </request-map>
+    <request-map uri="prepareDwhUpdate">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="prepareDwhUpdate"/>
+    </request-map>
+    <request-map uri="updateDwh">
+        <description>Update the Dimension and Fact tables in the DWH</description>
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateDwh"/>
+        <response name="success" type="view" value="reportBuilder"/>
     </request-map>
 
-    <request-map uri="reportbuilder">
+    <request-map uri="reporBbuilder">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="reportbuilder"/>
+        <response name="success" type="view" value="reportBuilder"/>
     </request-map>
     <request-map uri="getAssociatedFieldList">
         <security https="true" auth="true"/>
@@ -57,7 +72,9 @@
 
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://bi/widget/BiScreens.xml#main"/>
-    <view-map name="reportbuilder" type="screen" page="component://bi/widget/BiScreens.xml#ReportBuilder"/>
+    <view-map name="prepareDwhInit" type="screen" page="component://bi/widget/BiScreens.xml#PrepareDwhInit"/>
+    <view-map name="prepareDwhUpdate" type="screen" page="component://bi/widget/BiScreens.xml#PrepareDwhUpdate"/>
+    <view-map name="reportBuilder" type="screen" page="component://bi/widget/BiScreens.xml#ReportBuilder"/>
     <view-map name="getAssociatedFieldList" type="screen" page="component://bi/widget/BiScreens.xml#AssociatedFieldList"/>
     <view-map name="reportStarSchema" type="screen" page="component://bi/widget/BiScreens.xml#StarSchemaReport"/>
 
