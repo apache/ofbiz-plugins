@@ -55,7 +55,7 @@
         <response name="success" type="view" value="reportBuilder"/>
     </request-map>
 
-    <request-map uri="reporBbuilder">
+    <request-map uri="reportBuilder">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="reportBuilder"/>
     </request-map>
