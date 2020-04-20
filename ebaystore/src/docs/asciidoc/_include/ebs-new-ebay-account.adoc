@@ -16,17 +16,18 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 ////
-= Apache OFBiz Plugins
-The Apache OFBiz Project
-Release trunk
-:imagesdir: ./images
-ifdef::backend-pdf[]
-:title-logo-image: image::OFBiz-Logo.svg[Apache OFBiz Logo, pdfwidth=4.25in, align=center]
-:source-highlighter: rouge
-endif::[]
-:toc:
-:sectnums:
+= New Ebay Account.
+This screen allows the user to add new ebay account for access to using their ebay store.
 
-include::../../ebay/src/docs/asciidoc/ebay.adoc[leveloffset=+1]
+== Fields Description :
+. Enter  'Salutation' (ex:Mr,miss,Missis)
+. Enter  'First Name' (ex:Demo)
+. Enter  'Middle Name'
+. Enter  'Last Name' (ex: DemoLastName)
+. Enter  'Gender'
+. Enter  'User Login Id' (ex:exbaySandBox123) which you registered on ebay
+. Enter  'Current Password' the same which you registered on ebay
+. Press the 'Create' button.
 
-include::../../ebaystore/src/docs/asciidoc/ebay-store.adoc[leveloffset=+1]
+[NOTE]
+Go to Party module -> Search your party -> then you can update your profiles
