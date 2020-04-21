@@ -18,8 +18,8 @@
  */
 dependencies {
     pluginLibsCompile 'org.safehaus.jug:jug:2.0.0:asl'
-    pluginLibsCompile 'org.apache.poi:poi-ooxml:4.1.0'
-    pluginLibsCompile 'org.apache.poi:poi-ooxml-schemas:4.1.0'
-    pluginLibsCompile 'org.apache.poi:poi-excelant:4.1.0'
-    pluginLibsCompile 'org.apache.poi:poi-scratchpad:4.1.0'
+    pluginLibsCompile 'org.apache.poi:poi-ooxml:4.1.2'
+    pluginLibsCompile 'org.apache.poi:poi-ooxml-schemas:4.1.2'
+    pluginLibsCompile 'org.apache.poi:poi-excelant:4.1.2'
+    pluginLibsCompile 'org.apache.poi:poi-scratchpad:4.1.2'
 }
