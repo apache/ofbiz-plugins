@@ -18,6 +18,7 @@
  */
 
 import java.sql.Timestamp
+
 import java.text.SimpleDateFormat
 import java.sql.Date
 
@@ -29,10 +30,57 @@ import org.apache.ofbiz.base.util.UtilValidate
 import org.apache.ofbiz.entity.GenericValue
 import org.apache.ofbiz.entity.condition.EntityCondition
 import org.apache.ofbiz.entity.condition.EntityOperator
+import org.apache.ofbiz.entity.util.EntityListIterator
 import org.apache.ofbiz.order.order.OrderReadHelper
+import org.apache.ofbiz.service.ModelService
 import org.apache.ofbiz.service.ServiceUtil
 
-def loadSalesInvoiceFact() {
+/**
+* Get Invoice data for DWH-SalesInvoiceItemFact
+*/
+def getDwhInvoiceData() {
+    Map inMap
+    serviceDef = "loadDwhInvoiceData"
+    
+    EntityCondition condition = EntityCondition.makeCondition(
+        EntityCondition.makeCondition("statusId", "INVOICE_READY"),
+        EntityCondition.makeCondition("statusDate", EntityOperator.GREATER_THAN_EQUAL_TO, parameters.fromDate),
+        EntityCondition.makeCondition("statusDate", EntityOperator.LESS_THAN, parameters.thruDate)
+    )
+    List invoiceStatusList = from("InvoiceStatus").where(condition).queryList()
+    if (invoiceStatusList) {
+        for (GenericValue invoice : invoiceStatusList) {
+            parameters.invoiceId = invoice.invoiceId
+            inMap = dispatcher.getDispatchContext().makeValidContext(serviceDef, ModelService.IN_PARAM, parameters)
+            serviceResult = run service: serviceDef, with: inMap
+            if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+            inMap.clear()
+        }
+    }
+}
+
+def loadDwhInvoiceData(){
+    Map inMap
+    GenericValue invoice = from("Invoice").where(parameters).queryOne()
+    if (!invoice) {
+        String errorMessage = UtilProperties.getMessage("AccountingUiLabels", "AccountingInvoiceDoesNotExists", parameters.locale)
+        logError(errorMessage)
+        return error(errorMessage)
+    }
+    switch (invoice.invoiceTypeId) {
+        case "SALES_INVOICE":
+            serviceDef = "updateSalesInvoiceFact"
+            inMap = dispatcher.getDispatchContext().makeValidContext(serviceDef, ModelService.IN_PARAM, parameters)
+            serviceResult = run service: serviceDef, with: inMap
+            if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+            inMap.clear()
+            break
+        case "PURCHASE_INVOICE":
+            break
+    }
+}
+
+def updateSalesInvoiceFact() {
     GenericValue invoice = from("Invoice").where(parameters).queryOne()
     if (!invoice) {
         String errorMessage = UtilProperties.getMessage("AccountingUiLabels", "AccountingInvoiceDoesNotExists", parameters.locale)
@@ -191,7 +239,6 @@ def loadSalesInvoiceItemFact() {
     return success()
 }
 
-
 def loadSalesOrderFact() {
     GenericValue orderHeader = from("OrderHeader").where(parameters).queryOne()
     if (!orderHeader) {
@@ -228,7 +275,6 @@ def loadSalesOrderItemFact() {
 
     List orderAdjustments
     GenericValue orderStatus
-
 
     if (!orderHeader) {
         orderHeader = from("OrderHeader").where(parameters).queryOne()
@@ -411,7 +457,6 @@ def loadSalesOrderItemFact() {
         fact.GSC = (BigDecimal) 0
         fact.GSP = (BigDecimal) 0
         fact.GP = (BigDecimal) 0
-
         fact.countOrder = (BigDecimal) 0
 
         // extGrossAmount
@@ -426,7 +471,6 @@ def loadSalesOrderItemFact() {
 
         if (exchangeRate) {
             BigDecimal unitPrice = orderItem.unitPrice * exchangeRate
-
             fact.extGrossAmount = fact.quantity * unitPrice
         }
 
@@ -586,17 +630,57 @@ def loadSalesOrderDataDaily() {
     return success()
 }
 
+/**
+ * Get SalesOrder data for DWH-SalesOrderItemFact
+ */
+def getDwhOrderData() {
+    Map inMap = [fromDate: parameters.fromDate, thruDate: parameters.thruDate]
+    serviceDef = "loadDwhOrderData"
+    EntityCondition condition = EntityCondition.makeCondition(
+        EntityCondition.makeCondition("statusId", "ORDER_APPROVED"),
+        EntityCondition.makeCondition("statusDatetime", EntityOperator.GREATER_THAN_EQUAL_TO, parameters.fromDate),
+        EntityCondition.makeCondition("statusDatetime", EntityOperator.LESS_THAN, parameters.thruDate)
+        )
+    List orderStatusList = from("OrderStatus").where(condition).queryList()
+    if (orderStatusList) {
+        for (GenericValue order : orderStatusList) {
+            Debug.logInfo("in getDwhOrderData - orderId = " + order.orderId, "FactServices.groovy")
+            parameters.orderId = order.orderId
+            inMap = dispatcher.getDispatchContext().makeValidContext(serviceDef, ModelService.IN_PARAM, parameters)
+            serviceResult = run service: serviceDef, with: inMap
+            if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+                inMap.clear()
+            }
+        }
+    return success()
+}
+
+def loadDwhOrderData(){
+    Map inMap
+    GenericValue order = from("OrderHeader").where(parameters).queryOne()
+    if (!order) {
+        String errorMessage = UtilProperties.getMessage("AccountingUiLabels", "AccountingInvoiceDoesNotExists", parameters.locale)
+        logError(errorMessage)
+        return error(errorMessage)
+    }
+    switch (order.orderTypeId) {
+    case "SALES_ORDER":
+        serviceDef = "loadSalesOrderFact"
+        inMap = dispatcher.getDispatchContext().makeValidContext(serviceDef, ModelService.IN_PARAM, parameters)
+        serviceResult = run service: serviceDef, with: inMap
+        if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+            inMap.clear()
+        break
+    case "PURCHASE_ORDER":
+        break
+    }
+}
 
 /**
  * Import Sales Order Data
  */
 def importSalesOrderData() {
     Map inMap = [fromDate: parameters.fromDate, thruDate: parameters.thruDate]
-
-    Map res = run service:"loadDateDimension", with: inMap
-    if (!ServiceUtil.isSuccess(res)) {
-        return res
-    }
     EntityCondition condition = EntityCondition.makeCondition(
         EntityCondition.makeCondition("statusId", "ORDER_APPROVED"),
         EntityCondition.makeCondition("statusDatetime", EntityOperator.GREATER_THAN_EQUAL_TO, parameters.fromDate),
@@ -642,7 +726,6 @@ def convertUomCurrency() {
     }
     return result
 }
-
 
 def loadInventoryItemFact() {
     GenericValue inventory = from("InventoryItem").where(inventoryItemId: parameters.inventoryItemId).queryOne()
@@ -727,4 +810,44 @@ def loadInventoryItemFact() {
 
     fact.store()
     return success()
+}
+
+def updateOfbizFact() {
+    Map inMap
+    switch(parameters.factEntityName) {
+    case "InventoryItemFact":
+        serviceDef = "loadInventoryItemFact"
+        inMap = dispatcher.getDispatchContext().makeValidContext(serviceDef, ModelService.IN_PARAM, parameters)
+        sourceEntity = "InventoryItem"
+        entryExprs = EntityCondition.makeCondition( [
+            EntityCondition.makeCondition("inventoryItemTypeId", EntityOperator.EQUALS, "NON_SERIAL_INV_ITEM"),
+            EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.GREATER_THAN_EQUAL_TO, parameters.fromDate),
+            EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.LESS_THAN_EQUAL_TO, parameters.thruDate)
+        ], EntityOperator.AND)
+        queryListIterator = from(sourceEntity).where(entryExprs).queryIterator()
+        while(sourceRecord = queryListIterator.next()) {
+            inMap.inventoryItemId = sourceRecord.inventoryItemId
+            serviceResult = run service: serviceDef, with: inMap
+            if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+        }
+        queryListIterator.close()
+        inMap.clear()
+        break
+    case "SalesInvoiceItemFact":
+        serviceDef = "getDwhInvoiceData"
+        inMap = dispatcher.getDispatchContext().makeValidContext(serviceDef, ModelService.IN_PARAM, parameters)
+        //Debug.logInfo("in updateOfbizFact (SalesInvoiceItemFact) - inMap = " + inMap, "FactServices.groovy")
+        serviceResult = run service: serviceDef, with: inMap
+        if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+        inMap.clear()
+        break
+    case "SalesOrderItemFact":
+        serviceDef = "getDwhOrderData"
+        inMap = dispatcher.getDispatchContext().makeValidContext(serviceDef, ModelService.IN_PARAM, parameters)
+            //Debug.logInfo("in updateOfbizFact (SalesOrderItemFact - inMap = " + inMap, "FactServices.groovy")
+        serviceResult = run service: serviceDef, with: inMap
+        if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+        inMap.clear()
+        break
+    }
 }

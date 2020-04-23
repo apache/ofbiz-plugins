@@ -66,6 +66,55 @@ public class DimensionServices {
         Delegator delegator = ctx.getDelegator();
         GenericValue dimensionValue = (GenericValue) context.get("dimensionValue");
         List<String> naturalKeyFields = UtilGenerics.checkCollection(context.get("naturalKeyFields"), String.class);
+        String naturalKeyValue = "";
+        String updateMode = (String) context.get("updateMode");
+        Locale locale = (Locale) context.get("locale");
+
+        try {
+            Map<String, Object> andCondition = new HashMap<>();
+            for (String naturalKeyField: naturalKeyFields) {
+                andCondition.put(naturalKeyField, dimensionValue.get(naturalKeyField));
+                naturalKeyValue = naturalKeyValue + dimensionValue.get(naturalKeyField) + " ";
+            }
+            naturalKeyValue = naturalKeyValue.trim();
+            if (andCondition.isEmpty()) {
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "BiNaturalKeyWithourDimension", UtilMisc.toMap("naturalKeyFields", naturalKeyFields, "dimensionValue", dimensionValue), locale));
+            }
+            List<GenericValue> existingDimensionValues = null;
+            try {
+                existingDimensionValues = EntityQuery.use(delegator).from(dimensionValue.getEntityName()).where(andCondition).queryList();
+            } catch (GenericEntityException gee) {
+                return ServiceUtil.returnError(gee.getMessage());
+            }
+            if (UtilValidate.isEmpty(existingDimensionValues)) {
+                dimensionValue.set("dimensionId", naturalKeyValue);
+                dimensionValue.create();
+            } else {
+                if ("TYPE1".equals(updateMode)) {
+                    // update all the rows with the new values
+                    for (GenericValue existingDimensionValue: existingDimensionValues) {
+                        GenericValue updatedValue = delegator.makeValue(dimensionValue.getEntityName(), dimensionValue);
+                        updatedValue.set("dimensionId", existingDimensionValue.getString("dimensionId"));
+                        updatedValue.store();
+                    }
+                } else if ("TYPE2".equals(updateMode)) {
+                    // TODO: create a new record and update somewhere the from/thru dates of the old row
+                    dimensionValue.set("dimensionId", delegator.getNextSeqId(dimensionValue.getEntityName()));
+                    dimensionValue.create();
+                } else {
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, "BiUpdateModeStillNotSupported", UtilMisc.toMap("updateMode", updateMode), locale));
+                }
+            }
+        } catch (GenericEntityException gee) {
+            return ServiceUtil.returnError(gee.getMessage());
+        }
+        return ServiceUtil.returnSuccess();
+    }
+
+    public static Map<String, Object> storeOfbizDimension(DispatchContext ctx, Map<String, ? extends Object> context) {
+        Delegator delegator = ctx.getDelegator();
+        GenericValue dimensionValue = (GenericValue) context.get("dimensionValue");
+        List<String> naturalKeyFields = UtilGenerics.checkCollection(context.get("naturalKeyFields"), String.class);
         String updateMode = (String) context.get("updateMode");
         Locale locale = (Locale) context.get("locale");
 
@@ -110,11 +159,11 @@ public class DimensionServices {
 
     /*
      * OLAP Dimension
-     * Service used to initialize the Date dimension (DateDimension).
+     * Service used to update the Date dimension (DateDimension).
      * The DateDimension entity is a nearly constant dimension ("Slowly Changing Dimension" or SCD):
      * the default strategy to handle data change is "Type 1" (i.e. overwrite the values).
      */
-    public static Map<String, Object> loadDateDimension(DispatchContext ctx, Map<String, ? extends Object> context) {
+    public static Map<String, Object> updateDateDimension(DispatchContext ctx, Map<String, ? extends Object> context) {
         Delegator delegator = ctx.getDelegator();
 
         Date fromDate = (Date) context.get("fromDate");
@@ -177,5 +226,4 @@ public class DimensionServices {
         }
         return ServiceUtil.returnSuccess();
     }
-
 }
