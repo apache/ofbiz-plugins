@@ -268,7 +268,7 @@ def loadProductInProductDimension() {
     inMap = dispatcher.getDispatchContext().makeValidContext("storeGenericDimension", ModelService.IN_PARAM, parameters)
     inMap.naturalKeyFields = "productId"
     inMap.dimensionValue = productDimension
-    serviceResult = run service: "storeGenericDimension", with: inMap
+    serviceResult = run service: "storeOfbizDimension", with: inMap
     if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
 }
 
@@ -285,14 +285,14 @@ def loadAllProductsInProductDimension() {
 }
 
 def updateProductDimension() {
-	Map inMap
-	dimensionEntityName = parameters.dimensionEntityName;
-	sourceEntity = "Product"
-	entryExprs = EntityCondition.makeCondition([
-	    EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.GREATER_THAN_EQUAL_TO, parameters.fromDate),
+    Map inMap
+    dimensionEntityName = parameters.dimensionEntityName;
+    sourceEntity = "Product"
+    entryExprs = EntityCondition.makeCondition([
+        EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.GREATER_THAN_EQUAL_TO, parameters.fromDate),
         EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.LESS_THAN_EQUAL_TO, parameters.thruDate)
     ], EntityOperator.AND)
-	queryListIterator = from(sourceEntity).where(entryExprs).queryIterator()
+    queryListIterator = from(sourceEntity).where(entryExprs).queryIterator()
     while(sourceRecord = queryListIterator.next()){
         inMap = dispatcher.getDispatchContext().makeValidContext("loadProductInProductDimension", ModelService.IN_PARAM, parameters)
         inMap.productId = sourceRecord.productId

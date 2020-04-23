@@ -38,10 +38,6 @@ GenericValue value = null;
 GenericValue dwhInitialised;
 
 def initialiseDwh() {
-    Debug.logInfo("In inialiseDwh - initialisation started","DwhServices")
-    Debug.logInfo("In initialiseDwh - fromDate = "+ fromDate,"DwhServices")
-    Debug.logInfo("In initialiseDwh - futureIncrement = "+ futureIncrement,"DwhServices")
-
     // Updating BI system properties
     futureIncrementProp = from('SystemProperty').where('systemResourceId','bi', 'systemPropertyId','dwh.futureIncrement ').queryOne()
     if(futureIncrement != futureIncrementProp.systemPropertyValue) {
@@ -59,16 +55,13 @@ def initialiseDwh() {
     // get thruDate
     switch(useTimeUomId) {
     case "TF_mon":
-        Debug.logInfo("In initialiseDwh - useTimeUomId = "+ useTimeUomId ,"DwhServices")
         calendar.add(Calendar.MONTH, futureIncrement)
         break
     case "TF_yr":
-        Debug.logInfo("In initialiseDwh - useTimeUomId = "+ useTimeUomId ,"DwhServices")
         calendar.add(Calendar.YEAR, futureIncrement)
         break
     }
     futureDate = new java.sql.Date(calendar.getTimeInMillis())
-    Debug.logInfo("In updateDwh, futureDate  = " + futureDate, "DwhServices")
 
     // update dimension and fact tables
     Map inMap = dispatcher.getDispatchContext().makeValidContext("updateDwh", ModelService.IN_PARAM, parameters)
@@ -108,25 +101,17 @@ def initialiseDwh() {
 }
 
 def updateDwh() {
-    Debug.logInfo("In updateDwh - update started","DwhServices")
-    Debug.logInfo("In updateDwh - fromDate = " + parameters.fromDate,"DwhServices")
-    Debug.logInfo("In updateDwh - thruDate = " + parameters.thruDate,"DwhServices")
     dwhInitialisedProp = from('SystemProperty').where('systemResourceId','bi', 'systemPropertyId','dwh.initialised').queryOne()
-    Debug.logInfo("In updateDwh - initialised = " + dwhInitialisedProp.systemPropertyValue,"DwhServices")
     dwhUpdateModeProp = from('SystemProperty').where('systemResourceId','bi', 'systemPropertyId','dwh.updateMode').queryOne()
-    Debug.logInfo("In updateDwh - update Mode = " + dwhUpdateModeProp.systemPropertyValue,"DwhServices")
     parameters.updateMode = dwhUpdateModeProp.systemPropertyValue
-    Debug.logInfo("In updateDwh - update Mode = " + parameters.updateMode,"DwhServices")
     // get nowTimestamp
     Calendar calendar = Calendar.getInstance();
     todayDate = new java.sql.Date(calendar.getTimeInMillis())
-    Debug.logInfo("In updateDwh, todayDate  = " + todayDate, "DwhServices")
-
+    
     // get date for the day before
     calendar.add(Calendar.DATE, -1)
     theDayBeforeDate = new java.sql.Date(calendar.getTimeInMillis())
-    Debug.logInfo("In updateDwh, theDayBeforeDate  = " + theDayBeforeDate, "DwhServices")
-
+    
     if (!parameters.fromDate) {
         parameters.fromDate = theDayBeforeDate.toString() + " 00:00:00"
     }
@@ -148,8 +133,6 @@ def updateDwh() {
         }
     futureDate = new java.sql.Date(calendar.getTimeInMillis())
     parameters.thruDate = futureDate
-    Debug.logInfo("In updateDwh - fromDate = " + parameters.fromDate,"DwhServices")
-    Debug.logInfo("In updateDwh - thruDate = " + parameters.thruDate,"DwhServices")
     Map inMap = dispatcher.getDispatchContext().makeValidContext("updateDateDimension", ModelService.IN_PARAM, parameters)
     serviceResult = run service: "updateDateDimension", with: inMap
     if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
@@ -159,7 +142,6 @@ def updateDwh() {
     } else {
         parameters.thruDate = todayDate.toString() + " 23:59:59.999"
     }
-    Debug.logInfo("In updateDwh - thruDate = " + parameters.thruDate,"DwhServices")
 
     //update RoleParty Dimensions
     serviceDef = "updateRolePartyDimension"
@@ -259,29 +241,26 @@ def updateDwh() {
 
     // update Facts
     serviceDef = "updateOfbizFact"
-    parameters.thruDate = theDayBeforeDate.toString() + " 23:59:59.999"
-    if("true" == dwhInitialisedProp.systemPropertyValue) {
-        // update InventoryItemFact
-        parameters.factEntityName = "InventoryItemFact"
-        Debug.logInfo("In updateDwh, applying " + serviceDef + " for fact " + parameters.factEntityName, "DwhServices")
-        inMap = dispatcher.getDispatchContext().makeValidContext(serviceDef, ModelService.IN_PARAM, parameters)
-        serviceResult = run service: serviceDef, with: inMap
-        if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+    // update InventoryItemFact
+    parameters.factEntityName = "InventoryItemFact"
+    Debug.logInfo("In updateDwh, applying " + serviceDef + " for fact " + parameters.factEntityName, "DwhServices")
+    inMap = dispatcher.getDispatchContext().makeValidContext(serviceDef, ModelService.IN_PARAM, parameters)
+    serviceResult = run service: serviceDef, with: inMap
+    if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
 
-        // update SalesInvoiceItemFact
-        parameters.factEntityName = "SalesInvoiceItemFact"
-        Debug.logInfo("In updateDwh, applying " + serviceDef + " for fact " + parameters.factEntityName, "DwhServices")
-        inMap = dispatcher.getDispatchContext().makeValidContext(serviceDef, ModelService.IN_PARAM, parameters)
-        serviceResult = run service: serviceDef, with: inMap
-        if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+    // update SalesInvoiceItemFact
+    parameters.factEntityName = "SalesInvoiceItemFact"
+    Debug.logInfo("In updateDwh, applying " + serviceDef + " for fact " + parameters.factEntityName, "DwhServices")
+    inMap = dispatcher.getDispatchContext().makeValidContext(serviceDef, ModelService.IN_PARAM, parameters)
+    serviceResult = run service: serviceDef, with: inMap
+    if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
 
-        // update SalesOrderItemFact
-        parameters.factEntityName = "SalesOrderItemFact"
-        Debug.logInfo("In updateDwh, applying " + serviceDef + " for fact " + parameters.factEntityName, "DwhServices")
-        inMap = dispatcher.getDispatchContext().makeValidContext(serviceDef, ModelService.IN_PARAM, parameters)
-        serviceResult = run service: serviceDef, with: inMap
-        if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
-    }
+    // update SalesOrderItemFact
+    parameters.factEntityName = "SalesOrderItemFact"
+    Debug.logInfo("In updateDwh, applying " + serviceDef + " for fact " + parameters.factEntityName, "DwhServices")
+    inMap = dispatcher.getDispatchContext().makeValidContext(serviceDef, ModelService.IN_PARAM, parameters)
+    serviceResult = run service: serviceDef, with: inMap
+    if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
 
     Debug.logInfo("In updateDwh - update completed","DwhServices")
 }
