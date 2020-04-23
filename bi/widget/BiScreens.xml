@@ -28,10 +28,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="BiMainPage"/>
                 <set field="headerItem" value="main"/>
-                <property-to-field resource="bi" property="fromDate" field="fromDateProp" no-locale="true"/>
-                <property-to-field resource="bi" property="thruDate" field="thruDateProp" no-locale="true"/>
-                <set field="fromDate" from-field="fromDateProp" type="Timestamp"/>
-                <set field="thruDate" from-field="thruDateProp" type="Timestamp"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonBiDecorator" location="${parameters.mainDecoratorLocation}">
@@ -49,11 +45,15 @@ under the License.
             <actions>
                 <set field="titleProperty" value="BiInitialiseDwh"/>
                 <set field="headerItem" value="reportbuilder"/>
+                <property-to-field resource="bi" property="dwh.initialised" field="dwhInitialised" no-locale="true"/>
+                <property-to-field resource="bi" property="dwh.fromDate" field="fromDate" no-locale="true"/>
+                <property-to-field resource="bi" property="dwh.futureIncrement" field="futureIncrement" no-locale="true"/>
+                <property-to-field resource="bi" property="dwh.useTimeUomId " field="useTimeUomId" no-locale="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonBiDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet>
+                        <screenlet title="${defaultUseTimeUomId}">
                             <include-form location="component://bi/widget/BiForms.xml" name="PrepareDwhInit"/>
                         </screenlet>
                     </decorator-section>
@@ -66,6 +66,10 @@ under the License.
             <actions>
                 <set field="titleProperty" value="BiUpdateDwh"/>
                 <set field="headerItem" value="reportbuilder"/>
+                <property-to-field resource="bi" property="dwh.initialised" field="dwhInitialised" no-locale="true"/>
+                <property-to-field resource="bi" property="dwh.fromDate" field="fromDate" no-locale="true"/>
+                <property-to-field resource="bi" property="dwh.futureIncrement" field="futureIncrement" no-locale="true"/>
+                <property-to-field resource="bi" property="dwh.useTimeUomId " field="useTimeUomId" no-locale="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonBiDecorator" location="${parameters.mainDecoratorLocation}">
