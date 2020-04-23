@@ -27,7 +27,6 @@ under the License.
                 <property-to-field resource="bi" property="dwh.initialised" field="dwhInitialised" no-locale="true"/>
                 <property-to-field resource="bi" property="dwh.fromDate" field="fromDate" no-locale="true"/>
                 <property-to-field resource="bi" property="dwh.futureIncrement" field="futureIncrement" no-locale="true"/>
-                <property-to-field resource="bi" property="dwh.initialised" field="dwhInitialised" no-locale="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
