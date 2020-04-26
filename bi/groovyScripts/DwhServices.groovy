@@ -94,7 +94,7 @@ def initialiseDwh() {
     
     // finalise dwh initialisation
     dwhInitialisedProp = from('SystemProperty').where('systemResourceId','bi', 'systemPropertyId','dwh.initialised').queryOne()
-    if("false" == dwhInitialisedProp.systemPropertyValue) {
+    if("false".equals(dwhInitialisedProp.systemPropertyValue) {
         dwhInitialisedProp.systemPropertyValue = "true"
         dwhInitialisedProp.store()
     }
@@ -137,7 +137,7 @@ def updateDwh() {
     serviceResult = run service: "updateDateDimension", with: inMap
     if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
 
-    if("true" == dwhInitialisedProp.systemPropertyValue) {
+    if("true".equals(dwhInitialisedProp.systemPropertyValue) {
         parameters.thruDate = theDayBeforeDate.toString() + " 23:59:59.999"
     } else {
         parameters.thruDate = todayDate.toString() + " 23:59:59.999"
