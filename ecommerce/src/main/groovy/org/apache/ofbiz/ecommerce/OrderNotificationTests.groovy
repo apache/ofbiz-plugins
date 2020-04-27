@@ -40,6 +40,8 @@ class OrderNotificationTests extends OFBizTestCase {
     void testSendOrderChangeNotification() {
         Map serviceCtx = [
             orderId: 'TEST_DEMO10090',
+            note: 'Test Note',
+            comments: 'Test comments',
             sendTo: 'test_email@example.com',
             userLogin: userLogin
         ]
