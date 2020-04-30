@@ -32,7 +32,6 @@ import org.apache.ofbiz.service.testtools.OFBizTestCase;
 
 public class SolrTests extends OFBizTestCase {
 
-    protected GenericValue userLogin = null;
     private Map<String, Object> context;
     private Map<String, Object> response;
     private String validTestProductId = "GZ-1006";
@@ -41,11 +40,6 @@ public class SolrTests extends OFBizTestCase {
 
     public SolrTests(String name) {
         super(name);
-    }
-
-    @Override
-    protected void setUp() throws Exception {
-        userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "system").queryOne();
     }
 
     @Override

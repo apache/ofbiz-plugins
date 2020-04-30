@@ -43,16 +43,10 @@ import org.apache.ofbiz.service.testtools.OFBizTestCase;
 
 public class LuceneTests extends OFBizTestCase {
 
-    protected GenericValue userLogin = null;
     public final static String MODULE = LuceneTests.class.getName();
 
     public LuceneTests(String name) {
         super(name);
-    }
-
-    @Override
-    protected void setUp() throws Exception {
-        userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "system").queryOne();
     }
 
     @Override
@@ -62,7 +56,7 @@ public class LuceneTests extends OFBizTestCase {
     public void testSearchTermHand() throws Exception {
         Map<String, Object> ctx = new HashMap<>();
         ctx.put("contentId", "LuceneCONTENT");
-        ctx.put("userLogin", userLogin);
+        ctx.put("userLogin", getUserLogin("system"));
         Map<String, Object> resp = dispatcher.runSync("indexContentTree", ctx);
         if (ServiceUtil.isError(resp)) {
             String errorMessage = ServiceUtil.getErrorMessage(resp);
