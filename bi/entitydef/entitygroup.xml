@@ -37,12 +37,15 @@ under the License.
     <entity-group group="org.apache.ofbiz.olap" entity="ProjectTaskDimension"/>
     <entity-group group="org.apache.ofbiz.olap" entity="SalesChannelDimension"/>
     <entity-group group="org.apache.ofbiz.olap" entity="SalesPromoDimension"/>
+    <entity-group group="org.apache.ofbiz.olap" entity="SupplierDimension"/>
     <entity-group group="org.apache.ofbiz.olap" entity="StoreDimension"/>
     <entity-group group="org.apache.ofbiz.olap" entity="TimeDimension"/>
 
     <!-- ========================================================= -->
     <!-- Facts                                                     -->
     <!-- ========================================================= -->
+    <entity-group group="org.apache.ofbiz.olap" entity="PurchaseInvoiceItemFact"/>
+    <entity-group group="org.apache.ofbiz.olap" entity="PurchaseOrderItemFact"/>
     <entity-group group="org.apache.ofbiz.olap" entity="SalesInvoiceItemFact"/>
     <entity-group group="org.apache.ofbiz.olap" entity="SalesOrderItemFact"/>
     <entity-group group="org.apache.ofbiz.olap" entity="InventoryItemFact"/>
@@ -50,6 +53,8 @@ under the License.
     <!-- ========================================================= -->
     <!-- Star Schemas                                              -->
     <!-- ========================================================= -->
+    <entity-group group="org.apache.ofbiz.olap" entity="PurchaseInvoiceItemStarSchema"/>
+    <entity-group group="org.apache.ofbiz.olap" entity="PurchaseOrderItemStarSchema"/>
     <entity-group group="org.apache.ofbiz.olap" entity="SalesInvoiceItemStarSchema"/>
     <entity-group group="org.apache.ofbiz.olap" entity="SalesOrderItemStarSchema"/>
     <entity-group group="org.apache.ofbiz.olap" entity="InventoryItemStarSchema"/>
