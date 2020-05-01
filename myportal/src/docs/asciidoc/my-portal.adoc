@@ -16,21 +16,19 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 ////
-= Apache OFBiz Plugins
-The Apache OFBiz Project
-Release trunk
-:imagesdir: ./images
-ifdef::backend-pdf[]
-:title-logo-image: image::OFBiz-Logo.svg[Apache OFBiz Logo, pdfwidth=4.25in, align=center]
-:source-highlighter: rouge
-endif::[]
-:toc:
-:sectnums:
+= My portal Plugin
 
-include::../../birt/src/docs/asciidoc/birt.adoc[leveloffset=+1]
+Within the 'my portal' application it is possible to create a collection of screens for a specific type of user of the system.
 
-include::../../ebay/src/docs/asciidoc/ebay.adoc[leveloffset=+1]
+Examples are a general employee, an account manager, a customer, a supplier etc...
 
-include::../../ebaystore/src/docs/asciidoc/ebay-store.adoc[leveloffset=+1]
+The system makes use of special portlets which can be arranged and selected/hidden by the logged on user.
 
-include::../../myportal/src/docs/asciidoc/my-portal.adoc[leveloffset=+1]
+The MyPortal application is an example of what it's possible to do with OFBiz Portal technics
+(integrated in ofbiz framework)
+
+== Some Portlet in other components
+
+include::_include/portlet-system-info-notes.adoc[leveloffset=+2]
+
+include::_include/portlet-calendar.adoc[leveloffset=+2]
