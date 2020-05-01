@@ -1,0 +1,75 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+
+= BIRT in OFbiz User Interface
+Welcome to OFBiz BIRT component. +
+The part installed within OFBiz allows you to run the reports which are prepared using Eclipse with the BIRT plugin installed.
+
+This is a short document to help you get started using BIRT to make a report.
+
+As a demo we have prepared a an example report. +
+Look at the http://eclipse.org/birt/phoenix/[Eclipse BIRT web site] for more information.
+
+There is also a new feature (2017) which allows you to dynamically create Birt reports, and allow your users to customise them:
+the <<_ofbiz_flexible_reports>>.
+
+
+== PDF tab
+When you click on this tab.
+It will render the example report in a PDF format
+
+== Send any format through Mail tab
+When you click on this tab.
+It will show a form that can send the report per email.
+
+== Chart tab
+When you click on this tab.
+An example chart will render in a PDF format
+
+== Examine the Example Report
+The example report design that run in OFBiz is in the file component://birt/webapp/birt/report/example.rptdesign.
+
+When you have started Eclipse BIRT, open this document.
+
+This report show how a report receives data from OFBiz through Scripted Data Source using the OFBiz delegator. +
+This report has the scripted data source name "OFBiz" and the data set that use the script data source name is called "Product".
+Open the script editor for Product data set, it uses the delegator object query data from the Product entity.
+A report that runs on the OFBiz platform can use the delegator object, dispatcher object, security object and classpath of
+OFBiz environment in the script.
+
+== How do I send parameter to report?
+If a report is to be rendered through a view map, you can send a parameter through attribute of the request object,
+the attribute's name is "birtParameters" which is a map.
+
+If a report is to be rendered through an e-mail, you can send the parameter through the service's parameter name called
+birtParameters.
+
+== Which are the supported content types?
+* Excel (.xls)
+* Excel (.xlsx)
+* LibreOffice Calc (.ods)
+* LibreOffice Impress (.odp)
+* LibreOffice Writer (.odt)
+* Pdf (.pdf)
+* Postscript (.ps)
+* Powerpoint (.ppt)
+* Powerpoint (.pptx)
+* Text (.html)
+* Word (.doc)
+* Word (.docx)
