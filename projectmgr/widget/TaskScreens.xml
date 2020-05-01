@@ -162,6 +162,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleFindTask"/>
                 <set field="headerItem" value="task"/>
                 <set field="tabButtonItem" value="find"/>
+                <set field="helpAnchor" value="_project_tasks"/>
                 <set field="labelTitleProperty" value="ProjectMgrListTasks"/>
             </actions>
             <widgets>
@@ -310,7 +311,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="ViewProjectTask">
         <section>
             <actions>
@@ -341,7 +342,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="TaskView">
         <section>
             <actions>

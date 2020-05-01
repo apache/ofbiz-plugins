@@ -24,6 +24,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindResource"/>
+                <set field="helpAnchor" value="_project_resources"/>
                 <set field="labelTitleProperty" value="ProjectMgrResourceName"/>
                 <set field="workEffortId" from-field="parameters.projectId"/>
                 <entity-condition entity-name="PartyRoleAndPartyDetail" list="resources">

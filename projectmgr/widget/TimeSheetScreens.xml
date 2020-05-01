@@ -25,6 +25,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleFindTimeSheet"/>
                 <set field="headerItem" value="timesheet"/>
+                <set field="helpAnchor" value="_timesheets"/>
                 <set field="labelTitleProperty" value="ProjectMgrFindTimeSheet"/>
             </actions>
             <widgets>

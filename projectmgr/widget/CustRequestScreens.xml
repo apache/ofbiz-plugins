@@ -20,7 +20,7 @@ under the License.
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="http://ofbiz.apache.org/Widget-Screen" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Screen http://ofbiz.apache.org/dtds/widget-screen.xsd">
-    
+
     <screen name="ProjectRequestList">
         <section>
             <condition>
@@ -45,13 +45,14 @@ under the License.
             </fail-widgets>
         </section>
     </screen>
-    
+
     <screen name="RequestList">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListWorkEffortRequests"/>
                 <set field="tabButtonItem" value="requestlist"/>
                 <set field="headerItem" value="request"/>
+                <set field="helpAnchor" value="_project_requests"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonRequestDecorator" location="${parameters.mainDecoratorLocation}">
@@ -124,7 +125,7 @@ under the License.
                 <entity-condition entity-name="CustRequestAndContent" list="custRequestAndContents">
                     <condition-list combine="and">
                         <condition-expr field-name="custRequestId" from-field="custRequestId"/>
-                        <condition-expr field-name="fromDate" operator="less-equals" from-field="nowTimestamp"/>                        
+                        <condition-expr field-name="fromDate" operator="less-equals" from-field="nowTimestamp"/>
                         <condition-list combine="or">
                             <condition-expr field-name="thruDate" operator="greater-equals" from-field="nowTimestamp"/>
                             <condition-expr field-name="thruDate" from-field="null"/>
@@ -135,7 +136,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="CommonRequestDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">                        
+                    <decorator-section name="body">
                         <container style="lefthalf">
                             <screenlet title="${uiLabelMap.OrderRequestInformation}">
                                 <include-form name="RequestInfo" location="component://order/widget/ordermgr/CustRequestForms.xml"/>
