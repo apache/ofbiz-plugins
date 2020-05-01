@@ -32,3 +32,5 @@ include::../../birt/src/docs/asciidoc/birt.adoc[leveloffset=+1]
 include::../../ebay/src/docs/asciidoc/ebay.adoc[leveloffset=+1]
 
 include::../../ebaystore/src/docs/asciidoc/ebay-store.adoc[leveloffset=+1]
+
+include::../../myportal/src/docs/asciidoc/my-portal.adoc[leveloffset=+1]
