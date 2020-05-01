@@ -1,0 +1,80 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+= Project Manager
+:doctype: book
+:sectnums:
+:toc: left
+:icons: font
+:experimental:
+:sourcedir: .
+
+include::_include/prjm_intro.adoc[leveloffset=+1]
+
+== ProjectMgr in UI
+=== Main screen.
+This is the startup screen of the project manager.
+It will show all active projects with some statistical data.
+
+=== My tasks
+This overview outlines all tasks the user has been assigned to.
+
+=== My Timesheets
+Here the user enters the hours worked on tasks.
+
+It also provides an overview of all timesheets the user has filled out. +
+It also shows the status of the timesheets.
+
+=== Find Projects
+This screen provides an overview of all projects the user is participating in.
+
+include::_include/prjm_project.adoc[leveloffset=+2]
+
+=== Project - billing
+This screen shows all hours registered to the various tasks in the project by all participants.
+
+From here the Project Manager processes all time entries for further processing regarding invoicing and
+cost accounting.
+
+=== Project - edit info
+The Project Manager can edit various details regarding the project.
+
+=== Project - orders
+This screen provides an overview of all orders related to the project.
+
+=== Project - phases
+This screen provides an overview of the phases of the project.
+
+The Project Manager can manage all phases in the project here, e.g. defining new phases.
+
+=== Project - resources
+This screen provides an overview of all participants in the project.
+
+From here the Project Manager can add new resources to the project, or end the participation of existing project members.
+
+=== Project - tasks
+This screen provides an overview of all tasks associated to the project.
+
+=== Project - Requests
+This screen provides an overview of all customer request regarding projects.
+
+=== Tasks
+This screen provides an overview of all tasks in the module
+
+=== Timesheets
+This screen provides an overview of all timesheets registered with the application by all project participants.
