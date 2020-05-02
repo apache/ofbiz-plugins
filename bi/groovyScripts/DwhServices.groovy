@@ -248,6 +248,20 @@ def updateDwh() {
     serviceResult = run service: serviceDef, with: inMap
     if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
 
+    // update PurchaseInvoiceItemFact
+    parameters.factEntityName = "PurchaseInvoiceItemFact"
+    Debug.logInfo("In updateDwh, applying " + serviceDef + " for fact " + parameters.factEntityName, "DwhServices")
+    inMap = dispatcher.getDispatchContext().makeValidContext(serviceDef, ModelService.IN_PARAM, parameters)
+    serviceResult = run service: serviceDef, with: inMap
+    if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+
+    // update PurchaseOrderItemFact
+    parameters.factEntityName = "PurchaseOrderItemFact"
+    Debug.logInfo("In updateDwh, applying " + serviceDef + " for fact " + parameters.factEntityName, "DwhServices")
+    inMap = dispatcher.getDispatchContext().makeValidContext(serviceDef, ModelService.IN_PARAM, parameters)
+    serviceResult = run service: serviceDef, with: inMap
+    if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+
     // update SalesInvoiceItemFact
     parameters.factEntityName = "SalesInvoiceItemFact"
     Debug.logInfo("In updateDwh, applying " + serviceDef + " for fact " + parameters.factEntityName, "DwhServices")
