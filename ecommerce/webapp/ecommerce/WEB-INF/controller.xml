@@ -777,6 +777,7 @@ under the License.
         <response name="error" type="view" value="checkoutreview"/>
     </request-map>
     <request-map uri="worldPayNotify">
+        <security https="false"/>
         <event type="java" path="org.apache.ofbiz.accounting.thirdparty.worldpay.WorldPayEvents" invoke="worldPayNotify"/>
         <response name="success" type="none"/>
         <response name="error" type="view" value="checkoutreview"/>
@@ -789,6 +790,7 @@ under the License.
         <response name="error" type="view" value="checkoutreview"/>
     </request-map>
     <request-map uri="payPalNotify">
+        <security https="false"/>
         <event type="java" path="org.apache.ofbiz.accounting.thirdparty.paypal.PayPalEvents" invoke="payPalIPN"/>
         <response name="success" type="none"/>
         <response name="error" type="none"/>
