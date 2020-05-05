@@ -114,9 +114,8 @@ def updateRolePartyDimension() {
     fromDate = parameters.fromDate
     thruDate = parameters.thruDate
     updateMode = parameters.updateMode
-    role = parameters.role
-    roleTypeId = role.toUpperCase();
-    dimensionEntityName = role+ "Dimension"
+    roleTypeId = parameters.roleTypeId
+    dimensionEntityName = parameters.dimensionEntityName
     naturalKeyFields = "partyId"
 
     entryExprs = EntityCondition.makeCondition([

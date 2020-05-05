@@ -147,35 +147,40 @@ def updateDwh() {
     serviceDef = "updateRolePartyDimension"
 
     // Account Dimension
-    parameters.role = "Account"
+    parameters.roleTypeId = "ACCOUNT"
+    parameters.dimensionEntityName = "AccountDimension"
     Debug.logInfo("In updateDwh, applying " + serviceDef + " for role " + parameters.role, "DwhServices")
     inMap = dispatcher.getDispatchContext().makeValidContext(serviceDef, ModelService.IN_PARAM, parameters)
     serviceResult = run service: serviceDef, with: inMap
     if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
 
     // Carrier Dimension
-    parameters.role = "Carrier"
+    parameters.role = "CARRIER"
+    parameters.dimensionEntityName = "CarrierDimension"
     Debug.logInfo("In updateDwh, applying " + serviceDef + " for role " + parameters.role, "DwhServices")
     inMap = dispatcher.getDispatchContext().makeValidContext(serviceDef, ModelService.IN_PARAM, parameters)
     serviceResult = run service: serviceDef, with: inMap
     if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
 
     // Customer Dimension
-    parameters.role = "Customer"
+    parameters.role = "CUSTOMER"
+    parameters.dimensionEntityName = "CustomerDimension"
     Debug.logInfo("In updateDwh, applying " + serviceDef + " for role " + parameters.role, "DwhServices")
     inMap = dispatcher.getDispatchContext().makeValidContext(serviceDef, ModelService.IN_PARAM, parameters)
     serviceResult = run service: serviceDef, with: inMap
     if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
 
     // Employee Dimension
-    parameters.role = "Employee"
+    parameters.role = "EMPLOYEE"
+    parameters.dimensionEntityName = "EmployeeDimension"
     Debug.logInfo("In updateDwh, applying " + serviceDef + " for role " + parameters.role, "DwhServices")
     inMap = dispatcher.getDispatchContext().makeValidContext(serviceDef, ModelService.IN_PARAM, parameters)
     serviceResult = run service: serviceDef, with: inMap
     if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
 
     // Supplier Dimension
-    parameters.role = "Supplier"
+    parameters.role = "SUPPLIER"
+    parameters.dimensionEntityName = "SupplierDimension"
     Debug.logInfo("In updateDwh, applying " + serviceDef + " for role " + parameters.role, "DwhServices")
     inMap = dispatcher.getDispatchContext().makeValidContext(serviceDef, ModelService.IN_PARAM, parameters)
     serviceResult = run service: serviceDef, with: inMap

@@ -84,7 +84,8 @@ under the License.
     <service name="updateRolePartyDimension" auth="true" engine="groovy" transaction-timeout="600"
         location="component://bi/groovyScripts/DimensionServices.groovy" invoke="updateRolePartyDimension">
         <description>Load all appropriate party records in the Dimension</description>
-        <attribute name="role" type="String" mode="IN" optional="false"/>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="dimensionEntityName" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="updateMode" type="String" mode="IN" optional="true" default-value="TYPE1"/>
