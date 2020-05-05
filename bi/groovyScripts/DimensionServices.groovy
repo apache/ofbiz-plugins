@@ -77,6 +77,10 @@ def updateOfbizDimension() {
         sourceEntity = "DwhOrganisationSource"
         naturalKeyFields = "partyId"
         break
+    case "PosTerminalDimension":
+        sourceEntity = "PosTerminal"
+        naturalKeyFields = "posTerminalId"
+        break
     case "ProjectDimension":
         sourceEntity = "DwhProjectSource"
         naturalKeyFields = "projectId"

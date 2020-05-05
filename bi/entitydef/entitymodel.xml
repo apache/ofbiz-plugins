@@ -210,6 +210,19 @@ under the License.
         </field>
         <prim-key field="dimensionId"/>
     </entity>
+    <entity entity-name="PosTerminalDimension" package-name="org.apache.ofbiz.bi.dimension" title="PoS Terminals Dimension">
+        <description>Dimension of PoS terminals. The natural key is [posTerminalId]</description>
+        <field name="dimensionId" type="integer">
+            <description>Unique identifier of the PosTerminal dimension record</description>
+        </field>
+        <field name="posTerminalId" type="id">
+            <description>The natural key. From PosTerminal.posTerminalId</description>
+        </field>
+        <field name="terminalName" type="description">
+            <description>The name given to the terminal</description>
+        </field>
+        <prim-key field="dimensionId"/>
+    </entity>
     <entity entity-name="ProductDimension" package-name="org.apache.ofbiz.bi.dimension" title="Products Dimension">
         <description>Dimension of Products. The natural key is [productId]</description>
         <field name="dimensionId" type="integer">
@@ -226,19 +239,6 @@ under the License.
         </field>
         <field name="brandName" type="name">
             <description>The brand name of the prdouct</description>
-        </field>
-        <prim-key field="dimensionId"/>
-    </entity>
-    <entity entity-name="SupplierDimension" package-name="org.apache.ofbiz.bi.dimension" title="Suppliers Dimension">
-        <description>Dimension of suppliers. The natural key is [partyId]</description>
-        <field name="dimensionId" type="integer">
-            <description>Unique identifier of the Supplier dimension record</description>
-        </field>
-        <field name="partyId" type="id">
-            <description>The natural key. From PartyRoleAndPartyDetail.partyId</description>
-        </field>
-        <field name="partyName" type="description">
-            <description>Name of the supplier. From PartyRoleAndPartyDetail. Dependent on PartyTypeId</description>
         </field>
         <prim-key field="dimensionId"/>
     </entity>
@@ -304,6 +304,19 @@ under the License.
         </field>
         <field name="storeName" type="description">
             <description>Name of the store. From ProductStore.storeName.</description>
+        </field>
+        <prim-key field="dimensionId"/>
+    </entity>
+    <entity entity-name="SupplierDimension" package-name="org.apache.ofbiz.bi.dimension" title="Suppliers Dimension">
+        <description>Dimension of suppliers. The natural key is [partyId]</description>
+        <field name="dimensionId" type="integer">
+            <description>Unique identifier of the Supplier dimension record</description>
+        </field>
+        <field name="partyId" type="id">
+            <description>The natural key. From PartyRoleAndPartyDetail.partyId</description>
+        </field>
+        <field name="partyName" type="description">
+            <description>Name of the supplier. From PartyRoleAndPartyDetail. Dependent on PartyTypeId</description>
         </field>
         <prim-key field="dimensionId"/>
     </entity>

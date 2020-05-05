@@ -208,6 +208,13 @@ def updateDwh() {
     serviceResult = run service: serviceDef, with: inMap
     if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
 
+    // update Facility Dimension
+    parameters.dimensionEntityName = "PosTerminalDimension"
+    Debug.logInfo("In updateDwh, applying " + serviceDef + " for dimension " + parameters.dimensionEntityName, "DwhServices")
+    inMap = dispatcher.getDispatchContext().makeValidContext(serviceDef, ModelService.IN_PARAM, parameters)
+    serviceResult = run service: serviceDef, with: inMap
+    if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+
     // update Project Dimension
     parameters.dimensionEntityName = "ProjectDimension"
     Debug.logInfo("In updateDwh, applying " + serviceDef + " for dimension " + parameters.dimensionEntityName, "DwhServices")
