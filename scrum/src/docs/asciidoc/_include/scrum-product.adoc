@@ -1,0 +1,76 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+= Product
+In the Scrum component, First product owner must create or select a product to assign into project later.
+
+The Product Backlog is the master list of all functionality desired in the product, a Scrum team and
+its product owner begin by writing down everything they can think of easily
+
+=== Product UI
+In product screen consist of.
+
+1. Add product button : For this button only product owner and scrum admin can see it. +
+   Click go to create product page
+2. Find product: You can find active product. You can find by productId or product name
+3. Product List: Show list active product and you can select the product to
+  * show an overview
+  * update product
+  * add some backlog item to your product
+  * ...
+
+include::scrum-product-overview.adoc[leveloffset=+3]
+
+==== Create New Product
+This screen includes details that need for creating new product and display product list.
+
+This part use to create new product.
+
+. Select company name that related to product owner.
+. Insert the product name and description.
+. Click submit button when insert above fields.
+
+==== Update Product
+This part use to update product.
+
+. The user can update product name and description.
+. Click submit button when insert above fields.
+
+==== Product Contents
+This screen use for uploading any contents that concern to the product.
+The screen consists of :
+
+. Product Content List
+  * Show the list of contents by Content Type Id and Content Name. +
+    There are 2 buttons in each content:
+    .. Delete : To delete the uploaded content
+    .. Download : To download the uploaded content
+. Add Product Content
+  * To upload the content. +
+    The content can be classified by choosing the Content Type Id and Mime Type Id.
+
+==== Communication
+This screen use for communication e-mails.
+The screen consists of :
+
+. New Email: To create a new email.
+  .. New Email: To insert the content to product owner.
+  .. E-mail Contents: To offer the uploading to attack the file to E-mail.
+. E-mail : To show the sending e-mail that is sent to product owner include with Subject,Status Id,Form,To and Created.
+
+

@@ -16,25 +16,20 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 ////
-= Apache OFBiz Plugins
-The Apache OFBiz Project
-Release 17.12
-:imagesdir: ./images
-ifdef::backend-pdf[]
-:title-logo-image: image::OFBiz-Logo.svg[Apache OFBiz Logo, pdfwidth=4.25in, align=center]
-:source-highlighter: rouge
-endif::[]
-:toc:
-:sectnums:
+= Default Tasks
+This screen use for setting the task that will be generated automatically when the backlog is create.
+The screen consists of :
 
-include::../../birt/src/docs/asciidoc/birt.adoc[leveloffset=+1]
+. Create A Default Task button
+. Default Task List
 
-include::../../ebay/src/docs/asciidoc/ebay.adoc[leveloffset=+1]
 
-include::../../ebaystore/src/docs/asciidoc/ebay-store.adoc[leveloffset=+1]
+== Create A Default Task button
+To create a new default task.
+When click on the button the screen appears  Edit Default Task instates the Default Tasks List.
 
-include::../../myportal/src/docs/asciidoc/my-portal.adoc[leveloffset=+1]
+== Default Tasks List
+To show Default Tasks List,when click it's name the screen appears  Edit Default Task.
 
-include::../../projectmgr/src/docs/asciidoc/project-mgr.adoc[leveloffset=+1]
-
-include::../../scrum/src/docs/asciidoc/scrum.adoc[leveloffset=+1]
+== Edit Default Task
+The screen appears the criteria that can be updated.

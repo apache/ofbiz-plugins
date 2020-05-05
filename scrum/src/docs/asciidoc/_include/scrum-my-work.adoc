@@ -16,25 +16,26 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 ////
-= Apache OFBiz Plugins
-The Apache OFBiz Project
-Release 17.12
-:imagesdir: ./images
-ifdef::backend-pdf[]
-:title-logo-image: image::OFBiz-Logo.svg[Apache OFBiz Logo, pdfwidth=4.25in, align=center]
-:source-highlighter: rouge
-endif::[]
-:toc:
-:sectnums:
+= My Work
+This perform to work's information and update timesheet
 
-include::../../birt/src/docs/asciidoc/birt.adoc[leveloffset=+1]
+. Current Timesheet
+. Open task assigned to me
+. Assign an exist Task to me
+. Add a new weekly Timesheet
+. Timesheet list of
 
-include::../../ebay/src/docs/asciidoc/ebay.adoc[leveloffset=+1]
+== Current Timesheet
+To update a member's Timesheet and the set the task's status to complete when the task has been done.
 
-include::../../ebaystore/src/docs/asciidoc/ebay-store.adoc[leveloffset=+1]
+== Open task assigned to me
+To show all tasks belong to the member and the tasks have not set to complete.
 
-include::../../myportal/src/docs/asciidoc/my-portal.adoc[leveloffset=+1]
+== Assign an exist Task to me
+To select the task in the drop down list named "Task name" for assignment the the ownself.
 
-include::../../projectmgr/src/docs/asciidoc/project-mgr.adoc[leveloffset=+1]
+== Add a new weekly Timesheet
+To create a new Timesheet for user who login to the system.
 
-include::../../scrum/src/docs/asciidoc/scrum.adoc[leveloffset=+1]
+==  list of Timesheet
+To show all Timesheet for user who login to the system.

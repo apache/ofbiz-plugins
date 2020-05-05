@@ -1,0 +1,31 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+= Product Overview
+On the product overview there are 8 sub menus -Overview,Update,Backlog,Billing,Default Tasks,Categories, Content,and Communications
+
+The product overview consist of:
+
+. Product Information: Show the product's information.
+. Backlogs Status Chart: Show backlogs' status in the pie chart concerning with open(yellow),be implement(blue),and finished(red).
+. Find Product Backlog Item: To find any Product backlog which belongs to the product.
+. Product Backlogs Item List: Product Backlogs Item List will show the backlogs which are not in the sprint by default.
+. Emails: List of the e-mails which are sent to the product owner who created the product.
+. Product Content List: List of the contents which concern to the product.
+. Project and Sprint List: To show the project which concerns this product and the sprint list which belong to project.
+
