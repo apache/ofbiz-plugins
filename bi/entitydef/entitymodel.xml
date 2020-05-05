@@ -155,6 +155,19 @@ under the License.
         </field>
         <prim-key field="dimensionId"/>
     </entity>
+    <entity entity-name="EmployeeDimension" package-name="org.apache.ofbiz.bi.dimension" title="Employees Dimension">
+        <description>Dimension of employees. The natural key is [partyId]</description>
+        <field name="dimensionId" type="integer">
+            <description>Unique identifier of the Employee dimension record</description>
+        </field>
+        <field name="partyId" type="id">
+            <description>The natural key. From PartyRoleAndPartyDetail.partyId</description>
+        </field>
+        <field name="partyName" type="description">
+            <description>Name of the employee. From PartyRoleAndPartyDetail. Dependent on PartyTypeId</description>
+        </field>
+        <prim-key field="dimensionId"/>
+    </entity>
     <entity entity-name="FacilityDimension" package-name="org.apache.ofbiz.bi.dimension" title="Facilities Dimension">
         <description>Dimension of facilities. The natural key is [facilityId]</description>
         <field name="dimensionId" type="integer">

@@ -30,6 +30,7 @@ under the License.
     <entity-group group="org.apache.ofbiz.olap" entity="CurrencyDimension"/>
     <entity-group group="org.apache.ofbiz.olap" entity="CustomerDimension"/>
     <entity-group group="org.apache.ofbiz.olap" entity="DateDimension"/>
+    <entity-group group="org.apache.ofbiz.olap" entity="EmployeeDimension"/>
     <entity-group group="org.apache.ofbiz.olap" entity="FacilityDimension"/>
     <entity-group group="org.apache.ofbiz.olap" entity="OrganisationDimension"/>
     <entity-group group="org.apache.ofbiz.olap" entity="ProductDimension"/>

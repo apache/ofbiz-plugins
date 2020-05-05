@@ -158,7 +158,14 @@ def updateDwh() {
     inMap = dispatcher.getDispatchContext().makeValidContext(serviceDef, ModelService.IN_PARAM, parameters)
     serviceResult = run service: serviceDef, with: inMap
     if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
-    
+
+    // Employee Dimension
+    parameters.role = "Employee"
+    Debug.logInfo("In updateDwh, applying " + serviceDef + " for role " + parameters.role, "DwhServices")
+    inMap = dispatcher.getDispatchContext().makeValidContext(serviceDef, ModelService.IN_PARAM, parameters)
+    serviceResult = run service: serviceDef, with: inMap
+    if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+
     // Supplier Dimension
     parameters.role = "Supplier"
     Debug.logInfo("In updateDwh, applying " + serviceDef + " for role " + parameters.role, "DwhServices")

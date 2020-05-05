@@ -144,7 +144,7 @@ def updateRolePartyDimension() {
             switch(partyTypeId) {
             case "PERSON":
                 person = from("Person").where("partyId", partyId).queryOne()
-                partyName = person.firstName + " " + person.middleName + " " + person.lastName;
+                partyName = person.lastName + ", " + person.firstName + " " + person.middleName;
                 partyName = partyName.replace("null","").trim();
                 break
             case "PARTY_GROUP":
