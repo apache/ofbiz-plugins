@@ -24,6 +24,7 @@ under the License.
     <!-- ========================================================= -->
     <!-- Dimensions                                                -->
     <!-- ========================================================= -->
+    <entity-group group="org.apache.ofbiz.olap" entity="AccountDimension"/>
     <entity-group group="org.apache.ofbiz.olap" entity="AssetDimension"/>
     <entity-group group="org.apache.ofbiz.olap" entity="CarrierDimension"/>
     <entity-group group="org.apache.ofbiz.olap" entity="CountryDimension"/>

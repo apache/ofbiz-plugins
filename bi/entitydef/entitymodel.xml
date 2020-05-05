@@ -29,6 +29,19 @@ under the License.
     <!-- ========================================================= -->
     <!-- Dimensions                                                -->
     <!-- ========================================================= -->
+    <entity entity-name="AccountDimension" package-name="org.apache.ofbiz.bi.dimension" title="Accounts Dimension">
+        <description>Dimension of accounts. The natural key is [partyId]</description>
+        <field name="dimensionId" type="integer">
+            <description>Unique identifier of the account dimension record</description>
+        </field>
+        <field name="partyId" type="id">
+            <description>The natural key. From PartyRoleAndPartyDetail.partyId</description>
+        </field>
+        <field name="partyName" type="description">
+            <description>Name of the account. From PartyRoleAndPartyDetail. Dependent on PartyTypeId</description>
+        </field>
+        <prim-key field="dimensionId"/>
+    </entity>
     <entity entity-name="AssetDimension" package-name="org.apache.ofbiz.bi.dimension" title="Assets Dimension">
         <description>Dimension of assets. The natural key is [fixedAssetId]</description>
         <field name="dimensionId" type="integer">

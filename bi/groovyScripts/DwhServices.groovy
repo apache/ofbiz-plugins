@@ -145,6 +145,14 @@ def updateDwh() {
 
     //update RoleParty Dimensions
     serviceDef = "updateRolePartyDimension"
+
+    // Account Dimension
+    parameters.role = "Account"
+    Debug.logInfo("In updateDwh, applying " + serviceDef + " for role " + parameters.role, "DwhServices")
+    inMap = dispatcher.getDispatchContext().makeValidContext(serviceDef, ModelService.IN_PARAM, parameters)
+    serviceResult = run service: serviceDef, with: inMap
+    if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+
     // Carrier Dimension
     parameters.role = "Carrier"
     Debug.logInfo("In updateDwh, applying " + serviceDef + " for role " + parameters.role, "DwhServices")
