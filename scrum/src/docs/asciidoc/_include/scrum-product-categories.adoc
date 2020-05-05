@@ -16,25 +16,20 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 ////
-= Apache OFBiz Plugins
-The Apache OFBiz Project
-Release trunk
-:imagesdir: ./images
-ifdef::backend-pdf[]
-:title-logo-image: image::OFBiz-Logo.svg[Apache OFBiz Logo, pdfwidth=4.25in, align=center]
-:source-highlighter: rouge
-endif::[]
-:toc:
-:sectnums:
+= Categories
+== List of ProductBacklog Categories
+This screen use for classification of the ProductBacklog.
+The screen consists of :
 
-include::../../birt/src/docs/asciidoc/birt.adoc[leveloffset=+1]
+. New Category button
+. Product Backlog Categories
 
-include::../../ebay/src/docs/asciidoc/ebay.adoc[leveloffset=+1]
+== New Categories button
+To create a new categories.
+When click on the button the screen appears  Edit Product Backlog Category instates the Product Backlog Categories List.
 
-include::../../ebaystore/src/docs/asciidoc/ebay-store.adoc[leveloffset=+1]
+== Product Backlog Categories
+To show Product Backlog Categories List,when click it's number the screen appears  Edit Product Backlog Category.
 
-include::../../myportal/src/docs/asciidoc/my-portal.adoc[leveloffset=+1]
-
-include::../../projectmgr/src/docs/asciidoc/project-mgr.adoc[leveloffset=+1]
-
-include::../../scrum/src/docs/asciidoc/scrum.adoc[leveloffset=+1]
+== Edit Product Backlog Category
+The screen appears the criteria named "Category" to create a new category.

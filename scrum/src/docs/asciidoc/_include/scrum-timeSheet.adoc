@@ -16,25 +16,14 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 ////
-= Apache OFBiz Plugins
-The Apache OFBiz Project
-Release trunk
-:imagesdir: ./images
-ifdef::backend-pdf[]
-:title-logo-image: image::OFBiz-Logo.svg[Apache OFBiz Logo, pdfwidth=4.25in, align=center]
-:source-highlighter: rouge
-endif::[]
-:toc:
-:sectnums:
+= TimeSheet
+== Timesheet screen consists of.
+. Find TimeSheet
+. Timesheet List
 
-include::../../birt/src/docs/asciidoc/birt.adoc[leveloffset=+1]
+== Find TimeSheet
+To find the required timesheet.
 
-include::../../ebay/src/docs/asciidoc/ebay.adoc[leveloffset=+1]
-
-include::../../ebaystore/src/docs/asciidoc/ebay-store.adoc[leveloffset=+1]
-
-include::../../myportal/src/docs/asciidoc/my-portal.adoc[leveloffset=+1]
-
-include::../../projectmgr/src/docs/asciidoc/project-mgr.adoc[leveloffset=+1]
-
-include::../../scrum/src/docs/asciidoc/scrum.adoc[leveloffset=+1]
+== Timesheet List
+To show the timesheet.
+There is the To Complete button for setting the timesheet.

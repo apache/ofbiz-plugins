@@ -1,0 +1,44 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+= Open Test
+This Screen shows the list of completed backlogs that's mean all implementation tasks are set to completed.
+
+. Select a project you want and 'Find'.
+. After result appear Click on backlog to view backlog's details
+. you will see the 'How to test' field that will describe how you could test the backlog.
+
+You can also make an error task on the backlog's overview screen incase you found en error while you're testing.
+So the backlog will be disappear from the list.
+
+== Open test UI
+. Find Backlog
+. Backlog List
+
+=== Find Backlog
+To find the backlog which remains the task status is "test".
+
+=== Backlog List
+On the backlog list shows
+
+* Sprint Name
+ ** click on sprint's name the action will go to sprint's overview,
+* Backlog item
+ ** click on Backlog's name the action will go to the backlog's overview,
+* Status
+ ** to notify the backlog's status.
