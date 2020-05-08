@@ -19,17 +19,10 @@ under the License.
 -->
 
 <entity-engine-xml>
-    <ProductStore productStoreId="9000"/>
     <Product productId="GZ-1000" smallImageUrl="/images/products/GZ-1000/small.png" largeImageUrl="/images/products/GZ-1000/large.png"/>
     <Product productId="GZ-1001" smallImageUrl="/images/products/GZ-1001/small.png" largeImageUrl="/images/products/GZ-1001/large.png"/>
     <Product productId="GZ-2644" smallImageUrl="/images/products/GZ-2644/small.png" largeImageUrl="/images/products/GZ-2644/large.png"/>
-    <Party partyId="USPS" partyTypeId="PARTY_GROUP"/>
-    <Party partyId="UPS" partyTypeId="PARTY_GROUP"/>
-    <PartyGroup partyId="USPS" groupName="USPS"/>
-    <PartyGroup partyId="UPS" groupName="UPS"/>
-    <PartyRole partyId="USPS" roleTypeId="CARRIER"/>
-    <PartyRole partyId="UPS" roleTypeId="CARRIER"/>
-
+    
     <ShipmentMethodType description="Standard" shipmentMethodTypeId="STANDARD"/>
     <ShipmentMethodType description="Ground" shipmentMethodTypeId="GROUND"/>
     <ShipmentMethodType description="Third Day" shipmentMethodTypeId="THIRD_DAY"/>
