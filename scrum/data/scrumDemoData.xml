@@ -127,7 +127,6 @@ under the License.
     <PartyContactMech contactMechId="SCRUM_CONTACT06" fromDate="2010-09-24 00:00:00.0" partyId="SCRUMADMIN"/>
     
     <!-- Company -->
-    <PartyRole partyId="Company" roleTypeId="ACCOUNT"/>
     
     <Party partyId="DemoScrumCompany" partyTypeId="PARTY_GROUP" statusId="PARTY_ENABLED"/>
     <PartyRole partyId="DemoScrumCompany" roleTypeId="ORGANIZATION_ROLE"/>
