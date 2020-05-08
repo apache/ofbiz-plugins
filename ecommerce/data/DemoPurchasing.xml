@@ -20,29 +20,7 @@ under the License.
 
 <entity-engine-xml>
     <UserLoginSecurityGroup groupId="ECOMMERCE_CUSTOMER" userLoginId="DemoCustomer" fromDate="2000-01-01 00:00:00.0"/>
-    <!-- suppliers -->
-    <Party partyId="BigSupplier" partyTypeId="PARTY_GROUP" />
-    <PartyGroup partyId="BigSupplier" groupName="Big Supplier" />
-    <PartyRole partyId="BigSupplier" roleTypeId="SUPPLIER" />
-    <ContactMech contactMechId="9002" contactMechTypeId="POSTAL_ADDRESS"/>
-    <PartyContactMech partyId="BigSupplier" contactMechId="9002" fromDate="2000-01-01 00:00:00.000" allowSolicitation="Y"/>
-    <PostalAddress contactMechId="9002" toName="Big Supplier Company" address1="2005 Industrial Park Blvd" city="New York" postalCode="10000" countryGeoId="USA" stateProvinceGeoId="NY"/>
-    <PartyContactMechPurpose partyId="BigSupplier" contactMechId="9002" contactMechPurposeTypeId="BILLING_LOCATION" fromDate="2000-01-01 00:00:00.000"/>
-    <PartyContactMechPurpose partyId="BigSupplier" contactMechId="9002" contactMechPurposeTypeId="GENERAL_LOCATION" fromDate="2000-01-01 00:00:00.000"/>
-    <PartyContactMechPurpose partyId="BigSupplier" contactMechId="9002" contactMechPurposeTypeId="PAYMENT_LOCATION" fromDate="2000-01-01 00:00:00.000"/>
-    <UserLogin userLoginId="BigSupplier" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a" partyId="BigSupplier"/>
-
-    <Party partyId="EuroSupplier" partyTypeId="PARTY_GROUP" />
-    <PartyGroup partyId="EuroSupplier" groupName="European Supplier"/>
-    <PartyRole partyId="EuroSupplier" roleTypeId="SUPPLIER"/>
-    <ContactMech contactMechId="9003" contactMechTypeId="POSTAL_ADDRESS"/>
-    <PartyContactMech partyId="EuroSupplier" contactMechId="9003" fromDate="2000-01-01 00:00:00.000" allowSolicitation="Y"/>
-    <PostalAddress contactMechId="9003" toName="Euro Supplier Company" address1="2005 Boulevard Industrie" city="Roissy" postalCode="95700" countryGeoId="FRA"/>
-    <PartyContactMechPurpose partyId="EuroSupplier" contactMechId="9003" contactMechPurposeTypeId="BILLING_LOCATION" fromDate="2000-01-01 00:00:00.000"/>
-    <PartyContactMechPurpose partyId="EuroSupplier" contactMechId="9003" contactMechPurposeTypeId="GENERAL_LOCATION" fromDate="2000-01-01 00:00:00.000"/>
-    <PartyContactMechPurpose partyId="EuroSupplier" contactMechId="9003" contactMechPurposeTypeId="PAYMENT_LOCATION" fromDate="2000-01-01 00:00:00.000"/>
-    <UserLogin userLoginId="EuroSupplier" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a" partyId="EuroSupplier"/>
-
+    
     <!-- supplier pricing -->
     <SupplierProduct partyId="DemoSupplier" supplierPrefOrderId="10_MAIN_SUPPL" minimumOrderQuantity="0" currencyUomId="USD" productId="GZ-1000" lastPrice="7.5" supplierProductId="GZ-1000-0" availableFromDate="2005-01-01 00:00:00.000"/>
     <SupplierProduct partyId="DemoSupplier" supplierPrefOrderId="10_MAIN_SUPPL" minimumOrderQuantity="0" currencyUomId="USD" productId="GZ-1001" lastPrice="12.99" supplierProductId="GZ-1001-0" availableFromDate="2005-01-01 00:00:00.000"/>
