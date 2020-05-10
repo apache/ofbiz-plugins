@@ -24,7 +24,6 @@ under the License.
   <#if !creditCard??>
     <h2>${uiLabelMap.AccountingAddNewCreditCard}</h2>
     <form method="post" action="<@ofbizUrl>createCreditCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editcreditcardform">
-    <div>
   <#else>
     <h2>${uiLabelMap.AccountingEditCreditCard}</h2>
     <form method="post" action="<@ofbizUrl>updateCreditCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editcreditcardform">
@@ -32,6 +31,7 @@ under the License.
   </#if>
   <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="btn btn-outline-secondary">${uiLabelMap.CommonGoBack}</a>
   <a href="javascript:document.editcreditcardform.submit()" class="btn btn-outline-secondary">${uiLabelMap.CommonSave}</a>
+    <div>
     ${screens.render("component://ecommerce/widget/CustomerScreens.xml#creditCardFields")}
       <label class="mb-2">${uiLabelMap.PartyBillingAddress}</label>
       <#-- Removed because is confusing, can add but would have to come back here with all data populated as before...
