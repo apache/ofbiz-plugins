@@ -20,6 +20,7 @@ under the License.
 <entity-engine-xml>
     <SecurityPermission description="ALL MyPortal base operations" permissionId="MYPORTALBASE_ADMIN"/>
     <SecurityPermission description="MyPortal Base View permission." permissionId="MYPORTALBASE_VIEW"/>
+    <SecurityPermission description="MyPortal Base Create permission." permissionId="MYPORTALBASE_CREATE"/>
     
     <!-- Super group -->
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SUPER" permissionId="MYPORTALBASE_ADMIN"/>

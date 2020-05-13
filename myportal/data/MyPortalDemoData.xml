@@ -20,7 +20,6 @@ under the License.
 <entity-engine-xml>
 
 
-    <UserLogin userLoginId="DemoCustomer" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a"/>
     <UserLogin userLoginId="DemoCustomer1" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a"/>
     <UserLogin userLoginId="DemoCustomer2" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a"/>
     <UserLogin userLoginId="DemoCustomer3" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a"/>
@@ -28,16 +27,13 @@ under the License.
     <!-- myportal users -->
     <!-- demo customer read access to his own customer requests and related tasks including planning and actual hours-->
     <UserLoginSecurityGroup groupId="MYPORTAL_CUSTOMER" userLoginId="DemoCustomer" fromDate="2000-01-01 00:00:00.0"/>
+
     <!-- these customers also have access to the project manager (via rules in the project manager comp) -->
     <UserLoginSecurityGroup groupId="MYPORTAL_CUSTOMER" userLoginId="DemoCustAgent" fromDate="2000-01-01 00:00:00.0"/>
     <UserLoginSecurityGroup groupId="MYPORTAL_CUSTOMER" userLoginId="DemoCustomer2" fromDate="2000-01-01 00:00:00.0"/>
     <UserLoginSecurityGroup groupId="MYPORTAL_CUSTOMER" userLoginId="DemoCustomer3" fromDate="2000-01-01 00:00:00.0"/>
-    <!-- demo employee has limited projectmanager access including timesheets, can read/write comms internal notes but cannot send external email-->
-    <UserLoginSecurityGroup groupId="MYPORTAL_EMPL-NOEML" userLoginId="employee6" fromDate="2000-01-01 00:00:00.0"/>
-    <UserLoginSecurityGroup groupId="MYPORTAL_EMPL-NOEML" userLoginId="employee7" fromDate="2000-01-01 00:00:00.0"/>
-    <UserLoginSecurityGroup groupId="MYPORTAL_EMPL-NOEML" userLoginId="employee23" fromDate="2000-01-01 00:00:00.0"/>
-    <UserLoginSecurityGroup groupId="MYPORTAL_EMPL-NOEML" userLoginId="employee24" fromDate="2000-01-01 00:00:00.0"/>
-    <!-- employee have no access to any project -->
+
+    <!-- Demo employees having no access to any project -->
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee1" fromDate="2000-01-01 00:00:00.0"/>
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee2" fromDate="2000-01-01 00:00:00.0"/>
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee3" fromDate="2000-01-01 00:00:00.0"/>
@@ -51,7 +47,6 @@ under the License.
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee13" fromDate="2000-01-01 00:00:00.0"/>
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee14" fromDate="2000-01-01 00:00:00.0"/>
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee15" fromDate="2000-01-01 00:00:00.0"/>
-    <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee16" fromDate="2000-01-01 00:00:00.0"/>
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee17" fromDate="2000-01-01 00:00:00.0"/>
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee18" fromDate="2000-01-01 00:00:00.0"/>
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee19" fromDate="2000-01-01 00:00:00.0"/>
@@ -67,11 +62,6 @@ under the License.
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee33" fromDate="2000-01-01 00:00:00.0"/>
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee34" fromDate="2000-01-01 00:00:00.0"/>
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee35" fromDate="2000-01-01 00:00:00.0"/>
-    <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee36" fromDate="2000-01-01 00:00:00.0"/>
-    <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee37" fromDate="2000-01-01 00:00:00.0"/>
-    <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee38" fromDate="2000-01-01 00:00:00.0"/>
-    <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee39" fromDate="2000-01-01 00:00:00.0"/>
-    <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee40" fromDate="2000-01-01 00:00:00.0"/>
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee41" fromDate="2000-01-01 00:00:00.0"/>
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee42" fromDate="2000-01-01 00:00:00.0"/>
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee43" fromDate="2000-01-01 00:00:00.0"/>
@@ -81,6 +71,21 @@ under the License.
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee47" fromDate="2000-01-01 00:00:00.0"/>
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee48" fromDate="2000-01-01 00:00:00.0"/>
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee49" fromDate="2000-01-01 00:00:00.0"/>
+
+    <!-- demo employees with limited project plugin access including timesheets, can read/write comms internal notes but cannot send external email-->
+    <UserLoginSecurityGroup groupId="MYPORTAL_EMPL-NOEML" userLoginId="employee6" fromDate="2000-01-01 00:00:00.0"/>
+    <UserLoginSecurityGroup groupId="MYPORTAL_EMPL-NOEML" userLoginId="employee7" fromDate="2000-01-01 00:00:00.0"/>
+    <UserLoginSecurityGroup groupId="MYPORTAL_EMPL-NOEML" userLoginId="employee23" fromDate="2000-01-01 00:00:00.0"/>
+    <UserLoginSecurityGroup groupId="MYPORTAL_EMPL-NOEML" userLoginId="employee24" fromDate="2000-01-01 00:00:00.0"/>
+
+    <!-- demo employees with very limited access to other components/applications-->
+    <UserLoginSecurityGroup groupId="MYPORTAL_EMPL-SMPL" userLoginId="employee16" fromDate="2000-01-01 00:00:00.0"/>
+    <UserLoginSecurityGroup groupId="MYPORTAL_EMPL-SMPL" userLoginId="employee36" fromDate="2000-01-01 00:00:00.0"/>
+    <UserLoginSecurityGroup groupId="MYPORTAL_EMPL-SMPL" userLoginId="employee37" fromDate="2000-01-01 00:00:00.0"/>
+    <UserLoginSecurityGroup groupId="MYPORTAL_EMPL-SMPL" userLoginId="employee38" fromDate="2000-01-01 00:00:00.0"/>
+    <UserLoginSecurityGroup groupId="MYPORTAL_EMPL-SMPL" userLoginId="employee39" fromDate="2000-01-01 00:00:00.0"/>
+    <UserLoginSecurityGroup groupId="MYPORTAL_EMPL-SMPL" userLoginId="employee40" fromDate="2000-01-01 00:00:00.0"/>
+
     <!-- admin logins -->
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="admin" fromDate="2000-01-01 00:00:00.0"/>
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="demoadmin" fromDate="2000-01-01 00:00:00.0"/>
