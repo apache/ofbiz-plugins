@@ -48,15 +48,12 @@ under the License.
 
     <!-- re Party partyId="employee7". -->
     <!-- The party is an PROGRAMMER of another project, can register time, accept and assign tasks withn his associated project(s)-->
-    <PartyRole partyId="employee7" roleTypeId="PROVIDER_ANALYST"/>
     <PartyRole partyId="employee7" roleTypeId="PROJECT_TEAM"/>
+    <PartyRole partyId="employee7" roleTypeId="PROVIDER_ANALYST"/>
     <UserLoginSecurityGroup groupId="PROJECTUSER" userLoginId="employee7" fromDate="2000-01-01 00:00:00.0"/>
 
     <!-- Demo DemoCustAgent for demo project 1 has access to project 1 only-->
-    <Party partyId="DemoCustAgent" partyTypeId="PERSON" statusId="PARTY_ENABLED"/>
-    <Person partyId="DemoCustAgent" firstName="ManagerP1" lastName="Customer 1"/>
     <PartyRole partyId="DemoCustAgent" roleTypeId="CLIENT_MANAGER"/>
-    <UserLogin userLoginId="DemoCustAgent"  partyId="DemoCustAgent"/>
     <UserLoginSecurityGroup groupId="PROJECTUSER" userLoginId="DemoCustAgent" fromDate="2000-01-01 00:00:00.0"/>
 
     <!-- Demo Customer2 client for demo project 2 has access to project 2 only-->
@@ -64,8 +61,8 @@ under the License.
     <UserLoginSecurityGroup groupId="PROJECTUSER" userLoginId="DemoCustomer2" fromDate="2000-01-01 00:00:00.0"/>
 
     <!-- DemoCustomer billing for demo project 1 and project 2 -->
-    <PartyRole partyId="DemoCustomer" roleTypeId="CLIENT_BILLING"/>
     <PartyRole partyId="DemoCustomer" roleTypeId="PROJECT_TEAM"/>
+    <PartyRole partyId="DemoCustomer" roleTypeId="CLIENT_BILLING"/>
     <UserLogin userLoginId="DemoCustomer"  partyId="DemoCustomer3"/>
     <UserLoginSecurityGroup groupId="PROJECTUSER" userLoginId="DemoCustomer" fromDate="2000-01-01 00:00:00.0"/>
 
