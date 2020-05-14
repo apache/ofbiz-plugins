@@ -22,10 +22,17 @@ under the License.
     <SecurityGroup description="Asset Maintenance Admin group, has all maintenance permissions." groupId="ASSETMAINTADMIN"/>
     <SecurityGroup description="Asset Maintenance Technician group, has view and update." groupId="ASSETMAINTTECH"/>
 
-    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="ASSETMAINTADMIN" permissionId="ASSETMAINT_ADMIN"/>
+    <SecurityGroupPermission groupId="ASSETMAINTADMIN" permissionId="ASSETMAINT_ADMIN" fromDate="2001-05-13 12:00:00.0" />
+    <SecurityGroupPermission groupId="ASSETMAINTADMIN" permissionId="OFBTOOLS_VIEW" fromDate="2001-05-13 12:00:00.0" />
 
-    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="ASSETMAINTTECH" permissionId="ASSETMAINT_VIEW"/>
-    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="ASSETMAINTTECH" permissionId="ASSETMAINT_UPDATE"/>
+    <SecurityGroupPermission groupId="ASSETMAINTTECH" permissionId="ASSETMAINT_UPDATE" fromDate="2001-05-13 12:00:00.0"/>
+    <SecurityGroupPermission groupId="ASSETMAINTTECH" permissionId="ASSETMAINT_VIEW" fromDate="2001-05-13 12:00:00.0"/>
+    <SecurityGroupPermission groupId="ASSETMAINTTECH" permissionId="OFBTOOLS_VIEW" fromDate="2001-05-13 12:00:00.0"/>
 
-    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FULLADMIN" permissionId="ASSETMAINT_ADMIN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="ASSETMAINT_ADMIN" fromDate="2001-05-13 12:00:00.0"/>
+    
+    <!-- user logins for demo employees -->
+    <UserLoginSecurityGroup groupId="ASSETMAINTADMIN" userLoginId="employee4" fromDate="2001-01-01 12:00:00.0"/>
+    <UserLoginSecurityGroup groupId="ASSETMAINTTECH" userLoginId="employee5" fromDate="2001-01-01 12:00:00.0"/>
+    
 </entity-engine-xml>
