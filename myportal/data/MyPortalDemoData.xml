@@ -55,8 +55,10 @@ under the License.
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee22" fromDate="2000-01-01 00:00:00.0"/>
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee25" fromDate="2000-01-01 00:00:00.0"/>
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee26" fromDate="2000-01-01 00:00:00.0"/>
+    <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee27" fromDate="2000-01-01 00:00:00.0"/>
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee28" fromDate="2000-01-01 00:00:00.0"/>
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee29" fromDate="2000-01-01 00:00:00.0"/>
+    <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee30" fromDate="2000-01-01 00:00:00.0"/>
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee31" fromDate="2000-01-01 00:00:00.0"/>
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee32" fromDate="2000-01-01 00:00:00.0"/>
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee33" fromDate="2000-01-01 00:00:00.0"/>
@@ -71,6 +73,7 @@ under the License.
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee47" fromDate="2000-01-01 00:00:00.0"/>
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee48" fromDate="2000-01-01 00:00:00.0"/>
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee49" fromDate="2000-01-01 00:00:00.0"/>
+    <UserLoginSecurityGroup groupId="MYPORTAL_EMPLOYEE" userLoginId="employee50" fromDate="2000-01-01 00:00:00.0"/>
 
     <!-- demo employees with limited project plugin access including timesheets, can read/write comms internal notes but cannot send external email-->
     <UserLoginSecurityGroup groupId="MYPORTAL_EMPL-NOEML" userLoginId="employee6" fromDate="2000-01-01 00:00:00.0"/>
