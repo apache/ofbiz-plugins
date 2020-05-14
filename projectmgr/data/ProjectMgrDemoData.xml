@@ -65,6 +65,10 @@ under the License.
     <PartyRole partyId="DemoCustomer" roleTypeId="CLIENT_BILLING"/>
     <UserLogin userLoginId="DemoCustomer"  partyId="DemoCustomer3"/>
     <UserLoginSecurityGroup groupId="PROJECTUSER" userLoginId="DemoCustomer" fromDate="2000-01-01 00:00:00.0"/>
+    <PartyRole partyId="DemoCustomer3" roleTypeId="PROJECT_TEAM"/>
+    <PartyRole partyId="DemoCustomer3" roleTypeId="CLIENT_BILLING"/>
+    <UserLoginSecurityGroup groupId="PROJECTUSER" userLoginId="DemoCustomer3" fromDate="2000-01-01 00:00:00.0"/>
+    
 
     <!-- make sure admin show up as a resource, he acts as a full access admin -->
     <PartyRole partyId="admin" roleTypeId="PROJECT_TEAM"/>
