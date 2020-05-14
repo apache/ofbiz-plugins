@@ -19,7 +19,7 @@
 -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://ofbiz.apache.org/Simple-Method" xsi:schemaLocation="http://ofbiz.apache.org/Simple-Method http://ofbiz.apache.org/dtds/simple-methods.xsd">
-    <simple-method method-name="CreateCustRequestAndAssignTaskToPerson" short-description="">
+    <simple-method method-name="createCustRequestAndAssignTaskToPerson" short-description="">
         <set field="parameters.statusId" value="CRQ_ACCEPTED"/><!-- entered by employee, should only enter accepted customer requests -->
         <if-not-empty field="parameters.communicationEventId">
             <set-service-fields service-name="createCustRequestFromCommEvent" map="parameters" to-map="eventCreateCust"/>

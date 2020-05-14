@@ -534,7 +534,7 @@
     </request-map>
     <request-map uri="createrequest">
         <security https="true" auth="true"/>
-        <event type="simple" invoke="CreateCustRequestAndAssignTaskToPerson" path="component://projectmgr/minilang/ProjectSimpleEvents.xml"/>
+        <event type="simple" invoke="createCustRequestAndAssignTaskToPerson" path="component://projectmgr/minilang/ProjectSimpleEvents.xml"/>
         <response name="success" type="view-last-noparam" value="RequestList"/>
         <response name="error" type="view" value="EditRequest"/>
     </request-map>

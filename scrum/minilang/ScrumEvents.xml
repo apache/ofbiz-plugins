@@ -390,7 +390,7 @@
     </if>
     </simple-method>
     
-    <simple-method method-name="DeleteSprint" short-description="Delete Sprint">
+    <simple-method method-name="deleteSprint" short-description="Delete Sprint">
     <!-- Permission Check -->
     <if>
         <condition>
@@ -2188,7 +2188,7 @@
         <remove-value value-field="workNoteMap"/>
         <remove-related relation-name="NoteData" value-field="workNoteMap"/>
     </simple-method>
-    <simple-method method-name="DeleteTaskFromSprintOverview" short-description="Delete Task From Sprint Overview Screen">
+    <simple-method method-name="deleteTaskFromSprintOverview" short-description="Delete Task From Sprint Overview Screen">
         <entity-one entity-name="CustRequestWorkEffort" value-field="taskWorkEffort">
             <field-map field-name="workEffortId" from-field="parameters.workEffort"/>
             <field-map field-name="custRequestId" from-field="parameters.custRequestId"/>
@@ -3328,7 +3328,7 @@
         </if-empty>
     </simple-method>
     
-    <simple-method method-name="CopyMemberLastSprint" short-description="">
+    <simple-method method-name="copyMemberLastSprint" short-description="">
         <entity-and entity-name="WorkEffort" list="sprintList">
             <field-map field-name="workEffortParentId" from-field="parameters.projectId"/>
             <field-map field-name="workEffortTypeId" value="SCRUM_SPRINT"/>
