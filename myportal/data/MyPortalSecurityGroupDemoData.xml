@@ -23,6 +23,7 @@ under the License.
     
     <SecurityPermission permissionId="MYPORTAL_EMPLOYEE" description="Use the employee screens in myportal."/>
     <SecurityGroup description="Employee user of myportal, Limited access to the projectmgr, comms,custRequests" groupId="MYPORTAL_EMPLOYEE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_EMPLOYEE" permissionId="OFBTOOLS_VIEW"/>
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_EMPLOYEE" permissionId="MYPORTALBASE_VIEW"/>
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_EMPLOYEE" permissionId="MYPORTALBASE_CREATE"/>
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_EMPLOYEE" permissionId="MYPORTAL_EMPLOYEE"/>
@@ -50,6 +51,7 @@ under the License.
 
     <SecurityPermission permissionId="MYPORTAL_EMPL-NOEML" description="Usage of the employee screens in MYPORTAL: projectmanager and internal notes."/>
     <SecurityGroup description="Employee user of MYPORTAL, Limited access to the projectmgr and comms, custReq, no email" groupId="MYPORTAL_EMPL-NOEML"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_EMPL-NOEML" permissionId="OFBTOOLS_VIEW"/>
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_EMPL-NOEML" permissionId="MYPORTALBASE_VIEW"/>
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_EMPL-NOEML" permissionId="MYPORTALBASE_CREATE"/>
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_EMPL-NOEML" permissionId="MYPORTAL_EMPLOYEE"/>
@@ -72,6 +74,7 @@ under the License.
 
     <SecurityPermission permissionId="MYPORTAL_EMPL-SMPL" description="Usage of the employee screens in MYPORTAL: No Tasks and internal notes."/>
     <SecurityGroup description="Employee user of MYPORTAL, Very limited access" groupId="MYPORTAL_EMPL-SMPL"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_EMPL-SMPL" permissionId="OFBTOOLS_VIEW"/>
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_EMPL-SMPL" permissionId="MYPORTALBASE_VIEW"/>
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_EMPL-SMPL" permissionId="MYPORTAL_EMPLOYEE"/>
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_EMPL-SMPL" permissionId="PARTYMGR_CME-NOTE_CREATE"/>
@@ -89,18 +92,63 @@ under the License.
     <SecurityPermission permissionId="MYPORTAL_CUSTOMER" description="Use the customer screens in MYPORTAL."/>
     <SecurityGroup description="Customer user of MYPORTAL, Limited access to own custRequests, and project" groupId="MYPORTAL_CUSTOMER"/>
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_CUSTOMER" permissionId="MYPORTALBASE_VIEW"/>
-    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_CUSTOMER" permissionId="PARTYMGR_CME-NOTE_CREATE"/><!-- allow customer to read/write internal notes -->
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_CUSTOMER" permissionId="MYPORTAL_CUSTOMER"/>
-    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_CUSTOMER" permissionId="PARTYMGR_CME_UPDATE"/>
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_CUSTOMER" permissionId="PROJECTMGR_ROLE_VIEW"/>
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_CUSTOMER" permissionId="CONTENTMGR_ROLE_CREATE"/>
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_CUSTOMER" permissionId="PARTYMGR_CME_CREATE"/>
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_CUSTOMER" permissionId="PARTYMGR_CME_UPDATE"/>
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_CUSTOMER" permissionId="PARTYMGR_CME_DELETE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_CUSTOMER" permissionId="PARTYMGR_CME-NOTE_CREATE"/><!-- allow customer to read/write internal notes -->
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_CUSTOMER" permissionId="WORKEFFORTMGR_ROLE_VIEW"/>
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_CUSTOMER" permissionId="WORKEFFORTMGR_ROLE_CREATE"/>
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_CUSTOMER" permissionId="WORKEFFORTMGR_ROLE_UPDATE"/>
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_CUSTOMER" permissionId="WORKEFFORTMGR_ROLE_DELETE"/>
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_CUSTOMER" permissionId="ORDERMGR_CRQ_CREATE"/>
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_CUSTOMER" permissionId="ORDERMGR_CRQ_UPDATE"/>
+
+    <!-- for contacts of the auditors -->
+    <SecurityPermission permissionId="MYPORTAL_AUDITOR" description="Usage of the auditor screens in MYPORTAL: No create,delete or update access."/>
+    <SecurityGroup groupId="MYPORTAL_AUDIT" description="Audit Supplier Contact user of MYPORTAL, Very limited access"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_AUDIT" permissionId="OFBTOOLS_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_AUDIT" permissionId="MYPORTALBASE_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_AUDIT" permissionId="MYPORTAL_AUDIT"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_AUDIT" permissionId="PARTYMGR_CME_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_AUDIT" permissionId="PARTYMGR_CME_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_AUDIT" permissionId="PARTYMGR_CME_DELETE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_AUDIT" permissionId="PARTYMGR_CME-NOTE_CREATE"/><!-- allow contact to read/write internal notes -->
+    <!-- view permissions in various components -->
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_AUDIT" permissionId="ACCOUNTING_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_AUDIT" permissionId="ASSETMAINT_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_AUDIT" permissionId="CATALOG_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_AUDIT" permissionId="CONTENTMGR_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_AUDIT" permissionId="HUMANRES_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_AUDIT" permissionId="MANUFACTURING_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_AUDIT" permissionId="FACILITY_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_AUDIT" permissionId="MARKETING_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_AUDIT" permissionId="ORDERMGR_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_AUDIT" permissionId="PROJECTMGR_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_AUDIT" permissionId="WORKEFFORTMGR_VIEW"/>
+    <!-- tbd
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_AUDIT" permissionId="WORKEFFORTMGR_ROLE_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_AUDIT" permissionId="WORKEFFORTMGR_ROLE_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_AUDIT" permissionId="WORKEFFORTMGR_ROLE_DELETE"/>
+    -->
+
+    <!-- for contacts of suppliers, e.g. subcontractors working on projects -->
+    <SecurityPermission permissionId="MYPORTAL_SUPPLIER" description="Usage of the supplier contact screens in MYPORTAL"/>
+    <SecurityGroup groupId="MYPORTAL_SUPPLIER" description="Supplier Contact user of MYPORTAL, Very limited access"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_SUPPLIER" permissionId="OFBTOOLS_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_SUPPLIER" permissionId="MYPORTALBASE_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_SUPPLIER" permissionId="MYPORTAL_SUPPLIER"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_SUPPLIER" permissionId="PARTYMGR_CME_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_SUPPLIER" permissionId="PARTYMGR_CME_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_SUPPLIER" permissionId="PARTYMGR_CME_DELETE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_SUPPLIER" permissionId="PARTYMGR_CME-NOTE_CREATE"/><!-- allow customer to read/write internal notes -->
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_SUPPLIER" permissionId="PROJECTMGR_ROLE_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_SUPPLIER" permissionId="CONTENTMGR_ROLE_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_SUPPLIER" permissionId="WORKEFFORTMGR_ROLE_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_SUPPLIER" permissionId="WORKEFFORTMGR_ROLE_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_SUPPLIER" permissionId="WORKEFFORTMGR_ROLE_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="MYPORTAL_SUPPLIER" permissionId="WORKEFFORTMGR_ROLE_DELETE"/>
+
 </entity-engine-xml>
