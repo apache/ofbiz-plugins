@@ -99,12 +99,12 @@ under the License.
     <form name="OpenUnpaid" type="single" target="addDispute">
         <field name="productStoreId"><hidden value="${parameters.productStoreId}"/></field>
         <field name="itemId"><hidden value="${parameters.itemId}"/></field>
-        <field name="item"><text disabled="true" default-value="${parameters.itemId} - ${parameters.title}"/></field>
-        <field name="listingType"><text disabled="true" default-value="${parameters.listingType}"/></field>
-        <field name="quantity"><text disabled="true" default-value="${parameters.quantity}"/></field>
-        <field name="salePrice"><text disabled="true" default-value="${parameters.salePrice}"/></field>
+        <field name="item" disabled="true"><text default-value="${parameters.itemId} - ${parameters.title}"/></field>
+        <field name="listingType" disabled="true"><text default-value="${parameters.listingType}"/></field>
+        <field name="quantity" disabled="true"><text default-value="${parameters.quantity}"/></field>
+        <field name="salePrice" disabled="true"><text default-value="${parameters.salePrice}"/></field>
         <field name="transactionId"><hidden value="${parameters.transactionId}"/></field>
-        <field name="transaction"><text disabled="true" default-value="${parameters.transactionId}"/></field>
+        <field name="transaction" disabled="true"><text default-value="${parameters.transactionId}"/></field>
         <field name="disputeReasonCodeType">
             <radio no-current-selected-key="TransactionMutuallyCanceled">
                 <option key="BUYER_HAS_NOT_PAID" description="The buyer has not paid for the item"/>
