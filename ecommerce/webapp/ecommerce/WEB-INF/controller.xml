@@ -167,6 +167,19 @@ under the License.
         <response name="success" type="none"/>
     </request-map>
 
+    <!-- Support multi-block="true" in html-template tag -->
+    <request-map uri="getJs" method="get">
+        <security https="false" auth="false"/>
+        <response name="success" type="request" value="js"/>
+        <response name="error" type="request" value="js"/>
+    </request-map>
+
+    <request-map uri="js">
+        <security direct-request="false"/>
+        <event type="java" path="org.apache.ofbiz.common.CommonEvents" invoke="jsResponseFromRequest"/>
+        <response name="success" type="none"/>
+    </request-map>
+
     <!-- ShoppingList Requests -->
     <request-map uri="editShoppingList">
         <security auth="true" https="false"/>
