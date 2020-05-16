@@ -81,7 +81,7 @@ under the License.
                                 </section>
                                 <container id="div3" style="${bodyStyle} order-lg-2 order-1">
                                 <!-- render messages -->
-                                    <platform-specific><html><html-template location="component://common-theme/template/includes/Messages.ftl"/></html></platform-specific>
+                                    <platform-specific><html><html-template multi-block="true" location="component://common-theme/template/includes/Messages.ftl"/></html></platform-specific>
                                     <decorator-section-include name="body"/>
                                 </container>
                                 <section>
@@ -292,7 +292,7 @@ under the License.
             <widgets>
                 <platform-specific><html><html-template multi-block="true" location="component://ecommerce/template/includes/HeaderHead.ftl"/></html></platform-specific>
                 <platform-specific><html><html-template location="component://common-theme/template/includes/OpenHtmlBody.ftl"/></html></platform-specific>
-                <platform-specific><html><html-template location="component://common-theme/template/includes/Messages.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template multi-block="true" location="component://common-theme/template/includes/Messages.ftl"/></html></platform-specific>
 
                 <decorator-section-include name="body"/>
 

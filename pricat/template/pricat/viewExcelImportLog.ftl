@@ -31,9 +31,7 @@ under the License.
 </div>
 
 <script>
-<!--
 jQuery(document).ready( function() {
     jQuery("#htmlreport").html("${StringUtil.wrapString(logFileContent!)}");
 });
-//-->
 </script>

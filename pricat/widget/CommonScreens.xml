@@ -74,7 +74,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://pricat/template/pricat/viewExcelImportLog.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template multi-block="true" location="component://pricat/template/pricat/viewExcelImportLog.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

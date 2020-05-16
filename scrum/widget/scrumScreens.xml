@@ -148,7 +148,7 @@ under the License.
                                 <container style="body">
                                 <screenlet title="${uiLabelMap.ScrumBurnDownChart}" id="BDChart" collapsible="true" initially-collapsed="false">
                                     <platform-specific>
-                                        <html><html-template location="component://scrum/template/includes/BurnDown.ftl"/></html>
+                                        <html><html-template multi-block="true" location="component://scrum/template/includes/BurnDown.ftl"/></html>
                                     </platform-specific>
                                 </screenlet>
                                 </container>
@@ -1687,7 +1687,7 @@ under the License.
                                     </screenlet>
                                     <screenlet title="${uiLabelMap.ScrumBacklogsStatusChart}">
                                         <platform-specific>
-                                            <html><html-template location="component://scrum/template/includes/PieChart.ftl"/></html>
+                                            <html><html-template multi-block="true" location="component://scrum/template/includes/PieChart.ftl"/></html>
                                         </platform-specific>
                                     </screenlet>
                                     <screenlet title="${uiLabelMap.ScrumRevisions}">
@@ -2744,12 +2744,12 @@ under the License.
                                         <screenlet id="projectAndSprintStatistics" title="${uiLabelMap.ScrumProjectAndSprintInformationChart}" collapsible="true">
                                             <container style="lefthalf">
                                                 <platform-specific>
-                                                    <html><html-template location="component://scrum/template/includes/ProjectByStatusChart.ftl"/></html>
+                                                    <html><html-template multi-block="true" location="component://scrum/template/includes/ProjectByStatusChart.ftl"/></html>
                                                 </platform-specific>
                                             </container>
                                             <container style="righthalf">
                                                 <platform-specific>
-                                                    <html><html-template location="component://scrum/template/includes/ProjectAndSprintChart.ftl"/></html>
+                                                    <html><html-template multi-block="true" location="component://scrum/template/includes/ProjectAndSprintChart.ftl"/></html>
                                                 </platform-specific>
                                             </container>
                                         </screenlet>
@@ -2757,12 +2757,12 @@ under the License.
                                         <screenlet id="backlogStatistics" title="${uiLabelMap.ScrumBacklogInformationChart}" collapsible="true">
                                             <container style="lefthalf">
                                                 <platform-specific>
-                                                    <html><html-template location="component://scrum/template/includes/BacklogByTypeChart.ftl"/></html>
+                                                    <html><html-template multi-block="true" location="component://scrum/template/includes/BacklogByTypeChart.ftl"/></html>
                                                 </platform-specific>
                                             </container>
                                             <container style="righthalf">
                                                 <platform-specific>
-                                                    <html><html-template location="component://scrum/template/includes/BacklogByStatusChart.ftl"/></html>
+                                                    <html><html-template multi-block="true" location="component://scrum/template/includes/BacklogByStatusChart.ftl"/></html>
                                                 </platform-specific>
                                             </container>
                                         </screenlet>
@@ -2770,12 +2770,12 @@ under the License.
                                         <screenlet id="taskStatistics" title="${uiLabelMap.ScrumTaskInformationChart}" collapsible="true">
                                             <container style="lefthalf">
                                                 <platform-specific>
-                                                    <html><html-template location="component://scrum/template/includes/TaskByTypeChart.ftl"/></html>
+                                                    <html><html-template multi-block="true" location="component://scrum/template/includes/TaskByTypeChart.ftl"/></html>
                                                 </platform-specific>
                                            </container>
                                            <container style="righthalf">
                                                 <platform-specific>
-                                                    <html><html-template location="component://scrum/template/includes/TaskByStatusChart.ftl"/></html>
+                                                    <html><html-template multi-block="true" location="component://scrum/template/includes/TaskByStatusChart.ftl"/></html>
                                                 </platform-specific>
                                            </container>
                                        </screenlet>

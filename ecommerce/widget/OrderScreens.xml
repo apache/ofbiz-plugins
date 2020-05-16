@@ -546,7 +546,7 @@ under the License.
                 <script location="component://ecommerce/groovyScripts/order/QuickAnonPaymentInformation.groovy"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://common-theme/template/includes/Messages.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template multi-block="true" location="component://common-theme/template/includes/Messages.ftl"/></html></platform-specific>
                 <platform-specific><html><html-template location="component://ecommerce/template/order/CcInfo.ftl"/></html></platform-specific>
             </widgets>
         </section>
@@ -566,7 +566,7 @@ under the License.
                 <script location="component://ecommerce/groovyScripts/order/QuickAnonPaymentInformation.groovy"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://common-theme/template/includes/Messages.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template multi-block="true" location="component://common-theme/template/includes/Messages.ftl"/></html></platform-specific>
                 <platform-specific><html><html-template location="component://ecommerce/template/order/EftInfo.ftl"/></html></platform-specific>
             </widgets>
         </section>
@@ -586,7 +586,7 @@ under the License.
                 <script location="component://ecommerce/groovyScripts/order/QuickAnonPaymentInformation.groovy"/>
             </actions>
             <widgets>
-              <platform-specific><html><html-template location="component://common-theme/template/includes/Messages.ftl"/></html></platform-specific>
+              <platform-specific><html><html-template multi-block="true" location="component://common-theme/template/includes/Messages.ftl"/></html></platform-specific>
               <platform-specific><html><html-template location="component://ecommerce/template/order/GcInfo.ftl"/></html></platform-specific>
             </widgets>
         </section>
