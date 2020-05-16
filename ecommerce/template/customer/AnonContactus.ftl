@@ -22,14 +22,12 @@ under the License.
     <strong>${uiLabelMap.CommonContactUs}</strong>
   </div>
   <script type="application/javascript">
-    <!--
     function reloadCaptcha(fieldName) {
       var captchaUri = "<@ofbizUrl>captcha.jpg?captchaCodeId=" + fieldName + "&amp;unique=_PLACEHOLDER_</@ofbizUrl>";
       var unique = Date.now();
       captchaUri = captchaUri.replace("_PLACEHOLDER_", unique);
       document.getElementById(fieldName).src = captchaUri;
     }
-    //-->
   </script>
   <div class="card-body">
     <form id="contactForm" method="post" action="<@ofbizUrl>submitAnonContact</@ofbizUrl>">

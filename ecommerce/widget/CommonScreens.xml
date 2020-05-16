@@ -61,7 +61,7 @@ under the License.
                         <not><if-empty field="globalContext.productStore"/></not>
                     </condition>
                     <widgets>
-                        <platform-specific><html><html-template location="component://ecommerce/template/includes/HeaderHead.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template multi-block="true" location="component://ecommerce/template/includes/HeaderHead.ftl"/></html></platform-specific>
                         <platform-specific><html><html-template location="component://common-theme/template/includes/OpenHtmlBody.ftl"/></html></platform-specific>
                         <!-- render header -->
                         <container id="parentContainer">
@@ -290,7 +290,7 @@ under the License.
 
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/template/includes/HeaderHead.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template multi-block="true" location="component://ecommerce/template/includes/HeaderHead.ftl"/></html></platform-specific>
                 <platform-specific><html><html-template location="component://common-theme/template/includes/OpenHtmlBody.ftl"/></html></platform-specific>
                 <platform-specific><html><html-template location="component://common-theme/template/includes/Messages.ftl"/></html></platform-specific>
 
@@ -351,7 +351,7 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
-                            <html><html-template location="component://ecommerce/template/Login.ftl"/></html>
+                            <html><html-template multi-block="true" location="component://ecommerce/template/Login.ftl"/></html>
                         </platform-specific>
                         <!-- <include-screen name="ListThirdPartyLogins" location="component://passport/widget/PassportScreens.xml"/> -->
                         <platform-specific>
@@ -373,7 +373,7 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
-                            <html><html-template location="component://ecommerce/template/RequirePasswordChange.ftl"/></html>
+                            <html><html-template multi-block="true" location="component://ecommerce/template/RequirePasswordChange.ftl"/></html>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>

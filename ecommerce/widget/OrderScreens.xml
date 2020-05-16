@@ -66,7 +66,7 @@ under the License.
                 <script location="component://ecommerce/groovyScripts/order/AnonymousCheckoutLinks.groovy"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/template/order/AnonymousCheckoutLinks.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template multi-block="true" location="component://ecommerce/template/order/AnonymousCheckoutLinks.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -192,7 +192,7 @@ under the License.
             <widgets>
                 <decorator-screen name="anonymousCheckoutDecorator">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/template/order/PaymentInformation.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template multi-block="true" location="component://ecommerce/template/order/PaymentInformation.ftl"/></html></platform-specific>
                     </decorator-section>
                     <decorator-section name="right-column">
                         <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
@@ -212,7 +212,7 @@ under the License.
             <widgets>
                 <decorator-screen name="anonymousCheckoutDecorator">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/template/order/CheckoutReview.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template multi-block="true" location="component://ecommerce/template/order/CheckoutReview.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -232,7 +232,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/template/order/BillSettings.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template multi-block="true" location="component://ecommerce/template/order/BillSettings.ftl"/></html></platform-specific>
                     </decorator-section>
                     <decorator-section name="right-column">
                         <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
@@ -254,7 +254,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/template/order/CheckoutOptions.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template multi-block="true" location="component://ecommerce/template/order/CheckoutOptions.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -272,7 +272,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/template/order/CheckoutShippingAddress.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template multi-block="true" location="component://ecommerce/template/order/CheckoutShippingAddress.ftl"/></html></platform-specific>
                     </decorator-section>
                     <decorator-section name="right-column">
                         <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
@@ -293,7 +293,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/template/order/CheckoutShippingOptions.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template multi-block="true" location="component://ecommerce/template/order/CheckoutShippingOptions.ftl"/></html></platform-specific>
                     </decorator-section>
                     <decorator-section name="right-column">
                         <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
@@ -312,7 +312,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/template/order/SplitShip.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template multi-block="true" location="component://ecommerce/template/order/SplitShip.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -329,7 +329,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/template/order/CheckoutReview.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template multi-block="true" location="component://ecommerce/template/order/CheckoutReview.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -433,7 +433,7 @@ under the License.
                 <script location="component://ecommerce/groovyScripts/order/QuickAnonCheckoutLinks.groovy"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/template/order/QuickAnonCheckoutLinks.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template multi-block="true" location="component://ecommerce/template/order/QuickAnonCheckoutLinks.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -497,7 +497,7 @@ under the License.
                 <script location="component://ecommerce/groovyScripts/order/QuickAnonOptionSettings.groovy"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/template/order/QuickAnonOptionSettings.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template multi-block="true" location="component://ecommerce/template/order/QuickAnonOptionSettings.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -510,7 +510,7 @@ under the License.
                 <script location="component://order/groovyScripts/entry/StorePaymentOptions.groovy"/>
             </actions>
             <widgets>
-               <platform-specific><html><html-template location="component://ecommerce/template/order/QuickAnonPaymentInformation.ftl"/></html></platform-specific>
+               <platform-specific><html><html-template multi-block="true" location="component://ecommerce/template/order/QuickAnonPaymentInformation.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -525,7 +525,7 @@ under the License.
             <widgets>
                 <decorator-screen name="quickAnonCheckoutDecorator">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/template/order/QuickAnonCheckoutReview.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template multi-block="true" location="component://ecommerce/template/order/QuickAnonCheckoutReview.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -663,7 +663,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/template/order/CheckoutPayment.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template multi-block="true" location="component://ecommerce/template/order/CheckoutPayment.ftl"/></html></platform-specific>
                     </decorator-section>
                     <decorator-section name="right-column">
                         <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>

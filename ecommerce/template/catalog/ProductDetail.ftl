@@ -25,7 +25,6 @@ under the License.
 ${virtualJavaScript!}
 ${virtualVariantJavaScript!}
 <script type="application/javascript">
-//<![CDATA[
     var detailImageUrl = null;
     function setAddProductId(name) {
         document.addform.add_product_id.value = name;
@@ -306,7 +305,7 @@ ${virtualVariantJavaScript!}
             priceElem.appendChild(priceTxt);
         }
     }
-//]]>
+
 $(function(){
     $('a[id^=productTag_]').click(function(){
         var id = $(this).attr('id');

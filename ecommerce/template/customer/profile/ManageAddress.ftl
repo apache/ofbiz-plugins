@@ -99,7 +99,6 @@ under the License.
       </form>
     </div>
     <script type="application/javascript">
-        //<![CDATA[
             jQuery("#displayCreateAddressForm").dialog({
                 autoOpen: false, modal: true,
                 buttons: {
@@ -118,7 +117,6 @@ under the License.
             jQuery("#addAddress").click(function () {
                 jQuery("#displayCreateAddressForm").dialog("open")
             });
-        //]]>
     </script>
   </div>
 
@@ -163,7 +161,6 @@ under the License.
         <#include "EditBillToAddress.ftl" />
       </div>
       <script type="application/javascript">
-          //<![CDATA[
             jQuery("#displayEditBillToPostalAddress").dialog({
                 autoOpen: false, modal: true,
                 buttons: {
@@ -183,7 +180,6 @@ under the License.
             jQuery("#updateBillToPostalAddress").click(function () {
                 jQuery("#displayEditBillToPostalAddress").dialog("open")
             });
-          //]]>
       </script>
 
     <#--===================================== Shipping Address and Telecom number ===================================-->
@@ -223,7 +219,6 @@ under the License.
         <#include "EditShipToAddress.ftl" />
       </div>
       <script type="application/javascript">
-          //<![CDATA[
               jQuery("#displayEditShipToPostalAddress").dialog({
                 autoOpen: false, modal: true,
                 buttons: {
@@ -242,7 +237,6 @@ under the License.
               jQuery("#updateShipToPostalAddress").click(function () {
                   jQuery("#displayEditShipToPostalAddress").dialog("open")
               });
-          //]]>
       </script>
     </div>
   </div>
@@ -303,7 +297,6 @@ under the License.
                 </form>
               </div>
               <script type="application/javascript">
-                  //<![CDATA[
                       jQuery("#displayEditAddressForm_${contactMech.contactMechId}").dialog({
                           autoOpen: false, modal: true,
                           buttons: {
@@ -322,7 +315,6 @@ under the License.
                       jQuery("#update_${contactMech.contactMechId}").click(function () {
                           jQuery("#displayEditAddressForm_${contactMech.contactMechId}").dialog("open")
                       });
-                  //]]>
               </script>
             <#else>
               <div>

@@ -24,7 +24,6 @@ under the License.
 <#-- virtual product javascript -->
 ${virtualJavaScript!}
 <script type="application/javascript">
-  <!--
   var detailImageUrl = null;
   function setAddProductId(name) {
     document.addform.add_product_id.value = name;
@@ -132,11 +131,9 @@ ${virtualJavaScript!}
       toggleAmt(checkAmtReq(sku));
     }
   }
-  //-->
 </script>
 
 <script type="application/javascript">
-  <!--
 
   jQuery(document).ready(function () {
     jQuery('#configFormId').change(getConfigDetails)
@@ -157,7 +154,6 @@ ${virtualJavaScript!}
     });
   }
 
-  -->
 </script>
 
 <div id="productdetail" class="card">

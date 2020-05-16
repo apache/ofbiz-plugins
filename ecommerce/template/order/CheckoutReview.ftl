@@ -18,7 +18,6 @@ under the License.
 -->
 
 <script type="application/javascript">
-  <!--
   var clicked = 0;
   function processOrder() {
     if (clicked == 0) {
@@ -31,7 +30,6 @@ under the License.
       showErrorAlert("${uiLabelMap.CommonErrorMessage2}", "${uiLabelMap.YoureOrderIsBeingProcessed}");
     }
   }
-  // -->
 </script>
 
 <h2>${uiLabelMap.OrderFinalCheckoutReview}</h2>

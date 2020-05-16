@@ -18,7 +18,6 @@ under the License.
 -->
 
 <script type="application/javascript">
-<!--
     var clicked = 0;
     function processOrder() {
         if (clicked == 0) {
@@ -43,7 +42,6 @@ under the License.
         });
     }
 
-// -->
 </script>
 
 <h1>${uiLabelMap.OrderFinalCheckoutReview}</h1>

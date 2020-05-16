@@ -17,7 +17,6 @@ specific language governing permissions and limitations
 under the License.
 -->
 <script type="application/javascript">
-    //<![CDATA[
         function removeSelected() {
             var cform = document.cartform;
             cform.removeSelected.value = true;
@@ -60,15 +59,12 @@ under the License.
             }
             cform.submit();
         }
-    //]]>
 </script>
 
 <script type="application/javascript">
-    //<![CDATA[
         function setAlternateGwp(field) {
             window.location=field.value;
         };
-    //]]>
 </script>
 <#assign fixedAssetExist = shoppingCart.containAnyWorkEffortCartItems() />
 <#-- change display format when rental items exist in the shoppingcart -->
@@ -127,9 +123,7 @@ under the License.
 </div>
 
 <script type="application/javascript">
-    //<![CDATA[
         document.quickaddform.add_product_id.focus();
-    //]]>
 </script>
 
 <div>

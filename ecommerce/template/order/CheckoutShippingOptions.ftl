@@ -18,7 +18,6 @@ under the License.
 -->
 
 <script type="application/javascript">
-  //<![CDATA[
   function submitForm(form, mode, value) {
     if ("DN" == mode) {
       // done action; checkout
@@ -54,8 +53,6 @@ under the License.
       form.submit();
     }
   }
-
-  //]]>
 </script>
 
 <form method="post" name="checkoutInfoForm" style="margin:0;">
