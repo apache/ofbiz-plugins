@@ -414,7 +414,7 @@
     </request-map>
     <request-map uri="deleteTimeSheet">
         <security https="true" auth="true"/>
-        <event type="service" invoke="checkAnddeleteTimesheet"/>
+        <event type="service" invoke="deleteTimesheet"/>
         <response name="success" type="view" value="FindTimeSheet"/>
         <response name="error" type="view" value="FindTimeSheet"/>
     </request-map>
@@ -472,13 +472,13 @@
     </request-map>
     <request-map uri="MyStatusToComplete">
         <security https="true" auth="true"/>
-        <event type="service" invoke="checkAndUpdateTimesheet"/>
+        <event type="service" invoke="updateTimesheet"/>
         <response name="success" type="view-last" value="MyTimesheet"/>
         <response name="error" type="view" value="MyTimesheet"/>
     </request-map>
     <request-map uri="StatusToComplete">
         <security https="true" auth="true"/>
-        <event type="service" invoke="checkAndUpdateTimesheet"/>
+        <event type="service" invoke="updateTimesheet"/>
         <response name="success" type="view" value="Timesheet"/>
         <response name="error" type="view" value="Timesheet"/>
     </request-map>
@@ -492,13 +492,13 @@
     </request-map>
     <request-map uri="TimeSheetStatusToComplete">
         <security https="true" auth="true"/>
-        <event type="service" invoke="checkAndUpdateTimesheet"/>
+        <event type="service" invoke="updateTimesheet"/>
         <response name="success" type="view" value="Timesheet"/>
         <response name="error" type="view" value="Timesheet"/>
     </request-map>
     <request-map uri="myTimeSheetStatusToComplete">
         <security https="true" auth="true"/>
-        <event type="service" invoke="checkAndUpdateTimesheet"/>
+        <event type="service" invoke="updateTimesheet"/>
         <response name="success" type="view" value="MyTimesheet"/>
         <response name="error" type="view" value="MyTimesheet"/>
     </request-map>

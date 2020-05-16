@@ -28,6 +28,6 @@ under the License.
         <set-current-user-login value-field="userLogin"/>
         <set field="inMap.timesheetId" value="DEMO-TIMESHEET1"/>
         <set field="inMap.statusId" value="TIMESHEET_COMPLETED"/>
-        <call-service service-name="checkAndUpdateTimesheet" in-map-name="inMap"/>
+        <call-service service-name="updateTimesheet" in-map-name="inMap"/>
     </simple-method>
 </simple-methods>

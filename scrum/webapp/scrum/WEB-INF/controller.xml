@@ -738,7 +738,7 @@ under the License.
     </request-map>
     <request-map uri="MyTimeSheetStatusToComplete">
         <security https="true" auth="true"/>
-        <event type="service" invoke="checkAndUpdateTimesheet"/>
+        <event type="service" invoke="updateTimesheet"/>
         <response name="success" type="view" value="MyWork"/>
         <response name="error" type="view" value="MyWork"/>
     </request-map>
@@ -757,7 +757,7 @@ under the License.
     </request-map>
     <request-map uri="TimeSheetStatusToComplete">
         <security https="true" auth="true"/>
-        <event type="service" invoke="checkAndUpdateTimesheet"/>
+        <event type="service" invoke="updateTimesheet"/>
         <response name="success" type="view" value="ViewTimeSheet"/>
         <response name="error" type="view" value="ViewTimeSheet"/>
     </request-map>
