@@ -138,6 +138,13 @@ under the License.
                                     </container>
                                     <include-form name="MaskFieldExampleForm" location="component://example/widget/example/FormWidgetExampleForms.xml"/>
                                 </container>
+                                <container style="screenlet-body">
+                                    <container style="button-bar"><label style="h2">${uiLabelMap.ExampleDisabledFields}</label></container>
+                                    <container style="screenlet-body">
+                                        <label>${uiLabelMap.ExampleDisabledFieldDescription}</label>
+                                    </container>
+                                    <include-form name="DisabledFieldExampleForm" location="component://example/widget/example/FormWidgetExampleForms.xml"/>
+                                </container>
                             </widgets>
                             <fail-widgets>
                                 <label style="h3">${uiLabelMap.ExampleViewPermissionError}</label>

@@ -329,6 +329,12 @@
         <value xml:lang="zh">相互依赖的下拉框</value>
         <value xml:lang="zh-TW">相互依賴的下拉清單</value>
     </property>
+    <property key="ExampleDisabledFields">
+        <value xml:lang="en">Disabled Fields</value>
+    </property>
+    <property key="ExampleDisabledFieldDescription">
+        <value xml:lang="en">Here is a simple example for all the fields with disabled attributes</value>
+    </property>
     <property key="ExampleDropDown">
         <value xml:lang="en">drop-down</value>
         <value xml:lang="fr">liste déroulante</value>

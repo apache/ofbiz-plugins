@@ -185,7 +185,7 @@ under the License.
         </field>
     </form>
     <form name="ViewEmailForProduct" type="single" extends="EditEmail" target="${target}" default-map-name="communicationEvent" id="updateEmailForProduct">
-        <field name="subject"><text size="74"  maxlength="255" disabled="true"/> </field>
+        <field name="subject" disabled="true"><text size="74"  maxlength="255"/> </field>
         <field name="content"><textarea cols="72" rows="15" read-only="true"/> </field>
     </form>
     <form name="ListCommContentForProduct" type="list" extends="ListCommContent" list-name="contentDataResourceList" paginate-target="/ListCommContent" target="removeAttachFileForProduct"
