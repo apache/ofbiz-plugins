@@ -1,3 +1,4 @@
+package plugins.bi.groovyScripts.reportbuilder;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,24 +18,18 @@
  * under the License.
  */
 
-reader = delegator.getModelReader()
-ec = reader.getEntityNames()
-entities = new TreeSet(ec)
-entitiesIt = entities.iterator()
-
-List starSchemas = []
-
-while (entitiesIt.hasNext()) {
-    entity = reader.getModelEntity(entitiesIt.next())
-    packageName = entity.getPackageName()
-    if (!packageName.contains("starschema")) {
-        continue
+starSchemaName = parameters.starSchemaName
+fieldCount = parameters.fieldCount
+field = parameters.field
+columnNames = [] as Set
+if("1" == fieldCount) {
+    columnNames.add(field)
+} else {
+    field.each { field ->
+        columnNames.add(field)
     }
-
-    entityMap = [:]
-    entityMap.name = entity.getEntityName()
-    entityMap.title = entity.getTitle()
-
-    starSchemas.add(entityMap)
 }
-context.starSchemas = starSchemas
+context.columnNames = columnNames
+List records = []
+records = select(context.columnNames).from(starSchemaName).distinct(false).queryList()
+context.records = records

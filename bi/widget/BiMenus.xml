@@ -17,8 +17,44 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://ofbiz.apache.org/Widget-Menu" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Menu http://ofbiz.apache.org/dtds/widget-menu.xsd">
-    <menu name="BiAppBar" title="${uiLabelMap.BusinessIntelligenceApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="reportbuilder" title="${uiLabelMap.BusinessIntelligenceReportBuilder}"><link target="ReportBuilderSelectStarSchema"/></menu-item>
+<menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://ofbiz.apache.org/Widget-Menu"
+    xsi:schemaLocation="http://ofbiz.apache.org/Widget-Menu http://ofbiz.apache.org/dtds/widget-menu.xsd">
+    <menu name="BiAppBar" title="${uiLabelMap.BiApplication}" extends="CommonAppBarMenu"
+        extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="ReportBuilder" title="${uiLabelMap.BiReportBuilder}">
+            <link target="reportBuilder"/>
+        </menu-item>
     </menu>
+    
+    <menu name="MainActionMenu" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        menu-container-style="button-bar button-style-2 no-clear">
+        <actions>
+            <property-to-field resource="bi" property="dwh.initialised" field="dwhInitialised" no-locale="true"/>
+        </actions>
+        <menu-item name="prepareDwhInit" title="${uiLabelMap.BiInitialiseDwh}">
+            <condition>
+                <and>
+                    <or>
+                        <if-has-permission permission="BI" action="_ADMIN"/>
+                        <if-has-permission permission="BI" action="_CREATE"/>
+                    </or>
+                    <if-compare field="dwhInitialised" operator="equals" value="false"/>
+                </and>
+            </condition>
+            <link target="prepareDwhInit"/>
+        </menu-item>
+        <menu-item name="prepareDwhUpdate" title="${uiLabelMap.BiUpdateDwh}">
+            <condition>
+                <and>
+                    <or>
+                        <if-has-permission permission="BI" action="_ADMIN"/>
+                        <if-has-permission permission="BI" action="_UPDATE"/>
+                    </or>
+                    <if-compare field="dwhInitialised" operator="equals" value="true"/>
+                </and>
+            </condition>
+            <link target="prepareDwhUpdate"/>
+        </menu-item>
+    </menu>
+    
 </menus>

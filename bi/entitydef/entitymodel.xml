@@ -29,34 +29,102 @@ under the License.
     <!-- ========================================================= -->
     <!-- Dimensions                                                -->
     <!-- ========================================================= -->
-    <entity entity-name="CountryDimension" package-name="org.apache.ofbiz.bi.dimension" title="Country Dimension">
-        <description>Country dimension. Based on ISO 3166-1. The natural key is [geoId]</description>
-        <field name="dimensionId" type="id">
-            <description>Unique identifier of the Date dimension record</description>
+    <entity entity-name="AccountDimension" package-name="org.apache.ofbiz.bi.dimension" title="Accounts Dimension">
+        <description>Dimension of accounts. The natural key is [partyId]</description>
+        <field name="dimensionId" type="integer">
+            <description>Unique identifier of the account dimension record</description>
         </field>
-        <field name="geoId" type="id">
-            <description>The natural key, based on ISO 3166-1 alpha-3</description>
+        <field name="partyId" type="id">
+            <description>The natural key. From PartyRoleAndPartyDetail.partyId</description>
         </field>
-        <field name="geoName" type="name">
-            <description>The name of the country, based on ISO 3166</description>
-        </field>
-        <field name="geoCode" type="short-varchar">
-            <description>The ISO 3166-1 alpha-2 code of the country</description>
-        </field>
-        <field name="abbreviation" type="short-varchar">
-            <description>Based on the ISO 3166-1 alpha-3 code of the country</description>
-        </field>
-        <field name="telCountryCode" type="short-varchar">
-            <description>The telephone country code. Based on ITU.E123 and ITU.164</description>
-        </field>
-        <field name="ccTld" type="short-varchar">
-            <description>The country code top-level domain for the country. Base on IANA rfc1591</description>
+        <field name="partyName" type="description">
+            <description>Name of the account. From PartyRoleAndPartyDetail. Dependent on PartyTypeId</description>
         </field>
         <prim-key field="dimensionId"/>
     </entity>
-    <entity entity-name="DateDimension" package-name="org.apache.ofbiz.bi.dimension" title="Date Dimension">
-        <description>Date (days) dimension. The natural key is [dateValue]</description>
+    <entity entity-name="AssetDimension" package-name="org.apache.ofbiz.bi.dimension" title="Assets Dimension">
+        <description>Dimension of assets. The natural key is [fixedAssetId]</description>
+        <field name="dimensionId" type="integer">
+            <description>Unique identifier of the Asset dimension record</description>
+        </field>
+        <field name="fixedAssetId" type="id">
+            <description>The natural key. From FixedAsset.fixedAssetId</description>
+        </field>
+        <field name="fixedAssetName" type="description">
+            <description>Name of the fixed asset.</description>
+        </field>
+        <prim-key field="dimensionId"/>
+    </entity>
+    <entity entity-name="CarrierDimension" package-name="org.apache.ofbiz.bi.dimension" title="Carriers Dimension">
+        <description>Dimension of carriers. The natural key is [partyId]</description>
+        <field name="dimensionId" type="integer">
+            <description>Unique identifier of the Carrier dimension record</description>
+        </field>
+        <field name="partyId" type="id">
+            <description>The natural key. From PartyRoleAndPartyDetail.partyId</description>
+        </field>
+        <field name="partyName" type="description">
+            <description>Name of the carrier. From PartyRoleAndPartyDetail. Dependent on PartyTypeId</description>
+        </field>
+        <prim-key field="dimensionId"/>
+    </entity>
+    <entity entity-name="CountryDimension" package-name="org.apache.ofbiz.bi.dimension" title="Countries Dimension">
+        <description>Dimension of countries. The natural key is [countryId]</description>
         <field name="dimensionId" type="id">
+            <description>Unique identifier of the dimension record</description>
+        </field>
+        <field name="countryId" type="id">
+            <description>The country id (natural key). The ISO 3166-1 alpha-3 code of the Country</description>
+        </field>
+        <field name="countryCode" type="short-varchar">
+            <description>The ISO 3166-1 alpha-2 code of the Country</description>
+        </field>
+        <field name="countryNumCode" type="short-varchar">
+            <description>The ISO 3166-1 numeric code of the Country</description>
+        </field>
+        <field name="countryName" type="description">
+            <description>The name of the Country</description>
+        </field>
+        <field name="countryTeleCode" type="short-varchar">
+            <description>The country calling code of the Country</description>
+        </field>
+        <field name="tld" type="short-varchar">
+            <description>The country code top-level domain of the Country</description>
+        </field>
+        <field name="description" type="description">
+            <description>description of the record</description>
+        </field>
+        <prim-key field="dimensionId"/>
+    </entity>
+    <entity entity-name="CurrencyDimension" package-name="org.apache.ofbiz.bi.dimension" title="Currencies Dimension">
+        <description>Dimension of currencies. The natural key is [currencyId]</description>
+        <field name="dimensionId" type="id">
+            <description>Unique identifier of the Currency dimension record</description>
+        </field>
+        <field name="currencyId" type="id">
+            <description>The currency id (natural key).</description>
+        </field>
+        <field name="description" type="description">
+            <description>description of the record</description>
+        </field>
+        <prim-key field="dimensionId"/>
+    </entity>
+    <entity entity-name="CustomerDimension" package-name="org.apache.ofbiz.bi.dimension" title="Customers Dimension">
+        <description>Dimension of customers. The natural key is [partyId]</description>
+        <field name="dimensionId" type="integer">
+            <description>Unique identifier of the Customer dimension record</description>
+        </field>
+        <field name="partyId" type="id">
+            <description>The natural key. From PartyRoleAndPartyDetail.partyId</description>
+        </field>
+        <field name="partyName" type="description">
+            <description>Name of the customer. From PartyRoleAndPartyDetail. Dependent on PartyTypeId</description>
+        </field>
+        <prim-key field="dimensionId"/>
+    </entity>
+    <entity entity-name="DateDimension" package-name="org.apache.ofbiz.bi.dimension" title="Dates Dimension">
+        <description>Dimension of dates. The natural key is [dateValue]</description>
+        <field name="dimensionId" type="integer">
             <description>Unique identifier of the Date dimension record</description>
         </field>
         <field name="dateValue" type="date">
@@ -100,24 +168,64 @@ under the License.
         </field>
         <prim-key field="dimensionId"/>
     </entity>
-
-    <entity entity-name="CurrencyDimension" package-name="org.apache.ofbiz.bi.dimension" title="Currency Dimension">
-        <description>Currency dimension. The natural key is [currencyId]</description>
-        <field name="dimensionId" type="id">
-            <description>Unique identifier of the Currency dimension record</description>
+    <entity entity-name="EmployeeDimension" package-name="org.apache.ofbiz.bi.dimension" title="Employees Dimension">
+        <description>Dimension of employees. The natural key is [partyId]</description>
+        <field name="dimensionId" type="integer">
+            <description>Unique identifier of the Employee dimension record</description>
         </field>
-        <field name="currencyId" type="id">
-            <description>The currency id (natural key).</description>
+        <field name="partyId" type="id">
+            <description>The natural key. From PartyRoleAndPartyDetail.partyId</description>
         </field>
-        <field name="description" type="description">
-            <description>Full currency description</description>
+        <field name="partyName" type="description">
+            <description>Name of the employee. From PartyRoleAndPartyDetail. Dependent on PartyTypeId</description>
         </field>
         <prim-key field="dimensionId"/>
     </entity>
-
-    <entity entity-name="ProductDimension" package-name="org.apache.ofbiz.bi.dimension.product" title="Product Dimension">
-        <description>Product dimension. The natural key is [productId]</description>
-        <field name="dimensionId" type="id">
+    <entity entity-name="FacilityDimension" package-name="org.apache.ofbiz.bi.dimension" title="Facilities Dimension">
+        <description>Dimension of facilities. The natural key is [facilityId]</description>
+        <field name="dimensionId" type="integer">
+            <description>Unique identifier of the dimension record</description>
+        </field>
+        <field name="facilityId" type="id">
+            <description>The natural key. From facility.facilityId</description>
+        </field>
+        <field name="facilityName" type="description">
+            <description>The name of the facility</description>
+        </field>
+        <prim-key field="dimensionId"/>
+    </entity>
+    <entity entity-name="OrganisationDimension" package-name="org.apache.ofbiz.bi.dimension" title="Internal Organisations Dimension">
+        <description>Dimension of internal (accounting) parties. The natural key is [partyId]</description>
+        <field name="dimensionId" type="integer">
+            <description>Unique identifier of the dimension record</description>
+        </field>
+        <field name="partyId" type="id">
+            <description>The natural key. From party.partyId</description>
+        </field>
+        <field name="partyName" type="description">
+            <description>The name of the party</description>
+        </field>
+        <field name="baseCurrencyDimId" type="id">
+            <description>the currency of the organisaiton.</description>
+        </field>
+        <prim-key field="dimensionId"/>
+    </entity>
+    <entity entity-name="PosTerminalDimension" package-name="org.apache.ofbiz.bi.dimension" title="PoS Terminals Dimension">
+        <description>Dimension of PoS terminals. The natural key is [posTerminalId]</description>
+        <field name="dimensionId" type="integer">
+            <description>Unique identifier of the PosTerminal dimension record</description>
+        </field>
+        <field name="posTerminalId" type="id">
+            <description>The natural key. From PosTerminal.posTerminalId</description>
+        </field>
+        <field name="terminalName" type="description">
+            <description>The name given to the terminal</description>
+        </field>
+        <prim-key field="dimensionId"/>
+    </entity>
+    <entity entity-name="ProductDimension" package-name="org.apache.ofbiz.bi.dimension" title="Products Dimension">
+        <description>Dimension of Products. The natural key is [productId]</description>
+        <field name="dimensionId" type="integer">
             <description>Unique identifier of the Product dimension record</description>
         </field>
         <field name="productId" type="id">
@@ -126,28 +234,148 @@ under the License.
         <field name="productType" type="description">
             <description>The product type. From ProductType.description</description>
         </field>
-        <field name="brandName" type="name"></field>
-        <field name="internalName" type="description"></field>
+        <field name="internalName" type="description">
+            <description>The internal name of the product</description>
+        </field>
+        <field name="brandName" type="name">
+            <description>The brand name of the prdouct</description>
+        </field>
+        <prim-key field="dimensionId"/>
+    </entity>
+    <entity entity-name="ProjectDimension" package-name="org.apache.ofbiz.bi.dimension" title="Projects Dimension">
+        <description>Dimension of projects. The natural key is [workEffortId]</description>
+        <field name="dimensionId" type="integer">
+            <description>Unique identifier of the Project dimension record</description>
+        </field>
+        <field name="projectId" type="id">
+            <description>The natural key. From WorkEffort.workEffortId</description>
+        </field>
+        <field name="projectName" type="description">
+            <description>Name of the project. From WorkEffort.workEffortName</description>
+        </field>
+        <prim-key field="dimensionId"/>
+    </entity>
+    <entity entity-name="ProjectTaskDimension" package-name="org.apache.ofbiz.bi.dimension" title="Project Tasks Dimension">
+        <description>Dimension of project tasks. The natural key is [workEffortId]</description>
+        <field name="dimensionId" type="integer">
+            <description>Unique identifier of the ProjectTask dimension record</description>
+        </field>
+        <field name="projectTaskId" type="id">
+            <description>The natural key. From WorkEffort.workEffortId</description>
+        </field>
+        <field name="projectTaskName" type="description">
+            <description>Name of the project task. From WorkEffort.workEffortName</description>
+        </field>
+        <prim-key field="dimensionId"/>
+    </entity>
+    <entity entity-name="SalesChannelDimension" package-name="org.apache.ofbiz.bi.dimension" title="Sales Channels Dimension">
+        <description>Dimension of sales channels. The natural key is [enumId]</description>
+        <field name="dimensionId" type="integer">
+            <description>Unique identifier of the dimension record</description>
+        </field>
+        <field name="salesChannelId" type="id">
+            <description>The natural key. From Enumeration.enumId</description>
+        </field>
+        <field name="description" type="description">
+            <description>Description. From Enumeration.description.</description>
+        </field>
+        <prim-key field="dimensionId"/>
+    </entity>
+    <entity entity-name="SalesPromoDimension" package-name="org.apache.ofbiz.bi.dimension" title="Sales Promotions Dimension">
+        <description>Dimension of sales promotions. The natural key is [productPromoId]</description>
+        <field name="dimensionId" type="integer">
+            <description>Unique identifier of the dimension record</description>
+        </field>
+        <field name="salesPromoId" type="id">
+            <description>The natural key. From ProductPromo.productPromoId</description>
+        </field>
+        <field name="salesPromoName" type="description">
+            <description>Name of the promo. From ProductPromo.promoName.</description>
+        </field>
+        <prim-key field="dimensionId"/>
+    </entity>
+    <entity entity-name="StoreDimension" package-name="org.apache.ofbiz.bi.dimension" title="Stores Dimension">
+        <description>Dimension of stores. The natural key is [productStoreId]</description>
+        <field name="dimensionId" type="integer">
+            <description>Unique identifier of the dimension record</description>
+        </field>
+        <field name="productStoreId" type="id">
+            <description>The natural key. From ProductStore.productStoreId</description>
+        </field>
+        <field name="storeName" type="description">
+            <description>Name of the store. From ProductStore.storeName.</description>
+        </field>
+        <prim-key field="dimensionId"/>
+    </entity>
+    <entity entity-name="SupplierDimension" package-name="org.apache.ofbiz.bi.dimension" title="Suppliers Dimension">
+        <description>Dimension of suppliers. The natural key is [partyId]</description>
+        <field name="dimensionId" type="integer">
+            <description>Unique identifier of the Supplier dimension record</description>
+        </field>
+        <field name="partyId" type="id">
+            <description>The natural key. From PartyRoleAndPartyDetail.partyId</description>
+        </field>
+        <field name="partyName" type="description">
+            <description>Name of the supplier. From PartyRoleAndPartyDetail. Dependent on PartyTypeId</description>
+        </field>
+        <prim-key field="dimensionId"/>
+    </entity>
+    <entity entity-name="TimeDimension" package-name="org.apache.ofbiz.bi.dimension" title="Times Dimension">
+        <description>Dimension of time slots. The natural key is [hh:mm]</description>
+        <field name="dimensionId" type="integer">
+            <description>Unique identifier of the dimension record</description>
+        </field>
+        <field name="timeValue" type="time">
+            <description>The natural key (hh:mm).</description>
+        </field>
+        <field name="hr" type="integer">
+            <description>The hour value</description>
+        </field>
+        <field name="mn" type="integer">
+            <description>The minute value</description>
+        </field>
+        <field name="description" type="description">
+            <description>Description of the record</description>
+        </field>
         <prim-key field="dimensionId"/>
     </entity>
 
     <!-- ========================================================= -->
     <!-- Facts                                                     -->
     <!-- ========================================================= -->
-    <entity entity-name="SalesInvoiceItemFact" package-name="org.apache.ofbiz.bi.fact.accounting" title="Sales Invoice Item Fact">
-        <description>A transaction fact entity with invoice item grain.</description>
-        <field name="invoiceId" type="id"></field> <!-- degenerate dimension -->
-        <field name="invoiceItemSeqId" type="id"></field> <!-- degenerate dimension -->
-        <field name="orderId" type="id"></field> <!-- degenerate dimension -->
-        <field name="invoiceDateDimId" type="id"></field>
-        <field name="productDimId" type="id"></field>
-        <field name="billToCustomerDimId" type="id"></field> <!-- TODO: implement the dimension -->
-        <field name="origCurrencyDimId" type="id"></field>
 
+    <entity entity-name="PurchaseInvoiceItemFact" package-name="org.apache.ofbiz.bi.fact" title="Purchase Invoice Item Fact">
+        <description>A transaction fact entity with invoice item grain for purchase invoices</description>
+        <field name="invoiceId" type="id">
+            <description>The invoice Id. A degenerate dimension</description>
+        </field>
+        <field name="invoiceItemSeqId" type="id">
+            <description>The invoice line item. A degenerate dimension</description>
+        </field>
+        <field name="orderId" type="id">
+            <description>The associated order. A degenerate dimension</description>
+        </field>
+        <field name="invoiceDateDimId" type="integer">
+            <description>The date of the invoice</description>
+        </field>
+        <field name="organisationDimId" type="integer">
+            <description>The associated internal organisation</description>
+        </field>
+        <field name="supplierDimId" type="integer">
+            <description>The associated supplier</description>
+        </field>
+        <field name="origCurrencyDimId" type="id">
+            <description>The currency of the invoice</description>
+        </field>
+        <field name="productDimId" type="integer">
+            <description>The associated product</description>
+        </field>
         <field name="quantity" type="fixed-point">
             <description>Quantity invoiced. From InvoiceItem.quantity</description>
         </field>
-
+        <field name="amount" type="fixed-point">
+            <description>Amount invoiced. From InvoiceItem.amount</description>
+        </field>
         <field name="extGrossAmount" type="currency-precise">
             <description>Extended gross amount: quantity invoiced multiplied by the list unit price.</description>
         </field>
@@ -175,33 +403,194 @@ under the License.
         <field name="contributionAmount" type="currency-precise">
             <description>Extended net amount less all the costs.</description>
         </field>
-        <!--
-        TODO: implement multi-currency fields
-        <field name="extGrossAmountOrig" type="currency-precise">
-            <description>Extended gross amount in the original currency: quantity invoiced multiplied by the list unit price.</description>
+
+        <prim-key field="invoiceId"/>
+        <prim-key field="invoiceItemSeqId"/>
+
+        <relation type="one" fk-name="PIIF_INVDATE" rel-entity-name="DateDimension">
+            <key-map field-name="invoiceDateDimId" rel-field-name="dimensionId"/>
+        </relation>
+        <relation type="one" fk-name="PIIF_CURRENCY" rel-entity-name="CurrencyDimension">
+            <key-map field-name="origCurrencyDimId" rel-field-name="dimensionId"/>
+        </relation>
+        <relation type="one" fk-name="PIIF_INTORG" rel-entity-name="OrganisationDimension">
+            <key-map field-name="organisationDimId" rel-field-name="dimensionId"/>
+        </relation>
+        <relation type="one" fk-name="PIIF_PRODUCT" rel-entity-name="ProductDimension">
+            <key-map field-name="productDimId" rel-field-name="dimensionId"/>
+        </relation>
+        <relation type="one" fk-name="PIIF_SUPPLIER" rel-entity-name="SupplierDimension">
+            <key-map field-name="supplierDimId" rel-field-name="dimensionId"/>
+        </relation>
+    </entity>
+
+    <entity entity-name="PurchaseOrderItemFact" package-name="org.apache.ofbiz.bi.fact.order" title="Purchase Order Item Fact">
+        <description>A transaction fact entity with order item grain for purchase orders.</description>
+        <field name="orderId" type="id">
+            <description>The order id. A degenerate dimension</description>
         </field>
-        <field name="extDiscountAmountOrig" type="currency-precise">
-            <description>Extended discount amount in the original currency.</description>
+        <field name="orderItemSeqId" type="id">
+            <description>The order line item. A degenerate dimension</description>
         </field>
-        <field name="extNetAmountOrig" type="currency-precise">
-            <description>Extended net amount in the original currency: gross amount less discounts.</description>
+        <field name="orderDateDimId" type="integer">
+            <description>The date of the order</description>
         </field>
-        <field name="extManFixedCostOrig" type="currency-precise">
-            <description>Extended manufacturing fixed cost in the original currency.</description>
+        <field name="organisationDimId" type="integer">
+            <description>The associated internal organisation</description>
         </field>
-        <field name="extManVarCostOrig" type="currency-precise">
-            <description>Extended manufacturing variable cost in the original currency.</description>
+        <field name="supplierDimId" type="integer">
+            <description>The associated supplier</description>
         </field>
-        <field name="extStorageCostOrig" type="currency-precise">
-            <description>Extended storage cost in the original currency.</description>
+        <field name="storeDimId" type="integer">
+            <description>The associated store</description>
         </field>
-        <field name="extDistributionCostOrig" type="currency-precise">
-            <description>Extended distribution cost in the original currency.</description>
+        <field name="salesChannelDimId" type="integer">
+            <description>The associated sales channel</description>
         </field>
-        <field name="contributionAmountOrig" type="currency-precise">
-            <description>Extended net amount less all the costs in the original currency.</description>
+        <field name="productDimId" type="integer">
+            <description>The associated product</description>
         </field>
-        -->
+        <field name="origCurrencyDimId" type="id">
+            <description>The associated currency</description>
+        </field>
+        <field name="productCategoryId" type="id"></field>
+        <field name="statusId" type="id"></field>
+
+        <field name="brand" type="name"></field>
+        <field name="pod" type="name"></field>
+        <field name="account" type="name"></field>
+
+        <field name="quantity" type="fixed-point">
+            <description>Quantity order. From OrderItem.quantity</description>
+        </field>
+
+        <field name="extGrossAmount" type="currency-precise">
+            <description>Extended gross amount: quantity item multiplied by the unit price.</description>
+        </field>
+        <field name="extGrossCost" type="currency-precise">
+            <description>Extended gross cost: quantity item multiplied by the last price.</description>
+        </field>
+        <field name="extDiscountAmount" type="currency-precise">
+            <description>Extended discount amount.</description>
+        </field>
+        <field name="extNetAmount" type="currency-precise">
+            <description>Extended net amount: gross amount less discounts.</description>
+        </field>
+        <field name="extShippingAmount" type="currency-precise">
+            <description>Extended shipping amount.</description>
+        </field>
+        <field name="extTaxAmount" type="currency-precise">
+            <description>Extended tax amount.</description>
+        </field>
+
+        <field name="GS" type="currency-precise">
+            <description>Gross Sales: Gross Amount plus Shipping Amount.</description>
+        </field>
+        <field name="GMS" type="currency-precise">
+            <description>Gross Merchandize Sales: Gross Amount.</description>
+        </field>
+        <field name="GMP" type="currency-precise">
+            <description>Gross Merchandize Profit: Gross Merchandize Sales less Gross Cost.</description>
+        </field>
+        <field name="GSS" type="currency-precise">
+            <description>Gross Shipping Sales: Shipping Amount</description>
+        </field>
+        <field name="GSC" type="currency-precise">
+            <description>Gross Shipping Cost</description>
+        </field>
+        <field name="GSP" type="currency-precise">
+            <description>Gross Shipping Profit: Gross Shipping Sales less Gross Shipping Cost.</description>
+        </field>
+        <field name="GP" type="currency-precise">
+            <description>Gross Profit: Gross Merchandize Profit less Gross Shipping Profit.</description>
+        </field>
+
+        <field name="countOrder" type="fixed-point">
+            <description>Count of order.</description>
+        </field>
+        <field name="productPromoCode" type="id">
+            <description>Product promotion Code.</description>
+        </field>
+
+        <prim-key field="orderId"/>
+        <prim-key field="orderItemSeqId"/>
+
+        <relation type="one" fk-name="POIF_ORDERDATE" rel-entity-name="DateDimension">
+            <key-map field-name="orderDateDimId" rel-field-name="dimensionId"/>
+        </relation>
+        <relation type="one" fk-name="POIF_CURRENCY" rel-entity-name="CurrencyDimension">
+            <key-map field-name="origCurrencyDimId" rel-field-name="dimensionId"/>
+        </relation>
+        <relation type="one" fk-name="POIF_INTORG" rel-entity-name="OrganisationDimension">
+            <key-map field-name="organisationDimId" rel-field-name="dimensionId"/>
+        </relation>
+        <relation type="one" fk-name="POIF_PRODUCT" rel-entity-name="ProductDimension">
+            <key-map field-name="productDimId" rel-field-name="dimensionId"/>
+        </relation>
+        <relation type="one" fk-name="POIF_SUPPLIER" rel-entity-name="SupplierDimension">
+            <key-map field-name="supplierDimId" rel-field-name="dimensionId"/>
+        </relation>
+    </entity>
+
+    <entity entity-name="SalesInvoiceItemFact" package-name="org.apache.ofbiz.bi.fact" title="Sales Invoice Item Fact">
+        <description>A transaction fact entity with invoice item grain for sales invoices.</description>
+        <field name="invoiceId" type="id">
+            <description>The invoice Id. A degenerate dimension</description>
+        </field>
+        <field name="invoiceItemSeqId" type="id">
+            <description>The invoice line item. A degenerate dimension</description>
+        </field>
+        <field name="orderId" type="id">
+            <description>The associated order. A degenerate dimension</description>
+        </field>
+        <field name="invoiceDateDimId" type="integer">
+            <description>The date of the invoice</description>
+        </field>
+        <field name="organisationDimId" type="integer">
+            <description>The associated internal organisation</description>
+        </field>
+        <field name="customerDimId" type="integer">
+            <description>The associated customer</description>
+        </field>
+        <field name="origCurrencyDimId" type="id">
+            <description>The currency of the invoice</description>
+        </field>
+        <field name="productDimId" type="integer">
+            <description>The associated product</description>
+        </field>
+        <field name="quantity" type="fixed-point">
+            <description>Quantity invoiced. From InvoiceItem.quantity</description>
+        </field>
+        <field name="amount" type="fixed-point">
+            <description>Amount invoiced. From InvoiceItem.amount</description>
+        </field>
+        <field name="extGrossAmount" type="currency-precise">
+            <description>Extended gross amount: quantity invoiced multiplied by the list unit price.</description>
+        </field>
+        <field name="extDiscountAmount" type="currency-precise">
+            <description>Extended discount amount.</description>
+        </field>
+        <field name="extNetAmount" type="currency-precise">
+            <description>Extended net amount: gross amount less discounts.</description>
+        </field>
+        <field name="extTaxAmount" type="currency-precise">
+            <description>Extended tax amount.</description>
+        </field>
+        <field name="extManFixedCost" type="currency-precise">
+            <description>Extended manufacturing fixed cost.</description>
+        </field>
+        <field name="extManVarCost" type="currency-precise">
+            <description>Extended manufacturing variable cost.</description>
+        </field>
+        <field name="extStorageCost" type="currency-precise">
+            <description>Extended storage cost.</description>
+        </field>
+        <field name="extDistributionCost" type="currency-precise">
+            <description>Extended distribution cost.</description>
+        </field>
+        <field name="contributionAmount" type="currency-precise">
+            <description>Extended net amount less all the costs.</description>
+        </field>
 
         <prim-key field="invoiceId"/>
         <prim-key field="invoiceItemSeqId"/>
@@ -212,24 +601,47 @@ under the License.
         <relation type="one" fk-name="SIIF_CURRENCY" rel-entity-name="CurrencyDimension">
             <key-map field-name="origCurrencyDimId" rel-field-name="dimensionId"/>
         </relation>
+        <relation type="one" fk-name="SIIF_CUSTOMER" rel-entity-name="CustomerDimension">
+            <key-map field-name="customerDimId" rel-field-name="dimensionId"/>
+        </relation>
+        <relation type="one" fk-name="SIIF_INTORG" rel-entity-name="OrganisationDimension">
+            <key-map field-name="organisationDimId" rel-field-name="dimensionId"/>
+        </relation>
         <relation type="one" fk-name="SIIF_PRODUCT" rel-entity-name="ProductDimension">
             <key-map field-name="productDimId" rel-field-name="dimensionId"/>
         </relation>
-
     </entity>
 
     <entity entity-name="SalesOrderItemFact" package-name="org.apache.ofbiz.bi.fact.order" title="Sales Order Item Fact">
-        <description>A transaction fact entity with order item grain.</description>
-        <field name="orderId" type="id"></field> <!-- degenerate dimension -->
-        <field name="orderItemSeqId" type="id"></field> <!-- degenerate dimension -->
-        <field name="orderDateDimId" type="id"></field>
-        <field name="productDimId" type="id"></field>
-        <field name="origCurrencyDimId" type="id"></field>
-        <field name="billToCustomerDimId" type="id"></field> <!-- TODO: implement the dimension -->
-
+        <description>A transaction fact entity with order item grain for sales orders.</description>
+        <field name="orderId" type="id">
+            <description>The order id. A degenerate dimension</description>
+        </field>
+        <field name="orderItemSeqId" type="id">
+            <description>The order line item. A degenerate dimension</description>
+        </field>
+        <field name="orderDateDimId" type="integer">
+            <description>The date of the order</description>
+        </field>
+        <field name="organisationDimId" type="integer">
+            <description>The associated internal organisation</description>
+        </field>
+        <field name="customerDimId" type="integer">
+            <description>The associated customer</description>
+        </field>
+        <field name="storeDimId" type="integer">
+            <description>The associated store</description>
+        </field>
+        <field name="salesChannelDimId" type="integer">
+            <description>The associated sales channel</description>
+        </field>
+        <field name="productDimId" type="integer">
+            <description>The associated product</description>
+        </field>
+        <field name="origCurrencyDimId" type="id">
+            <description>The associated currency</description>
+        </field>
         <field name="productCategoryId" type="id"></field>
-        <field name="productStoreId" type="id"></field>
-        <field name="salesChannelEnumId" type="id"></field>
         <field name="statusId" type="id"></field>
 
         <field name="brand" type="name"></field>
@@ -297,197 +709,418 @@ under the License.
         <relation type="one" fk-name="SOIF_CURRENCY" rel-entity-name="CurrencyDimension">
             <key-map field-name="origCurrencyDimId" rel-field-name="dimensionId"/>
         </relation>
+        <relation type="one" fk-name="SOIF_CUSTOMER" rel-entity-name="CustomerDimension">
+            <key-map field-name="customerDimId" rel-field-name="dimensionId"/>
+        </relation>
+        <relation type="one" fk-name="SOIF_INTORG" rel-entity-name="OrganisationDimension">
+            <key-map field-name="organisationDimId" rel-field-name="dimensionId"/>
+        </relation>
         <relation type="one" fk-name="SOIF_PRODUCT" rel-entity-name="ProductDimension">
             <key-map field-name="productDimId" rel-field-name="dimensionId"/>
         </relation>
-
     </entity>
 
-    <entity entity-name="InventoryItemFact" package-name="org.apache.ofbiz.bi.fact.product" title="Inventory Item Fact">
-        <description>A transaction fact entity with inventory item.</description>
+    <entity entity-name="InventoryItemFact" package-name="org.apache.ofbiz.bi.fact" title="Inventory Item Fact">
+        <description>A transaction fact entity with inventory items.</description>
         <field name="inventoryItemId" type="id"></field>
-        <field name="facilityId" type="id"></field>
-        <field name="productDimId" type="id"></field>
+        <field name="inventoryDateDimId" type="integer"></field>
+        <field name="organisationDimId" type="integer"></field>
         <field name="origCurrencyDimId" type="id"></field>
-        <field name="inventoryDateDimId" type="id"></field>
-
+        <field name="facilityDimId" type="integer"></field>
+        <field name="productDimId" type="integer"></field>
         <field name="quantityOnHandTotal" type="fixed-point"></field>
         <field name="availableToPromiseTotal" type="fixed-point"></field>
         <field name="unitCost" type="fixed-point"></field>
         <field name="soldoutAmount" type="fixed-point"></field>
+
         <prim-key field="inventoryItemId"/>
-        <relation type="one" fk-name="IIF_INVPRODUCT" rel-entity-name="ProductDimension">
-            <key-map field-name="productDimId" rel-field-name="dimensionId"/>
-        </relation>
+
         <relation type="one" fk-name="IIF_INVCURRENCY" rel-entity-name="CurrencyDimension">
             <key-map field-name="origCurrencyDimId" rel-field-name="dimensionId"/>
         </relation>
         <relation type="one" fk-name="IIF_INVDATE" rel-entity-name="DateDimension">
             <key-map field-name="inventoryDateDimId" rel-field-name="dimensionId"/>
         </relation>
+        <relation type="one" fk-name="IIF_INVFACILITY" rel-entity-name="FacilityDimension">
+            <key-map field-name="facilityDimId" rel-field-name="dimensionId"/>
+        </relation>
+        <relation type="one" fk-name="IIF_INVINTORG" rel-entity-name="OrganisationDimension">
+            <key-map field-name="organisationDimId" rel-field-name="dimensionId"/>
+        </relation>
+        <relation type="one" fk-name="IIF_INVPRODUCT" rel-entity-name="ProductDimension">
+            <key-map field-name="productDimId" rel-field-name="dimensionId"/>
+        </relation>
     </entity>
 
     <!-- ========================================================= -->
     <!-- Star Schemas                                              -->
     <!-- ========================================================= -->
-    <view-entity entity-name="SalesInvoiceItemStarSchema" package-name="org.apache.ofbiz.bi.starschema.accounting" title="Sales Invoice Item Star Schema">
-        <description>Invoice Item star schema (Profit and Loss Statement).</description>
 
-        <member-entity entity-alias="SIIF" entity-name="SalesInvoiceItemFact"/>
-        <member-entity entity-alias="IDD" entity-name="DateDimension"/>
-        <member-entity entity-alias="PD" entity-name="ProductDimension"/>
-        <member-entity entity-alias="CD" entity-name="CurrencyDimension"/>
+    <view-entity entity-name="PurchaseInvoiceItemStarSchema" package-name="org.apache.ofbiz.bi.starschema" title="Purchase Invoice Item Star Schema">
+        <description>Invoice Item star schema regarding Purchase Orders .</description>
 
-        <alias-all entity-alias="IDD" prefix="invoiceDate" group-by="true">
+        <member-entity entity-alias="PIISS_PIIF" entity-name="PurchaseInvoiceItemFact"/>
+        <member-entity entity-alias="PIISS_IDD" entity-name="DateDimension"/>
+        <member-entity entity-alias="PIISS_SUPPLIER" entity-name="SupplierDimension"/>
+        <member-entity entity-alias="PIISS_INTORG" entity-name="OrganisationDimension"/>
+        <member-entity entity-alias="PIISS_PD" entity-name="ProductDimension"/>
+        <member-entity entity-alias="PIISS_CD" entity-name="CurrencyDimension"/>
+
+        <alias-all entity-alias="PIISS_IDD" prefix="invoiceDate" group-by="true">
             <exclude field="dimensionId"/>
         </alias-all>
-        <alias-all entity-alias="PD" prefix="product" group-by="true">
+        <alias-all entity-alias="PIISS_SUPPLIER" prefix="supplier" group-by="true">
             <exclude field="dimensionId"/>
         </alias-all>
-        <alias-all entity-alias="CD" prefix="currency" group-by="true">
+        <alias-all entity-alias="PIISS_INTORG" prefix="intOrg" group-by="true">
             <exclude field="dimensionId"/>
         </alias-all>
-        <alias-all entity-alias="SIIF" function="sum">
-            <exclude field="invoiceItemSeqId"/>
-            <exclude field="invoiceDateDimId"/>
-            <exclude field="productDimId"/>
-            <exclude field="billToCustomerDimId"/>
-            <exclude field="origCurrencyDimId"/>
-            <exclude field="orderId"/>
+        <alias-all entity-alias="PIISS_PD" prefix="product" group-by="true">
+            <exclude field="dimensionId"/>
+        </alias-all>
+        <alias-all entity-alias="PIISS_CD" prefix="currency" group-by="true">
+            <exclude field="dimensionId"/>
+        </alias-all>
+        <alias-all entity-alias="PIISS_PIIF" function="sum">
+            <exclude field="supplierDimId"/>
             <exclude field="invoiceId"/>
             <exclude field="invoiceItemSeqId"/>
+            <exclude field="invoiceDateDimId"/>
+            <exclude field="orderId"/>
+            <exclude field="organisationDimId"/>
+            <exclude field="origCurrencyDimId"/>
+            <exclude field="productDimId"/>
         </alias-all>
-        <alias entity-alias="SIIF" name="invoiceId" group-by="true">
-            <description>Invoice id</description>
-        </alias>
-        <alias entity-alias="SIIF" name="invoiceItemSeqId" group-by="true"/>
-        <alias entity-alias="SIIF" name="orderId" group-by="true"/>
-
-        <view-link entity-alias="SIIF" rel-entity-alias="IDD">
+        <alias entity-alias="PIISS_PIIF" name="invoiceId" group-by="true"/>
+        <alias entity-alias="PIISS_PIIF" name="invoiceItemSeqId" group-by="true"/>
+        <alias entity-alias="PIISS_PIIF" name="invoiceDateDimId" group-by="true"/>
+        <alias entity-alias="PIISS_PIIF" name="origCurrencyDimId" group-by="true"/>
+        <alias entity-alias="PIISS_PIIF" name="orderId" group-by="true"/>
+        <alias entity-alias="PIISS_PIIF" name="organisationDimId" group-by="true"/>
+        <alias entity-alias="PIISS_PIIF" name="supplierDimId" group-by="true"/>
+        <alias entity-alias="PIISS_PIIF" name="productDimId" group-by="true"/>
+        
+        <view-link entity-alias="PIISS_PIIF" rel-entity-alias="PIISS_SUPPLIER">
+            <key-map field-name="supplierDimId" rel-field-name="dimensionId"/>
+        </view-link>
+        <view-link entity-alias="PIISS_PIIF" rel-entity-alias="PIISS_IDD">
             <key-map field-name="invoiceDateDimId" rel-field-name="dimensionId"/>
         </view-link>
-        <view-link entity-alias="SIIF" rel-entity-alias="PD">
-            <key-map field-name="productDimId" rel-field-name="dimensionId"/>
+        <view-link entity-alias="PIISS_PIIF" rel-entity-alias="PIISS_INTORG">
+            <key-map field-name="organisationDimId" rel-field-name="dimensionId"/>
         </view-link>
-        <view-link entity-alias="SIIF" rel-entity-alias="CD">
+        <view-link entity-alias="PIISS_PIIF" rel-entity-alias="PIISS_CD">
             <key-map field-name="origCurrencyDimId" rel-field-name="dimensionId"/>
+        </view-link>
+        <view-link entity-alias="PIISS_PIIF" rel-entity-alias="PIISS_PD">
+            <key-map field-name="productDimId" rel-field-name="dimensionId"/>
         </view-link>
     </view-entity>
 
-    <view-entity entity-name="SalesOrderItemStarSchema" package-name="org.apache.ofbiz.bi.starschema.order" title="Sales Order Item Star Schema">
-        <description>Order Item star schema (Profit and Loss Statement).</description>
+    <view-entity entity-name="PurchaseOrderItemStarSchema" package-name="org.apache.ofbiz.bi.starschema" title="Purchase Order Item Star Schema">
+        <description>Order Item star schema regarding Purchase Orders.</description>
 
-        <member-entity entity-alias="SOIF" entity-name="SalesOrderItemFact"/>
-        <member-entity entity-alias="ODD" entity-name="DateDimension"/>
-        <member-entity entity-alias="PD" entity-name="ProductDimension"/>
-        <member-entity entity-alias="CD" entity-name="CurrencyDimension"/>
+        <member-entity entity-alias="POISS_POIF" entity-name="PurchaseOrderItemFact"/>
+        <member-entity entity-alias="POISS_CD" entity-name="CurrencyDimension"/>
+        <member-entity entity-alias="POISS_SUPD" entity-name="SupplierDimension"/>
+        <member-entity entity-alias="POISS_DD" entity-name="DateDimension"/>
+        <member-entity entity-alias="POISS_INTORGD" entity-name="OrganisationDimension"/>
+        <member-entity entity-alias="POISS_STORED" entity-name="StoreDimension"/>
+        <member-entity entity-alias="POISS_CHAND" entity-name="SalesChannelDimension"/>
+        <member-entity entity-alias="POISS_PD" entity-name="ProductDimension"/>
 
-        <alias-all entity-alias="ODD" prefix="orderDate" group-by="true">
+        <alias-all entity-alias="POISS_CD" prefix="currency" group-by="true">
             <exclude field="dimensionId"/>
         </alias-all>
-        <alias-all entity-alias="PD" prefix="product" group-by="true">
+        <alias-all entity-alias="POISS_SUPD" prefix="supplier" group-by="true">
             <exclude field="dimensionId"/>
         </alias-all>
-        <alias-all entity-alias="CD" prefix="currency" group-by="true">
+        <alias-all entity-alias="POISS_DD" prefix="date" group-by="true">
             <exclude field="dimensionId"/>
         </alias-all>
-        <alias-all entity-alias="SOIF" function="sum">
+        <alias-all entity-alias="POISS_INTORGD" prefix="intOrg" group-by="true">
+            <exclude field="dimensionId"/>
+        </alias-all>
+        <alias-all entity-alias="POISS_STORED" prefix="store" group-by="true">
+            <exclude field="dimensionId"/>
+        </alias-all>
+        <alias-all entity-alias="POISS_CHAND" prefix="channel" group-by="true">
+            <exclude field="dimensionId"/>
+        </alias-all>
+        <alias-all entity-alias="POISS_PD" prefix="product" group-by="true">
+            <exclude field="dimensionId"/>
+        </alias-all>
+
+        <alias-all entity-alias="POISS_POIF" function="sum">
             <exclude field="orderId"/>
             <exclude field="orderItemSeqId"/>
             <exclude field="orderDateDimId"/>
+            <exclude field="organisationDimId"/>
+            <exclude field="supplierDimId"/>
             <exclude field="productDimId"/>
             <exclude field="origCurrencyDimId"/>
-            <exclude field="billToCustomerDimId"/>
             <exclude field="productCategoryId"/>
-            <exclude field="productStoreId"/>
-            <exclude field="salesChannelEnumId"/>
+            <exclude field="salesChannelDimId"/>
+            <exclude field="storeDimId"/>
             <exclude field="statusId"/>
             <exclude field="brand"/>
             <exclude field="pod"/>
             <exclude field="account"/>
             <exclude field="productPromoCode"/>
         </alias-all>
-        <alias entity-alias="SOIF" name="orderId" group-by="true">
-            <description>Order id</description>
-        </alias>
-        <alias entity-alias="SOIF" name="productPromoCode" group-by="true"/>
-        <alias entity-alias="SOIF" name="orderItemSeqId" group-by="true"/>
-        <alias entity-alias="SOIF" name="productCategoryId" group-by="true"/>
-        <alias entity-alias="SOIF" name="productStoreId" group-by="true"/>
-        <alias entity-alias="SOIF" name="salesChannelEnumId" group-by="true"/>
-        <alias entity-alias="SOIF" name="statusId" group-by="true"/>
-        <alias entity-alias="SOIF" name="brand" group-by="true"/>
-        <alias entity-alias="SOIF" name="pod" group-by="true"/>
-        <alias entity-alias="SOIF" name="account" group-by="true"/>
+        <alias entity-alias="POISS_POIF" name="orderId" group-by="true"/>
+        <alias entity-alias="POISS_POIF" name="orderItemSeqId" group-by="true"/>
+        <alias entity-alias="POISS_POIF" name="organisationDimId" group-by="true"/>
+        <alias entity-alias="POISS_POIF" name="storeDimId" group-by="true"/>
+        <alias entity-alias="POISS_POIF" name="salesChannelDimId" group-by="true"/>
+        <alias entity-alias="POISS_POIF" name="supplierDimId" group-by="true"/>
+        <alias entity-alias="POISS_POIF" name="productDimId" group-by="true"/>
+        <alias entity-alias="POISS_POIF" name="productPromoCode" group-by="true"/>
+        <alias entity-alias="POISS_POIF" name="productCategoryId" group-by="true"/>
+        <alias entity-alias="POISS_POIF" name="statusId" group-by="true"/>
+        <alias entity-alias="POISS_POIF" name="brand" group-by="true"/>
+        <alias entity-alias="POISS_POIF" name="pod" group-by="true"/>
+        <alias entity-alias="POISS_POIF" name="account" group-by="true"/>
 
-        <view-link entity-alias="SOIF" rel-entity-alias="ODD">
+        <view-link entity-alias="POISS_POIF" rel-entity-alias="POISS_DD">
             <key-map field-name="orderDateDimId" rel-field-name="dimensionId"/>
         </view-link>
-        <view-link entity-alias="SOIF" rel-entity-alias="PD">
+        <view-link entity-alias="POISS_POIF" rel-entity-alias="POISS_CD">
+            <key-map field-name="origCurrencyDimId" rel-field-name="dimensionId"/>
+        </view-link>
+        <view-link entity-alias="POISS_POIF" rel-entity-alias="POISS_SUPD">
+            <key-map field-name="supplierDimId" rel-field-name="dimensionId"/>
+        </view-link>
+        <view-link entity-alias="POISS_POIF" rel-entity-alias="POISS_INTORGD">
+            <key-map field-name="organisationDimId" rel-field-name="dimensionId"/>
+        </view-link>
+        <view-link entity-alias="POISS_POIF" rel-entity-alias="POISS_PD">
             <key-map field-name="productDimId" rel-field-name="dimensionId"/>
         </view-link>
-        <view-link entity-alias="SOIF" rel-entity-alias="CD">
-            <key-map field-name="origCurrencyDimId" rel-field-name="dimensionId"/>
+        <view-link entity-alias="POISS_POIF" rel-entity-alias="POISS_STORED">
+            <key-map field-name="storeDimId" rel-field-name="dimensionId"/>
+        </view-link>
+        <view-link entity-alias="POISS_POIF" rel-entity-alias="POISS_CHAND">
+            <key-map field-name="salesChannelDimId" rel-field-name="dimensionId"/>
         </view-link>
     </view-entity>
 
-    <view-entity entity-name="InventoryItemSchema" package-name="org.apache.ofbiz.bi.starschema.product" title="Inventory Item Schema">
-        <description>"Inventory Item Schema.</description>
-        <member-entity entity-alias="IIF" entity-name="InventoryItemFact"/>
-        <!--member-entity entity-alias="SIIF" entity-name="SalesOrderItemFact"/-->
-        <member-entity entity-alias="PD" entity-name="ProductDimension"/>
-        <member-entity entity-alias="IDD" entity-name="DateDimension"/>
-        <member-entity entity-alias="CD" entity-name="CurrencyDimension"/>
+    <view-entity entity-name="SalesInvoiceItemStarSchema" package-name="org.apache.ofbiz.bi.starschema" title="Sales Invoice Item Star Schema">
+        <description>Invoice Item star schema regarding Sales Invoices.</description>
 
-        <alias-all entity-alias="IIF" function="sum">
+        <member-entity entity-alias="SIISS_SIIF" entity-name="SalesInvoiceItemFact"/>
+        <member-entity entity-alias="SIISS_IDD" entity-name="DateDimension"/>
+        <member-entity entity-alias="SIISS_CUSTOMER" entity-name="CustomerDimension"/>
+        <member-entity entity-alias="SIISS_INTORG" entity-name="OrganisationDimension"/>
+        <member-entity entity-alias="SIISS_PD" entity-name="ProductDimension"/>
+        <member-entity entity-alias="SIISS_CD" entity-name="CurrencyDimension"/>
+
+        <alias-all entity-alias="SIISS_IDD" prefix="invoiceDate" group-by="true">
+            <exclude field="dimensionId"/>
+        </alias-all>
+        <alias-all entity-alias="SIISS_CUSTOMER" prefix="customer" group-by="true">
+            <exclude field="dimensionId"/>
+        </alias-all>
+        <alias-all entity-alias="SIISS_INTORG" prefix="intOrg" group-by="true">
+            <exclude field="dimensionId"/>
+        </alias-all>
+        <alias-all entity-alias="SIISS_PD" prefix="product" group-by="true">
+            <exclude field="dimensionId"/>
+        </alias-all>
+        <alias-all entity-alias="SIISS_CD" prefix="currency" group-by="true">
+            <exclude field="dimensionId"/>
+        </alias-all>
+        <alias-all entity-alias="SIISS_SIIF" function="sum">
+            <exclude field="customerDimId"/>
+            <exclude field="invoiceId"/>
+            <exclude field="invoiceItemSeqId"/>
+            <exclude field="invoiceDateDimId"/>
+            <exclude field="orderId"/>
+            <exclude field="organisationDimId"/>
+            <exclude field="origCurrencyDimId"/>
+            <exclude field="productDimId"/>
+        </alias-all>
+        <alias entity-alias="SIISS_SIIF" name="invoiceId" group-by="true"/>
+        <alias entity-alias="SIISS_SIIF" name="invoiceItemSeqId" group-by="true"/>
+        <alias entity-alias="SIISS_SIIF" name="invoiceDateDimId" group-by="true"/>
+        <alias entity-alias="SIISS_SIIF" name="origCurrencyDimId" group-by="true"/>
+        <alias entity-alias="SIISS_SIIF" name="orderId" group-by="true"/>
+        <alias entity-alias="SIISS_SIIF" name="organisationDimId" group-by="true"/>
+        <alias entity-alias="SIISS_SIIF" name="customerDimId" group-by="true"/>
+        <alias entity-alias="SIISS_SIIF" name="productDimId" group-by="true"/>
+
+        
+        <view-link entity-alias="SIISS_SIIF" rel-entity-alias="SIISS_CUSTOMER">
+            <key-map field-name="customerDimId" rel-field-name="dimensionId"/>
+        </view-link>
+        <view-link entity-alias="SIISS_SIIF" rel-entity-alias="SIISS_IDD">
+            <key-map field-name="invoiceDateDimId" rel-field-name="dimensionId"/>
+        </view-link>
+        <view-link entity-alias="SIISS_SIIF" rel-entity-alias="SIISS_INTORG">
+            <key-map field-name="organisationDimId" rel-field-name="dimensionId"/>
+        </view-link>
+        <view-link entity-alias="SIISS_SIIF" rel-entity-alias="SIISS_CD">
+            <key-map field-name="origCurrencyDimId" rel-field-name="dimensionId"/>
+        </view-link>
+        <view-link entity-alias="SIISS_SIIF" rel-entity-alias="SIISS_PD">
+            <key-map field-name="productDimId" rel-field-name="dimensionId"/>
+        </view-link>
+    </view-entity>
+
+    <view-entity entity-name="SalesOrderItemStarSchema" package-name="org.apache.ofbiz.bi.starschema" title="Sales Order Item Star Schema">
+        <description>Order Item star schema regarding Sales Orders.</description>
+
+        <member-entity entity-alias="SOISS_SOIF" entity-name="SalesOrderItemFact"/>
+        <member-entity entity-alias="SOISS_CD" entity-name="CurrencyDimension"/>
+        <member-entity entity-alias="SOISS_CUSTD" entity-name="CustomerDimension"/>
+        <member-entity entity-alias="SOISS_DD" entity-name="DateDimension"/>
+        <member-entity entity-alias="SOISS_INTORGD" entity-name="OrganisationDimension"/>
+        <member-entity entity-alias="SOISS_STORED" entity-name="StoreDimension"/>
+        <member-entity entity-alias="SOISS_CHAND" entity-name="SalesChannelDimension"/>
+        <member-entity entity-alias="SOISS_PD" entity-name="ProductDimension"/>
+
+        <alias-all entity-alias="SOISS_CD" prefix="currency" group-by="true">
+            <exclude field="dimensionId"/>
+        </alias-all>
+        <alias-all entity-alias="SOISS_CUSTD" prefix="customer" group-by="true">
+            <exclude field="dimensionId"/>
+        </alias-all>
+        <alias-all entity-alias="SOISS_DD" prefix="date" group-by="true">
+            <exclude field="dimensionId"/>
+        </alias-all>
+        <alias-all entity-alias="SOISS_INTORGD" prefix="intOrg" group-by="true">
+            <exclude field="dimensionId"/>
+        </alias-all>
+        <alias-all entity-alias="SOISS_STORED" prefix="store" group-by="true">
+            <exclude field="dimensionId"/>
+        </alias-all>
+        <alias-all entity-alias="SOISS_CHAND" prefix="channel" group-by="true">
+            <exclude field="dimensionId"/>
+        </alias-all>
+        <alias-all entity-alias="SOISS_PD" prefix="product" group-by="true">
+            <exclude field="dimensionId"/>
+        </alias-all>
+
+        <alias-all entity-alias="SOISS_SOIF" function="sum">
+            <exclude field="orderId"/>
+            <exclude field="orderItemSeqId"/>
+            <exclude field="orderDateDimId"/>
+            <exclude field="organisationDimId"/>
+            <exclude field="customerDimId"/>
+            <exclude field="productDimId"/>
+            <exclude field="origCurrencyDimId"/>
+            <exclude field="productCategoryId"/>
+            <exclude field="salesChannelDimId"/>
+            <exclude field="storeDimId"/>
+            <exclude field="statusId"/>
+            <exclude field="brand"/>
+            <exclude field="pod"/>
+            <exclude field="account"/>
+            <exclude field="productPromoCode"/>
+        </alias-all>
+        <alias entity-alias="SOISS_SOIF" name="orderId" group-by="true"/>
+        <alias entity-alias="SOISS_SOIF" name="orderItemSeqId" group-by="true"/>
+        <alias entity-alias="SOISS_SOIF" name="organisationDimId" group-by="true"/>
+        <alias entity-alias="SOISS_SOIF" name="storeDimId" group-by="true"/>
+        <alias entity-alias="SOISS_SOIF" name="salesChannelDimId" group-by="true"/>
+        <alias entity-alias="SOISS_SOIF" name="customerDimId" group-by="true"/>
+        <alias entity-alias="SOISS_SOIF" name="productDimId" group-by="true"/>
+        <alias entity-alias="SOISS_SOIF" name="productPromoCode" group-by="true"/>
+        <alias entity-alias="SOISS_SOIF" name="productCategoryId" group-by="true"/>
+        <alias entity-alias="SOISS_SOIF" name="statusId" group-by="true"/>
+        <alias entity-alias="SOISS_SOIF" name="brand" group-by="true"/>
+        <alias entity-alias="SOISS_SOIF" name="pod" group-by="true"/>
+        <alias entity-alias="SOISS_SOIF" name="account" group-by="true"/>
+
+        <view-link entity-alias="SOISS_SOIF" rel-entity-alias="SOISS_DD">
+            <key-map field-name="orderDateDimId" rel-field-name="dimensionId"/>
+        </view-link>
+        <view-link entity-alias="SOISS_SOIF" rel-entity-alias="SOISS_CD">
+            <key-map field-name="origCurrencyDimId" rel-field-name="dimensionId"/>
+        </view-link>
+        <view-link entity-alias="SOISS_SOIF" rel-entity-alias="SOISS_CUSTD">
+            <key-map field-name="customerDimId" rel-field-name="dimensionId"/>
+        </view-link>
+        <view-link entity-alias="SOISS_SOIF" rel-entity-alias="SOISS_INTORGD">
+            <key-map field-name="organisationDimId" rel-field-name="dimensionId"/>
+        </view-link>
+        <view-link entity-alias="SOISS_SOIF" rel-entity-alias="SOISS_PD">
+            <key-map field-name="productDimId" rel-field-name="dimensionId"/>
+        </view-link>
+        <view-link entity-alias="SOISS_SOIF" rel-entity-alias="SOISS_STORED">
+            <key-map field-name="storeDimId" rel-field-name="dimensionId"/>
+        </view-link>
+        <view-link entity-alias="SOISS_SOIF" rel-entity-alias="SOISS_CHAND">
+            <key-map field-name="salesChannelDimId" rel-field-name="dimensionId"/>
+        </view-link>
+    </view-entity>
+
+    <view-entity entity-name="InventoryItemStarSchema" package-name="org.apache.ofbiz.bi.starschema" title="Inventory Item Star Schema">
+        <description>"Inventory Item Star Schema.</description>
+        <member-entity entity-alias="IISS_IIF" entity-name="InventoryItemFact"/>
+        <member-entity entity-alias="IISS_FACILITY" entity-name="FacilityDimension"/>
+        <member-entity entity-alias="IISS_INTORG" entity-name="OrganisationDimension"/>
+        <member-entity entity-alias="IISS_PD" entity-name="ProductDimension"/>
+        <member-entity entity-alias="IISS_IDD" entity-name="DateDimension"/>
+        <member-entity entity-alias="IISS_CD" entity-name="CurrencyDimension"/>
+
+        <alias-all entity-alias="IISS_IIF" function="sum">
             <exclude field="inventoryItemId"/>
             <exclude field="orderId"/>
-            <exclude field="facilityId"/>
+            <exclude field="facilityDimId"/>
+            <exclude field="organisationDimId"/>
             <exclude field="inventoryDateDimId"/>
             <exclude field="productDimId"/>
             <exclude field="origCurrencyDimId"/>
         </alias-all>
-        <!--alias-all entity-alias="SIIF" function="sum">
-            <exclude field="orderItemSeqId"/>
-            <exclude field="orderDateDimId"/>
-            <exclude field="productDimId"/>
-            <exclude field="billToCustomerDimId"/>
-            <exclude field="origCurrencyDimId"/>
-            <exclude field="orderId"/>
-            <exclude field="orderItemSeqId"/>
-            <exclude field="orderStatus"/>
-            <exclude field="saleChanel"/>
-        </alias-all-->
-        <alias-all entity-alias="PD" prefix="product" group-by="true">
+        <alias-all entity-alias="IISS_PD" prefix="product" group-by="true">
             <exclude field="dimensionId"/>
         </alias-all>
-        <alias-all entity-alias="IDD" prefix="inventoryDate" group-by="true">
+        <alias-all entity-alias="IISS_IDD" prefix="inventoryDate" group-by="true">
             <exclude field="dimensionId"/>
         </alias-all>
-        <alias-all entity-alias="CD" prefix="currency" group-by="true">
+        <alias-all entity-alias="IISS_CD" prefix="currency" group-by="true">
+            <exclude field="dimensionId"/>
+            <exclude field="currencyId"/>
+        </alias-all>
+        <alias-all entity-alias="IISS_FACILITY" prefix="wh" group-by="true">
             <exclude field="dimensionId"/>
         </alias-all>
-        <alias entity-alias="IIF" name="inventoryItemId" group-by="true">
+        <alias-all entity-alias="IISS_INTORG" prefix="intOrg" group-by="true">
+            <exclude field="dimensionId"/>
+        </alias-all>
+        <alias entity-alias="IISS_IIF" name="inventoryItemId" group-by="true">
             <description>Inventory Item Id</description>
         </alias>
-        <alias entity-alias="IIF" name="facilityId" group-by="true">
-            <description>Facility Id</description>
+        <alias entity-alias="IISS_IIF" name="inventoryDateDimId" group-by="true">
+            <description>DimensionId of the inventory date</description>
         </alias>
-        <alias entity-alias="PD" name="productId" group-by="true">
-            <description>Product id</description>
+        <alias entity-alias="IISS_IIF" name="organisationDimId" group-by="true">
+            <description>DimensionId of the internal organisation</description>
         </alias>
-        <view-link entity-alias="IIF" rel-entity-alias="PD" rel-optional="true">
+        <alias entity-alias="IISS_IIF" name="facilityDimId" group-by="true">
+            <description>DimensionId of the facility</description>
+        </alias>
+        <alias entity-alias="IISS_IIF" name="productDimId" group-by="true">
+            <description>DimensionId of the product</description>
+        </alias>
+        <alias entity-alias="IISS_IIF" name="origCurrencyDimId" group-by="true">
+            <description>DimensionId of the currency</description>
+        </alias>
+        <view-link entity-alias="IISS_IIF" rel-entity-alias="IISS_PD" rel-optional="true">
             <key-map field-name="productDimId" rel-field-name="dimensionId"/>
         </view-link>
-        <!--view-link entity-alias="PD" rel-entity-alias="SIIF" rel-optional="true">
-            <key-map field-name="dimensionId" rel-field-name="productDimId"/>
-        </view-link-->
-        <view-link entity-alias="IIF" rel-entity-alias="IDD">
+        <view-link entity-alias="IISS_IIF" rel-entity-alias="IISS_FACILITY" rel-optional="true">
+            <key-map field-name="facilityDimId" rel-field-name="dimensionId"/>
+        </view-link>
+        <view-link entity-alias="IISS_IIF" rel-entity-alias="IISS_INTORG" rel-optional="true">
+            <key-map field-name="organisationDimId" rel-field-name="dimensionId"/>
+        </view-link>
+        <view-link entity-alias="IISS_IIF" rel-entity-alias="IISS_IDD">
             <key-map field-name="inventoryDateDimId" rel-field-name="dimensionId"/>
         </view-link>
-        <view-link entity-alias="IIF" rel-entity-alias="CD">
+        <view-link entity-alias="IISS_IIF" rel-entity-alias="IISS_CD">
             <key-map field-name="origCurrencyDimId" rel-field-name="dimensionId"/>
         </view-link>
     </view-entity>
-
 </entitymodel>

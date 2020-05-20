@@ -17,6 +17,7 @@
  * under the License.
  */
 
+import org.apache.ofbiz.base.util.Debug
 import org.apache.ofbiz.entity.condition.EntityCondition
 import org.apache.ofbiz.entity.condition.EntityOperator
 import org.apache.ofbiz.entity.GenericValue
@@ -24,75 +25,223 @@ import org.apache.ofbiz.entity.util.EntityListIterator
 import org.apache.ofbiz.service.ModelService
 import org.apache.ofbiz.service.ServiceUtil
 
-def quickInitDataWarehouse() {
-    Map inMap = dispatcher.getDispatchContext().makeValidContext("loadDateDimension", ModelService.IN_PARAM, parameters)
-    serviceResult = run service: "loadDateDimension", with: inMap
-    if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+def updateGenericDimension() {
+    Map inMap
 
-    inMap.clear()
-    serviceResult = run service: "loadCurrencyDimension", with: inMap
-    if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
-
-    // loads all products in the ProductDimension
-    serviceResult = run service: "loadAllProductsInProductDimension", with: inMap
-    if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
-
-    // loads the invoice items in the SalesInvoiceItemFact fact entity
+    dimensionEntityName = parameters.dimensionEntityName;
     entryExprs = EntityCondition.makeCondition([
-            EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"),
-            EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, parameters.fromDate),
-            EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, parameters.thruDate)
+        EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.GREATER_THAN_EQUAL_TO, parameters.fromDate),
+        EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.LESS_THAN_EQUAL_TO, parameters.thruDate)
     ], EntityOperator.AND)
-    EntityListIterator listIterator = from("Invoice").where(entryExprs).queryIterator()
-    GenericValue iterator
-    while (iterator = listIterator.next()) {
-        inMap.invoiceId = iterator.invoiceId
-        serviceResult = run service: "loadSalesInvoiceFact", with: inMap
-        if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+    switch (dimensionEntityName) {
+    case "CountryDimension":
+        sourceEntity = "DwhCountrySource"
+        naturalKeyFields = "countryId"
+        break
+    case "CurrencyDimension":
+        sourceEntity = "DwhCurrencySource"
+        naturalKeyFields = "currencyId"
+        break
     }
-
-    // loads the order items in the SalesOrderItemFact fact entity
-    entryExprs = EntityCondition.makeCondition([
-            EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER"),
-            EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, parameters.fromDate),
-            EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, parameters.thruDate)
-    ], EntityOperator.AND)
-    listIterator = from("OrderHeader").where(entryExprs).queryIterator()
-    inMap.clear()
-    while (iterator = listIterator.next()) {
-        inMap.orderId = iterator.orderId
-        serviceResult = run service: "loadSalesOrderFact", with: inMap
+    queryListIterator = from(sourceEntity).where(entryExprs).queryIterator()
+    while(sourceRecord = queryListIterator.next()){
+        updateDimension = delegator.makeValue(dimensionEntityName)
+        updateDimension.setNonPKFields(sourceRecord)
+        inMap = dispatcher.getDispatchContext().makeValidContext("storeGenericDimension", ModelService.IN_PARAM, parameters)
+        inMap.naturalKeyFields = naturalKeyFields
+        inMap.dimensionValue = updateDimension
+        serviceResult = run service: "storeGenericDimension", with: inMap
         if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
-    }
-
-    // loads the inventory items in the InventoryItemFact fact entity
-    listIterator = from("InventoryItem").where("inventoryItemTypeId", "NON_SERIAL_INV_ITEM").queryIterator()
-    inMap.clear()
-    while (iterator = listIterator.next()) {
-        inMap.inventoryItemId = iterator.inventoryItemId
-        serviceResult = run service: "loadInventoryFact", with: inMap
-        if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
-    }
+    };
+    queryListIterator.close();
 }
 
-def loadCurrencyDimension() {
-    // Initialize the CurrencyDimension using the update strategy of 'type 1
-    EntityListIterator listIterator = from("Uom").where("uomTypeId", "CURRENCY_MEASURE").queryIterator()
-    GenericValue currency
-    while (currency = listIterator.next()) {
-        currencyDims = from("CurrencyDimension").where("currencyId", currency.uomId).queryList()
-        if (currencyDims) {
-            for (GenericValue currencyDim: currencyDims) {
-                currencyDim.description = currency.description
-                currencyDim.store()
-            }
-        } else {
-            currencyDim = delegator.makeValue("CurrencyDimension",["dimensionId":currency.uomId])
-            currencyDim.currencyId = currency.uomId
-            currencyDim.description = currency.description
-            currencyDim.create()
-        }
+def updateOfbizDimension() {
+    Map inMap
+
+    dimensionEntityName = parameters.dimensionEntityName;
+    entryExprs = EntityCondition.makeCondition([
+        EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.GREATER_THAN_EQUAL_TO, parameters.fromDate),
+        EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.LESS_THAN_EQUAL_TO, parameters.thruDate)
+    ], EntityOperator.AND)
+    switch (dimensionEntityName) {
+    case "AssetDimension":
+        sourceEntity = "FixedAsset"
+        naturalKeyFields = "fixedAssetId"
+        break
+    case "FacilityDimension":
+        sourceEntity = "Facility"
+        naturalKeyFields = "facilityId"
+        break
+    case "OrganisationDimension":
+        sourceEntity = "DwhOrganisationSource"
+        naturalKeyFields = "partyId"
+        break
+    case "PosTerminalDimension":
+        sourceEntity = "PosTerminal"
+        naturalKeyFields = "posTerminalId"
+        break
+    case "ProjectDimension":
+        sourceEntity = "DwhProjectSource"
+        naturalKeyFields = "projectId"
+        break
+    case "ProjectTaskDimension":
+        naturalKeyFields = "projectTaskId"
+        break
+    case "SalesChannelDimension":
+        sourceEntity = "DwhSalesChannelSource"
+        naturalKeyFields = "salesChannelId"
+        break
+    case "SalesPromoDimension":
+        sourceEntity = "DwhSalesPromoSource"
+        naturalKeyFields = "salesPromoId"
+        break
+    case "StoreDimension":
+        sourceEntity = "ProductStore"
+        naturalKeyFields = "productStoreId"
+        break
     }
+    queryListIterator = from(sourceEntity).where(entryExprs).queryIterator()
+    while(sourceRecord = queryListIterator.next()){
+        updateDimension = delegator.makeValue(dimensionEntityName)
+        updateDimension.setNonPKFields(sourceRecord)
+        inMap = dispatcher.getDispatchContext().makeValidContext("storeOfbizDimension", ModelService.IN_PARAM, parameters)
+        inMap.naturalKeyFields = naturalKeyFields
+        inMap.dimensionValue = updateDimension
+        serviceResult = run service: "storeOfbizDimension", with: inMap
+        if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+    };
+    queryListIterator.close();
+};
+
+def updateRolePartyDimension() {
+    fromDate = parameters.fromDate
+    thruDate = parameters.thruDate
+    updateMode = parameters.updateMode
+    roleTypeId = parameters.roleTypeId
+    dimensionEntityName = parameters.dimensionEntityName
+    naturalKeyFields = "partyId"
+
+    entryExprs = EntityCondition.makeCondition([
+        EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.GREATER_THAN_EQUAL_TO, parameters.fromDate),
+        EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.LESS_THAN_EQUAL_TO, parameters.thruDate)
+    ], EntityOperator.AND)
+    // Get mutations in PartyGroup
+    partyGroupListIterator = from("PartyGroup").where(entryExprs).queryIterator()
+    // get mutations in Person
+    personListIterator = from("Person").where(entryExprs).queryIterator()
+    entryExprs = EntityCondition.makeCondition([
+        EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, roleTypeId),
+        EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.GREATER_THAN_EQUAL_TO, parameters.fromDate),
+        EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.LESS_THAN_EQUAL_TO, parameters.thruDate)
+    ], EntityOperator.AND)
+    // Get mutation in PartyRole
+    partyRoleListIterator = from("PartyRole").where(entryExprs).queryIterator()
+
+    // Complete new records in PartyRole with PartyGroup and Person details
+    while(sourceRecord = partyRoleListIterator.next()){
+        partyId = sourceRecord.partyId
+        party = from("Party").where("partyId", partyId).queryOne()
+        if(party) {
+            partyTypeId = party.partyTypeId
+            switch(partyTypeId) {
+            case "PERSON":
+                person = from("Person").where("partyId", partyId).queryOne()
+                partyName = person.lastName + ", " + person.firstName + " " + person.middleName;
+                partyName = partyName.replace("null","").trim();
+                break
+            case "PARTY_GROUP":
+                partyGroup = from("PartyGroup").where("partyId", partyId).queryOne()
+                partyName = partyGroup.groupName
+                partyName = partyName.replace("null","").trim();
+                break
+            }
+        }
+        updateDimension = delegator.makeValue(dimensionEntityName)
+        updateDimension.partyId = partyId
+        updateDimension.partyName = partyName
+        inMap = dispatcher.getDispatchContext().makeValidContext("storeOfbizDimension", ModelService.IN_PARAM, parameters)
+        inMap.naturalKeyFields = naturalKeyFields
+        inMap.dimensionValue = updateDimension
+        serviceResult = run service: "storeOfbizDimension", with: inMap
+        if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+    };
+    // update mutated PartyGroup records
+    while(sourceRecord = partyGroupListIterator.next()){
+        partyId = sourceRecord.partyId
+        entryExprs = EntityCondition.makeCondition([
+            EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, roleTypeId),
+            EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId),
+        ], EntityOperator.AND)
+        isRole = from("PartyRole").where(entryExprs).queryOne()
+        if(isRole) {
+            dimensionRecord = from(dimensionEntityName).where("partyId", partyId).queryOne()
+            if(dimensionRecord) {
+                party = from("Party").where("partyId", partyId).queryOne()
+                if(party) {
+                    partyTypeId = party.partyTypeId
+                    switch(party.partyTypeId) {
+                        case "PERSON":
+                            person = from("Person").where("partyId", partyId).queryOne()
+                            partyName = person.firstName + " " + person.middleName + " " + person.lastName;
+                            partyName = partyName.replace("null","").trim();
+                            break
+                        case "PARTY_GROUP":
+                            partyGroup = from("PartyGroup").where("partyId", partyId).queryOne()
+                            partyName = partyGroup.groupName
+                            partyName = partyName.replace("null","").trim();
+                            break
+                    }
+                }
+                updateDimension = delegator.makeValue(dimensionEntityName)
+                updateDimension.partyId = partyId
+                updateDimension.partyName = partyName
+                inMap = dispatcher.getDispatchContext().makeValidContext("storeOfbizDimension", ModelService.IN_PARAM, parameters)
+                inMap.naturalKeyFields = naturalKeyFields
+                inMap.dimensionValue = updateDimension
+                serviceResult = run service: "storeOfbizDimension", with: inMap
+                if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+            }
+        }
+    };
+    // update mutated Person records
+    while(sourceRecord = personListIterator.next()){
+        partyId = sourceRecord.partyId
+        entryExprs = EntityCondition.makeCondition([
+            EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, roleTypeId),
+            EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId),
+        ], EntityOperator.AND)
+        isRole = from("PartyRole").where(entryExprs).queryOne()
+        if(isRole) {
+            dimensionRecord = from(dimensionEntityName).where("partyId", partyId).queryOne()
+            if(dimensionRecord) {
+                party = from("Party").where("partyId", partyId).queryOne()
+                if(party) {
+                    partyTypeId = party.partyTypeId
+                    switch(party.partyTypeId) {
+                        case "PERSON":
+                            person = from("Person").where("partyId", partyId).queryOne()
+                            partyName = person.firstName + " " + person.middleName + " " + person.lastName;
+                            partyName = partyName.replace("null","").trim();
+                            break
+                        case "PARTY_GROUP":
+                            partyGroup = from("PartyGroup").where("partyId", partyId).queryOne()
+                            partyName = partyGroup.groupName
+                            partyName = partyName.replace("null","").trim();
+                            break
+                    }
+                }
+                updateDimension = delegator.makeValue(dimensionEntityName)
+                updateDimension.partyId = partyId
+                updateDimension.partyName = partyName
+                inMap = dispatcher.getDispatchContext().makeValidContext("storeOfbizDimension", ModelService.IN_PARAM, parameters)
+                inMap.naturalKeyFields = naturalKeyFields
+                inMap.dimensionValue = updateDimension
+                serviceResult = run service: "storeOfbizDimension", with: inMap
+                if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+            }
+        }
+    };
 }
 
 def prepareProductDimensionData() {
@@ -103,7 +252,7 @@ def prepareProductDimensionData() {
     productDimension = delegator.makeValue("ProductDimension")
     productDimension.setNonPKFields(product)
     GenericValue productType = select("description").from("ProductType")
-            .where("productTypeId", product.productTypeId).cache().queryOne()
+        .where("productTypeId", product.productTypeId).cache().queryOne()
     productDimension.productType = productType.description
     Map result = success()
     result.productDimension = productDimension
@@ -113,6 +262,7 @@ def prepareProductDimensionData() {
 def loadProductInProductDimension() {
     Map inMap = dispatcher.getDispatchContext().makeValidContext("prepareProductDimensionData", ModelService.IN_PARAM, parameters)
     serviceResult = run service: "prepareProductDimensionData", with: inMap
+    if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
     GenericValue productDimension
     if (ServiceUtil.isSuccess(serviceResult)) {
         productDimension  = serviceResult.productDimension
@@ -121,7 +271,8 @@ def loadProductInProductDimension() {
     inMap = dispatcher.getDispatchContext().makeValidContext("storeGenericDimension", ModelService.IN_PARAM, parameters)
     inMap.naturalKeyFields = "productId"
     inMap.dimensionValue = productDimension
-    run service: "storeGenericDimension", with: inMap
+    serviceResult = run service: "storeOfbizDimension", with: inMap
+    if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
 }
 
 def loadAllProductsInProductDimension() {
@@ -131,6 +282,25 @@ def loadAllProductsInProductDimension() {
     while (product = listIterator.next()) {
         inMap = dispatcher.getDispatchContext().makeValidContext("loadProductInProductDimension", ModelService.IN_PARAM, parameters)
         inMap.productId = product.productId
-        run service: "loadProductInProductDimension", with: inMap
+        serviceResullt = run service: "loadProductInProductDimension", with: inMap
+        if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
     }
+}
+
+def updateProductDimension() {
+    Map inMap
+    dimensionEntityName = parameters.dimensionEntityName;
+    sourceEntity = "Product"
+    entryExprs = EntityCondition.makeCondition([
+        EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.GREATER_THAN_EQUAL_TO, parameters.fromDate),
+        EntityCondition.makeCondition("lastUpdatedStamp", EntityOperator.LESS_THAN_EQUAL_TO, parameters.thruDate)
+    ], EntityOperator.AND)
+    queryListIterator = from(sourceEntity).where(entryExprs).queryIterator()
+    while(sourceRecord = queryListIterator.next()){
+        inMap = dispatcher.getDispatchContext().makeValidContext("loadProductInProductDimension", ModelService.IN_PARAM, parameters)
+        inMap.productId = sourceRecord.productId
+        serviceResult = run service: "loadProductInProductDimension", with: inMap
+        if (!ServiceUtil.isSuccess(serviceResult)) return error(serviceResult.errorMessage)
+    };
+    queryListIterator.close();
 }

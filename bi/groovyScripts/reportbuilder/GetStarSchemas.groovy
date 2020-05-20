@@ -17,17 +17,22 @@
  * under the License.
  */
 
-import org.apache.ofbiz.base.util.UtilHttp
+reader = delegator.getModelReader();
+ec = reader.getEntityNames();
+entities = new TreeSet(ec);
+entitiesIt = entities.iterator();
 
-starSchemaName = parameters.starSchemaName
-selectedFieldList = UtilHttp.parseMultiFormData(parameters)
+List starSchemas = [];
 
-columnNames = [] as Set
-selectedFieldList.each { selectedField ->
-  columnNames.add(selectedField.selectedFieldName)
+while (entitiesIt.hasNext()) {
+    entity = reader.getModelEntity(entitiesIt.next());
+    packageName = entity.getPackageName();
+    if (!packageName.contains("starschema")) {
+        continue;
+    }
+    entityMap = [:];
+    entityMap.name = entity.getEntityName();
+    entityMap.title = entity.getTitle();
+    starSchemas.add(entityMap);
 }
-context.columnNames = columnNames
-List records = []
-records = select(context.columnNames).from(starSchemaName).distinct(false).queryList()
-
-context.records = records
+context.starSchemas = starSchemas;

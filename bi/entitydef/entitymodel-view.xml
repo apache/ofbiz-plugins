@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entitymodel.xsd">
+  <!-- ========================================================= -->
+  <!-- ======================== Defaults ======================= -->
+  <!-- ========================================================= -->
+    <title>Entity of an Apache OFBiz Component</title>
+    <description>None</description>
+    <version>1.0</version>
+    <view-entity entity-name="DwhCountrySource"
+        package-name="org.apache.ofbiz.bi.view"
+        title="DWH Country source">
+        <member-entity entity-alias="BICOUNTRY" entity-name="Geo"/>
+        <member-entity entity-alias="BIGEOTYPE" entity-name="GeoType"/>
+        <member-entity entity-alias="BICOUNTRYTELE" entity-name="CountryTeleCode"/>
+        <alias entity-alias="BICOUNTRY" field="geoId" name="countryId"/>
+        <alias entity-alias="BICOUNTRY" field="geoCode" name="countryCode"/>
+        <alias entity-alias="BICOUNTRY" field="geoSecCode" name="countryNumCode"/>
+        <alias entity-alias="BICOUNTRY" field="geoName" name="countryName"/>
+        <alias entity-alias="BICOUNTRY" field="geoCode" name="tld"/>
+        <alias entity-alias="BICOUNTRYTELE" field="teleCode" name="countryTeleCode"/>
+        <alias entity-alias="BICOUNTRY" name="lastUpdatedStamp"/>
+        <view-link entity-alias="BICOUNTRY" rel-entity-alias="BIGEOTYPE">
+            <key-map field-name="geoTypeId"/>
+            <entity-condition>
+                <condition-expr entity-alias="BIGEOTYPE" field-name="geoTypeId" value="COUNTRY"/>
+            </entity-condition>
+        </view-link>
+        <view-link entity-alias="BICOUNTRY" rel-entity-alias="BICOUNTRYTELE">
+            <key-map field-name="geoCode" rel-field-name="countryCode"/>
+        </view-link>
+    </view-entity>
+    <view-entity entity-name="DwhCurrencySource"
+        package-name="org.apache.ofbiz.bi.view"
+        title="DWH Currency source">
+        <member-entity entity-alias="BICURRENCY" entity-name="Uom"/>
+        <member-entity entity-alias="BIUOMTYPE" entity-name="UomType"/>
+        <alias entity-alias="BICURRENCY" field="uomId"  name="currencyId"/>
+        <alias entity-alias="BICURRENCY" name="description"/>
+        <alias entity-alias="BICURRENCY"  name="lastUpdatedStamp"/>
+        <view-link entity-alias="BICURRENCY" rel-entity-alias="BIUOMTYPE">
+            <key-map field-name="uomTypeId"/>
+            <entity-condition>
+                <condition-expr entity-alias="BIUOMTYPE" field-name="uomTypeId" value="CURRENCY_MEASURE"/>
+            </entity-condition>
+        </view-link>
+    </view-entity>
+    <view-entity entity-name="DwhOrganisationSource"
+        package-name="org.apache.ofbiz.bi.view"
+        title="DWH Internal Organisation source">
+        <member-entity entity-alias="BIINTORG" entity-name="PartyAcctgPreference"/>
+        <member-entity entity-alias="BIORGGRP" entity-name="PartyGroup"/>
+        <member-entity entity-alias="BIORGROLE" entity-name="PartyRole"/>
+        <alias entity-alias="BIINTORG" name="partyId"/>
+        <alias entity-alias="BIORGGRP" field="groupName"  name="partyName"/>
+        <alias entity-alias="BIINTORG" field="baseCurrencyUomId" name="baseCurrencyDimId"/>
+        <alias entity-alias="BIORGGRP"  name="lastUpdatedStamp"/>
+        <view-link entity-alias="BIINTORG" rel-entity-alias="BIORGGRP">
+            <key-map field-name="partyId"/>
+        </view-link>
+        <view-link entity-alias="BIINTORG" rel-entity-alias="BIORGROLE">
+            <key-map field-name="partyId"/>
+        </view-link>
+        <entity-condition>
+            <condition-expr entity-alias="BIORGROLE" field-name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO"/>
+        </entity-condition>
+    </view-entity>
+    <view-entity entity-name="DwhProjectSource" 
+        package-name="org.apache.ofbiz.bi.view"
+        title="DWH Project source">
+        <member-entity entity-alias="BIPROJ" entity-name="WorkEffort"/>
+        <member-entity entity-alias="BIPROJTYPE" entity-name="WorkEffortType"/>
+        <alias entity-alias="BIPROJ" field="workEffortId" name="projectId"/>
+        <alias entity-alias="BIPROJ" field="workEffortName"  name="projectName"/>
+        <alias entity-alias="BIPROJ"  name="lastUpdatedStamp"/>
+        <view-link entity-alias="BIPROJ" rel-entity-alias="BIPROJTYPE">
+            <key-map field-name="workEffortTypeId"/>
+        </view-link>
+        <entity-condition>
+            <condition-expr entity-alias="BIPROJTYPE" field-name="workEffortTypeId" operator="equals" value="PROJECT"/>
+        </entity-condition>
+    </view-entity>
+    <view-entity entity-name="DwhProjectTaskSource" 
+        package-name="org.apache.ofbiz.bi.view"
+        title="DWH Project Task source">
+        <member-entity entity-alias="BIPROJTSK" entity-name="WorkEffort"/>
+        <member-entity entity-alias="BIPROJTSKTYPE" entity-name="WorkEffortType"/>
+        <alias entity-alias="BIPROJTSK" field="workEffortId" name="projectTaskId"/>
+        <alias entity-alias="BIPROJTSK" field="workEffortName"  name="projectTaskName"/>
+        <alias entity-alias="BIPROJTSK"  name="lastUpdatedStamp"/>
+        <view-link entity-alias="BIPROJTSK" rel-entity-alias="BIPROJTSKTYPE">
+            <key-map field-name="workEffortTypeId"/>
+        </view-link>
+        <entity-condition>
+            <condition-expr entity-alias="BIPROJTSKTYPE" field-name="workEffortTypeId" operator="equals" value="TASK"/>
+        </entity-condition>
+    </view-entity>
+    <view-entity entity-name="DwhSalesChannelSource"
+        package-name="org.apache.ofbiz.bi.view"
+        title="DWH Sales Channel source">
+        <member-entity entity-alias="BICHANNEL" entity-name="Enumeration"/>
+        <member-entity entity-alias="BICHENUMTPE" entity-name="EnumerationType"/>
+        <alias entity-alias="BICHANNEL" field="enumId"  name="salesChannelId"/>
+        <alias entity-alias="BICHANNEL" name="description"/>
+        <alias entity-alias="BICHANNEL"  name="lastUpdatedStamp"/>
+        <view-link entity-alias="BICHANNEL" rel-entity-alias="BICHENUMTPE">
+            <key-map field-name="enumTypeId"/>
+            <entity-condition>
+                <condition-expr entity-alias="BICHENUMTPE" field-name="enumTypeId" value="ORDER_SALES_CHANNEL"/>
+            </entity-condition>
+        </view-link>
+    </view-entity>
+    <view-entity entity-name="DwhSalesPromoSource"
+        package-name="org.apache.ofbiz.bi.view"
+        title="DWH Sales Promo source">
+        <member-entity entity-alias="BIPROMO" entity-name="ProductPromo"/>
+        <alias entity-alias="BIPROMO" field="productPromoId"  name="salesPromoId"/>
+        <alias entity-alias="BIPROMO" field="promoName" name="salesPromoName"/>
+        <alias entity-alias="BIPROMO"  name="lastUpdatedStamp"/>
+    </view-entity>
+</entitymodel>

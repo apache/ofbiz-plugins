@@ -21,6 +21,30 @@ under the License.
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
 
+    <service name="initialiseDwh" auth="true" engine="groovy"
+        location="component://bi/groovyScripts/DwhServices.groovy" invoke="initialiseDwh">
+        <description>Initialize the DataWareHouse.Do an initial load of records into dimension and fact tables.</description>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="useTimeUomId" type="String" mode="IN" optional="false"/>
+        <attribute name="futureIncrement" type="Integer" mode="IN" optional="false"/>
+    </service>
+    <service name="updateDwh" auth="true" engine="groovy"
+        location="component://bi/groovyScripts/DwhServices.groovy" invoke="updateDwh">
+        <description>Update the Dimension and Fact tables in DataWareHouse.</description>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
+    <service name="getDimensionIdFromNaturalKey" engine="java"
+        location="org.apache.ofbiz.bi.util.DimensionServices" invoke="getDimensionIdFromNaturalKey" auth="true">
+        <description>Generic service to get the dimensionId for a natural key.</description>
+        <attribute name="dimensionEntityName" type="String" mode="IN" optional="false"/>
+        <attribute name="naturalKeyFields" type="Map" mode="IN" optional="false">
+            <description>the names/values pairs of the fields that compose the natural key of the dimension</description>
+        </attribute>
+        <attribute name="dimensionId" type="String" mode="OUT" optional="true"/>
+    </service>
+
+    <!-- Dimensions -->
     <service name="storeGenericDimension" engine="java"
         location="org.apache.ofbiz.bi.util.DimensionServices" invoke="storeGenericDimension" auth="true">
         <description>Generic service to load data into a dimension entity (olap entity).</description>
@@ -28,31 +52,45 @@ under the License.
         <attribute name="naturalKeyFields" type="List" mode="IN" optional="false"/> <!-- the names of the fields that compose the natural key of the dimension -->
         <attribute name="updateMode" type="String" mode="IN" optional="false"/> <!-- TYPE1, TYPE2, TYPE3 -->
     </service>
-    <service name="getDimensionIdFromNaturalKey" engine="java"
-        location="org.apache.ofbiz.bi.util.DimensionServices" invoke="getDimensionIdFromNaturalKey" auth="true">
-        <description>Generic service to get the dimensionId for a natural key.</description>
-        <attribute name="dimensionEntityName" type="String" mode="IN" optional="false"/>
-        <attribute name="naturalKeyFields" type="Map" mode="IN" optional="false"/> <!-- the names/values pairs of the fields that compose the natural key of the dimension -->
-        <attribute name="dimensionId" type="String" mode="OUT" optional="true"/>
+    <service name="storeOfbizDimension" engine="java"
+        location="org.apache.ofbiz.bi.util.DimensionServices" invoke="storeOfbizDimension" auth="true">
+        <description>Generic service to load data into a dimension entity (olap entity).</description>
+        <attribute name="dimensionValue" type="GenericEntity" mode="IN" optional="false"/>
+        <attribute name="naturalKeyFields" type="List" mode="IN" optional="false"/> <!-- the names of the fields that compose the natural key of the dimension -->
+        <attribute name="updateMode" type="String" mode="IN" optional="false"/> <!-- TYPE1, TYPE2, TYPE3 -->
     </service>
-    <service name="quickInitDataWarehouse" auth="true" engine="groovy"
-        location="component://bi/groovyScripts/DimensionServices.groovy" invoke="quickInitDataWarehouse">
-        <description>Quickly initialize the dimensions (Currency, Date, Product) and facts (SalesInvoiceItem): useful to quickly initialize the datawarehouse.</description>
+    <service name="updateDateDimension" engine="java" transaction-timeout="300"
+        location="org.apache.ofbiz.bi.util.DimensionServices" invoke="updateDateDimension" auth="true">
+        <description>Load records in the DateDimension entity using the update strategy of 'type 1': overwrite the values of the attributes</description>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="false"/>
+    </service>
+    <service name="updateGenericDimension" auth="true" engine="groovy"
+        location="component://bi/groovyScripts/DimensionServices.groovy" invoke="updateGenericDimension">
+        <description>Update the Dimension and Fact tables in DataWareHouse.</description>
+        <attribute name="dimensionEntityName" type="String" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="updateMode" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="updateOfbizDimension" auth="true" engine="groovy"
+        location="component://bi/groovyScripts/DimensionServices.groovy" invoke="updateOfbizDimension">
+        <description>Update the Dimension and Fact tables in DataWareHouse.</description>
+        <attribute name="dimensionEntityName" type="String" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="updateMode" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="updateRolePartyDimension" auth="true" engine="groovy" transaction-timeout="600"
+        location="component://bi/groovyScripts/DimensionServices.groovy" invoke="updateRolePartyDimension">
+        <description>Load all appropriate party records in the Dimension</description>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="dimensionEntityName" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="updateMode" type="String" mode="IN" optional="true" default-value="TYPE1"/>
     </service>
 
-    <!-- Common Dimensions -->
-    <service name="loadDateDimension" engine="java" transaction-timeout="300"
-        location="org.apache.ofbiz.bi.util.DimensionServices" invoke="loadDateDimension" auth="true">
-        <description>Loads data in the DateDimension entity (olap entity) using the update strategy of 'type 1': overwrite the values of the attributes</description>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="false"/>
-    </service>
-    <service name="loadCurrencyDimension" auth="true" engine="groovy"
-        location="component://bi/groovyScripts/DimensionServices.groovy" invoke="loadCurrencyDimension">
-        <description>Loads data in the CurrencyDimension entity (olap entity) using the update strategy of 'type 1': overwrite the values of the attributes</description>
-    </service>
     <!-- Product Dimension -->
     <service name="prepareProductDimensionData" auth="true" engine="groovy"
         location="component://bi/groovyScripts/DimensionServices.groovy" invoke="prepareProductDimensionData">
@@ -83,12 +121,47 @@ under the License.
         <description>Calls the loadProductInProductDimension service for all the products.</description>
         <attribute name="updateMode" type="String" mode="IN" optional="true" default-value="TYPE1"/>
     </service>
+    <service name="updateProductDimension" auth="true" engine="groovy"
+        location="component://bi/groovyScripts/DimensionServices.groovy" invoke="updateProductDimension">
+        <description>Update the Product Dimension.</description>
+        <attribute name="dimensionEntityName" type="String" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="updateMode" type="String" mode="IN" optional="true" default-value="TYPE1"/>
+    </service>
 
-    <!-- Accounting Facts -->
-    <service name="loadSalesInvoiceItemFact" auth="true" engine="groovy"
-        location="component://bi/groovyScripts/FactServices.groovy" invoke="loadSalesInvoiceItemFact">
+    <service name="updateOfbizFact" auth="true" engine="groovy"
+        location="component://bi/groovyScripts/FactServices.groovy" invoke="updateOfbizFact">
+        <description>Generic service to invoke update of OFBiz fact entity</description>
+        <attribute name="factEntityName" type="String" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
+
+    <!-- Inventory Facts -->
+    <service name="loadInventoryItemFact" auth="true" engine="groovy"
+        location="component://bi/groovyScripts/FactServices.groovy" invoke="loadInventoryItemFact">
+        <attribute name="inventoryItemId" type="String" mode="IN" optional="true"/>
+    </service>
+
+    <!-- Invoice Facts -->
+    <service name="getDwhInvoiceData" auth="true" engine="groovy"
+        location="component://bi/groovyScripts/FactServices.groovy" invoke="getDwhInvoiceData" transaction-timeout="10000000">
+        <description>Get Sales Invoice Data for SalesInvoiceItemFact.</description>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="false"/>
+    </service>
+    <service name="loadDwhInvoiceData" auth="true" engine="groovy"
+        location="component://bi/groovyScripts/FactServices.groovy" invoke="loadDwhInvoiceData" transaction-timeout="10000000">
+        <description>Get Sales Invoice Data for SalesInvoiceItemFact.</description>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="loadInvoiceItemFact" auth="true" engine="groovy"
+        location="component://bi/groovyScripts/FactServices.groovy" invoke="loadInvoiceItemFact">
         <description>
-            Pulls information from the Invoice* entities and stores them in the SalesInvoiceItem entity (olap entity).
+            Pulls information from the Invoice* entities and stores them in the appropriate InvoiceItemFact entity (olap entity).
             One of invoiceId/invoiceItemSeqId or invoice/invoiceItem must be passed or an error is returned.
         </description>
         <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
@@ -96,9 +169,9 @@ under the License.
         <attribute name="invoice" type="org.apache.ofbiz.entity.GenericValue" mode="IN" optional="true"/>
         <attribute name="invoiceItem" type="org.apache.ofbiz.entity.GenericValue" mode="IN" optional="true"/>
     </service>
-    <service name="loadSalesInvoiceFact" auth="true" engine="groovy"
-        location="component://bi/groovyScripts/FactServices.groovy" invoke="loadSalesInvoiceFact">
-        <description>Calls the loadSalesInvoiceItemFact service for all the invoice items.</description>
+    <service name="updateInvoiceFact" auth="true" engine="groovy"
+        location="component://bi/groovyScripts/FactServices.groovy" invoke="updateInvoiceFact">
+        <description>Calls the updateInvoiceItemFact function for all the invoice items.</description>
         <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
     </service>
 
@@ -107,6 +180,23 @@ under the License.
         location="component://bi/groovyScripts/FactServices.groovy" invoke="loadSalesOrderItemFact">
         <description>
             Pulls information from the OrderItem* entities and stores them in the SalesOrderItem entity (olap entity).
+            One of orderId/orderItemSeqId or order/orderItem must be passed or an error is returned.
+        </description>
+        <attribute name="orderId" type="String" mode="IN" optional="true"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
+        <attribute name="orderHeader" type="org.apache.ofbiz.entity.GenericValue" mode="IN" optional="true"/>
+        <attribute name="orderItem" type="org.apache.ofbiz.entity.GenericValue" mode="IN" optional="true"/>
+        <attribute name="orderAdjustment " type="org.apache.ofbiz.entity.GenericValue" mode="IN" optional="true"/>
+    </service>
+    <service name="loadOrderFact" auth="true" engine="groovy"
+        location="component://bi/groovyScripts/FactServices.groovy" invoke="loadOrderFact">
+        <description>Calls the loadOrderItemFact service for all the order items.</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="loadOrderItemFact" auth="true" engine="groovy"
+        location="component://bi/groovyScripts/FactServices.groovy" invoke="loadOrderItemFact">
+        <description>
+            Pulls information from the OrderItem* entities and stores them in the appropriate OrderItemFact entity (olap entity).
             One of orderId/orderItemSeqId or order/orderItem must be passed or an error is returned.
         </description>
         <attribute name="orderId" type="String" mode="IN" optional="true"/>
@@ -130,6 +220,20 @@ under the License.
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
+    <service name="getDwhOrderData" auth="true" engine="groovy"
+        location="component://bi/groovyScripts/FactServices.groovy" invoke="getDwhOrderData" transaction-timeout="10000000">
+        <description>Get Sales Order Data for SalesOrderItemFact.</description>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="false"/>
+    </service>
+    <service name="loadDwhOrderData" auth="true" engine="groovy"
+        location="component://bi/groovyScripts/FactServices.groovy" invoke="loadDwhOrderData" transaction-timeout="10000000">
+        <description>Get Sales Invoice Data for SalesInvoiceItemFact.</description>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+    </service>
+
     <service name="convertUomCurrency" auth="true" engine="groovy"
         location="component://bi/groovyScripts/FactServices.groovy" invoke="convertUomCurrency">
         <description>Import Sales Order Data.</description>
@@ -138,42 +242,4 @@ under the License.
         <attribute name="nowDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="conversionFactor" type="Double" mode="OUT" optional="true"/>
     </service>
-
-    <!-- Inventory Facts -->
-    <service name="loadInventoryFact" auth="true" engine="groovy"
-        location="component://bi/groovyScripts/FactServices.groovy" invoke="loadInventoryFact">
-        <attribute name="inventoryItemId" type="String" mode="IN" optional="true"/>
-    </service>
-
-    <!-- SalesInvoiceItem Facts -->
-    <service name="createSalesInvoiceItemFact" engine="entity-auto" invoke="create" default-entity-name="SalesInvoiceItemFact" auth="true">
-        <description>Create a SalesInvoiceItemFact record</description>
-        <auto-attributes include="pk" mode="IN"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
-    </service>
-    <service name="updateSalesInvoiceItemFact" engine="entity-auto" invoke="update" default-entity-name="SalesInvoiceItemFact" auth="true">
-        <description>Update a SalesInvoiceItemFact record</description>
-        <auto-attributes include="pk" mode="IN"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
-    </service>
-    <service name="deleteSalesInvoiceItemFact" engine="entity-auto" invoke="delete" default-entity-name="SalesInvoiceItemFact" auth="true">
-        <description>Delete a SalesInvoiceItemFact record</description>
-        <auto-attributes include="pk" mode="IN"/>
-    </service>
-
-    <service name="createSalesOrderItemFact" default-entity-name="SalesOrderItemFact" engine="entity-auto" invoke="create" auth="true">
-        <description>Create a SalesOrderItemFact</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
-    </service>
-    <service name="updateSalesOrderItemFact" default-entity-name="SalesOrderItemFact" engine="entity-auto" invoke="update" auth="true">
-        <description>Update a SalesOrderItemFact</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
-    </service>
-    <service name="deleteSalesOrderItemFact" default-entity-name="SalesOrderItemFact" engine="entity-auto" invoke="delete" auth="true">
-        <description>Delete a SalesOrderItemFact</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
-    </service>
-
 </services>
