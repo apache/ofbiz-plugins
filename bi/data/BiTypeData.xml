@@ -78,10 +78,15 @@ under the License.
     <SalesPromoDimension dimensionId="1" salesPromoId="_NA_"
         salesPromoName="Sales Promo Not Set." />
 
-    <StoreDimension dimensionId="0" storeId="_NF_"
+    <StoreDimension dimensionId="0" productStoreId="_NF_"
         internalName="Store Not Found." />
-    <StoreDimension dimensionId="1" storeId="_NA_"
+    <StoreDimension dimensionId="1" productStoreId="_NA_"
         internalName="Store Not Set." />
+
+    <SupplierDimension dimensionId="0" partyId="_NF_"
+        partyName="Supplier Not Found." />
+    <SupplierDimension dimensionId="1" partyId="_NA_"
+        partyName="Supplier Not Set." />
 
     <TimeDimension dimensionId="2359" timeValue="23:59:00"
         hr="23" mn="59" />
