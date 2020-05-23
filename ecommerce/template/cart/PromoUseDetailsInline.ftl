@@ -16,10 +16,18 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<h2>${uiLabelMap.OrderPromotionInformation}:</h2>
+<div class="card">
+<div class="card-header">
+  <strong>${uiLabelMap.OrderPromotionInformation}</strong>
+</div>
+<div class="card-body">
 <div class="row">
   <div class="col-xl-6">
-    <h3>${uiLabelMap.OrderPromotionsApplied}:</h3>
+    <div class="card">
+    <div class="card-header">
+      <strong>${uiLabelMap.OrderPromotionsApplied}</strong>
+    </div>
+    <div class="card-body">
         <ul>
             <#list shoppingCart.getProductPromoUseInfoIter() as productPromoUseInfo>
                 <li>
@@ -36,10 +44,16 @@ under the License.
                 </#if>
             </#list>
         </ul>
+     </div>
+     </div>
   </div>
 
   <div class="col-xl-6">
-    <h3>${uiLabelMap.OrderCartItemUseinPromotions}:</h3>
+    <div class="card">
+    <div class="card-header">
+      <strong>${uiLabelMap.OrderCartItemUseinPromotions}</strong>
+    </div>
+    <div class="card-body">
     <ul>
         <#list shoppingCart.items() as cartLine>
             <#assign cartLineIndex = shoppingCart.getItemIndex(cartLine)>
@@ -76,5 +90,9 @@ under the License.
             </#if>
         </#list>
     </ul>
+    </div>
+    </div>
   </div>
+</div>
+</div>
 </div>
