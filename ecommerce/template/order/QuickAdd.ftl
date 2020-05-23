@@ -16,11 +16,14 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
+<div class="card">
 <#if productCategory?has_content>
-<h2>${productCategory.categoryName!}</h2>
-<form name="choosequickaddform" method="post" action="<@ofbizUrl>quickadd</@ofbizUrl>" style='margin: 0;'>
-  <select name='category_id'>
+<div class="card-header">
+  <strong>${productCategory.categoryName!}</strong>
+</div>
+<div class="card-body">
+<form name="choosequickaddform" method="post" action="<@ofbizUrl>quickadd</@ofbizUrl>">
+  <select name='category_id' class="form-control">
     <option value='${productCategory.productCategoryId}'>${productCategory.categoryName!}</option>
     <option value='${productCategory.productCategoryId}'>--</option>
     <#list quickAddCats as quickAddCatalogId>
@@ -30,14 +33,16 @@ under the License.
   </#if>
 </#list>
 </select>
-<div><a href="javascript:document.choosequickaddform.submit()" class="buttontext">${uiLabelMap.ProductChooseQuickAddCategory}</a></div>
+<div class="pt-2 pb-1"><a href="javascript:document.choosequickaddform.submit()" class="buttontext">${uiLabelMap.ProductChooseQuickAddCategory}</a></div>
 </form>
 <#if productCategory.categoryImageUrl?? || productCategory.longDescription??>
 <div>
   <#if productCategory.categoryImageUrl??>
   <img src="<@ofbizContentUrl>${productCategory.categoryImageUrl}</@ofbizContentUrl>" vspace="5" hspace="5" class="cssImgLarge" alt="" />
 </#if>
+<div class="pt-2 pb-1">
 ${productCategory.longDescription!}
+</div>
 </div>
 </#if>
 </#if>
@@ -47,7 +52,7 @@ ${productCategory.longDescription!}
   <fieldset>
     <input type='hidden' name='category_id' value='${categoryId}' />
     <div class="quickaddall">
-      <a href="javascript:document.bulkaddform.submit()" class="buttontext">${uiLabelMap.OrderAddAllToCart}</a>
+      <a href="javascript:document.bulkaddform.submit()" class="btn btn-outline-secondary ml-3">${uiLabelMap.OrderAddAllToCart}</a>
     </div>
     <div class="quickaddtable">
       <#list productCategoryMembers as productCategoryMember>
@@ -58,12 +63,14 @@ ${productCategory.longDescription!}
       </p>
     </#list>
     </div>
-    <div class="quickaddall">
-      <a href="javascript:document.bulkaddform.submit()" class="buttontext">${uiLabelMap.OrderAddAllToCart}</a>
+    <div class="ml-3">
+      <a href="javascript:document.bulkaddform.submit()" class="btn btn-outline-secondary">${uiLabelMap.OrderAddAllToCart}</a>
     </div>
   </fieldset>
 </form>
 <#else>
 <label>${uiLabelMap.ProductNoProductsInThisCategory}.</label>
 </#if>
+</div>
+</div>
 
