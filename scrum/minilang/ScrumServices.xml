@@ -1249,7 +1249,7 @@
         </iterate>
         <if-empty field="partyIdAllInCompany">
             <add-error>
-                <fail-message message="There is no party in this company" />
+                <fail-property resource="scrumUiLabels" property="ScrumServiceNoParty"/>
             </add-error>
             <check-errors />
         </if-empty>
@@ -1300,7 +1300,7 @@
         <set field="isAddAll" value="${groovy:tasks.addAll(unplannedTasks)}"/>
         <if-empty field="tasks">
             <add-error>
-                <fail-message message="No timeentry items found" />
+                <fail-property resource="scrumUiLabels" property="ScrumServiceNoTimeEntryItem"/>
             </add-error>
             <check-errors />
         </if-empty>
