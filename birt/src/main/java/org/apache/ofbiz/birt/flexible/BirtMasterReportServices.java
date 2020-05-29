@@ -50,9 +50,9 @@ import org.eclipse.birt.report.engine.api.script.IReportContext;
 
 public class BirtMasterReportServices {
 
-    public static final String MODULE = BirtServices.class.getName();
-    public static final String resource = "BirtUiLabels";
-    public static final String resource_error = "BirtErrorUiLabels";
+    private static final String MODULE = BirtServices.class.getName();
+    private static final String RESOURCE = "BirtUiLabels";
+    private static final String RES_ERROR = "BirtErrorUiLabels";
 
     // The following methods are flexible report services as examples for reporting
     public static Map<String, Object> workEffortPerPersonPrepareDate(DispatchContext dctx, Map<String, Object> context) {
@@ -363,7 +363,7 @@ public class BirtMasterReportServices {
             }
         } catch (Exception e) {
             Debug.logError(e, MODULE);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "BirtErrorRetrievingTurnOver", locale));
+            return ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE, "BirtErrorRetrievingTurnOver", locale));
         }
         Map<String, Object> result = ServiceUtil.returnSuccess();
         result.put("records", listInvoiceEditable);

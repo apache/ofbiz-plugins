@@ -39,7 +39,7 @@ import org.apache.ofbiz.entity.util.EntityUtil;
 
 public class ThirdPartyEvents {
 
-    public static final String MODULE = ThirdPartyEvents.class.getName();
+    private static final String MODULE = ThirdPartyEvents.class.getName();
 
     public final static String DISTRIBUTOR_ID = "_DISTRIBUTOR_ID_";
     public final static String AFFILIATE_ID = "_AFFILIATE_ID_";

@@ -37,8 +37,8 @@ import org.apache.ofbiz.service.ServiceUtil;
 
 public class EbayBestOfferAutoPref {
 
-    public static final String MODULE = EbayBestOfferAutoPref.class.getName();
-    public static final String resource = "EbayStoreUiLabels";
+    private static final String MODULE = EbayBestOfferAutoPref.class.getName();
+    private static final String RESOURCE = "EbayStoreUiLabels";
     public static Map<String, Object> ebayBestOfferPrefCond(DispatchContext dctx, Map<String, ? extends Object> context) {
 
             Map<String, Object> result = new HashMap<String, Object>();
@@ -233,11 +233,11 @@ public class EbayBestOfferAutoPref {
             }
             
         } catch (GenericServiceException | GenericEntityException e) {
-            String errorMessage = UtilProperties.getMessage(resource, "EbayStoreBestOfferToEntityFailed", locale);
+            String errorMessage = UtilProperties.getMessage(RESOURCE, "EbayStoreBestOfferToEntityFailed", locale);
             result = ServiceUtil.returnError(errorMessage);
             return result;
         }
-        String successMsg = UtilProperties.getMessage(resource, "EbayStoreBestOfferToEntitySuccessful", locale);
+        String successMsg = UtilProperties.getMessage(RESOURCE, "EbayStoreBestOfferToEntitySuccessful", locale);
         result = ServiceUtil.returnSuccess(successMsg);
         return result;
     }

@@ -79,7 +79,7 @@ import org.apache.ofbiz.service.ServiceUtil;
  */
 public abstract class AbstractPricatParser implements InterfacePricatParser {
     
-    public static final String MODULE = AbstractPricatParser.class.getName();
+    private static final String MODULE = AbstractPricatParser.class.getName();
     
     protected LocalDispatcher dispatcher;
     
@@ -136,7 +136,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
     @Override
     public void writeCommentsToFile(XSSFWorkbook workbook, XSSFSheet sheet) {
         report.println();
-        report.print(UtilProperties.getMessage(resource, "WriteCommentsBackToExcel", locale), InterfaceReport.FORMAT_NOTE);
+        report.print(UtilProperties.getMessage(RESOURCE, "WriteCommentsBackToExcel", locale), InterfaceReport.FORMAT_NOTE);
         FileOutputStream fos = null;
         XSSFCreationHelper factory = workbook.getCreationHelper();
         XSSFFont boldFont = workbook.createFont();
@@ -288,7 +288,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
                 }
             }
         }
-        report.println(UtilProperties.getMessage(resource, "ok", locale), InterfaceReport.FORMAT_OK);
+        report.println(UtilProperties.getMessage(RESOURCE, "ok", locale), InterfaceReport.FORMAT_OK);
         report.println();
     }
 
@@ -395,14 +395,14 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
 
     @Override
     public boolean isNumOfSheetsOK(XSSFWorkbook workbook) {
-        report.print(UtilProperties.getMessage(resource, "CheckPricatHasSheet", locale), InterfaceReport.FORMAT_NOTE);
+        report.print(UtilProperties.getMessage(RESOURCE, "CheckPricatHasSheet", locale), InterfaceReport.FORMAT_NOTE);
         int sheets = workbook.getNumberOfSheets();
         if (sheets < 1) {
-            report.println(UtilProperties.getMessage(resource, "PricatTableNoSheet", locale), InterfaceReport.FORMAT_ERROR);
+            report.println(UtilProperties.getMessage(RESOURCE, "PricatTableNoSheet", locale), InterfaceReport.FORMAT_ERROR);
             return false;
         } else if (sheets >= 1) {
-            report.println(UtilProperties.getMessage(resource, "ok", locale), InterfaceReport.FORMAT_OK);
-            report.println(UtilProperties.getMessage(resource, "PricatTableOnlyParse1stSheet", locale), InterfaceReport.FORMAT_WARNING);
+            report.println(UtilProperties.getMessage(RESOURCE, "ok", locale), InterfaceReport.FORMAT_OK);
+            report.println(UtilProperties.getMessage(RESOURCE, "PricatTableOnlyParse1stSheet", locale), InterfaceReport.FORMAT_WARNING);
         }
         return true;
     }
@@ -429,8 +429,8 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
             }
             if (cell == null) {
                 if ((Boolean) colNames.get(i)[2]) {
-                    report.print(UtilProperties.getMessage(resource, "ErrorColCannotEmpty", new Object[] {colNames.get(i)[0]}, locale), InterfaceReport.FORMAT_WARNING);
-                    errorMessages.put(new CellReference(cell), UtilProperties.getMessage(resource, "ErrorColCannotEmpty", new Object[] {colNames.get(i)[0]}, locale));
+                    report.print(UtilProperties.getMessage(RESOURCE, "ErrorColCannotEmpty", new Object[] {colNames.get(i)[0]}, locale), InterfaceReport.FORMAT_WARNING);
+                    errorMessages.put(new CellReference(cell), UtilProperties.getMessage(RESOURCE, "ErrorColCannotEmpty", new Object[] {colNames.get(i)[0]}, locale));
                     foundError = true;
                     continue;
                 } else {
@@ -450,8 +450,8 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
                 report.print(((i == 0)?"":","), InterfaceReport.FORMAT_NOTE);
             }
             if ((Boolean) colNames.get(i)[2] && UtilValidate.isEmpty(cellValue)) {
-                report.print(UtilProperties.getMessage(resource, "ErrorColCannotEmpty", new Object[] {colNames.get(i)[0]}, locale), InterfaceReport.FORMAT_WARNING);
-                errorMessages.put(new CellReference(cell), UtilProperties.getMessage(resource, "ErrorColCannotEmpty", new Object[] {colNames.get(i)[0]}, locale));
+                report.print(UtilProperties.getMessage(RESOURCE, "ErrorColCannotEmpty", new Object[] {colNames.get(i)[0]}, locale), InterfaceReport.FORMAT_WARNING);
+                errorMessages.put(new CellReference(cell), UtilProperties.getMessage(RESOURCE, "ErrorColCannotEmpty", new Object[] {colNames.get(i)[0]}, locale));
                 foundError = true;
                 results.add(null);
                 continue;
@@ -468,7 +468,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
                         results.add(BigDecimal.valueOf(Double.parseDouble(cell.getStringCellValue())).setScale(FinAccountHelper.decimals, FinAccountHelper.rounding));
                     } catch (NumberFormatException e) {
                         results.add(null);
-                        errorMessages.put(new CellReference(cell), UtilProperties.getMessage(resource, "ErrorParseValueToNumeric", locale));
+                        errorMessages.put(new CellReference(cell), UtilProperties.getMessage(RESOURCE, "ErrorParseValueToNumeric", locale));
                     }
                 }
             } else {
@@ -488,21 +488,21 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
                             results.add(BigDecimal.valueOf(Double.valueOf(cell.getStringCellValue())));
                         } catch (NumberFormatException e) {
                             results.add(null);
-                            errorMessages.put(new CellReference(cell), UtilProperties.getMessage(resource, "ErrorParseValueToNumeric", locale));
+                            errorMessages.put(new CellReference(cell), UtilProperties.getMessage(RESOURCE, "ErrorParseValueToNumeric", locale));
                         }
                     } else if (cell.getCellType() == CellType.NUMERIC) {
                         try {
                             results.add(BigDecimal.valueOf(cell.getNumericCellValue()).setScale(FinAccountHelper.decimals, FinAccountHelper.rounding));
                         } catch (NumberFormatException e) {
                             results.add(null);
-                            errorMessages.put(new CellReference(cell), UtilProperties.getMessage(resource, "ErrorParseValueToNumeric", locale));
+                            errorMessages.put(new CellReference(cell), UtilProperties.getMessage(RESOURCE, "ErrorParseValueToNumeric", locale));
                         }
                     } else {
                         try {
                             results.add(BigDecimal.valueOf(Double.valueOf(cellValue)).setScale(FinAccountHelper.decimals, FinAccountHelper.rounding));
                         } catch (NumberFormatException e) {
                             results.add(null);
-                            errorMessages.put(new CellReference(cell), UtilProperties.getMessage(resource, "ErrorParseValueToNumeric", locale));
+                            errorMessages.put(new CellReference(cell), UtilProperties.getMessage(RESOURCE, "ErrorParseValueToNumeric", locale));
                         }
                     }
                 }
@@ -522,7 +522,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
     protected boolean isEmptyRow(XSSFRow row, int size, boolean display) {
         // check whether this row is empty
         if (UtilValidate.isEmpty(row)) {
-            report.print(UtilProperties.getMessage(resource, "ExcelEmptyRow", locale), InterfaceReport.FORMAT_NOTE);
+            report.print(UtilProperties.getMessage(RESOURCE, "ExcelEmptyRow", locale), InterfaceReport.FORMAT_NOTE);
             return true;
         }
         boolean isEmptyRow = true;
@@ -540,12 +540,12 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
         }
         if (isEmptyRow) {
             if (display) {
-                report.print(UtilProperties.getMessage(resource, "ExcelEmptyRow", locale), InterfaceReport.FORMAT_NOTE);
+                report.print(UtilProperties.getMessage(RESOURCE, "ExcelEmptyRow", locale), InterfaceReport.FORMAT_NOTE);
             }
             return true;
         } else if (!isEmptyRow && i > size) {
             if (display) {
-                report.print(UtilProperties.getMessage(resource, "IgnoreDataOutOfRange", locale), InterfaceReport.FORMAT_NOTE);
+                report.print(UtilProperties.getMessage(RESOURCE, "IgnoreDataOutOfRange", locale), InterfaceReport.FORMAT_NOTE);
             }
             return true;
         }
@@ -632,13 +632,13 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
 
     protected void cleanupLogAndCommentedExcel() {
         try {
-            report.print(UtilProperties.getMessage(resource, "CLEANUP_LOGANDEXCEL_BEGIN", locale), InterfaceReport.FORMAT_DEFAULT);
+            report.print(UtilProperties.getMessage(RESOURCE, "CLEANUP_LOGANDEXCEL_BEGIN", locale), InterfaceReport.FORMAT_DEFAULT);
             List<GenericValue> historyValues = EntityQuery.use(delegator).from("ExcelImportHistory").where("userLoginId", userLoginId).orderBy("sequenceNum DESC").queryList();
             if (UtilValidate.isEmpty(historyValues) || historyValues.size() <= HISTORY_MAX_FILENUMBER) {
-                report.print(UtilProperties.getMessage(resource, "HistoryLessThan", new Object[] {String.valueOf(HISTORY_MAX_FILENUMBER)}, locale), InterfaceReport.FORMAT_NOTE);
-                report.println(" ... " + UtilProperties.getMessage(resource, "skipped", locale), InterfaceReport.FORMAT_NOTE);
+                report.print(UtilProperties.getMessage(RESOURCE, "HistoryLessThan", new Object[] {String.valueOf(HISTORY_MAX_FILENUMBER)}, locale), InterfaceReport.FORMAT_NOTE);
+                report.println(" ... " + UtilProperties.getMessage(RESOURCE, "skipped", locale), InterfaceReport.FORMAT_NOTE);
             } else {
-                report.print(" ... " + UtilProperties.getMessage(resource, "HistoryEntryToRemove", new Object[] {historyValues.size() - HISTORY_MAX_FILENUMBER}, locale), InterfaceReport.FORMAT_NOTE);
+                report.print(" ... " + UtilProperties.getMessage(RESOURCE, "HistoryEntryToRemove", new Object[] {historyValues.size() - HISTORY_MAX_FILENUMBER}, locale), InterfaceReport.FORMAT_NOTE);
                 List<GenericValue> valuesToRemove = new ArrayList<>();
                 for (int i = HISTORY_MAX_FILENUMBER; i < historyValues.size(); i++) {
                     GenericValue historyValue = historyValues.get(i);
@@ -663,7 +663,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
                     }
                 }
                 delegator.removeAll(valuesToRemove);
-                report.println(" ... " + UtilProperties.getMessage(resource, "ok", locale), InterfaceReport.FORMAT_OK);
+                report.println(" ... " + UtilProperties.getMessage(RESOURCE, "ok", locale), InterfaceReport.FORMAT_OK);
             }
             report.println();
         } catch (GenericEntityException e) {

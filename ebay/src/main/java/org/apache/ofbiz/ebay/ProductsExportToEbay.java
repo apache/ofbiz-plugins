@@ -56,7 +56,7 @@ import org.w3c.dom.Node;
 
 public class ProductsExportToEbay {
 
-    private static final String resource = "EbayUiLabels";
+    private static final String RESOURCE = "EbayUiLabels";
     private static final String configFileName = "ebayExport.properties";
     private static final String MODULE = ProductsExportToEbay.class.getName();
     private static List<String> productExportSuccessMessageList = new LinkedList<>();
@@ -100,7 +100,7 @@ public class ProductsExportToEbay {
             }
         } catch (Exception e) {
             Debug.logError("Exception in exportToEbay " + e, MODULE);
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "productsExportToEbay.exceptionInExportToEbay", locale));
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "productsExportToEbay.exceptionInExportToEbay", locale));
         }
         if (UtilValidate.isNotEmpty(productExportSuccessMessageList)) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
@@ -295,7 +295,7 @@ public class ProductsExportToEbay {
                     if (categoryCode.indexOf("_") != -1) {
                         String[] params = categoryCode.split("_");
                         if (UtilValidate.isEmpty(params) || params[1].length() == 0) {
-                            ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "productsExportToEbay.parametersNotCorrectInGetEbayCategories", locale));
+                            ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "productsExportToEbay.parametersNotCorrectInGetEbayCategories", locale));
                         } else {
                             primaryCategoryId = params[1];
                         }
@@ -324,11 +324,11 @@ public class ProductsExportToEbay {
                 dataItemsXml.append(UtilXml.writeXmlDocument(itemDocument));
             } catch (Exception e) {
                 Debug.logError("Exception during building data items to eBay: " + e.getMessage(), MODULE);
-                return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "productsExportToEbay.exceptionDuringBuildingDataItemsToEbay", locale));
+                return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "productsExportToEbay.exceptionDuringBuildingDataItemsToEbay", locale));
             }
         } catch (Exception e) {
             Debug.logError("Exception during building data items to eBay: " + e.getMessage(), MODULE);
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "productsExportToEbay.exceptionDuringBuildingDataItemsToEbay", locale));
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "productsExportToEbay.exceptionDuringBuildingDataItemsToEbay", locale));
         }
         return ServiceUtil.returnSuccess();
     }
@@ -359,7 +359,7 @@ public class ProductsExportToEbay {
             dataItemsXml.append(UtilXml.writeXmlDocument(itemRequest));
         } catch (Exception e) {
             Debug.logError("Exception during building data items to eBay", MODULE);
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "productsExportToEbay.exceptionDuringBuildingGetCategoriesRequest", locale));
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "productsExportToEbay.exceptionDuringBuildingGetCategoriesRequest", locale));
         }
         return ServiceUtil.returnSuccess();
     }
@@ -384,7 +384,7 @@ public class ProductsExportToEbay {
             setTaxTableRequestXml.append(UtilXml.writeXmlDocument(taxRequestDocument));
         } catch (Exception e) {
             Debug.logError("Exception during building request set tax table to eBay", MODULE);
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "productsExportToEbay.exceptionDuringBuildingRequestSetTaxTableToEbay", locale));
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "productsExportToEbay.exceptionDuringBuildingRequestSetTaxTableToEbay", locale));
         }
         return ServiceUtil.returnSuccess();
     }
@@ -411,7 +411,7 @@ public class ProductsExportToEbay {
             Debug.logInfo(dataItemsXml.toString(), MODULE);
         } catch (Exception e) {
             Debug.logError("Exception during building AddTransactionConfirmationItemRequest eBay", MODULE);
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "productsExportToEbay.exceptionDuringBuildingAddTransactionConfirmationItemRequestToEbay", locale));
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "productsExportToEbay.exceptionDuringBuildingAddTransactionConfirmationItemRequestToEbay", locale));
         }
         return ServiceUtil.returnSuccess();
     }
@@ -520,7 +520,7 @@ public class ProductsExportToEbay {
                 String[] params = categoryCode.split("_");
 
                 if (params == null || params.length != 3) {
-                    ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "productsExportToEbay.parametersNotCorrectInGetEbayCategories", locale));
+                    ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "productsExportToEbay.parametersNotCorrectInGetEbayCategories", locale));
                 } else {
                     categoryParent = params[1];
                     levelLimit = params[2];
@@ -541,7 +541,7 @@ public class ProductsExportToEbay {
             }
         } catch (Exception e) {
             Debug.logError("Exception in GetEbayCategories " + e, MODULE);
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "productsExportToEbay.exceptionInGetEbayCategories", locale));
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "productsExportToEbay.exceptionInGetEbayCategories", locale));
         }
         return result;
     }

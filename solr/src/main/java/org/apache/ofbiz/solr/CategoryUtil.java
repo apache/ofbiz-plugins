@@ -39,7 +39,7 @@ import org.apache.ofbiz.service.DispatchContext;
  */
 public final class CategoryUtil {
     
-    public static final String MODULE = CategoryUtil.class.getName();
+    private static final String MODULE = CategoryUtil.class.getName();
 
     private CategoryUtil () {}
 

@@ -63,8 +63,8 @@ import freemarker.template.TemplateException;
 
 public class BirtEmailServices {
 
-    public static final String MODULE = BirtEmailServices.class.getName();
-    public static final String resource = "BirtUiLabels";
+    private static final String MODULE = BirtEmailServices.class.getName();
+    private static final String RESOURCE = "BirtUiLabels";
     /**
      * send birt mail
      *
@@ -119,11 +119,11 @@ public class BirtEmailServices {
         try {
             screenStringRenderer = new MacroScreenRenderer("screen", visualTheme.getModelTheme().getScreenRendererLocation("screen"));
         } catch (TemplateException e) {
-            String errMsg =  UtilProperties.getMessage(resource, "BirtErrorRenderingScreenForEmail", UtilMisc.toMap("errorString", e.toString()), locale);
+            String errMsg =  UtilProperties.getMessage(RESOURCE, "BirtErrorRenderingScreenForEmail", UtilMisc.toMap("errorString", e.toString()), locale);
             Debug.logError(e, errMsg, MODULE);
             return ServiceUtil.returnError(errMsg);
         } catch (IOException e) {
-            String errMsg = UtilProperties.getMessage(resource, "BirtErrorRenderingScreenForEmail", UtilMisc.toMap("errorString", e.toString()), locale);
+            String errMsg = UtilProperties.getMessage(RESOURCE, "BirtErrorRenderingScreenForEmail", UtilMisc.toMap("errorString", e.toString()), locale);
             Debug.logError(e, errMsg, MODULE);
             return ServiceUtil.returnError(errMsg);
         }
@@ -135,19 +135,19 @@ public class BirtEmailServices {
             try {
                 screens.render(bodyScreenUri);
             } catch (GeneralException e) {
-                String errMsg = UtilProperties.getMessage(resource, "BirtErrorRenderingScreenForEmail", UtilMisc.toMap("errorString", e.toString()), locale);
+                String errMsg = UtilProperties.getMessage(RESOURCE, "BirtErrorRenderingScreenForEmail", UtilMisc.toMap("errorString", e.toString()), locale);
                 Debug.logError(e, errMsg, MODULE);
                 return ServiceUtil.returnError(errMsg);
             } catch (IOException e) {
-                String errMsg = UtilProperties.getMessage(resource, "BirtErrorIORenderingScreenForEmail", UtilMisc.toMap("errorString", e.toString()), locale);
+                String errMsg = UtilProperties.getMessage(RESOURCE, "BirtErrorIORenderingScreenForEmail", UtilMisc.toMap("errorString", e.toString()), locale);
                 Debug.logError(e, errMsg, MODULE);
                 return ServiceUtil.returnError(errMsg);
             } catch (SAXException e) {
-                String errMsg = UtilProperties.getMessage(resource, "BirtErrorSAXRenderingScreenForEmail", UtilMisc.toMap("errorString", e.toString()), locale);
+                String errMsg = UtilProperties.getMessage(RESOURCE, "BirtErrorSAXRenderingScreenForEmail", UtilMisc.toMap("errorString", e.toString()), locale);
                 Debug.logError(e, errMsg, MODULE);
                 return ServiceUtil.returnError(errMsg);
             } catch (ParserConfigurationException e) {
-                String errMsg = UtilProperties.getMessage(resource, "BirtErrorParserConfigRenderingScreenForEmail", UtilMisc.toMap("errorString", e.toString()), locale);
+                String errMsg = UtilProperties.getMessage(RESOURCE, "BirtErrorParserConfigRenderingScreenForEmail", UtilMisc.toMap("errorString", e.toString()), locale);
                 Debug.logError(e, errMsg, MODULE);
                 return ServiceUtil.returnError(errMsg);
             }
@@ -201,31 +201,31 @@ public class BirtEmailServices {
                 bodyParts.add(UtilMisc.toMap("content", baos.toByteArray(), "type", "application/pdf", "filename", attachmentName));
                 serviceContext.put("bodyParts", bodyParts);
             } catch (GeneralException ge) {
-                String errMsg = UtilProperties.getMessage(resource, "BirtErrorRenderingAttachmentForEmail", UtilMisc.toMap("birtContentType", birtContentType, "errorString", ge.toString()), locale);
+                String errMsg = UtilProperties.getMessage(RESOURCE, "BirtErrorRenderingAttachmentForEmail", UtilMisc.toMap("birtContentType", birtContentType, "errorString", ge.toString()), locale);
                 Debug.logError(ge, errMsg, MODULE);
                 return ServiceUtil.returnError(errMsg);
             } catch (IOException ie) {
-                String errMsg = UtilProperties.getMessage(resource, "BirtErrorIORenderingAttachmentForEmail", UtilMisc.toMap("birtContentType", birtContentType, "errorString", ie.toString()), locale);
+                String errMsg = UtilProperties.getMessage(RESOURCE, "BirtErrorIORenderingAttachmentForEmail", UtilMisc.toMap("birtContentType", birtContentType, "errorString", ie.toString()), locale);
                 Debug.logError(ie, errMsg, MODULE);
                 return ServiceUtil.returnError(errMsg);
             } catch (FOPException fe) {
-                String errMsg = UtilProperties.getMessage(resource, "BirtErrorFOPRenderingAttachmentForEmail", UtilMisc.toMap("birtContentType", birtContentType, "errorString", fe.toString()), locale);
+                String errMsg = UtilProperties.getMessage(RESOURCE, "BirtErrorFOPRenderingAttachmentForEmail", UtilMisc.toMap("birtContentType", birtContentType, "errorString", fe.toString()), locale);
                 Debug.logError(fe, errMsg, MODULE);
                 return ServiceUtil.returnError(errMsg);
             } catch (SAXException se) {
-                String errMsg = UtilProperties.getMessage(resource, "BirtErrorSAXRenderingAttachmentForEmail", UtilMisc.toMap("birtContentType", birtContentType, "errorString", se.toString()), locale);
+                String errMsg = UtilProperties.getMessage(RESOURCE, "BirtErrorSAXRenderingAttachmentForEmail", UtilMisc.toMap("birtContentType", birtContentType, "errorString", se.toString()), locale);
                 Debug.logError(se, errMsg, MODULE);
                 return ServiceUtil.returnError(errMsg);
             } catch (ParserConfigurationException pe) {
-                String errMsg = UtilProperties.getMessage(resource, "BirtErrorParserRenderingAttachmentForEmail", UtilMisc.toMap("birtContentType", birtContentType, "errorString", pe.toString()), locale);
+                String errMsg = UtilProperties.getMessage(RESOURCE, "BirtErrorParserRenderingAttachmentForEmail", UtilMisc.toMap("birtContentType", birtContentType, "errorString", pe.toString()), locale);
                 Debug.logError(pe, errMsg, MODULE);
                 return ServiceUtil.returnError(errMsg);
             } catch (EngineException ee) {
-                String errMsg = UtilProperties.getMessage(resource, "BirtErrorRenderingAttachmentForEmail", UtilMisc.toMap("birtContentType", birtContentType, "errorString", ee.toString()), locale);
+                String errMsg = UtilProperties.getMessage(RESOURCE, "BirtErrorRenderingAttachmentForEmail", UtilMisc.toMap("birtContentType", birtContentType, "errorString", ee.toString()), locale);
                 Debug.logError(ee, errMsg, MODULE);
                 return ServiceUtil.returnError(errMsg);
             } catch (SQLException se) {
-                String errMsg = UtilProperties.getMessage(resource, "BirtErrorSQLRenderingAttachmentForEmail", UtilMisc.toMap("birtContentType", birtContentType, "errorString", se.toString()), locale);
+                String errMsg = UtilProperties.getMessage(RESOURCE, "BirtErrorSQLRenderingAttachmentForEmail", UtilMisc.toMap("birtContentType", birtContentType, "errorString", se.toString()), locale);
                 Debug.logError(se, errMsg, MODULE);
                 return ServiceUtil.returnError(errMsg);
             }
@@ -270,7 +270,7 @@ public class BirtEmailServices {
                 }
             }
         } catch (GenericServiceException e) {
-            String errMsg = UtilProperties.getMessage(resource, "BirtErrorInSendingEmail", UtilMisc.toMap("errorString", e.toString()), locale);
+            String errMsg = UtilProperties.getMessage(RESOURCE, "BirtErrorInSendingEmail", UtilMisc.toMap("errorString", e.toString()), locale);
             Debug.logError(e, errMsg, MODULE);
             return ServiceUtil.returnError(errMsg);
         }

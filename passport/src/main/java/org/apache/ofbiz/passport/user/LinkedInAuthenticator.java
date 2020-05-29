@@ -67,7 +67,7 @@ public class LinkedInAuthenticator implements Authenticator {
 
     public static final String props = "linkedInAuth.properties";
 
-    public static final String resource = "PassportUiLabels";    
+    private static final String RESOURCE = "PassportUiLabels";
 
     protected LocalDispatcher dispatcher;
 
@@ -415,7 +415,7 @@ public class LinkedInAuthenticator implements Authenticator {
             // Debug.logInfo("Json Response from LinkedIn: " + responseString, MODULE);
             userInfo = UtilXml.readXmlDocument(responseString);
         } else {
-            String errMsg = UtilProperties.getMessage(resource, "GetOAuth2AccessTokenError", UtilMisc.toMap("error", responseString), locale);
+            String errMsg = UtilProperties.getMessage(RESOURCE, "GetOAuth2AccessTokenError", UtilMisc.toMap("error", responseString), locale);
             throw new AuthenticatorException(errMsg);
         }
         return userInfo;

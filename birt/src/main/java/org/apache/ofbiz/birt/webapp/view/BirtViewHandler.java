@@ -51,8 +51,8 @@ import org.xml.sax.SAXException;
 
 public class BirtViewHandler implements ViewHandler {
 
-    public static final String MODULE = BirtViewHandler.class.getName();
-    public static final String resource_error = "BirtErrorUiLabels";
+    private static final String MODULE = BirtViewHandler.class.getName();
+    private static final String RES_ERROR = "BirtErrorUiLabels";
 
     protected ServletContext servletContext = null;
 
@@ -89,7 +89,7 @@ public class BirtViewHandler implements ViewHandler {
             }
             if (UtilValidate.isEmpty(page)) {
                 Locale locale = request.getLocale();
-                throw new ViewHandlerException(UtilProperties.getMessage(resource_error, "BirtErrorNotPublishedReport", locale));
+                throw new ViewHandlerException(UtilProperties.getMessage(RES_ERROR, "BirtErrorNotPublishedReport", locale));
             }
             if (page.startsWith("component://")) {
                 InputStream reportInputStream = BirtFactory.getReportInputStreamFromLocation(page);

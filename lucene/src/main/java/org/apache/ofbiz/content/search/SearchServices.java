@@ -43,8 +43,8 @@ import java.util.HashMap;
  */
 public class SearchServices {
 
-    public static final String MODULE = SearchServices.class.getName();
-    public static final String resource = "ContentUiLabels";
+    private static final String MODULE = SearchServices.class.getName();
+    private static final String RESOURCE = "ContentUiLabels";
 
     public static Map<String, Object> indexContentTree(DispatchContext dctx, Map<String, ? extends Object> context) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -55,7 +55,7 @@ public class SearchServices {
             SearchWorker.indexContentTree(dispatcher, delegator, siteId);
         } catch (Exception e) {
             Debug.logError(e, MODULE);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+            return ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE,
                     "ContentIndexingTreeError", UtilMisc.toMap("errorString", e.toString()), locale));
         }
         return ServiceUtil.returnSuccess();

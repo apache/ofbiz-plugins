@@ -39,7 +39,7 @@ import org.apache.ofbiz.webapp.view.ViewHandlerException;
  */
 public class JspViewHandler extends AbstractViewHandler {
 
-    public static final String MODULE = JspViewHandler.class.getName();
+    private static final String MODULE = JspViewHandler.class.getName();
 
     protected ServletContext context;
 

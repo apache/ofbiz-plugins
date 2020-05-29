@@ -61,7 +61,7 @@ import com.ebay.soap.eBLBaseComponents.SellingManagerProductType;
 
 public class EbayStoreInventoryServices {
     private static final String MODULE = EbayStoreInventoryServices.class.getName();
-    public static final String resource = "EbayStoreUiLabels";
+    private static final String RESOURCE = "EbayStoreUiLabels";
     private static final String defaultFolderName = "OFBizProducts";
     private static String folderId = null;
     public EbayStoreInventoryServices() {
@@ -79,7 +79,7 @@ public class EbayStoreInventoryServices {
         boolean status = false;
         try {
             if (context.get("productStoreId") == null || context.get("productId") == null || context.get("folderId") == null) {
-                result = ServiceUtil.returnError(UtilProperties.getMessage(resource, "EbayStoreInventoryFolderIdRequired", locale));
+                result = ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE, "EbayStoreInventoryFolderIdRequired", locale));
                 result.put("productStoreId", context.get("productStoreId"));
                 result.put("facilityId", context.get("facilityId"));
                 result.put("folderId", context.get("folderId"));
@@ -116,9 +116,9 @@ public class EbayStoreInventoryServices {
                 }
                 if (status) {
                     Debug.logInfo("Done to updated product ".concat(context.get("productId").toString()), MODULE);
-                    result = ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "EbayStoreInventoryFolderIdUpdated", UtilMisc.toMap("folderId", context.get("folderId")), locale));
+                    result = ServiceUtil.returnSuccess(UtilProperties.getMessage(RESOURCE, "EbayStoreInventoryFolderIdUpdated", UtilMisc.toMap("folderId", context.get("folderId")), locale));
                 } else {
-                    result = ServiceUtil.returnError(UtilProperties.getMessage(resource, "EbayStoreInventoryFolderIdUpdatedFailed", locale));
+                    result = ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE, "EbayStoreInventoryFolderIdUpdatedFailed", locale));
                 }
             }
         }catch (ApiException e) {
@@ -273,7 +273,7 @@ public class EbayStoreInventoryServices {
                 } else {
                     EbayStoreHelper.createErrorLogMessage(userLogin, dctx.getDispatcher(), context.get("productStoreId").toString(), resp.getAck().toString(), "GetSellingManagerInventoryFolderCall : getFolderInEbayStoreInventory", resp.getErrors(0).getLongMessage());
                 }
-                result = ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "EbayStoreInventoryFolderIdLoaded", UtilMisc.toMap("folderId", folderId), locale));
+                result = ServiceUtil.returnSuccess(UtilProperties.getMessage(RESOURCE, "EbayStoreInventoryFolderIdLoaded", UtilMisc.toMap("folderId", folderId), locale));
             }
         } catch (ApiException e) {
             result = ServiceUtil.returnFailure(e.getMessage());
@@ -355,7 +355,7 @@ public class EbayStoreInventoryServices {
                             ebayProductStoreInventory.put("sold",new BigDecimal(prodInventoryStatus.getQuantitySold()));
                             ebayProductStoreInventory.put("unSold",new BigDecimal(prodInventoryStatus.getQuantityUnsold()));
                             ebayProductStoreInventory.store();
-                            result = ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "EbayStoreInventoryStatusUpdated", UtilMisc.toMap("productId", productId), locale));
+                            result = ServiceUtil.returnSuccess(UtilProperties.getMessage(RESOURCE, "EbayStoreInventoryStatusUpdated", UtilMisc.toMap("productId", productId), locale));
                             break;
                         }
                     }

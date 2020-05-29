@@ -35,7 +35,7 @@ import org.apache.ofbiz.base.util.Debug;
 @ServerEndpoint("/ws/pushNotifications")
 public class ExampleWebSockets {
 
-    public static final String MODULE = ExampleWebSockets.class.getName();
+    private static final String MODULE = ExampleWebSockets.class.getName();
     private static Set<Session> clients = Collections.synchronizedSet(new HashSet<Session>());
     
 

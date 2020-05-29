@@ -44,13 +44,13 @@ import com.ebay.soap.eBLBaseComponents.UserType;
 public class EbayStoreCustomerService {
 
     public static String MODULE = EbayStoreCustomerService.class.getName();
-    private static final String resource = "EbayStoreUiLabels";
+    private static final String RESOURCE = "EbayStoreUiLabels";
 
     public static Map<String, Object> listBestOfferIncludeMessage(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
         if (UtilValidate.isEmpty(context.get("userId")) || UtilValidate.isEmpty(context.get("itemId"))) {
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "EbayStoreRequiredUserIdAndItemId", locale));
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "EbayStoreRequiredUserIdAndItemId", locale));
         }
         Map <String, Object> result = new HashMap<String, Object>();
         try {
@@ -92,7 +92,7 @@ public class EbayStoreCustomerService {
             result.put("offerStatus", offerStatus);
             result.put("itemName", itemName);
         } catch (Exception e) {
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "EbayStoreErrorFromListBestOfferIncludeMessage", locale) + e);
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "EbayStoreErrorFromListBestOfferIncludeMessage", locale) + e);
         }
         return result;
     }
@@ -100,7 +100,7 @@ public class EbayStoreCustomerService {
         Delegator delegator = dctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
         if (UtilValidate.isEmpty(context.get("productStoreId")) || UtilValidate.isEmpty(context.get("userId")) || UtilValidate.isEmpty(context.get("itemId")) || UtilValidate.isEmpty(context.get("offerId")) || UtilValidate.isEmpty(context.get("contactSetting"))) {
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "EbayStoreRequiredUserIdAndItemIdAndProductStoreIdAndOfferIdAndContactStatus", locale));
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "EbayStoreRequiredUserIdAndItemIdAndProductStoreIdAndOfferIdAndContactStatus", locale));
         }
         String userId = (String) context.get("userId");
         String itemId = (String) context.get("itemId");
@@ -127,7 +127,7 @@ public class EbayStoreCustomerService {
                 respondToBestOfferCall.respondToBestOffer();
                 contactStatus = "FINISHED";
             } else {
-                return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "EbayStoreRequiredContactStatusSetting", locale));
+                return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "EbayStoreRequiredContactStatusSetting", locale));
             }
             GenericValue  ebayUserBestOffer = EntityQuery.use(delegator).from("EbayUserBestOffer").where("userId", userId, "itemId", itemId).queryOne();
             ebayUserBestOffer.set("contactStatus", contactStatus);
@@ -145,7 +145,7 @@ public class EbayStoreCustomerService {
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError(e.getMessage());
         } catch (Exception e) {
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "EbayStoreErrorFromUpdateContactStatus", locale) + e);
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "EbayStoreErrorFromUpdateContactStatus", locale) + e);
         }
         return result;
     }
@@ -156,7 +156,7 @@ public class EbayStoreCustomerService {
         Locale locale = (Locale) context.get("locale");
         Map <String, Object> result = new HashMap<String, Object>();
         if (UtilValidate.isEmpty(context.get("itemId")) || UtilValidate.isEmpty(context.get("userId"))) {
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "EbayStoreRequiredUserIdAndItemId", locale));
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "EbayStoreRequiredUserIdAndItemId", locale));
         }
         String itemId = (String) context.get("itemId");
         String userId = (String) context.get("userId");
@@ -167,7 +167,7 @@ public class EbayStoreCustomerService {
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError(e.getMessage());
         } catch (Exception e) {
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "EbayStoreErrorFromDeleteContactStatus", locale) + e);
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "EbayStoreErrorFromDeleteContactStatus", locale) + e);
         }
         return result;
     }

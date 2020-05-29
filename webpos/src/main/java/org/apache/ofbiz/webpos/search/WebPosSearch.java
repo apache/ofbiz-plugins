@@ -41,7 +41,7 @@ import org.apache.ofbiz.service.ServiceUtil;
 
 public class WebPosSearch {
 
-    public static final String MODULE = WebPosSearch.class.getName();
+    private static final String MODULE = WebPosSearch.class.getName();
     
     public static Map<String, Object> findProducts(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();

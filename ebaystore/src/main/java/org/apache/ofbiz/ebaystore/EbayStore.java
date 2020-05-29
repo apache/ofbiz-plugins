@@ -153,7 +153,7 @@ import com.ebay.soap.eBLBaseComponents.UserType;
 import com.ibm.icu.text.SimpleDateFormat;
 
 public class EbayStore {
-    private static final String resource = "EbayStoreUiLabels";
+    private static final String RESOURCE = "EbayStoreUiLabels";
     private static final String MODULE = ProductsExportToEbay.class.getName();
     public static ProductsExportToEbay productExportEbay = new ProductsExportToEbay();
 
@@ -228,10 +228,10 @@ public class EbayStore {
         List<GenericValue> catalogCategories = null;
 
         if (UtilValidate.isEmpty(context.get("prodCatalogId")) || UtilValidate.isEmpty(context.get("productStoreId")) || UtilValidate.isEmpty(context.get("partyId"))) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "EbayStoreSetCatalogIdAndProductStoreId", locale));
+            return ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE, "EbayStoreSetCatalogIdAndProductStoreId", locale));
         }
         if (!EbayStoreHelper.validatePartyAndRoleType(delegator,context.get("partyId").toString())) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "EbayStorePartyWithoutRoleEbayAccount", UtilMisc.toMap("partyId", context.get("partyId").toString()), locale));
+            return ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE, "EbayStorePartyWithoutRoleEbayAccount", UtilMisc.toMap("partyId", context.get("partyId").toString()), locale));
         }
         try {
             SetStoreCategoriesCall  call = new SetStoreCategoriesCall(EbayStoreHelper.getApiContext((String)context.get("productStoreId"), locale, delegator));
@@ -357,7 +357,7 @@ public class EbayStore {
                     }
                 }
             } else {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "EbayStoreRootCategoryNotFound", UtilMisc.toMap("prodCatalogId", context.get("prodCatalogId")), locale));
+                return ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE, "EbayStoreRootCategoryNotFound", UtilMisc.toMap("prodCatalogId", context.get("prodCatalogId")), locale));
             }
         } catch (GenericEntityException e) {
             result = ServiceUtil.returnError(e.getMessage());
@@ -407,9 +407,9 @@ public class EbayStore {
                             }
                         }
                     }
-                    result = ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "EbayExportToEbayStoreSuccess", locale));
+                    result = ServiceUtil.returnSuccess(UtilProperties.getMessage(RESOURCE, "EbayExportToEbayStoreSuccess", locale));
                 } else {
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, "EbayExportToEbayStoreFailed", UtilMisc.toMap("errorString", resp.getMessage()), locale));
+                    return ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE, "EbayExportToEbayStoreFailed", UtilMisc.toMap("errorString", resp.getMessage()), locale));
                 }
             }
         } catch (ApiException e) {
@@ -453,7 +453,7 @@ public class EbayStore {
 
         } catch (Exception e) {
             Debug.logError("Exception during building data items to eBay: " + e.getMessage(), MODULE);
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "productsExportToEbay.exceptionDuringBuildingDataItemsToEbay", locale));
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "productsExportToEbay.exceptionDuringBuildingDataItemsToEbay", locale));
         }
         return ServiceUtil.returnSuccess();
     }
@@ -497,7 +497,7 @@ public class EbayStore {
             dataStoreXml.append(UtilXml.writeXmlDocument(storeDocument));
         } catch (Exception e) {
             Debug.logError("Exception during building data to eBay: " + e.getMessage(), MODULE);
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "productsExportToEbay.exceptionDuringBuildingDataItemsToEbay", locale));
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "productsExportToEbay.exceptionDuringBuildingDataItemsToEbay", locale));
         }
         return ServiceUtil.returnSuccess();
     }
@@ -533,7 +533,7 @@ public class EbayStore {
 
         } catch (Exception e) {
             Debug.logError("Exception during building data to eBay: " + e.getMessage(), MODULE);
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "productsExportToEbay.exceptionDuringBuildingDataItemsToEbay", locale));
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "productsExportToEbay.exceptionDuringBuildingDataItemsToEbay", locale));
         }
         return ServiceUtil.returnSuccess();
     }
@@ -647,7 +647,7 @@ public class EbayStore {
                 if (resp != null && "SUCCESS".equals(resp.getAck().toString())) {
                     returnedStoreType  = resp.getStore();
                     result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-                    //result.put(ModelService.SUCCESS_MESSAGE, UtilProperties.getMessage(resource, "EbayStoreLoadSuccess", locale));
+                    //result.put(ModelService.SUCCESS_MESSAGE, UtilProperties.getMessage(RESOURCE, "EbayStoreLoadSuccess", locale));
                     // update product store in ofbiz
                     updateProductStore(dctx, context, returnedStoreType,(String) context.get("productStoreId"));
                     Map<String,Object> ebayResp = new HashMap<String, Object>();
@@ -963,7 +963,7 @@ public class EbayStore {
                         logoList.add(logo);
                         i++;
                     }
-                    result = ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "EbayStoreLoadLogoSuccess", locale));
+                    result = ServiceUtil.returnSuccess(UtilProperties.getMessage(RESOURCE, "EbayStoreLoadLogoSuccess", locale));
                     result.put("storeLogoOptList", logoList);
                 } else {
                     EbayStoreHelper.createErrorLogMessage(userLogin, dctx.getDispatcher(), context.get("productStoreId").toString(), resp.getAck().toString(), "Get store option : retrievePredesignedLogoOption", resp.getErrors(0).getLongMessage());
@@ -1015,7 +1015,7 @@ public class EbayStore {
                         themeList.add(basictheme);
                         i++;
                     }
-                    result = ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "EbayStoreLoadBasicThemeSuccess", locale));
+                    result = ServiceUtil.returnSuccess(UtilProperties.getMessage(RESOURCE, "EbayStoreLoadBasicThemeSuccess", locale));
                     result.put("storeThemeList", themeList);
                 } else {
                     EbayStoreHelper.createErrorLogMessage(userLogin, dctx.getDispatcher(), context.get("productStoreId").toString(), resp.getAck().toString(), "Get store option : retrieveBasicThemeArray", resp.getErrors(0).getLongMessage());
@@ -1047,7 +1047,7 @@ public class EbayStore {
                 resp = (GetStoreOptionsResponseType) call.execute(req);
 
                 if (resp != null && "SUCCESS".equals(resp.getAck().toString())) {
-                    result = ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "EbayStoreLoadAdvancedThemeSuccess", locale));
+                    result = ServiceUtil.returnSuccess(UtilProperties.getMessage(RESOURCE, "EbayStoreLoadAdvancedThemeSuccess", locale));
 
                     returnedAdvancedThemeArray = resp.getAdvancedThemeArray();
 
@@ -1201,7 +1201,7 @@ public class EbayStore {
                         advanceFontTheme.put("storeDescSizeList",descSizes);
                         i++;
                     }
-                    result = ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "EbayStoreLoadBasicThemeSuccess", locale));
+                    result = ServiceUtil.returnSuccess(UtilProperties.getMessage(RESOURCE, "EbayStoreLoadBasicThemeSuccess", locale));
                     result.put("advanceFontTheme", advanceFontTheme);
                 } else {
                     EbayStoreHelper.createErrorLogMessage(userLogin, dctx.getDispatcher(), context.get("productStoreId").toString(), resp.getAck().toString(), "Get store option : retrieveStoreFontTheme", resp.getErrors(0).getLongMessage());
@@ -1311,7 +1311,7 @@ public class EbayStore {
                 resp = (SetStoreResponseType) call.execute(req);
 
                 if (resp != null && "SUCCESS".equals(resp.getAck().toString())) {
-                    result = ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "EbayStoreSaveSuccess",locale));
+                    result = ServiceUtil.returnSuccess(UtilProperties.getMessage(RESOURCE, "EbayStoreSaveSuccess",locale));
                 } else {
                     result = ServiceUtil.returnError(resp.getMessage());
                 }
@@ -1837,7 +1837,7 @@ public class EbayStore {
         } catch (Exception e) {
             return ServiceUtil.returnError(e.getMessage());
         }
-        return ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "EbayStoreAddSecondChanceOfferSuccessful", locale));
+        return ServiceUtil.returnSuccess(UtilProperties.getMessage(RESOURCE, "EbayStoreAddSecondChanceOfferSuccessful", locale));
     }
 
     @SuppressWarnings("serial")
@@ -2290,7 +2290,7 @@ public class EbayStore {
         } catch (Exception e) {
             return ServiceUtil.returnError(e.getMessage());
         }
-        return ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "EbayStoreUpdateItemSuccessfully", locale));
+        return ServiceUtil.returnSuccess(UtilProperties.getMessage(RESOURCE, "EbayStoreUpdateItemSuccessfully", locale));
     }
     public Map<String, Object> geteBayClosedItem(DispatchContext dctx, Map<String, ? extends Object> context) {
         Map <String, Object> result = new HashMap<String, Object>();
@@ -2413,7 +2413,7 @@ public class EbayStore {
 
     public static Map<String, Object> getShippingDetail(AddressType shippingAddress, Locale locale) {
         if(UtilValidate.isEmpty(shippingAddress)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "EbayStoreRequiredShippingAddressParameter", locale));
+            return ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE, "EbayStoreRequiredShippingAddressParameter", locale));
         }
         Map<String, Object> result = new HashMap<String, Object>();
         String buyerName = null;

@@ -39,7 +39,7 @@ import org.apache.lucene.store.LockObtainFailedException;
 
 public class DocumentIndexer extends Thread {
 
-    public static final String MODULE = DocumentIndexer.class.getName();
+    private static final String MODULE = DocumentIndexer.class.getName();
 
     private static Map<String, DocumentIndexer> documentIndexerMap = new HashMap<>();
     private LinkedBlockingQueue<LuceneDocument> documentIndexQueue = new LinkedBlockingQueue<>();

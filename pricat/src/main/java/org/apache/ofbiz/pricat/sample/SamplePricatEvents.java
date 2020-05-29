@@ -37,7 +37,7 @@ import org.apache.ofbiz.pricat.PricatEvents;
 
 public class SamplePricatEvents extends PricatEvents {
     
-    public static final String MODULE = SamplePricatEvents.class.getName();
+    private static final String MODULE = SamplePricatEvents.class.getName();
     
     public static final String PricatLatestVersion = UtilProperties.getPropertyValue("pricat", "pricat.latest.version", "V1.1");
     

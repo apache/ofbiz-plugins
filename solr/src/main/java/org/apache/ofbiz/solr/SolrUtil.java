@@ -53,7 +53,7 @@ import org.apache.ofbiz.entity.GenericEntityException;
 public final class SolrUtil {
     
     private SolrUtil() {}
-    public static final String MODULE = SolrUtil.class.getName();
+    private static final String MODULE = SolrUtil.class.getName();
     private static final String[] solrProdAttribute = { "productId", "internalName", "manu", "size", "smallImage", "mediumImage", "largeImage", "listPrice", "defaultPrice", "inStock", "isVirtual" };
 
     private static final String solrConfigName = "solrconfig.properties";

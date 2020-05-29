@@ -88,10 +88,10 @@ import com.ibm.icu.util.ULocale;
 
 public class BirtServices {
 
-    public static final String MODULE = BirtServices.class.getName();
-    public static final String resource = "BirtUiLabels";
-    public static final String resource_error = "BirtErrorUiLabels";
-    public static final String resourceProduct = "BirtUiLabels";
+    private static final String MODULE = BirtServices.class.getName();
+    private static final String RESOURCE = "BirtUiLabels";
+    private static final String RES_ERROR = "BirtErrorUiLabels";
+    private static final String RES_PRODUCT = "BirtUiLabels";
 
     /**
      * Instantiate a new Flexible report, using the data given in parameters and <code>ReportDesignGenerator</code> class.
@@ -136,16 +136,16 @@ public class BirtServices {
             try {
                 Map<String, Object> convertRes = dispatcher.runSync("convertFieldTypeToBirtType", UtilMisc.toMap("fieldType", fieldType, "userLogin", userLogin));
                 if (ServiceUtil.isError(convertRes)) {
-                    String errMsg = UtilProperties.getMessage(resource_error, "BirtErrorConversionFieldToBirtFailed", locale);
+                    String errMsg = UtilProperties.getMessage(RES_ERROR, "BirtErrorConversionFieldToBirtFailed", locale);
                     return ServiceUtil.returnError(errMsg + ServiceUtil.getErrorMessage(convertRes));
                 }
                 birtType = (String) convertRes.get("birtType");
                 if (UtilValidate.isEmpty(birtType)) {
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorConversionFieldToBirtFailed", locale));
+                    return ServiceUtil.returnError(UtilProperties.getMessage(RES_ERROR, "BirtErrorConversionFieldToBirtFailed", locale));
                 }
             } catch (GenericServiceException e) {
                 Debug.logError(e, MODULE);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorConversionFieldToBirtFailed", locale));
+                return ServiceUtil.returnError(UtilProperties.getMessage(RES_ERROR, "BirtErrorConversionFieldToBirtFailed", locale));
             }
             // make more general when report forms have been made so too.
             if ("date-time".equalsIgnoreCase(birtType) || "date".equalsIgnoreCase(birtType) || "time".equalsIgnoreCase(birtType)) {
@@ -178,7 +178,7 @@ public class BirtServices {
         if (UtilValidate.isEmpty(entityViewName)) {
             entityViewName = (String) inputFields.get("modelElementName");
             if (UtilValidate.isEmpty(entityViewName)) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorEntityViewNotFound", locale));
+                return ServiceUtil.returnError(UtilProperties.getMessage(RES_ERROR, "BirtErrorEntityViewNotFound", locale));
             }
         }
 
@@ -186,22 +186,22 @@ public class BirtServices {
             resultPerformFind = dispatcher.runSync("performFind", UtilMisc.<String, Object>toMap("entityName", entityViewName, 
                     "inputFields", inputFields, "userLogin", userLogin, "noConditionFind", "Y", "locale", locale));
             if (ServiceUtil.isError(resultPerformFind)) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorRunningPerformFind", locale));
+                return ServiceUtil.returnError(UtilProperties.getMessage(RES_ERROR, "BirtErrorRunningPerformFind", locale));
             }
         } catch (GenericServiceException e) {
             Debug.logError(e, MODULE);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorRunningPerformFind", locale));
+            return ServiceUtil.returnError(UtilProperties.getMessage(RES_ERROR, "BirtErrorRunningPerformFind", locale));
         }
 
         try (EntityListIterator listIt = (EntityListIterator) resultPerformFind.get("listIt")) {
             if (UtilValidate.isNotEmpty(listIt)) {
                 list = listIt.getCompleteList();
             } else {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorRunningPerformFind", locale));
+                return ServiceUtil.returnError(UtilProperties.getMessage(RES_ERROR, "BirtErrorRunningPerformFind", locale));
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, MODULE);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorRunningPerformFind", locale));
+            return ServiceUtil.returnError(UtilProperties.getMessage(RES_ERROR, "BirtErrorRunningPerformFind", locale));
         }
         resultToBirt = ServiceUtil.returnSuccess();
         resultToBirt.put("records", list);
@@ -233,11 +233,11 @@ public class BirtServices {
             masterContentAttribute = EntityQuery.use(delegator).from("ContentAttribute").where(entityCondition).queryFirst();
         } catch (GenericEntityException e) {
             Debug.logError(e, MODULE);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorNoAttributeFound", locale));
+            return ServiceUtil.returnError(UtilProperties.getMessage(RES_ERROR, "BirtErrorNoAttributeFound", locale));
         }
 
         if (masterContentAttribute == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorNoAttributeFound", locale));
+            return ServiceUtil.returnError(UtilProperties.getMessage(RES_ERROR, "BirtErrorNoAttributeFound", locale));
         }
         String attrName = masterContentAttribute.getString("attrName");
         String reportContentId;
@@ -245,7 +245,7 @@ public class BirtServices {
             String entityViewName = masterContentAttribute.getString("attrValue");
             ModelEntity modelEntity = delegator.getModelEntity(entityViewName);
             if (modelEntity == null) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorEntityViewNotExist", locale) + " " + entityViewName);
+                return ServiceUtil.returnError(UtilProperties.getMessage(RES_ERROR, "BirtErrorEntityViewNotExist", locale) + " " + entityViewName);
             }
             try {
                 Map<String, Object> resultContent = dispatcher.runSync("createFlexibleReportFromMasterEntityWorkflow", UtilMisc.toMap("entityViewName", entityViewName,
@@ -256,7 +256,7 @@ public class BirtServices {
                 reportContentId = (String) resultContent.get("contentId");
             } catch (GenericServiceException e) {
                 Debug.logError(e, MODULE);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorCannotDetermineDataSource", locale));
+                return ServiceUtil.returnError(UtilProperties.getMessage(RES_ERROR, "BirtErrorCannotDetermineDataSource", locale));
             }
         } else if ("Service".equalsIgnoreCase(attrName)) {
             String serviceName = masterContentAttribute.getString("attrValue");
@@ -269,11 +269,11 @@ public class BirtServices {
                 reportContentId = (String) resultContent.get("contentId");
             } catch (GenericServiceException e) {
                 Debug.logError(e, MODULE);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorCannotDetermineDataSource", locale));
+                return ServiceUtil.returnError(UtilProperties.getMessage(RES_ERROR, "BirtErrorCannotDetermineDataSource", locale));
             }
         } else {
             // TODO check: could create other workflows. WebService? Does it need to be independent from Service workflow?
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorCannotDetermineDataSource", locale));
+            return ServiceUtil.returnError(UtilProperties.getMessage(RES_ERROR, "BirtErrorCannotDetermineDataSource", locale));
         }
 
         // prepare report form to display to allow override
@@ -287,10 +287,10 @@ public class BirtServices {
             textForm = (String) resultFormDisplay.get("textForm");
         } catch (GenericServiceException e) {
             Debug.logError(e, MODULE);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorCreatingDefaultSearchForm", locale).concat(": ").concat(e.getMessage()));
+            return ServiceUtil.returnError(UtilProperties.getMessage(RES_ERROR, "BirtErrorCreatingDefaultSearchForm", locale).concat(": ").concat(e.getMessage()));
         }
 
-        Map<String, Object> result = ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "BirtFlexibleReportSuccessfullyGenerated", locale).concat(" ").concat(reportName));
+        Map<String, Object> result = ServiceUtil.returnSuccess(UtilProperties.getMessage(RESOURCE, "BirtFlexibleReportSuccessfullyGenerated", locale).concat(" ").concat(reportName));
         result.put("textForm", textForm);
         result.put("reportContentId", reportContentId);
         return result;
@@ -311,7 +311,7 @@ public class BirtServices {
         // safety check : do not accept "${groovy", "${bsh" and "javascript"
         String overideFiltersNoWhiteSpace = overrideFilters.replaceAll("\\s", "");
         if (overideFiltersNoWhiteSpace.contains("${groovy:") || overideFiltersNoWhiteSpace.contains("${bsh:") || overideFiltersNoWhiteSpace.contains("javascript:")) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorUnauthorisedCharacter", locale));
+            return ServiceUtil.returnError(UtilProperties.getMessage(RES_ERROR, "BirtErrorUnauthorisedCharacter", locale));
         }
 
         try {
@@ -330,7 +330,7 @@ public class BirtServices {
             Debug.logError(e, MODULE);
             return ServiceUtil.returnError("Error in overrideReportForm service."); //TODO labelise
         }
-        return ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "BirtSearchFormSuccessfullyOverridde", locale));
+        return ServiceUtil.returnSuccess(UtilProperties.getMessage(RESOURCE, "BirtSearchFormSuccessfullyOverridde", locale));
     }
 
     /**
@@ -453,11 +453,11 @@ public class BirtServices {
                     "fieldDisplayLabels", fieldDisplayLabels,
                     "filterDisplayLabels", filterDisplayLabels));
             if (ServiceUtil.isError(resultGeneration)) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorCreatingFlexibleReport", locale));
+                return ServiceUtil.returnError(UtilProperties.getMessage(RES_ERROR, "BirtErrorCreatingFlexibleReport", locale));
             }
         } catch (GeneralException e) {
             Debug.logError(e, MODULE);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorCreatingFlexibleReport", locale));
+            return ServiceUtil.returnError(UtilProperties.getMessage(RES_ERROR, "BirtErrorCreatingFlexibleReport", locale));
         }
         result.put("contentId", contentId);
         return result;
@@ -507,15 +507,15 @@ public class BirtServices {
                 filterMap.put(field.concat("_fld0_op"), "short-varchar");
                 filterMap.put(field.concat("_fld1_value"), mField.getType());
                 filterMap.put(field.concat("_fld1_op"), "short-varchar");
-                filterDisplayLabels.put(field.concat("_fld0_value"), fieldDisplayLabels.get(field).concat(UtilProperties.getMessage(resource, "BirtFindFieldOptionValue0", locale)));
-                filterDisplayLabels.put(field.concat("_fld0_op"), fieldDisplayLabels.get(field).concat(UtilProperties.getMessage(resource, "BirtFindFieldOptionValue0", locale).concat(UtilProperties.getMessage(resource, "BirtFindCompareOperator", locale))));
-                filterDisplayLabels.put(field.concat("_fld1_value"), fieldDisplayLabels.get(field).concat(UtilProperties.getMessage(resource, "BirtFindFieldOptionValue1", locale)));
-                filterDisplayLabels.put(field.concat("_fld1_op"), fieldDisplayLabels.get(field).concat(UtilProperties.getMessage(resource, "BirtFindFieldOptionValue1", locale).concat(UtilProperties.getMessage(resource, "BirtFindCompareOperator", locale))));
+                filterDisplayLabels.put(field.concat("_fld0_value"), fieldDisplayLabels.get(field).concat(UtilProperties.getMessage(RESOURCE, "BirtFindFieldOptionValue0", locale)));
+                filterDisplayLabels.put(field.concat("_fld0_op"), fieldDisplayLabels.get(field).concat(UtilProperties.getMessage(RESOURCE, "BirtFindFieldOptionValue0", locale).concat(UtilProperties.getMessage(RESOURCE, "BirtFindCompareOperator", locale))));
+                filterDisplayLabels.put(field.concat("_fld1_value"), fieldDisplayLabels.get(field).concat(UtilProperties.getMessage(RESOURCE, "BirtFindFieldOptionValue1", locale)));
+                filterDisplayLabels.put(field.concat("_fld1_op"), fieldDisplayLabels.get(field).concat(UtilProperties.getMessage(RESOURCE, "BirtFindFieldOptionValue1", locale).concat(UtilProperties.getMessage(RESOURCE, "BirtFindCompareOperator", locale))));
             } else { // remaining types need 4 fields (fld0-1_op-value)
                 filterMap.put(field, mField.getType());
                 filterMap.put(field.concat("_op"), "short-varchar");
                 filterDisplayLabels.put(field, fieldDisplayLabels.get(field));
-                filterDisplayLabels.put(field.concat("_op"), fieldDisplayLabels.get(field).concat(UtilProperties.getMessage(resource, "BirtFindCompareOperator", locale)));
+                filterDisplayLabels.put(field.concat("_op"), fieldDisplayLabels.get(field).concat(UtilProperties.getMessage(RESOURCE, "BirtFindCompareOperator", locale)));
             }
         }
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -582,7 +582,7 @@ public class BirtServices {
             return ServiceUtil.returnError("Error in deleteAllReports service."); //TODO labelise
         }
         if (UtilValidate.isEmpty(listContent)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorNoFlexibleReportToDelete", locale));
+            return ServiceUtil.returnError(UtilProperties.getMessage(RES_ERROR, "BirtErrorNoFlexibleReportToDelete", locale));
         }
         listContentId = EntityUtil.getFieldListFromEntityList(listContent, "contentId", true);
 
@@ -597,7 +597,7 @@ public class BirtServices {
             Debug.logError(e, MODULE);
             return ServiceUtil.returnError("Error in deleteAllReports service."); //TODO labelise
         }
-        return ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "BirtFlexibleReportsSuccessfullyDeleted", locale));
+        return ServiceUtil.returnSuccess(UtilProperties.getMessage(RESOURCE, "BirtFlexibleReportsSuccessfullyDeleted", locale));
     }
 
     /**
@@ -629,14 +629,14 @@ public class BirtServices {
             return ServiceUtil.returnError("Error in deleteFlexibleReport service."); //TODO labelise
         }
         if (listRptDesignFileGV.size() > 1) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorUnexpectedNumberReportToDelete", locale));
+            return ServiceUtil.returnError(UtilProperties.getMessage(RES_ERROR, "BirtErrorUnexpectedNumberReportToDelete", locale));
         }
         List<String> listRptDesignFile = EntityUtil.getFieldListFromEntityList(listRptDesignFileGV, "drObjectInfo", false);
         String rptfileName = listRptDesignFile.get(0);
         Path path = Paths.get(rptfileName);
         try {
             if (!Files.deleteIfExists(path)) {
-                ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorCannotLocateReportFile", locale));
+                ServiceUtil.returnError(UtilProperties.getMessage(RES_ERROR, "BirtErrorCannotLocateReportFile", locale));
             }
         } catch (IOException e) {
             Debug.logError(e, MODULE);
@@ -656,7 +656,7 @@ public class BirtServices {
             Debug.logError(e, MODULE);
             return ServiceUtil.returnError("Error in deleteFlexibleReport service."); //TODO labelise
         }
-        return ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "BirtFlexibleReportSuccessfullyDeleted", locale));
+        return ServiceUtil.returnSuccess(UtilProperties.getMessage(RESOURCE, "BirtFlexibleReportSuccessfullyDeleted", locale));
     }
 
     /**
@@ -686,7 +686,7 @@ public class BirtServices {
         // get old file to restore dataset and datasource
         ByteBuffer newRptDesignBytes = (ByteBuffer) context.get("uploadRptDesign");
         if (newRptDesignBytes == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorCannotFindUploadedFile", locale));
+            return ServiceUtil.returnError(UtilProperties.getMessage(RES_ERROR, "BirtErrorCannotFindUploadedFile", locale));
         }
 
         GenericValue dataResource = null;
@@ -747,7 +747,7 @@ public class BirtServices {
             Files.deleteIfExists(path);
         } catch (Exception e) {
             Debug.logError(e, MODULE);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "BirtErrorInuploadRptDesignNoFile", locale));
+            return ServiceUtil.returnError(UtilProperties.getMessage(RES_ERROR, "BirtErrorInuploadRptDesignNoFile", locale));
         }
 
         //copy cube
@@ -858,7 +858,7 @@ public class BirtServices {
         if (Debug.infoOn()) Debug.logInfo("####### Design uploaded: ".concat(rptDesignName), MODULE);
 
         // TODO check: should we, as a secondary safety precaution, delete any file finishing with _TEMP_.rptdesign?
-        listSuccessMessage.add(UtilProperties.getMessage(resource, "BirtFlexibleRptDesignSuccessfullyUploaded", locale));
+        listSuccessMessage.add(UtilProperties.getMessage(RESOURCE, "BirtFlexibleRptDesignSuccessfullyUploaded", locale));
         result = ServiceUtil.returnSuccess(listSuccessMessage);
         return result;
     }

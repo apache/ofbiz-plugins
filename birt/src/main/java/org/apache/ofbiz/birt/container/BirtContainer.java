@@ -36,7 +36,7 @@ import org.apache.ofbiz.birt.BirtWorker;
 
 public class BirtContainer implements Container {
 
-    public static final String MODULE = BirtContainer.class.getName();
+    private static final String MODULE = BirtContainer.class.getName();
 
     protected String configFile;
 

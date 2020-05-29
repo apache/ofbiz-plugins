@@ -61,7 +61,7 @@ import org.xml.sax.SAXException;
  */
 public class JanrainHelper {
 
-    public static final String MODULE = JanrainHelper.class.getName();
+    private static final String MODULE = JanrainHelper.class.getName();
     private static String apiKey = UtilProperties.getPropertyValue("ecommerce", "janrain.apiKey");
     private static String baseUrl = UtilProperties.getPropertyValue("ecommerce", "janrain.baseUrl");
     public JanrainHelper(String apiKey, String baseUrl) {

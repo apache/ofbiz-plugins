@@ -48,8 +48,8 @@ import org.apache.ofbiz.service.ServiceUtil;
  */
 public class ScrumServices {
 
-    public static final String MODULE = ScrumServices.class.getName();
-    public static final String resource = "scrumUiLabels";
+    private static final String MODULE = ScrumServices.class.getName();
+    private static final String RESOURCE = "scrumUiLabels";
     public static Map<String, Object> linkToProduct(DispatchContext ctx, Map<String, ? extends Object> context) {
         Delegator delegator = ctx.getDelegator();
         Locale locale = (Locale)context.get("locale");
@@ -91,7 +91,7 @@ public class ScrumServices {
                                     }
                                 } catch (GenericServiceException e1) {
                                     Debug.logError(e1, "Error calling updating commevent status", MODULE);
-                                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ScrumErrorCallingUpdatingCommeventStatus", locale) + e1.toString());
+                                    return ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE, "ScrumErrorCallingUpdatingCommeventStatus", locale) + e1.toString());
                                 }
                             } else {
                                 Debug.logInfo("Product id " + productId + " found in subject but not in database", MODULE);
@@ -101,13 +101,13 @@ public class ScrumServices {
                 }
 
             } catch (GenericEntityException e) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ScrumFindByPrimaryKeyError", locale) + e.toString());
+                return ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE, "ScrumFindByPrimaryKeyError", locale) + e.toString());
             }
 
             Map<String, Object> result = ServiceUtil.returnSuccess();
             return result;
         } else {
-            Map<String, Object> result = ServiceUtil.returnError(UtilProperties.getMessage(resource, "ScrumCommunicationEventIdRequired", locale));
+            Map<String, Object> result = ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE, "ScrumCommunicationEventIdRequired", locale));
             return result;
         }
     }

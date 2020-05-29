@@ -53,7 +53,7 @@ import org.w3c.dom.Element;
 
 public class ImportOrdersFromEbay {
 
-    private static final String resource = "EbayUiLabels";
+    private static final String RESOURCE = "EbayUiLabels";
     private static final String MODULE = ImportOrdersFromEbay.class.getName();
 
     public static Map<String, Object> importOrdersSearchFromEbay(DispatchContext dctx, Map<String, Object> context) {
@@ -74,7 +74,7 @@ public class ImportOrdersFromEbay {
             }
         } catch (Exception e) {
             Debug.logError("Exception in importOrdersSearchFromEbay " + e, MODULE);
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "ordersImportFromEbay.exceptionInImportOrdersSearchFromEbay", locale));
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.exceptionInImportOrdersSearchFromEbay", locale));
         }
 
         return result;
@@ -117,7 +117,7 @@ public class ImportOrdersFromEbay {
             result = createShoppingCart(delegator, dispatcher, locale, order, true);
         } catch (Exception e) {
             Debug.logError("Exception in importOrderFromEbay " + e, MODULE);
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "ordersImportFromEbay.exceptionInImportOrderFromEbay", locale));
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.exceptionInImportOrderFromEbay", locale));
         }
 
         return result;
@@ -133,7 +133,7 @@ public class ImportOrdersFromEbay {
         try {
             if (orderId == null && externalId == null) {
                 Debug.logError("orderId or externalId must be filled", MODULE);
-                return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "ordersImportFromEbay.orderIdOrExternalIdAreMandatory", locale));
+                return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.orderIdOrExternalIdAreMandatory", locale));
             }
 
             GenericValue orderHeader = null;
@@ -143,7 +143,7 @@ public class ImportOrdersFromEbay {
                 orderHeader = EntityQuery.use(delegator).from("OrderHeader").where("orderId", orderId).queryOne();
                 if (orderHeader == null) {
                     Debug.logError("Cannot find order with orderId [" + orderId + "]", MODULE);
-                    return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "ordersImportFromEbay.errorRetrievingOrderFromOrderId", locale));
+                    return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.errorRetrievingOrderFromOrderId", locale));
                 }
 
                 if (!"EBAY_SALES_CHANNEL".equals(orderHeader.getString("salesChannelEnumId")) || orderHeader.getString("externalId") == null) {
@@ -171,12 +171,12 @@ public class ImportOrdersFromEbay {
                 if (successMessage != null) {
                     return readCompleteSaleResponse(successMessage, locale);
                 } else{
-                    ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "ordersImportFromEbay.errorDuringPostCompleteSaleRequest", locale));
+                    ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.errorDuringPostCompleteSaleRequest", locale));
                 }
             }
         } catch (Exception e) {
             Debug.logError("Exception in setEbayOrderToComplete " + e, MODULE);
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "ordersImportFromEbay.exceptionInSetEbayOrderToComplete", locale));
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.exceptionInSetEbayOrderToComplete", locale));
         }
         return ServiceUtil.returnSuccess();
     }
@@ -189,7 +189,7 @@ public class ImportOrdersFromEbay {
             return ServiceUtil.returnFailure(errorMessage.toString());
         } else if (orders.size() == 0) {
             Debug.logError("No orders found", MODULE);
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "ordersImportFromEbay.noOrdersFound", locale));
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.noOrdersFound", locale));
         } else {
             Iterator<Map<String, Object>> orderIter = orders.iterator();
             while (orderIter.hasNext()) {
@@ -229,7 +229,7 @@ public class ImportOrdersFromEbay {
                  UtilXml.addChildElementValue(transElem, "ModTimeFrom", fromDateOut, transDoc);
              } else {
                  Debug.logError("Cannot convert from date from yyyy-MM-dd HH:mm:ss.SSS date format to yyyy-MM-dd'T'HH:mm:ss.SSS'Z' date format", MODULE);
-                 return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "ordersImportFromEbay.cannotConvertFromDate", locale));
+                 return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.cannotConvertFromDate", locale));
              }
 
 
@@ -238,13 +238,13 @@ public class ImportOrdersFromEbay {
                  UtilXml.addChildElementValue(transElem, "ModTimeTo", fromDateOut, transDoc);
              } else {
                  Debug.logError("Cannot convert thru date from yyyy-MM-dd HH:mm:ss.SSS date format to yyyy-MM-dd'T'HH:mm:ss.SSS'Z' date format", MODULE);
-                 return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "ordersImportFromEbay.cannotConvertThruDate", locale));
+                 return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.cannotConvertThruDate", locale));
              }
              //Debug.logInfo("The value of generated string is ======= " + UtilXml.writeXmlDocument(transDoc), MODULE);
              dataItemsXml.append(UtilXml.writeXmlDocument(transDoc));
          } catch (Exception e) {
              Debug.logError("Exception during building get seller transactions request", MODULE);
-             return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "ordersImportFromEbay.exceptionDuringBuildingGetSellerTransactionRequest", locale));
+             return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.exceptionDuringBuildingGetSellerTransactionRequest", locale));
          }
          return ServiceUtil.returnSuccess();
     }
@@ -255,7 +255,7 @@ public class ImportOrdersFromEbay {
 
         try {
             if (externalId == null) {
-                return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "ordersImportFromEbay.errorDuringBuildItemAndTransactionIdFromExternalId", locale));
+                return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.errorDuringBuildItemAndTransactionIdFromExternalId", locale));
             }
 
             Document transDoc = UtilXml.makeEmptyXmlDocument("CompleteSaleRequest");
@@ -308,7 +308,7 @@ public class ImportOrdersFromEbay {
             dataItemsXml.append(UtilXml.writeXmlDocument(transDoc));
         } catch (Exception e) {
             Debug.logError("Exception during building complete sale request", MODULE);
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "ordersImportFromEbay.exceptionDuringBuildingCompleteSaleRequest", locale));
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.exceptionDuringBuildingCompleteSaleRequest", locale));
         }
         return ServiceUtil.returnSuccess();
     }
@@ -597,7 +597,7 @@ public class ImportOrdersFromEbay {
 
             // Product Store is mandatory
             if (productStoreId == null) {
-                return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "ordersImportFromEbay.productStoreIdIsMandatory", locale));
+                return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.productStoreIdIsMandatory", locale));
             } else {
                 GenericValue productStore = EntityQuery.use(delegator).from("ProductStore").where("productStoreId", productStoreId).queryOne();
                 if (productStore != null) {
@@ -605,7 +605,7 @@ public class ImportOrdersFromEbay {
                     payToPartyId = productStore.getString("payToPartyId");
                     facilityId = productStore.getString("inventoryFacilityId");
                 } else {
-                    return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "ordersImportFromEbay.productStoreIdIsMandatory", locale));
+                    return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.productStoreIdIsMandatory", locale));
                 }
             }
 
@@ -617,11 +617,11 @@ public class ImportOrdersFromEbay {
 
             if (UtilValidate.isNotEmpty(externalId)) {
                 if (externalOrderExists(delegator, externalId) != null && create) {
-                    return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "ordersImportFromEbay.externalIdAlreadyExist", locale));
+                    return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.externalIdAlreadyExist", locale));
                 }
                 cart.setExternalId(externalId);
             } else {
-                return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "ordersImportFromEbay.externalIdNotAvailable", locale));
+                return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.externalIdNotAvailable", locale));
             }
 
             cart.setOrderType("SALES_ORDER");
@@ -655,18 +655,18 @@ public class ImportOrdersFromEbay {
             // check if the producId exists and it is valid
             String productId = (String) parameters.get("productId");
             if (UtilValidate.isEmpty(productId)) {
-                return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "ordersImportFromEbay.productIdNotAvailable", locale));
+                return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.productIdNotAvailable", locale));
             } else {
                 GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne();
                 if (UtilValidate.isEmpty(product)) {
-                    return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "ordersImportFromEbay.productIdDoesNotExist", locale));
+                    return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.productIdDoesNotExist", locale));
                 }
             }
 
             // Before import the order from eBay to OFBiz is mandatory that the payment has be received
             String paidTime = (String) parameters.get("paidTime");
             if (UtilValidate.isEmpty(paidTime)) {
-                return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "ordersImportFromEbay.paymentIsStillNotReceived", locale));
+                return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.paymentIsStillNotReceived", locale));
             }
 
             BigDecimal unitPrice = new BigDecimal((String) parameters.get("transactionPrice"));
@@ -759,7 +759,7 @@ public class ImportOrdersFromEbay {
                     Debug.logInfo("Creating new postal address for party: " + partyId, MODULE);
                     contactMechId = EbayHelper.createAddress(dispatcher, partyId, userLogin, "SHIPPING_LOCATION", parameters);
                     if (UtilValidate.isEmpty(contactMechId)) {
-                        return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "EbayUnableToCreatePostalAddress", locale) + parameters);
+                        return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "EbayUnableToCreatePostalAddress", locale) + parameters);
                     }
                     Debug.logInfo("Created postal address: " + contactMechId, MODULE);
                     Debug.logInfo("Creating new phone number for party: " + partyId, MODULE);
@@ -813,7 +813,7 @@ public class ImportOrdersFromEbay {
             }
         } catch (Exception e) {
             Debug.logError("Exception in createShoppingCart: " + e.getMessage(), MODULE);
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "ordersImportFromEbay.exceptionInCreateShoppingCart", locale) + ": " + e.getMessage());
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.exceptionInCreateShoppingCart", locale) + ": " + e.getMessage());
         }
         return ServiceUtil.returnSuccess();
     }

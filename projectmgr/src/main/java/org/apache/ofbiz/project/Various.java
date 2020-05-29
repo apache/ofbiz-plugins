@@ -31,7 +31,7 @@ import org.apache.ofbiz.entity.util.EntityQuery;
 
 public class Various {
 
-    public static final String MODULE = Various.class.getName();
+    private static final String MODULE = Various.class.getName();
 
     public static void setDatesFollowingTasks(GenericValue task) {
 

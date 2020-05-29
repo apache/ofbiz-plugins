@@ -48,7 +48,7 @@ public class SampleHtmlThread extends AbstractReportThread {
     
     public static final List<String> messages = Collections.unmodifiableList(Arrays.asList(messageLables));
     
-    private static final String resource = "PricatUiLabels";
+    private static final String RESOURCE = "PricatUiLabels";
     
     /**
      * Constructor, creates a new HtmlImportThreat.
@@ -68,33 +68,33 @@ public class SampleHtmlThread extends AbstractReportThread {
     public void run() {
         try {
             if (getName().startsWith(COUNT_DOWN)) {
-                getReport().println(UtilProperties.getMessage(resource, "START_COUNT_DOWN", getLocale()), InterfaceReport.FORMAT_HEADLINE);
+                getReport().println(UtilProperties.getMessage(RESOURCE, "START_COUNT_DOWN", getLocale()), InterfaceReport.FORMAT_HEADLINE);
                 Random random = new Random();
                 int j = 0;
                 for (int i=1000; i>0; i--) {
                     sleep(20);
                     j = random.nextInt(7);
                     if (j == 6) {
-                        getReport().println(new Throwable(UtilProperties.getMessage(resource, messages.get(j), new Object[] {i}, getLocale())));
+                        getReport().println(new Throwable(UtilProperties.getMessage(RESOURCE, messages.get(j), new Object[] {i}, getLocale())));
                     } else {
-                        getReport().println(UtilProperties.getMessage(resource, messages.get(j), new Object[] {i}, getLocale()), j);
+                        getReport().println(UtilProperties.getMessage(RESOURCE, messages.get(j), new Object[] {i}, getLocale()), j);
                     }
                 }
-                getReport().println(UtilProperties.getMessage(resource, "COUNT_COMPLETED", getLocale()), InterfaceReport.FORMAT_HEADLINE);
+                getReport().println(UtilProperties.getMessage(RESOURCE, "COUNT_COMPLETED", getLocale()), InterfaceReport.FORMAT_HEADLINE);
             } else if (getName().startsWith(COUNT_UP)) {
-                getReport().println(UtilProperties.getMessage(resource, "START_COUNT_UP", getLocale()), InterfaceReport.FORMAT_HEADLINE);
+                getReport().println(UtilProperties.getMessage(RESOURCE, "START_COUNT_UP", getLocale()), InterfaceReport.FORMAT_HEADLINE);
                 Random random = new Random();
                 int j = 0;
                 for (int i=1; i<=1000; i++) {
                     sleep(20);
                     j = random.nextInt(7);
                     if (j == 6) {
-                        getReport().println(new Throwable(UtilProperties.getMessage(resource, messages.get(j), new Object[] {i}, getLocale())));
+                        getReport().println(new Throwable(UtilProperties.getMessage(RESOURCE, messages.get(j), new Object[] {i}, getLocale())));
                     } else {
-                        getReport().println(UtilProperties.getMessage(resource, messages.get(j), new Object[] {i}, getLocale()), j);
+                        getReport().println(UtilProperties.getMessage(RESOURCE, messages.get(j), new Object[] {i}, getLocale()), j);
                     }
                 }
-                getReport().println(UtilProperties.getMessage(resource, "COUNT_COMPLETED", getLocale()), InterfaceReport.FORMAT_HEADLINE);
+                getReport().println(UtilProperties.getMessage(RESOURCE, "COUNT_COMPLETED", getLocale()), InterfaceReport.FORMAT_HEADLINE);
             } else {
                 getReport().println(getName(), InterfaceReport.FORMAT_ERROR);
             }

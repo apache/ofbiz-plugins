@@ -39,7 +39,7 @@ import org.apache.ofbiz.service.LocalDispatcher;
  */
 public final class SearchWorker {
 
-    public static final String MODULE = SearchWorker.class.getName();
+    private static final String MODULE = SearchWorker.class.getName();
 
     private static final Version LUCENE_VERSION = Version.LUCENE_8_5_0;
 

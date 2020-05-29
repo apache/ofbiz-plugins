@@ -33,7 +33,7 @@ import org.apache.ofbiz.service.LocalDispatcher;
 
 public class EbayStoreAutoPrefEvents{
 
-    public static final String MODULE = EbayStoreAutoPrefEvents.class.getName();
+    private static final String MODULE = EbayStoreAutoPrefEvents.class.getName();
 
     public static String ebayAutoPrefCond (HttpServletRequest request, HttpServletResponse response) {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");

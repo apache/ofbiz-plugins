@@ -92,7 +92,7 @@ import com.ibm.icu.text.SimpleDateFormat;
 
 public class EbayStoreHelper {
     private static final String MODULE = EbayStoreHelper.class.getName();
-    public static final String resource = "EbayStoreUiLabels";
+    private static final String RESOURCE = "EbayStoreUiLabels";
 
     public static ApiContext getApiContext(String productStoreId,Locale locale, Delegator delegator) {
        Map<String, Object> context = new HashMap<String, Object>();
@@ -287,7 +287,7 @@ public class EbayStoreHelper {
             }
             if (UtilValidate.isEmpty(ebayProductPref.getString("autoPrefJobId"))) {
                 if (UtilValidate.isEmpty(serviceName)) {
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, "EbayStoreAutoPrefJobEmpty", locale));
+                    return ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE, "EbayStoreAutoPrefJobEmpty", locale));
                 }
                 /*** RuntimeData ***/
                 String runtimeDataId = null;

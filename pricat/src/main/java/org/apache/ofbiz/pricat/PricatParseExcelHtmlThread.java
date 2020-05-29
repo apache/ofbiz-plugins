@@ -66,7 +66,7 @@ import org.apache.ofbiz.service.LocalDispatcher;
  */
 public class PricatParseExcelHtmlThread extends AbstractReportThread {
     
-    public static final String MODULE = PricatParseExcelHtmlThread.class.getName();
+    private static final String MODULE = PricatParseExcelHtmlThread.class.getName();
 
     public static final String PARSE_EXCEL = "parse_excel";
     
@@ -102,7 +102,7 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
     
     private Map<String, String[]> facilities = new HashMap<>();
     
-    public static final String resource = "PricatUiLabels";
+    private static final String RESOURCE = "PricatUiLabels";
     
     private HttpSession session;
     
@@ -134,7 +134,7 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
         userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
         if (UtilValidate.isEmpty(userLogin)) {
             initHtmlReport(request, response, true, true);
-            getReport().println(UtilProperties.getMessage(resource, "PricatRequireUserLogin", getLocale()), InterfaceReport.FORMAT_ERROR);
+            getReport().println(UtilProperties.getMessage(RESOURCE, "PricatRequireUserLogin", getLocale()), InterfaceReport.FORMAT_ERROR);
             return;
         } else {
             userLoginId = userLogin.getString("userLoginId");
@@ -153,16 +153,16 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
             getReport().addLogFile(logFileName);
         }
         try {
-            getReport().print(UtilProperties.getMessage(resource, "StartStoreExcel", getLocale()), InterfaceReport.FORMAT_HEADLINE);
+            getReport().print(UtilProperties.getMessage(RESOURCE, "StartStoreExcel", getLocale()), InterfaceReport.FORMAT_HEADLINE);
             ServletFileUpload dfu = new ServletFileUpload(new DiskFileItemFactory(10240, userFolder));
             fileItems = UtilGenerics.cast(dfu.parseRequest(request));
         } catch (FileUploadException e) {
             getReport().addError(e);
         }
         if (UtilValidate.isEmpty(fileItems)) {
-            getReport().println(UtilProperties.getMessage(resource, "NoFileUploaded", getLocale()), InterfaceReport.FORMAT_ERROR);
+            getReport().println(UtilProperties.getMessage(RESOURCE, "NoFileUploaded", getLocale()), InterfaceReport.FORMAT_ERROR);
         } else {
-            getReport().println(UtilProperties.getMessage(resource, "ok", getLocale()), InterfaceReport.FORMAT_OK);
+            getReport().println(UtilProperties.getMessage(RESOURCE, "ok", getLocale()), InterfaceReport.FORMAT_OK);
         }
     }
 
@@ -178,16 +178,16 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
         try {
             if (getName().startsWith(PARSE_EXCEL) && UtilValidate.isNotEmpty(fileItems)) {
                 getReport().println();
-                getReport().println(UtilProperties.getMessage(resource, "StartParsePricat", getLocale()), InterfaceReport.FORMAT_HEADLINE);
+                getReport().println(UtilProperties.getMessage(RESOURCE, "StartParsePricat", getLocale()), InterfaceReport.FORMAT_HEADLINE);
                 if (prepareParse()) {
                     if (selectedPricatType.equals(DEFAULT_PRICAT_TYPE)) {
                         pricatParser = new SamplePricatParser(dispatcher, delegator, getLocale(), getReport(), facilities, pricatFile, userLogin);
                     }
                     if (UtilValidate.isEmpty(pricatParser)) {
-                        getReport().println(UtilProperties.getMessage(resource, "NoPricatParserFor", getLocale()), InterfaceReport.FORMAT_ERROR);
+                        getReport().println(UtilProperties.getMessage(RESOURCE, "NoPricatParserFor", getLocale()), InterfaceReport.FORMAT_ERROR);
                     } else {
                         pricatParser.parsePricatExcel();
-                        getReport().println(UtilProperties.getMessage(resource, "PricatParseCompleted", getLocale()), InterfaceReport.FORMAT_HEADLINE);
+                        getReport().println(UtilProperties.getMessage(RESOURCE, "PricatParseCompleted", getLocale()), InterfaceReport.FORMAT_HEADLINE);
                     }
                 }
             } else {
@@ -221,10 +221,10 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
         // 1 get facilities belong to current userLogin
         facilities = getCurrentUserLoginFacilities();
         if (UtilValidate.isEmpty(facilities)) {
-            getReport().println(UtilProperties.getMessage(resource, "CurrentUserLoginNoFacility", new Object[]{userLoginId}, getLocale()), InterfaceReport.FORMAT_ERROR);
+            getReport().println(UtilProperties.getMessage(RESOURCE, "CurrentUserLoginNoFacility", new Object[]{userLoginId}, getLocale()), InterfaceReport.FORMAT_ERROR);
             return false;
         } else {
-            getReport().println(" ... " + UtilProperties.getMessage(resource, "ok", getLocale()), InterfaceReport.FORMAT_OK);
+            getReport().println(" ... " + UtilProperties.getMessage(RESOURCE, "ok", getLocale()), InterfaceReport.FORMAT_OK);
             getReport().println();
         }
         
@@ -249,12 +249,12 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
                 }
             }
         }
-        getReport().print(UtilProperties.getMessage(resource, "ExcelTemplateTypeSelected", getLocale()), InterfaceReport.FORMAT_DEFAULT);
+        getReport().print(UtilProperties.getMessage(RESOURCE, "ExcelTemplateTypeSelected", getLocale()), InterfaceReport.FORMAT_DEFAULT);
         if (PricatTypeLabels.containsKey(selectedPricatType)) {
-            getReport().print(UtilProperties.getMessage(resource, PricatTypeLabels.get(selectedPricatType), getLocale()), InterfaceReport.FORMAT_DEFAULT);
-            getReport().println(" ... " + UtilProperties.getMessage(resource, "ok", getLocale()), InterfaceReport.FORMAT_OK);
+            getReport().print(UtilProperties.getMessage(RESOURCE, PricatTypeLabels.get(selectedPricatType), getLocale()), InterfaceReport.FORMAT_DEFAULT);
+            getReport().println(" ... " + UtilProperties.getMessage(RESOURCE, "ok", getLocale()), InterfaceReport.FORMAT_OK);
         } else {
-            getReport().println(UtilProperties.getMessage(resource, PricatTypeLabels.get(selectedPricatType), getLocale()), InterfaceReport.FORMAT_ERROR);
+            getReport().println(UtilProperties.getMessage(RESOURCE, PricatTypeLabels.get(selectedPricatType), getLocale()), InterfaceReport.FORMAT_ERROR);
             return false;
         }
 
@@ -279,7 +279,7 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
 
     private Map<String, String[]> getCurrentUserLoginFacilities() {
         getReport().println();
-        getReport().println(UtilProperties.getMessage(resource, "GetCurrentUserLoginFacility", getLocale()), InterfaceReport.FORMAT_DEFAULT);
+        getReport().println(UtilProperties.getMessage(RESOURCE, "GetCurrentUserLoginFacility", getLocale()), InterfaceReport.FORMAT_DEFAULT);
         Map<String, Object> context = new HashMap<>();
         context.put("userLogin", userLogin);
         context.put("locale", getLocale());
@@ -316,7 +316,7 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
                         if (!facilities.containsKey(facilityId)) {
                             String facilityName = facilityValue.getString("facilityName");
                             facilities.put(facilityId, new String[] {facilityName, facilityValue.getString("ownerPartyId")});
-                            getReport().println(UtilProperties.getMessage(resource, "FacilityFoundForCurrentUserLogin", new Object[]{String.valueOf(i), facilityName, facilityId}, getLocale()), InterfaceReport.FORMAT_NOTE);
+                            getReport().println(UtilProperties.getMessage(RESOURCE, "FacilityFoundForCurrentUserLogin", new Object[]{String.valueOf(i), facilityName, facilityId}, getLocale()), InterfaceReport.FORMAT_NOTE);
                             i++;
                         }
                     }

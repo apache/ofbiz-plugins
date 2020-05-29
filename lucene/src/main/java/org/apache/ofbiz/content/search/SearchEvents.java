@@ -39,7 +39,7 @@ import org.apache.ofbiz.service.ServiceUtil;
  */
 public class SearchEvents {
 
-    public static final String MODULE = SearchEvents.class.getName();
+    private static final String MODULE = SearchEvents.class.getName();
 
     public static String indexContentTree(HttpServletRequest request, HttpServletResponse response) {
 

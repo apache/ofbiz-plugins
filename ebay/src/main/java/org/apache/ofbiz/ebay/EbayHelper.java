@@ -60,7 +60,7 @@ import org.w3c.dom.Element;
 public class EbayHelper {
     private static final String configFileName = "ebayExport.properties";
     private static final String MODULE = EbayHelper.class.getName();
-    public static final String resource = "EbayUiLabels";
+    private static final String RESOURCE = "EbayUiLabels";
 
     public static Map<String, Object> buildEbayConfig(Map<String, Object> context, Delegator delegator) {
         Map<String, Object> buildEbayConfigContext = new HashMap<>();
@@ -71,7 +71,7 @@ public class EbayHelper {
             try {
                 eBayConfig = EntityQuery.use(delegator).from("EbayConfig").where(UtilMisc.toMap("productStoreId", productStoreId)).queryOne();
             } catch (GenericEntityException e) {
-                String errMsg = UtilProperties.getMessage(resource, "buildEbayConfig.unableToFindEbayConfig" + e.getMessage(), locale);
+                String errMsg = UtilProperties.getMessage(RESOURCE, "buildEbayConfig.unableToFindEbayConfig" + e.getMessage(), locale);
                 return ServiceUtil.returnError(errMsg);
             }
             if (eBayConfig != null) {

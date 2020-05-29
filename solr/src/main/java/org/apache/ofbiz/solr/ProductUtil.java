@@ -45,7 +45,7 @@ import org.apache.ofbiz.service.ServiceUtil;
  * Product utility class for solr.
  */
 public final class ProductUtil {
-    public static final String MODULE = ProductUtil.class.getName();
+    private static final String MODULE = ProductUtil.class.getName();
 
     private ProductUtil () {}
 

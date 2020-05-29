@@ -56,7 +56,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  */
 public class SamplePricatParser extends AbstractPricatParser {
     
-    public static final String MODULE = SamplePricatParser.class.getName();
+    private static final String MODULE = SamplePricatParser.class.getName();
 
     public static final Map<String, List<Object[]>> ColNamesList = UtilMisc.toMap("V1.1", genExcelHeaderNames("V1.1"));
 
@@ -79,13 +79,13 @@ public class SamplePricatParser extends AbstractPricatParser {
             FileInputStream is = new FileInputStream(pricatFile);
             
             // 2. use POI to load this bytes
-            report.print(UtilProperties.getMessage(resource, "ParsePricatFileStatement", new Object[] { pricatFile.getName() }, locale), InterfaceReport.FORMAT_DEFAULT);
+            report.print(UtilProperties.getMessage(RESOURCE, "ParsePricatFileStatement", new Object[] { pricatFile.getName() }, locale), InterfaceReport.FORMAT_DEFAULT);
             try {
                 workbook = new XSSFWorkbook(is);
-                report.println(UtilProperties.getMessage(resource, "ok", locale), InterfaceReport.FORMAT_OK);
+                report.println(UtilProperties.getMessage(RESOURCE, "ok", locale), InterfaceReport.FORMAT_OK);
             } catch(IOException e) {
                 report.println(e);
-                report.println(UtilProperties.getMessage(resource, "PricatSuggestion", locale), InterfaceReport.FORMAT_ERROR);
+                report.println(UtilProperties.getMessage(RESOURCE, "PricatSuggestion", locale), InterfaceReport.FORMAT_ERROR);
                 return;
             }
             
@@ -112,7 +112,7 @@ public class SamplePricatParser extends AbstractPricatParser {
             containsDataRows(sheet);
             
             if (UtilValidate.isNotEmpty(errorMessages)) {
-                report.println(UtilProperties.getMessage(resource, "HeaderContainsError", locale), InterfaceReport.FORMAT_ERROR);
+                report.println(UtilProperties.getMessage(RESOURCE, "HeaderContainsError", locale), InterfaceReport.FORMAT_ERROR);
                 return;
             }
             
@@ -120,7 +120,7 @@ public class SamplePricatParser extends AbstractPricatParser {
             // 4.1 parse row by row and store the contents into database
             parseRowByRow(sheet);
             if (UtilValidate.isNotEmpty(errorMessages)) {
-                report.println(UtilProperties.getMessage(resource, "DataContainsError", locale), InterfaceReport.FORMAT_ERROR);
+                report.println(UtilProperties.getMessage(RESOURCE, "DataContainsError", locale), InterfaceReport.FORMAT_ERROR);
                 if (writeFile) {
                     sequenceNum = report.getSequenceNum();
                     writeCommentsToFile(workbook, sheet);
@@ -153,11 +153,11 @@ public class SamplePricatParser extends AbstractPricatParser {
 
     @Override
     public boolean existsCurrencyId(XSSFSheet sheet) {
-        report.print(UtilProperties.getMessage(resource, "StartCheckCurrencyId", locale), InterfaceReport.FORMAT_NOTE);
+        report.print(UtilProperties.getMessage(RESOURCE, "StartCheckCurrencyId", locale), InterfaceReport.FORMAT_NOTE);
         XSSFCell currencyIdCell = sheet.getRow(2).getCell(1);
         currencyId = currencyIdCell.getStringCellValue().trim().toUpperCase();
         if (UtilValidate.isEmpty(currencyId)) {
-            String errorMessage = UtilProperties.getMessage(resource, "CurrencyIdRequired", locale);
+            String errorMessage = UtilProperties.getMessage(RESOURCE, "CurrencyIdRequired", locale);
             report.println(errorMessage, InterfaceReport.FORMAT_ERROR);
             errorMessages.put(new CellReference(currencyIdCell), errorMessage);
             return false;
@@ -165,19 +165,19 @@ public class SamplePricatParser extends AbstractPricatParser {
             try {
                 GenericValue currencyUom = EntityQuery.use(delegator).from("Uom").where("uomId", currencyId).queryOne();
                 if (!"CURRENCY_MEASURE".equals(currencyUom.getString("uomTypeId"))) {
-                    String errorMessage = UtilProperties.getMessage(resource, "CurrencyIdNotCurrency", new Object[] {currencyId}, locale);
+                    String errorMessage = UtilProperties.getMessage(RESOURCE, "CurrencyIdNotCurrency", new Object[] {currencyId}, locale);
                     report.println(errorMessage, InterfaceReport.FORMAT_ERROR);
                     errorMessages.put(new CellReference(currencyIdCell), errorMessage);
                     return false;
                 }
             } catch(GenericEntityException e) {
-                String errorMessage = UtilProperties.getMessage(resource, "CurrencyIdNotFound", new Object[] {currencyId}, locale);
+                String errorMessage = UtilProperties.getMessage(RESOURCE, "CurrencyIdNotFound", new Object[] {currencyId}, locale);
                 report.println(errorMessage, InterfaceReport.FORMAT_ERROR);
                 errorMessages.put(new CellReference(currencyIdCell), errorMessage);
                 return false;
             }
-            report.print(UtilProperties.getMessage(resource, "CurrencyIdIs", new Object[] {currencyId}, locale), InterfaceReport.FORMAT_NOTE);
-            report.println(" ... " + UtilProperties.getMessage(resource, "ok", locale), InterfaceReport.FORMAT_OK);
+            report.print(UtilProperties.getMessage(RESOURCE, "CurrencyIdIs", new Object[] {currencyId}, locale), InterfaceReport.FORMAT_NOTE);
+            report.println(" ... " + UtilProperties.getMessage(RESOURCE, "ok", locale), InterfaceReport.FORMAT_OK);
         }
         return true;
     }
@@ -205,8 +205,8 @@ public class SamplePricatParser extends AbstractPricatParser {
                     if (emptyRowEnd != -1) {
                         report.print(" - (" + (emptyRowEnd + 1) + ") ", InterfaceReport.FORMAT_NOTE);
                     }
-                    report.print(UtilProperties.getMessage(resource, "ExcelEmptyRow", locale), InterfaceReport.FORMAT_NOTE);
-                    report.println(" ... " + UtilProperties.getMessage(resource, "skipped", locale), InterfaceReport.FORMAT_NOTE);
+                    report.print(UtilProperties.getMessage(RESOURCE, "ExcelEmptyRow", locale), InterfaceReport.FORMAT_NOTE);
+                    report.println(" ... " + UtilProperties.getMessage(RESOURCE, "skipped", locale), InterfaceReport.FORMAT_NOTE);
                     emptyRowStart = -1;
                     emptyRowEnd = -1;
                 }
@@ -215,9 +215,9 @@ public class SamplePricatParser extends AbstractPricatParser {
             List<Object> cellContents = getCellContents(row, colNames, colNumber);
             try {
                 if (parseCellContentsAndStore(row, cellContents)) {
-                    report.println(" ... " + UtilProperties.getMessage(resource, "ok", locale), InterfaceReport.FORMAT_OK);
+                    report.println(" ... " + UtilProperties.getMessage(RESOURCE, "ok", locale), InterfaceReport.FORMAT_OK);
                 } else {
-                    report.println(" ... " + UtilProperties.getMessage(resource, "skipped", locale), InterfaceReport.FORMAT_NOTE);
+                    report.println(" ... " + UtilProperties.getMessage(RESOURCE, "skipped", locale), InterfaceReport.FORMAT_NOTE);
                 }
             } catch (GenericTransactionException e) {
                 report.println(e);
@@ -225,8 +225,8 @@ public class SamplePricatParser extends AbstractPricatParser {
         }
         if (emptyRowEnd != -1) {
             report.print(" - (" + (emptyRowEnd + 1) + ") ", InterfaceReport.FORMAT_NOTE);
-            report.print(UtilProperties.getMessage(resource, "ExcelEmptyRow", locale), InterfaceReport.FORMAT_NOTE);
-            report.println(" ... " + UtilProperties.getMessage(resource, "skipped", locale), InterfaceReport.FORMAT_NOTE);
+            report.print(UtilProperties.getMessage(RESOURCE, "ExcelEmptyRow", locale), InterfaceReport.FORMAT_NOTE);
+            report.println(" ... " + UtilProperties.getMessage(RESOURCE, "skipped", locale), InterfaceReport.FORMAT_NOTE);
         }
     }
 
@@ -294,12 +294,12 @@ public class SamplePricatParser extends AbstractPricatParser {
             if (features.containsKey("index") && String.valueOf(features.get("index")).contains("0")) {
                 int cell = headerColNames.indexOf("Color");
                 XSSFCell colorCell = row.getCell(cell);
-                errorMessages.put(new CellReference(colorCell), UtilProperties.getMessage(resource, "PricatColorError", locale));
+                errorMessages.put(new CellReference(colorCell), UtilProperties.getMessage(RESOURCE, "PricatColorError", locale));
             }
             if (features.containsKey("index") && String.valueOf(features.get("index")).contains("1")) {
                 int cell = headerColNames.indexOf("Size");
                 XSSFCell colorCell = row.getCell(cell);
-                errorMessages.put(new CellReference(colorCell), UtilProperties.getMessage(resource, "PricatDimensionError", locale));
+                errorMessages.put(new CellReference(colorCell), UtilProperties.getMessage(RESOURCE, "PricatDimensionError", locale));
             }
             return false;
         }
@@ -360,7 +360,7 @@ public class SamplePricatParser extends AbstractPricatParser {
                     String theFacilityId = (String) facilities.keySet().toArray()[0];
                     String name = facilities.get(theFacilityId)[0];
                     if (!name.equals(facilityName)) {
-                        String errorMessage = UtilProperties.getMessage(resource, "FacilityNameNotMatchId", new Object[]{theFacilityId, name, facilityName}, locale);
+                        String errorMessage = UtilProperties.getMessage(RESOURCE, "FacilityNameNotMatchId", new Object[]{theFacilityId, name, facilityName}, locale);
                         report.println();
                         report.print(errorMessage, InterfaceReport.FORMAT_ERROR);
                         XSSFCell cell = row.getCell(0);
@@ -369,7 +369,7 @@ public class SamplePricatParser extends AbstractPricatParser {
                     }
                 }
             } else {
-                String errorMessage = UtilProperties.getMessage(resource, "FacilityNotBelongToYou", new Object[]{facilityName, facilityId}, locale);
+                String errorMessage = UtilProperties.getMessage(RESOURCE, "FacilityNotBelongToYou", new Object[]{facilityName, facilityId}, locale);
                 report.println();
                 report.print(errorMessage, InterfaceReport.FORMAT_ERROR);
                 XSSFCell cell = row.getCell(1);
@@ -379,7 +379,7 @@ public class SamplePricatParser extends AbstractPricatParser {
         } else {
             String name = facilities.get(facilityId)[0];
             if (!name.equals(facilityName)) {
-                String errorMessage = UtilProperties.getMessage(resource, "FacilityNameNotMatchId", new Object[]{facilityId, name, facilityName}, locale);
+                String errorMessage = UtilProperties.getMessage(RESOURCE, "FacilityNameNotMatchId", new Object[]{facilityId, name, facilityName}, locale);
                 report.println();
                 report.print(errorMessage, InterfaceReport.FORMAT_ERROR);
                 XSSFCell cell = row.getCell(0);
@@ -394,28 +394,28 @@ public class SamplePricatParser extends AbstractPricatParser {
     public boolean isTableHeaderMatched(XSSFSheet sheet) {
         List<Object[]> columnNames = ColNamesList.get(pricatFileVersion);
         short cols = sheet.getRow(headerRowNo).getLastCellNum();
-        report.print(UtilProperties.getMessage(resource, "StartCheckHeaderColNum", new Object[] {pricatFileVersion}, locale), InterfaceReport.FORMAT_NOTE);
+        report.print(UtilProperties.getMessage(RESOURCE, "StartCheckHeaderColNum", new Object[] {pricatFileVersion}, locale), InterfaceReport.FORMAT_NOTE);
         if (cols != columnNames.size()) {
-            report.print(UtilProperties.getMessage(resource, "HeaderColNumNotMatch", new Object[] {String.valueOf(cols), String.valueOf(columnNames.size())}, locale), InterfaceReport.FORMAT_WARNING);
+            report.print(UtilProperties.getMessage(RESOURCE, "HeaderColNumNotMatch", new Object[] {String.valueOf(cols), String.valueOf(columnNames.size())}, locale), InterfaceReport.FORMAT_WARNING);
             if (cols < columnNames.size()) {
-                report.println(UtilProperties.getMessage(resource, "HeaderColNumShortThanRequired", new Object[] {String.valueOf(columnNames.size())}, locale), InterfaceReport.FORMAT_ERROR);
+                report.println(UtilProperties.getMessage(RESOURCE, "HeaderColNumShortThanRequired", new Object[] {String.valueOf(columnNames.size())}, locale), InterfaceReport.FORMAT_ERROR);
                 return false;
             } else {
-                report.println(UtilProperties.getMessage(resource, "UseHeaderColNum", new Object[] {String.valueOf(columnNames.size())}, locale), InterfaceReport.FORMAT_WARNING);
+                report.println(UtilProperties.getMessage(RESOURCE, "UseHeaderColNum", new Object[] {String.valueOf(columnNames.size())}, locale), InterfaceReport.FORMAT_WARNING);
                 cols = (short) columnNames.size();
             }
         } else {
-            report.println(UtilProperties.getMessage(resource, "ok", locale), InterfaceReport.FORMAT_OK);
+            report.println(UtilProperties.getMessage(RESOURCE, "ok", locale), InterfaceReport.FORMAT_OK);
         }
         
-        report.print(UtilProperties.getMessage(resource, "StartCheckHeaderColLabel", new Object[] {pricatFileVersion}, locale), InterfaceReport.FORMAT_NOTE);
+        report.print(UtilProperties.getMessage(RESOURCE, "StartCheckHeaderColLabel", new Object[] {pricatFileVersion}, locale), InterfaceReport.FORMAT_NOTE);
         boolean foundLabelNotMatch = false;
         for (int i = 0; i < cols; i++) {
             String coltext = sheet.getRow(headerRowNo).getCell(i).getStringCellValue().trim();
             headerColNames.add(coltext);
             Object[] versionColumn = columnNames.get(i);
             if (!coltext.equals(versionColumn[0])) {
-                report.println(UtilProperties.getMessage(resource, "HeaderColLabelNotMatch", new Object[] {String.valueOf(headerRowNo + 1), String.valueOf(i + 1), coltext, versionColumn[0]}, locale), InterfaceReport.FORMAT_ERROR);
+                report.println(UtilProperties.getMessage(RESOURCE, "HeaderColLabelNotMatch", new Object[] {String.valueOf(headerRowNo + 1), String.valueOf(i + 1), coltext, versionColumn[0]}, locale), InterfaceReport.FORMAT_ERROR);
                 foundLabelNotMatch = true;
             } else {
                 report.print(" " + coltext, InterfaceReport.FORMAT_NOTE);
@@ -428,20 +428,20 @@ public class SamplePricatParser extends AbstractPricatParser {
             report.println();
             return false;
         }
-        report.println(" ... " + UtilProperties.getMessage(resource, "ok", locale), InterfaceReport.FORMAT_OK);
+        report.println(" ... " + UtilProperties.getMessage(RESOURCE, "ok", locale), InterfaceReport.FORMAT_OK);
         return true;
     }
 
     @Override
     public boolean isVersionSupported(XSSFSheet sheet) {
-        report.print(UtilProperties.getMessage(resource, "StartCheckPricatVersion", locale), InterfaceReport.FORMAT_NOTE);
+        report.print(UtilProperties.getMessage(RESOURCE, "StartCheckPricatVersion", locale), InterfaceReport.FORMAT_NOTE);
         pricatFileVersion = sheet.getRow(2).getCell(0).getStringCellValue().trim();
         if (ColNamesList.containsKey(pricatFileVersion)) {
             report.print(" " + pricatFileVersion + " ... ", InterfaceReport.FORMAT_NOTE);
-            report.println(UtilProperties.getMessage(resource, "ok", locale), InterfaceReport.FORMAT_OK);
+            report.println(UtilProperties.getMessage(RESOURCE, "ok", locale), InterfaceReport.FORMAT_OK);
         } else {
-            report.println(UtilProperties.getMessage(resource, "error", locale), InterfaceReport.FORMAT_ERROR);
-            report.println(UtilProperties.getMessage(resource, "PricatVersionNotSupport", new Object[] {pricatFileVersion}, locale), InterfaceReport.FORMAT_ERROR);
+            report.println(UtilProperties.getMessage(RESOURCE, "error", locale), InterfaceReport.FORMAT_ERROR);
+            report.println(UtilProperties.getMessage(RESOURCE, "PricatVersionNotSupport", new Object[] {pricatFileVersion}, locale), InterfaceReport.FORMAT_ERROR);
             return false;
         }
         return true;
@@ -451,9 +451,9 @@ public class SamplePricatParser extends AbstractPricatParser {
     public boolean containsDataRows(XSSFSheet sheet) {
         int rows = sheet.getPhysicalNumberOfRows();
         if (rows > headerRowNo + 1) {
-            report.println(UtilProperties.getMessage(resource, "PricatTableRows", new Object[] {String.valueOf(headerRowNo + 1), String.valueOf(rows - headerRowNo - 1), sheet.getSheetName()}, locale), InterfaceReport.FORMAT_NOTE);
+            report.println(UtilProperties.getMessage(RESOURCE, "PricatTableRows", new Object[] {String.valueOf(headerRowNo + 1), String.valueOf(rows - headerRowNo - 1), sheet.getSheetName()}, locale), InterfaceReport.FORMAT_NOTE);
         } else {
-            report.println(UtilProperties.getMessage(resource, "PricatNoDataRows", new Object[] {sheet.getSheetName()}, locale), InterfaceReport.FORMAT_ERROR);
+            report.println(UtilProperties.getMessage(RESOURCE, "PricatNoDataRows", new Object[] {sheet.getSheetName()}, locale), InterfaceReport.FORMAT_ERROR);
             return false;
         }
         return true;
@@ -567,9 +567,9 @@ public class SamplePricatParser extends AbstractPricatParser {
             }
             if (cell == null) {
                 if ((Boolean) colNames.get(i)[2] && (facilities.keySet().size() > 1 || (facilities.keySet().size() == 1 && i >= 2))) {
-                    report.print(UtilProperties.getMessage(resource, "ErrorColCannotEmpty", new Object[] {colNames.get(i)[0]}, locale), InterfaceReport.FORMAT_WARNING);
+                    report.print(UtilProperties.getMessage(RESOURCE, "ErrorColCannotEmpty", new Object[] {colNames.get(i)[0]}, locale), InterfaceReport.FORMAT_WARNING);
                     cell = row.createCell(i);
-                    errorMessages.put(new CellReference(cell), UtilProperties.getMessage(resource, "ErrorColCannotEmpty", new Object[] {colNames.get(i)[0]}, locale));
+                    errorMessages.put(new CellReference(cell), UtilProperties.getMessage(RESOURCE, "ErrorColCannotEmpty", new Object[] {colNames.get(i)[0]}, locale));
                     foundError = true;
                     results.add(null);
                     continue;
@@ -598,8 +598,8 @@ public class SamplePricatParser extends AbstractPricatParser {
                 report.print(((i == 0)?"":","), InterfaceReport.FORMAT_NOTE);
             }
             if ((Boolean) colNames.get(i)[2] && UtilValidate.isEmpty(cellValue) && (facilities.keySet().size() > 1 || (facilities.keySet().size() == 1 && i >= 2))) {
-                report.print(UtilProperties.getMessage(resource, "ErrorColCannotEmpty", new Object[] {colNames.get(i)[0]}, locale), InterfaceReport.FORMAT_WARNING);
-                errorMessages.put(new CellReference(cell), UtilProperties.getMessage(resource, "ErrorColCannotEmpty", new Object[] {colNames.get(i)[0]}, locale));
+                report.print(UtilProperties.getMessage(RESOURCE, "ErrorColCannotEmpty", new Object[] {colNames.get(i)[0]}, locale), InterfaceReport.FORMAT_WARNING);
+                errorMessages.put(new CellReference(cell), UtilProperties.getMessage(RESOURCE, "ErrorColCannotEmpty", new Object[] {colNames.get(i)[0]}, locale));
                 foundError = true;
                 results.add(null);
                 continue;
@@ -620,7 +620,7 @@ public class SamplePricatParser extends AbstractPricatParser {
                         results.add(BigDecimal.valueOf(Double.parseDouble(cell.getStringCellValue())).setScale(FinAccountHelper.decimals, FinAccountHelper.rounding));
                     } catch (NumberFormatException e) {
                         results.add(null);
-                        errorMessages.put(new CellReference(cell), UtilProperties.getMessage(resource, "ErrorParseValueToNumeric", locale));
+                        errorMessages.put(new CellReference(cell), UtilProperties.getMessage(RESOURCE, "ErrorParseValueToNumeric", locale));
                     }
                 }
             } else {
@@ -641,21 +641,21 @@ public class SamplePricatParser extends AbstractPricatParser {
                             results.add(BigDecimal.valueOf(Double.valueOf(cell.getStringCellValue())));
                         } catch (NumberFormatException e) {
                             results.add(null);
-                            errorMessages.put(new CellReference(cell), UtilProperties.getMessage(resource, "ErrorParseValueToNumeric", locale));
+                            errorMessages.put(new CellReference(cell), UtilProperties.getMessage(RESOURCE, "ErrorParseValueToNumeric", locale));
                         }
                     } else if (cell.getCellType() == CellType.NUMERIC) {
                         try {
                             results.add(BigDecimal.valueOf(cell.getNumericCellValue()).setScale(FinAccountHelper.decimals, FinAccountHelper.rounding));
                         } catch (NumberFormatException e) {
                             results.add(null);
-                            errorMessages.put(new CellReference(cell), UtilProperties.getMessage(resource, "ErrorParseValueToNumeric", locale));
+                            errorMessages.put(new CellReference(cell), UtilProperties.getMessage(RESOURCE, "ErrorParseValueToNumeric", locale));
                         }
                     } else {
                         try {
                             results.add(BigDecimal.valueOf(Double.valueOf(cellValue)).setScale(FinAccountHelper.decimals, FinAccountHelper.rounding));
                         } catch (NumberFormatException e) {
                             results.add(null);
-                            errorMessages.put(new CellReference(cell), UtilProperties.getMessage(resource, "ErrorParseValueToNumeric", locale));
+                            errorMessages.put(new CellReference(cell), UtilProperties.getMessage(RESOURCE, "ErrorParseValueToNumeric", locale));
                         }
                     }
                 }

@@ -62,8 +62,8 @@ import org.apache.ofbiz.service.ServiceValidationException;
  */
 public abstract class SolrProductSearch {
 
-    public static final String MODULE = SolrProductSearch.class.getName();
-    public static final String resource = "SolrUiLabels";
+    private static final String MODULE = SolrProductSearch.class.getName();
+    private static final String RESOURCE = "SolrUiLabels";
 
     /**
      * Adds product to solr, with product denoted by productId field in instance attribute
@@ -149,7 +149,7 @@ public abstract class SolrProductSearch {
             client.add(docs);
             client.commit();
 
-            final String statusStr = UtilProperties.getMessage(resource, "SolrDocumentForProductIdAddedToSolrIndex", UtilMisc.toMap("productId", context.get("productId")), locale);
+            final String statusStr = UtilProperties.getMessage(RESOURCE, "SolrDocumentForProductIdAddedToSolrIndex", UtilMisc.toMap("productId", context.get("productId")), locale);
             Debug.logInfo("Solr: " + statusStr, MODULE);
             result = ServiceUtil.returnSuccess(statusStr);
         }
@@ -160,7 +160,7 @@ public abstract class SolrProductSearch {
         }
         catch (SolrServerException e) {
             if (e.getCause() != null && e.getCause() instanceof ConnectException) {
-                final String statusStr = UtilProperties.getMessage(resource, "SolrFailureConnectingToSolrServerToCommitProductId",
+                final String statusStr = UtilProperties.getMessage(RESOURCE, "SolrFailureConnectingToSolrServerToCommitProductId",
                         UtilMisc.toMap("productId", context.get("productId")), locale);
                 if (Boolean.TRUE.equals(treatConnectErrorNonFatal)) {
                     Debug.logWarning(e, "Solr: " + statusStr, MODULE);
@@ -226,7 +226,7 @@ public abstract class SolrProductSearch {
             client.add(docs);
             client.commit();
 
-            final String statusStr = UtilProperties.getMessage(resource, "SolrAddedDocumentsToSolrIndex", UtilMisc.toMap("fieldList", fieldList.size()), locale);
+            final String statusStr = UtilProperties.getMessage(RESOURCE, "SolrAddedDocumentsToSolrIndex", UtilMisc.toMap("fieldList", fieldList.size()), locale);
             Debug.logInfo("Solr: " + statusStr, MODULE);
             result = ServiceUtil.returnSuccess(statusStr);
         }
@@ -237,7 +237,7 @@ public abstract class SolrProductSearch {
         }
         catch (SolrServerException e) {
             if (e.getCause() != null && e.getCause() instanceof ConnectException) {
-                final String statusStr = UtilProperties.getMessage(resource, "SolrFailureConnectingToSolrServerToCommitProductList",
+                final String statusStr = UtilProperties.getMessage(RESOURCE, "SolrFailureConnectingToSolrServerToCommitProductList",
                         UtilMisc.toMap("productId", context.get("productId")), locale);
                 if (Boolean.TRUE.equals(treatConnectErrorNonFatal)) {
                     Debug.logWarning(e, "Solr: " + statusStr, MODULE);
@@ -398,7 +398,7 @@ public abstract class SolrProductSearch {
                 String productCategoryId = (String) context.get("productCategoryId");
                 dispatchMap.put("query", "cat:*" + productCategoryId + "*");
             } else
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "SolrMissingProductCategoryId", locale));
+                return ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE, "SolrMissingProductCategoryId", locale));
             if (context.get("viewSize") != null)
                 dispatchMap.put("viewSize", Integer.parseInt(((String) context.get("viewSize"))));
             if (context.get("viewIndex") != null)
@@ -704,7 +704,7 @@ public abstract class SolrProductSearch {
             } else if (ServiceUtil.isFailure(runResult)) {
                 result = ServiceUtil.returnFailure(runMsg);
             } else {
-                final String statusMsg = UtilProperties.getMessage(resource, "SolrClearedSolrIndexAndReindexedDocuments", UtilMisc.toMap("numDocs", numDocs), locale);
+                final String statusMsg = UtilProperties.getMessage(RESOURCE, "SolrClearedSolrIndexAndReindexedDocuments", UtilMisc.toMap("numDocs", numDocs), locale);
                 result = ServiceUtil.returnSuccess(statusMsg);
             }
         }
@@ -714,7 +714,7 @@ public abstract class SolrProductSearch {
         }
         catch (SolrServerException e) {
             if (e.getCause() != null && e.getCause() instanceof ConnectException) {
-                final String statusStr = UtilProperties.getMessage(resource, "SolrFailureConnectingToSolrServerToRebuildIndex", locale);
+                final String statusStr = UtilProperties.getMessage(RESOURCE, "SolrFailureConnectingToSolrServerToRebuildIndex", locale);
                 if (Boolean.TRUE.equals(treatConnectErrorNonFatal)) {
                     Debug.logWarning(e, "Solr: " + statusStr, MODULE);
                     result = ServiceUtil.returnFailure(statusStr);

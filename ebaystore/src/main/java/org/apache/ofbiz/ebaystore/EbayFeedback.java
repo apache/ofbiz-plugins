@@ -52,7 +52,7 @@ import com.ebay.soap.eBLBaseComponents.TransactionType;
 
 public class EbayFeedback {
 
-    public static final String resource = "EbayUiLabels";
+    private static final String RESOURCE = "EbayUiLabels";
 
     public static Map<String, Object> loadFeedback(DispatchContext dctx, Map<String, ? extends Object> context) {
         Map<String, Object> result = new HashMap<String, Object>();
@@ -205,7 +205,7 @@ public class EbayFeedback {
         } catch (Exception e) {
             result = ServiceUtil.returnError("Exception ".concat(e.getMessage()));
         }
-        String successMsg = UtilProperties.getMessage(resource, "EbayLoadEbayFeedbackSuccessful", locale);
+        String successMsg = UtilProperties.getMessage(RESOURCE, "EbayLoadEbayFeedbackSuccessful", locale);
         result = ServiceUtil.returnSuccess(successMsg);
         return result;
     }

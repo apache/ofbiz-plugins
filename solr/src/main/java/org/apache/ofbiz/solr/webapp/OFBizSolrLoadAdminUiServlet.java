@@ -41,7 +41,7 @@ import org.apache.solr.core.SolrCore;
 public class OFBizSolrLoadAdminUiServlet extends OFBizSolrRedirectServlet {
 
     private static final long serialVersionUID = 1L;
-    public static final String MODULE = OFBizSolrLoadAdminUiServlet.class.getName();
+    private static final String MODULE = OFBizSolrLoadAdminUiServlet.class.getName();
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {

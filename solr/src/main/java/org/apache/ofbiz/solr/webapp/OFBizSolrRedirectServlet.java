@@ -37,7 +37,7 @@ import org.apache.solr.servlet.RedirectServlet;
 @SuppressWarnings("serial")
 public class OFBizSolrRedirectServlet extends RedirectServlet {
 
-    public static final String MODULE = OFBizSolrRedirectServlet.class.getName();
+    private static final String MODULE = OFBizSolrRedirectServlet.class.getName();
     
     /**
      * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)

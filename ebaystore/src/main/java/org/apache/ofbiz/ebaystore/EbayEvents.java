@@ -92,7 +92,7 @@ import com.ebay.soap.eBLBaseComponents.AddItemResponseType;
 public class EbayEvents {
 
     private static final int SHIPPING_SERVICE_ID_LIMIT = 50000;
-    public static final String MODULE = EbayEvents.class.getName();
+    private static final String MODULE = EbayEvents.class.getName();
 
     public static String sendLeaveFeedback(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(true);

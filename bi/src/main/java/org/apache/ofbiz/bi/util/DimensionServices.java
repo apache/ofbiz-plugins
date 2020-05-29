@@ -41,8 +41,8 @@ import org.apache.ofbiz.service.ServiceUtil;
 
 public class DimensionServices {
 
-    public static final String MODULE = DimensionServices.class.getName();
-    public static final String resource = "BiUiLabels";
+    private static final String MODULE = DimensionServices.class.getName();
+    private static final String RESOURCE = "BiUiLabels";
 
     public static Map<String, Object> getDimensionIdFromNaturalKey(DispatchContext ctx, Map<String, ? extends Object> context) {
         Map<String, Object> resultMap = ServiceUtil.returnSuccess();
@@ -75,7 +75,7 @@ public class DimensionServices {
                 andCondition.put(naturalKeyField, dimensionValue.get(naturalKeyField));
             }
             if (andCondition.isEmpty()) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "BusinessIntelligenceNaturalKeyWithourDimension", UtilMisc.toMap("naturalKeyFields", naturalKeyFields, "dimensionValue", dimensionValue), locale));
+                return ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE, "BusinessIntelligenceNaturalKeyWithourDimension", UtilMisc.toMap("naturalKeyFields", naturalKeyFields, "dimensionValue", dimensionValue), locale));
             }
             List<GenericValue> existingDimensionValues = null;
             try {
@@ -99,7 +99,7 @@ public class DimensionServices {
                     dimensionValue.set("dimensionId", delegator.getNextSeqId(dimensionValue.getEntityName()));
                     dimensionValue.create();
                 } else {
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, "BusinessIntelligenceUpdateModeStillNotSupported", UtilMisc.toMap("updateMode", updateMode), locale));
+                    return ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE, "BusinessIntelligenceUpdateModeStillNotSupported", UtilMisc.toMap("updateMode", updateMode), locale));
                 }
             }
         } catch (GenericEntityException gee) {

@@ -30,7 +30,7 @@ import com.microsoft.schemas.vml.CTShape;
 
 public final class OFBizPricatUtil {
     
-    public static final String MODULE = OFBizPricatUtil.class.getName();
+    private static final String MODULE = OFBizPricatUtil.class.getName();
     
     protected static Method VMLDrawingMethod;
     

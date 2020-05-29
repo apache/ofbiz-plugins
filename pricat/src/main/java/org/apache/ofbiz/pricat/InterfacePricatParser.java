@@ -59,7 +59,7 @@ public interface InterfacePricatParser {
     
     public static final String FACILITY_ID = "facilityId";
     
-    public static final String resource = "PricatUiLabels";
+    public static final String RESOURCE = "PricatUiLabels";
     
     public static final String PRICAT_FILE = "__PRICAT_FILE__";
 

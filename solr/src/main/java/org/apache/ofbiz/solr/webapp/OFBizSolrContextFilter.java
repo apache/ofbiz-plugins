@@ -57,9 +57,9 @@ import org.apache.solr.servlet.SolrDispatchFilter;
  */
 public class OFBizSolrContextFilter extends SolrDispatchFilter {
 
-    public static final String MODULE = OFBizSolrContextFilter.class.getName();
+    private static final String MODULE = OFBizSolrContextFilter.class.getName();
     
-    private static final String resource = "SolrUiLabels";
+    private static final String RESOURCE = "SolrUiLabels";
 
     @Override
     public void init(FilterConfig config) throws ServletException {
@@ -95,9 +95,9 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
                     os.flush();
                     String message = "";
                     if (UtilValidate.isEmpty(userLogin)) {
-                        message = UtilProperties.getMessage(resource, "SolrErrorManageLoginFirst", locale);
+                        message = UtilProperties.getMessage(RESOURCE, "SolrErrorManageLoginFirst", locale);
                     } else {
-                        message = UtilProperties.getMessage(resource, "SolrErrorNoManagePermission", locale);
+                        message = UtilProperties.getMessage(RESOURCE, "SolrErrorNoManagePermission", locale);
                     }
                     Debug.logInfo("[" + httpRequest.getRequestURI().substring(1) + "(Domain:" + request.getScheme() + "://" + request.getServerName() + ")] Request error: " + message, MODULE);
                 } catch (ConversionException e) {
@@ -188,12 +188,12 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
             if (UtilValidate.isEmpty(userLogin)) {
                 httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 responseHeader.put("status", HttpServletResponse.SC_UNAUTHORIZED);
-                message = UtilProperties.getMessage(resource, notLoginMessage, locale);
+                message = UtilProperties.getMessage(RESOURCE, notLoginMessage, locale);
                 responseHeader.put("message", message);
             } else {
                 httpResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 responseHeader.put("status", HttpServletResponse.SC_FORBIDDEN);
-                message = UtilProperties.getMessage(resource, noPermissionMessage, locale);
+                message = UtilProperties.getMessage(RESOURCE, noPermissionMessage, locale);
                 responseHeader.put("message", message);
             }
             json = mapToJson.convert(UtilMisc.toMap("responseHeader", (Object) responseHeader));

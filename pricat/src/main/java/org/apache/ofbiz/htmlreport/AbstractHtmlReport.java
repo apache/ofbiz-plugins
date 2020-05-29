@@ -30,7 +30,7 @@ import org.apache.ofbiz.htmlreport.util.ReportStringUtil;
  */
 public abstract class AbstractHtmlReport extends HtmlReport {
     
-    public static final String MODULE = AbstractHtmlReport.class.getName();
+    private static final String MODULE = AbstractHtmlReport.class.getName();
 
     public final static String THREAD_TYPE = "thread_type";
     

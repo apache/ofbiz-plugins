@@ -118,7 +118,7 @@ import com.ebay.soap.eBLBaseComponents.UserType;
 
 public class EbayStoreAutoPreferences {
     public static String MODULE = EbayStoreAutoPreferences.class.getName();
-    private static final String resource = "EbayStoreUiLabels";
+    private static final String RESOURCE = "EbayStoreUiLabels";
 
     public EbayStoreAutoPreferences() {
 
@@ -131,7 +131,7 @@ public class EbayStoreAutoPreferences {
         Locale locale = (Locale) context.get("locale");
 
         if (UtilValidate.isEmpty(context.get("productStoreId")) && UtilValidate.isEmpty(context.get("jobId"))) {
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "EbayStoreRequiredProductStoreId", locale));
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "EbayStoreRequiredProductStoreId", locale));
         }
         String jobId = (String) context.get("jobId");
         String productStoreId = (String) context.get("productStoreId");
@@ -214,7 +214,7 @@ public class EbayStoreAutoPreferences {
         } catch (GenericEntityException gee) {
             return ServiceUtil.returnError(gee.getMessage());
         } catch (Exception e) {
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "EbayStoreProblemConnectingToEbaySite", locale) + e);
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "EbayStoreProblemConnectingToEbaySite", locale) + e);
         }
 
         return ServiceUtil.returnSuccess();
@@ -318,7 +318,7 @@ public class EbayStoreAutoPreferences {
         Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "system").queryOne();
         if (UtilValidate.isEmpty(context.get("productStoreId")) && UtilValidate.isEmpty(context.get("jobId"))) {
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "EbayStoreRequiredProductStoreId", locale));
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "EbayStoreRequiredProductStoreId", locale));
         }
         String jobId = (String) context.get("jobId");
         String productStoreId = (String) context.get("productStoreId");
@@ -395,7 +395,7 @@ public class EbayStoreAutoPreferences {
                 }
             }
         } catch (Exception e) {
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "EbayStoreProblemConnectingToEbaySite", locale) + e);
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "EbayStoreProblemConnectingToEbaySite", locale) + e);
         }
 
         return ServiceUtil.returnSuccess();
@@ -692,7 +692,7 @@ public class EbayStoreAutoPreferences {
         GenericValue userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "system").queryOne();
 
         if (UtilValidate.isEmpty(context.get("productStoreId")) && UtilValidate.isEmpty(context.get("jobId"))) {
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "EbayStoreRequiredProductStoreId", locale));
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "EbayStoreRequiredProductStoreId", locale));
         }
 
         String jobId = (String) context.get("jobId");
@@ -755,7 +755,7 @@ public class EbayStoreAutoPreferences {
                 }
             }
         } catch (Exception e) {
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "EbayStoreProblemConnectingToEbaySite", locale) + e);
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "EbayStoreProblemConnectingToEbaySite", locale) + e);
         }
 
         return ServiceUtil.returnSuccess();

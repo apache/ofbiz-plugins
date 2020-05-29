@@ -43,7 +43,7 @@ import org.apache.ofbiz.entity.util.EntityQuery;
 
 public class PricatEvents {
     
-    public static final String MODULE = PricatEvents.class.getName();
+    private static final String MODULE = PricatEvents.class.getName();
     
     public static final String PricatLatestVersion = UtilProperties.getPropertyValue("pricat", "pricat.latest.version", "V1.1");
     

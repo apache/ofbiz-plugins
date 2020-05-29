@@ -55,7 +55,7 @@ import com.ebay.soap.eBLBaseComponents.StoreOwnerExtendedListingDurationsType;
 import com.ebay.soap.eBLBaseComponents.ThemeGroupType;
 
 public class EbayStoreCategoryFacade {
-    public static final String MODULE = EbayStoreCategoryFacade.class.getName();
+    private static final String MODULE = EbayStoreCategoryFacade.class.getName();
     private ApiContext apiContext = null;
     private String catId = null;
     private IAttributesMaster attrMaster = null;

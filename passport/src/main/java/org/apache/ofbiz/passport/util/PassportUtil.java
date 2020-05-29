@@ -28,7 +28,7 @@ import org.apache.ofbiz.base.util.Debug;
 
 public class PassportUtil {
 
-    public static final String MODULE = PassportUtil.class.getName();
+    private static final String MODULE = PassportUtil.class.getName();
     
     public static final String ClientIdLabel = "ClientId";
     

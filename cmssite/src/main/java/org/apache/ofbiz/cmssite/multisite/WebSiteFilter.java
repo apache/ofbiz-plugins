@@ -51,7 +51,7 @@ import org.apache.ofbiz.webapp.stats.VisitHandler;
 // Used to filter website on the basis of hosted pathAlias.
 public class WebSiteFilter implements Filter {
 
-    public static final String MODULE = WebSiteFilter.class.getName();
+    private static final String MODULE = WebSiteFilter.class.getName();
 
     protected FilterConfig m_config = null;
 

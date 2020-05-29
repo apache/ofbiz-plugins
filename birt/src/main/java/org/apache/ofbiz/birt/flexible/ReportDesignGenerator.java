@@ -81,7 +81,7 @@ public class ReportDesignGenerator {
     private String rptDesignName;
     private boolean generateFilters = false;
 
-    public static final String resource_error = "BirtErrorUiLabels";
+    private static final String RES_ERROR = "BirtErrorUiLabels";
 
     public ReportDesignGenerator(Map<String, Object> context, DispatchContext dctx) throws GeneralException, SemanticException {
         locale = (Locale) context.get("locale");
@@ -146,7 +146,7 @@ public class ReportDesignGenerator {
             for (String filter : filterMap.keySet()) {
                 String birtType = BirtUtil.convertFieldTypeToBirtParameterType(filterMap.get(filter));
                 if (birtType == null) {
-                    throw new GeneralException(UtilProperties.getMessage(resource_error, "BirtErrorConversionFieldToBirtFailed", locale));
+                    throw new GeneralException(UtilProperties.getMessage(RES_ERROR, "BirtErrorConversionFieldToBirtFailed", locale));
                 }
                 // get label
                 String displayFilterName;
@@ -310,7 +310,7 @@ public class ReportDesignGenerator {
             resultSetCol.setColumnName(field);
             String birtType = BirtUtil.convertFieldTypeToBirtType(dataMap.get(field));
             if (birtType == null) {
-                 throw new GeneralException(UtilProperties.getMessage(resource_error, "BirtErrorConversionFieldToBirtFailed", locale));
+                 throw new GeneralException(UtilProperties.getMessage(RES_ERROR, "BirtErrorConversionFieldToBirtFailed", locale));
             }
             resultSetCol.setPosition(i);
             resultSetCol.setDataType(birtType);

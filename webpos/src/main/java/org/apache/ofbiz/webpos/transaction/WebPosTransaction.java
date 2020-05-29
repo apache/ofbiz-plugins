@@ -48,8 +48,8 @@ import org.apache.ofbiz.webpos.session.WebPosSession;
 
 public class WebPosTransaction {
 
-    public static final String resource = "WebPosUiLabels";
-    public static final String MODULE = WebPosTransaction.class.getName();
+    private static final String RESOURCE = "WebPosUiLabels";
+    private static final String MODULE = WebPosTransaction.class.getName();
     public static final int NO_PAYMENT = 0;
     public static final int INTERNAL_PAYMENT = 1;
     public static final int EXTERNAL_PAYMENT = 2;
@@ -196,7 +196,7 @@ public class WebPosTransaction {
         BigDecimal grandTotal = this.getGrandTotal();
         BigDecimal paymentAmt = this.getPaymentTotal();
         if (grandTotal.compareTo(paymentAmt) > 0) {
-            throw new GeneralException(UtilProperties.getMessage(resource, "WebPosNotEnoughFunds", webPosSession.getLocale()));
+            throw new GeneralException(UtilProperties.getMessage(RESOURCE, "WebPosNotEnoughFunds", webPosSession.getLocale()));
         }
 
         // attach the party ID to the cart

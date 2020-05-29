@@ -50,7 +50,7 @@ import org.apache.ofbiz.entity.util.EntityQuery;
  */
 public class ScrumEvents {
 
-    public static final String MODULE = ScrumEvents.class.getName();
+    private static final String MODULE = ScrumEvents.class.getName();
 
     public static String timeSheetChecker(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();

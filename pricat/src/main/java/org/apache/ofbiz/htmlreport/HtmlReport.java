@@ -50,12 +50,12 @@ import org.apache.ofbiz.htmlreport.util.ReportStringUtil;
  */
 public class HtmlReport extends AbstractReport {
 
-    public static final String MODULE = HtmlReport.class.getName();
+    private static final String MODULE = HtmlReport.class.getName();
 
-    /** The delimiter that is used in the resource list request parameter. */
+    /** The delimiter that is used in the RESOURCE list request parameter. */
     public static final String DELIMITER_RESOURCES = "|";
 
-    /** Request parameter name for the resource list. */
+    /** Request parameter name for the RESOURCE list. */
     public static final String PARAM_RESOURCELIST = "resourcelist";
 
     /** Constant for a HTML linebreak with added "real" line break. */
@@ -157,10 +157,10 @@ public class HtmlReport extends AbstractReport {
     /** Request parameter value for the action: set. */
     public static final String DIALOG_SET = "set";
 
-    /** The resource list parameter value. */
+    /** The RESOURCE list parameter value. */
     protected String paramResourcelist;
 
-    /** The list of resource names for the multi operation. */
+    /** The list of RESOURCE names for the multi operation. */
     protected List<String> resourceList;
 
     /** The key name which contains the localized message for the continue checkbox. */
@@ -170,7 +170,7 @@ public class HtmlReport extends AbstractReport {
     
     public static final String FORM_URI = "formuri";
     
-    public static final String resource = "PricatUiLabels";
+    private static final String RESOURCE = "PricatUiLabels";
     
     /** Log file. */
     protected File logFile;
@@ -433,7 +433,7 @@ public class HtmlReport extends AbstractReport {
         StringBuffer buf = new StringBuffer(256);
         if (showExceptionStackTrace) {
             buf.append("aT('");
-            buf.append(UtilProperties.getMessage(resource, "REPORT_EXCEPTION", getLocale()));
+            buf.append(UtilProperties.getMessage(RESOURCE, "REPORT_EXCEPTION", getLocale()));
             String exception = ReportEncoder.escapeXml(throwable.getLocalizedMessage());
             if (UtilValidate.isEmpty(exception)) {
                 exception = ReportEncoder.escapeXml(throwable.getMessage());
@@ -447,7 +447,7 @@ public class HtmlReport extends AbstractReport {
             buf.append("'); ");
         } else {
             buf.append("aT('");
-            buf.append(UtilProperties.getMessage(resource, "REPORT_EXCEPTION", getLocale()));
+            buf.append(UtilProperties.getMessage(RESOURCE, "REPORT_EXCEPTION", getLocale()));
             buf.append(ReportStringUtil.escapeJavaScript(throwable.toString()));
             buf.append("'); ");
         }
@@ -458,7 +458,7 @@ public class HtmlReport extends AbstractReport {
         StringBuffer buf = new StringBuffer(256);
         if (showExceptionStackTrace) {
             buf.append("<span class='throw'>");
-            buf.append(UtilProperties.getMessage(resource, "REPORT_EXCEPTION", getLocale()));
+            buf.append(UtilProperties.getMessage(RESOURCE, "REPORT_EXCEPTION", getLocale()));
             String exception = ReportEncoder.escapeXml(throwable.getLocalizedMessage());
             if (UtilValidate.isEmpty(exception)) {
                 exception = ReportEncoder.escapeXml(throwable.getMessage());
@@ -472,7 +472,7 @@ public class HtmlReport extends AbstractReport {
             buf.append("</span>");
         } else {
             buf.append("<span class='throw'>");
-            buf.append(UtilProperties.getMessage(resource, "REPORT_EXCEPTION", getLocale()));
+            buf.append(UtilProperties.getMessage(RESOURCE, "REPORT_EXCEPTION", getLocale()));
             buf.append(throwable.toString());
             buf.append("</span>");
             buf.append(getLineBreak());
@@ -1027,7 +1027,7 @@ public class HtmlReport extends AbstractReport {
         switch (button) {
             case BUTTON_OK:
                 result.append("<input name=\"ok\" value=\"");
-                result.append(UtilProperties.getMessage(resource, "DIALOG_BUTTON_OK", getLocale()) + "\"");
+                result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_OK", getLocale()) + "\"");
                 if (attribute.toLowerCase().indexOf("onclick") == -1) {
                     result.append(" type=\"submit\"");
                 } else {
@@ -1039,7 +1039,7 @@ public class HtmlReport extends AbstractReport {
                 break;
             case BUTTON_CANCEL:
                 result.append("<input name=\"cancel\" type=\"button\" value=\"");
-                result.append(UtilProperties.getMessage(resource, "DIALOG_BUTTON_CANCEL", getLocale()) + "\"");
+                result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_CANCEL", getLocale()) + "\"");
                 if (attribute.toLowerCase().indexOf("onclick") == -1) {
                     result.append(" onclick=\"submitAction('" + DIALOG_CANCEL + "', form);\"");
                 }
@@ -1049,7 +1049,7 @@ public class HtmlReport extends AbstractReport {
                 break;
             case BUTTON_EDIT:
                 result.append("<input name=\"ok\" value=\"");
-                result.append(UtilProperties.getMessage(resource, "DIALOG_BUTTON_EDIT", getLocale()) + "\"");
+                result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_EDIT", getLocale()) + "\"");
                 if (attribute.toLowerCase().indexOf("onclick") == -1) {
                     result.append(" type=\"submit\"");
                 } else {
@@ -1061,7 +1061,7 @@ public class HtmlReport extends AbstractReport {
                 break;
             case BUTTON_DISCARD:
                 result.append("<input name=\"cancel\" type=\"button\" value=\"");
-                result.append(UtilProperties.getMessage(resource, "DIALOG_BUTTON_DISCARD", getLocale()) + "\"");
+                result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_DISCARD", getLocale()) + "\"");
                 if (attribute.toLowerCase().indexOf("onclick") == -1) {
                     result.append(" onclick=\"submitAction('" + DIALOG_CANCEL + "', form);\"");
                 }
@@ -1071,7 +1071,7 @@ public class HtmlReport extends AbstractReport {
                 break;
             case BUTTON_CLOSE:
                 result.append("<input name=\"close\" type=\"button\" value=\"");
-                result.append(UtilProperties.getMessage(resource, "DIALOG_BUTTON_CLOSE", getLocale()) + "\"");
+                result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_CLOSE", getLocale()) + "\"");
                 if (attribute.toLowerCase().indexOf("onclick") == -1) {
                     result.append(" onclick=\"submitAction('" + DIALOG_CANCEL + "', form);\"");
                 }
@@ -1081,14 +1081,14 @@ public class HtmlReport extends AbstractReport {
                 break;
             case BUTTON_ADVANCED:
                 result.append("<input name=\"advanced\" type=\"button\" value=\"");
-                result.append(UtilProperties.getMessage(resource, "DIALOG_BUTTON_ADVANCE", getLocale()) + "\"");
+                result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_ADVANCE", getLocale()) + "\"");
                 result.append(" class=\"dialogbutton\"");
                 result.append(attribute);
                 result.append(">\n");
                 break;
             case BUTTON_SET:
                 result.append("<input name=\"set\" type=\"button\" value=\"");
-                result.append(UtilProperties.getMessage(resource, "DIALOG_BUTTON_SET", getLocale()) + "\"");
+                result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_SET", getLocale()) + "\"");
                 if (attribute.toLowerCase().indexOf("onclick") == -1) {
                     result.append(" onclick=\"submitAction('" + DIALOG_SET + "', form);\"");
                 }
@@ -1098,7 +1098,7 @@ public class HtmlReport extends AbstractReport {
                 break;
             case BUTTON_BACK:
                 result.append("<input name=\"set\" type=\"button\" value=\"");
-                result.append(UtilProperties.getMessage(resource, "DIALOG_BUTTON_BACK", getLocale()) + "\"");
+                result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_BACK", getLocale()) + "\"");
                 if (attribute.toLowerCase().indexOf("onclick") == -1) {
                     result.append(" onclick=\"submitAction('" + DIALOG_BACK + "', form);\"");
                 }
@@ -1108,7 +1108,7 @@ public class HtmlReport extends AbstractReport {
                 break;
             case BUTTON_CONTINUE:
                 result.append("<input name=\"set\" type=\"button\" value=\"");
-                result.append(UtilProperties.getMessage(resource, "DIALOG_BUTTON_CONTINUE", getLocale()) + "\"");
+                result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_CONTINUE", getLocale()) + "\"");
                 if (attribute.toLowerCase().indexOf("onclick") == -1) {
                     result.append(" onclick=\"submitAction('" + DIALOG_CONTINUE + "', form);\"");
                 }
@@ -1118,14 +1118,14 @@ public class HtmlReport extends AbstractReport {
                 break;
             case BUTTON_DETAILS:
                 result.append("<input name=\"details\" type=\"button\" value=\"");
-                result.append(UtilProperties.getMessage(resource, "DIALOG_BUTTON_DETAIL", getLocale()) + "\"");
+                result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_DETAIL", getLocale()) + "\"");
                 result.append(" class=\"dialogbutton\"");
                 result.append(attribute);
                 result.append(">\n");
                 break;
             case BUTTON_DOWNLOAD:
                 result.append("<input name=\"download\" type=\"button\" value=\"");
-                result.append(UtilProperties.getMessage(resource, "DIALOG_BUTTON_DOWNLOAD", getLocale()) + "\"");
+                result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_DOWNLOAD", getLocale()) + "\"");
                 result.append(" class=\"dialogbutton\"");
                 result.append(attribute);
                 result.append(">\n");
@@ -1169,8 +1169,8 @@ public class HtmlReport extends AbstractReport {
     /**
      * Returns the resources that are defined for the dialog operation.
      * 
-     * For single resource operations, the list contains one item: the resource name found 
-     * in the request parameter value of the "resource" parameter.
+     * For single RESOURCE operations, the list contains one item: the RESOURCE name found
+     * in the request parameter value of the "RESOURCE" parameter.
      * 
      * @return the resources that are defined for the dialog operation
      */
@@ -1182,7 +1182,7 @@ public class HtmlReport extends AbstractReport {
                 resourceList = StringUtil.split(getParamResourcelist(request), DELIMITER_RESOURCES);
                 Collections.sort(resourceList);
             } else {
-                // this is a single resource operation, create list containing the resource name
+                // this is a single RESOURCE operation, create list containing the RESOURCE name
                 resourceList = new ArrayList<>(1);
                 String resource = getParamResource(request);
                 if (ReportStringUtil.isNotEmptyOrWhitespaceOnly(resource)) {
@@ -1196,11 +1196,11 @@ public class HtmlReport extends AbstractReport {
     }
 
     /**
-     * Returns the value of the resource list parameter, or null if the parameter is not provided.<p>
+     * Returns the value of the RESOURCE list parameter, or null if the parameter is not provided.<p>
      * 
      * This parameter selects the resources to perform operations on.<p>
      *  
-     * @return the value of the resource list parameter or null, if the parameter is not provided
+     * @return the value of the RESOURCE list parameter or null, if the parameter is not provided
      */
     public String getParamResourcelist(HttpServletRequest request) {
         if (ReportStringUtil.isNotEmpty(paramResourcelist) && !"null".equals(paramResourcelist)) {
@@ -1251,7 +1251,7 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Returns the value of the resourcelist parameter in form of a String separated 
-     * with {@link #DELIMITER_RESOURCES}, or the value of the  resource parameter if the 
+     * with {@link #DELIMITER_RESOURCES}, or the value of the RESOURCE parameter if the
      * first parameter is not provided (no multiple choice has been done.<p>
      * 
      * This may be used for jsps as value for the parameter for resources {@link #PARAM_RESOURCELIST}.<p>
@@ -1333,7 +1333,7 @@ public class HtmlReport extends AbstractReport {
                         logFileOutputStream.close();
                     } catch (IOException e) {
                         // do nothing
-                        Debug.logError(e, HtmlReport.MODULE);
+                        Debug.logError(e, MODULE);
                     }
                 }
             }

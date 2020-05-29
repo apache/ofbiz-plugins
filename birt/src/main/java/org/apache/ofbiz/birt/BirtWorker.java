@@ -68,7 +68,7 @@ public final class BirtWorker {
     private final static String BIRT_IMAGE_DIRECTORY = "birtImageDirectory";
     private final static String BIRT_CONTENT_TYPE = "birtContentType";
     private final static String BIRT_OUTPUT_FILE_NAME = "birtOutputFileName";
-    private static final String resourceError = "BirtErrorUiLabels";
+    private static final String RES_ERROR = "BirtErrorUiLabels";
 
     private final static HTMLServerImageHandler imageHandler = new HTMLServerImageHandler();
 
@@ -234,7 +234,7 @@ public final class BirtWorker {
             if (!templatePathLocationDir.exists()) {
                 boolean created = templatePathLocationDir.mkdirs();
                 if (!created) {
-                    throw new GeneralException(UtilProperties.getMessage(resourceError, "BirtErrorCannotLocateReportFolder", locale));
+                    throw new GeneralException(UtilProperties.getMessage(RES_ERROR, "BirtErrorCannotLocateReportFolder", locale));
                 }
             }
         int i = 0;
