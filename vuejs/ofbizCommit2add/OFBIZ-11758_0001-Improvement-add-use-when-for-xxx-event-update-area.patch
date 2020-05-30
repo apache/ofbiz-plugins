@@ -1,0 +1,218 @@
+From 3b1a05531772e5026c020dbb493fddb56f8e0f4c Mon Sep 17 00:00:00 2001
+From: holivier <holivier@apache.org>
+Date: Fri, 22 May 2020 11:10:45 +0200
+Subject: [PATCH 07/22] Improved: add use-when for xxx-event-update-area (OFBIZ-11758)
+
+1. add "use-when" management in the xsd and in the modelForm.UpdateArea,
+2. add in modelForm a static method to return a valid list of updateArea
+from a list of updateArea and context
+3. duplicate all methods returning a list of updateArea, by same name
+but with context as parameters which return only valid updateArea list
+(ex: in formFieldBuilder for getOnClickUpdateAreas and
+getOnChangeUpdateAreas)
+---
+ framework/widget/dtd/widget-form.xsd               |  2 +
+ .../org/apache/ofbiz/widget/model/ModelForm.java   | 61 +++++++++++++++++++++-
+ .../apache/ofbiz/widget/model/ModelFormField.java  | 16 ++++++
+ .../ofbiz/widget/model/ModelFormFieldBuilder.java  | 16 ++++++
+ 4 files changed, 94 insertions(+), 1 deletion(-)
+
+diff --git a/framework/widget/dtd/widget-form.xsd b/framework/widget/dtd/widget-form.xsd
+index 9eb3efd8b7..08e0c9c4e3 100644
+--- a/framework/widget/dtd/widget-form.xsd
++++ b/framework/widget/dtd/widget-form.xsd
+@@ -599,6 +599,7 @@ under the License.
+             </xs:attribute>
+             <xs:attribute name="area-id" type="xs:string" use="required" />
+             <xs:attribute name="area-target" type="xs:string" use="required" />
++            <xs:attribute name="use-when" type="xs:string" />
+         </xs:complexType>
+     </xs:element>
+ 
+@@ -1535,6 +1536,7 @@ under the License.
+             </xs:attribute>
+             <xs:attribute type="xs:string" name="area-id" use="required" />
+             <xs:attribute type="xs:string" name="area-target" use="required" />
++            <xs:attribute type="xs:string" name="use-when" />
+         </xs:complexType>
+     </xs:element>
+ 
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java
+index 919791d65f..b2f01f93b3 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java
+@@ -1067,16 +1067,40 @@ public abstract class ModelForm extends ModelWidget {
+     public List<UpdateArea> getOnPaginateUpdateAreas() {
+         return this.onPaginateUpdateAreas;
+     }
++    /**
++     * Returns the list of ModelForm.UpdateArea objects to activate on a pagination event and which have no use-when or use-when = true.
++     * @param context
++     * @return
++     */
++    public List<UpdateArea> getOnPaginateUpdateAreas(Map<String, Object> context) {
++        return getValidUpdateAreas(this.onPaginateUpdateAreas, context);
++    }
+ 
+     public List<UpdateArea> getOnSortColumnUpdateAreas() {
+         return this.onSortColumnUpdateAreas;
+     }
++    /**
++     * Returns the list of ModelForm.UpdateArea objects to activate on a column sort event and which have no use-when or use-when = true.
++     * @param context
++     * @return
++     */
++    public List<UpdateArea> getOnSortColumnUpdateAreas(Map<String, Object> context) {
++        return getValidUpdateAreas(this.onSortColumnUpdateAreas, context);
++    }
+ 
+-    /* Returns the list of ModelForm.UpdateArea objects.
++    /** Returns the list of ModelForm.UpdateArea objects.
+      */
+     public List<UpdateArea> getOnSubmitUpdateAreas() {
+         return this.onSubmitUpdateAreas;
+     }
++    /**
++     * Returns the list of ModelForm.UpdateArea objects to activate on a submit event and which have no use-when or use-when = true.
++     * @param context
++     * @return
++     */
++    public List<UpdateArea> getOnSubmitUpdateAreas(Map<String, Object> context) {
++        return getValidUpdateAreas(this.onSubmitUpdateAreas, context);
++    }
+ 
+     public String getOverrideListSize() {
+         return overrideListSize.getOriginal();
+@@ -1695,6 +1719,7 @@ public abstract class ModelForm extends ModelWidget {
+         private final String eventType;
+         private final String areaId;
+         private final String areaTarget;
++        private final String useWhen;
+         private final String defaultServiceName;
+         private final String defaultEntityName;
+         private final CommonWidgetModels.AutoEntityParameters autoEntityParameters;
+@@ -1713,6 +1738,7 @@ public abstract class ModelForm extends ModelWidget {
+             this.eventType = updateAreaElement.getAttribute("event-type");
+             this.areaId = updateAreaElement.getAttribute("area-id");
+             this.areaTarget = updateAreaElement.getAttribute("area-target");
++            this.useWhen = updateAreaElement.getAttribute("use-when");
+             this.defaultServiceName = defaultServiceName;
+             this.defaultEntityName = defaultEntityName;
+             List<? extends Element> parameterElementList = UtilXml.childElementList(updateAreaElement, "parameter");
+@@ -1747,6 +1773,7 @@ public abstract class ModelForm extends ModelWidget {
+             this.eventType = eventType;
+             this.areaId = areaId;
+             this.areaTarget = areaTarget;
++            this.useWhen = null;
+             this.defaultServiceName = null;
+             this.defaultEntityName = null;
+             this.parameterList = Collections.emptyList();
+@@ -1775,6 +1802,10 @@ public abstract class ModelForm extends ModelWidget {
+             return eventType;
+         }
+ 
++        public String getUseWhen() {
++            return useWhen;
++        }
++
+         public Map<String, String> getParameterMap(Map<String, Object> context) {
+             Map<String, String> fullParameterMap = new HashMap<>();
+             if (autoServiceParameters != null) {
+@@ -1819,4 +1850,32 @@ public abstract class ModelForm extends ModelWidget {
+             return parameterList;
+         }
+     }
++
++    static protected List<UpdateArea> getValidUpdateAreas(List<UpdateArea> updateAreas, Map<String, Object> context) {
++        if (updateAreas == null) return null;
++        ArrayList<UpdateArea> updateAreasValid = new ArrayList<>();
++        try {
++            for (ModelForm.UpdateArea updateArea : updateAreas) {
++                    String useWhen = FlexibleStringExpander.expandString(updateArea.getUseWhen(), context);
++                    if (useWhen != null && !useWhen.isEmpty()) {
++                        Object retVal = GroovyUtil.eval(StringUtil.convertOperatorSubstitutions(useWhen),context);
++                        // retVal should be a Boolean, if not something weird is up...
++                        if (retVal instanceof Boolean) {
++                            Boolean boolVal = (Boolean) retVal;
++                            if (boolVal) updateAreasValid.add(updateArea);
++                        } else {
++                            throw new IllegalArgumentException("Return value from updateArea condition eval was not a Boolean: "
++                                    + retVal.getClass().getName() + " [" + retVal + "] of updateArea " + updateArea.toString());
++                        }
++                    } else {
++                        updateAreasValid.add(updateArea);
++                    }
++            }
++        } catch (CompilationFailedException e) {
++            String errmsg = "Error evaluating Groovy target conditions on updateArea ";
++            Debug.logError(e, errmsg, MODULE);
++            throw new IllegalArgumentException(errmsg);
++        }
++        return updateAreasValid;
++    }
+ }
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormField.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormField.java
+index 03264a4fe3..a15569beba 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormField.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormField.java
+@@ -540,10 +540,26 @@ public class ModelFormField {
+     public List<UpdateArea> getOnChangeUpdateAreas() {
+         return onChangeUpdateAreas;
+     }
++    /**
++     * Returns the list of ModelForm.UpdateArea objects to activate on a change event and which have no use-when or use-when = true.
++     * @param context
++     * @return
++     */
++    public List<UpdateArea> getOnChangeUpdateAreas(Map<String, Object> context) {
++        return ModelForm.getValidUpdateAreas(onChangeUpdateAreas, context);
++    }
+ 
+     public List<UpdateArea> getOnClickUpdateAreas() {
+         return onClickUpdateAreas;
+     }
++    /**
++     * Returns the list of ModelForm.UpdateArea objects to activate on a click event and which have no use-when or use-when = true.
++     * @param context
++     * @return
++     */
++    public List<UpdateArea> getOnClickUpdateAreas(Map<String, Object> context) {
++        return ModelForm.getValidUpdateAreas(onClickUpdateAreas, context);
++    }
+ 
+     public FlexibleStringExpander getParameterName() {
+         return parameterName;
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java
+index dfde8c25be..06f2397c68 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java
+@@ -444,10 +444,26 @@ public class ModelFormFieldBuilder {
+     public List<UpdateArea> getOnChangeUpdateAreas() {
+         return onChangeUpdateAreas;
+     }
++    /**
++     * Returns the list of ModelForm.UpdateArea objects to activate on a change event and which have no use-when or use-when = true.
++     * @param context
++     * @return
++     */
++    public List<UpdateArea> getOnChangeUpdateAreas(Map<String, Object> context) {
++        return ModelForm.getValidUpdateAreas(onChangeUpdateAreas, context);
++    }
+ 
+     public List<UpdateArea> getOnClickUpdateAreas() {
+         return onClickUpdateAreas;
+     }
++    /**
++     * Returns the list of ModelForm.UpdateArea objects to activate on a click event and which have no use-when or use-when = true.
++     * @param context
++     * @return
++     */
++    public List<UpdateArea> getOnClickUpdateAreas(Map<String, Object> context) {
++        return ModelForm.getValidUpdateAreas(onClickUpdateAreas, context);
++    }
+ 
+     public FlexibleStringExpander getParameterName() {
+         return parameterName;
+-- 
+2.11.0
+

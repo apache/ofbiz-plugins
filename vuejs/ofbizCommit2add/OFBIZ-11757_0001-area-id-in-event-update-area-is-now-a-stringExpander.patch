@@ -1,0 +1,28 @@
+From 1a0a88ad1507596a320f3f27758c1c1f7aec63a2 Mon Sep 17 00:00:00 2001
+From: holivier <holivier@apache.org>
+Date: Wed, 27 May 2020 11:45:19 +0200
+Subject: [PATCH 09/25] Improved: area-id in event-update-area is now a stringExpander (OFBIZ-11757)
+
+It's now possible to use ${ for area-id
+---
+ .../widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java
+index 8c4c4a1f94..29d660f248 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java
+@@ -1763,6 +1763,10 @@ public abstract class ModelForm extends ModelWidget {
+             return areaId;
+         }
+ 
++        public String getAreaId(Map<String, ? extends Object> context) {
++            return FlexibleStringExpander.expandString(areaId, context);
++        }
++
+         public String getAreaTarget(Map<String, ? extends Object> context) {
+             return FlexibleStringExpander.expandString(areaTarget, context);
+         }
+-- 
+2.11.0
+

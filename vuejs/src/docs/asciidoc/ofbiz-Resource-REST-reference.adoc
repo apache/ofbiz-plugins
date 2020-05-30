@@ -1,0 +1,97 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+= Apache OFBiz Resource REST Reference
+The Apache OFBiz Project
+Release trunk
+:imagesdir: ./images
+ifdef::backend-pdf[]
+:title-logo-image: image::OFBiz-Logo.svg[Apache OFBiz Logo, pdfwidth=4.25in, align=center]
+:source-highlighter: rouge
+endif::[]
+
+== Introduction to OFBiz
+Welcome to _Apache OFBiz_! A powerful top level Apache software project.
+OFBiz is an Enterprise Resource Planning (ERP) System written in Java and
+houses a large set of libraries, entities, services and features to run
+all aspects of your business.
+
+This manual will describe all `resources` (on a REST point of view) available to manage business object.
+
+Currently ofbiz REST requests return for a `resource`:
+
+ * data about it
+ * AND, most of time, user presentation data
+
+Resource is not entity (even if most of time it's the same), Resource is a functional view.
+
+Most of the OFBiz GUI is design by assembling some screenlet for one page. +
+One of the configuration / personalisation task could be to choose its own assemblage.
+
+If you need to understand the process and bussiness object for the core application of this framework like the
+Party Manager, Order Manager, Accounting system, and others you should read the "Apache OFBiz User Manual".
+
+If you wish to contribute to OFBiz and help make it better, you may wish to read
+the "Apache OFBiz Developer Manual" for a deeper understanding of the
+architectural concepts of the framework.
+
+== REST uri structure
+All REST uri follow the model {webapp}/control/{ResourceName}/{cover}/{Pkvalue: .*}
+
+The first letter of ResourceName is uppercase.
+
+Classic cover are:
+
+|===
+|          cover        | method to use |  Goal
+| find                  | get           | find form to select options for list
+| list                  | get (via post)| Resource list, +
+                                                => with a get (so without parameters) all the resource rows +
+                                                => with a post (parameters and _method="GET") resources selected by options
+| create                | get           | create form
+| edit/{Pkvalue: .*}    | get           | edit form and data for the id sent
+| show/{Pkvalue: .*}    | get           | show form and data for the id sent
+| summary/{Pkvalue: .*} | get           | summary form and data for the id sent
+| data/{Pkvalue: .*}    | get           | just data for the id sent
+| change                | post          | create a resource
+| change/{Pkvalue: .*}  | put (via post)| update example with the correspondig Id
+| change/{Pkvalue: .*}  | delete        | delete example with the correspondig Id
+|===
+
+
+In this documentation, for each ResourceName, the webapp mentioned is the one for which
+the REST interface has been created for the first time.
+
+=== Core Business Applications
+Most businesses share universal needs. They require accounting functionality,
+managing customers, placing orders, book-keeping, invoicing and so on.
+
+OFBiz is designed so that such basic universal business needs are available
+through a set of core business applications. These applications all share a
+unified data-model with a set of unified services to implement this
+functionality.
+
+Each core business application contain a group of resources, this documentation will help you
+to find and understand which one do what
+
+All ResourceName are organize by Category, so there is one chapter by category.
+
+include::../../plugins/partymgrfjs/src/docs/asciidoc/screenlet-party.adoc[leveloffset=+1]
+
+include::../../plugins/examplefjs/src/docs/asciidoc/screenlet-example.adoc[leveloffset=+1]
+

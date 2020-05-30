@@ -1,0 +1,52 @@
+{
+  "name": "vuejs",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A Vue.js project",
+  "author": "bashark <j-bash@protonmail.com>",
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "lint": "vue-cli-service lint",
+    "build-default": "vue-cli-service build",
+    "build-dev": "vue-cli-service build --mode development --name vuejs 'src/main.js'",
+    "build-dev-watch": "vue-cli-service build --mode development --watch --name vuejs 'src/main.js'",
+    "build-prod": "vue-cli-service build --mode production --name vuejs 'src/main.js'",
+    "build-prod-watch": "vue-cli-service build --mode production --watch --name vuejs 'src/main.js'"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.8.7",
+    "core-js": "^3.3.2",
+    "epic-spinners": "^1.1.0",
+    "lodash": "^4.17.15",
+    "query-string": "^6.11.1",
+    "stylus": "^0.54.7",
+    "stylus-loader": "^3.0.2",
+    "terser": "^4.6.7",
+    "vue": "^2.6.10",
+    "vue-blockui": "^1.1.7",
+    "vue-resource": "^1.5.1",
+    "vue-router": "^3.1.6",
+    "vue-the-mask": "^0.11.1",
+    "vue-wait": "^1.4.6",
+    "vuetify": "^2.2.18",
+    "vuex": "^3.1.3",
+    "vuex-strong-cache": "^0.1.1"
+  },
+  "devDependencies": {
+    "@mdi/font": "^4.9.95",
+    "@mdi/js": "^5.0.45",
+    "@vue/cli-plugin-babel": "^4.2.3",
+    "@vue/cli-plugin-eslint": "^4.2.3",
+    "@vue/cli-service": "^4.2.3",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "sass": "^1.26.3",
+    "sass-loader": "^7.1.0",
+    "terser-webpack-plugin": "^2.3.5",
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "vue-cli-plugin-vuetify": "^1.1.1",
+    "vue-template-compiler": "^2.6.10",
+    "vuetify-loader": "^1.4.3"
+  }
+}

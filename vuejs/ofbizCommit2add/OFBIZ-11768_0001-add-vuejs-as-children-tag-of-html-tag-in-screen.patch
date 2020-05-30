@@ -1,0 +1,232 @@
+From bfe06f0b169d8862a0f0a20bfeb02ffa6e21352c Mon Sep 17 00:00:00 2001
+From: holivier <holivier@apache.org>
+Date: Wed, 27 May 2020 11:43:08 +0200
+Subject: [PATCH 19/25] Improved: add vuejs as children tag of html tag in screen (OFBIZ-11768)
+
+this tag is used to call vuejs specifics component in the standard vuejs
+application (the vuejs renderer).
+vuejs specifics components are similar to ftl files in html standard
+renderer.
+---
+ framework/widget/dtd/widget-screen.xsd             |  9 +++
+ .../widget/artifact/ArtifactInfoGatherer.java      |  5 ++
+ .../org/apache/ofbiz/widget/model/HtmlWidget.java  |  3 +
+ .../ofbiz/widget/model/ModelScreenWidget.java      | 65 ++++++++++++++++++++++
+ .../ofbiz/widget/model/ModelWidgetVisitor.java     |  2 +
+ .../ofbiz/widget/model/XmlWidgetVisitor.java       | 11 ++++
+ .../widget/renderer/ScreenStringRenderer.java      |  1 +
+ .../widget/renderer/macro/MacroScreenRenderer.java |  4 ++
+ 8 files changed, 100 insertions(+)
+
+diff --git a/framework/widget/dtd/widget-screen.xsd b/framework/widget/dtd/widget-screen.xsd
+index b86feed004..c6586aed08 100644
+--- a/framework/widget/dtd/widget-screen.xsd
++++ b/framework/widget/dtd/widget-screen.xsd
+@@ -526,6 +526,15 @@ under the License.
+         <xs:attribute type="xs:string" name="location" use="required" />
+         <xs:attribute type="xs:boolean" name="multi-block" use="optional" default="false" />
+     </xs:attributeGroup>
++    <xs:element name="vuejs" substitutionGroup="HtmlWidgets">
++      <xs:complexType>
++          <xs:sequence>
++            <xs:element minOccurs="0" maxOccurs="unbounded" ref="parameter" />
++          </xs:sequence>
++          <xs:attribute type="xs:string" name="component-name" use="required" />
++          <xs:attribute type="xs:string" name="param-map" />
++      </xs:complexType>
++    </xs:element>
+     <xs:element name="html-template-decorator" substitutionGroup="HtmlWidgets">
+         <xs:annotation>
+             <xs:documentation>
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/artifact/ArtifactInfoGatherer.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/artifact/ArtifactInfoGatherer.java
+index 0ea33934fd..44657bf1a1 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/artifact/ArtifactInfoGatherer.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/artifact/ArtifactInfoGatherer.java
+@@ -101,6 +101,7 @@ import org.apache.ofbiz.widget.model.ModelScreenWidget.ScreenLink;
+ import org.apache.ofbiz.widget.model.ModelScreenWidget.Screenlet;
+ import org.apache.ofbiz.widget.model.ModelScreenWidget.Section;
+ import org.apache.ofbiz.widget.model.ModelScreenWidget.Tree;
++import org.apache.ofbiz.widget.model.ModelScreenWidget.VueJs;
+ import org.apache.ofbiz.widget.model.ModelSingleForm;
+ import org.apache.ofbiz.widget.model.ModelTree;
+ import org.apache.ofbiz.widget.model.ModelTree.ModelNode;
+@@ -242,6 +243,10 @@ public final class ArtifactInfoGatherer implements ModelWidgetVisitor, ModelActi
+     }
+ 
+     @Override
++    public void visit(VueJs vuejs) throws Exception {
++    }
++
++    @Override
+     public void visit(Menu menu) throws Exception {
+     }
+ 
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/HtmlWidget.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/HtmlWidget.java
+index 36d4742d1a..7fbe500736 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/HtmlWidget.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/HtmlWidget.java
+@@ -37,6 +37,7 @@ import org.apache.ofbiz.base.util.cache.UtilCache;
+ import org.apache.ofbiz.base.util.collections.MapStack;
+ import org.apache.ofbiz.base.util.string.FlexibleStringExpander;
+ import org.apache.ofbiz.base.util.template.FreeMarkerWorker;
++import org.apache.ofbiz.widget.WidgetFactory;
+ import org.apache.ofbiz.widget.renderer.ScreenRenderer;
+ import org.apache.ofbiz.widget.renderer.ScreenStringRenderer;
+ import org.apache.ofbiz.widget.renderer.html.HtmlWidgetRenderer;
+@@ -124,6 +125,8 @@ public class HtmlWidget extends ModelScreenWidget {
+                     subWidgets.add(new HtmlTemplate(modelScreen, childElement));
+                 } else if ("html-template-decorator".equals(childElement.getNodeName())) {
+                     subWidgets.add(new HtmlTemplateDecorator(modelScreen, childElement));
++                } else if ("vuejs".equals(childElement.getNodeName())) {
++                    subWidgets.add(WidgetFactory.getModelScreenWidget(modelScreen, childElement));
+                 } else {
+                     throw new IllegalArgumentException("Tag not supported under the platform-specific -> html tag with name: "
+                             + childElement.getNodeName());
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenWidget.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenWidget.java
+index 372b253e47..0391733890 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenWidget.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenWidget.java
+@@ -1041,6 +1041,71 @@ public abstract class ModelScreenWidget extends ModelWidget {
+             return styleExdr;
+         }
+     }
++    public static final class VueJs extends ModelScreenWidget {
++        public static final String TAG_NAME = "vuejs";
++        private final FlexibleStringExpander componentNameExdr;
++        private final List<Parameter> parameterList;
++
++        public VueJs(ModelScreen modelScreen, Element vueJsElement) {
++            super(modelScreen, vueJsElement);
++
++            this.componentNameExdr = FlexibleStringExpander.getInstance(vueJsElement.getAttribute("component-name"));
++            List<? extends Element> parameterElementList = UtilXml.childElementList(vueJsElement, "parameter");
++            if (parameterElementList.isEmpty() ) {
++                this.parameterList = Collections.emptyList();
++            } else {
++                List<Parameter> parameterList = new ArrayList<>(parameterElementList.size());
++                for (Element parameterElement : parameterElementList) {
++                    parameterList.add(new Parameter(parameterElement));
++                }
++                this.parameterList = Collections.unmodifiableList(parameterList);
++            }
++
++        }
++
++        @Override
++        public void renderWidgetString(Appendable writer, Map<String, Object> context, ScreenStringRenderer screenStringRenderer) {
++            try {
++                screenStringRenderer.renderVueJs(writer, context, this);
++            } catch (IOException e) {
++                String errMsg = "Error rendering vue-js in screen named [" + getModelScreen().getName() + "]: " + e.toString();
++                Debug.logError(e, errMsg, MODULE);
++                throw new RuntimeException(errMsg);
++            }
++        }
++
++        public Map<String, Object> getParameterMap(Map<String, Object> context) {
++            Map<String, Object> fullParameterMap = new HashMap<>();
++            for (Parameter parameter : this.parameterList) {
++                Object retVal = null;
++                if (parameter.value != null) {
++                    retVal = parameter.value.expandString(context);
++                } else if (parameter.fromField != null && parameter.fromField.get(context) != null) {
++                    retVal = parameter.fromField.get(context);
++                } else {
++                    retVal = context.get(parameter.name);
++                }
++                fullParameterMap.put(parameter.getName(), retVal);
++            }
++            return fullParameterMap;
++        }
++
++        public String getComponentName(Map<String, Object> context) {
++            return this.componentNameExdr.expandString(context);
++        }
++
++        public FlexibleStringExpander getComponentNameExdr() {
++            return componentNameExdr;
++        }
++        public List<Parameter> getParameterList() {
++            return parameterList;
++        }
++
++        @Override
++        public void accept(ModelWidgetVisitor visitor) throws Exception {
++            visitor.visit(this);
++        }
++    }
+ 
+     public static final class Form extends ModelScreenWidget {
+         public static final String TAG_NAME = "include-form";
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelWidgetVisitor.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelWidgetVisitor.java
+index f081f98314..d42b52efef 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelWidgetVisitor.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelWidgetVisitor.java
+@@ -68,6 +68,8 @@ public interface ModelWidgetVisitor {
+ 
+     void visit(ModelScreenWidget.Label label) throws Exception;
+ 
++    void visit(ModelScreenWidget.VueJs vuejs) throws Exception;
++
+     void visit(ModelScreenWidget.ScreenLink link) throws Exception;
+ 
+     void visit(ModelScreenWidget.Menu menu) throws Exception;
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/XmlWidgetVisitor.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/XmlWidgetVisitor.java
+index 0777a7058e..c7ecc9fa64 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/XmlWidgetVisitor.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/XmlWidgetVisitor.java
+@@ -44,6 +44,7 @@ import org.apache.ofbiz.widget.model.ModelScreenWidget.ScreenLink;
+ import org.apache.ofbiz.widget.model.ModelScreenWidget.Screenlet;
+ import org.apache.ofbiz.widget.model.ModelScreenWidget.Section;
+ import org.apache.ofbiz.widget.model.ModelScreenWidget.Tree;
++import org.apache.ofbiz.widget.model.ModelScreenWidget.VueJs;
+ import org.apache.ofbiz.widget.model.ModelTree.ModelNode;
+ import org.apache.ofbiz.widget.model.ModelTree.ModelNode.ModelSubNode;
+ 
+@@ -230,6 +231,16 @@ public class XmlWidgetVisitor extends XmlAbstractWidgetVisitor implements ModelW
+     }
+ 
+     @Override
++    public void visit(VueJs vuejs) throws Exception {
++        writer.append("<vuejs");
++        visitModelWidget(vuejs);
++        visitAttribute("component-name", vuejs.getComponentNameExdr());
++        writer.append(">");
++        visitParameters(vuejs.getParameterList());
++        writer.append("</label>");
++    }
++
++    @Override
+     public void visit(Menu menu) throws Exception {
+         writer.append("<include-menu");
+         visitModelWidget(menu);
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/renderer/ScreenStringRenderer.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/renderer/ScreenStringRenderer.java
+index 13263adf7d..7ea4dfa1eb 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/renderer/ScreenStringRenderer.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/renderer/ScreenStringRenderer.java
+@@ -46,6 +46,7 @@ public interface ScreenStringRenderer {
+ 
+     public void renderHorizontalSeparator(Appendable writer, Map<String, Object> context, ModelScreenWidget.HorizontalSeparator separator) throws IOException;
+     public void renderLabel(Appendable writer, Map<String, Object> context, ModelScreenWidget.Label label) throws IOException;
++    public void renderVueJs(Appendable writer, Map<String, Object> context, ModelScreenWidget.VueJs vuejs) throws IOException;
+     public void renderLink(Appendable writer, Map<String, Object> context, ModelScreenWidget.ScreenLink link) throws IOException;
+     public void renderImage(Appendable writer, Map<String, Object> context, ModelScreenWidget.ScreenImage image) throws IOException;
+ 
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/renderer/macro/MacroScreenRenderer.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/renderer/macro/MacroScreenRenderer.java
+index 7cd5040ff2..36951637d0 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/renderer/macro/MacroScreenRenderer.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/renderer/macro/MacroScreenRenderer.java
+@@ -223,6 +223,10 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
+         parameters.put("style", label.getStyle(context));
+         executeMacro(writer, "renderLabel", parameters);
+     }
++    @Override
++    public void renderVueJs(Appendable writer, Map<String, Object> context, ModelScreenWidget.VueJs vuejs) throws IOException {
++        //TODO should be implemented
++    }
+ 
+     @Override
+     public void renderHorizontalSeparator(Appendable writer, Map<String, Object> context, ModelScreenWidget.HorizontalSeparator separator) throws IOException {
+-- 
+2.11.0
+

@@ -1,0 +1,103 @@
+From e9d0c2b32d47aed7c050e6c03c4d7e9fb80a5d56 Mon Sep 17 00:00:00 2001
+From: holivier <holivier@apache.org>
+Date: Wed, 27 May 2020 12:34:57 +0200
+Subject: [PATCH 21/25] Improved: Add icon management, name and tooltips abstraction (OFBIZ-11769)
+
+two properties files, to be able to use a logical name not a "path" in link, hyperlink, ...
+---
+ framework/common/config/CommonIconsTooltips.xml           |   1 +
+ themes/common-theme/config/iconsPurpose.properties        |   1 +
+ .../webapp/images/icons/famfamfam/application_addr.png    | Bin 0 -> 567 bytes
+ .../webapp/images/icons/famfamfam/application_addy.png    | Bin 0 -> 598 bytes
+ .../webapp/images/icons/famfamfam/link_go_inverse.png     | Bin 0 -> 674 bytes
+ 5 files changed, 2 insertions(+)
+ create mode 120000 framework/common/config/CommonIconsTooltips.xml
+ create mode 120000 themes/common-theme/config/iconsPurpose.properties
+ create mode 100755 themes/common-theme/webapp/images/icons/famfamfam/application_addr.png
+ create mode 100755 themes/common-theme/webapp/images/icons/famfamfam/application_addy.png
+ create mode 100755 themes/common-theme/webapp/images/icons/famfamfam/link_go_inverse.png
+
+diff --git a/framework/common/config/CommonIconsTooltips.xml b/framework/common/config/CommonIconsTooltips.xml
+new file mode 120000
+index 0000000000..14241ec0b3
+--- /dev/null
++++ b/framework/common/config/CommonIconsTooltips.xml
+@@ -0,0 +1 @@
++../../../plugins/vuejsPortal/ofbizFiles/framework/common/config/CommonIconsTooltips.xml
+\ No newline at end of file
+diff --git a/themes/common-theme/config/iconsPurpose.properties b/themes/common-theme/config/iconsPurpose.properties
+new file mode 120000
+index 0000000000..965e398ad8
+--- /dev/null
++++ b/themes/common-theme/config/iconsPurpose.properties
+@@ -0,0 +1 @@
++../../../plugins/vuejsPortal/ofbizFiles/themes/common-theme/config/iconsPurpose.properties
+\ No newline at end of file
+diff --git a/themes/common-theme/webapp/images/icons/famfamfam/application_addr.png b/themes/common-theme/webapp/images/icons/famfamfam/application_addr.png
+new file mode 100755
+index 0000000000000000000000000000000000000000..13d84faa60e072445995c482e011e5b12afa2365
+GIT binary patch
+literal 567
+zcmV-70?7S|P)<h;3K|Lk000e1NJLTq000mG000mO1^@s6AM^iV00001b5ch_0Itp)
+z=>Px#24YJ`L;(K){{a7>y{D4^000SaNLh0L01FcU01FcV0GgZ_00007bV*G`2i*q?
+z3?3RMY{7v500Fm2L_t(I%cYV%YgADXhMzh2Zd_bfAuG{FM2H|L*lZ!hfSt9C7PdBG
+z8Y_Q+pjBWYKfuC58-IeWV4<LpQi7yVk`+Jp2KU~X*W%pOD1uoW7#N1bGw(ZR;6KBz
+z-F<TB@|EGkaiyLFM4$*f9EAu4awjC@jz@5Gp`L7RZr^*heq*B?t_(+=ZZDna&Na9<
+zseA-%lvS-%jlaz;eXmvmDCOe*&E>fPw;pVf0SW-7jUzxIJRlGe!XxlTITcJ@oH^OY
+z!!rOWZ!;Mtp=8K}g^`kBmN0Xy5Je=)CclrS1<XhZkQo>hf-r~>g&<i$Y2YS2WyRsq
+zS_ritY9RdvG6T5?0~wHvB8m){S(p`>VY%1`iqa?}c)5C&&X+M#Ai<gn9z(Zm>iVYw
+z10-Q)Xdh^A@i;4AKLfBkSYojI5r8+RmOmx6UJAfk71q|tjAVv2dC04aLk2q^cz$UW
+zfWzM>UDie~^sksK9FpKy!(9UH9O<jvez*1X_IiCi+zAidoru8enus7I9(mqV-RaP&
+zYu=ta&jsLEH96STjeGq@pg;5V>9f^=Pxt-e()2G7`vKO>GUq+kqk#Yb002ovPDHLk
+FV1iHF>8k($
+
+literal 0
+HcmV?d00001
+
+diff --git a/themes/common-theme/webapp/images/icons/famfamfam/application_addy.png b/themes/common-theme/webapp/images/icons/famfamfam/application_addy.png
+new file mode 100755
+index 0000000000000000000000000000000000000000..b400332ef0e188adef254dd3b033f21b9928afda
+GIT binary patch
+literal 598
+zcmV-c0;&CpP)<h;3K|Lk000e1NJLTq000mG000mO1^@s6AM^iV00001b5ch_0Itp)
+z=>Px#32;bRa{vGf6951U69E94oEQKA00(qQO+^RY2L%rmBY6Z_C;$Kf=t)FDR5;6}
+zlCe%yVGxDC`R@gmz~Z7PBvzYXqQsI;jlKefT3BjBtgL(iO|&8*;T24@@fCam3xlFD
+zx}jJDE5dF9yPLf`b1d$n*g>3Rl2iQo=A8Kl{<Cc5$?L~A?<~LE?`lc{B2WY#jzWY2
+zxf2p{$0L{-FOIghnor-Z-QUQUZ!E8mRi@H><xGR8j=H`MY~<ZSsk?u8X6wB|2_Tn?
+z=MNUo40!Znn-ZV^U@&w9D1-+DB0_isK2+HX1}^FgRXn@|AeGxphDj(HGGSq)WSAw)
+z9Lq!&iF{bTkKqV#OiF;vz#tQZL4?Qz$ue>SH{q#t93G<xq0xsLNdJJ$KrX^S1|%bk
+ztOOiKI2I+tN^t@dxsgY(*SSrr{exmSKoYBWtGs#!`LHPdI50pGW`<6HTJ2l3d%Ikk
+zJI~~Jl~$+8ug)$XzK?xQ8fD1<8@aHNPG%%CntR*Ssx@R{cJdvv;6iPV)<L$IBI0j^
+z(K3@6*@^BCdL+xaJo6ratMlKOo;XK{EN?cp->j|`_rjg<z}<-myeNnWLgL}dfKG3Z
+zcCXI0g$7$Yb&_Qy!|gOzx7ir`*zQ-B=4uz2uGBc}x7lm|WM-oO#ZG&=n~kwgI|td7
+k2=bH|F3kGZ>-A#kH{@9l@myGdLI3~&07*qoM6N<$f?qiTIRF3v
+
+literal 0
+HcmV?d00001
+
+diff --git a/themes/common-theme/webapp/images/icons/famfamfam/link_go_inverse.png b/themes/common-theme/webapp/images/icons/famfamfam/link_go_inverse.png
+new file mode 100755
+index 0000000000000000000000000000000000000000..bf8412a1321b712fd2c19979d4e49ce7b4a2ae59
+GIT binary patch
+literal 674
+zcmV;T0$u%yP)<h;3K|Lk000e1NJLTq000mG000mO1^@s6AM^iV00004b3#c}2nYxW
+zd<bNS00076Nkl<ZIE~GcF=!KE6vzMHci&wvxkwXC#LJ~u6EM~i6h*AIh13{}PEzMO
+zDYj@92Zz=zi-T^0s6&S0QjsDq23#8GAXNmL5IKmUkTzG_(o2X(Nt5g6pe+a$i<7_U
+z4e$TsJ>DanbL?<vk}ww)S^{;}%V{3KKA<~AaFR%FiuV_yLvTxEKUn|(`xWkx80IfV
+zhfkc*`@y$2{ezFZj?5%TRDvu?m>Dk%dkKg(0hh$^=~B<-o>N`@*!aEzwNr;cC>RyM
+zsDL-0pW(&L;+|tMw}e_>cu+dsHGtK|61KOuVAjiERD?(wx(^<O%;Z0>ATuHx=7%kh
+z=w|05Nm%wO4tIt?K_E~80-=zZgj6cE*=#nQYPGs%+xCcQnt8)89KtzAZ|rz)=tiw@
+zva64rJ(9q}(j2NAC5VCmi84?@MBH^3?RI;kQmN3{+1Zs+sdTMaEPi1Cz^E9H7+32R
+zcg}l2R<QK#E2=XAD2f6Aux%R)t;a2&&-XEzOuh>SgZCE~7l#1+6o{f2)-+9yweE~B
+ztY@Cetb>n@jgdeg0FTE5%d(J8r<;!Bj5v;SUDGsK6vgoF89C>3^?LnQG#Z_3ygv4}
+z(P#{3gIU4v_d``x<nwuWJRX<J<$9G!B+g|rnI`9aZdX7E$r^_7T-Wt`sZ>f=RTb@a
+zyE!#AHE&r~XmoTm914X5MNzIyPfx=zjE97fEC7(5SB}TyN-P$;t!dhXs;a(nxm>Q*
+zY6Aeey<YFjNF<`0rfDrNFFz<03Quymoc){NU!i|*`QHUU0D`sMs1f2k$N&HU07*qo
+IM6N<$f<gl-HUIzs
+
+literal 0
+HcmV?d00001
+
+-- 
+2.11.0
+

@@ -1,0 +1,318 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+= POC Vuejs Renderer
+
+Actually the first javascript application enabling to use portlet system - portal Apache OFBiz is written with the Vue.js framework.
+
+Vue.js has been choose for its easy learning curve and its community driven development instead of a corporation. +
+In Vue.js, library vuetify has been choosen, because it's base on material design and have e very active community, so seem
+to be the most used vue.js GUI libraries.
+
+== POC Vuejs Renderer installation
+
+. From a standard trunk ofbiz-framework with 205914a1beb commit or superior (that can be downloaded at
+https://ofbiz.apache.org/source-repositories.html[documentation standard  SourceRepository] using git).
+. Create the 'plugins' repository at ofbiz-framework root folder.
+. In the Apache OFBiz plugins repository, download the next repository using git :
+.. *example plugin* at http://svn.apache.org/repos/asf/ofbiz/ofbiz-plugins/trunk/example
+. In the ofbizextra plugins repository, download the 3 next repositories using git :
+.. *vuejsportal plugin* that can be downloaded at https://gitlab.ofbizextra.org/ofbizextra/ofbizplugins/vuejsPortal
+   all vuejs components, a new ScreenViewHandler and 4 new renderers (screen, form, menu, tree) and all common files to all
+   fjs component.
+.. *examplefjs plugin* that can be downloaded at https://gitlab.ofbizextra.org/ofbizextra/ofbizplugins/examplefjs.git
+   specifics files for using vue.js with ofbiz example component
+.. *flatgreyfjs plugin* that can be downloaded at https://gitlab.ofbizextra.org/ofbizextra/ofbizplugins/flatgreyfjs.git
+   dedicated theme for vue.js with vuetify library
+. In the ofbizextra git repository download ofbizJiraPatchAvailable project +
+  If there are some files, some patch may be necessary for this POC, for each patch you can goto JIRA
+  to have more explanation for each. +
+  To apply them it is recommended to create a branch on your ofbiz, and apply the patchs with git command
+  `git am patchName`. Currently these patchs are necessary:
+  .. OFBIZ-11645_0001-simple-methods-optional-in-compound-file.patch <= compound-widget files are used in POC
+  .. OFBIZ-11676_0001-Fixed-drop-down-field-not-work-when-in-a-compound-wi.patch  <= compound-widget files are used in POC
+  .. OFBIZ-11708_0001-fixed-sort-order-field-not-works-in-CompoundWidgets.patch  <= compound-widget files are used in POC
+. If there are some files in the ofbizCommit2add, it's some patch waiting jira creation or dedicated for this POC,
+  so it's needed to apply them too
+  with `git am fileName` at the ofbiz root directory (replace fileName by the patch file name and path)
+. After that you have to modify some files of ofbiz-framework (ex: model.java because some tag are added). +
+  For that, a (bash) script exist, it's located in the 'plugins/vuejs' : +
+  `./tools/applyOfbizFilesPatchs.sh` +
+  And then copy some files +
+  `rsync -a --exclude-from=./ofbizFiles/rsyncExcludes ./ofbizFiles/ ../../` +
+. To be able to build the vue.js application you must have Node.js installed on your system.
+.. To install Node.js on a debian based system, execute the following commands : +
+  `curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -` +
+  `sudo apt-get install -y nodejs` +
+  In case of another system, you can consult https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions
+.. Meanwhile an integrated gradle command
+... Being located at 'plugins/vuejs/webapp/vuejs'
+* `npm i` <= to install the project dependencies
+* `npm run build-prod` <= to build the project (it's possible to use build-dev to be able to use browser dev-tools)
+. You can now launch OFBiz as regular : +
+`./gradlew cleanAll loadAll ofbiz` +
+(being located at the *root of ofbiz-framework* )
+. You can now connect to the application portal at https://localhost:8443/examplefjs/control/main
+
+== POC choices
+
+Apache OFBiz *trunk branch* usage.
+
+Principe and architecture of Apache OFBiz *Portal Page and Porlet* usage.
+
+The whole use cases are applied *to example component* and during the POC some new files used which should to be located in common
+have been moved to examplefjs aiming to simplify the installation and update process.
+
+With examplefjs, there is an *additional webapp (examplefjs)*, it centralize allowed URIs for vuejs component,
+currently this applicationName is listed in constantes.js file. +
+vuejs component is not bound to a component, it just need a base URI for send its requests.
+This uri is temporary set in constantes.js but it will be more flexible later aiming to use vuejs with multiple components
+
+Portal component ( https://localhost:8443/examplefjs/control/login ) use *ofbiz standard login by cookies* mechanism, it will
+later use ofbiz login by token (cf. https://issues.apache.org/jira/browse/OFBIZ-9833).
+
+*screens, forms, menus* used for portlets are defined *with xml*, and dedicated files for better readability.
+
+There is *a component (vuejs) for each ofbiz screen element* ( SingleItemRow => vue.single-item-row ), which are defined by
+renderer for screen, form and menu ( and for html renderer that correspond globally to macro.ftl ). Actually, for the POC,
+to list them, you can search in vuejs existing file for `Vue*.vue` in webapp/vuejs/src/component/ .
+
+=== XML tags used
+During the POC, few new properties or XML tags had been added but some of existing tags and properties had been distorted
+for an exclusive Vue.Js use.
+
+* screen
+  ** in `<container` tag +
+     container is the main piece of dynamics screen (update a part of screen on event)
+    *** `id` is used to identify the container and enable to inject content into it with `set-area` later. +
+         When set-area is done for this id, its content will be replace by the content received from area-target. +
+         So, do not resend the container !
+    *** `watcher-name` (new attribute) is a name in the local store (in web browser) which can contain some data (parameters).
+         It's possible to update watcher content with a `set-watcher`. Each time the watcher content changes,
+         the `auto-update-target` is called using watcher content as parameters to update the container. +
+         If `refresh-area` is call, the refresh is done by using auto-update-target and watcher content (if exist).
+    *** `auto-update-target` is used to bind a `watcher` to the container. +
+        To use it with set-watcher, a new attribute `watcher-name` has been added, and when the content of this this watcher
+        changes a set-area is done with auto-update-target as target and watcher content as parameters. +
+        `auto-update-target` support the REST uri format with some parameters in it include with {}, value is populate with
+        content of watcher content. If uri contain, at least one {xxx} or have no parameters a GET method will be used
+        otherwise a POST will be used.
+  ** screenlet
+    *** collapsible, if collapsible = "true" then it's necessary to have a "unique" id to know what collapse when button is clicked.
+        It's possible to have multiple screenlet with  same id or each with a different one. +
+        So, it's important to give a `id` if collapsible ="true" otherwise collapse will collapse all screenlet without id !
+    *** id : is manatory if the screenlet should be collapse
+  ** in `platform-specific`-`html` tag a new tag
+    *** `vuejs` is to call a specifics vuejs component named `component-name`. +
+         it's possible to give to it some parameters with sub tag `parameters`
+* form
+  ** property `entity-name` is mandatory for grid or single form, vuejs use it to build entity store.
+     When entity-name, exist data print to screen are associated to the web-browser local store, so when a data
+     change in one screenlet, same data in an other screenlet will change too.
+  ** in `<on-event-update-area` tag (there can be many of them and they will be executed in xml apparition order. It will wait
+      current task is completed before starting the next one. If any of these events is set, the submit button will prevent
+      the form default behaviour, so if you need to post in addition to vuejs feature you must add an event-type `submit`)
+    *** `event-type` +
+      Define the action to be executed during the form submitting (click on submit button). It can take one of next values :
+      **** `submit` will submit the form to `area-target` with provided `parameter` elements. Like `set-area` if no `parameter`
+            are defined it will use the whole form. Error and success messages will be displayed. +
+            Form `target` support the REST uri format with some parameters in it include with {}, value is populate with
+            content of form - fields when submit. +
+            The http method used is POST, but you can add a field _method to choose the method received by the ofbiz controler
+            (ex: PUT for an update)
+      **** `set-area` update area with id `areaId` with the post result at URI `area-target` with included `parameter` elements. +
+            If uri contain, at least one {xxx} or have no parameters a GET method will be used otherwise a POST will be used.
+      **** `refresh-area` similar with set-area but target used will be the `auto-update-target` define at the container level
+            and, if a watcher-name is define for this container, it's content will be used as parameters (for solving {} in target
+            or as parameters if no {} in target.
+      **** `set-watcher` update watcher `areaId` with included `parameter`. In case no parameter was passed to `set-watcher`
+            it will use all form fields to update watcher content.
+      **** `refresh-watcher` all container which watch a watcher-name are update when watcher content change, with refresh-watcher
+            update is done without change watcher content.
+      **** `collapse` do an action on collapse/expand screenlet. +
+           `area-target` is the action to do : *collapse* or *expand* or *toggle*; +
+           `area-id` is the `screenlet name` to change.
+      **** `close-modal` close the current modal, currently `area-id` is necessary, when modal is open for a lookup areaId is
+            {formName}_{fieldName};  area-target is not used, so can be left empty.
+  ** in `<on-field-event-update-area` tag (there can be many of them and they will be executed in xml apparition order. It will wait
+      current task is completed before starting the next one.)
+    *** `event-type` +
+      Define the action to be executed during the click on the associated hyperlink (<a link or button). It can take one of next values :
+      **** `post` will post at URI `area-target` with the `parameter` elements included in the tag. If there are no parameters,
+        it will use the whole form. It will display error and success messages.
+      **** `put` will post at URI `area-target` with the http methof PUT if target contain {xxxx} xxxx will be replace by value
+           if xxxx is define in parameters included in the tag. If there are no parameters, it will use the whole form.
+           It will display error and success messages.
+      **** `delete` will post at URI `area-target` with the http methof DELETE if target contain {xxxx} xxxx will be replace by value
+           if xxxx is define in parameters included in the tag. If there are no parameters, it will use the whole form.
+           It will display error and success messages.
+      **** `set-area` update area with id `areaId` with the post result at URI `area-target` with included `parameter` elements. +
+            If uri contain, at least one {xxx} or have no parameters a GET method will be used otherwise a POST will be used.
+      **** `refresh-area` similar with set-area but target used will be the `auto-update-target` define at the container level
+            and, if a watcher-name is define for this container, it's content will be used as parameters (for solving {} in target
+            or as parameters if no {} in target.
+      **** `set-watcher` update watcher `areaId` with included `parameter`. In case no parameter was passed to `set-watcher`
+            it will use all form fields to update watcher content.
+      **** `refresh-watcher` all container which watch a watcher-name are update when watcher content change, with refresh-watcher
+            update is done without change watcher content.
+      **** `set-field-in-form` will set the value of property `area-target` from form `area-id` from the actual field value.
+      **** `collapse` do an action on collapse/expand screenlet. +
+           `area-target` is the action to do : *collapse* or *expand* or *toggle*; +
+           `area-id` is the `screenlet name` to change.
+      **** `close-modal` close the current modal, `area-id` is to know which modal close, when modal is open for a lookup areaId is
+            {formName}_{fieldName}; +
+            if area-id is empty all modal are closed; +
+            area-target is not used, so can be left empty.
+  ** in `parameters` tag
+    *** `auto-parameters-portlet` allow to automatically fill necessary portlet parameters :
+      **** `portalPageId`
+      **** `portalPortletId`
+      **** `portletSeqId`
+      **** `currentAreaId`
+  ** in `<hyperlink` tag
+    *** `link-type="anchor"` is used to make an internal call to FrontJs via `set-area`, `target-window` is used as
+         id to update and `target` as area-target, parameters as parameters.
+    *** `target-window` is used to design the watcherName that have to be updated.
+    *** `url-mode` three new modes is added to be able to give the http method to use, POST is the default
+      **** intra-post : do a http POST request for the set-area, and so sending multiple parameters
+      **** intra-put : do the http request with a PUT method
+      **** intra-delete : do the http request with a DELETE method
+* menu
+  ** in `<link` tag
+    *** `link-type="set-area"` is used to make an internal call to FrontJs via `set-area`, `target-window` is used as
+         id to update and `target` as area-target, it's a http get so parameters should be in target and
+         if there area some {xxx} in target they will be replace by correct value with fields list in parameters.
+    *** `link-type="auto"` (default value) and `url-mode="intra-app"` call the target-url to print a new
+         page (using internal routing).
+    *** `link-type="layered-modal"` is used to open a modal windows and do a set-area in it
+    *** `url-mode` three new modes is added to be able to give the http method to use, POST is the default (except for set-area)
+      **** intra-post : do a http POST request for the set-area, and so sending multiple parameters
+      **** intra-put : do the http request with a PUT method
+      **** intra-delete : do the http request with a DELETE method
+
+=== decorator, lookup
+Currently vuejs app is call in a ftl included in the classic mainDecorator, without application menu (which are directly
+manage by vuejsApp cf <<_specifics_uri>>).
+
+Currently a specifics theme has created, to be able to remove most of css to avoid "conflict" with vuetify lib. This theme
+is forced in the main decorator of the application.
+
+*Lookup*
+
+1. `LookupDecorator` is a specifics one for VueJs, but its usage is same as the standard one. It contain 2 main specificity
+  * for autocomplete return, all data are in viewData
+  * for search - result, when lookup receive parameters.lookupResult = "Y" only result form is sent to be injected in area lookup-results
+2. `LookupForm - find` :
+  * it's necessary to add a hidden field
+[source,XML]
+   <field name="lookupResult"><hidden value="Y"/></field>
+
+  * it's necessary to add 2 on-event-update-are, +
+    first one to send result in the area lookup-result
+    second one to collapse Find screenlet (if you want collapse it
+[source,XML]
+       <on-event-update-area event-type="set-area" area-id="lookup-results" area-target="LookupExample"/>
+       <on-event-update-area event-type="collapse" area-id="LookupFindScreenlet" area-target="collapse"/>
+3. `LookupForm - list` :
+  * for the link return field, 2 on-field-event-update-area must be added +
+     first one to set Field which call the lookup with the correct value +
+     second one to close the modal
+[source,XML]
+            <on-field-event-update-area event-type="set-field-in-form" area-id="SelectExample" area-target="exampleId" />
+            <on-field-event-update-area event-type="close-modal" area-id="SelectExample_exampleId" area-target="" />
+4. `FindScreenDecorator`, is a specifics one for VueJs, but its usage is same as the standard one. Its specificity is about
+    ListResult update. Some modifications should be done in the find form
+  * add a hidden field onlyList
+[source,XML]
+            <field name="onlyList"><hidden value="Y"/><!-- used by FindScreenDecorator to only send list result --></field>
+  * add a on-event-update-area to update List result area
+[source,XML]
+         <on-event-update-area area-target="findExample" event-type="set-area" area-id="search-results"/><!-- When parameters-map is empty all form field are sent  -->
+  * add a on-event-update-area to collapse find screenlet (optional)
+[source,XML]
+       <on-event-update-area event-type="collapse" area-id="findScreenlet" area-target="collapse"/>
+
+
+=== FrontJs Renderer
+A *new viewHandler* and a new set of *renderer* had been created. +
+A new package had been created in org.apache.ofbiz.widget.renderer named frontJs which contain all new renderer.
+
+In this package, there is a new FrontJsOutput class which allow to construct necessary elements whit the wished format.
+An object of this class is instantiate at the begin of viewHandler process, then is completed by rendered object call.
+
+Uri *showPortletFj* of component examplefjs use the new viewHandler to return screen render result, showPortlet.
+
+This URI is used by Vue.Js application for display information gathering. +
+New viewHandle return a json which contain 2 maps ( viewScreen and viewEntities ). +
+viewScreen contain all information about display.
+viewEntities contain all information about data set.
+
+In future revision, it will probably be feasible to only receive the data map.
+
+=== Specifics URI
+there is a *showPortal* URI in vuejs (CommonScreen), which is the Start point of the VueJs application.
+
+*showPortlet* screen is redefine in this POC for simplification purpose, to only do what we want.
+
+*applicationMenu* is a new uri which return with the FrontJsScreenViewHandler the data (ViewScreen & ViewData) from application xml menu. +
+In each fjs component, it's necessary to define a view-map entry applicationMenu pointing to a screen.xml with only the correct menu.
+
+=== REST URI
+For OFBiz applications URI structure is : {resourceName}/{cover}/{Pkvalue: .*}
+
+So, for Example resource, it translate into :
+|===
+| URI                         | method        |  Goal
+| Example/find                | get           | find form to select options for list
+| Example/list                | get (via post)| Example list, +
+                                                => with a get (so without parameters) all the examples +
+                                                => with a post (parameters and _method="GET") examples selected by options
+| Example/create              | get           | create form
+| Example/edit/{exampleId}    | get           | edit form and data for the id sent
+| Example/show/{exampleId}    | get           | show form and data for the id sent
+| Example/summary/{exampleId} | get           | summary form and data for the id sent
+| Example/data/{exampleId}    | get           | just data for the id sent
+| Example/change              | post          | create a example
+| Example/change/{exampleId}  | put (via post)| update example with exampleId
+| Example/change/{exampleId}  | delete        | delete example with exampleId
+|===
+
+All these actions([cover]) is about screenlet (part of a page), if cover should be for a page, its name is suffix by Pg.
+
+[TIP]
+HTTP request other than POST method cannot have parameters (other than in URI) so to be able to do a GET or a PUT with parameters
+a workarround is to used a POST with added `<field name="_method"><hidden value="GET">` (or "PUT") in the form (or as one of the parameters).
+
+[CAUTION]
+TOMCAT httpServlet.java not manage PATCH method, so it's not usable
+
+=== Added field
+A new field had been added to PortalPagePortlet entity : *watcherName* which is the name of the watcher that fire portlet update.
+
+=== ftl
+ftl file can be mixed with Vue.js app, so it's necessary to create a dedicated component by ftl migrated. Look at
+<<_xml_tags_used, XML tags used>> on point `platform-specific`-`html` - `vuejs`.
+
+include::poc-situation_en.adoc[leveloffset=+1]
+
+include::poc-todo_en.adoc[leveloffset=+1]
+
+include::poc-useCase_en.adoc[leveloffset=+1]
+
+include::poc-vuejs-details_en.adoc[leveloffset=+1]
+

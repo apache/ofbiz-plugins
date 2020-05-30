@@ -1,0 +1,73 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+= POC's remaining todos
+This list contain only points which are already meet in use case process.
+
+Most of time, each new use case (or portlet) give new task (ex: new field type not yet meet, or field properties not yet process)
+
+== Minors
+
+* review and change field-find to include title in the field to remove the "title" coloumn in find form
+* Manage the ConfMod in the showPortalPage, to show (and manage) the portlet parameters page.
+* do a uri to send label for login screen, to be able to have translation in login screen
+* Include header and footer in the VueJs application to have a full page manage by VueJs, and so have a complete Vue.Js look.
+* Include all Common and Commonext part, like systemInfoNote
+
+== Majeurs
+
+* use VuejsRouter to be able to manage all screenType
+* showPortletFj* must verify *security* about field SecurityServiceName and SecurityMainAction.
+
+== PortletWidget migration
+Start of documentation for all portletwidget migration
+
+1. create/copy the screen in {component}PortletScreen and remove <portalPortlet properties 
+  ** portletTypeId
+  ** component, subComponent, useScreen
+    ... add screenName and screenLocation
+  ** useScript, useMenu
+1. copy the forms (and update screen if necessary)
+1. update screen with portletUiLabelDecorator
+1. update screen with screenlet and container if menu need it (id for setArea)
+1. update screen with script, if necessary
+1. update screen with menu, if necessary
+1. copy from controller for uri edit and action
+1. in Menu, replace 
+[source,XML]
+          <show-portlet portlet-id="${portalPortletId}" target="EditPersonPt" area-id="${subAreaDivId}" 
+                         image-location="${iconsPurpose.Edit}" image-title="${uiLabelMap.IconsTooltips_Edit}">
+              <parameter param-name="partyId" from-field="parameters.partyId"/>
+          </show-portlet>
+
+   with
+[source,XML]
+            <link  text="Edit" target="editperson" link-type="anchor" target-window="viewPartyInfo"> <!-- usage du target-window pourdonner l'id de destination -->
+                <parameter param-name="partyId" from-field="parameters.partyId"/>
+                <parameter param-name="DONE_PAGE" from-field="DONE_PAGE"/>
+                <auto-parameters-portlet/>
+<!--                 TODO is it necessary to have 3 parameters not auto-parameters -->
+<!--                 <parameter param-name="portalPageId"    from-field="parameters.portalPageId"/> -->
+<!--                 <parameter param-name="portalPortletId" from-field="parameters.portalPortletId"/> -->
+<!--                 <parameter param-name="portletSeqId"    from-field="parameters.portletSeqId"/> -->
+                <image src="${iconsPurpose.Edit}" title="${uiLabelMap.IconsTooltips_Edit}"/>
+            </link>
+
+
+
+

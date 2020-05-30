@@ -1,0 +1,220 @@
+From 63e51bce356547106dfebea6fd9138d3e14fd40d Mon Sep 17 00:00:00 2001
+From: holivier <holivier@apache.org>
+Date: Mon, 25 May 2020 20:16:07 +0200
+Subject: [PATCH 14/25] Improved: Add set-area and set-watcher for container level (OFBIZ-11763)
+
+* add attribute watcher-name for tag container
+* add in link-type enum set-area, refresh-area and set-watcher,
+refresh-watcher
+* add in xxx-event-update-area, in event-type enum set-area,
+refresh-area and set-watcher, refresh-watcher
+
+Concept is:
+1. container is the main piece of dynamics screen (update a part of
+screen on event), a new attribute is added watcher-name, and existing
+one auto-update-target is using as target
+
+2. There are two/four new "action" usable by link - hyperlink
+ * set-area (and refresh-area)
+ * set-watcher (and refresh-watcher)
+
+3. set-area is used to update a containerId, and, most of the time, uses
+only for included containerId
+set-watcher put some "parameters" in a watcher-name
+
+4. when the content of a whatcher-name change, all containerId which
+watch it, use their auto-update-target as target and watcher-name
+content as parameters to update the container content.
+
+5. refresh-area is similar with set-area but target used will be the
+auto-update-target define at the container level and, if a watcher-name
+is define for this container, it's content will be used as parameters
+(for solving {} in target or as parameters if no {} in target.
+---
+ framework/widget/dtd/widget-common.xsd             | 14 +++++++
+ framework/widget/dtd/widget-form.xsd               | 44 ++++++++++++++++++++++
+ framework/widget/dtd/widget-screen.xsd             |  5 +++
+ .../org/apache/ofbiz/widget/model/ModelForm.java   |  4 ++
+ .../ofbiz/widget/model/ModelFormFieldBuilder.java  |  4 ++
+ .../ofbiz/widget/model/ModelScreenWidget.java      |  6 +++
+ 6 files changed, 77 insertions(+)
+
+diff --git a/framework/widget/dtd/widget-common.xsd b/framework/widget/dtd/widget-common.xsd
+index eb73280c7d..0fd32d3334 100644
+--- a/framework/widget/dtd/widget-common.xsd
++++ b/framework/widget/dtd/widget-common.xsd
+@@ -559,6 +559,20 @@ under the License.
+                     <xs:enumeration value="anchor" />
+                     <xs:enumeration value="hidden-form" />
+                     <xs:enumeration value="layered-modal" />
++                    <xs:enumeration value="set-area" >
++                        <xs:annotation>
++                            <xs:documentation>
++                                Usable only in menu link, for FrontJs action, target and target-windows are used.
++                            </xs:documentation>
++                        </xs:annotation>
++                    </xs:enumeration>
++                    <xs:enumeration value="set-watcher" >
++                        <xs:annotation>
++                            <xs:documentation>
++                                Usable only in menu link, for FrontJs action, only target-windows is used (as watcherName).
++                            </xs:documentation>
++                        </xs:annotation>
++                    </xs:enumeration>
+                 </xs:restriction>
+             </xs:simpleType>
+         </xs:attribute>
+diff --git a/framework/widget/dtd/widget-form.xsd b/framework/widget/dtd/widget-form.xsd
+index a1aba90f14..fe57b0dc47 100644
+--- a/framework/widget/dtd/widget-form.xsd
++++ b/framework/widget/dtd/widget-form.xsd
+@@ -589,11 +589,34 @@ under the License.
+                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="parameter" />
+             </xs:sequence>
+             <xs:attribute name="event-type" use="required">
++                <xs:annotation>
++                    <xs:documentation>set-area and set-watcher are specifics for VueJs and are put onSubmitUpdateAreas list.
++                                      submit, set-area and set-watcher are activate when submit button is clicked.
++                    </xs:documentation>
++                </xs:annotation>
+                 <xs:simpleType>
+                     <xs:restriction base="xs:token">
+                         <xs:enumeration value="paginate" />
+                         <xs:enumeration value="sort-column" />
+                         <xs:enumeration value="submit" />
++                        <xs:enumeration value="set-area" >
++                          <xs:annotation>
++                            <xs:documentation>
++                              set-area is activate when submit button is clicked, it uses area-id as area to update and area-target as target to call.
++                              Parameters area read in included parameter tag or all form fields if parameters is empty.
++                            </xs:documentation>
++                          </xs:annotation>
++                        </xs:enumeration>
++                        <xs:enumeration value="refresh-area" >
++                          <xs:annotation>
++                            <xs:documentation>
++                              refresh-area is activate when submit button is clicked, it's same as set-area but areaId should be a container with a
++                              auto-update-target, because refresh-area will use it to refresh area and parameters in the watcher associated for call.
++                            </xs:documentation>
++                          </xs:annotation>
++                        </xs:enumeration>
++                        <xs:enumeration value="set-watcher" />
++                        <xs:enumeration value="refresh-watcher" />
+                     </xs:restriction>
+                 </xs:simpleType>
+             </xs:attribute>
+@@ -1530,6 +1553,9 @@ under the License.
+                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="parameter" />
+             </xs:sequence>
+             <xs:attribute name="event-type" use="required">
++                <xs:annotation>
++                    <xs:documentation>post, put, delete, setArea and setWatcher are specifics for VueJs on hyperlink (or link) and are put onClickUpdateAreas list.</xs:documentation>
++                </xs:annotation>
+                 <xs:simpleType>
+                     <xs:restriction base="xs:token">
+                         <xs:enumeration value="change" />
+@@ -1537,6 +1563,24 @@ under the License.
+                         <xs:enumeration value="post" />
+                         <xs:enumeration value="put" />
+                         <xs:enumeration value="delete" />
++                        <xs:enumeration value="set-area" >
++                          <xs:annotation>
++                            <xs:documentation>
++                              set-area is activate when field is clicked, it uses area-id as area to update and area-target as target to call.
++                              Parameters area read in included parameter tag or all form fields if parameters is empty.
++                            </xs:documentation>
++                          </xs:annotation>
++                        </xs:enumeration>
++                        <xs:enumeration value="refresh-area" >
++                          <xs:annotation>
++                            <xs:documentation>
++                              refresh-area is activate when field is clicked, it's same as set-area but areaId should be a container with a
++                              auto-update-target, because refresh-area will use it to refresh area and parameters in the watcher associated for call.
++                            </xs:documentation>
++                          </xs:annotation>
++                        </xs:enumeration>
++                        <xs:enumeration value="set-watcher" />
++                        <xs:enumeration value="refresh-watcher" />
+                     </xs:restriction>
+                 </xs:simpleType>
+             </xs:attribute>
+diff --git a/framework/widget/dtd/widget-screen.xsd b/framework/widget/dtd/widget-screen.xsd
+index 087809b15c..b86feed004 100644
+--- a/framework/widget/dtd/widget-screen.xsd
++++ b/framework/widget/dtd/widget-screen.xsd
+@@ -232,6 +232,11 @@ under the License.
+                     <xs:documentation>The auto-update interval, in seconds.</xs:documentation>
+                 </xs:annotation>
+             </xs:attribute>
++            <xs:attribute type="xs:string" name="watcher-name">
++                <xs:annotation>
++                    <xs:documentation>Name of the watcher, which will trigger auto-update when it changes.</xs:documentation>
++                </xs:annotation>
++            </xs:attribute>
+         </xs:complexType>
+     </xs:element>
+     <xs:element name="horizontal-separator" substitutionGroup="AllWidgets">
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java
+index 61562ff7b7..4976778cd8 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java
+@@ -436,6 +436,10 @@ public abstract class ModelForm extends ModelWidget {
+                 }
+             } else if ("submit".equals(updateArea.getEventType())
+                      ||"post".equals(updateArea.getEventType())
++                     ||"set-area".equals(updateArea.getEventType())
++                     ||"refresh-area".equals(updateArea.getEventType())
++                     ||"set-watcher".equals(updateArea.getEventType())
++                     ||"refresh-watcher".equals(updateArea.getEventType())
+                       ) {
+                 int index = onSubmitUpdateAreas.indexOf(updateArea);
+                 if (index != -1) {
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java
+index 7ac1c0023e..42c05dbe05 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java
+@@ -218,6 +218,10 @@ public class ModelFormFieldBuilder {
+                 } else if ("post".equals(updateArea.getEventType())
+                         || "put".equals(updateArea.getEventType())
+                         || "delete".equals(updateArea.getEventType())
++                        || "set-area".equals(updateArea.getEventType())
++                        || "refresh-area".equals(updateArea.getEventType())
++                        || "set-watcher".equals(updateArea.getEventType())
++                        || "refresh-watcher".equals(updateArea.getEventType())
+                         ) {
+                     onClickUpdateAreas.add(updateArea);
+                 }
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenWidget.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenWidget.java
+index d0af4947ad..372b253e47 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenWidget.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenWidget.java
+@@ -438,6 +438,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
+         private final FlexibleStringExpander styleExdr;
+         private final FlexibleStringExpander autoUpdateTargetExdr;
+         private final FlexibleStringExpander autoUpdateInterval;
++        private final FlexibleStringExpander watcherNameExdr;
+         private final List<ModelScreenWidget> subWidgets;
+ 
+         public Container(ModelScreen modelScreen, Element containerElement) {
+@@ -446,6 +447,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
+             this.typeExdr = FlexibleStringExpander.getInstance(containerElement.getAttribute("type"));
+             this.styleExdr = FlexibleStringExpander.getInstance(containerElement.getAttribute("style"));
+             this.autoUpdateTargetExdr = FlexibleStringExpander.getInstance(containerElement.getAttribute("auto-update-target"));
++            this.watcherNameExdr = FlexibleStringExpander.getInstance(containerElement.getAttribute("watcher-name"));
+             String autoUpdateInterval = containerElement.getAttribute("auto-update-interval");
+             if (autoUpdateInterval.isEmpty()) {
+                 autoUpdateInterval = "2";
+@@ -488,6 +490,10 @@ public abstract class ModelScreenWidget extends ModelWidget {
+             return this.autoUpdateTargetExdr.expandString(context);
+         }
+ 
++        public String getWatcherNameExdr(Map<String, Object> context) {
++            return this.watcherNameExdr.expandString(context);
++        }
++
+         public String getAutoUpdateInterval(Map<String, Object> context) {
+             return this.autoUpdateInterval.expandString(context);
+         }
+-- 
+2.11.0
+
