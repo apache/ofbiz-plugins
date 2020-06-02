@@ -17,6 +17,10 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+<div class="breadcrumbs">
+  <a href="<@ofbizUrl>main</@ofbizUrl>" class="linktext">${uiLabelMap.CommonMain}</a> &gt;
+  ${uiLabelMap.CommonContactUs}
+</div>
 <div class="card m-3">
   <div class="card-header">
     <div class="boxlink">
