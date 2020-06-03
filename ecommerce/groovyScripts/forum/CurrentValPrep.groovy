@@ -50,13 +50,13 @@ if (!currentEntityPropertyName) {
     currentEntityName = parameters[currentEntityPropertyName]
 }
 
-//Debug.logInfo("in currentvalprep, currentEntityName:" + currentEntityName,"")
+//logInfo("in currentvalprep, currentEntityName:" + currentEntityName)
 cachedPK = currentEntityMap[currentEntityName]
-//Debug.logInfo("in currentvalprep, cachedPK:" + cachedPK,"")
+//logInfo("in currentvalprep, cachedPK:" + cachedPK)
 
 // Build a key from param or attribute values.
 paramMap = UtilHttp.getParameterMap(request)
-//Debug.logInfo("paramMap:" + paramMap, null)
+//logInfo("paramMap:" + paramMap)
 v = delegator.makeValue(currentEntityName)
 passedPK = v.getPrimaryKey()
 keyColl = passedPK.getAllKeys()
@@ -64,14 +64,14 @@ keyIt = keyColl.iterator()
 while (keyIt.hasNext()) {
     attrName = keyIt.next()
     attrVal = parameters[attrName]
-    //Debug.logInfo("in currentvalprep, attrName:" + attrName,"")
-    //Debug.logInfo("in currentvalprep, attrVal:" + attrVal,"")
+    //logInfo("in currentvalprep, attrName:" + attrName)
+    //logInfo("in currentvalprep, attrVal:" + attrVal)
     if (attrVal) {
         passedPK[attrName] = attrVal
     }
 }
 
-//Debug.logInfo("in currentvalprep, passedPK:" + passedPK,"")
+//logInfo("in currentvalprep, passedPK:" + passedPK)
 // messed up code to determine whether or not the cached or passed keys have missing fields,
 // in which case, the valid one is used to retrieve the current value
 pksEqual = true
@@ -113,7 +113,7 @@ if (!pksEqual) {
     currentPK = cachedPK
    // all other condition result in currentPK = passedPK
 }
-//Debug.logInfo("in currentvalprep, currentPK:" + currentPK,"")
+//logInfo("in currentvalprep, currentPK:" + currentPK)
 
 currentEntityMap[currentEntityName] = currentPK
 request.setAttribute("currentPK", currentPK)
@@ -122,7 +122,7 @@ currentValue = from(currentPK.getPrimaryKey().getEntityName()).where(currentPK.g
 context.currentValue = currentValue
 request.setAttribute("currentValue", currentValue)
 
-// Debug.logInfo("===========in currentvalprep, currentValue:" + request.getAttribute("currentValue"),"")
+// logInfo("===========in currentvalprep, currentValue:" + request.getAttribute("currentValue"))
 if (currentValue) {
     if (currentEntityName.indexOf("DataResource") >= 0) {
         suffix = ""
@@ -134,7 +134,7 @@ if (currentValue) {
             if (s) suffix += "_" + s
         }
 
-        //Debug.logInfo("in currentvalprep, suffix:" + suffix,"")
+        //logInfo("in currentvalprep, suffix:" + suffix)
 //        if (suffix) {
 //            ContentManagementWorker.mruAdd(session, currentPK, suffix)
 //        } else {
@@ -144,4 +144,4 @@ if (currentValue) {
         ContentManagementWorker.mruAdd(session, currentPK)
     }
 }
-//Debug.logInfo("in currentvalprep, contentId:" + request.getAttribute("contentId"),"")
+//logInfo("in currentvalprep, contentId:" + request.getAttribute("contentId"))

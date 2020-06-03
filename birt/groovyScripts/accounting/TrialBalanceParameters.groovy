@@ -17,8 +17,6 @@
  * under the License.
  */
 
-def module = "TrialBalanceParameters.groovy"
-
 try {
     def birtParameters = [:]
     birtParameters.organizationPartyId = parameters.organizationPartyId
@@ -26,6 +24,6 @@ try {
     birtParameters.userLoginId = userLogin.userLoginId
     request.setAttribute("birtParameters", birtParameters)
 } catch (e) {
-    Debug.logError(e, module)
+    logError(e, "")
 }
 return "success";

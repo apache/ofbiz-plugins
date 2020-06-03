@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import org.apache.ofbiz.base.util.Debug
 import java.sql.*
 
 fromDateStr = parameters.fromDate
@@ -36,7 +35,7 @@ try {
     birtParameters.thruMonth = month
     birtParameters.thisYear = year
 } catch (e) {
-    Debug.logError(e, "")
+    logError(e, "")
 }
 
 request.setAttribute("birtParameters", birtParameters)

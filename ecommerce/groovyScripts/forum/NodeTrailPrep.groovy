@@ -67,14 +67,14 @@ if (nodeTrailCsv) {
            dummy = [:]
         }
         dummy.nodeTrailCsv = nodeTrailCsv
-        //Debug.logInfo("in nodetrailprep, dummy:" + dummy,"")
+        //logInfo("in nodetrailprep, dummy:" + dummy)
         singleWrapper.putInContext("dummy",dummy)
     }
     context.nodeTrailCsv = nodeTrailCsv
 
-    //Debug.logInfo("in nodetrailprep, nodeTrailCsv:" + nodeTrailCsv,"")
+    //logInfo("in nodetrailprep, nodeTrailCsv:" + nodeTrailCsv)
     trailContentList = ContentWorker.csvToContentList(nodeTrailCsv, delegator)
-    //Debug.logInfo("in nodetrailprep, trailContentList:" + trailContentList,"")
+    //logInfo("in nodetrailprep, trailContentList:" + trailContentList)
     context.ancestorList = trailContentList
-    //Debug.logInfo("in vewprep, siteAncestorList:" + siteAncestorList,"")
+    //logInfo("in vewprep, siteAncestorList:" + siteAncestorList)
 }

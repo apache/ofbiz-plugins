@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import org.apache.ofbiz.base.util.Debug
 import org.apache.ofbiz.base.util.UtilDateTime
 import java.sql.*
 import com.ibm.icu.util.Calendar
@@ -33,7 +32,7 @@ try
     birtParameters.Week = Week
     birtParameters.Year = Year
 } catch (e) {
-    Debug.logError(e, "")
+    logError(e, "")
 }
 
 request.setAttribute("birtParameters", birtParameters)

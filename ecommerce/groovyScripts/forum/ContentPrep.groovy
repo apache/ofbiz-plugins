@@ -38,7 +38,7 @@ import javax.servlet.http.*
 // load edit or create Content form
 
 rootPubPt = parameters.webSiteId
-//Debug.logInfo("in contentprep, security:" + security, "")
+//logInfo("in contentprep, security:" + security)
 
 singleWrapper = context.singleWrapper
 
@@ -50,9 +50,9 @@ if (!contentId)
 if (!contentId)
     contentId = ContentManagementWorker.getFromSomewhere("contentId", paramMap, request, context)
 
-//Debug.logInfo("in contentprep, contentId(1):" + contentId, "")
+//logInfo("in contentprep, contentId(1):" + contentId)
 currentValue = parameters.currentValue
-//Debug.logInfo("in contentprep, currentValue(0):" + currentValue, "")
+//logInfo("in contentprep, currentValue(0):" + currentValue)
 
 if (!contentId && currentValue) {
     contentId = currentValue.contentId
@@ -60,8 +60,8 @@ if (!contentId && currentValue) {
 if (contentId && !currentValue) {
     currentValue = from("Content").where("contentId", contentId).cache(true).queryOne()
 }
-//Debug.logInfo("in contentprep, currentValue(1):" + currentValue, "")
-//Debug.logInfo("in contentprep, contentId(4):" + contentId, "")
+//logInfo("in contentprep, currentValue(1):" + currentValue)
+//logInfo("in contentprep, contentId(4):" + contentId)
 
 if (currentValue) {
     dataResourceId = currentValue.dataResourceId
@@ -93,10 +93,10 @@ if (currentValue) {
         context.txtContentId = subContentDataResourceView.contentId
         context.txtDataResourceId = subContentDataResourceView.dataResourceId
         context.textData = textData
-        //Debug.logInfo("textId:" + txtContentId, "")
-        //Debug.logInfo("textData:" + textData, "")
+        //logInfo("textId:" + txtContentId)
+        //logInfo("textData:" + textData)
         if (singleWrapper) {
-           //Debug.logInfo("textData:" + textData, "")
+           //logInfo("textData:" + textData)
            singleWrapper.putInContext("textData", textData)
         }
     }
@@ -109,10 +109,10 @@ if (currentValue) {
         context.sumContentId = subContentDataResourceView.contentId
         context.sumDataResourceId = subContentDataResourceView.dataResourceId
         context.summaryData = summaryData
-        //Debug.logInfo("sumId:" + sumContentId, "")
-        //Debug.logInfo("summaryData:" + summaryData, "")
+        //logInfo("sumId:" + sumContentId)
+        //logInfo("summaryData:" + summaryData)
         if (singleWrapper) {
-            //Debug.logInfo("summaryData:" + summaryData, "")
+            //logInfo("summaryData:" + summaryData)
             singleWrapper.putInContext("summaryData", summaryData)
         }
     }

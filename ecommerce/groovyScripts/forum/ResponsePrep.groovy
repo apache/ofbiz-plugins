@@ -44,7 +44,7 @@ paramMap = UtilHttp.getParameterMap(request)
 
 contentIdTo = paramMap.contentIdTo
 nodeTrailCsv = paramMap.nodeTrailCsv
-//Debug.logInfo("in viewprep, nodeTrailCsv:" + nodeTrailCsv,"")
+//logInfo("in viewprep, nodeTrailCsv:" + nodeTrailCsv)
 context.nodeTrailCsv = nodeTrailCsv
 contentId = paramMap.contentIdTo
 context.subContentId = contentId
@@ -65,7 +65,7 @@ idList.each { id ->
     siteAncestorList.add(webSitePublishPoint)
 }
 context.siteAncestorList = siteAncestorList
-//Debug.logInfo("in viewprep, siteAncestorList:" + siteAncestorList,"")
+//logInfo("in viewprep, siteAncestorList:" + siteAncestorList)
 
 singleWrapper = context.singleWrapper
 // singleWrapper.putInContext("pageName", page.getPageName())

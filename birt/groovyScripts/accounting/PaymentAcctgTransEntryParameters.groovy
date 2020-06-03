@@ -17,14 +17,12 @@
  * under the License.
  */
 
-def module = "PaymentAcctgTransEntryParameters.groovy"
-
 try {
     birtParameters = [:]
     birtParameters.paymentId = parameters.paymentId
     birtParameters.userLoginId = userLogin.userLoginId
     request.setAttribute("birtParameters", birtParameters)
 } catch (e) {
-    Debug.logError(e, module)
+    logError(e, "")
 }
 return "success";

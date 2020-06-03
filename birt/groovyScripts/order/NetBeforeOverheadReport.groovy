@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import org.apache.ofbiz.base.util.Debug
 import org.apache.ofbiz.base.util.UtilDatetime
 import java.sql.*
 
@@ -48,7 +47,7 @@ try {
     birtParameters.DateYear = DateYear
     birtParameters.NunberDate = NunberDate
 } catch (e) {
-    Debug.logError(e, "")
+    logError(e, "")
 }
 
 request.setAttribute("birtParameters", birtParameters)

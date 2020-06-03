@@ -50,14 +50,14 @@ rootPubPt = parameters.webSiteId
 paramMap = UtilHttp.getParameterMap(request)
 contentIdTo = ContentManagementWorker.getFromSomewhere("forumId", paramMap, request, context)
 context.contentIdTo = contentIdTo
-//Debug.logInfo("in contentaddprep, contentIdTo:" + contentIdTo,"")
-//Debug.logInfo("in contentaddprep, paramMap:" + paramMap,"")
+//logInfo("in contentaddprep, contentIdTo:" + contentIdTo)
+//logInfo("in contentaddprep, paramMap:" + paramMap)
 attrList = from("ContentAttribute").where("contentId", contentIdTo, "attrName", "publishOperation").cache(true).queryList()
 publishOperation = null
 if (attrList) {
     contentAttribute = attrList.get(0)
     publishOperation = contentAttribute.attrValue
-    //Debug.logInfo("in contentaddprep, publishOperation:" + publishOperation,"")
+    //logInfo("in contentaddprep, publishOperation:" + publishOperation)
 }
 
 singleWrapper.putInContext("publishOperation", publishOperation)
@@ -90,4 +90,4 @@ singleWrapper.putInContext("statusId", statusId)
 siteAncestorList = []
 siteAncestorList.add(contentIdTo)
 context.siteAncestorList = siteAncestorList
-//Debug.logInfo("in viewprep, siteAncestorList:" + siteAncestorList,"")
+//logInfo("in viewprep, siteAncestorList:" + siteAncestorList)

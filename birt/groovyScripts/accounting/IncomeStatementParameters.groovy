@@ -18,9 +18,6 @@
  */
 
 import java.sql.Timestamp
-import org.apache.ofbiz.base.util.Debug
-
-def module = "IncomeStatementParameters.groovy"
 
 try {
     def birtParameters = [:]
@@ -35,6 +32,6 @@ try {
     birtParameters.userLoginId = userLogin.userLoginId
     request.setAttribute("birtParameters", birtParameters)
 } catch (e) {
-    Debug.logError(e, module)
+    logError(e, "")
 }
 return "success";

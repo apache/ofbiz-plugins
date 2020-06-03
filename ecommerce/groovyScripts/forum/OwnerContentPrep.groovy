@@ -37,17 +37,17 @@ import javax.servlet.http.*
 
 // load edit or create Content form
 
-//Debug.logInfo("in ownerprep, security:" + security, "")
+//logInfo("in ownerprep, security:" + security)
 
 rootPubPt = parameters.webSiteId
-//Debug.logInfo("in ownerprep, rootPubPt:" + rootPubPt, "")
+//logInfo("in ownerprep, rootPubPt:" + rootPubPt)
 entityAction = page.entityOperation
 permittedOperations = page.permittedOperations
 
 allDepartmentContentList = ContentManagementWorker.getAllDepartmentContent(delegator, rootPubPt)
-//Debug.logInfo("in ownercontentprep, allDepartmentContentList:" + allDepartmentContentList, "")
+//logInfo("in ownercontentprep, allDepartmentContentList:" + allDepartmentContentList)
 departmentPointList = ContentManagementWorker.getPermittedDepartmentPoints( delegator, allDepartmentContentList, userLogin, security, entityAction, "CONTENT_CREATE", null )
-//Debug.logInfo("in ownercontentprep, departmentPointList:" + departmentPointList, "")
+//logInfo("in ownercontentprep, departmentPointList:" + departmentPointList)
 departmentPointMap = [:]
 departmentPointMapAll = [:]
 ownerContentList = []
@@ -69,10 +69,10 @@ departmentPointList.each { arr ->
         ownerContentList.add(lineMap2)
     }
 }
-//Debug.logInfo("in ownercontentprep, ownerContentList:" + ownerContentList, "")
+//logInfo("in ownercontentprep, ownerContentList:" + ownerContentList)
 
 pubPt = context.pubPt
-//Debug.logInfo("in ownercontentprep, pubPt:" + pubPt, "")
+//logInfo("in ownercontentprep, pubPt:" + pubPt)
 singleWrapper = context.singleWrapper
 singleWrapper.putInContext("ownerContentList", ownerContentList)
 singleWrapper.putInContext("pubPt", pubPt)
