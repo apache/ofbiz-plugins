@@ -482,7 +482,7 @@
             </service>
         </row-actions>
         <field name="projectName" map-name="resultProject.projectInfo" title="${uiLabelMap.ProjectMgrProjectName}" widget-style="buttontext">
-            <hyperlink description="${resultProject.projectInfo.projectName}" target-type="inter-app" target="/projectmgr/control/projectView">
+            <hyperlink description="${resultProject.projectInfo.projectName}" target="projectView">
                 <parameter param-name="projectId" from-field="resultProject.projectInfo.projectId"/>
             </hyperlink>
         </field>

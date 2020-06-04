@@ -633,7 +633,7 @@
         </actions>
         <field name="workEffortId"><hidden/></field>
         <field name="custRequestId" widget-style="buttontext">
-            <hyperlink description="${custRequestName} [${custRequestId}]" target="/projectmgr/control/ViewRequest" target-type="inter-app">
+            <hyperlink description="${custRequestName} [${custRequestId}]" target="ViewRequest" target-type="inter-app">
                 <parameter param-name="custRequestId"/>
             </hyperlink>
         </field>
