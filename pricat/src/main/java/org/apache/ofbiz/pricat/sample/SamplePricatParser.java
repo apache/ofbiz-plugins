@@ -582,7 +582,8 @@ public class SamplePricatParser extends AbstractPricatParser {
             if (UtilValidate.isNotEmpty(cellValue) && UtilValidate.isNotEmpty(cellValue.trim())) {
                 if (cellType == CellType.FORMULA) {
                     try {
-                        cellValue = BigDecimal.valueOf(cell.getNumericCellValue()).setScale(FinAccountHelper.decimals, FinAccountHelper.rounding).toString();
+                        cellValue = BigDecimal.valueOf(cell.getNumericCellValue())
+                                .setScale(FinAccountHelper.getDecimals(), FinAccountHelper.getRounding()).toString();
                     } catch (IllegalStateException e) {
                         try {
                             cellValue = cell.getStringCellValue();
@@ -617,7 +618,8 @@ public class SamplePricatParser extends AbstractPricatParser {
                         cell.setCellType(CellType.STRING);
                     }
                     try {
-                        results.add(BigDecimal.valueOf(Double.parseDouble(cell.getStringCellValue())).setScale(FinAccountHelper.decimals, FinAccountHelper.rounding));
+                        results.add(BigDecimal.valueOf(Double.parseDouble(cell.getStringCellValue()))
+                                .setScale(FinAccountHelper.getDecimals(), FinAccountHelper.getRounding()));
                     } catch (NumberFormatException e) {
                         results.add(null);
                         errorMessages.put(new CellReference(cell), UtilProperties.getMessage(RESOURCE, "ErrorParseValueToNumeric", locale));
@@ -645,14 +647,16 @@ public class SamplePricatParser extends AbstractPricatParser {
                         }
                     } else if (cell.getCellType() == CellType.NUMERIC) {
                         try {
-                            results.add(BigDecimal.valueOf(cell.getNumericCellValue()).setScale(FinAccountHelper.decimals, FinAccountHelper.rounding));
+                            results.add(BigDecimal.valueOf(cell.getNumericCellValue())
+                                    .setScale(FinAccountHelper.getDecimals(), FinAccountHelper.getRounding()));
                         } catch (NumberFormatException e) {
                             results.add(null);
                             errorMessages.put(new CellReference(cell), UtilProperties.getMessage(RESOURCE, "ErrorParseValueToNumeric", locale));
                         }
                     } else {
                         try {
-                            results.add(BigDecimal.valueOf(Double.valueOf(cellValue)).setScale(FinAccountHelper.decimals, FinAccountHelper.rounding));
+                            results.add(BigDecimal.valueOf(Double.valueOf(cellValue))
+                                    .setScale(FinAccountHelper.getDecimals(), FinAccountHelper.getRounding()));
                         } catch (NumberFormatException e) {
                             results.add(null);
                             errorMessages.put(new CellReference(cell), UtilProperties.getMessage(RESOURCE, "ErrorParseValueToNumeric", locale));
