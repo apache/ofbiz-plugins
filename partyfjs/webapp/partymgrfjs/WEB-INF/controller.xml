@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://ofbiz.apache.org/Site-Conf" xsi:schemaLocation="http://ofbiz.apache.org/Site-Conf http://ofbiz.apache.org/dtds/site-conf.xsd">
+    <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
+    <include location="component://vuejs-portal/webcommon/vuejs-controller.xml"/>
+
+    <description>PartyFjs Component Site Configuration File</description>
+
+    <!-- Request Mappings -->
+    <request-map uri="findparty"><security https="true" auth="true"/><response name="success" type="view" value="findParty"/></request-map>
+
+    <request-map uri="editperson"><security https="true" auth="true"/><response name="success" type="view" value="EditPerson"/></request-map>
+    <request-map uri="updatePerson">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updatePerson"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="editPartyGroup"><security https="true" auth="true"/><response name="success" type="view" value="EditPartyGroup"/></request-map>
+    <request-map uri="updatePartyGroup">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updatePartyGroup"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
+    <request-map uri="editPartyUserLogin"><security https="true" auth="true"/><response name="success" type="view" value="EditPartyUserLogin"/></request-map>
+    <request-map uri="createPartyUserLogin"><security https="true" auth="true"/><response name="success" type="view" value="CreatePartyUserLogin"/></request-map>
+    <request-map uri="editUserLoginPassword"><security https="true" auth="true"/><response name="success" type="view" value="EditUserLoginPassword"/></request-map>
+    <request-map uri="addUserLoginSecurityGroup"><security https="true" auth="true"/><response name="success" type="view" value="AddUserLoginSecurityGroup"/></request-map>
+    <request-map uri="updateUserLoginPassword">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updatePassword"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="updateUserLoginSecurity">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateUserLoginSecurity"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="createUserLogin">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createUserLogin"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="enableUserLogin">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateUserLoginSecurity"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+<!--         <response name="success" type="view" value="showPortlet"/> -->
+<!--         <response name="error" type="view" value="showPortlet"/> -->
+    </request-map>
+    <request-map uri="disableUserLogin">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateUserLoginSecurity"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+<!--         <response name="success" type="view" value="showPortlet"/> -->
+<!--         <response name="error" type="view" value="showPortlet"/> -->
+    </request-map>
+    <request-map uri="createUserLoginAndSecurityGroup"><!-- TODO où est utilisé -->
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createUserLoginAndSecurityGroup"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="addUserLoginToSecurityGroup">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="addUserLoginToSecurityGroup"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="updateUserLoginToSecurityGroup">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateUserLoginToSecurityGroup"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="removeUserLoginFromSecurityGroup">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateUserLoginToSecurityGroup"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+<!--         <response name="success" type="view" value="showPortlet"/> -->
+<!--         <response name="error" type="view" value="showPortlet"/> -->
+    </request-map>
+
+    <request-map uri="getCountryList">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getCountryList"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
+    <!-- Party ContactMech -->
+    <request-map uri="getcontactmech">
+        <security https="true" auth="true"/>
+<!--         <event type="service" invoke="getPartyContactMechValueMaps"/> not use it because timestamp are not formated -->
+        <event type="groovy" path="component://partyfjs/groovyScripts/GetContactMechs.groovy"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="getContactmechPurposeType">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://partyfjs/groovyScripts/FindContactMechPurposeType.groovy"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="createContactMech">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyContactMech"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="updateContactMech">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePartyContactMech"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="deleteContactMech">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePartyContactMech"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
+    <!-- for a specifics process, with only shipping and billing purpose
+    <request-map uri="createPostalAddressAndPurpose">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyPostalAddress"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+     -->
+
+    <request-map uri="createPostalAddress"><!-- if contactMechPurposeTypeId exist in parameters, a createPartyContactMechPurpose is run too (cf SECA)-->
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyPostalAddress"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="updatePostalAddress">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePartyPostalAddress"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
+    <request-map uri="createTelecomNumber"><!-- if contactMechPurposeTypeId exist in parameters, a createPartyContactMechPurpose is run too (cf SECA)-->
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyTelecomNumber"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="updateTelecomNumber">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePartyTelecomNumber"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
+    <request-map uri="createEmailAddress"><!-- if contactMechPurposeTypeId exist in parameters, a createPartyContactMechPurpose is run too (cf SECA)-->
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyEmailAddress"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="updateEmailAddress">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePartyEmailAddress"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
+    <request-map uri="createFtpAddress">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyFtpAddress"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="updateFtpAddress">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePartyFtpAddress"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
+    <request-map uri="createPartyContactMechPurpose">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyContactMechPurpose"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="expirePartyContactMechPurpose">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="expirePartyContactMechPurpose"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
+    <!-- Party relationship  -->
+    <request-map uri="editPartyRelationship"><security auth="true" https="true"/><response name="success" type="view" value="EditPartyRelationship"/></request-map>
+    <request-map uri="createRelation">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createPartyRelationship"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="updateRelation">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updatePartyRelationship"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="deleteRelation">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deletePartyRelationship"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
+    <request-map uri="addPartyRoles"><security https="true" auth="true"/><response name="success" type="view" value="AddPartyRoles"/></request-map>
+    <request-map uri="addSecondaryPartyRole"><security https="true" auth="true"/><response name="success" type="view" value="AddSecondaryPartyRole"/></request-map>
+    <request-map uri="deletePartyRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePartyRole"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="addPartyRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyRole"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
+    <request-map uri="editPartyAttribute"><security https="true" auth="true"/><response name="success" type="view" value="EditPartyAttribute"/></request-map>
+    <request-map uri="createPartyAttribute">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createPartyAttribute"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="updatePartyAttribute">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updatePartyAttribute"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="removePartyAttribute">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removePartyAttribute" />
+        <response name="success" type="request" value="json"/>
+        <response name="error"   type="request" value="json"/>
+    </request-map>
+
+    <request-map uri="editPartyIdentification"><security https="true" auth="true"/><response name="success" type="view" value="EditPartyIdentification"/></request-map>
+    <request-map uri="createPartyIdentification">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyIdentification"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="updatePartyIdentification">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePartyIdentification"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="deletePartyIdentification">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePartyIdentification"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
+    <request-map uri="editPartyNote"><security https="true" auth="true"/><response name="success" type="view" value="EditPartyNote"/></request-map>
+    <request-map uri="assocPartyNote"><security https="true" auth="true"/><response name="success" type="view" value="AssocPartyNote"/></request-map>
+    <request-map uri="createPartyNote">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyNote"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="updatePartyNote">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateNote"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
+    <request-map uri="editPartyBillingAccount"><security https="true" auth="true"/><response name="success" type="view" value="EditPartyBillingAccount"/></request-map>
+    <request-map uri="editPartyPaymentMethod"><security https="true" auth="true"/><response name="success" type="view" value="EditPartyPaymentMethod"/></request-map>
+
+    <request-map uri="createBillingAccountAndRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createBillingAccountAndRole"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="updateBillingAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateBillingAccount"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="deleteBillingAccount">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://party/minilang/party/PartySimpleMethods.xml" invoke="deleteBillingAccount"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="createBillingAccountTerm">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createBillingAccountTerm"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="updateBillingAccountTerm">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateBillingAccountTerm"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="removeBillingAccountTerm">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeBillingAccountTerm"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
+   <request-map uri="createCreditCard">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createCreditCard"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="updateCreditCard">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateCreditCard"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="createEftAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createEftAccount"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="updateEftAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateEftAccount"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="createGiftCard">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createGiftCard"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="updateGiftCard">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateGiftCard"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="createPaymentMethod">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentMethod"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="updatePaymentMethod">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePaymentMethod"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="deletePaymentMethod">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePaymentMethod"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
+    <request-map uri="editPartyContent"><security https="true" auth="true"/><response name="success" type="view" value="EditPartyContent"/></request-map>
+    <request-map uri="updatePartyContent">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePartyContent"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="uploadPartyContent">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="uploadPartyContentFile"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="removePartyContent">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removePartyContent"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <!-- come from commonext/controller.xml  TODO look other uri to be able to use them with fjs-->
+    <request-map uri="stream">
+        <event type="java" path="org.apache.ofbiz.content.data.DataEvents" invoke="serveObjectData"/>
+        <response name="success" type="none"/>
+        <response name="error" type="view" value="error"/>
+        <response name="io-error" type="none"/>
+    </request-map>
+
+    <request-map uri="updateAvsOverride">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://party/minilang/party/PartySimpleMethods.xml" invoke="updateAVSOverride"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="resetAvsOverride">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://party/minilang/party/PartySimpleMethods.xml" invoke="deleteAVSOverride"/>
+        <response name="success" type="request" value="showPortletFj"/><!-- TODO Question ? or a view to the correct screen -->
+        <response name="error" type="request" value="showPortletFj"/>
+    </request-map>
+
+    <request-map uri="findVisits"><security https="true" auth="true"/><response name="success" type="view" value="FindVisits"/></request-map>
+    <request-map uri="visitdetail"><security https="true" auth="true"/><response name="success" type="view" value="Visitdetail"/></request-map>
+
+    <request-map uri="LookupPartyName"><security https="true" auth="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
+    <request-map uri="LookupPartyRoleType"><security https="true" auth="true"/><response name="success" type="view" value="LookupPartyRoleType"/></request-map>
+    <request-map uri="LookupUserLogin"><security https="true" auth="true"/><response name="success" type="view" value="LookupUserLogin"/></request-map>
+
+
+    <!-- View Mappings -->
+    <view-map name="main"                    type="screenfrontjs" page="component://partyfjs/widget/CommonScreens.xml#mainfjs"/>
+    <view-map name="applicationMenu"         type="screenfrontjs" page="component://partyfjs/widget/CommonScreens.xml#applicationMenu"/>
+    <view-map name="findParty"               type="screenfrontjs" page="component://partyfjs/widget/PartyFjsScreens.xml#findParty"/>
+
+    <view-map name="EditPerson"              type="screenfrontjs" page="component://partyfjs/widget/ProfileFjsScreens.xml#EditPerson"/>
+    <view-map name="EditPartyGroup"          type="screenfrontjs" page="component://partyfjs/widget/ProfileFjsScreens.xml#EditPartyGroup"/>
+
+    <view-map name="EditPartyUserLogin"      type="screenfrontjs" page="component://partyfjs/widget/ProfileFjsScreens.xml#EditPartyUserLogin"/>
+    <view-map name="CreatePartyUserLogin"    type="screenfrontjs" page="component://partyfjs/widget/ProfileFjsScreens.xml#CreatePartyUserLogin"/>
+    <view-map name="EditUserLoginPassword"   type="screenfrontjs" page="component://partyfjs/widget/ProfileFjsScreens.xml#EditUserLoginPassword"/>
+    <view-map name="AddUserLoginSecurityGroup" type="screenfrontjs" page="component://partyfjs/widget/ProfileFjsScreens.xml#AddUserLoginSecurityGroup"/>
+
+    <view-map name="EditPartyRelationship"   type="screenfrontjs" page="component://partyfjs/widget/ProfileFjsScreens.xml#EditPartyRelationship"/>
+
+    <view-map name="AddPartyRoles"           type="screenfrontjs" page="component://partyfjs/widget/ProfileFjsScreens.xml#AddPartyRoles"/>
+    <view-map name="AddSecondaryPartyRole"   type="screenfrontjs" page="component://partyfjs/widget/ProfileFjsScreens.xml#AddSecondaryPartyRole" />
+
+    <view-map name="EditPartyAttribute"      type="screenfrontjs" page="component://partyfjs/widget/ProfileFjsScreens.xml#EditPartyAttribute"/>
+
+    <view-map name="EditPartyIdentification" type="screenfrontjs" page="component://partyfjs/widget/ProfileFjsScreens.xml#EditPartyIdentification"/>
+
+    <view-map name="EditPartyNote"           type="screenfrontjs" page="component://partyfjs/widget/ProfileFjsScreens.xml#EditPartyNote"/>
+    <view-map name="AssocPartyNote"          type="screenfrontjs" page="component://partyfjs/widget/ProfileFjsScreens.xml#AssocPartyNote"/>
+
+    <view-map name="EditPartyBillingAccount" type="screenfrontjs" page="component://partyfjs/widget/ProfileFjsScreens.xml#EditPartyBillingAccount"/>
+    <view-map name="EditPartyPaymentMethod"  type="screenfrontjs" page="component://partyfjs/widget/ProfileFjsScreens.xml#EditPartyPaymentMethod"/>
+
+    <view-map name="EditPartyContent"        type="screenfrontjs" page="component://partyfjs/widget/ProfileFjsScreens.xml#EditPartyContent"/>
+
+    <view-map name="FindVisits"             type="screenfrontjs" page="component://partyfjs/widget/VisitFjsScreens.xml#PartyAllVisits"/>
+    <view-map name="Visitdetail"             type="screenfrontjs" page="component://partyfjs/widget/VisitFjsScreens.xml#visitdetail"/>
+
+    <view-map name="LookupPartyName"         type="screenfrontjs" page="component://partyfjs/widget/PartyFjsScreens.xml#LookupPartyName"/>
+    <view-map name="LookupPartyRoleType"     type="screenfrontjs" page="component://partyfjs/widget/PartyFjsScreens.xml#LookupPartyRoleType"/>
+    <view-map name="LookupUserLogin"         type="screenfrontjs" page="component://partyfjs/widget/PartyFjsScreens.xml#LookupUserLoginAndPartyDetails"/>
+
+</site-conf>

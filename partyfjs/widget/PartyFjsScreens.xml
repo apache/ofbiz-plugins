@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://ofbiz.apache.org/Widget-Screen" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Screen http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+
+    <!-- Party Find Screen -->
+    <screen name="findParty">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleFindParty"/>
+                <set field="headerItem" value="find"/>
+                <set field="tabButtonItem" value="findparty"/>
+                <!-- asmselect parameters, must be prefixed by asm_ for SetMultipleSelectJs.ftl -->
+<!--                 <set field="asm_multipleSelectForm" value="LookupParty"/> -->
+<!--                 <set field="asm_multipleSelect" value="LookupParty_partyClassificationGroupId"/> -->
+<!--                 <set field="asm_formSize" value="700"/> -->
+<!--                 <set field="asm_listItemPercentOfForm" value="95"/> -->
+<!--                 <set field="asm_sortable" value="false"/> -->
+
+                <set field="initialyCollapsed" value="${groovy:'Y'.equals(parameters.hideFields)}" type="String"/>
+                <script location="component://party/groovyScripts/party/FindParty.groovy"/>
+                <set field="extInfo" from-field="extInfo" default-value=""/>
+                <set field="idFind" value="Party"/>
+                <set field="findTitle" value="PartyFindParty"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+<!--                         <platform-specific><html><html-template location="component://common-theme/template/includes/SetMultipleSelectJs.ftl"/></html></platform-specific> -->
+                        <section>
+                            <!-- do check for PARTYMGR, _VIEW permission -->
+                            <condition>
+                                <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+                            </condition>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://vuejs-portal/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                        <include-menu name="CreateNewParty" location="component://party/widget/partymgr/PartyMenus.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-options">
+                                        <include-form name="LookupPartyFjs" location="component://partyfjs/widget/PartyFjsForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                        <include-grid name="ListParty${extInfo}" location="component://partyfjs/widget/PartyForms.xml"/>
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- Party Find Portlet -->
+    <screen name="FindParties">
+        <section>
+            <widgets>
+                <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="${uiLabelMap.CommonSearch}" id="FindParties" collapsible="true">
+                            <include-form name="FindParties" location="component://partyfjs/widget/PartyFjsForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="ListParties">
+        <section>
+            <actions>
+                <set field="windowName" from-field="windowName" default-value="PageTitleListParties"/><!-- TODO check if necessary if a default PortletAttribute exist -->
+            </actions>
+            <widgets>
+                <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="${uiLabelMap.${windowName}}" id="ListParties" collapsible="true" >
+                            <include-grid name="ListParties" location="component://partyfjs/widget/PartyFjsForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="PartyContactMech">
+        <section>
+          <condition>
+            <not><if-empty field="parameters.partyId"/></not>
+          </condition>
+            <widgets>
+                <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                      <section>
+                        <actions>
+                          <property-map resource="PartyEntityLabels" map-name="partyLabelMap"/>
+                          <set field="uiLabels.EditContactMech"  value="${uiLabelMap.PageTitleEditContactMech}"/>
+                          <set field="uiLabels.contactMechTitle" value="${uiLabelMap.PartyContactInformation}"/>
+                          <set field="uiLabels.contactMechs"     value="${uiLabelMap.PartyContactMechs}"/>
+                          <set field="uiLabels.contactPurposes"  value="${uiLabelMap.PartyContactPurposes}"/>
+                          <set field="uiLabels.emailAddressRequired" value="${uiLabelMap.PartyEmailAddressRequired}"/>
+                          <set field="uiLabels.emailAddressNotFormattedCorrectly" value="${uiLabelMap.PartyEmailAddressNotFormattedCorrectly}"/>
+                          <set field="uiLabels.PartyContactType" value="${uiLabelMap.PartyContactType}"/>
+                          <set field="uiLabels.hideOld"          value="${uiLabelMap.PartyHideOld}"/>
+                          <set field="uiLabels.showAll"          value="${uiLabelMap.PartyShowAll}"/> <!-- should be chalenge with commonShowAll -->
+                          <set field="uiLabels.showActive"       value="${uiLabelMap.PartyShowActive}"/>
+                          <set field="uiLabels.showOld"          value="${uiLabelMap.PartyShowOld}"/>
+                          <set field="uiLabels.effectiveThru"    value="${uiLabelMap.PartyContactEffectiveThru}"/>
+
+                          <set field="uiLabels.toName"           value="${uiLabelMap.PartyToName}"/>
+                          <set field="uiLabels.attentionName"    value="${uiLabelMap.PartyAttentionName}"/>
+                          <set field="uiLabels.addressLine1"     value="${uiLabelMap.PartyAddressLine1}"/>
+                          <set field="uiLabels.addressLine2"     value="${uiLabelMap.PartyAddressLine2}"/>
+                          <set field="uiLabels.city"             value="${uiLabelMap.PartyCity}"/>
+                          <set field="uiLabels.state"            value="${uiLabelMap.PartyState}"/>
+                          <set field="uiLabels.zipCode"          value="${uiLabelMap.PartyZipCode}"/>
+                          <set field="uiLabels.country"          value="${uiLabelMap.CommonCountry}"/>
+
+                          <set field="uiLabels.phoneNumber"      value="${uiLabelMap.PartyPhoneNumber}"/>
+                          <set field="uiLabels.countryCode"      value="${uiLabelMap.CommonCountryCode}"/>
+                          <set field="uiLabels.areaCode"         value="${uiLabelMap.PartyAreaCode}"/>
+                          <set field="uiLabels.contactNumber"    value="${uiLabelMap.PartyContactNumber}"/>
+                          <set field="uiLabels.contactExt"       value="${uiLabelMap.PartyContactExt}"/>
+
+                          <set field="uiLabels.hostname"         value="${uiLabelMap.FormFieldTitle_hostname}"/>
+                          <set field="uiLabels.hostnameMustContainProtocol"   value="${uiLabelMap.PartyHostnameMustContainProtocol}"/>
+                          <set field="uiLabels.port"             value="${uiLabelMap.FormFieldTitle_port}"/>
+                          <set field="uiLabels.username"         value="${uiLabelMap.CommonUsername}"/>
+                          <set field="uiLabels.password"         value="${uiLabelMap.CommonPassword}"/>
+                          <set field="uiLabels.binaryTransfer"   value="${uiLabelMap.FormFieldTitle_binaryTransfer}"/>
+                          <set field="uiLabels.path"             value="${uiLabelMap.FormFieldTitle_path}"/>
+                          <set field="uiLabels.zipFile"          value="${uiLabelMap.FormFieldTitle_zipFile}"/>
+                          <set field="uiLabels.passiveMode"      value="${uiLabelMap.FormFieldTitle_passiveMode}"/>
+                          <set field="uiLabels.defaultTimeout"  value="${uiLabelMap.FormFieldTitle_defaultTimeout}"/>
+
+                          <set field="uiLabels.allowSolicitation" value="${uiLabelMap.PartyContactAllowSolicitation}"/>
+
+                          <set field="uiLabels.TELECOM_NUMBER"   value="${partyLabelMap['ContactMechType.description.TELECOM_NUMBER']}"/>
+                          <set field="uiLabels.EMAIL_ADDRESS"    value="${partyLabelMap['ContactMechType.description.EMAIL_ADDRESS']}"/>
+                          <set field="uiLabels.POSTAL_ADDRESS"   value="${partyLabelMap['ContactMechType.description.POSTAL_ADDRESS']}"/>
+                          <set field="uiLabels.IP_ADDRESS"       value="${partyLabelMap['ContactMechType.description.IP_ADDRESS']}"/>
+                          <set field="uiLabels.DOMAIN_NAME"      value="${partyLabelMap['ContactMechType.description.DOMAIN_NAME']}"/>
+                          <set field="uiLabels.LDAP_ADDRESS"     value="${partyLabelMap['ContactMechType.description.LDAP_ADDRESS']}"/>
+                          <set field="uiLabels.INTERNAL_PARTYID" value="${partyLabelMap['ContactMechType.description.INTERNAL_PARTYID']}"/>
+                          <set field="uiLabels.WEB_ADDRESS"      value="${partyLabelMap['ContactMechType.description.WEB_ADDRESS']}"/>
+                          <set field="uiLabels.FTP_ADDRESS"      value="${partyLabelMap['ContactMechType.description.FTP_ADDRESS']}"/>
+
+                          <set field="configParams.getContactMechUrl"            from-field="configParams.getContactMechUrl"            default-value="/partymgrfjs/control/getcontactmech" />
+                          <set field="configParams.createContactMechUrl"         from-field="configParams.createContactMechUrl"         default-value="/partymgrfjs/control/createContactMech" />
+                          <set field="configParams.createEmailAddressUrl"        from-field="configParams.createEmailAddressUrl"        default-value="/partymgrfjs/control/createEmailAddress" />
+                          <set field="configParams.createPostalAddressUrl"       from-field="configParams.createPostalAddressUrl"       default-value="/partymgrfjs/control/createPostalAddress" />
+                          <set field="configParams.createTelecomNumberUrl"       from-field="configParams.createTelecomNumberUrl"       default-value="/partymgrfjs/control/createTelecomNumber" />
+                          <set field="configParams.createFtpAddressUrl"          from-field="configParams.createFtpAddressUrl"          default-value="/partymgrfjs/control/createFtpAddress" />
+                          <set field="configParams.updateContactMechUrl"         from-field="configParams.updateContactMechUrl"         default-value="/partymgrfjs/control/updateContactMech" />
+                          <set field="configParams.updatePostalAddressUrl"       from-field="configParams.updatePostalAddressUrl"       default-value="/partymgrfjs/control/updatePostalAddress" />
+                          <set field="configParams.updateTelecomNumberUrl"       from-field="configParams.updateTelecomNumberUrl"       default-value="/partymgrfjs/control/updateTelecomNumber" />
+                          <set field="configParams.updateEmailAddressUrl"        from-field="configParams.updateEmailAddressUrl"        default-value="/partymgrfjs/control/updateEmailAddress" />
+                          <set field="configParams.updateFtpAddressUrl"          from-field="configParams.updateFtpAddressUrl"          default-value="/partymgrfjs/control/updateFtpAddress" />
+                          <set field="configParams.deleteContactMechUrl"         from-field="configParams.deleteContactMechUrl"         default-value="/partymgrfjs/control/deleteContactMech" />
+                          <set field="configParams.getContactMechPurposeTypeUrl" from-field="configParams.getContactMechPurposeTypeUrl" default-value="/partymgrfjs/control/getContactmechPurposeType" />
+                          <set field="configParams.createContactMechPurposeUrl"  from-field="configParams.createContactMechPurposeUrl"  default-value="/partymgrfjs/control/createPartyContactMechPurpose" />
+                          <set field="configParams.expireContactMechPurposeUrl"  from-field="configParams.expireContactMechPurposeUrl"  default-value="/partymgrfjs/control/expirePartyContactMechPurpose" />
+
+                          <!-- Display Param :
+                                mode:
+                                    count: display the n first contact
+                                    purposes: display contacts that have at least 1 purposes included in 'purposes' array
+                                    none: don't display in showLess mode
+                                    never: never display in showLess nor showMore mods
+                                count: number of contact to display in 'count' mod
+                                purposes: list of purposes that should be displayed in 'purposes' mod
+                           -->
+                          <set field="postalAddr.mode" value="purposes"/>
+                          <set field="postalAddr.purposes[]" value="GENERAL_LOCATION"/>
+                          <set field="postalAddr.purposes[]" value="SHIPPING_LOCATION"/>
+
+                          <set field="telecom.mode" value="count"/>
+                          <set field="telecom.count" value="2" type="Integer"/>
+
+                          <set field="email.mode" value="purposes"/>
+                          <set field="email.count" value="1" type="Integer"/>
+                          <set field="email.purposes[]" value="PRIMARY_EMAIL"/>
+
+                          <set field="none.mode" value="none"/>
+
+<!--                           <set field="displayParams.POSTAL_ADDRESS"   from-field="postalAddr"/> -->
+<!--                           <set field="displayParams.EMAIL_ADDRESS"    from-field="email"/> -->
+<!--                           <set field="displayParams.TELECOM_NUMBER"   from-field="telecom"/> -->
+<!--                           <set field="displayParams.IP_ADDRESS"       from-field="none"/> -->
+<!--                           <set field="displayParams.DOMAIN_NAME"      from-field="none"/> -->
+<!--                           <set field="displayParams.WEB_ADDRESS"      from-field="none"/> -->
+<!--                           <set field="displayParams.INTERNAL_PARTYID" from-field="none"/> -->
+<!--                           <set field="displayParams.FTP_ADDRESS"      from-field="none"/> -->
+<!--                           <set field="displayParams.LDAP_ADDRESS"     from-field="none"/> -->
+                          <script location="component://partyfjs/groovyScripts/PartyContactMechDefaultParam.groovy"/>
+                        </actions>
+                        <widgets>
+                          <platform-specific> <!-- title="${uiLabelMap.PartyContactInformation}" -->
+                            <html>
+                                <vuejs component-name="ContactMech">
+                                     <parameter param-name="partyId" from-field="parameters.partyId"/>
+                                     <parameter param-name="configParams"/>
+                                     <parameter param-name="displayParams"/>
+                                     <parameter param-name="uiLabels"/>
+                                </vuejs>
+                            </html>
+                          </platform-specific>
+                        </widgets>
+                      </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="LookupPartyName">
+        <section>
+            <condition>
+                <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+            </condition>
+            <actions>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="title" from-field="uiLabelMap.PartyLookupPartyByName"/>
+                <set field="queryString" from-field="result.queryString"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSizeDefaultValue" value="${groovy: modelTheme.getDefaultViewSize()}" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+
+                <!-- entries needed for lookup ajax auto completer -->
+                <!-- required: entity to search in -->
+                <set field="entityName" value="PartyNameView"/>
+
+                <!-- required: fields to search a match -->
+                <!-- the first element from searchFields is returned after user selection -->
+                <!-- it might be hidden based on widget.autocompleter.displayReturnField property in widget.properties -->
+                <set field="searchFields" value="[partyId, firstName, middleName, lastName, groupName]"/>
+
+                <!-- optional: fields to display in the given order, default is searchFields -->
+                <set field="displayFields" value="[firstName, lastName, groupName]"/>
+
+                <!-- optional: additional entity condition (named andCondition) added to search query -->
+                <script location="component://party/groovyScripts/party/StatusCondition.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="LookupDecorator" location="component://vuejs-portal/widget/CommonScreens.xml">
+                    <decorator-section name="search-options">
+                        <include-form name="LookupPartyName" location="component://partyfjs/widget/PartyFjsForms.xml"/>
+                    </decorator-section>
+                    <decorator-section name="search-results">
+                        <include-form name="ListLookupPartyName" location="component://partyfjs/widget/PartyFjsForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+   <screen name="LookupPartyRoleType">
+        <section>
+            <condition>
+                <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+            </condition>
+            <actions>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="title" value="${uiLabelMap.PartyLookupPartyByRoleType}"/>
+                <set field="entityName" value="PartyAndRoleTypeView"/>
+                <set field="roleTypeId" from-field="parameters.parm0" default-value="${parameters.roleTypeId}"/>
+                <set field="searchFields" value="[partyId, firstName, middleName, lastName, groupName]"/>
+                <set field="displayFields" value="[firstName, lastName, groupName]"/>
+                <set field="searchDistinct" value="true"/>
+                <script location="component://party/groovyScripts/party/StatusCondition.groovy"/>
+                <set field="andCondition" value="${groovy: import org.apache.ofbiz.entity.condition.*;
+if (roleTypeId)
+    andCondition = EntityCondition.makeCondition([context.andCondition, EntityCondition.makeCondition('roleTypeId',EntityOperator.EQUALS, roleTypeId)], EntityOperator.AND);
+return andCondition;
+}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="LookupDecorator" location="component://vuejs-portal/widget/CommonScreens.xml">
+                    <decorator-section name="search-options">
+                        <include-form name="LookupPartyRoleType" location="component://partyfjs/widget/PartyFjsForms.xml"/>
+                    </decorator-section>
+                    <decorator-section name="search-results">
+                        <include-form name="listLookupPartyRoleGroup" location="component://partyfjs/widget/PartyFjsForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="LookupUserLoginAndPartyDetails">
+        <section>
+            <condition>
+                <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
+            </condition>
+            <actions>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="title" from-field="uiLabelMap.PartyLookupUserLoginAndPartyDetails"/>
+                <set field="entityName" value="UserLoginAndPartyDetails"/>
+                <set field="queryString" from-field="result.queryString"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSizeDefaultValue" value="${groovy: modelTheme.getDefaultViewSize()}" type="Integer"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                <set field="searchFields" value="[userLoginId, partyId, firstName, lastName, groupName]"/>
+                <set field="displayFields" value="[userLoginId, lastName, groupName]"/>
+                <script location="component://party/groovyScripts/party/StatusCondition.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="LookupDecorator" location="component://vuejs-portal/widget/CommonScreens.xml">
+                    <decorator-section name="search-options">
+                        <include-form name="LookupUserLoginAndPartyDetails" location="component://partyfjs/widget/PartyFjsForms.xml"/>
+                    </decorator-section>
+                    <decorator-section name="search-results">
+                        <include-form name="ListLookupUserLoginAndPartyDetails" location="component://partyfjs/widget/PartyFjsForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+</screens>

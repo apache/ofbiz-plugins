@@ -1,0 +1,16 @@
+
+= Portlet Sélectionner un acteur.
+
+Cette portlet est utiliser pour sélectionner-choisir un acteur, pour afficher la page portail en cours.
+
+&nbsp;
+
+== Les paramètre de la Portlet
+
+* uri pour le lookup: la valeur par défault est lookupParty, ce paramètre est utile pour les pages portail à usage d'un "groupe" d'acteur,  par exemple avec un filtre sur le type d'acteur, son role, .... Demander à un consultant technique pour avoir la liste de lookup existant ou pour en définir un nouveau
+
+
+
+== Règles de Securité
+
+* aucune, (celles du composant)

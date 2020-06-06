@@ -1,0 +1,1172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://ofbiz.apache.org/Widget-Screen" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Screen http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="SelectParty">
+      <section>
+        <actions>
+          <set field="windowRoleType" from-field="windowRoleType" set-if-null="true"/>
+          <set field="titleLabel" value="${groovy: windowRoleType=='CUSTOMER'? 'TitleSelectCustomer':(windowRoleType=='SUPPLIER'?'TitleSelectSupplier':'PageTitleSelectParty')}"/>
+        </actions>
+        <widgets>
+          <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+            <decorator-section name="body">
+              <screenlet title="${uiLabelMap.${titleLabel}}">
+                <include-form name="SelectParty" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+              </screenlet>
+            </decorator-section>
+          </decorator-screen>
+        </widgets>
+      </section>
+    </screen>
+
+    <screen name="PartyInfo">
+        <section>
+          <actions>
+              <set field="parameters.partyId"  from-field="parameters.partyId" default-value="${userLogin.partyId}"/>
+              <entity-one entity-name="Party" value-field="party">
+                  <field-map field-name="partyId" from-field="parameters.partyId"/>
+              </entity-one>
+              <entity-and entity-name="PartyNameHistory" list="partyNameHistoryList">
+                  <field-map field-name="partyId" from-field="parameters.partyId"/>
+                  <order-by field-name="-changeDate"/>
+              </entity-and>
+              <entity-one entity-name="PartyAndGroup" value-field="lookupGroup">
+                  <field-map field-name="partyId" from-field="parameters.partyId"/><!-- is required -->
+              </entity-one>
+              <entity-one entity-name="PartyAndPerson" value-field="lookupPerson">
+                  <field-map field-name="partyId" from-field="parameters.partyId"/><!-- is required -->
+              </entity-one>
+              <entity-and entity-name="PartyContent" list="partyContentList" filter-by-date="true">
+                  <field-map field-name="partyId" from-field="parameters.partyId"/>
+                  <field-map field-name="partyContentTypeId" value="LGOIMGURL"/>
+                  <order-by field-name="-fromDate"/>
+              </entity-and>
+              <set field="partyContentId" from-field="partyContentList[0].contentId"/>
+              <set field="partyContent" value="${groovy: partyContentId!=null?'/partymgr/control/stream?contentId=' + partyContentId + externalKeyParam : ''}"/>
+              <set field="partyGroupLogoLinkUrl" from-field="partyContent" default-value="${lookupGroup.logoImageUrl}" global="true"/>
+              <set field="personalImage" from-field="partyContent"/>
+
+<!--               <set field="FacButton"  value="${groovy: PartyContactTypeMenu=='CUSTOMER' ? uiLabelMap.IconsTooltips_Customer : uiLabelMap.IconsTooltips_Facility}"/> wait to find for what it is OH20191106-->
+
+            </actions>
+            <widgets>
+              <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-section name="body">
+                  <section>
+                    <condition>
+                        <not><if-empty field="lookupPerson"/></not>
+                    </condition>
+                    <widgets>
+                        <section>
+                            <condition>
+                                <or>
+                                    <if-has-permission permission="PARTYMGR" action="_GRP_UPDATE"/>
+                                    <if-compare-field field="parameters.partyId" operator="equals" to-field="userLogin.partyId"/>
+                                </or>
+                            </condition>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.PartyPersonalInformation}" navigation-menu-name="PersonUpdate" id="PartyPersonalInformationPanel">
+                                    <include-menu name="PersonUpdate" location="component://partyfjs/widget/ProfileFjsMenus.xml"/>
+                                    <container id="PartyInfo_subArea">
+                                      <include-form name="ViewPartyPerson" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                      <section>
+                                        <condition>
+                                            <not><if-empty field="partyNameHistoryList"/></not>
+                                        </condition>
+                                        <widgets>
+                                            <include-form name="ViewPartyPersonHistory" location="component://partyfjs/widget/PartyForms.xml"/>
+                                        </widgets>
+                                      </section>
+                                    </container>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </widgets>
+                </section>
+                <section>
+                    <condition>
+                        <not><if-empty field="lookupGroup"/></not>
+                    </condition>
+                    <widgets>
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_GRP_UPDATE"/>
+                               </condition>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.PartyPartyGroupInformation}" navigation-menu-name="GroupUpdate" id="PartyGroupInformationPanel">
+                                    <include-menu name="GroupUpdate" location="component://partyfjs/widget/ProfileFjsMenus.xml"/>
+                                    <container id="PartyInfo_subArea">
+                                      <include-form name="ViewPartyGroup" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                      <section>
+                                        <condition>
+                                            <not><if-empty field="partyNameHistoryList"/></not>
+                                        </condition>
+                                        <widgets>
+                                            <include-form name="ViewPartyGroupHistory" location="component://partyfjs/widget/PartyForms.xml"/>
+                                        </widgets>
+                                      </section>
+                                    </container>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <screenlet title="${uiLabelMap.PartyPartyGroupInformation}" id="PartyGroupInformationPanel">
+                                    <include-form name="ViewPartyGroup" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                    <section>
+                                        <condition>
+                                            <not><if-empty field="partyNameHistoryList"/></not>
+                                        </condition>
+                                        <widgets>
+                                            <include-form name="ViewPartyGroupHistory" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                        </widgets>
+                                    </section>
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
+                    </widgets>
+                  </section>
+                </decorator-section>
+              </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="EditPerson">
+        <section>
+            <actions>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-one entity-name="PartyAndPerson" value-field="personInfo"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-form name="EditPerson" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditPartyGroup">
+        <section>
+            <actions>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-one entity-name="PartyAndGroup" value-field="partyGroup"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-form name="EditPartyGroup" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+  <screen name="PartyUserLogins">
+    <section>
+      <actions>
+          <set field="initiallyCollapsed" from-field="initiallyCollapsed" default-value="false"/>
+          <set field="partyId" from-field="parameters.partyId"/>
+          <entity-and list="partyAndUserLogins" entity-name="PartyAndUserLogin">
+              <field-map field-name="partyId"/>
+          </entity-and>
+          <set field="isUserLogin" value="${groovy: (parameters.partyId.equals(userLogin.partyId)) ? true : false}" type="Boolean"/>
+          <set field="userLoginIdLogged" from-field="userLogin.userLoginId" />
+          <set field="userLoginIdSeq" value="00001" type="String"/>
+          <set field="hasSecurityUpdate" value="${groovy: security.hasEntityPermission('SECURITY', '_UPDATE', session)}" type="Boolean"/>
+      </actions>
+      <widgets>
+        <section>
+          <condition>
+            <not><if-empty field="parameters.partyId"/></not>
+          </condition>
+          <widgets>
+            <section>
+              <condition>
+                  <if-compare field="showScreenletMenu" operator="equals" value="N"/>
+              </condition>
+              <widgets>
+                <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                      <screenlet title="${uiLabelMap.PageTitlePartyUserLogins} ${parameters.idDescription}" collapsible="true" initially-collapsed="${initiallyCollapsed}"
+                                 id="PartyUserLogins" >
+                        <include-screen name="PartyUserLoginsScreen"/>
+                      </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+              </widgets>
+              <fail-widgets>
+                <!-- menuLocation is defined so call it -->
+                <section>
+                  <widgets>
+                    <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                        <decorator-section name="body">
+                          <screenlet title="${uiLabelMap.PageTitlePartyUserLogins} ${parameters.idDescription}" collapsible="true" initially-collapsed="${initiallyCollapsed}"
+                                     navigation-menu-name="PartyUserLogins" id="PartyUserLogins" >
+                            <include-menu name="PartyUserLogins" location="component://partyfjs/widget/ProfileFjsMenus.xml"/>
+                            <container id="PartyUserLogins_editArea"/>
+                            <include-screen name="PartyUserLoginsScreen"/>
+                          </screenlet>
+                        </decorator-section>
+                    </decorator-screen>
+                  </widgets>
+                </section>
+              </fail-widgets>
+            </section>
+          </widgets>
+        </section>
+      </widgets>
+    </section>
+  </screen>
+
+    <screen name="PartyUserLoginsScreen">
+      <section>
+        <widgets>
+          <iterate-section entry="partyAndUserLogin" list="partyAndUserLogins" paginate="false">
+               <section>
+                   <actions>
+                       <set field="userLoginId" from-field="partyAndUserLogin.userLoginId"/>
+                       <set field="userLoginIdSeq" value="${groovy:org.apache.ofbiz.base.util.StringUtil.addToNumberString(userLoginIdSeq, 1)}"/>
+                       <set field="disabledDateTime" from-field="partyAndUserLogin.disabledDateTime"/>
+                       <set field="iteratorIndex" from-field="itemIndex" default-value="0"/><!-- Index used in the form ListUserLoginSecurityGroups to have multiple id in eachForm -->
+                   </actions>
+                   <widgets>
+                       <container id="PartyUserLogin${userLoginIdSeq}_EditArea"/>
+                       <include-form name="ShowUserLogin" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                       <section>
+                         <condition>
+                           <if-has-permission permission="SECURITY" action="_VIEW"/>
+                         </condition>
+                         <widgets>
+                           <include-form name="ListUserLoginSecurityGroups" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                         </widgets>
+                       </section>
+                       <horizontal-separator/>
+                   </widgets>
+               </section>
+          </iterate-section>
+        </widgets>
+      </section>
+    </screen>
+
+    <screen name="EditPartyUserLogin">
+      <section>
+        <actions>
+            <entity-one value-field="editUserLogin" entity-name="UserLogin"/>
+            <set field="partyId" from-field="editUserLogin.partyId"/>
+        </actions>
+        <widgets>
+            <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-section name="body">
+                    <container style="h2">
+                        <label text="${uiLabelMap.UserLoginUpdateSecuritySettings} - ${parameters.userLoginId}"/>
+                    </container>
+                    <include-form name="updateUserLoginSecurity" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                    <screenlet title="${uiLabelMap.UserLoginChangePassword} - ${parameters.userLoginId}">
+                      <include-form name="EditUserLoginPassword" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                    </screenlet>
+                </decorator-section>
+            </decorator-screen>
+        </widgets>
+        </section>
+    </screen>
+    <screen name="CreatePartyUserLogin">
+        <section>
+            <actions>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <service service-name="getPortletAttributes" result-map="portletAttr"></service>
+                <set field="securityGroupId" from-field="portletAttr.securityGroupId" default-value="empty"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-form name="addUserLogin" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="AddUserLoginSecurityGroup">
+        <section>
+            <actions>
+                <set field="userLoginId" from-field="parameters.userLoginId"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-form name="AddUserLoginSecurityGroup" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="EditUserLoginPassword">
+        <section>
+            <actions>
+                <set field="userLoginId" from-field="parameters.userLoginId"/>
+                <entity-one entity-name="UserLogin" value-field="editUserLogin"/>
+                <set field="partyId" from-field="editUserLogin.partyId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-form name="EditUserLoginPassword" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+  <screen name="PartyRelationFroms">
+    <section>
+        <condition>
+          <not><if-empty field="parameters.partyId"/></not>
+        </condition>
+      <widgets>
+        <section>
+          <actions>
+              <set field="initiallyCollapsed" from-field="initiallyCollapsed" default-value="false"/>
+              <set field="partyId" from-field="parameters.partyId"/>
+              <set field="relationIs" value="FROM"/>
+              <script location="component://partyfjs/groovyScripts/PartyRelationships.groovy"/>
+          </actions>
+          <widgets>
+            <section>
+              <condition>
+                  <if-compare field="showScreenletMenu" operator="equals" value="N"/>
+              </condition>
+              <widgets>
+                <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                      <screenlet title="${uiLabelMap.PartyListRelatedAccounts} ${parameters.idDescription}" collapsible="true" initially-collapsed="${initiallyCollapsed}"
+                                 id="PartyRelationFroms" >
+                            <include-grid name="PartyRelationFroms" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                      </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+              </widgets>
+              <fail-widgets>
+                <!-- menuLocation is defined so call it -->
+                <section>
+                  <widgets>
+                    <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                        <decorator-section name="body">
+                          <screenlet title="${uiLabelMap.PartyListRelatedAccounts} ${parameters.idDescription}" collapsible="true" initially-collapsed="${initiallyCollapsed}"
+                                     navigation-menu-name="PartyRelationships" id="PartyRelationFroms">
+                            <include-menu name="PartyRelationships" location="component://partyfjs/widget/ProfileFjsMenus.xml"/>
+                            <container id="PartyRelationFroms_editArea"/>
+                            <include-grid name="PartyRelationFroms" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                          </screenlet>
+                        </decorator-section>
+                    </decorator-screen>
+                  </widgets>
+                </section>
+              </fail-widgets>
+            </section>
+          </widgets>
+        </section>
+      </widgets>
+    </section>
+  </screen>
+
+    <screen name="EditPartyRelationship">
+      <section>
+        <actions>
+          <service service-name="getPortletAttributes" result-map="result"/>
+          <set field="attributeMap" from-field="result.attributeMap"/>
+          <entity-one value-field="relation" entity-name="PartyRelationship"/>
+        </actions>
+        <widgets>
+          <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+            <decorator-section name="body">
+              <include-form name="EditPartyRelationship" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+            </decorator-section>
+          </decorator-screen>
+        </widgets>
+      </section>
+    </screen>
+
+  <screen name="PartyRelationTos">
+    <section>
+        <condition>
+          <not><if-empty field="parameters.partyId"/></not>
+        </condition>
+      <widgets>
+        <section>
+          <actions>
+              <set field="initiallyCollapsed" from-field="initiallyCollapsed" default-value="false"/>
+              <set field="partyId" from-field="parameters.partyId"/>
+              <set field="relationIs" value="TO"/>
+              <script location="component://partyfjs/groovyScripts/PartyRelationships.groovy"/>
+          </actions>
+          <widgets>
+            <section>
+              <condition>
+                  <if-compare field="showScreenletMenu" operator="equals" value="N"/>
+              </condition>
+              <widgets>
+                <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                      <screenlet title="${uiLabelMap.PageTitlePartyRelationTos} ${parameters.idDescription}" collapsible="true" initially-collapsed="${initiallyCollapsed}"
+                                 id="PartyRelationTos" >
+                            <include-grid name="PartyRelationTos" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                      </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+              </widgets>
+              <fail-widgets>
+                <!-- menuLocation is defined so call it -->
+                <section>
+                  <widgets>
+                    <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                        <decorator-section name="body">
+                          <screenlet title="${uiLabelMap.PageTitlePartyRelationTos} ${parameters.idDescription}" collapsible="true" initially-collapsed="${initiallyCollapsed}"
+                                     navigation-menu-name="PartyRelationships" id="PartyRelationTos">
+                            <include-menu name="PartyRelationships" location="component://partyfjs/widget/ProfileFjsMenus.xml"/>
+                            <container id="PartyRelationTos_editArea"/>
+                            <include-grid name="PartyRelationTos" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                          </screenlet>
+                        </decorator-section>
+                    </decorator-screen>
+                  </widgets>
+                </section>
+              </fail-widgets>
+            </section>
+          </widgets>
+        </section>
+      </widgets>
+    </section>
+  </screen>
+
+  <screen name="PartyRoles">
+    <section>
+        <condition>
+          <not><if-empty field="parameters.partyId"/></not>
+        </condition>
+      <widgets>
+        <section>
+          <actions>
+<!--    TODO       roleTypeEntity = UtilProperties.getPropertyValue('general.properties', 'entityRoleTypeGroupe', 'RoleType') // to be able to use RoleTypeGroup if it exist -->
+              <set field="initiallyCollapsed" from-field="initiallyCollapsed" default-value="false"/>
+              <set field="partyId" from-field="parameters.partyId"/>
+              <set field="roleTypeGroupId" from-field="roleTypeGroupId" set-if-null="true"/>
+              <entity-condition entity-name="RoleTypeAndParty" list="partyRoles" distinct="true">
+                  <condition-list combine="and">
+                      <condition-expr field-name="partyId" operator="equals" value="${parameters.partyId}" />
+                      <condition-expr field-name="roleTypeId" operator="not-equals" value="_NA_" />
+                      <condition-expr field-name="parentTypeId" operator="equals" from-field="roleTypeGroupId" ignore-if-empty="true"/>
+                  </condition-list>
+              </entity-condition>
+              <set field="parentTitle" value="${groovy: (roleTypeGroupId ? org.ofbiz.base.util.UtilProperties.getMessage('PartyEntityLabels', 'RoleType.description.' + roleTypeGroupId, locale) : '')}"/>
+              <set field="parameters.idDescription" value="${groovy: (!(parameters.idDescription == null || parameters.idDescription.contain(parentTitle)))
+                                                  ? parentTitle + parameters.idDescription : (parameters.idDescription!=null ? parameters.idDescription : '')}"/>
+              <set field="showEditButton" from-field="showEditButton" default-value="Y"/>
+          </actions>
+          <widgets>
+            <section>
+              <condition>
+                  <if-compare field="showScreenletMenu" operator="equals" value="N"/>
+              </condition>
+              <widgets>
+                <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                      <screenlet title="${uiLabelMap.PartyRoles} ${parameters.idDescription}" collapsible="true" initially-collapsed="${initiallyCollapsed}"
+                                 id="PartyRoles" >
+                        <include-grid name="PartyRoles" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                      </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+              </widgets>
+              <fail-widgets>
+                <!-- menuLocation is defined so call it -->
+                <section>
+                  <widgets>
+                    <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                        <decorator-section name="body">
+                          <screenlet title="${uiLabelMap.PartyRoles} ${parameters.idDescription}" collapsible="true" initially-collapsed="${initiallyCollapsed}"
+                                     navigation-menu-name="PartyRoles" id="PartyRoles">
+                            <include-menu name="PartyRoles" location="component://partyfjs/widget/ProfileFjsMenus.xml"/>
+                            <container id="PartyRoles_editArea"/>
+                            <include-grid name="PartyRoles" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                          </screenlet>
+                        </decorator-section>
+                    </decorator-screen>
+                  </widgets>
+                </section>
+              </fail-widgets>
+            </section>
+          </widgets>
+        </section>
+      </widgets>
+    </section>
+  </screen>
+
+    <screen name="AddPartyRoles">
+        <section>
+            <actions>
+              <service service-name="getPortletAttributes" result-map="result"/>
+              <set field="attributeMap" from-field="result.attributeMap"/>
+              <set field="partyId" from-field="parameters.partyId" />
+            </actions>
+            <widgets>
+                <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <and>
+                                    <if-empty field="attributeMap.roleTypeGroupId"/>
+                                </and>
+                            </condition>
+                            <widgets>
+                              <label style="h2">${uiLabelMap.PartySelectMainRole}</label>
+                              <include-form name="SelectMainRoleForParty" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                              <container id="addSecondaryPartyRole" />
+                              <label style="h2">${uiLabelMap.PartyAddToRoleViewAll}</label>
+                              <include-form name="AddRoletoParty" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                            </widgets>
+                            <fail-widgets>
+                                <include-form name="AddRoleForPartyWithFilter" location="component://partyfjs/widget/ProfileFjsForms.xml" />
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="AddSecondaryPartyRole">
+      <section>
+        <actions>
+          <entity-and entity-name="RoleType" list="roles" >
+              <field-map field-name="parentTypeId" value="${parameters.roleTypeId}"/>
+              <order-by field-name="roleTypeId"/><!-- orderBy description not works for other language than English -->
+          </entity-and>
+        </actions>
+        <widgets>
+          <section>
+            <condition>
+              <not>
+                <if-empty field="roles"/>
+              </not>
+            </condition>
+            <widgets>
+              <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-section name="body">
+                  <label style="h2">${uiLabelMap.PartyAddToSecondRole}</label>
+                  <include-form name="AddSecondaryPartyRole" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                </decorator-section>
+              </decorator-screen>
+            </widgets>
+          </section>
+        </widgets>
+      </section>
+    </screen>
+
+  <screen name="PartyAttributes">
+    <section>
+        <condition>
+          <not><if-empty field="parameters.partyId"/></not>
+        </condition>
+      <widgets>
+        <section>
+          <widgets>
+            <section>
+              <condition>
+                  <if-compare field="showScreenletMenu" operator="equals" value="N"/>
+              </condition>
+              <widgets>
+                <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                      <screenlet title="${uiLabelMap.PartyAttributes} ${parameters.idDescription}" collapsible="true" initially-collapsed="${initiallyCollapsed}"
+                                 id="PartyAttributes" >
+                        <include-grid name="PartyAttributes" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                      </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+              </widgets>
+              <fail-widgets>
+                <!-- menuLocation is defined so call it -->
+                <section>
+                  <widgets>
+                    <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                        <decorator-section name="body">
+                          <screenlet title="${uiLabelMap.PartyAttributes} ${parameters.idDescription}" collapsible="true" initially-collapsed="${initiallyCollapsed}"
+                                     navigation-menu-name="PartyAttributes" id="PartyAttributes">
+                            <include-menu name="PartyAttributes" location="component://partyfjs/widget/ProfileFjsMenus.xml"/>
+                            <container id="PartyAttributes_editArea"/>
+                            <include-grid name="PartyAttributes" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                          </screenlet>
+                        </decorator-section>
+                    </decorator-screen>
+                  </widgets>
+                </section>
+              </fail-widgets>
+            </section>
+          </widgets>
+        </section>
+      </widgets>
+    </section>
+  </screen>
+
+    <screen name="EditPartyAttribute">
+        <section>
+            <actions>
+                <entity-one entity-name="PartyAttribute" value-field="attribute"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                       <include-form name="EditPartyAttribute" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+  <screen name="PartyIdentLists">
+    <section>
+        <condition>
+          <not><if-empty field="parameters.partyId"/></not>
+        </condition>
+      <widgets>
+        <section>
+          <widgets>
+            <section>
+              <condition>
+                  <if-compare field="showScreenletMenu" operator="equals" value="N"/>
+              </condition>
+              <widgets>
+                <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                      <screenlet title="${uiLabelMap.PartyPartyIdentifications} ${parameters.idDescription}" collapsible="true" initially-collapsed="${initiallyCollapsed}"
+                                 id="PartyIdentLists" >
+                        <include-grid name="PartyIdentLists" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                      </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+              </widgets>
+              <fail-widgets>
+                <!-- menuLocation is defined so call it -->
+                <section>
+                  <widgets>
+                    <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                        <decorator-section name="body">
+                          <screenlet title="${uiLabelMap.PartyPartyIdentifications} ${parameters.idDescription}" collapsible="true" initially-collapsed="${initiallyCollapsed}"
+                                     navigation-menu-name="PartyIdentLists" id="PartyIdentLists">
+                            <include-menu name="PartyIdentLists" location="component://partyfjs/widget/ProfileFjsMenus.xml"/>
+                            <container id="PartyIdentLists_editArea"/>
+                            <include-grid name="PartyIdentLists" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                          </screenlet>
+                        </decorator-section>
+                    </decorator-screen>
+                  </widgets>
+                </section>
+              </fail-widgets>
+            </section>
+          </widgets>
+        </section>
+      </widgets>
+    </section>
+  </screen>
+    <screen name="EditPartyIdentification">
+      <section>
+          <actions>
+              <service service-name="getPortletAttributes" result-map="result"/>
+              <set field="attributeMap" from-field="result.attributeMap"/>
+              <entity-one entity-name="PartyIdentification" value-field="partyIdentification"/>
+              <set field="paramParentTypeId" from-field="attributeMap.parentTypeId"/>
+          </actions>
+          <widgets>
+              <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-section name="body">
+                  <include-form name="EditPartyIdentification" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                </decorator-section>
+              </decorator-screen>
+          </widgets>
+      </section>
+    </screen>
+
+  <screen name="PartyNotes">
+    <section>
+        <condition>
+          <not><if-empty field="parameters.partyId"/></not>
+        </condition>
+      <widgets>
+        <section>
+          <widgets>
+            <section>
+              <condition>
+                  <if-compare field="showScreenletMenu" operator="equals" value="N"/>
+              </condition>
+              <widgets>
+                <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                      <screenlet title="${uiLabelMap.CommonNotes} ${parameters.idDescription}" collapsible="true" initially-collapsed="${initiallyCollapsed}"
+                                 id="PartyNotes" >
+                        <include-grid name="PartyNotes" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                      </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+              </widgets>
+              <fail-widgets>
+                <!-- menuLocation is defined so call it -->
+                <section>
+                  <widgets>
+                    <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                        <decorator-section name="body">
+                          <screenlet title="${uiLabelMap.CommonNotes} ${parameters.idDescription}" collapsible="true" initially-collapsed="${initiallyCollapsed}"
+                                     navigation-menu-name="PartyNotes" id="PartyNotes">
+                            <include-menu name="PartyNotes" location="component://partyfjs/widget/ProfileFjsMenus.xml"/>
+                            <container id="PartyNotes_editArea"/>
+                            <include-grid name="PartyNotes" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                          </screenlet>
+                        </decorator-section>
+                    </decorator-screen>
+                  </widgets>
+                </section>
+              </fail-widgets>
+            </section>
+          </widgets>
+        </section>
+      </widgets>
+    </section>
+  </screen>
+    <screen name="EditPartyNote">
+        <section>
+            <condition><not><if-empty field="parameters.partyId"/></not></condition>
+            <actions>
+                <set field="partyId" from-field="parameters.partyId"/>
+<!--                 <set field="areaId" from-field="parameters.areaId" default-value="${areaId}"/> -->
+<!--                 <set field="portalPageId" from-field="parameters.portalPageId" default-value="${portalPageId}"/> -->
+<!--                 <set field="portletSeqId" from-field="parameters.portletSeqId" default-value="${portletSeqId}"/> -->
+                <entity-one value-field="partyNote" entity-name="NoteData"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                         <include-form name="EditPartyNote" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="AssocPartyNote">
+        <section>
+            <actions>
+                <set field="partyId" from-field="parameters.partyId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                         <include-form name="AssocPartyNote" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+  <screen name="PartyPaymentMethods">
+    <section>
+        <condition>
+          <not><if-empty field="parameters.partyId"/></not>
+        </condition>
+      <widgets>
+        <section>
+          <actions>
+              <set field="initiallyCollapsed" from-field="initiallyCollapsed" default-value="false"/>
+          </actions>
+          <widgets>
+            <section>
+              <condition>
+                  <if-compare field="showScreenletMenu" operator="equals" value="N"/>
+              </condition>
+              <widgets>
+                <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                      <section>
+                        <actions>
+                          <script location="component://partyfjs/groovyScripts/GetPartyPaymentMethods.groovy"/>
+                        </actions>
+                        <widgets>
+                          <screenlet title="${uiLabelMap.PartyPaymentMethodInformation} ${parameters.idDescription}" collapsible="true" initially-collapsed="${initiallyCollapsed}"
+                                     id="PartyPaymentMethods" >
+                            <include-grid name="PartyPaymentMethodsList" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                          </screenlet>
+                        </widgets>
+                      </section>
+                    </decorator-section>
+                </decorator-screen>
+              </widgets>
+              <fail-widgets>
+                <!-- menuLocation is defined so call it -->
+                <section>
+                  <widgets>
+                    <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                        <decorator-section name="body">
+                          <section>
+                            <actions>
+                              <script location="component://partyfjs/groovyScripts/GetPartyPaymentMethods.groovy"/>
+                            </actions>
+                            <widgets>
+                              <screenlet title="${uiLabelMap.PartyPaymentMethodInformation} ${parameters.idDescription}" collapsible="true" initially-collapsed="${initiallyCollapsed}"
+                                         navigation-menu-name="PartyPaymentMethods" id="PartyPaymentMethods">
+                                <include-menu name="PartyPaymentMethods" location="component://partyfjs/widget/ProfileFjsMenus.xml"/>
+                                <container id="PartyPaymentMethods_editArea"/>
+                                <include-grid name="PartyPaymentMethodsList" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                              </screenlet>
+                            </widgets>
+                          </section>
+                        </decorator-section>
+                    </decorator-screen>
+                  </widgets>
+                </section>
+              </fail-widgets>
+            </section>
+          </widgets>
+        </section>
+      </widgets>
+    </section>
+  </screen>
+    <screen name="EditPartyBillingAccount">
+        <section>
+            <actions>
+                <script location="component://party/groovyScripts/HasPartyPermissions.groovy"/>
+                <script location="component://party/groovyScripts/party/EditPaymentMethod.groovy"/>
+                <set field="roleTypeId" from-field="parameters.roleTypeId"/>
+                <set field="billingAccountId" from-field="parameters.billingAccountId" />
+                <entity-one entity-name="BillingAccount" value-field="billingAccount"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition><not><if-empty field="billingAccount"/></not></condition>
+                            <widgets>
+                                <platform-specific>
+                                   <!-- TODO Migrate ftl to forms.xml -->
+                                    <html><html-template location="component://partyfjs/template/editbillingaccountterm.ftl"/></html>
+                                </platform-specific>
+                            </widgets>
+                        </section>
+                        <include-form name="EditPartyBillingAccount" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditPartyPaymentMethod">
+        <section>
+            <condition><not><if-empty field="parameters.partyId"/></not></condition>
+            <actions>
+                <entity-one entity-name="PaymentMethod" value-field="paymentMethod"/>
+                <set field="paymentMethodTypeId" from-field="parameters.paymentMethodTypeId" default-value="${paymentMethod.paymentMethodTypeId}"/>
+                <script location="component://party/groovyScripts/HasPartyPermissions.groovy"/>
+                <script location="component://party/groovyScripts/party/EditPaymentMethod.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition><if-compare field="paymentMethodTypeId" operator="equals" value="CREDIT_CARD" /></condition>
+                            <widgets>
+                                <include-form name="EditPartyCreditCard" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                            </widgets>
+                            <fail-widgets>
+                                <section>
+                                    <condition><if-compare field="paymentMethodTypeId" operator="equals" value="GIFT_CARD" /></condition>
+                                    <widgets>
+                                        <include-form name="EditPartyGiftCard" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <section>
+                                            <condition><if-compare field="paymentMethodTypeId" operator="equals" value="EFT_ACCOUNT" /></condition>
+                                            <widgets>
+                                                <include-form name="EditPartyEftAccount" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                                            </widgets>
+                                            <fail-widgets>
+                                                <include-form name="EditPartyPaymentMethod" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                                            </fail-widgets>
+                                        </section>
+                                    </fail-widgets>
+                                </section>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+  <screen name="PartyContents">
+    <section>
+        <condition>
+          <not><if-empty field="parameters.partyId"/></not>
+        </condition>
+      <widgets>
+        <section>
+          <widgets>
+            <section>
+              <condition>
+                  <if-compare field="showScreenletMenu" operator="equals" value="N"/>
+              </condition>
+              <widgets>
+                <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                      <screenlet title="${uiLabelMap.PartyContent} ${parameters.idDescription}" collapsible="true" initially-collapsed="${initiallyCollapsed}"
+                                 id="PartyContents" >
+                        <include-grid name="PartyContents" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                      </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+              </widgets>
+              <fail-widgets>
+                <!-- menuLocation is defined so call it -->
+                <section>
+                  <widgets>
+                    <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                        <decorator-section name="body">
+                          <screenlet title="${uiLabelMap.PartyContent} ${parameters.idDescription}" collapsible="true" initially-collapsed="${initiallyCollapsed}"
+                                     navigation-menu-name="PartyContents" id="PartyContents">
+                            <include-menu name="PartyContents" location="component://partyfjs/widget/ProfileFjsMenus.xml"/>
+                            <container id="PartyContents_editArea"/>
+                            <include-grid name="PartyContents" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                          </screenlet>
+                        </decorator-section>
+                    </decorator-screen>
+                  </widgets>
+                </section>
+              </fail-widgets>
+            </section>
+          </widgets>
+        </section>
+      </widgets>
+    </section>
+  </screen>
+    <screen name="EditPartyContent">
+        <section>
+            <condition><not><if-empty field="parameters.partyId"/></not></condition>
+            <actions>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="contentId" from-field="parameters.contentId"/>
+                <entity-one value-field="content" entity-name="PartyContentDetail"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                         <include-form name="EditPartyContent" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+  <screen name="PartyAvsSettings">
+    <section>
+        <condition>
+          <not><if-empty field="parameters.partyId"/></not>
+        </condition>
+      <widgets>
+        <section>
+          <actions>
+              <set field="partyId" from-field="parameters.partyId"/>
+              <entity-one entity-name="PartyIcsAvsOverride" value-field="avsOverride" >
+                  <field-map field-name="partyId"/>
+              </entity-one>
+          </actions>
+          <widgets>
+            <section>
+              <condition>
+                  <if-compare field="showScreenletMenu" operator="equals" value="N"/>
+              </condition>
+              <widgets>
+                <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                      <screenlet title="${uiLabelMap.PartyAvsOver} ${parameters.idDescription}" collapsible="true" initially-collapsed="${initiallyCollapsed}"
+                                 id="PartyAvsSettings" >
+                        <include-form name="PartyAvsSettings" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                      </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+              </widgets>
+              <fail-widgets>
+                <!-- menuLocation is defined so call it -->
+                <section>
+                  <widgets>
+                    <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                        <decorator-section name="body">
+                          <screenlet title="${uiLabelMap.PartyAvsOver} ${parameters.idDescription}" collapsible="true" initially-collapsed="${initiallyCollapsed}"
+                                     navigation-menu-name="PartyAvsSettings" id="PartyAvsSettings">
+                            <include-menu name="PartyAvsSettings" location="component://partyfjs/widget/ProfileFjsMenus.xml"/>
+                            <container id="PartyAvsSettings_editArea"/>
+                            <include-form name="PartyAvsSettings" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+                          </screenlet>
+                        </decorator-section>
+                    </decorator-screen>
+                  </widgets>
+                </section>
+              </fail-widgets>
+            </section>
+          </widgets>
+        </section>
+      </widgets>
+    </section>
+  </screen>
+  <screen name="PartyLoyaltyPoints">
+    <section>
+        <condition>
+          <not><if-empty field="parameters.partyId"/></not>
+        </condition>
+      <widgets>
+        <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+            <decorator-section name="body">
+              <screenlet title="${uiLabelMap.PartyLoyaltyPoints} ${parameters.idDescription}" collapsible="true" initially-collapsed="${initiallyCollapsed}"
+                         id="PartyLoyaltyPoints" >
+                <include-grid name="PartyLoyaltyPoints" location="component://partyfjs/widget/ProfileFjsForms.xml"/>
+              </screenlet>
+            </decorator-section>
+        </decorator-screen>
+      </widgets>
+    </section>
+  </screen>
+
+  <screen name="PartyDetailsMenu">
+    <section>
+        <condition>
+          <not><if-empty field="parameters.partyId"/></not>
+        </condition>
+      <widgets>
+        <section>
+          <actions>
+              <set field="initiallyCollapsed" from-field="initiallyCollapsed" default-value="false"/>
+              <set field="parameters.partyId"  from-field="parameters.partyId" default-value="${userLogin.partyId}"/>
+              <entity-one entity-name="Party" value-field="party">
+                  <field-map field-name="partyId" from-field="parameters.partyId"/>
+              </entity-one>
+<!--               <entity-and entity-name="PartyNameHistory" list="partyNameHistoryList"> -->
+<!--                   <field-map field-name="partyId" from-field="parameters.partyId"/> -->
+<!--                   <order-by field-name="-changeDate"/> -->
+<!--               </entity-and> -->
+              <entity-one entity-name="PartyAndGroup" value-field="lookupGroup">
+                  <field-map field-name="partyId" from-field="parameters.partyId"/><!-- is required -->
+              </entity-one>
+              <entity-one entity-name="PartyAndPerson" value-field="lookupPerson">
+                  <field-map field-name="partyId" from-field="parameters.partyId"/><!-- is required -->
+              </entity-one>
+              <entity-and entity-name="PartyContent" list="partyContentList" filter-by-date="true">
+                  <field-map field-name="partyId" from-field="parameters.partyId"/>
+                  <field-map field-name="partyContentTypeId" value="LGOIMGURL"/>
+                  <order-by field-name="-fromDate"/>
+              </entity-and>
+              <set field="partyContentId" from-field="partyContentList[0].contentId"/>
+              <set field="partyContent" value="${groovy: partyContentId!=null?'/partymgr/control/stream?contentId=' + partyContentId + externalKeyParam : ''}"/>
+              <set field="partyGroupLogoLinkUrl" from-field="partyContent" default-value="${lookupGroup.logoImageUrl}" global="true"/>
+              <set field="personalImage" from-field="partyContent"/>
+              <set field="idDescription" value="${lookupGroup}${lookupPerson.firstName} ${lookupPerson.lastName} (${parameters.partyId})"/>
+
+<!--               <set field="FacButton"  value="${groovy: PartyContactTypeMenu=='CUSTOMER' ? uiLabelMap.IconsTooltips_Customer : uiLabelMap.IconsTooltips_Facility}"/> wait to find for what it is OH20191106-->
+          </actions>
+          <widgets>
+            <section>
+              <condition>
+                  <if-compare field="showScreenletMenu" operator="equals" value="N"/>
+              </condition>
+              <widgets>
+                <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                      <screenlet title="${parameters.idDescription}" collapsible="true" initially-collapsed="${initiallyCollapsed}"
+                                 id="PartyDetailsMenu" >
+                        <include-screen name="PartyInfoSimple"/>
+                      </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+              </widgets>
+              <fail-widgets>
+                <!-- menuLocation is defined so call it -->
+                <section>
+                  <widgets>
+                    <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                        <decorator-section name="body">
+                          <screenlet title="${idDescription}" collapsible="true" initially-collapsed="${initiallyCollapsed}"
+                                     navigation-menu-name="PartyDetailsMenu" id="PartyDetailsMenu">
+                            <include-menu name="PartyDetailsMenu" location="component://partyfjs/widget/ProfileFjsMenus.xml"/>
+                            <include-menu name="PartyExternalMenu" location="component://partyfjs/widget/ProfileFjsMenus.xml"/>
+                            <include-screen name="PartyInfoSimple"/>
+                          </screenlet>
+                        </decorator-section>
+                    </decorator-screen>
+                  </widgets>
+                </section>
+              </fail-widgets>
+            </section>
+          </widgets>
+        </section>
+      </widgets>
+    </section>
+  </screen>
+    <screen name="PartyInfoSimple">
+        <section>
+          <actions>
+            </actions>
+            <widgets>
+                  <section>
+                    <condition>
+                        <not><if-empty field="lookupPerson"/></not>
+                    </condition>
+                    <widgets>
+                        <include-form name="ViewPartyPerson" location="component://party/widget/partymgr/PartyForms.xml"/>
+                    </widgets>
+                </section>
+                <section>
+                    <condition>
+                        <not><if-empty field="lookupGroup"/></not>
+                    </condition>
+                    <widgets>
+                        <include-form name="ViewPartyGroup" location="component://party/widget/partymgr/PartyForms.xml"/>
+                    </widgets>
+                  </section>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="PartyDetail">
+      <section>
+        <condition>
+          <not><if-empty field="parameters.partyId"/></not>
+        </condition>
+        <actions>
+          <set field="defaultdetailPortletId" from-field="dtPartyId" from-scope="user" default-value="PartyInfo"/>
+          <set field="subPortletId" from-field="parameters.subPortletId" default-value="${defaultdetailPortletId}"/>
+          <set field="dtPartyId" from-field="subPortletId" to-scope="user"/>
+          <set field="portalPageId" from-field="parameters.portalPageId" default-value="${portalPageId}"/>
+          <set field="parameters.portalPortletId" from-field="subPortletId"/>
+          <set field="portletSeqId" from-field="parameters.portletSeqId" default-value="00001"/>
+          <set field="currentAreaId" value="${parameters.portalPortletId}-${parameters.portletSeqId}"/>
+        </actions>
+        <widgets>
+          <container id="${currentAreaId}">
+            <include-screen name="showPortlet" location="component://vuejs-portal/widget/CommonScreens.xml"/>
+          </container>
+        </widgets>
+      </section>
+    </screen>
+</screens>

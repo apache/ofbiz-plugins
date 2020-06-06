@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<entity-engine-xml>
+    <!--#START Portlet reviewed -->
+    <create-replace>
+
+        <PortletCategory portletCategoryId="PARTY_FJS" description="Party Portlet(s) using FrontJs"/>
+
+
+        <PortalPortlet portalPortletId="SelectParty" portletName="Select one Party (FrontJs)" 
+                       description="Select one Party for a Page PartyRecap" screenshot="thfrontjs/images/partyfjsportlets/SelectParty.png"
+                       screenName="SelectParty" screenLocation="component://partyfjs/widget/ProfileFjsScreens.xml"
+                       editFormName="EditParam_SelectParty" editFormLocation="component://partyfjs/widget/ProfileFjsForms.xml"/>
+
+        <PortalPortlet portalPortletId="PartyContactMech" portletName="Party ContactMech (FrontJs)"
+                       description="portlet to show and manage ContactMech for one party" screenshot="thfrontjs/images/partyfjsportlets/ContactMechMgmt.png"
+                       screenName="PartyContactMech" screenLocation="component://partyfjs/widget/PartyFjsScreens.xml"/>
+
+        <PortalPortlet portalPortletId="PartyInfo" portletName="Party Info"
+                       description="General information about a party, person or party group. Show and edit" screenshot="/images/portlets/party.png"
+                       screenName="PartyInfo" screenLocation="component://partyfjs/widget/ProfileFjsScreens.xml"
+                       editFormName="GenericEditEditOrShowParam" editFormLocation="component://common/widget/PortletEditForms.xml"/><!-- TODO retrieve the edit form -->
+
+        <PortalPortlet portalPortletId="PartyUserLogins" portletName="Party user login list"
+                       description="List and manage User Logins of a party" screenshot="/images/portlets/UserLogin.png"
+                       screenName="PartyUserLogins" screenLocation="component://partyfjs/widget/ProfileFjsScreens.xml"
+                       editFormName="EditParam_PartyUserLogin" editFormLocation="component://partyfjs/widget/ProfileFjsForms.xml"/>
+
+        <PortalPortlet portalPortletId="PartyRelationFroms" portletName="List relation associated to a party"
+                       description="List relation associated to a party"
+                       screenName="PartyRelationFroms" screenLocation="component://partyfjs/widget/ProfileFjsScreens.xml"
+                       editFormName="EditParam_PartyRelationship" editFormLocation="component://partyfjs/widget/ProfileFjsForms.xml"/>
+        <PortalPortlet portalPortletId="PartyRelationTos" portletName="Party Lists to which it is associated"
+                       description="List relation associated from a party"
+                       screenName="PartyRelationTos" screenLocation="component://partyfjs/widget/ProfileFjsScreens.xml"
+                       editFormName="EditParam_PartyRelationship" editFormLocation="component://partyfjs/widget/ProfileFjsForms.xml"/>
+
+        <PortalPortlet portalPortletId="PartyRoles" portletName="Party roles" 
+                       description="Portlet to manage PartyRole" screenshot="thfrontjs/images/partyfjsportlets/PartyRoles.png"
+                       screenName="PartyRoles" screenLocation="component://partyfjs/widget/ProfileFjsScreens.xml"
+                       editFormName="EditParam_PartyRoles" editFormLocation="component://partyfjs/widget/ProfileFjsForms.xml" />
+
+        <PortalPortlet portalPortletId="PartyAttributes" portletName="Party Attributes"
+                       description="Attributes of a party" screenshot="/images/portlets/Attributes.png"
+                       screenName="PartyAttributes" screenLocation="component://partyfjs/widget/ProfileFjsScreens.xml"/>
+
+        <PortalPortlet portalPortletId="PartyIdentLists" portletName="Party identifications list"
+                       description="Party identification number list" screenshot="thfrontjs/images/partyfjsportlets/PartyIdentification.png"
+                       screenName="PartyIdentLists" screenLocation="component://partyfjs/widget/ProfileFjsScreens.xml"
+                       editFormName="EditParam_PartyIdentLists" editFormLocation="component://partyfjs/widget/ProfileFjsForms.xml"/>
+
+        <PortalPortlet portalPortletId="PartyNotes" portletName="Notes associated to Party management"
+                       description="Notes associated to one party list and management"
+                       securityMainAction="VIEW"
+                       screenName="PartyNotes" screenLocation="component://partyfjs/widget/ProfileFjsScreens.xml"
+                       editFormName="EditParam_PartyNote" editFormLocation="component://partyfjs/widget/ProfileFjsForms.xml"/>
+
+        <PortalPortlet portalPortletId="PartyPaymentMethods" portletName="Party payment method list"
+                       description="List and manage payment method for one Party" screenshot="thfrontjs/images/partyfjsportlets/PartyPaymentMethods.png"
+                       securityServiceName="" securityMainAction="VIEW" 
+                       screenName="PartyPaymentMethods" screenLocation="component://partyfjs/widget/ProfileFjsScreens.xml"
+                       editFormName="EditParam_PartyPaymentMethodsList" editFormLocation="component://partyfjs/widget/ProfileFjsForms.xml"/>
+
+        <PortalPortlet portalPortletId="PartyContents" portletName="Contents associated to Party management"
+                       description="List and manage Contents associated to one party"
+                       securityMainAction="VIEW"
+                       screenName="PartyContents" screenLocation="component://partyfjs/widget/ProfileFjsScreens.xml"/>
+
+        <PortalPortlet portalPortletId="PartyAvsSettings" portletName="Party Avs Settings"
+                       description="Avs Settings of a party" screenshot="/images/portlets/AvsSettings.png"
+                       screenName="PartyAvsSettings" screenLocation="component://partyfjs/widget/ProfileFjsScreens.xml"/>
+
+        <PortalPortlet portalPortletId="PartyLoyaltyPoints" portletName="Party Loyalty Points"
+                       description="Loyalty Points of a party" screenshot="/images/portlets/LoyaltyPoints.png"
+                       screenName="PartyLoyaltyPoints" screenLocation="component://partyfjs/widget/ProfileFjsScreens.xml"/>
+
+        <PortletPortletCategory portalPortletId="PartyInfo"          portletCategoryId="PARTY_FJS"/>
+        <PortletPortletCategory portalPortletId="PartyUserLogins"    portletCategoryId="PARTY_FJS"/>
+        <PortletPortletCategory portalPortletId="PartyRelationFroms" portletCategoryId="PARTY_FJS"/>
+        <PortletPortletCategory portalPortletId="PartyRelationTos"   portletCategoryId="PARTY_FJS"/>
+        <PortletPortletCategory portalPortletId="SelectParty"        portletCategoryId="PARTY_FJS"/>
+        <PortletPortletCategory portalPortletId="PartyContactMech"   portletCategoryId="PARTY_FJS"/>
+        <PortletPortletCategory portalPortletId="PartyRoles"         portletCategoryId="PARTY_FJS"/>
+        <PortletPortletCategory portalPortletId="PartyAttributes"    portletCategoryId="PARTY_FJS"/>
+        <PortletPortletCategory portalPortletId="PartyIdentLists"    portletCategoryId="PARTY_FJS"/>
+        <PortletPortletCategory portalPortletId="PartyNotes"         portletCategoryId="PARTY_FJS"/>
+        <PortletPortletCategory portalPortletId="PartyPaymentMethods" portletCategoryId="PARTY_FJS"/>
+        <PortletPortletCategory portalPortletId="PartyContents"      portletCategoryId="PARTY_FJS"/>
+        <PortletPortletCategory portalPortletId="PartyAvsSettings"   portletCategoryId="PARTY_FJS"/>
+        <PortletPortletCategory portalPortletId="PartyLoyaltyPoints" portletCategoryId="PARTY_FJS"/>
+
+        <PortalPortlet portalPortletId="PartyLastVisits" portletName="List last Visits for the Party"
+                       description="Last 5 Visits of a certain party" screenshot="/images/portlets/Visits.png"
+                       screenName="PartyLastVisits" screenLocation="component://partyfjs/widget/VisitFjsScreens.xml"/>
+        <PortalPortlet portalPortletId="PartyAllVisits" portletName="List Visits"
+                       description="search or select and list  party visits" screenshot="/images/portlets/Visits.png"
+                       screenName="PartyAllVisits" screenLocation="component://partyfjs/widget/VisitFjsScreens.xml"/>
+
+        <PortletPortletCategory portalPortletId="PartyLastVisits"    portletCategoryId="PARTY_FJS"/>
+        <PortletPortletCategory portalPortletId="PartyAllVisits"     portletCategoryId="PARTY_FJS"/>
+
+        <PortalPortlet portalPortletId="FindParties" portletName="Party and Person find form (FrontJs)"
+                       description="Muliple criteria find form for PartyGroup and Person" screenshot="/images/portlets/FindParties.png"
+                       screenName="FindParties" screenLocation="component://partyfjs/widget/PartyFjsScreens.xml"
+                       editFormName="EditParam_FindParties" editFormLocation="component://partyfjs/widget/PartyFjsForms.xml"/>
+
+        <PortletAttribute portalPortletId="FindParties" attrName="resultPortalPortletId" attrValue="ListParties"
+                          portalPageId="_NA_" portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="FindParties" attrName="useAreaCode" attrValue="N" portalPageId="_NA_"
+                          portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="FindParties" attrName="useCountryCode" attrValue="N" portalPageId="_NA_"
+                          portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="FindParties" attrName="usePartyClassification" attrValue="N"
+                          portalPageId="_NA_" portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="FindParties" attrName="useRoleTypeId" attrValue="Y" portalPageId="_NA_"
+                          portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="FindParties" attrName="usePartyId" attrValue="Y" portalPageId="_NA_"
+                          portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="FindParties" attrName="useFirstName" attrValue="Y" portalPageId="_NA_"
+                          portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="FindParties" attrName="useLastName" attrValue="Y" portalPageId="_NA_"
+                          portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="FindParties" attrName="useGroupName" attrValue="Y" portalPageId="_NA_"
+                          portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="FindParties" attrName="useRoleTypeGroupId" attrValue="Y" portalPageId="_NA_"
+                          portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="FindParties" attrName="useRoleTypeId" attrValue="Y" portalPageId="_NA_"
+                          portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="FindParties" attrName="usePartyTypeId" attrValue="Y" portalPageId="_NA_"
+                          portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="FindParties" attrName="useContactName" attrValue="Y" portalPageId="_NA_"
+                          portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="FindParties" attrName="useAddress1" attrValue="Y" portalPageId="_NA_"
+                          portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="FindParties" attrName="useAddress2" attrValue="Y" portalPageId="_NA_"
+                          portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="FindParties" attrName="useCity" attrValue="Y" portalPageId="_NA_"
+                          portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="FindParties" attrName="usePostalCode" attrValue="Y" portalPageId="_NA_"
+                          portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="FindParties" attrName="useCountryGeoId" attrValue="Y" portalPageId="_NA_"
+                          portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="FindParties" attrName="useCountryCode" attrValue="Y" portalPageId="_NA_"
+                          portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="FindParties" attrName="useAreaCode" attrValue="Y" portalPageId="_NA_"
+                          portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="FindParties" attrName="useContactNumber" attrValue="Y" portalPageId="_NA_"
+                          portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="FindParties" attrName="useInfoString" attrValue="Y" portalPageId="_NA_"
+                          portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="FindParties" attrName="usePartyClassification" attrValue="Y"
+                          portalPageId="_NA_" portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="FindParties" attrName="useFacilityId" attrValue="N" portalPageId="_NA_"
+                          portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="FindParties" attrName="useComments" attrValue="N" portalPageId="_NA_"
+                          portletSeqId="00000"/>
+
+        <PortalPortlet portalPortletId="ListParties" portletName="PartyGroups and Persons list (FrontJs)"
+                       description="PartyGroup and Person search results" screenshot="/images/portlets/ListParties.png"
+                       screenName="ListParties" screenLocation="component://partyfjs/widget/PartyFjsScreens.xml"
+                       editFormName="EditParam_ListParties" editFormLocation="component://partyfjs/widget/PartyFjsForms.xml"/>
+        <PortletAttribute portalPortletId="ListParties" attrName="recapPageId" attrValue="PartyRecapFrontJs"
+                          portalPageId="_NA_" portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="ListParties" attrName="usePartyClassification" attrValue="N"
+                          portalPageId="_NA_" portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="ListParties" attrName="useFacilityId" attrValue="N" portalPageId="_NA_"
+                          portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="ListParties" attrName="windowName" attrValue="PageTitleListParties"
+                          portalPageId="_NA_" portletSeqId="00000"/>
+
+        <PortalPortlet portalPortletId="PartyDetailsMenu" portletName="Party summary and details menu (FrontJs)"
+                       description="Party summary and menu to see all details profile portlet in the PartyDetail contener"
+                       screenName="PartyDetailsMenu" screenLocation="component://partyfjs/widget/ProfileFjsScreens.xml"
+                       editFormName="EditParam_PartyDetailsMenu" editFormLocation="component://partyfjs/widget/ProfileFjsForms.xml"/>
+        <PortletAttribute portalPortletId="PartyDetailsMenu" attrName="PartyInfoMgmtMenu" attrValue="Y"
+                          portalPageId="_NA_" portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="PartyDetailsMenu" attrName="ContactMechMgmtMenu" attrValue="Y"
+                          portalPageId="_NA_" portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="PartyDetailsMenu" attrName="PartyRelationFromsMenu" attrValue="Y"
+                          portalPageId="_NA_" portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="PartyDetailsMenu" attrName="PartyUserLoginsMenu" attrValue="Y"
+                          portalPageId="_NA_" portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="PartyDetailsMenu" attrName="PartyRolesMenu" attrValue="Y" 
+                          portalPageId="_NA_" portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="PartyDetailsMenu" attrName="PartyNotesMenu" attrValue="Y"
+                          portalPageId="_NA_" portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="PartyDetailsMenu" attrName="PartyContentsMenu" attrValue="Y"
+                          portalPageId="_NA_" portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="PartyDetailsMenu" attrName="PartyPaymentsMenu" attrValue="Y"
+                          portalPageId="_NA_" portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="PartyDetailsMenu" attrName="PartyIdentListsMenu" attrValue="Y"
+                          portalPageId="_NA_" portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="PartyDetailsMenu" attrName="PartyAttributesMenu" attrValue="Y"
+                          portalPageId="_NA_" portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="PartyDetailsMenu" attrName="PartyOrdersMenu" attrValue="Y"
+                          portalPageId="_NA_" portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="PartyDetailsMenu" attrName="PartyOrdersSalesMenu" attrValue="N"
+                          portalPageId="_NA_" portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="PartyDetailsMenu" attrName="PartyOrdersPurchaseMenu" attrValue="N"
+                          portalPageId="_NA_" portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="PartyDetailsMenu" attrName="PartyFacilityMenu" attrValue="Y"
+                          portalPageId="_NA_" portletSeqId="00000"/>
+
+        <PortalPortlet portalPortletId="PartyDetail" portletName="Container to show Party portlet detail (with portletType and showPortlet)"
+                       description="Use this portlet to say where detail portlet call from a menu will be show"
+                       screenName="PartyDetail" screenLocation="component://partyfjs/widget/ProfileFjsScreens.xml"/>
+
+        <PortletPortletCategory portalPortletId="FindParties"        portletCategoryId="PARTY_FJS"/>
+        <PortletPortletCategory portalPortletId="ListParties"        portletCategoryId="PARTY_FJS"/>
+        <PortletPortletCategory portalPortletId="PartyDetailsMenu"   portletCategoryId="PARTY_FJS"/>
+        <PortletPortletCategory portalPortletId="PartyDetail"        portletCategoryId="PARTY_FJS"/>
+
+
+<PortalPage portalPageId="PartyMgmtFrontJs" sequenceNum="10" parentPortalPageId="PartyMgmtFrontJs" portalPageName="Party management (MgmtPageFrontJs)" description="Search, list, details area" ownerUserLoginId="_NA_"/>
+
+        <PortalPage portalPageId="PartyRecap" sequenceNum="30" portalPageName="Party Profile (All portlets)" parentPortalPageId="PartyMgmtFrontJs"
+                    description="Party profile page whith a lot of portlet" ownerUserLoginId="_NA_"/>
+        <PortalPageColumn portalPageId="PartyRecap" columnSeqId="00001" columnWidthPercentage="50"/>
+        <PortalPagePortlet portalPageId="PartyRecap" portalPortletId="SelectParty" portletSeqId="00001"
+                           columnSeqId="00001" sequenceNum="0"/>
+        <PortalPagePortlet portalPageId="PartyRecap" portalPortletId="PartyInfo" portletSeqId="00001"
+                           columnSeqId="00001" sequenceNum="1" watcherName="selectParty"/>
+        <PortalPagePortlet portalPageId="PartyRecap" portalPortletId="PartyRelationFroms" portletSeqId="00001"
+                           columnSeqId="00001" sequenceNum="2" watcherName="selectParty"/>
+        <PortalPagePortlet portalPageId="PartyRecap" portalPortletId="PartyRelationTos" portletSeqId="00001"
+                           columnSeqId="00001" sequenceNum="3" watcherName="selectParty"/>
+        <PortalPagePortlet portalPageId="PartyRecap" portalPortletId="PartyContactMech" portletSeqId="00001"
+                           columnSeqId="00001" sequenceNum="4" watcherName="selectParty"/>
+        <PortalPagePortlet portalPageId="PartyRecap" portalPortletId="PartyPaymentMethods" portletSeqId="00001"
+                           columnSeqId="00001" sequenceNum="5" watcherName="selectParty"/>
+        <PortalPagePortlet portalPageId="PartyRecap" portalPortletId="PartyIdentLists" portletSeqId="00001"
+                           columnSeqId="00001" sequenceNum="6" watcherName="selectParty"/>
+        <PortalPagePortlet portalPageId="PartyRecap" portalPortletId="PartyLoyaltyPoints" portletSeqId="00001"
+                           columnSeqId="00001" sequenceNum="7" watcherName="selectParty"/>
+        <PortalPageColumn portalPageId="PartyRecap"
+                          columnSeqId="00002"/><!-- no width in pixels or percent, use the rest of the space available -->
+        <PortalPagePortlet portalPageId="PartyRecap" portalPortletId="PartyRoles" portletSeqId="00001"
+                           columnSeqId="00002" sequenceNum="1" watcherName="selectParty"/>
+        <PortalPagePortlet portalPageId="PartyRecap" portalPortletId="PartyUserLogins" portletSeqId="00001"
+                           columnSeqId="00002" sequenceNum="2" watcherName="selectParty"/>
+        <PortalPagePortlet portalPageId="PartyRecap" portalPortletId="PartyAttributes" portletSeqId="00001"
+                           columnSeqId="00002" sequenceNum="3" watcherName="selectParty"/>
+        <PortalPagePortlet portalPageId="PartyRecap" portalPortletId="PartyAvsSettings" portletSeqId="00001"
+                           columnSeqId="00002" sequenceNum="4" watcherName="selectParty"/>
+        <PortalPagePortlet portalPageId="PartyRecap" portalPortletId="PartyContents" portletSeqId="00001"
+                           columnSeqId="00002" sequenceNum="5" watcherName="selectParty"/>
+        <PortalPagePortlet portalPageId="PartyRecap" portalPortletId="PartyNotes" portletSeqId="00001"
+                           columnSeqId="00002" sequenceNum="6" watcherName="selectParty"/>
+        <PortalPagePortlet portalPageId="PartyRecap" portalPortletId="PartyAllVisits" portletSeqId="00001"
+                           columnSeqId="00002" sequenceNum="7" watcherName="selectParty"/>
+    </create-replace>
+
+    <!--#END Portlet reviewed-->
+    <create-replace>
+
+        <!-- should be migrated when portlet parameters works and partyContactMech will be transform as ContactMechMgmt with primaryId not partyId -->
+        <PortalPortlet portalPortletId="ContactMechMgmt" portletName="Contact mechanism for Party and Facility"
+                       description="Contact mechanism for Party and Facility"
+                       portletTypeId="Screenlet" component="party" subComponent="Profile" useScreen="Y" useScript="Y"
+                       useMenu="Y" pkIdName="primaryId"
+                       editFormName="EditParam_ContactMechMgmt" editFormLocation="component://party/widget/ProfileForms.xml"
+                       titleLabel="PartyContactInformation" screenshot="/images/portlets/ContactMechMgmt.png"/>
+        <!-- TODO : check if Portlet Attribute with portalPageId _NA_ works -->
+        <PortletAttribute portalPortletId="ContactMechMgmt" attrName="defaultFaxPurposeId" attrValue="FAX_NUMBER"
+                          portalPageId="_NA_" portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="ContactMechMgmt" attrName="defaultMobilePurposeId" attrValue="PHONE_MOBILE"
+                          portalPageId="_NA_" portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="ContactMechMgmt" attrName="defaultEmailAddressPurposeId"
+                          attrValue="PRIMARY_EMAIL" portalPageId="_NA_" portletSeqId="00000"/>
+        <PortletAttribute portalPortletId="ContactMechMgmt" attrName="defaultTelecomNumberPurposeId"
+                          attrValue="PRIMARY_PHONE" portalPageId="_NA_" portletSeqId="00000"/>
+        <!-- END OF ContactMechMgmt for Party -->
+
+<!-- to be able to test lookup with parameter ( in selectParty)
+<PortletAttribute portalPortletId="SelectParty" attrName="lookupName" attrValue="LookupPartyRoleType" portalPageId="PartyRecapFrontJs" portletSeqId="00001"/>
+<PortletAttribute portalPortletId="SelectParty" attrName="lookupParam" attrValue="CUSTOMER" portalPageId="PartyRecapFrontJs" portletSeqId="00001"/>
+<PortletAttribute portalPortletId="SelectParty" attrName="windowRoleType" attrValue="CUSTOMER" portalPageId="PartyRecapFrontJs" portletSeqId="00001"/>
+-->
+    </create-replace>
+</entity-engine-xml>
