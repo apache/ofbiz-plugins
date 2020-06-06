@@ -52,7 +52,7 @@ under the License.
                                 <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
                             </condition>
                             <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://vuejs-portal/widget/CommonScreens.xml">
+                                <decorator-screen name="FindScreenDecorator" location="component://vuejs/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
                                         <include-menu name="CreateNewParty" location="component://party/widget/partymgr/PartyMenus.xml"/>
                                     </decorator-section>
@@ -265,7 +265,7 @@ under the License.
                 <script location="component://party/groovyScripts/party/StatusCondition.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="LookupDecorator" location="component://vuejs-portal/widget/CommonScreens.xml">
+                <decorator-screen name="LookupDecorator" location="component://vuejs/widget/CommonScreens.xml">
                     <decorator-section name="search-options">
                         <include-form name="LookupPartyName" location="component://partyfjs/widget/PartyFjsForms.xml"/>
                     </decorator-section>
@@ -298,7 +298,7 @@ return andCondition;
 }"/>
             </actions>
             <widgets>
-                <decorator-screen name="LookupDecorator" location="component://vuejs-portal/widget/CommonScreens.xml">
+                <decorator-screen name="LookupDecorator" location="component://vuejs/widget/CommonScreens.xml">
                     <decorator-section name="search-options">
                         <include-form name="LookupPartyRoleType" location="component://partyfjs/widget/PartyFjsForms.xml"/>
                     </decorator-section>
@@ -329,7 +329,7 @@ return andCondition;
                 <script location="component://party/groovyScripts/party/StatusCondition.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="LookupDecorator" location="component://vuejs-portal/widget/CommonScreens.xml">
+                <decorator-screen name="LookupDecorator" location="component://vuejs/widget/CommonScreens.xml">
                     <decorator-section name="search-options">
                         <include-form name="LookupUserLoginAndPartyDetails" location="component://partyfjs/widget/PartyFjsForms.xml"/>
                     </decorator-section>

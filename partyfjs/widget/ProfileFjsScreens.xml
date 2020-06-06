@@ -1164,7 +1164,7 @@ under the License.
         </actions>
         <widgets>
           <container id="${currentAreaId}">
-            <include-screen name="showPortlet" location="component://vuejs-portal/widget/CommonScreens.xml"/>
+            <include-screen name="showPortlet" location="component://vuejs/widget/CommonScreens.xml"/>
           </container>
         </widgets>
       </section>
