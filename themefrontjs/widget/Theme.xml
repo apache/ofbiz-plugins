@@ -32,17 +32,14 @@ under the License.
         <!--header image -->
         <property name="VT_HDR_IMAGE_URL" value="/images/ofbiz_logo.png"/>
         <!--template location-->
-        <property name="VT_HDR_TMPLT_LOC" value="component://flatgrey/template/Header.ftl"/>
-<!--         <property name="VT_HDR_TMPLT_LOC" value="component://thfrontjs/template/Header.ftl"/> -->
+        <property name="VT_HDR_TMPLT_LOC" value="component://thfrontjs/template/Header.ftl"/>
         <property name="VT_FTR_TMPLT_LOC" value="component://flatgrey/template/Footer.ftl"/>
         <property name="VT_NAV_TMPLT_LOC" value="component://flatgrey/template/AppBar.ftl"/>
         <!--javascript lib remove all javascript-->
         <property name="VT_HDR_JAVASCRIPT[]" value=""/>
         <!--Css style-->
-        <property name="VT_STYLESHEET['add']" value="/flatgreyfjs/style.css"/>
-        <property name="VT_STYLESHEET['add']" value="/flatgreyfjs/javascript.css"/>
-        <property name="VT_HELPSTYLESHEET['add']" value="/flatgrey/help.css"/>
-        <property name="VT_DOCBOOKSTYLESHEET['add']" value="/flatgrey/webapp/flatgrey/docbook.css"/>
-        <property name="VT_RTL_STYLESHEET['add']" value="/flatgreyfjs/stylertl.css"/>
+        <property name="VT_STYLESHEET['add']" value="/thfrontjs/style.css"/>
+        <property name="VT_STYLESHEET['add']" value="/thfrontjs/javascript.css"/>
+        <property name="VT_RTL_STYLESHEET['add']" value="/thfrontjs/stylertl.css"/>
     </theme-properties>
 </theme>
