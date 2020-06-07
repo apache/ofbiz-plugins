@@ -44,9 +44,13 @@ import org.xml.sax.SAXException;
 /**
  * Common LDAP Login Workers
  */
-public class LdapLoginWorker extends LoginWorker {
+public final class LdapLoginWorker {
 
-    private static final String ldapConfig = "plugins/ldap/config/ldap.xml";
+    private final static String MODULE = LdapLoginWorker.class.getName();
+    private static final String RESOURCE = "SecurityextUiLabels";
+    private static final String LDAP_CONFIG = "plugins/ldap/config/ldap.xml";
+
+    protected LdapLoginWorker() { }
 
     /**
      * An HTTP WebEvent handler that checks to see is a userLogin is logged in.
@@ -77,14 +81,14 @@ public class LdapLoginWorker extends LoginWorker {
                 } catch (Exception e) {
                     Debug.logError(e, "Error calling checkLogin service", MODULE);
                     Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
-                    String errMsg = UtilProperties.getMessage(resourceWebapp, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
+                    String errMsg = UtilProperties.getMessage(RESOURCE, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
                     request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 }
             }
 
-            if (!hasBasePermission(userLogin, request) || isFlaggedLoggedOut(userLogin, userLogin.getDelegator()) || hasLdapLoggedOut) {
+            if (!LoginWorker.hasBasePermission(userLogin, request) || LoginWorker.isFlaggedLoggedOut(userLogin, userLogin.getDelegator()) || hasLdapLoggedOut) {
                 Debug.logInfo("User does not have permission or is flagged as logged out", MODULE);
-                doBasicLogout(userLogin, request, response);
+                LoginWorker.doBasicLogout(userLogin, request, response);
                 userLogin = null;
             }
         }
@@ -117,7 +121,7 @@ public class LdapLoginWorker extends LoginWorker {
             } catch (Exception e) {
                 Debug.logError(e, "Error calling userLogin service", MODULE);
                 Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
-                String errMsg = UtilProperties.getMessage(resourceWebapp, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
+                String errMsg = UtilProperties.getMessage(RESOURCE, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
             }
         }
@@ -147,7 +151,7 @@ public class LdapLoginWorker extends LoginWorker {
         // invalidate the security group list cache
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
 
-        doBasicLogout(userLogin, request, response);
+        LoginWorker.doBasicLogout(userLogin, request, response);
 
         Element rootElement = getRootElement(request);
 
@@ -161,47 +165,47 @@ public class LdapLoginWorker extends LoginWorker {
             } catch (Exception e) {
                 Debug.logError(e, "Error calling userLogin service", MODULE);
                 Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
-                String errMsg = UtilProperties.getMessage(resourceWebapp, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
+                String errMsg = UtilProperties.getMessage(RESOURCE, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
             }
         }
 
         if (request.getAttribute("_AUTO_LOGIN_LOGOUT_") == null) {
-            return autoLoginCheck(request, response);
+            return LoginWorker.autoLoginCheck(request, response);
         }
         return result;
     }
 
     protected static Element getRootElement(HttpServletRequest request) {
         if (Debug.infoOn()) {
-            Debug.logInfo("LDAP config file: " + ldapConfig, MODULE);
+            Debug.logInfo("LDAP config file: " + LDAP_CONFIG, MODULE);
         }
-        File configFile = new File(ldapConfig);
+        File configFile = new File(LDAP_CONFIG);
         FileInputStream configFileIS = null;
         Element rootElement = null;
         try {
             configFileIS = new FileInputStream(configFile);
-            Document configDoc = UtilXml.readXmlDocument(configFileIS, "LDAP configuration file " + ldapConfig);
+            Document configDoc = UtilXml.readXmlDocument(configFileIS, "LDAP configuration file " + LDAP_CONFIG);
             rootElement = configDoc.getDocumentElement();
         } catch (FileNotFoundException e) {
             Debug.logError(e, "Error calling userLogin service", MODULE);
             Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
-            String errMsg = UtilProperties.getMessage(resourceWebapp, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
+            String errMsg = UtilProperties.getMessage(RESOURCE, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
         } catch (SAXException e) {
             Debug.logError(e, "Error calling userLogin service", MODULE);
             Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
-            String errMsg = UtilProperties.getMessage(resourceWebapp, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
+            String errMsg = UtilProperties.getMessage(RESOURCE, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
         } catch (ParserConfigurationException e) {
             Debug.logError(e, "Error calling userLogin service", MODULE);
             Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
-            String errMsg = UtilProperties.getMessage(resourceWebapp, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
+            String errMsg = UtilProperties.getMessage(RESOURCE, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
         } catch (IOException e) {
             Debug.logError(e, "Error calling userLogin service", MODULE);
             Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
-            String errMsg = UtilProperties.getMessage(resourceWebapp, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
+            String errMsg = UtilProperties.getMessage(RESOURCE, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
         } finally {
             if (configFileIS != null) {
