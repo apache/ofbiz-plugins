@@ -33,6 +33,6 @@ try {
     birtParameters.locale = locale
     request.setAttribute("birtParameters", birtParameters)
 } catch (e) {
-    logError(e, "")
+    logError(e)
 }
 return "success";

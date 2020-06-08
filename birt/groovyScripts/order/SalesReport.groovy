@@ -35,7 +35,7 @@ try {
     birtParameters.thruMonth = month
     birtParameters.thisYear = year
 } catch (e) {
-    logError(e, "")
+    logError(e)
 }
 
 request.setAttribute("birtParameters", birtParameters)

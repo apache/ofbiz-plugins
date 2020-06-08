@@ -42,7 +42,7 @@ if (performFindResults.listSize > 0) {
             try {
                 performFindResults.listIt.close()
                 } catch (GenericEntityException e) {
-                    logError(e, "")
+                    logError(e)
                 }
         }
     }

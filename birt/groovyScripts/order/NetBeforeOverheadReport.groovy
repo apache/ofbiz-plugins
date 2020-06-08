@@ -47,7 +47,7 @@ try {
     birtParameters.DateYear = DateYear
     birtParameters.NunberDate = NunberDate
 } catch (e) {
-    logError(e, "")
+    logError(e)
 }
 
 request.setAttribute("birtParameters", birtParameters)

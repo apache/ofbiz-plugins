@@ -32,6 +32,6 @@ try {
     birtParameters.userLoginId = userLogin.userLoginId
     request.setAttribute("birtParameters", birtParameters)
 } catch (e) {
-    logError(e, "")
+    logError(e)
 }
 return "success";

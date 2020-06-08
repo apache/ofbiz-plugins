@@ -43,7 +43,7 @@ try {
         try {
             performFindResults.listIt.close()
             } catch (GenericEntityException e) {
-                logError(e, "")
+                logError(e)
             }
     }
 }

@@ -32,7 +32,7 @@ try
     birtParameters.Week = Week
     birtParameters.Year = Year
 } catch (e) {
-    logError(e, "")
+    logError(e)
 }
 
 request.setAttribute("birtParameters", birtParameters)

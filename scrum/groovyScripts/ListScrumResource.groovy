@@ -35,13 +35,13 @@ performFindResults = runService('performFind', performFindInMap)
 try {
     resultList = performFindResults.listIt.getCompleteList()
 } catch (GenericEntityException e) {
-    logError(e, "")
+    logError(e)
 } finally {
     if (performFindResults.listIt != null) {
         try {
             performFindResults.listIt.close()
             } catch (GenericEntityException e) {
-                logError(e, "")
+                logError(e)
             }
     }
 }
