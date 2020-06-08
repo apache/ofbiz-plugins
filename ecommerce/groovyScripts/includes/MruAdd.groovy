@@ -40,8 +40,8 @@ import javax.servlet.*
 import javax.servlet.http.*
 
 lookupCaches = session.getAttribute("lookupCaches")
-//org.apache.ofbiz.base.util.Debug.logInfo("entityName:" + entityName, "")
-//org.apache.ofbiz.base.util.Debug.logInfo("in MruAdd.groovy, lookupCaches:" + lookupCaches, "")
+//logInfo("entityName:" + entityName)
+//logInfo("in MruAdd.groovy, lookupCaches:" + lookupCaches)
 
 if (!lookupCaches) {
     lookupCaches = [:]
@@ -49,9 +49,9 @@ if (!lookupCaches) {
 }
 
 cacheEntityName = entityName
-//Debug.logInfo("cacheEntityName:" + cacheEntityName, "")
+//logInfo("cacheEntityName:" + cacheEntityName)
 lifoSet = lookupCaches[cacheEntityName]
-//org.apache.ofbiz.base.util.Debug.logInfo("lifoSet:" + lifoSet, "")
+//logInfo("lifoSet:" + lifoSet)
 if (!lifoSet) {
     lifoSet = new LifoSet(10)
     lookupCaches[cacheEntityName] = lifoSet
@@ -60,11 +60,11 @@ if (!lifoSet) {
 paramMap = UtilHttp.getParameterMap(request)
 contentId = paramMap.contentId
 contentAssocDataResourceViewFrom = ContentWorker.getSubContentCache(delegator, null, null, contentId, null, null, null, null, null)
-//Debug.logInfo("in mruadd, contentAssocDataResourceViewFrom :" + contentAssocDataResourceViewFrom , "")
+//logInfo("in mruadd, contentAssocDataResourceViewFrom :" + contentAssocDataResourceViewFrom )
 if (contentAssocDataResourceViewFrom) {
     lookupCaches = session.getAttribute("lookupCaches")
     viewPK = contentAssocDataResourceViewFrom.getPrimaryKey()
-    //Debug.logInfo("in mruadd, viewPK :" + viewPK , "")
+    //logInfo("in mruadd, viewPK :" + viewPK )
     if (viewPK) {
         ContentManagementWorker.mruAdd(session, viewPK)
     }

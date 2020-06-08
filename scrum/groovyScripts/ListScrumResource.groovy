@@ -18,9 +18,6 @@
  */
 
 import org.apache.ofbiz.entity.GenericEntityException
-import org.apache.ofbiz.base.util.Debug
-
-def module = "ListScrumResource.groovy"
 
 performFindInMap = [:]
 performFindInMap.entityName = "ScrumMemberUserLoginAndSecurityGroup"
@@ -38,13 +35,13 @@ performFindResults = runService('performFind', performFindInMap)
 try {
     resultList = performFindResults.listIt.getCompleteList()
 } catch (GenericEntityException e) {
-    Debug.logError(e, "Failure in " + module)
+    logError(e)
 } finally {
     if (performFindResults.listIt != null) {
         try {
             performFindResults.listIt.close()
             } catch (GenericEntityException e) {
-                Debug.logError(e, module);
+                logError(e)
             }
     }
 }

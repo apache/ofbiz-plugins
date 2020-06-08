@@ -17,8 +17,6 @@
 * under the License.
 */
 
-import org.apache.ofbiz.base.util.Debug
-
 try{
     // for sprint dropdown
     workEffortList = []
@@ -79,7 +77,7 @@ try{
         context.categoryList = categoryList
     }
 }catch(e){
-    Debug.logInfo("catch e ================" + e,"")
+    logInfo("catch e ================" + e)
 }
 
 //subString function

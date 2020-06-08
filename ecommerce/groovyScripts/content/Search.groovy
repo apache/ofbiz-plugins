@@ -34,12 +34,12 @@ import org.apache.ofbiz.base.util.UtilProperties
 
 paramMap = UtilHttp.getParameterMap(request)
 queryLine = paramMap.queryLine.toString()
-//Debug.logInfo("in search, queryLine:" + queryLine, "")
+//logInfo("in search, queryLine:" + queryLine)
 
 siteId = paramMap.siteId ?: "WebStoreCONTENT"
-//Debug.logInfo("in search, siteId:" + siteId, "")
+//logInfo("in search, siteId:" + siteId)
 featureIdByType = ParametricSearch.makeFeatureIdByTypeMap(paramMap)
-//Debug.logInfo("in search, featureIdByType:" + featureIdByType, "")
+//logInfo("in search, featureIdByType:" + featureIdByType)
 
 combQuery = new BooleanQuery.Builder()
 IndexSearcher searcher = null
@@ -57,9 +57,9 @@ try {
 
 termQuery = new TermQuery(new Term("site", siteId.toString()))
 combQuery.add(termQuery, BooleanClause.Occur.MUST)
-//Debug.logInfo("in search, termQuery:" + termQuery.toString(), "")
+//logInfo("in search, termQuery:" + termQuery.toString())
 
-//Debug.logInfo("in search, combQuery(1):" + combQuery, "")
+//logInfo("in search, combQuery(1):" + combQuery)
 if (queryLine && analyzer) {
     Query query = null
     QueryParser parser = new QueryParser("content", analyzer)
@@ -78,18 +78,18 @@ if (featureIdByType) {
         featureIdByType.each { key, value ->
             termQuery = new TermQuery(new Term("feature", value))
             featureQuery.add(termQuery, featuresRequired)
-            //Debug.logInfo("in search searchFeature3, termQuery:" + termQuery.toString(), "")
+            //logInfo("in search searchFeature3, termQuery:" + termQuery.toString())
         }
     }
     combQuery.add(featureQuery.build(), featuresRequired)
 }
 
 if (searcher) {
-    Debug.logInfo("in search searchFeature3, combQuery:" + combQuery.toString(), "")
+    logInfo("in search searchFeature3, combQuery:" + combQuery.toString())
     TopScoreDocCollector collector = TopScoreDocCollector.create(100) //defaulting to 100 results
     searcher.search(combQuery.build(), collector)
     ScoreDoc[] hits = collector.topDocs().scoreDocs
-    Debug.logInfo("in search, hits:" + collector.getTotalHits(), "")
+    logInfo("in search, hits:" + collector.getTotalHits())
 
     contentList = [] as ArrayList
     hitSet = [:] as HashSet

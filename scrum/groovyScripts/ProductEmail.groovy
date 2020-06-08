@@ -17,7 +17,6 @@
  * under the License.
  */
 
-import org.apache.ofbiz.base.util.Debug
 import org.apache.ofbiz.base.util.UtilDateTime
 import org.apache.ofbiz.base.util.UtilValidate
 import org.apache.ofbiz.entity.GenericEntityException
@@ -93,7 +92,7 @@ try{
        }
     }
 } catch (exeption) {
-    Debug.logInfo("catch exeption ================" + exeption,"")
+    logInfo("catch exeption ================" + exeption)
 } catch (GenericEntityException e) {
-    Debug.logInfo("catch GenericEntityException ================" + e.getMessage(),"")
+    logInfo("catch GenericEntityException ================" + e.getMessage())
 }
