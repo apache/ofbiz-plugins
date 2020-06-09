@@ -1,4 +1,4 @@
-From 55fc09561ec975be0fc91f4eaa4f3c64175f330b Mon Sep 17 00:00:00 2001
+From 912a0cc31a1bf75625537bc657946550c5b738c2 Mon Sep 17 00:00:00 2001
 From: holivier <holivier@apache.org>
 Date: Wed, 27 May 2020 11:43:08 +0200
 Subject: [PATCH 11/14] Improved: add vuejs as children tag of html tag in
@@ -63,18 +63,18 @@ index 0ea33934fd..44657bf1a1 100644
      }
  
 diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/HtmlWidget.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/HtmlWidget.java
-index b7a9cc94bc..cbca214aa1 100644
+index e03fe38027..5a4ff24fbb 100644
 --- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/HtmlWidget.java
 +++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/HtmlWidget.java
-@@ -39,6 +39,7 @@ import org.apache.ofbiz.base.util.cache.UtilCache;
- import org.apache.ofbiz.base.util.collections.MapStack;
+@@ -40,6 +40,7 @@ import org.apache.ofbiz.base.util.collections.MapStack;
  import org.apache.ofbiz.base.util.string.FlexibleStringExpander;
  import org.apache.ofbiz.base.util.template.FreeMarkerWorker;
+ import org.apache.ofbiz.security.CsrfUtil;
 +import org.apache.ofbiz.widget.WidgetFactory;
  import org.apache.ofbiz.widget.renderer.ScreenRenderer;
  import org.apache.ofbiz.widget.renderer.ScreenStringRenderer;
  import org.apache.ofbiz.widget.renderer.html.HtmlWidgetRenderer;
-@@ -126,6 +127,8 @@ public class HtmlWidget extends ModelScreenWidget {
+@@ -130,6 +131,8 @@ public class HtmlWidget extends ModelScreenWidget {
                      subWidgets.add(new HtmlTemplate(modelScreen, childElement));
                  } else if ("html-template-decorator".equals(childElement.getNodeName())) {
                      subWidgets.add(new HtmlTemplateDecorator(modelScreen, childElement));
@@ -84,7 +84,7 @@ index b7a9cc94bc..cbca214aa1 100644
                      throw new IllegalArgumentException("Tag not supported under the platform-specific -> html tag with name: "
                              + childElement.getNodeName());
 diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenWidget.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenWidget.java
-index 97ec2258c0..453519343c 100644
+index 8a7e09d5a6..04ffde9ea8 100644
 --- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenWidget.java
 +++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenWidget.java
 @@ -1069,6 +1069,71 @@ public abstract class ModelScreenWidget extends ModelWidget {
@@ -214,7 +214,7 @@ index 13263adf7d..7ea4dfa1eb 100644
      public void renderImage(Appendable writer, Map<String, Object> context, ModelScreenWidget.ScreenImage image) throws IOException;
  
 diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/renderer/macro/MacroScreenRenderer.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/renderer/macro/MacroScreenRenderer.java
-npmindex a8cf74e68b..bb627fc23d 100644
+index a8cf74e68b..bb627fc23d 100644
 --- a/framework/widget/src/main/java/org/apache/ofbiz/widget/renderer/macro/MacroScreenRenderer.java
 +++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/renderer/macro/MacroScreenRenderer.java
 @@ -223,6 +223,10 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
