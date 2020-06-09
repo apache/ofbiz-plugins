@@ -1,12 +1,10 @@
 <template>
   <div id="portal">
-    <table v-if="portalPageDetail" class="d-block">
-      <tr class="d-block">
+    <div v-if="portalPageDetail" class="d-block">
         <vue-column-portlet v-for="column in portalPageDetail.listColumnPortlet" :key="column.portalPageId + '-' + column.columnSeqId"
                             :props="{portalPageId: portalPage, columnSeqId: column.columnSeqId}">
         </vue-column-portlet>
-      </tr>
-    </table>
+    </div>
   </div>
 </template>
 
