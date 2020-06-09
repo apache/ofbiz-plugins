@@ -206,7 +206,7 @@ under the License.
             </actions>
             <widgets>
                 <include-screen name="MinimalActions" location="component://common/widget/CommonScreens.xml"/>
-                <include-screen name="login" location="component://flatgreyfjs/widget/CommonScreens.xml"/>
+                <include-screen name="login" location="component://thfrontjs/widget/CommonScreens.xml"/>
             </widgets>
         </section>
     </screen>
