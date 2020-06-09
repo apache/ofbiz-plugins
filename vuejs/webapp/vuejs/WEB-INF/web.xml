@@ -30,6 +30,10 @@ under the License.
           <param-value>/dist</param-value>
       </init-param>
   </filter>
+  <filter-mapping>
+      <filter-name>ControlFilter</filter-name>
+      <url-pattern>/*</url-pattern>
+  </filter-mapping>
   <welcome-file-list>
     <welcome-file>dist/index.html</welcome-file>
   </welcome-file-list>

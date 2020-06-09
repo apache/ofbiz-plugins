@@ -20,7 +20,7 @@ under the License.
 
 <service-eca xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/service-eca.xsd">
-    <!-- FIXME: This ECA assumes the updateExample service was called with a statusId parameter.
+    <!-- TODO: This ECA assumes the updateExample service was called with a statusId parameter.
          The condition should be improved to check for statusId being not empty. -->
     <!--  used by UI test process about statusHistory  -->
     <eca service="updateExample" event="return">
