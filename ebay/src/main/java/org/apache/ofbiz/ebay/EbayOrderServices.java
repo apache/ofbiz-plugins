@@ -20,6 +20,7 @@
 package org.apache.ofbiz.ebay;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -28,14 +29,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.ofbiz.base.util.Debug;
-import org.apache.ofbiz.base.util.GeneralException;
-import org.apache.ofbiz.base.util.UtilDateTime;
-import org.apache.ofbiz.base.util.UtilGenerics;
-import org.apache.ofbiz.base.util.UtilMisc;
-import org.apache.ofbiz.base.util.UtilProperties;
-import org.apache.ofbiz.base.util.UtilValidate;
-import org.apache.ofbiz.base.util.UtilXml;
+import org.apache.ofbiz.base.util.*;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
@@ -59,6 +53,9 @@ public class EbayOrderServices {
 
     private static final String RESOURCE = "EbayUiLabels";
     private static final String MODULE = EbayOrderServices.class.getName();
+
+    private static final int DECIMALS = UtilNumber.getBigDecimalScale("order.decimals");
+    private static final RoundingMode ROUNDING = UtilNumber.getRoundingMode("order.rounding");
     private static boolean isGetSellerTransactionsCall = false;
     private static boolean isGetOrdersCall = false;
     private static boolean isGetMyeBaySellingCall = false;
@@ -1269,7 +1266,7 @@ public class EbayOrderServices {
             itemPrice = (String) orderItem.get("amount");
         }
         BigDecimal price = new BigDecimal(itemPrice);
-        price = price.setScale(ShoppingCart.scale, ShoppingCart.rounding);
+        price = price.setScale(DECIMALS, ROUNDING);
 
         HashMap<String, Object> attrs = new HashMap<>();
         attrs.put("shipGroup", groupIdx);
@@ -1294,7 +1291,7 @@ public class EbayOrderServices {
             cartItem.setQuantity(qty, dispatcher, cart, true, false);
             // locate the price verify it matches the expected price
             BigDecimal cartPrice = cartItem.getBasePrice();
-            cartPrice = cartPrice.setScale(ShoppingCart.scale, ShoppingCart.rounding);
+            cartPrice = cartPrice.setScale(DECIMALS, ROUNDING);
             if (price.doubleValue() != cartPrice.doubleValue()) {
                 // does not match; honor the price but hold the order for manual review
                 cartItem.setIsModifiedPrice(true);
