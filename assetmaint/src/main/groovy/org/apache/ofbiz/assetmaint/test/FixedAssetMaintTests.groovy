@@ -48,7 +48,6 @@ class FixedAssetMaintTests extends OFBizTestCase {
         String actualStartDate = "2009-12-20 00:00:00.000"
         serviceCtx.actualStartDate = new Timestamp(sdf.parse(actualStartDate).getTime())
 
-        GenericValue userLogin = from("UserLogin").where("userLoginId", "system").queryOne()
         serviceCtx.userLogin = userLogin
         Map serviceResult = dispatcher.runSync('createFixedAssetMaintUpdateWorkEffort', serviceCtx)
         String maintHistSeqId = serviceResult.maintHistSeqId
@@ -82,7 +81,6 @@ class FixedAssetMaintTests extends OFBizTestCase {
         String actualStartDate = "2009-12-20 00:00:00.000"
         serviceCtx.actualStartDate = new Timestamp(sdf.parse(actualStartDate).getTime())
 
-        GenericValue userLogin = from("UserLogin").where("userLoginId", "system").queryOne()
         serviceCtx.userLogin = userLogin
         Map serviceResult = dispatcher.runSync('createFixedAssetMaintUpdateWorkEffort', serviceCtx)
         String maintHistSeqId = serviceResult.maintHistSeqId
@@ -116,9 +114,7 @@ class FixedAssetMaintTests extends OFBizTestCase {
         GenericValue fixedAssetMaint = from("FixedAssetMaint").where("fixedAssetId", fixedAssetId).queryFirst()
         serviceCtx.workEffortId = fixedAssetMaint.scheduleWorkEffortId
 
-        GenericValue userLogin = from("UserLogin").where("userLoginId", "system").queryOne()
         serviceCtx.userLogin = userLogin
-
         Map serviceResult = dispatcher.runSync('updateFixedAssetMaintAndWorkEffort', serviceCtx)
 
         fixedAssetMaint.clear()
@@ -140,8 +136,6 @@ class FixedAssetMaintTests extends OFBizTestCase {
         serviceCtx.scheduleWorkEffortId = fixedAssetMaint.scheduleWorkEffortId
         serviceCtx.statusId = "FAM_COMPLETED"
         serviceCtx.actualCompletionDate = UtilDateTime.nowTimestamp()
-
-        GenericValue userLogin = from("UserLogin").where("userLoginId", "system").queryOne()
         serviceCtx.userLogin = userLogin
 
         Map serviceResult = dispatcher.runSync('updateFixedAssetMaintAndWorkEffort', serviceCtx)
