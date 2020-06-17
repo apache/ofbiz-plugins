@@ -61,7 +61,7 @@ under the License.
       </#list>
     </#if>
 -->
-<script src="<@ofbizContentUrl>/common/js/jquery/jquery-3.4.1.min.js</@ofbizContentUrl>" type="application/javascript"></script>
+<script src="<@ofbizContentUrl>/common/js/jquery/jquery-3.5.1.min.js</@ofbizContentUrl>" type="application/javascript"></script>
 <script src="<@ofbizContentUrl>/common/js/jquery/ui/jquery-ui-1.12.1.min.js</@ofbizContentUrl>" type="application/javascript"></script>
 <script src="<@ofbizContentUrl>/common/js/plugins/selenium.js</@ofbizContentUrl>" type="application/javascript"></script>
     <#if layoutSettings.styleSheets?has_content>
