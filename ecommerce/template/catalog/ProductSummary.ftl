@@ -77,7 +77,7 @@
                   </a>
                   <div class="card-body">
                     <h4 class="card-title"><a href="${productUrl}" class="btn btn-link">${productContentWrapper.get("PRODUCT_NAME", "html")!}</a></h4>
-                    <div class="cart-text">
+                    <div class="card-text">
                       ${productContentWrapper.get("DESCRIPTION", "html")!}<#if daysToShip??>&nbsp;-&nbsp;${uiLabelMap.ProductUsuallyShipsIn} <b>${daysToShip}</b> ${uiLabelMap.CommonDays}!</#if>
 
                       <#-- Display category-specific product comments -->

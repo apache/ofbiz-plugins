@@ -41,7 +41,7 @@ a.btn-primary {
 
 .card .card-img-top {
     height: 140px;
-    width: auto;
+/*    width: auto;*/
 }
 .card-body ul {
     padding : 0px;
