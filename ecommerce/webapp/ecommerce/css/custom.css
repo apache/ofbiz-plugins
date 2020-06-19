@@ -40,7 +40,7 @@ a.btn-primary {
 }
 
 .card .card-img-top {
-    width: auto;
+/*    width: auto;*/
     height: 140px;
 }
 .card-body ul {
