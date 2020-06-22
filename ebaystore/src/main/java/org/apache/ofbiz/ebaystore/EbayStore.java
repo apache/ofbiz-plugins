@@ -1437,14 +1437,13 @@ public class EbayStore {
 
             if (UtilValidate.isNotEmpty(sellingManagerSoldOrders)) {
                 int soldOrderLength = sellingManagerSoldOrders.length;
-                for (int i = 0; i < soldOrderLength; i++) {
-                    SellingManagerSoldOrderType sellingManagerSoldOrder = sellingManagerSoldOrders[i];
+                for (SellingManagerSoldOrderType sellingManagerSoldOrder : sellingManagerSoldOrders) {
                     if (sellingManagerSoldOrder != null) {
                         SellingManagerSoldTransactionType[] sellingManagerSoldTransactions = sellingManagerSoldOrder.getSellingManagerSoldTransaction();
                         int sellingManagerSoldTransactionLength = sellingManagerSoldTransactions.length;
-                        for (int j = 0; j < sellingManagerSoldTransactionLength; j++) {
+                        for (SellingManagerSoldTransactionType managerSoldTransaction : sellingManagerSoldTransactions) {
                             Map<String, Object> entry = new HashMap<String, Object>();
-                            SellingManagerSoldTransactionType sellingManagerSoldTransaction = sellingManagerSoldTransactions[j];
+                            SellingManagerSoldTransactionType sellingManagerSoldTransaction = managerSoldTransaction;
                             entry.put("itemId", sellingManagerSoldTransaction.getItemID());
                             entry.put("title", sellingManagerSoldTransaction.getItemTitle());
                             entry.put("transactionId", sellingManagerSoldTransaction.getTransactionID().toString());
@@ -1453,21 +1452,21 @@ public class EbayStore {
 
                             String buyer = null;
                             if (sellingManagerSoldOrder.getBuyerID() != null) {
-                                buyer  = sellingManagerSoldOrder.getBuyerID();
+                                buyer = sellingManagerSoldOrder.getBuyerID();
                             }
                             entry.put("buyer", buyer);
                             String buyerEmail = null;
                             if (sellingManagerSoldOrder.getBuyerID() != null) {
-                                buyerEmail  = sellingManagerSoldOrder.getBuyerEmail();
+                                buyerEmail = sellingManagerSoldOrder.getBuyerEmail();
                             }
                             entry.put("buyerEmail", buyerEmail);
                             GetItemCall api = new GetItemCall(apiContext);
                             api.setItemID(sellingManagerSoldTransaction.getItemID());
-                            DetailLevelCodeType[] detailLevels = new DetailLevelCodeType[] {
-                                      DetailLevelCodeType.RETURN_ALL,
-                                      DetailLevelCodeType.ITEM_RETURN_ATTRIBUTES,
-                                      DetailLevelCodeType.ITEM_RETURN_DESCRIPTION
-                                  };
+                            DetailLevelCodeType[] detailLevels = new DetailLevelCodeType[]{
+                                    DetailLevelCodeType.RETURN_ALL,
+                                    DetailLevelCodeType.ITEM_RETURN_ATTRIBUTES,
+                                    DetailLevelCodeType.ITEM_RETURN_DESCRIPTION
+                            };
                             api.setDetailLevel(detailLevels);
                             ItemType itemType = api.getItem();
                             String itemUrl = null;
@@ -1478,17 +1477,17 @@ public class EbayStore {
                             entry.put("hitCount", itemType.getHitCount() != null ? itemType.getHitCount() : 0);
 
                             if (itemType.getListingDetails() != null) {
-                                itemUrl  = itemType.getListingDetails().getViewItemURL();
+                                itemUrl = itemType.getListingDetails().getViewItemURL();
                             }
                             entry.put("itemUrl", itemUrl);
                             String itemUrlNatural = null;
                             if (itemType.getListingDetails() != null) {
-                                itemUrlNatural  = itemType.getListingDetails().getViewItemURLForNaturalSearch();
+                                itemUrlNatural = itemType.getListingDetails().getViewItemURLForNaturalSearch();
                             }
                             entry.put("itemUrlNatural", itemUrlNatural);
                             String unpaidItemStatus = null;
                             if (sellingManagerSoldOrder.getUnpaidItemStatus() != null) {
-                                unpaidItemStatus  = sellingManagerSoldOrder.getUnpaidItemStatus().value();
+                                unpaidItemStatus = sellingManagerSoldOrder.getUnpaidItemStatus().value();
                             }
                             entry.put("unpaidItemStatus", unpaidItemStatus);
                             Date creationTime = null;
@@ -1498,7 +1497,7 @@ public class EbayStore {
                             entry.put("creationTime", creationTime);
                             double totalAmount = 0;
                             if (sellingManagerSoldOrder.getTotalAmount() != null) {
-                                totalAmount  = sellingManagerSoldOrder.getTotalAmount().getValue();
+                                totalAmount = sellingManagerSoldOrder.getTotalAmount().getValue();
                             }
                             entry.put("totalAmount", totalAmount);
                             if (sellingManagerSoldOrder.getSalePrice() != null) {
@@ -1510,10 +1509,10 @@ public class EbayStore {
                             Date shippedTime = null;
                             if (sellingManagerSoldOrder.getOrderStatus() != null) {
                                 if (sellingManagerSoldOrder.getOrderStatus().getPaidTime() != null) {
-                                    paidTime  = sellingManagerSoldOrder.getOrderStatus().getPaidTime().getTime();
+                                    paidTime = sellingManagerSoldOrder.getOrderStatus().getPaidTime().getTime();
                                 }
                                 if (sellingManagerSoldOrder.getOrderStatus().getCheckoutStatus() != null) {
-                                    checkoutStatus  = sellingManagerSoldOrder.getOrderStatus().getCheckoutStatus().value();
+                                    checkoutStatus = sellingManagerSoldOrder.getOrderStatus().getCheckoutStatus().value();
                                 }
                                 if (sellingManagerSoldOrder.getOrderStatus().getShippedStatus() != null) {
                                     shippedStatus = sellingManagerSoldOrder.getOrderStatus().getShippedStatus().value();
@@ -1795,13 +1794,13 @@ public class EbayStore {
             api.setCallMode(GetAllBiddersModeCodeType.VIEW_ALL);
             OfferType[] bidders = api.getAllBidders();
 
-            for (int count = 0; count < bidders.length; count++) {
+            for (OfferType bidder : bidders) {
                 Map<String, Object> entry = new HashMap<String, Object>();
-                OfferType offer = bidders[count];
+                OfferType offer = bidder;
                 entry.put("userId", offer.getUser().getUserID());
                 entry.put("bidder", offer.getUser());
                 allBidders.add(entry);
-              }
+            }
             result.put("allBidders", allBidders);
         } catch (Exception e) {
             Debug.logError(e.getMessage(), MODULE);
@@ -2067,8 +2066,8 @@ public class EbayStore {
             if (UtilValidate.isNotEmpty(order)) {
                 TransactionType[] trans = order.getTransactionArray().getTransaction();
                 String orderId = order.getOrderID();
-                for (int rowIndex1 = 0; rowIndex1 < trans.length; rowIndex1++) {
-                    Map<String, Object> transactionMap = EbayStore.getTransaction(trans[rowIndex1]);
+                for (TransactionType tran : trans) {
+                    Map<String, Object> transactionMap = EbayStore.getTransaction(tran);
                     transactionMap.put("orderId", orderId);
                     colsList.add(transactionMap);
                 }
@@ -2335,8 +2334,8 @@ public class EbayStore {
             if (UtilValidate.isNotEmpty(getMyeBaySelling.getReturnedUnsoldList())) tempUnSoldItems = (getMyeBaySelling.getReturnedUnsoldList().getItemArray()).getItem();
 
             if (UtilValidate.isNotEmpty(tempUnSoldItems)) {
-                for (int i = 0; i < tempUnSoldItems.length; i++) {
-                    Map <String, Object> unsoldItemMap = getClosedItem(tempUnSoldItems[i]);
+                for (ItemType tempUnSoldItem : tempUnSoldItems) {
+                    Map<String, Object> unsoldItemMap = getClosedItem(tempUnSoldItem);
                     unsoldItemMap.put("sellingStatus", "unsold");
                     closedItems.add(unsoldItemMap);
                 }
@@ -2345,9 +2344,9 @@ public class EbayStore {
             if (UtilValidate.isNotEmpty(getMyeBaySelling.getReturnedSoldList())) tempSoldItems  = (getMyeBaySelling.getReturnedSoldList().getOrderTransactionArray()).getOrderTransaction();
 
             if (UtilValidate.isNotEmpty(tempSoldItems)) {
-                for (int i = 0; i < tempSoldItems.length; i++) {
-                    ItemType soldItem = tempSoldItems[i].getTransaction().getItem();
-                    Map <String, Object> soldItemMap = getClosedItem(soldItem);
+                for (OrderTransactionType tempSoldItem : tempSoldItems) {
+                    ItemType soldItem = tempSoldItem.getTransaction().getItem();
+                    Map<String, Object> soldItemMap = getClosedItem(soldItem);
                     soldItemMap.put("sellingStatus", "sold");
                     closedItems.add(soldItemMap);
                 }
@@ -2671,8 +2670,7 @@ public class EbayStore {
             TimeFilter modifiedTimeFilter = new TimeFilter(fromDate, toDate);
             getSellerTransaction.setModifiedTimeFilter(modifiedTimeFilter);
             TransactionType[] transactions = getSellerTransaction.getSellerTransactions();
-            for (int tranCount = 0; tranCount < transactions.length; tranCount++) {
-                TransactionType transaction = transactions[tranCount];
+            for (TransactionType transaction : transactions) {
                 if (UtilValidate.isNotEmpty(transaction.getContainingOrder())) {
                     String orderId = transaction.getContainingOrder().getOrderID();
                     if (!orderIdList.contains(orderId)) {
@@ -2729,8 +2727,7 @@ public class EbayStore {
             getOrder.setOrderStatus(OrderStatusCodeType.COMPLETED);
 
             OrderType[] orders = getOrder.getOrders();
-            for (int orderCount = 0; orderCount < orders.length; orderCount++) {
-                OrderType order = orders[orderCount];
+            for (OrderType order : orders) {
                 Map<String, Object> orderMap = EbayStore.getOrderHelper(order, locale);
                 orderList.add(orderMap);
             }
@@ -2863,8 +2860,7 @@ public class EbayStore {
 
         if (UtilValidate.isNotEmpty(order.getExternalTransaction())) {
             ExternalTransactionType[] externalTransactions = order.getExternalTransaction();
-            for (int count = 0; count < externalTransactions.length; count++) {
-                ExternalTransactionType externalTransaction = externalTransactions[count];
+            for (ExternalTransactionType externalTransaction : externalTransactions) {
                 if (UtilValidate.isNotEmpty(externalTransaction.getExternalTransactionID())) {
                     externalTransactionId = externalTransaction.getExternalTransactionID();
                 }
@@ -2887,9 +2883,9 @@ public class EbayStore {
         List<Map<String, Object>> orderItemList = new LinkedList<Map<String,Object>>();
         if (UtilValidate.isNotEmpty(order.getTransactionArray().getTransaction())) {
             TransactionType[] transactions = order.getTransactionArray().getTransaction();
-            for (int tranCount = 0; tranCount < transactions.length; tranCount++) {
+            for (TransactionType transactionType : transactions) {
                 Map<String, Object> orderItemCtx = new HashMap<String, Object>();
-                TransactionType transaction = transactions[tranCount];
+                TransactionType transaction = transactionType;
                 int quantityPurchased = 0;
                 double transactionPrice = 0.0;
                 String createdDate = null;

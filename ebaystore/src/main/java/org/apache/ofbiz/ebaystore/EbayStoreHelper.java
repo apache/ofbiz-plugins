@@ -362,8 +362,8 @@ public class EbayStoreHelper {
 
             Map<String, Object>inMap = new HashMap<String, Object>();
             inMap.put("userLogin", userLogin);
-            for (int index = 0; index < jobs.size(); index++) {
-                inMap.put("jobId", jobs.get(index).getString("jobId"));
+            for (GenericValue job : jobs) {
+                inMap.put("jobId", job.getString("jobId"));
                 result = dispatcher.runSync("cancelScheduledJob", inMap);
                 if (ServiceUtil.isError(result)) {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
@@ -483,12 +483,11 @@ public class EbayStoreHelper {
         Map<String, Object> ebayProductListingAttributeMap = new HashMap<String, Object>();
         try {
            List<GenericValue> attributeToClears = EntityQuery.use(delegator).from("EbayProductListingAttribute").where("productListingId", productListingId).queryList();
-           for (int clearCount = 0; clearCount < attributeToClears.size(); clearCount++) {
-              GenericValue valueToClear = attributeToClears.get(clearCount);
-              if (valueToClear != null) {
-                 valueToClear.remove();
-              }
-           }
+            for (GenericValue valueToClear : attributeToClears) {
+                if (valueToClear != null) {
+                    valueToClear.remove();
+                }
+            }
            for (Map.Entry<String,Object> entry : attributeMapList.entrySet()) {
                if (UtilValidate.isNotEmpty(entry.getKey())) {
                    ebayProductListingAttributeMap.put("productListingId", productListingId);
@@ -520,69 +519,69 @@ public class EbayStoreHelper {
             ListingDesignerType designer = new ListingDesignerType();
             ShippingDetailsType shippingDetail = new ShippingDetailsType();
             ShippingServiceOptionsType shippingOption = new ShippingServiceOptionsType();
-            for (int index = 0; index < attrs.size(); index++) {
-                if ("Title".equals(attrs.get(index).getString("attrName"))) {
-                    item.setTitle(attrs.get(index).getString("attrValue"));
-                } else if ("SKU".equals(attrs.get(index).getString("attrName"))) {
-                    item.setSKU(attrs.get(index).getString("attrValue"));
-                } else if ("Currency".equals(attrs.get(index).getString("attrName"))) {
-                    amount.setCurrencyID(CurrencyCodeType.valueOf(attrs.get(index).getString("attrValue")));
-                } else if ("Description".equals(attrs.get(index).getString("attrName"))) {
-                    item.setDescription(attrs.get(index).getString("attrValue"));
-                } else if ("ApplicationData".equals(attrs.get(index).getString("attrName"))) {
-                    item.setApplicationData(attrs.get(index).getString("attrValue"));
-                } else if ("Country".equals(attrs.get(index).getString("attrName"))) {
-                    item.setCountry(CountryCodeType.valueOf(attrs.get(index).getString("attrValue")));
-                } else if ("PictureURL".equals(attrs.get(index).getString("attrName"))) {
-                    String[] pictureUrl = {attrs.get(index).getString("attrValue")};
+            for (GenericValue attr : attrs) {
+                if ("Title".equals(attr.getString("attrName"))) {
+                    item.setTitle(attr.getString("attrValue"));
+                } else if ("SKU".equals(attr.getString("attrName"))) {
+                    item.setSKU(attr.getString("attrValue"));
+                } else if ("Currency".equals(attr.getString("attrName"))) {
+                    amount.setCurrencyID(CurrencyCodeType.valueOf(attr.getString("attrValue")));
+                } else if ("Description".equals(attr.getString("attrName"))) {
+                    item.setDescription(attr.getString("attrValue"));
+                } else if ("ApplicationData".equals(attr.getString("attrName"))) {
+                    item.setApplicationData(attr.getString("attrValue"));
+                } else if ("Country".equals(attr.getString("attrName"))) {
+                    item.setCountry(CountryCodeType.valueOf(attr.getString("attrValue")));
+                } else if ("PictureURL".equals(attr.getString("attrName"))) {
+                    String[] pictureUrl = {attr.getString("attrValue")};
                     picture.setPictureURL(pictureUrl);
-                } else if ("Site".equals(attrs.get(index).getString("attrName"))) {
-                    item.setSite(SiteCodeType.valueOf(attrs.get(index).getString("attrValue")));
-                } else if ("UseTaxTable".equals(attrs.get(index).getString("attrName"))) {
-                    item.setUseTaxTable(Boolean.valueOf(attrs.get(index).getString("attrValue")));
-                } else if ("BestOfferEnabled".equals(attrs.get(index).getString("attrName"))) {
-                    item.setBestOfferEnabled(Boolean.valueOf(attrs.get(index).getString("attrValue")));
-                } else if ("AutoPayEnabled".equals(attrs.get(index).getString("attrName"))) {
-                    item.setAutoPay(Boolean.valueOf(attrs.get(index).getString("attrValue")));
-                } else if ("CategoryID".equals(attrs.get(index).getString("attrName"))) {
-                    category.setCategoryID(attrs.get(index).getString("attrValue"));
-                } else if ("CategoryLevel".equals(attrs.get(index).getString("attrName"))) {
-                    category.setCategoryLevel(Integer.parseInt(attrs.get(index).getString("attrValue")));
-                } else if ("CategoryName".equals(attrs.get(index).getString("attrName"))) {
-                    category.setCategoryName(attrs.get(index).getString("attrValue"));
-                } else if ("CategoryParentID".equals(attrs.get(index).getString("attrName"))) {
-                    String[] parent = {attrs.get(index).getString("attrValue")};
-                    category.setCategoryParentID(parent );
-                } else if ("LeafCategory".equals(attrs.get(index).getString("attrName"))) {
-                    category.setLeafCategory(Boolean.valueOf(attrs.get(index).getString("attrValue")));
-                } else if ("LSD".equals(attrs.get(index).getString("attrName"))) {
-                    category.setLSD(Boolean.valueOf(attrs.get(index).getString("attrValue")));
-                } else if ("ReturnsAcceptedOption".equals(attrs.get(index).getString("attrName"))) {
+                } else if ("Site".equals(attr.getString("attrName"))) {
+                    item.setSite(SiteCodeType.valueOf(attr.getString("attrValue")));
+                } else if ("UseTaxTable".equals(attr.getString("attrName"))) {
+                    item.setUseTaxTable(Boolean.valueOf(attr.getString("attrValue")));
+                } else if ("BestOfferEnabled".equals(attr.getString("attrName"))) {
+                    item.setBestOfferEnabled(Boolean.valueOf(attr.getString("attrValue")));
+                } else if ("AutoPayEnabled".equals(attr.getString("attrName"))) {
+                    item.setAutoPay(Boolean.valueOf(attr.getString("attrValue")));
+                } else if ("CategoryID".equals(attr.getString("attrName"))) {
+                    category.setCategoryID(attr.getString("attrValue"));
+                } else if ("CategoryLevel".equals(attr.getString("attrName"))) {
+                    category.setCategoryLevel(Integer.parseInt(attr.getString("attrValue")));
+                } else if ("CategoryName".equals(attr.getString("attrName"))) {
+                    category.setCategoryName(attr.getString("attrValue"));
+                } else if ("CategoryParentID".equals(attr.getString("attrName"))) {
+                    String[] parent = {attr.getString("attrValue")};
+                    category.setCategoryParentID(parent);
+                } else if ("LeafCategory".equals(attr.getString("attrName"))) {
+                    category.setLeafCategory(Boolean.valueOf(attr.getString("attrValue")));
+                } else if ("LSD".equals(attr.getString("attrName"))) {
+                    category.setLSD(Boolean.valueOf(attr.getString("attrValue")));
+                } else if ("ReturnsAcceptedOption".equals(attr.getString("attrName"))) {
                     ReturnPolicyType policy = new ReturnPolicyType();
-                    policy.setReturnsAcceptedOption(attrs.get(index).getString("attrValue"));
+                    policy.setReturnsAcceptedOption(attr.getString("attrValue"));
                     item.setReturnPolicy(policy);
-                } else if ("LayoutID".equals(attrs.get(index).getString("attrName"))) {
-                    designer.setLayoutID(Integer.parseInt(attrs.get(index).getString("attrValue")));
-                } else if ("ThemeID".equals(attrs.get(index).getString("attrName"))) {
-                    designer.setThemeID(Integer.parseInt(attrs.get(index).getString("attrValue")));
-                } else if ("BuyItNowPrice".equals(attrs.get(index).getString("attrName"))) {
+                } else if ("LayoutID".equals(attr.getString("attrName"))) {
+                    designer.setLayoutID(Integer.parseInt(attr.getString("attrValue")));
+                } else if ("ThemeID".equals(attr.getString("attrName"))) {
+                    designer.setThemeID(Integer.parseInt(attr.getString("attrValue")));
+                } else if ("BuyItNowPrice".equals(attr.getString("attrName"))) {
                     amount = new AmountType();
-                    amount.setValue(Double.parseDouble(attrs.get(index).getString("attrValue")));
+                    amount.setValue(Double.parseDouble(attr.getString("attrValue")));
                     item.setBuyItNowPrice(amount);
-                } else if ("ReservePrice".equals(attrs.get(index).getString("attrName"))) {
+                } else if ("ReservePrice".equals(attr.getString("attrName"))) {
                     amount = new AmountType();
-                    amount.setValue(Double.parseDouble(attrs.get(index).getString("attrValue")));
+                    amount.setValue(Double.parseDouble(attr.getString("attrValue")));
                     item.setReservePrice(amount);
-                } else if ("ListingType".equals(attrs.get(index).getString("attrName"))) {
-                    item.setListingType(ListingTypeCodeType.valueOf(attrs.get(index).getString("attrValue")));
-                } else if ("StartPrice".equals(attrs.get(index).getString("attrName"))) {
+                } else if ("ListingType".equals(attr.getString("attrName"))) {
+                    item.setListingType(ListingTypeCodeType.valueOf(attr.getString("attrValue")));
+                } else if ("StartPrice".equals(attr.getString("attrName"))) {
                     amount = new AmountType();
-                    amount.setValue(Double.parseDouble(attrs.get(index).getString("attrValue")));
+                    amount.setValue(Double.parseDouble(attr.getString("attrValue")));
                     item.setStartPrice(amount);
-                } else if ("ShippingService".equals(attrs.get(index).getString("attrName"))) {
-                    shippingOption.setShippingService(attrs.get(index).getString("attrValue"));
-                } else if ("ShippingServiceCost".equals(attrs.get(index).getString("attrName"))) {
-                    shippingServiceCost.setValue(Double.parseDouble(attrs.get(index).getString("attrValue")));
+                } else if ("ShippingService".equals(attr.getString("attrName"))) {
+                    shippingOption.setShippingService(attr.getString("attrValue"));
+                } else if ("ShippingServiceCost".equals(attr.getString("attrName"))) {
+                    shippingServiceCost.setValue(Double.parseDouble(attr.getString("attrValue")));
                     shippingOption.setShippingServiceCost(shippingServiceCost);
                 } else if ("ShippingServiceCostCurrency".equals(attrs.get(index).getString("attrName"))) {
                     shippingServiceCost.setCurrencyID(CurrencyCodeType.valueOf(attrs.get(index).getString("attrValue")));

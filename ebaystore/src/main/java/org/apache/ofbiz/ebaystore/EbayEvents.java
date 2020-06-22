@@ -600,8 +600,8 @@ public class EbayEvents {
 
     /* for shipping service detail filter */
     private static boolean isFlat(ShippingTypeCodeType[] st) {
-        for (int i = 0; i < st.length; i++) {
-            if (st[i].compareTo(ShippingTypeCodeType.FLAT) == 0) {
+        for (ShippingTypeCodeType shippingTypeCodeType : st) {
+            if (shippingTypeCodeType.compareTo(ShippingTypeCodeType.FLAT) == 0) {
                 return true;
             }
         }
@@ -610,9 +610,10 @@ public class EbayEvents {
 
     public static ShippingServiceDetailsType[] filterShippingService(ShippingServiceDetailsType[] array) {
         List<ShippingServiceDetailsType> list = new ArrayList<ShippingServiceDetailsType>();
-        for (int i = 0; i < array.length; i++) {
-            if (isFlat(array[i].getServiceType()) && array[i].getShippingServiceID() < SHIPPING_SERVICE_ID_LIMIT) {
-                list.add(array[i]);
+        for (ShippingServiceDetailsType shippingServiceDetailsType : array) {
+            if (isFlat(shippingServiceDetailsType.getServiceType())
+                    && shippingServiceDetailsType.getShippingServiceID() < SHIPPING_SERVICE_ID_LIMIT) {
+                list.add(shippingServiceDetailsType);
             }
         }
         return list.toArray(new ShippingServiceDetailsType[0]);
@@ -1154,8 +1155,8 @@ public class EbayEvents {
                 resp = (GetSellingManagerInventoryResponseType)call.execute(req);
                 if (resp != null && "SUCCESS".equals(resp.getAck().toString())) {
                     returnedSellingManagerProductType  = resp.getSellingManagerProduct();
-                    for (int i = 0; i < returnedSellingManagerProductType.length; i++) {
-                        SellingManagerProductDetailsType prodDetailType = returnedSellingManagerProductType[i].getSellingManagerProductDetails();
+                    for (SellingManagerProductType sellingManagerProductType : returnedSellingManagerProductType) {
+                        SellingManagerProductDetailsType prodDetailType = sellingManagerProductType.getSellingManagerProductDetails();
                         String productIdInv = Long.toString(prodDetailType.getProductID());
                         if (productId.equals(productIdInv)) {
                             int qty = prodDetailType.getQuantityAvailable();
@@ -1168,7 +1169,8 @@ public class EbayEvents {
                                 revReq.setSellingManagerProductDetails(prodDetailType);
                                 revResp = (ReviseSellingManagerProductResponseType) revProdCall.execute(revReq);
                                 if (revResp != null && "SUCCESS".equals(revResp.getAck().toString())) {
-                                    Debug.logInfo("  Already update quantity on eBay inventory with product id ::"+revResp.getSellingManagerProductDetails().getProductID(), MODULE);
+                                    Debug.logInfo("Already update quantity on eBay inventory with product id ::"
+                                            + revResp.getSellingManagerProductDetails().getProductID(), MODULE);
                                 } else {
                                     EbayStoreHelper.createErrorLogMessage(userLogin, dispatcher, productStoreId, revResp.getAck().toString(), "ReviseSellingManagerProductCall : updateQuantityInventoryProduct", revResp.getErrors(0).getLongMessage());
                                 }
@@ -1203,16 +1205,16 @@ public class EbayEvents {
             };
             categorySpecifics.setDetailLevel(detailLevel);
             RecommendationsType[] recommend =  categorySpecifics.getCategorySpecifics();
-            
-            for (int i = 0; i < recommend.length; i++) {
-                NameRecommendationType[] nameRecommend = recommend[i].getNameRecommendation();
+
+            for (RecommendationsType recommendationsType : recommend) {
+                NameRecommendationType[] nameRecommend = recommendationsType.getNameRecommendation();
                 Map<String, List<String>> nameRecommendationMap = new HashMap<String, List<String>>();
-                for (int j = 0; j < nameRecommend.length; j++) {
-                    String name = nameRecommend[j].getName();
+                for (NameRecommendationType nameRecommendationType : nameRecommend) {
+                    String name = nameRecommendationType.getName();
                     List<String> valueList = new LinkedList<String>();
-                    ValueRecommendationType[] valueRecommend = nameRecommend[j].getValueRecommendation();
-                    for (int k = 0; k < valueRecommend.length; k++) {
-                        String value = valueRecommend[k].getValue();
+                    ValueRecommendationType[] valueRecommend = nameRecommendationType.getValueRecommendation();
+                    for (ValueRecommendationType valueRecommendationType : valueRecommend) {
+                        String value = valueRecommendationType.getValue();
                         valueList.add(value);
                     }
                     nameRecommendationMap.put(name, valueList);

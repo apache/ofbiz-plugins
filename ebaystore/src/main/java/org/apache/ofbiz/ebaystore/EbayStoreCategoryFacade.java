@@ -130,8 +130,8 @@ public class EbayStoreCategoryFacade {
         ListingDurationDefinitionsType listDuration = featureDefinition.getListingDurations();
         ListingDurationDefinitionType[] durationArray = listDuration.getListingDuration();
         listingDurationMap = new HashMap<Integer, String[]>();
-        for (int i = 0; i < durationArray.length; i++) {
-            listingDurationMap.put(durationArray[i].getDurationSetID(), durationArray[i].getDuration());
+        for (ListingDurationDefinitionType listingDurationDefinitionType : durationArray) {
+            listingDurationMap.put(listingDurationDefinitionType.getDurationSetID(), listingDurationDefinitionType.getDuration());
         }
 
         //get listing types
@@ -140,8 +140,8 @@ public class EbayStoreCategoryFacade {
             listingDuration = siteDefaults.getListingDuration();
         }
         listingDurationReferenceMap = new HashMap<String, Integer>();
-        for (int i = 0; i < listingDuration.length; i++) {
-            listingDurationReferenceMap.put(listingDuration[i].getType().value(),listingDuration[i].getValue());
+        for (ListingDurationReferenceType listingDurationReferenceType : listingDuration) {
+            listingDurationReferenceMap.put(listingDurationReferenceType.getType().value(), listingDurationReferenceType.getValue());
         }
 
         //get payment methods

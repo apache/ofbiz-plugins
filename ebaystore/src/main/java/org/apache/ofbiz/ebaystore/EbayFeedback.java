@@ -109,29 +109,29 @@ public class EbayFeedback {
                     partyRole.create();
                 }
                 int feedbackLength = feedback.length;
-                for (int i = 0; i < feedbackLength; i++) {
+                for (FeedbackDetailType feedbackDetailType : feedback) {
                     //convert to ofbiz
-                    String contentId = feedback[i].getFeedbackID();
-                    Date eBayDateTime = feedback[i].getCommentTime().getTime();
+                    String contentId = feedbackDetailType.getFeedbackID();
+                    Date eBayDateTime = feedbackDetailType.getCommentTime().getTime();
                     GenericValue contentCheck = EntityQuery.use(delegator).from("Content").where("contentId", contentId).queryOne();
                     if (contentCheck != null) {
                         continue;
                     }
-                    String textData = feedback[i].getCommentText();
-                    String commentingUserId= feedback[i].getCommentingUser();
+                    String textData = feedbackDetailType.getCommentText();
+                    String commentingUserId = feedbackDetailType.getCommentingUser();
                     String commentingPartyId = null;
                     GenericValue CommentingUserLogin = EntityQuery.use(delegator).from("UserLogin")
-                                                                  .where("userLoginId", commentingUserId)
-                                                                  .queryOne();
+                            .where("userLoginId", commentingUserId)
+                            .queryOne();
                     if (UtilValidate.isEmpty(CommentingUserLogin)) {
                         //Party
-                        GenericValue party =  delegator.makeValue("Party");
+                        GenericValue party = delegator.makeValue("Party");
                         commentingPartyId = delegator.getNextSeqId("Party");
                         party.put("partyId", commentingPartyId);
                         party.put("partyTypeId", "PERSON");
                         party.create();
                         //UserLogin
-                        userLoginEx =  delegator.makeValue("UserLogin");
+                        userLoginEx = delegator.makeValue("UserLogin");
                         userLoginEx.put("userLoginId", commentingUserId);
                         userLoginEx.put("partyId", commentingPartyId);
                         userLoginEx.create();
@@ -139,45 +139,45 @@ public class EbayFeedback {
                         commentingPartyId = CommentingUserLogin.getString("partyId");
                     }
                     //DataResource
-                    GenericValue dataResource =  delegator.makeValue("DataResource");
+                    GenericValue dataResource = delegator.makeValue("DataResource");
                     String dataResourceId = delegator.getNextSeqId("DataResource");
                     dataResource.put("dataResourceId", dataResourceId);
                     dataResource.put("dataResourceTypeId", "ELECTRONIC_TEXT");
                     dataResource.put("mimeTypeId", "text/html");
                     dataResource.create();
                     //ElectronicText
-                    GenericValue electronicText =  delegator.makeValue("ElectronicText");
+                    GenericValue electronicText = delegator.makeValue("ElectronicText");
                     electronicText.put("dataResourceId", dataResourceId);
                     electronicText.put("textData", textData);
                     electronicText.create();
                     //Content
-                    GenericValue content =  delegator.makeValue("Content");
+                    GenericValue content = delegator.makeValue("Content");
                     content.put("contentId", contentId);
                     content.put("contentTypeId", "DOCUMENT");
                     content.put("dataResourceId", dataResourceId);
                     content.put("createdDate", UtilDateTime.toTimestamp(eBayDateTime));
                     content.create();
                     //ContentPurpose
-                    GenericValue contentPurpose =  delegator.makeValue("ContentPurpose");
+                    GenericValue contentPurpose = delegator.makeValue("ContentPurpose");
                     contentPurpose.put("contentId", contentId);
                     contentPurpose.put("contentPurposeTypeId", "FEEDBACK");
                     contentPurpose.create();
                     //PartyRole For eBay Commentator
                     GenericValue commentingPartyRole = EntityQuery.use(delegator).from("PartyRole")
-                                                           .where("partyId", commentingPartyId, "roleTypeId", "COMMENTATOR")
-                                                           .queryOne();
+                            .where("partyId", commentingPartyId, "roleTypeId", "COMMENTATOR")
+                            .queryOne();
                     if (UtilValidate.isEmpty(commentingPartyRole)) {
-                        GenericValue partyRole =  delegator.makeValue("PartyRole");
+                        GenericValue partyRole = delegator.makeValue("PartyRole");
                         partyRole.put("partyId", commentingPartyId);
                         partyRole.put("roleTypeId", "COMMENTATOR");
                         partyRole.create();
                     }
                     //ContentRole for eBay User
                     GenericValue ownerContentRole = EntityQuery.use(delegator).from("ContentRole")
-                                                   .where("partyId", partyId, "roleTypeId", "OWNER", "contentId", contentId)
-                                                   .queryFirst();
+                            .where("partyId", partyId, "roleTypeId", "OWNER", "contentId", contentId)
+                            .queryFirst();
                     if (UtilValidate.isEmpty(ownerContentRole)) {
-                        GenericValue contentRole =  delegator.makeValue("ContentRole");
+                        GenericValue contentRole = delegator.makeValue("ContentRole");
                         contentRole.put("contentId", contentId);
                         contentRole.put("partyId", partyId);
                         contentRole.put("roleTypeId", "OWNER");
@@ -186,10 +186,10 @@ public class EbayFeedback {
                     }
                     //ContentRole for Commentator
                     GenericValue commentingContentRole = EntityQuery.use(delegator).from("ContentRole")
-                                                             .where("partyId", commentingPartyId, "roleTypeId", "COMMENTATOR", "contentId", contentId)
-                                                             .queryFirst();
+                            .where("partyId", commentingPartyId, "roleTypeId", "COMMENTATOR", "contentId", contentId)
+                            .queryFirst();
                     if (UtilValidate.isEmpty(commentingContentRole)) {
-                        GenericValue contentRole =  delegator.makeValue("ContentRole");
+                        GenericValue contentRole = delegator.makeValue("ContentRole");
                         contentRole.put("contentId", contentId);
                         contentRole.put("partyId", commentingPartyId);
                         contentRole.put("roleTypeId", "COMMENTATOR");
