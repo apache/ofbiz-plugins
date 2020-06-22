@@ -181,10 +181,8 @@ public final class LdapLoginWorker {
             Debug.logInfo("LDAP config file: " + LDAP_CONFIG, MODULE);
         }
         File configFile = new File(LDAP_CONFIG);
-        FileInputStream configFileIS = null;
         Element rootElement = null;
-        try {
-            configFileIS = new FileInputStream(configFile);
+        try (FileInputStream configFileIS = new FileInputStream(configFile)) {
             Document configDoc = UtilXml.readXmlDocument(configFileIS, "LDAP configuration file " + LDAP_CONFIG);
             rootElement = configDoc.getDocumentElement();
         } catch (FileNotFoundException e) {
@@ -207,13 +205,6 @@ public final class LdapLoginWorker {
             Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
             String errMsg = UtilProperties.getMessage(RESOURCE, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
-        } finally {
-            if (configFileIS != null) {
-                try {
-                    configFileIS.close();
-                } catch (IOException e) {
-                }
-            }
         }
 
         return rootElement;

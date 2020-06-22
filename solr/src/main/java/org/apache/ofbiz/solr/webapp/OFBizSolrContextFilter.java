@@ -181,10 +181,8 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
         Map<String, Object> responseHeader = new HashMap<>();
         JSON json;
         String message = "";
-        OutputStream os = null;
-        
-        try {
-            os = httpResponse.getOutputStream();
+
+        try (OutputStream os = httpResponse.getOutputStream()) {
             if (UtilValidate.isEmpty(userLogin)) {
                 httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 responseHeader.put("status", HttpServletResponse.SC_UNAUTHORIZED);
@@ -202,10 +200,6 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
             Debug.logInfo("[" + httpRequest.getRequestURI().substring(1) + "(Domain:" + httpRequest.getScheme() + "://" + httpRequest.getServerName() + ")] Request error: " + message, MODULE);
         } catch (ConversionException e) {
             Debug.logError("Error while converting responseHeader map to JSON.", MODULE);
-        } finally {
-            if (os != null) {
-                os.close();
-            }
         }
     }
 }
