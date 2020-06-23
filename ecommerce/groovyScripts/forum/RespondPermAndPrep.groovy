@@ -55,7 +55,7 @@ if (!pubPt) {
 
 contentToValue = from("Content").where("contentId", contentIdTo).queryOne()
 contentToPurposeList = contentToValue.getRelated("ContentPurpose", null, null, true)
-currentValue = makeValue("Content", [contentTypeId : "DOCUMENT", statusId : "CTNT_PUBLISHED", privilegeEnumId : "_00_"]))
+currentValue = makeValue("Content", [contentTypeId : "DOCUMENT", statusId : "CTNT_PUBLISHED", privilegeEnumId : "_00_"])
 
 if (contentToPurposeList.contains("RESPONSE")) {
     ownerContentId = contentToValue.ownerContentId
