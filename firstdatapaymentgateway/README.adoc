@@ -1,0 +1,25 @@
+[[FirstDataPaymentGateway]]
+= First Data Payment Gateway
+
+[[steps-to-integrate]]
+== Steps to integrate First Data Payment Gateway with Apache OFBiz
+
+* Checkout or install the "firstdatapaymentgateway" plugin from the Apache OFBiz repository.
+https://github.com/apache/ofbiz-plugins.git
+* Make sure you load the data from following files manually or using loadAll command.
+** FirstDataTypeData.xml
+** FirstDataSecurityPermissionSeedData.xml
+** FirstDataSecurityGroupDemoData.xml
+** FirstDataDemoData.xml
+* Make sure you have created your test account on First Data and you have enabled REST APIs for your test merchant account.
+Also you have got following configuration parameters from the First Data against your merchant account.
+** App Name
+** API Key
+** API Secret
+* Now build and start the server.
+* Hit following URL and use admin credentials for login.
+`https://localhost:8443/firstdata/control/main`
+* Fill in the configuration parameters which you have got from First Data in appropriate fields.
+Transaction URL to be entered should be of sandbox server.
+`https://cert.api.firstdata.com/gateway/v2`
+* Now you can place order and check transactions like Auth, Capture, Refund and Release.
