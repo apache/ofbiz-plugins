@@ -415,14 +415,12 @@ public class EbayEvents {
                     }
                 }
                 //sort the cats list
-                Collections.sort(categories, new Comparator<Object>() {
-                    public int compare(Object a, Object b) {
-                        CategoryType cat1 = (CategoryType)a;
-                        CategoryType cat2 = (CategoryType)b;
-                        int catId1 = Integer.parseInt(cat1.getCategoryID());
-                        int catId2 = Integer.parseInt(cat2.getCategoryID());
-                        return catId1 - catId2;
-                    }
+                Collections.sort(categories, (Comparator<Object>) (a, b) -> {
+                    CategoryType cat1 = (CategoryType)a;
+                    CategoryType cat2 = (CategoryType)b;
+                    int catId1 = Integer.parseInt(cat1.getCategoryID());
+                    int catId2 = Integer.parseInt(cat2.getCategoryID());
+                    return catId1 - catId2;
                 });
             }
         }
@@ -469,14 +467,12 @@ public class EbayEvents {
                     }
                 }
                 //sort the cats list
-                Collections.sort(categories, new Comparator<Object>() {
-                    public int compare(Object a, Object b) {
-                        StoreCustomCategoryType cat1 = (StoreCustomCategoryType) a;
-                        StoreCustomCategoryType cat2 = (StoreCustomCategoryType) b;
-                        int catId1 = Integer.parseInt(Long.toString(cat1.getCategoryID()));
-                        int catId2 = Integer.parseInt(Long.toString(cat2.getCategoryID()));
-                        return catId1 - catId2;
-                    }
+                Collections.sort(categories, (Comparator<Object>) (a, b) -> {
+                    StoreCustomCategoryType cat1 = (StoreCustomCategoryType) a;
+                    StoreCustomCategoryType cat2 = (StoreCustomCategoryType) b;
+                    int catId1 = Integer.parseInt(Long.toString(cat1.getCategoryID()));
+                    int catId2 = Integer.parseInt(Long.toString(cat2.getCategoryID()));
+                    return catId1 - catId2;
                 });
             }
         }
