@@ -87,7 +87,7 @@ def loadCurrencyDimension() {
                 currencyDim.store()
             }
         } else {
-            currencyDim = makeValue("CurrencyDimension",["dimensionId":currency.uomId])
+            currencyDim = makeValue("CurrencyDimension", [dimensionId: currency.uomId])
             currencyDim.currencyId = currency.uomId
             currencyDim.description = currency.description
             currencyDim.create()
