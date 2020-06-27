@@ -1358,7 +1358,7 @@ public class EbayStoreAutoPreferences {
 
                         if (acceptBestOfferIndexId.size() > 0) {
                             int quantityAvailable = inventoryQuantityItem;
-                            Collections.sort(acceptBestOfferIndexId);
+                            acceptBestOfferIndexId.sort(null);
                             RespondToBestOfferCall respondAcceptBestOfferCall = new RespondToBestOfferCall(apiContext);
                             respondAcceptBestOfferCall.setItemID(itemID);
                             for (String bestOfferIdIndex : acceptBestOfferIndexId) {

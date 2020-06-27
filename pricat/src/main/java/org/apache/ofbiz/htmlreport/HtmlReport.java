@@ -1178,7 +1178,7 @@ public class HtmlReport extends AbstractReport {
             if (getParamResourcelist(request) != null) {
                 // found the resourcelist parameter
                 resourceList = StringUtil.split(getParamResourcelist(request), DELIMITER_RESOURCES);
-                Collections.sort(resourceList);
+                resourceList.sort(null);
             } else {
                 // this is a single RESOURCE operation, create list containing the RESOURCE name
                 resourceList = new ArrayList<>(1);
