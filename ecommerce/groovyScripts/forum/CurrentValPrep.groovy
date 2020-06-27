@@ -57,7 +57,7 @@ cachedPK = currentEntityMap[currentEntityName]
 // Build a key from param or attribute values.
 paramMap = UtilHttp.getParameterMap(request)
 //logInfo("paramMap:" + paramMap)
-v = delegator.makeValue(currentEntityName)
+v = makeValue(currentEntityName)
 passedPK = v.getPrimaryKey()
 keyColl = passedPK.getAllKeys()
 keyIt = keyColl.iterator()
