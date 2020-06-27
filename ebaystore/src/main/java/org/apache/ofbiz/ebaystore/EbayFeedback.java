@@ -55,7 +55,7 @@ public class EbayFeedback {
     private static final String RESOURCE = "EbayUiLabels";
 
     public static Map<String, Object> loadFeedback(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Delegator delegator = dctx.getDelegator();
@@ -64,7 +64,7 @@ public class EbayFeedback {
 
         ApiContext apiContext = EbayStoreHelper.getApiContext(productStoreId, locale, delegator);
         try {
-            Map<String, Object> inMap = new HashMap<String, Object>();
+            Map<String, Object> inMap = new HashMap<>();
             inMap.put("productStoreId", productStoreId);
             inMap.put("userLogin", userLogin);
             Map<String, Object> resultUser = dispatcher.runSync("getEbayStoreUser", inMap);
@@ -211,12 +211,12 @@ public class EbayFeedback {
     }
 
     public static Map<String, Object> getItemsAwaitingFeedback(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         Delegator delegator = dctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
         String productStoreId = (String) context.get("productStoreId");
         ApiContext apiContext = EbayStoreHelper.getApiContext(productStoreId, locale, delegator);
-        List<Map<String, Object>> itemsResult = new LinkedList<Map<String,Object>>();
+        List<Map<String, Object>> itemsResult = new LinkedList<>();
         try {
             GetItemsAwaitingFeedbackCall awaitingFeedbackCall = new GetItemsAwaitingFeedbackCall();
             awaitingFeedbackCall.setApiContext(apiContext);
@@ -226,7 +226,7 @@ public class EbayFeedback {
             GetUserCall getUserCall = new GetUserCall(apiContext);
             String commentingUser = getUserCall.getUser().getUserID();
             for (int i = 0;i < items.getTransactionLength(); i++) {
-                Map<String, Object> entry = new HashMap<String, Object>();
+                Map<String, Object> entry = new HashMap<>();
                 TransactionType transection = items.getTransaction(i);
                 entry.put("itemID", transection.getItem().getItemID());
                 entry.put("commentingUser", commentingUser);
@@ -263,7 +263,7 @@ public class EbayFeedback {
     }
 
     public static Map<String, Object> leaveFeedback(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object>result = new HashMap<String, Object>();
+        Map<String, Object>result = new HashMap<>();
         Delegator delegator = dctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
         String productStoreId = (String) context.get("productStoreId");

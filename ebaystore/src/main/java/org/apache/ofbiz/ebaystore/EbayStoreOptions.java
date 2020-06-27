@@ -84,7 +84,7 @@ public class EbayStoreOptions {
                     String colorSchemeId = themeId.substring(themeId.indexOf("-")+1);
                     themeId = themeId.substring(0,themeId.indexOf("-"));
 
-                    Map<String,Object> storeColorSchemeMap = new HashMap<String, Object>();
+                    Map<String,Object> storeColorSchemeMap = new HashMap<>();
                     while (i < storeBasicTheme.length) {
 
                         StoreThemeType storeThemeType = storeBasicTheme[i];
@@ -171,9 +171,9 @@ public class EbayStoreOptions {
                 request.setAttribute("categoryId", ebayCategoryId);
                 results = EbayEvents.getChildCategories(request);
                 if (UtilValidate.isNotEmpty(results)) {
-                    List<Map<String,Object>> categories = new LinkedList<Map<String,Object>>();
+                    List<Map<String,Object>> categories = new LinkedList<>();
                     for (CategoryType category : results) {
-                        Map<String,Object> context = new HashMap<String, Object>();
+                        Map<String,Object> context = new HashMap<>();
                         context.put("CategoryCode", category.getCategoryID());
                         context.put("CategoryName", category.getCategoryName());
                         String isLeaf = String.valueOf(category.isLeafCategory()!= null ? category.isLeafCategory() : "false");
@@ -218,9 +218,9 @@ public class EbayStoreOptions {
                 request.setAttribute("categoryId", ebayStoreCategory);
                 results = EbayEvents.getStoreChildCategories(request);
                 if (UtilValidate.isNotEmpty(results)) {
-                    List<Map<String,Object>> categories = new LinkedList<Map<String,Object>>();
+                    List<Map<String,Object>> categories = new LinkedList<>();
                     for (StoreCustomCategoryType category : results) {
-                        Map<String,Object> context = new HashMap<String, Object>();
+                        Map<String,Object> context = new HashMap<>();
                         context.put("CategoryCode", category.getCategoryID());
                         context.put("CategoryName", category.getName());
                         String isLeaf = "false";

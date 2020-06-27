@@ -84,7 +84,7 @@ public class EbayStoreAutoPrefEvents{
             }
         }
 
-        Map<String, Object> bestOfferCondition = new HashMap<String, Object>();
+        Map<String, Object> bestOfferCondition = new HashMap<>();
         bestOfferCondition.put("productStoreId", productStoreId);
         bestOfferCondition.put("userLogin", userLogin);
         bestOfferCondition.put("enabled", enabled);

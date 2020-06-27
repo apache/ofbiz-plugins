@@ -95,7 +95,7 @@ public class EbayStoreHelper {
     private static final String RESOURCE = "EbayStoreUiLabels";
 
     public static ApiContext getApiContext(String productStoreId,Locale locale, Delegator delegator) {
-       Map<String, Object> context = new HashMap<String, Object>();
+       Map<String, Object> context = new HashMap<>();
        context.put("locale", locale);
        context.put("productStoreId", productStoreId);
        Map<String, Object> config = EbayHelper.buildEbayConfig(context, delegator);
@@ -129,7 +129,7 @@ public class EbayStoreHelper {
     }
 
     public static SiteCodeType getSiteCodeType(String productStoreId, Locale locale, Delegator delegator) {
-        Map<String, Object> context = new HashMap<String, Object>();
+        Map<String, Object> context = new HashMap<>();
         context.put("locale", locale);
         context.put("productStoreId", productStoreId);
         Map<String, Object> config = EbayHelper.buildEbayConfig(context, delegator);
@@ -262,7 +262,7 @@ public class EbayStoreHelper {
     }
 
     public static Map<String, Object> startEbayAutoPreference(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object>result = new HashMap<String, Object>();
+        Map<String, Object>result = new HashMap<>();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Delegator delegator = dctx.getDelegator();
@@ -276,7 +276,7 @@ public class EbayStoreHelper {
             if (UtilValidate.isNotEmpty(jobId)) {
                 List<GenericValue> jobs = EntityQuery.use(delegator).from("JobSandbox").where("parentJobId", jobId, "statusId", "SERVICE_PENDING").queryList();
                 if (jobs.size() == 0) {
-                    Map<String, Object>inMap = new HashMap<String, Object>();
+                    Map<String, Object>inMap = new HashMap<>();
                     inMap.put("jobId", jobId);
                     inMap.put("userLogin", userLogin);
                     result = dispatcher.runSync("resetScheduledJob", inMap);
@@ -326,7 +326,7 @@ public class EbayStoreHelper {
                 ebayProductPref.set("autoPrefJobId", jobSandbox.getString("jobId"));
                 ebayProductPref.store();
                 
-                Map<String, Object>infoData = new HashMap<String, Object>();
+                Map<String, Object>infoData = new HashMap<>();
                 infoData.put("jobId", jobSandbox.getString("jobId"));
                 infoData.put("productStoreId", ebayProductPref.getString("productStoreId"));
                 runtimeData.set("runtimeInfo", XmlSerializer.serialize(infoData));
@@ -340,7 +340,7 @@ public class EbayStoreHelper {
     }
 
     public static Map<String, Object> stopEbayAutoPreference(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object>result = new HashMap<String, Object>();
+        Map<String, Object>result = new HashMap<>();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Delegator delegator = dctx.getDelegator();
@@ -351,7 +351,7 @@ public class EbayStoreHelper {
             String jobId = ebayProductPref.getString("autoPrefJobId");
             List<GenericValue> jobs = EntityQuery.use(delegator).from("JobSandbox").where("parentJobId", jobId ,"statusId", "SERVICE_PENDING").queryList();
 
-            Map<String, Object>inMap = new HashMap<String, Object>();
+            Map<String, Object>inMap = new HashMap<>();
             inMap.put("userLogin", userLogin);
             for (GenericValue job : jobs) {
                 inMap.put("jobId", job.getString("jobId"));
@@ -422,7 +422,7 @@ public class EbayStoreHelper {
     }
 
     public static Map<String, Object> exportProductEachItem(DispatchContext dctx, Map<String, Object> context) {
-        Map<String,Object> result = new HashMap<String, Object>();
+        Map<String,Object> result = new HashMap<>();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
         Map<String, Object> itemObject = UtilGenerics.checkMap(context.get("itemObject"));
@@ -438,7 +438,7 @@ public class EbayStoreHelper {
             if (resp != null && "SUCCESS".equals(resp.getAck().toString()) || "WARNING".equals(resp.getAck().toString())) {
                 String itemId = resp.getItemID();
                 String listingXml = addItemCall.getRequestXml().toString();
-                Map<String, Object> updateItemMap = new HashMap<String, Object>();
+                Map<String, Object> updateItemMap = new HashMap<>();
                 updateItemMap.put("productListingId", productListingId);
                 updateItemMap.put("itemId", itemId);
                 updateItemMap.put("listingXml", listingXml);
@@ -467,7 +467,7 @@ public class EbayStoreHelper {
         Map<String, Object> attributeMapList = UtilGenerics.cast(context.get("attributeMapList"));
         String productListingId = (String) context.get("productListingId");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        Map<String, Object> ebayProductListingAttributeMap = new HashMap<String, Object>();
+        Map<String, Object> ebayProductListingAttributeMap = new HashMap<>();
         try {
            List<GenericValue> attributeToClears = EntityQuery.use(delegator).from("EbayProductListingAttribute").where("productListingId", productListingId).queryList();
             for (GenericValue valueToClear : attributeToClears) {
@@ -701,7 +701,7 @@ public class EbayStoreHelper {
     public static void createErrorLogMessage(GenericValue userLogin, LocalDispatcher dispatcher, String productStoreId, String ack, String fuction, String errorMessage) {
         if (!"".equals(productStoreId) && (!"".equals(errorMessage))) {
             try {
-                Map<String, Object> newMap = new HashMap<String, Object>();
+                Map<String, Object> newMap = new HashMap<>();
                 newMap.put("productStoreId", productStoreId);
                 newMap.put("logAck", ack.toLowerCase());
                 newMap.put("functionName", fuction);

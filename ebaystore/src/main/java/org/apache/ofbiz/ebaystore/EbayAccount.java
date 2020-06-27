@@ -35,7 +35,7 @@ import com.ebay.soap.eBLBaseComponents.UserType;
 public class EbayAccount {
     
     public static Map<String, Object> getEbayUser(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object>result = new HashMap<String, Object>();
+        Map<String, Object>result = new HashMap<>();
         Delegator delegator = dctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
         String productStoreId = (String) context.get("productStoreId");
@@ -55,7 +55,7 @@ public class EbayAccount {
             street1 = null, 
             street2 = null,
             status = null;
-        Map<String, Object>registrationAddress = new HashMap<String, Object>();
+        Map<String, Object>registrationAddress = new HashMap<>();
 
         try {
             ApiContext apiContext = EbayStoreHelper.getApiContext(productStoreId, locale, delegator);

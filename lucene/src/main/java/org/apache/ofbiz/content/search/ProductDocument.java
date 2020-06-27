@@ -351,7 +351,7 @@ public class ProductDocument implements LuceneDocument {
     }
 
     private Timestamp getParentCategories(Document doc, GenericValue productCategory, Set<String> indexedCategoryIds) throws GenericEntityException {
-        return this.getParentCategories(doc, productCategory, indexedCategoryIds, new TreeSet<String>());
+        return this.getParentCategories(doc, productCategory, indexedCategoryIds, new TreeSet<>());
     }
 
     private Timestamp getParentCategories(Document doc, GenericValue productCategory, Set<String> indexedCategoryIds, Set<String> indexedCatalogIds) throws GenericEntityException {

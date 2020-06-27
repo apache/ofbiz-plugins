@@ -116,7 +116,7 @@ public class EbayEvents {
                 String ratingShipHand = (String)requestParams.get("ratingShipHand"+i);
                 String AqItemAsDescribedId = (String)requestParams.get("AqItemAsDescribedId"+i);
 
-                Map<String, Object> leavefeedback =  new HashMap<String, Object>();
+                Map<String, Object> leavefeedback = new HashMap<>();
                 leavefeedback.put("productStoreId", productStoreId);
                 leavefeedback.put("userLogin", userLogin);
                 leavefeedback.put("itemId", itemId);
@@ -166,7 +166,7 @@ public class EbayEvents {
             try {
                 productIds = UtilGenerics.checkList(requestParams.get("selectResult"));
             } catch (ClassCastException e) {
-                if (UtilValidate.isEmpty(productIds)) productIds = new LinkedList<String>();
+                if (UtilValidate.isEmpty(productIds)) productIds = new LinkedList<>();
                 productIds.add((String) requestParams.get("selectResult"));
             }
         } else {
@@ -183,7 +183,7 @@ public class EbayEvents {
         if (UtilValidate.isNotEmpty(addItemObject.get("itemListings"))) {
             itemObjs = UtilGenerics.checkList(addItemObject.get("itemListings"));
         } else {
-            itemObjs = new LinkedList<Map<String,Object>>();
+            itemObjs = new LinkedList<>();
         }
 
         if (UtilValidate.isNotEmpty(productIds)) {
@@ -255,7 +255,7 @@ public class EbayEvents {
                         }
                     }
                     if (UtilValidate.isEmpty(itemListing)) {
-                        itemListing = new HashMap<String, Object>();
+                        itemListing = new HashMap<>();
                         itemListing.put("addItemCall", addItemCall);
                         itemListing.put("productId", productId);
                     }
@@ -364,7 +364,7 @@ public class EbayEvents {
             session.setAttribute("itemListings_".concat(siteCode), addItemObject);
         }
         if (addItemObject == null) {
-            addItemObject = new HashMap<String, Object>();
+            addItemObject = new HashMap<>();
             session.setAttribute("itemListings_".concat(siteCode), addItemObject);
         }
         return addItemObject;
@@ -622,7 +622,7 @@ public class EbayEvents {
         Map<String,Object> requestParams = UtilHttp.getParameterMap(request);
         Locale locale = UtilHttp.getLocale(request);
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-        Map<String, Object> attributeMapList = new HashMap<String, Object>();
+        Map<String, Object> attributeMapList = new HashMap<>();
         String id = "";
         if (UtilValidate.isNotEmpty(requestParams.get("listype"))) {
             if ("auction".equals(requestParams.get("listype"))) {
@@ -650,8 +650,8 @@ public class EbayEvents {
         
         // initialize request parameter.
         Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
-        List<String> nameSpecificList = new LinkedList<String>();
-        List<String> valueSpecificList = new LinkedList<String>();
+        List<String> nameSpecificList = new LinkedList<>();
+        List<String> valueSpecificList = new LinkedList<>();
         String nameValueListType = null;
         String valueListType = null;
         int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
@@ -681,7 +681,7 @@ public class EbayEvents {
             if (UtilValidate.isNotEmpty(addItemObject.get("itemListing"))) {
                 listAddItem = UtilGenerics.checkList(addItemObject.get("itemListing"));
             } else {
-                listAddItem = new LinkedList<Map<String,Object>>();
+                listAddItem = new LinkedList<>();
             }
 
             for (Map<String,Object> itemObj : listAddItem) {
@@ -876,7 +876,7 @@ public class EbayEvents {
                                 int intAtp = atp.intValue();
                                 if ((facilityId != "")  && (intAtp != 0)) {
                                     int newAtp = intAtp - 1;
-                                    Map<String,Object> inMap = new HashMap<String, Object>();
+                                    Map<String,Object> inMap = new HashMap<>();
                                     inMap.put("productStoreId", productStoreId);
                                     inMap.put("facilityId", facilityId);
                                     inMap.put("productId", productId);
@@ -902,7 +902,7 @@ public class EbayEvents {
                         addItemCall.setItem(item);
 
                         // create/update EbayProductListing entity
-                        Map<String, Object> prodMap = new HashMap<String, Object>();
+                        Map<String, Object> prodMap = new HashMap<>();
                         prodMap.put("productStoreId", productStoreId);
                         prodMap.put("productId", productId);
                         prodMap.put("userLogin", userLogin);
@@ -965,7 +965,7 @@ public class EbayEvents {
                         // create/update EbayProductListingAttribute
                         if (UtilValidate.isNotEmpty(productListingId)) {
                             attributeMapList.put("productListingId", productListingId);
-                            Map<String, Object> ebayProdAttrMap = new HashMap<String, Object>();
+                            Map<String, Object> ebayProdAttrMap = new HashMap<>();
                             ebayProdAttrMap.put("productListingId", productListingId);
                             ebayProdAttrMap.put("userLogin", userLogin);
                             ebayProdAttrMap.put("attributeMapList", attributeMapList);
@@ -1017,7 +1017,7 @@ public class EbayEvents {
             if (UtilValidate.isNotEmpty(addItemObject.get("itemListing"))) {
                 listAddItem = UtilGenerics.checkList(addItemObject.get("itemListing"));
             } else {
-                listAddItem = new LinkedList<Map<String,Object>>();
+                listAddItem = new LinkedList<>();
             }
             double feesummary = 0.0;
             for (Map<String,Object> itemObj : listAddItem) {
@@ -1072,7 +1072,7 @@ public class EbayEvents {
             if (UtilValidate.isNotEmpty(addItemObject.get("itemListing"))) {
                 listAddItem = UtilGenerics.checkList(addItemObject.get("itemListing"));
             } else {
-                listAddItem = new LinkedList<Map<String,Object>>();
+                listAddItem = new LinkedList<>();
             }
             int i = 0;
             for (Map<String,Object> itemObj : listAddItem) {
@@ -1114,7 +1114,7 @@ public class EbayEvents {
             if (UtilValidate.isNotEmpty(addItemObject.get("itemListing"))) {
                 listAddItem = UtilGenerics.checkList(addItemObject.get("itemListing"));
             } else {
-                listAddItem = new LinkedList<Map<String,Object>>();
+                listAddItem = new LinkedList<>();
             }
             for (Map<String,Object> itemObj : listAddItem) {
                 updateQuantityInventoryProduct(itemObj, productStoreId, locale, delegator, dispatcher, userLogin);
@@ -1183,7 +1183,7 @@ public class EbayEvents {
     }
     
     public static Map<String, Map<String, List<String>>> categorySpecifics(String categoryId, HttpServletRequest request) {
-        Map<String, Map<String, List<String>>> recommendationMap = new HashMap<String, Map<String,List<String>>>();
+        Map<String, Map<String, List<String>>> recommendationMap = new HashMap<>();
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         Map<String,Object> requestParams = UtilHttp.getParameterMap(request);
         Locale locale = UtilHttp.getLocale(request);
@@ -1204,10 +1204,10 @@ public class EbayEvents {
 
             for (RecommendationsType recommendationsType : recommend) {
                 NameRecommendationType[] nameRecommend = recommendationsType.getNameRecommendation();
-                Map<String, List<String>> nameRecommendationMap = new HashMap<String, List<String>>();
+                Map<String, List<String>> nameRecommendationMap = new HashMap<>();
                 for (NameRecommendationType nameRecommendationType : nameRecommend) {
                     String name = nameRecommendationType.getName();
-                    List<String> valueList = new LinkedList<String>();
+                    List<String> valueList = new LinkedList<>();
                     ValueRecommendationType[] valueRecommend = nameRecommendationType.getValueRecommendation();
                     for (ValueRecommendationType valueRecommendationType : valueRecommend) {
                         String value = valueRecommendationType.getValue();

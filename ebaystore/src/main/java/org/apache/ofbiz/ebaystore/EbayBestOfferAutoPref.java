@@ -41,7 +41,7 @@ public class EbayBestOfferAutoPref {
     private static final String RESOURCE = "EbayStoreUiLabels";
     public static Map<String, Object> ebayBestOfferPrefCond(DispatchContext dctx, Map<String, ? extends Object> context) {
 
-            Map<String, Object> result = new HashMap<String, Object>();
+            Map<String, Object> result = new HashMap<>();
             LocalDispatcher dispatcher = dctx.getDispatcher();
             Locale locale = (Locale)context.get("locale");
             GenericValue userLogin = (GenericValue) context.get("userLogin");
