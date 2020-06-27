@@ -230,8 +230,6 @@ public final class ProductUtil {
                     }
                 }
             }
-        } catch (GenericEntityException e) {
-            Debug.logError(e, e.getMessage(), MODULE);
         } catch (Exception e) {
             Debug.logError(e, e.getMessage(), MODULE);
         }

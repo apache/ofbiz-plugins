@@ -126,9 +126,7 @@ public class SearchServices {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
                 }
             }
-        } catch (GenericEntityException e) {
-            Debug.logError(e, MODULE);
-        } catch (GenericServiceException e) {
+        } catch (GenericEntityException | GenericServiceException e) {
             Debug.logError(e, MODULE);
         }
         return ServiceUtil.returnSuccess();

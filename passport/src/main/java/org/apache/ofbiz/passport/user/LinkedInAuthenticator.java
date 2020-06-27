@@ -114,15 +114,9 @@ public class LinkedInAuthenticator implements Authenticator {
                     user = LinkedInAuthenticator.getUserInfo(getMethod, Locale.getDefault());
                 }
             }
-        } catch (GenericEntityException e) {
-            throw new AuthenticatorException(e.getMessage(), e);
-        } catch (IOException e) {
-            throw new AuthenticatorException(e.getMessage(), e);
-        } catch (AuthenticatorException e) {
+        } catch (GenericEntityException | ParserConfigurationException | AuthenticatorException | IOException e) {
             throw new AuthenticatorException(e.getMessage(), e);
         } catch (SAXException e) {
-            throw new AuthenticatorException(e.getMessage(), e);
-        } catch (ParserConfigurationException e) {
             throw new AuthenticatorException(e.getMessage(), e);
         } finally {
             if (getMethod != null) {
@@ -228,15 +222,9 @@ public class LinkedInAuthenticator implements Authenticator {
                     user = getUserInfo(getMethod, Locale.getDefault());
                 }
             }
-        } catch (GenericEntityException e) {
-            throw new AuthenticatorException(e.getMessage(), e);
-        } catch (IOException e) {
-            throw new AuthenticatorException(e.getMessage(), e);
-        } catch (AuthenticatorException e) {
+        } catch (GenericEntityException | ParserConfigurationException | AuthenticatorException | IOException e) {
             throw new AuthenticatorException(e.getMessage(), e);
         } catch (SAXException e) {
-            throw new AuthenticatorException(e.getMessage(), e);
-        } catch (ParserConfigurationException e) {
             throw new AuthenticatorException(e.getMessage(), e);
         } finally {
             if (getMethod != null) {

@@ -860,9 +860,7 @@ public class HtmlReport extends AbstractReport {
             Object o = null;
             try {
                 o = m.invoke(this, new Object[0]);
-            } catch (InvocationTargetException ite) {
-                // can usually be ignored
-            } catch (IllegalAccessException eae) {
+            } catch (InvocationTargetException | IllegalAccessException ite) {
                 // can usually be ignored
             }
             if (o != null) {

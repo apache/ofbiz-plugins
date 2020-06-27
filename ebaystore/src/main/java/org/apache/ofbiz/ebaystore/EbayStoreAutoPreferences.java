@@ -300,10 +300,7 @@ public class EbayStoreAutoPreferences {
             }
             request.setAttribute("_EVENT_MESSAGE_", "Setting Automated Positive Feedback for Buyers Success with site " + apiContext.getSite().value());
 
-        } catch (GenericEntityException e) {
-            request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
-            return "error";
-        } catch (GenericServiceException e) {
+        } catch (GenericEntityException | GenericServiceException e) {
             request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
             return "error";
         }
@@ -523,10 +520,8 @@ public class EbayStoreAutoPreferences {
                     }
                 }
             }
-        } catch (GenericEntityException|GenericServiceException ge) {
+        } catch (GenericEntityException | GenericServiceException ge) {
             return ServiceUtil.returnError(ge.getMessage());
-        } catch (Exception e) {
-            return ServiceUtil.returnError(e.getMessage());
         }
         return ServiceUtil.returnSuccess();
     }
@@ -598,10 +593,8 @@ public class EbayStoreAutoPreferences {
                     }
                 }
             }
-        } catch (GenericEntityException|GenericServiceException ge) {
+        } catch (GenericEntityException | GenericServiceException ge) {
             return ServiceUtil.returnError(ge.getMessage());
-        } catch (Exception e) {
-            return ServiceUtil.returnError(e.getMessage());
         }
         return ServiceUtil.returnSuccess();
     }
@@ -673,10 +666,8 @@ public class EbayStoreAutoPreferences {
                     }
                 }
             }
-        } catch (GenericEntityException|GenericServiceException ge) {
+        } catch (GenericEntityException | GenericServiceException ge) {
             return ServiceUtil.returnError(ge.getMessage());
-        } catch (Exception e) {
-            return ServiceUtil.returnError(e.getMessage());
         }
         return ServiceUtil.returnSuccess();
     }
@@ -908,9 +899,7 @@ public class EbayStoreAutoPreferences {
                 }
             }
             result = ServiceUtil.returnSuccess();
-        } catch (GenericEntityException e) {
-            result = ServiceUtil.returnError(e.getMessage());
-        } catch (GenericServiceException e) {
+        } catch (GenericEntityException | GenericServiceException e) {
             result = ServiceUtil.returnError(e.getMessage());
         } catch (Exception e) {
             return ServiceUtil.returnError(e.getMessage());
@@ -1129,11 +1118,7 @@ public class EbayStoreAutoPreferences {
                     EbayStoreHelper.createErrorLogMessage(userLogin, dctx.getDispatcher(), context.get("productStoreId").toString(), resp.getAck().toString(), "Get selling manager inventory : autoBlockItemsOutOfStock", resp.getErrors(0).getLongMessage());
                 }
                 result = ServiceUtil.returnSuccess();
-            } catch (ApiException e) {
-                e.printStackTrace();
-            } catch (SdkSoapException e) {
-                e.printStackTrace();
-            } catch (SdkException e) {
+            } catch (ApiException | SdkException | SdkSoapException e) {
                 e.printStackTrace();
             }
         }
@@ -1183,10 +1168,8 @@ public class EbayStoreAutoPreferences {
                     }
                 }
             }
-        } catch (GenericEntityException|GenericServiceException ge) {
+        } catch (GenericEntityException | GenericServiceException ge) {
             return ServiceUtil.returnError(ge.getMessage());
-        } catch (Exception e) {
-            return ServiceUtil.returnError(e.getMessage());
         }
         return ServiceUtil.returnSuccess();
     }

@@ -239,15 +239,9 @@ public class ScrumServices {
                     }
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | GenericServiceException | GenericEntityException e) {
             e.printStackTrace();
             return ServiceUtil.returnError(e.getMessage());
-        } catch (GenericEntityException entityEx) {
-            entityEx.printStackTrace();
-            return ServiceUtil.returnError(entityEx.getMessage());
-        } catch (GenericServiceException serviceEx) {
-            serviceEx.printStackTrace();
-            return ServiceUtil.returnError(serviceEx.getMessage());
         }
 
         return result;

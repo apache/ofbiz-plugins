@@ -96,18 +96,9 @@ public abstract class SolrProductSearch {
                 } else {
                     result = ServiceUtil.returnSuccess();
                 }
-            }
-            catch (GenericEntityException gee) {
-                Debug.logError(gee, gee.getMessage(), MODULE);
-                result = ServiceUtil.returnError(gee.toString());
-            }
-            catch (GenericServiceException gse) {
+            } catch (GenericEntityException | GenericServiceException gse) {
                 Debug.logError(gse, gse.getMessage(), MODULE);
                 result = ServiceUtil.returnError(gse.toString());
-            }
-            catch (Exception e) {
-                Debug.logError(e, e.getMessage(), MODULE);
-                result = ServiceUtil.returnError(e.toString());
             }
         } else {
             final String statusMsg = "Solr ECA indexing disabled; skipping indexing for productId '" + productId + "'";
@@ -707,8 +698,7 @@ public abstract class SolrProductSearch {
                 final String statusMsg = UtilProperties.getMessage(RESOURCE, "SolrClearedSolrIndexAndReindexedDocuments", UtilMisc.toMap("numDocs", numDocs), locale);
                 result = ServiceUtil.returnSuccess(statusMsg);
             }
-        }
-        catch (MalformedURLException e) {
+        } catch (IOException | GenericServiceException e) {
             Debug.logError(e, e.getMessage(), MODULE);
             result = ServiceUtil.returnError(e.toString());
         }
@@ -726,28 +716,7 @@ public abstract class SolrProductSearch {
                 Debug.logError(e, e.getMessage(), MODULE);
                 result = ServiceUtil.returnError(e.toString());
             }
-        }
-        catch (IOException e) {
-            Debug.logError(e, e.getMessage(), MODULE);
-            result = ServiceUtil.returnError(e.toString());
-        }
-        catch (ServiceAuthException e) {
-            Debug.logError(e, e.getMessage(), MODULE);
-            result = ServiceUtil.returnError(e.toString());
-        }
-        catch (ServiceValidationException e) {
-            Debug.logError(e, e.getMessage(), MODULE);
-            result = ServiceUtil.returnError(e.toString());
-        }
-        catch (GenericServiceException e) {
-            Debug.logError(e, e.getMessage(), MODULE);
-            result = ServiceUtil.returnError(e.toString());
-        }
-        catch (Exception e) {
-            Debug.logError(e, e.getMessage(), MODULE);
-            result = ServiceUtil.returnError(e.toString());
-        }
-        finally {
+        } finally {
             if (client != null) {
                 try {
                     client.close();

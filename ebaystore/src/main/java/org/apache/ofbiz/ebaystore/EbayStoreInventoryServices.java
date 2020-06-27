@@ -121,11 +121,7 @@ public class EbayStoreInventoryServices {
                     result = ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE, "EbayStoreInventoryFolderIdUpdatedFailed", locale));
                 }
             }
-        }catch (ApiException e) {
-            result = ServiceUtil.returnFailure(e.getMessage());
-        } catch (SdkSoapException e) {
-            result = ServiceUtil.returnFailure(e.getMessage());
-        } catch (SdkException e) {
+        } catch (ApiException | SdkException | SdkSoapException e) {
             result = ServiceUtil.returnFailure(e.getMessage());
         } catch (GenericEntityException e) {
             result = ServiceUtil.returnFailure(e.getMessage());
@@ -172,11 +168,7 @@ public class EbayStoreInventoryServices {
                     Debug.logError("Fail to  create inventory product ".concat(productId).concat("in productStore ").concat(context.get("productStoreId").toString()).concat(" message from ebay : ").concat(productResp.getMessage()), MODULE);
                 }
             }
-        } catch (ApiException e) {
-            Debug.logError(e.getMessage(), MODULE);
-        } catch (SdkSoapException e) {
-            Debug.logError(e.getMessage(), MODULE);
-        } catch (SdkException e) {
+        } catch (ApiException | SdkException | SdkSoapException e) {
             Debug.logError(e.getMessage(), MODULE);
         } catch (GenericEntityException e) {
             Debug.logError(e.getMessage(), MODULE);
@@ -228,11 +220,7 @@ public class EbayStoreInventoryServices {
                     Debug.logError("Fail to  update inventory product ".concat(productId).concat("in productStore ").concat(context.get("productStoreId").toString()).concat(" message from ebay : ").concat(resp.getMessage()), MODULE);
                 }
             }
-        } catch (ApiException e) {
-            Debug.logError(e.getMessage(), MODULE);
-        } catch (SdkSoapException e) {
-            Debug.logError(e.getMessage(), MODULE);
-        } catch (SdkException e) {
+        } catch (ApiException | SdkException | SdkSoapException e) {
             Debug.logError(e.getMessage(), MODULE);
         } catch (GenericEntityException e) {
             Debug.logError(e.getMessage(), MODULE);
@@ -275,11 +263,7 @@ public class EbayStoreInventoryServices {
                 }
                 result = ServiceUtil.returnSuccess(UtilProperties.getMessage(RESOURCE, "EbayStoreInventoryFolderIdLoaded", UtilMisc.toMap("folderId", folderId), locale));
             }
-        } catch (ApiException e) {
-            result = ServiceUtil.returnFailure(e.getMessage());
-        } catch (SdkSoapException e) {
-            result = ServiceUtil.returnFailure(e.getMessage());
-        } catch (SdkException e) {
+        } catch (ApiException | SdkException | SdkSoapException e) {
             result = ServiceUtil.returnFailure(e.getMessage());
         }
         if (result.get("responseMessage") != null && "fail".equals(result.get("responseMessage"))) folderId = null;
@@ -310,11 +294,7 @@ public class EbayStoreInventoryServices {
                     return folderId;
                 }
             }
-        } catch (ApiException e) {
-            Debug.logError(e.getMessage(), MODULE);
-        } catch (SdkSoapException e) {
-            Debug.logError(e.getMessage(), MODULE);
-        } catch (SdkException e) {
+        } catch (ApiException | SdkException | SdkSoapException e) {
             Debug.logError(e.getMessage(), MODULE);
         }
         return folderId;
@@ -364,11 +344,7 @@ public class EbayStoreInventoryServices {
                     Debug.logError("The problem with get manage inventory detail from ebay site.", MODULE);
                 }
             }
-        } catch (ApiException e) {
-            result = ServiceUtil.returnFailure(e.getMessage());
-        } catch (SdkSoapException e) {
-            result = ServiceUtil.returnFailure(e.getMessage());
-        } catch (SdkException e) {
+        } catch (ApiException | SdkException | SdkSoapException e) {
             result = ServiceUtil.returnFailure(e.getMessage());
         } catch (GenericEntityException e) {
             result = ServiceUtil.returnFailure(e.getMessage());
@@ -398,9 +374,7 @@ public class EbayStoreInventoryServices {
                     }
                 }
             }
-        } catch (GenericEntityException e) {
-            result = ServiceUtil.returnFailure(e.getMessage());
-        } catch (GenericServiceException e) {
+        } catch (GenericEntityException | GenericServiceException e) {
             result = ServiceUtil.returnFailure(e.getMessage());
         }
         result = ServiceUtil.returnSuccess();

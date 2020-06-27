@@ -74,9 +74,6 @@ public class PricatEvents {
             Path file = Paths.get(path + fileName);
             byte[] bytes = Files.readAllBytes(file);
             UtilHttp.streamContentToBrowser(response, bytes, "application/octet-stream", URLEncoder.encode(fileName, "UTF-8"));
-        } catch (MalformedURLException e) {
-            Debug.logError(e.getMessage(), MODULE);
-            return "error";
         } catch (IOException e) {
             Debug.logError(e.getMessage(), MODULE);
             return "error";
@@ -116,9 +113,6 @@ public class PricatEvents {
                         byte[] bytes = Files.readAllBytes(path);
                         path = Paths.get(originalPricatFileName);
                         UtilHttp.streamContentToBrowser(response, bytes, "application/octet-stream", URLEncoder.encode(path.getName(path.getNameCount() - 1).toString(), "UTF-8"));
-                    } catch (MalformedURLException e) {
-                        Debug.logError(e.getMessage(), MODULE);
-                        return "error";
                     } catch (IOException e) {
                         Debug.logError(e.getMessage(), MODULE);
                         return "error";
@@ -150,10 +144,7 @@ public class PricatEvents {
         GenericValue historyValue = null;
         try {
             historyValue = EntityQuery.use(delegator).from("ExcelImportHistory").where("userLoginId", userLoginId, "sequenceNum", Long.valueOf(sequenceNum)).queryOne();
-        } catch (NumberFormatException e) {
-            Debug.logError(e.getMessage(), MODULE);
-            return "error";
-        } catch (GenericEntityException e) {
+        } catch (NumberFormatException | GenericEntityException e) {
             Debug.logError(e.getMessage(), MODULE);
             return "error";
         }
@@ -172,9 +163,6 @@ public class PricatEvents {
                 byte[] bytes = Files.readAllBytes(path);
                 UtilHttp.streamContentToBrowser(response, bytes, "application/octet-stream", URLEncoder.encode(fileName, "UTF-8"));
             }
-        } catch (MalformedURLException e) {
-            Debug.logError(e.getMessage(), MODULE);
-            return "error";
         } catch (IOException e) {
             Debug.logError(e.getMessage(), MODULE);
             return "error";

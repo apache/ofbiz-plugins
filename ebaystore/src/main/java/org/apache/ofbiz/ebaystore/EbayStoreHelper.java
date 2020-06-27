@@ -332,17 +332,8 @@ public class EbayStoreHelper {
                 runtimeData.set("runtimeInfo", XmlSerializer.serialize(infoData));
                 runtimeData.store();
             }
-        } catch (GenericEntityException e) {
-            return ServiceUtil.returnError(e.getMessage());
-        } catch (GenericServiceException e) {
-            return ServiceUtil.returnError(e.getMessage());
-        } catch (SerializeException e) {
-            return ServiceUtil.returnError(e.getMessage());
-        } catch (IOException e) {
-            return ServiceUtil.returnError(e.getMessage());
-        }catch (RecurrenceInfoException e) {
-            return ServiceUtil.returnError(e.getMessage());
-        } catch (GenericConfigException e) {
+        } catch (GenericEntityException | GenericConfigException | RecurrenceInfoException | IOException | SerializeException
+                | GenericServiceException e) {
             return ServiceUtil.returnError(e.getMessage());
         }
         return result;
@@ -369,9 +360,7 @@ public class EbayStoreHelper {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
                 }
             }
-        } catch (GenericEntityException e) {
-            return ServiceUtil.returnError(e.getMessage());
-        } catch (GenericServiceException e) {
+        } catch (GenericEntityException | GenericServiceException e) {
             return ServiceUtil.returnError(e.getMessage());
         }
         return result;
@@ -466,9 +455,7 @@ public class EbayStoreHelper {
                 }
             }
             result = ServiceUtil.returnSuccess();
-        } catch (GenericEntityException e) {
-            return ServiceUtil.returnError(e.getMessage());
-        } catch (GenericServiceException e) {
+        } catch (GenericEntityException | GenericServiceException e) {
             return ServiceUtil.returnError(e.getMessage());
         }
         return result;
@@ -500,9 +487,7 @@ public class EbayStoreHelper {
                    }
                }
            }
-        } catch (GenericEntityException e) {
-            return ServiceUtil.returnError(e.getMessage());
-        } catch (GenericServiceException e) {
+        } catch (GenericEntityException | GenericServiceException e) {
             return ServiceUtil.returnError(e.getMessage());
         }
         return ServiceUtil.returnSuccess();
@@ -709,8 +694,6 @@ public class EbayStoreHelper {
         }
     } catch (GenericEntityException gee) {
         return ServiceUtil.returnError(gee.getMessage());
-    } catch (Exception e) {
-        return ServiceUtil.returnError(e.getMessage());
     }
     return ServiceUtil.returnSuccess();
     }

@@ -129,11 +129,8 @@ public class ContentDocument implements LuceneDocument {
         String text;
         try {
             text = ContentWorker.renderContentAsText(dispatcher, contentId, null, locale, mimeTypeId, true);
-        } catch (GeneralException e) {
+        } catch (GeneralException | IOException e) {
             Debug.logError(e, MODULE);
-            return false;
-        } catch (IOException e2) {
-            Debug.logError(e2, MODULE);
             return false;
         }
         if (UtilValidate.isNotEmpty(text)) {

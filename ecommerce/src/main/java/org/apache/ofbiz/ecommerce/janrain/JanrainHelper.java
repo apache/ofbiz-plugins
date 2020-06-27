@@ -181,9 +181,7 @@ public class JanrainHelper {
             throw new RuntimeException("Unexpected URL error", e);
         } catch (IOException e) {
             throw new RuntimeException("Unexpected IO error", e);
-        } catch (ParserConfigurationException e) {
-            throw new RuntimeException("Unexpected XML error", e);
-        } catch (SAXException e) {
+        } catch (ParserConfigurationException | SAXException e) {
             throw new RuntimeException("Unexpected XML error", e);
         }
     }

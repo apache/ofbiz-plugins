@@ -204,9 +204,7 @@ public class ProductDocument implements LuceneDocument {
                             Map<String, Object> drContext = UtilMisc.<String, Object>toMap("product", product);
                             String contentText = DataResourceWorker.renderDataResourceAsText(null, delegator, productContentAndInfo.getString("dataResourceId"), drContext, null, null, false);
                             addTextField(doc, "content", contentText, false, "fullText", delegator);
-                        } catch (IOException e1) {
-                            Debug.logError(e1, "Error getting content text to index", MODULE);
-                        } catch (GeneralException e1) {
+                        } catch (IOException | GeneralException e1) {
                             Debug.logError(e1, "Error getting content text to index", MODULE);
                         }
 

@@ -114,9 +114,7 @@ public class GitHubAuthenticator implements Authenticator {
                     user = GitHubAuthenticator.getUserInfo(getMethod, accessToken, tokenType, Locale.getDefault());
                 }
             }
-        } catch (GenericEntityException e) {
-            throw new AuthenticatorException(e.getMessage(), e);
-        } catch (AuthenticatorException e) {
+        } catch (GenericEntityException | AuthenticatorException e) {
             throw new AuthenticatorException(e.getMessage(), e);
         } finally {
             if (getMethod != null) {
@@ -222,9 +220,7 @@ public class GitHubAuthenticator implements Authenticator {
                     user = getUserInfo(getMethod, accessToken, tokenType, Locale.getDefault());
                 }
             }
-        } catch (GenericEntityException e) {
-            throw new AuthenticatorException(e.getMessage(), e);
-        } catch (AuthenticatorException e) {
+        } catch (GenericEntityException | AuthenticatorException e) {
             throw new AuthenticatorException(e.getMessage(), e);
         }
         return user;

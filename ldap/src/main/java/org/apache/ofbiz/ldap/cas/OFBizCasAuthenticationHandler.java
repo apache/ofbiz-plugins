@@ -150,7 +150,6 @@ public final class OFBizCasAuthenticationHandler extends AbstractOFBizAuthentica
         String logoutUri = UtilXml.childElementValue(rootElement, "CasLogoutUri", "/logout");
         try {
             response.sendRedirect(casUrl + logoutUri);
-        } catch (UnsupportedEncodingException e) {
         } catch (IOException e) {
         }
         return "success";

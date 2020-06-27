@@ -266,9 +266,6 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
             fos.flush();
             fos.close();
             workbook.close();
-        } catch (FileNotFoundException e) {
-            report.println(e);
-            Debug.logError(e, MODULE);
         } catch (IOException e) {
             report.println(e);
             Debug.logError(e, MODULE);
@@ -617,10 +614,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
         GenericValue historyValue = null;
         try {
             historyValue = EntityQuery.use(delegator).from("ExcelImportHistory").where("userLoginId", userLoginId, "sequenceNum", Long.valueOf(sequenceNum)).queryOne();
-        } catch (NumberFormatException e) {
-            Debug.logError(e.getMessage(), MODULE);
-            return false;
-        } catch (GenericEntityException e) {
+        } catch (NumberFormatException | GenericEntityException e) {
             Debug.logError(e.getMessage(), MODULE);
             return false;
         }

@@ -224,9 +224,6 @@ public class EbayHelper {
         } catch (GenericEntityException gee) {
             Debug.logError(gee, "Cannot get payment preferences for order #" + orderId, MODULE);
             return false;
-        } catch (Exception e) {
-            Debug.logError(e, "Cannot get payment preferences for order #" + orderId, MODULE);
-            return false;
         }
         return true;
     }
@@ -262,10 +259,7 @@ public class EbayHelper {
                 return false;
             }
             return true;
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Failed to create the payment for order " + orderId, MODULE);
-            return false;
-        } catch (GenericServiceException e) {
+        } catch (GenericEntityException | GenericServiceException e) {
             Debug.logError(e, "Failed to create the payment for order " + orderId, MODULE);
             return false;
         }
@@ -326,8 +320,6 @@ public class EbayHelper {
                 if (Debug.verboseOn()) Debug.logVerbose("Created Customer Party: " + partyId, MODULE);
             }
         } catch (GenericServiceException e) {
-            Debug.logError(e, "Failed to createPerson", MODULE);
-        } catch (Exception e) {
             Debug.logError(e, "Failed to createPerson", MODULE);
         }
         return partyId;

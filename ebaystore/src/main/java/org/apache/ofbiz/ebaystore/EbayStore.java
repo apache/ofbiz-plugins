@@ -1324,13 +1324,7 @@ public class EbayStore {
                     result.put("ebayStore", results.get("ebayStore"));
                 }
             }
-        } catch (ApiException e) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, e.getMessage());
-        } catch (SdkSoapException e) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, e.getMessage());
-        } catch (SdkException e) {
+        } catch (ApiException | SdkException | SdkSoapException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, e.getMessage());
         }
@@ -1651,10 +1645,8 @@ public class EbayStore {
                 result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_FAIL);
                 result.put(ModelService.ERROR_MESSAGE_LIST, ProductsExportToEbay.getproductExportFailureMessageList());
             }
-        } catch (GenericEntityException|GenericServiceException ge) {
+        } catch (GenericEntityException | GenericServiceException ge) {
             return ServiceUtil.returnError(ge.getMessage());
-        } catch (Exception e) {
-            return ServiceUtil.returnError(e.getMessage());
         }
         return result;
     }

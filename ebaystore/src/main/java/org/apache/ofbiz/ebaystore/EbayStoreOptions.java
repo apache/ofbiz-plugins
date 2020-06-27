@@ -122,13 +122,7 @@ public class EbayStoreOptions {
                     EbayStoreHelper.createErrorLogMessage(userLogin, dispatcher, paramMap.get("productStoreId").toString(), resp.getAck().toString(), "GetStoreOptionsCall : retrieveThemeColorSchemeByThemeId", resp.getErrors(0).getLongMessage());
                 }
             }
-        } catch (ApiException e) {
-            e.printStackTrace();
-            return "error";
-        } catch (SdkSoapException e) {
-            e.printStackTrace();
-            return "error";
-        } catch (SdkException e) {
+        } catch (ApiException | SdkException | SdkSoapException e) {
             e.printStackTrace();
             return "error";
         }
@@ -191,15 +185,11 @@ public class EbayStoreOptions {
                     }
                 }
             }
-        } catch (GenericServiceException e) {
-            Debug.logError(e.getMessage(), MODULE);
         } catch (EventHandlerException e) {
             Debug.logError(e.getMessage(), MODULE);
-        } catch (ApiException e) {
-            Debug.logError(e.getMessage(), MODULE);
-        } catch (SdkException e) {
-            Debug.logError(e.getMessage(), MODULE);
         } catch (Exception e) {
+            Debug.logError(e.getMessage(), MODULE);
+        } catch (ApiException | SdkException e) {
             Debug.logError(e.getMessage(), MODULE);
         }
         return "success";
@@ -247,15 +237,11 @@ public class EbayStoreOptions {
                     }
                 }
             }
-        } catch (GenericServiceException e) {
-            Debug.logError(e.getMessage(), MODULE);
         } catch (EventHandlerException e) {
             Debug.logError(e.getMessage(), MODULE);
-        } catch (ApiException e) {
-            Debug.logError(e.getMessage(), MODULE);
-        } catch (SdkException e) {
-            Debug.logError(e.getMessage(), MODULE);
         } catch (Exception e) {
+            Debug.logError(e.getMessage(), MODULE);
+        } catch (ApiException | SdkException e) {
             Debug.logError(e.getMessage(), MODULE);
         }
         return "success";

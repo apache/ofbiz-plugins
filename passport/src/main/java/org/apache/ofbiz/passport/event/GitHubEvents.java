@@ -202,20 +202,11 @@ public class GitHubEvents {
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
-        } catch (UnsupportedEncodingException e) {
+        } catch (URISyntaxException | ConversionException | IOException e) {
             request.setAttribute("_ERROR_MESSAGE_", e.toString());
             return "error";
-        } catch (IOException e) {
-            request.setAttribute("_ERROR_MESSAGE_", e.toString());
-            return "error";
-        } catch (ConversionException e) {
-            request.setAttribute("_ERROR_MESSAGE_", e.toString());
-            return "error";
-        } catch (URISyntaxException e) {
-            request.setAttribute("_ERROR_MESSAGE_", e.toString());
-            return "error";
-		}
-        
+        }
+
         // Get User Profile
         HttpGet getMethod = new HttpGet(ApiEndpoint + UserApiUri);
         Map<String, Object> userInfo = null;
@@ -291,11 +282,7 @@ public class GitHubEvents {
             userLogin.store();
             request.setAttribute("USERNAME", userLogin.getString("userLoginId"));
             request.setAttribute("PASSWORD", autoPassword);
-        } catch (GenericEntityException e) {
-            Debug.logError(e.getMessage(), MODULE);
-            request.setAttribute("_ERROR_MESSAGE_", e.toString());
-            return "error";
-        } catch (AuthenticatorException e) {
+        } catch (GenericEntityException | AuthenticatorException e) {
             Debug.logError(e.getMessage(), MODULE);
             request.setAttribute("_ERROR_MESSAGE_", e.toString());
             return "error";
