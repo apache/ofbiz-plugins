@@ -76,14 +76,20 @@
         return '<' + tag + '>' + title + '</' + tag + '>';
     }
     $( document ).ready(function() {
-        $(".product-price-expand").popover({
+        $(".product-price-expand")
+        .popover({
             content: function() {return displayProductPrice(this, 'h6')},
             title: function() {
                 return $('.product-id', this.closest('div')).html();
             },
             html: true,
-            trigger: 'focus',
             placement: 'auto'
+        })
+        .on('shown.bs.popover', function () {
+            var $pop = $(this);
+            setTimeout(function () {
+                $pop.popover('hide');
+            }, 2000);
         });
     });
 //-->
