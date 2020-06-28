@@ -82,7 +82,7 @@
                 return $('.product-id', this.closest('div')).html();
             },
             html: true,
-            trigger: 'click focus',
+            trigger: 'focus',
             placement: 'auto'
         });
     });
