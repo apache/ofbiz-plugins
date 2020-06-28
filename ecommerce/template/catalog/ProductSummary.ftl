@@ -51,6 +51,43 @@
     }
 //-->
 </script>
+  ${virtualJavaScript!}
+  <script type="text/javascript">
+<!--
+    function displayProductPrice(a, tag) {
+        if (typeof(tag) == 'undefined') {
+            tag = 'h4';
+        }
+        var div = a.closest('div');
+        var secs = [
+            'aggregated', 'compare', 'list', 'your', 'saved', 'details'];
+        var title = '';
+        for (var c in secs) {
+            var obj = $('.product-price-' + secs[c], div);
+            if (obj.length) {
+                if (title) {
+                    title += '<br />';
+                }
+                var wrapped = $("<div>" + obj.html() + "</div>");
+                wrapped.find('.product-price-expand').remove();
+                title += wrapped.html();
+            }
+        }
+        return '<' + tag + '>' + title + '</' + tag + '>';
+    }
+    $( document ).ready(function() {
+        $(".product-price-expand").popover({
+            content: function() {return displayProductPrice(this, 'h6')},
+            title: function() {
+                return $('.product-id', this.closest('div')).html();
+            },
+            html: true,
+            trigger: 'click focus',
+            placement: 'auto'
+        });
+    });
+//-->
+</script>
   <#if product??>
     <#-- variable setup -->
       <#if "Y" == backendPath?default("N")>
@@ -80,16 +117,25 @@
                   <div class="card-body">
                     <h4 class="card-title"><a href="${productUrl}" class="btn btn-link">${productContentWrapper.get("PRODUCT_NAME", "html")!}</a></h4>
                     <div class="card-text">
-                      <div>${productContentWrapper.get("DESCRIPTION", "html")!}<#if daysToShip??>&nbsp;-&nbsp;${uiLabelMap.ProductUsuallyShipsIn} <b>${daysToShip}</b> ${uiLabelMap.CommonDays}!</#if></div>
+                      <#assign textNDivs = 1?int/>
+                      <#if prodCatMem?? && prodCatMem.comments?has_content>
+                        <#assign textNDivs = textNDivs + 1/>
+                      </#if>
+                      <#if sizeProductFeatureAndAppls?has_content>
+                        <#-- assign textNDivs = textNDivs + 1 + sizeProductFeatureAndAppls?size/ -->
+                        <#assign textNDivs = textNDivs + 1/>
+                      </#if>
+                      <#assign textDivPercent = 50 / textNDivs/>
+                      <div class="product-description percent-${textDivPercent?int}">${productContentWrapper.get("DESCRIPTION", "html")!}<#if daysToShip??>&nbsp;-&nbsp;${uiLabelMap.ProductUsuallyShipsIn} <b>${daysToShip}</b> ${uiLabelMap.CommonDays}!</#if></div>
 
                       <#-- Display category-specific product comments -->
                         <#if prodCatMem?? && prodCatMem.comments?has_content>
-                          <p>${prodCatMem.comments}</p>
+                          <p class="product-category-comment percent-${textDivPercent?int}">${prodCatMem.comments}</p>
                         </#if>
 
                         <#-- example of showing a certain type of feature with the product -->
                           <#if sizeProductFeatureAndAppls?has_content>
-                            <div>
+                            <div class="product-exploded-feature percent-${textDivPercent?int}">
                               <#if (sizeProductFeatureAndAppls?size == 1)>
                                 <p>${uiLabelMap.OrderSizeAvailableSingle}:</p>
                                 <#else>
@@ -102,61 +148,62 @@
                               </div>
                             </div>
                           </#if>
-                          <div>
-                            <p><strong>${product.productId!}</strong></p>
+                          <div class="product-price">
+                            <p class="product-id"><strong>${product.productId!}</strong></p>
                             <dl>
                               <dt></dt>
                               <dd></dd>
                             </dl>
                             <#if totalPrice??>
-                              <p>${uiLabelMap.ProductAggregatedPrice}: <span class='basePrice'><@ofbizCurrency amount=totalPrice isoCode=totalPrice.currencyUsed/></span></p>
-                              <#else>
-                                <#if price.competitivePrice?? && price.price?? && price.price?double < price.competitivePrice?double>
+                              <p class="product-price-aggregated">${uiLabelMap.ProductAggregatedPrice}: <span class='basePrice'><@ofbizCurrency amount=totalPrice isoCode=totalPrice.currencyUsed/></span></p>
+                            <#else>
+                              <#if price.competitivePrice?? && price.price?? && price.price?double < price.competitivePrice?double>
+                                <p class="product-price-compare">
                                 ${uiLabelMap.ProductCompareAtPrice}: <span class='basePrice'><@ofbizCurrency amount=price.competitivePrice isoCode=price.currencyUsed/></span>
+                                </p>
+                              </#if>
+                              <#if price.listPrice?? && price.price?? && price.price?double < price.listPrice?double>
+                                <p class="product-price-list">
+                                  ${uiLabelMap.ProductListPrice}: <span class="basePrice"><@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/></span>
+                                </p>
+                              </#if>
+                              <b class="product-price-main">
+                                <#if price.isSale?? && price.isSale>
+                                  <p class="badge badge-info">${uiLabelMap.OrderOnSale}!</p>
+                                  <#assign priceStyle = "salePrice">
+                                    <#else>
+                                      <#assign priceStyle = "regularPrice">
+                                </#if>
+                                <a class="product-price-expand" href="javascript:void(0);">?</a>
+                                <#if (price.price?default(0) > 0 && "N" == product.requireAmount?default("N"))>
+                                  <p class="product-price-your">${uiLabelMap.OrderYourPrice}: <#if "Y" = product.isVirtual!> ${uiLabelMap.CommonFrom} </#if><span class="${priceStyle}"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span></p>
+                                </#if>
+                              </b>
+                              <#if price.listPrice?? && price.price?? && price.price?double < price.listPrice?double>
+                                <#assign priceSaved = price.listPrice?double - price.price?double>
+                                <#assign percentSaved = (priceSaved?double / price.listPrice?double) * 100>
+                                  <p class="product-price-saved">
+                                    ${uiLabelMap.OrderSave}: <span class="basePrice"><@ofbizCurrency amount=priceSaved isoCode=price.currencyUsed/> (${percentSaved?int}%)</span>
+                                  </p>
+                              </#if>
                             </#if>
-                            <#if price.listPrice?? && price.price?? && price.price?double < price.listPrice?double>
-                            <p>
-                              ${uiLabelMap.ProductListPrice}: <span class="basePrice"><@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/></span>
-                            </p>
-  </#if>
-  <b>
-    <#if price.isSale?? && price.isSale>
-      <p class="badge badge-info">${uiLabelMap.OrderOnSale}!</p>
-      <#assign priceStyle = "salePrice">
-        <#else>
-          <#assign priceStyle = "regularPrice">
-    </#if>
-
-    <#if (price.price?default(0) > 0 && "N" == product.requireAmount?default("N"))>
-      <p>${uiLabelMap.OrderYourPrice}: <#if "Y" = product.isVirtual!> ${uiLabelMap.CommonFrom} </#if><span class="${priceStyle}"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span></p>
-    </#if>
-  </b>
-  <#if price.listPrice?? && price.price?? && price.price?double < price.listPrice?double>
-  <#assign priceSaved = price.listPrice?double - price.price?double>
-    <#assign percentSaved = (priceSaved?double / price.listPrice?double) * 100>
-      <p>
-        ${uiLabelMap.OrderSave}: <span class="basePrice"><@ofbizCurrency amount=priceSaved isoCode=price.currencyUsed/> (${percentSaved?int}%)</span>
-      </p>
-      </#if>
-      </#if>
-      <#-- show price details ("showPriceDetails" field can be set in the screen definition) -->
-        <#if (showPriceDetails?? && "Y" == showPriceDetails?default("N"))>
-          <#if price.orderItemPriceInfos??>
-            <#list price.orderItemPriceInfos as orderItemPriceInfo>
-              <div>${orderItemPriceInfo.description!}</div>
-            </#list>
-          </#if>
-        </#if>
-        </div>
+                          <#-- show price details ("showPriceDetails" field can be set in the screen definition) -->
+                            <#if (showPriceDetails?? && "Y" == showPriceDetails?default("N"))>
+                              <#if price.orderItemPriceInfos??>
+                                <#list price.orderItemPriceInfos as orderItemPriceInfo>
+                                  <div class="product-price-details">${orderItemPriceInfo.description!}</div>
+                                </#list>
+                              </#if>
+                            </#if>
+                          </div>
         <#if averageRating?? && (averageRating?double > 0) && numRatings?? && (numRatings?long > 2)>
-          <div>${uiLabelMap.OrderAverageRating}: ${averageRating} (${uiLabelMap.CommonFrom} ${numRatings} ${uiLabelMap.OrderRatings})</div>
+          <div class="product-rating">${uiLabelMap.OrderAverageRating}: ${averageRating} (${uiLabelMap.CommonFrom} ${numRatings} ${uiLabelMap.OrderRatings})</div>
         </#if>
-        <form method="post" action="<@ofbizUrl secure="${request.isSecure()?string}">addToCompare</@ofbizUrl>" name="addToCompare${requestAttributes.listIndex!}form">
-      <input type="hidden" name="productId" value="${product.productId}"/>
-      <input type="hidden" name="mainSubmitted" value="Y"/>
-      </form>
-
-      </div>
+        <form class="product-compare" method="post" action="<@ofbizUrl secure="${request.isSecure()?string}">addToCompare</@ofbizUrl>" name="addToCompare${requestAttributes.listIndex!}form">
+          <input type="hidden" name="productId" value="${product.productId}"/>
+          <input type="hidden" name="mainSubmitted" value="Y"/>
+        </form>
+                    </div>
       <div id="${productDetailId}" style="display:none;">
         <img src="<@ofbizContentUrl>${contentPathPrefix!}${largeImageUrl}</@ofbizContentUrl>" alt="Large Image"/>
         ${uiLabelMap.ProductProductId} ${product.productId!}
@@ -185,18 +232,22 @@
                                 <#elseif "ASSET_USAGE_OUT_IN" == product.productTypeId!>
                                   <a href="${productUrl}" class="btn btn-outline-secondary btn-sm">${uiLabelMap.OrderRent}...</a>
                                   <#else>
+                                    <#assign defaultQuantity = 1/>
+                                    <#if prodCatMem?? && prodCatMem.quantity?? && 0.00 < prodCatMem.quantity?double>
+                                      <#assign defaultQuantity = prodCatMem.quantity?double/>
+                                    </#if>
                                     <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="the${requestAttributes.formNamePrefix!}${requestAttributes.listIndex!}form" style="margin: 0;">
-                                      <div class="form-group">
+                                      <div class="form-group" style="margin: 0;">
                                         <input type="hidden" name="add_product_id" value="${product.productId}"/>
                                         <input type="hidden" name="clearSearch" value="N"/>
                                         <input type="hidden" name="mainSubmitted" value="Y"/>
                                         <div class="input-group">
-                                          <input type="text" class="form-control form-control-sm" name="quantity" value="1"/>
+                                          <input type="text" class="form-control form-control-sm" name="quantity" value="${defaultQuantity}"/>
                                           <a href="javascript:document.the${requestAttributes.formNamePrefix!}${requestAttributes.listIndex!}form.submit()" class="btn btn-outline-secondary btn-sm">${uiLabelMap.OrderAddToCart}</a>
                                         </div>
                                         <#if mainProducts?has_content>
                                           <input type="hidden" name="product_id" value=""/>
-                                          <select name="productVariantId" onchange="javascript:displayProductVirtualId(this.value, '${product.productId}', this.form);">
+                                          <select name="productVariantId" onchange="javascript:displayProductVirtualId(this.value, '${product.productId}', this.form);" style="width: 100%;">
                                             <option value="">Select Unit Of Measure</option>
                                             <#list mainProducts as mainProduct>
                                               <option value="${mainProduct.productId}">${mainProduct.uomDesc} : ${mainProduct.piecesIncluded}</option>

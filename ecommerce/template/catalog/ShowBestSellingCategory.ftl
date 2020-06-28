@@ -58,7 +58,7 @@ under the License.
                 </a>
                 <div class="card-body">
                   <h4 class="card-title">
-                    <a style="font-size:12px" href="<@ofbizCatalogAltUrl productCategoryId=productCategoryId/>">
+                    <a class="btn btn-link" href="<@ofbizCatalogAltUrl productCategoryId=productCategoryId/>">
                       ${productCategory.categoryName!productCategoryId}
                     </a>
                   </h4>
