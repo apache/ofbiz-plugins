@@ -32,6 +32,9 @@ a.btn-primary {
     text-align: left;
     flex: 1;
 }
+.productsummary-container {
+    margin-bottom: 30px;
+}
 .card {
     margin-bottom:20px!important;
 }
@@ -85,7 +88,7 @@ a.btn-primary {
     border: thin solid;
 }
 .products-card .card-text .product-price {
-    height: 50%;
+    height: 46%;
     border: thin solid;
 }
 .products-card .card-text .product-price dl { /* what is this ? */
@@ -99,8 +102,8 @@ a.btn-primary {
     display: none;
 }
 .products-card .card-body .productbuy {
-    height: 35%;
-    min-height: 35%;
+    height: 42%;
+    min-height: 42%;
     border: thin solid;
     overflow: auto;
 }
