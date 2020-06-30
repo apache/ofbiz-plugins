@@ -56,6 +56,9 @@ a.btn-primary {
     margin-bottom: 0.15rem;
     border: thin solid;
 }
+.products-card .card-text p.product-id {
+    margin-bottom: 0.25rem;
+}
 .products-card .card-text {
     height: 50%;
     overflow: auto;
@@ -85,11 +88,15 @@ a.btn-primary {
     height: 50%;
     border: thin solid;
 }
+.products-card .card-text .product-price dl { /* what is this ? */
+    display: none;
+}
 .products-card .card-text .product-rating {
     height: 10%;
 }
-.products-card .card-text .product-compare {
-    height: 10%;
+.products-card .card-text form.product-compare {
+    /*height: 10%;*/
+    display: none;
 }
 .products-card .card-body .productbuy {
     height: 35%;
