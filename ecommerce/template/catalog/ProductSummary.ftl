@@ -20,33 +20,21 @@
   <script type="text/javascript">
 <!--
     function displayProductVirtualId(variantId, virtualProductId, pForm) {
-        if(variantId){
-            pForm.product_id.value = variantId;
-        }else{
-            pForm.product_id.value = '';
+        var theForm = $(pForm);
+        var price_div = $('.variant-price', theForm);
+        if (!variantId) {
             variantId = '';
         }
-        var elem = document.getElementById('product_id_display');
-        var txt = document.createTextNode(variantId);
-        if(elem.hasChildNodes()) {
-            elem.replaceChild(txt, elem.firstChild);
-        } else {
-            elem.appendChild(txt);
-        }
+        $("[name='product_id']", theForm).val(variantId);
+        $('.product_id_display', price_div).text(variantId);
 
-        var priceElem = document.getElementById('variant_price_display');
         var price = getVariantPrice(variantId);
-        var priceTxt = null;
-        if(price){
-            priceTxt = document.createTextNode(price);
-        }else{
-            priceTxt = document.createTextNode('');
+        $('.variant_price_display', price_div).text(price || '');
+        if (price) {
+            price_div.css('display', 'inline-block');
         }
-
-        if(priceElem.hasChildNodes()) {
-            priceElem.replaceChild(priceTxt, priceElem.firstChild);
-        } else {
-            priceElem.appendChild(priceTxt);
+        else {
+            price_div.hide();
         }
     }
 //-->
@@ -259,9 +247,9 @@
                                               <option value="${mainProduct.productId}">${mainProduct.uomDesc} : ${mainProduct.piecesIncluded}</option>
                                             </#list>
                                           </select>
-                                          <div style="display: inline-block;">
-                                            <strong><span id="product_id_display"> </span></strong>
-                                            <strong><span id="variant_price_display"> </span></strong>
+                                          <div class="variant-price" style="display: none;">
+                                            <strong><span class="product_id_display"> </span></strong>
+                                            <strong><span class="variant_price_display"> </span></strong>
                                           </div>
                                         </#if>
                                       </div>
