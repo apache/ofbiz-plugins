@@ -137,11 +137,11 @@ def loadSalesInvoiceItemFact() {
         /*
          * facts handling
          */
-        fact.quantity = (BigDecimal) invoiceItem.quantity
-        fact.extGrossAmount = (BigDecimal) 0
-        fact.extDiscountAmount = (BigDecimal) 0
-        fact.extTaxAmount = (BigDecimal) 0
-        fact.extNetAmount = (BigDecimal) 0
+        fact.quantity = invoiceItem.quantity as BigDecimal
+        fact.extGrossAmount = 0 as BigDecimal
+        fact.extDiscountAmount = 0 as BigDecimal
+        fact.extTaxAmount = 0 as BigDecimal
+        fact.extNetAmount = 0 as BigDecimal
 
         if (invoiceItem.quantity && invoiceItem.amount) {
             fact.extGrossAmount = invoiceItem.quantity * invoiceItem.amount
@@ -167,10 +167,10 @@ def loadSalesInvoiceItemFact() {
         fact.extNetAmount = fact.extGrossAmount - fact.extDiscountAmount
         // TODO: prorate invoice header discounts and shipping charges
         // TODO: costs
-        fact.extManFixedCost = (BigDecimal) 0
-        fact.extManVarCost = (BigDecimal) 0
-        fact.extStorageCost = (BigDecimal) 0
-        fact.extDistributionCost = (BigDecimal) 0
+        fact.extManFixedCost = 0 as BigDecimal
+        fact.extManVarCost = 0 as BigDecimal
+        fact.extStorageCost = 0 as BigDecimal
+        fact.extDistributionCost = 0 as BigDecimal
 
         BigDecimal costs = fact.extManFixedCost + fact.extManVarCost + fact.extStorageCost + fact.extDistributionCost
         fact.contributionAmount = fact.extNetAmount - costs
@@ -343,23 +343,23 @@ def loadSalesOrderItemFact() {
         Map accountResult = run service:"getPartyAccountingPreferences", with: partyAccountingPreferencesCallMap
         GenericValue accPref = accountResult.partyAccountingPreference
 
-        fact.quantity = (BigDecimal) orderItem.quantity
-        fact.extGrossAmount = (BigDecimal) 0
-        fact.extGrossCost = (BigDecimal) 0
-        fact.extDiscountAmount = (BigDecimal) 0
-        fact.extNetAmount = (BigDecimal) 0
-        fact.extShippingAmount = (BigDecimal) 0
-        fact.extTaxAmount = (BigDecimal) 0
+        fact.quantity = orderItem.quantity as BigDecimal
+        fact.extGrossAmount = 0 as BigDecimal
+        fact.extGrossCost = 0 as BigDecimal
+        fact.extDiscountAmount = 0 as BigDecimal
+        fact.extNetAmount = 0 as BigDecimal
+        fact.extShippingAmount = 0 as BigDecimal
+        fact.extTaxAmount = 0 as BigDecimal
 
-        fact.GS = (BigDecimal) 0
-        fact.GMS = (BigDecimal) 0
-        fact.GMP = (BigDecimal) 0
-        fact.GSS = (BigDecimal) 0
-        fact.GSC = (BigDecimal) 0
-        fact.GSP = (BigDecimal) 0
-        fact.GP = (BigDecimal) 0
+        fact.GS = 0 as BigDecimal
+        fact.GMS = 0 as BigDecimal
+        fact.GMP = 0 as BigDecimal
+        fact.GSS = 0 as BigDecimal
+        fact.GSC = 0 as BigDecimal
+        fact.GSP = 0 as BigDecimal
+        fact.GP = 0 as BigDecimal
 
-        fact.countOrder = (BigDecimal) 0
+        fact.countOrder = 0 as BigDecimal
 
         // extGrossAmount
         Map convertUomCurrencyMap = [:]
@@ -379,7 +379,7 @@ def loadSalesOrderItemFact() {
 
         // extGrossCost
         GenericValue cost = from("SupplierProduct")
-            .where(productId: orderItem.productId, availableThruDate: null, minimumOrderQuantity: (BigDecimal) 0)
+            .where(productId: orderItem.productId, availableThruDate: null, minimumOrderQuantity: 0 as BigDecimal)
             .queryFirst()
         if (cost) {
             convertUomCurrencyMap.uomId = cost.currencyUomId
@@ -428,7 +428,7 @@ def loadSalesOrderItemFact() {
         fact.extNetAmount = fact.extGrossAmount - fact.extDiscountAmount
 
         // GS
-        BigDecimal countGS = (BigDecimal) 0
+        BigDecimal countGS = 0 as BigDecimal
         List checkGSList = from("SalesOrderItemFact").where(orderId: orderHeader.orderId).queryList()
         for (GenericValue checkGS : checkGSList) {
             if (checkGS.GS) {
@@ -458,7 +458,7 @@ def loadSalesOrderItemFact() {
         fact.GMP = fact.GMS - fact.extGrossCost
 
         // GSP
-        BigDecimal countGSP = (BigDecimal) 0
+        BigDecimal countGSP = 0 as BigDecimal
         List checkGSPList = from("SalesOrderItemFact").where(orderId: orderHeader.orderId).queryList()
         for (GenericValue checkGSP : checkGSPList) {
             if (checkGSP.GSP) {
@@ -470,7 +470,7 @@ def loadSalesOrderItemFact() {
         if (countGSP == 0) {
             List orderItemList = from("OrderItem").where(orderId: orderHeader.orderId).queryList()
 
-            BigDecimal warrantyPrice = (BigDecimal) 0
+            BigDecimal warrantyPrice = 0 as BigDecimal
             for (GenericValue warranty : orderAdjustments) {
                 if ("WARRANTY_ADJUSTMENT".equals(warranty.orderAdjustmentTypeId)) {
                     warrantyPrice = warrantyPrice + warranty.amount
@@ -490,14 +490,14 @@ def loadSalesOrderItemFact() {
                 GSS = GSS * exchangeRate
             }
             fact.GSS = GSS
-            fact.GSP = (BigDecimal) GSS
+            fact.GSP = GSS as BigDecimal
         }
 
         // GP
         fact.GP = fact.GMP + fact.GSP
 
         // countOrder
-        BigDecimal countOrder = (BigDecimal) 0
+        BigDecimal countOrder = 0 as BigDecimal
         List checkCountOrderList = from("SalesOrderItemFact").where(orderId: orderHeader.orderId).queryList()
         for (GenericValue checkCountOrder : checkCountOrderList) {
             if (checkCountOrder.countOrder) {
@@ -507,7 +507,7 @@ def loadSalesOrderItemFact() {
             }
         }
         if (countOrder == 0) {
-            fact.countOrder = (BigDecimal) 1
+            fact.countOrder = 1 as BigDecimal
         }
         fact.store()
     }
