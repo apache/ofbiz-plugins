@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 ////
-= POC Vuejs Renderer
+= Vue.Js Renderer
 
 Actually the first javascript application enabling to use portlet system - portal Apache OFBiz is written with the Vue.js framework.
 
