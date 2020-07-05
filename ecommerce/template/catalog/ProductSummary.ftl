@@ -19,24 +19,24 @@
   ${virtualJavaScript!}
   <script type="text/javascript">
 <!--
-    function displayProductVirtualId(variantId, virtualProductId, pForm) {
-        var theForm = $(pForm);
-        var price_div = $('.variant-price', theForm);
-        if (!variantId) {
-            variantId = '';
-        }
-        $("[name='product_id']", theForm).val(variantId);
-        $('.product_id_display', price_div).text(variantId);
-
-        var price = getVariantPrice(variantId);
-        $('.variant_price_display', price_div).text(price || '');
-        if (price) {
-            price_div.css('display', 'inline-block');
-        }
-        else {
-            price_div.hide();
-        }
-    }
+    $( document ).ready(function() {
+        $("select[name='productVariantId']").on('change', function() {
+            var form = $(this).closest('form');
+            var price_div = $('.variant-price', form);
+            var variantId = $(this).val() || '';
+            $("[name='product_id']", form).val(variantId);
+            $('.product_id_display', price_div).text(variantId);
+    
+            var price = getVariantPrice(variantId);
+            $('.variant_price_display', price_div).text(price || '');
+            if (price) {
+                price_div.css('display', 'inline-block');
+            }
+            else {
+                price_div.hide();
+            }
+        });
+    });
 //-->
 </script>
   ${virtualJavaScript!}
@@ -61,6 +61,9 @@
                 title += wrapped.html();
             }
         }
+        if (!title) {
+            title = 'there is no price information'; // should translate
+        }
         return '<' + tag + '>' + title + '</' + tag + '>';
     }
     $( document ).ready(function() {
@@ -78,6 +81,14 @@
             setTimeout(function () {
                 $pop.popover('hide');
             }, 2000);
+        });
+    });
+    $( document ).ready(function() {
+        $(".set-default-quantity").on('click', function() {
+            var form = $(this).closest('form');
+            var theQuantity = $("input[name='defaultQuantity']", form).val();
+            $("input[name='quantity']", form).val(theQuantity);
+            $("select[name='productVariantId']", form).val('').change();
         });
     });
 //-->
@@ -149,7 +160,10 @@
                               <dd></dd>
                             </dl>
                             <#if totalPrice??>
-                              <p class="product-price-aggregated">${uiLabelMap.ProductAggregatedPrice}: <span class='basePrice'><@ofbizCurrency amount=totalPrice isoCode=totalPrice.currencyUsed/></span></p>
+                              <p class="product-price-aggregated">
+                                <a class="product-price-expand" href="javascript:void(0);">?</a>&nbsp;
+                                <strong>${uiLabelMap.ProductAggregatedPrice}: <span class='basePrice'><@ofbizCurrency amount=totalPrice isoCode=totalPrice.currencyUsed/></span></strong>
+                              </p>
                             <#else>
                               <#if price.competitivePrice?? && price.price?? && price.price?double < price.competitivePrice?double>
                                 <p class="product-price-compare">
@@ -227,22 +241,30 @@
                                   <a href="${productUrl}" class="btn btn-outline-secondary btn-sm">${uiLabelMap.OrderRent}...</a>
                                   <#else>
                                     <#assign defaultQuantity = 1/>
+                                    <#assign hasDefaultQuantity = false/>
                                     <#if prodCatMem?? && prodCatMem.quantity?? && 0.00 < prodCatMem.quantity?double>
                                       <#assign defaultQuantity = prodCatMem.quantity?double/>
+                                      <#assign hasDefaultQuantity = true/>
                                     </#if>
                                     <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="the${requestAttributes.formNamePrefix!}${requestAttributes.listIndex!}form" style="margin: 0;">
                                       <div class="form-group" style="margin: 0;">
                                         <input type="hidden" name="add_product_id" value="${product.productId}"/>
                                         <input type="hidden" name="clearSearch" value="N"/>
                                         <input type="hidden" name="mainSubmitted" value="Y"/>
+                                        <#if hasDefaultQuantity>
+                                        <div class="input-group">
+                                          <input type="hidden" name="defaultQuantity" value="${defaultQuantity}"/>
+                                          <a class="set-default-quantity" class="btn btn-link btn-sm" href="javascript:void(0);">${uiLabelMap.EcommerceSetDefault} (${defaultQuantity})</a>
+                                        </div>
+                                        </#if>
                                         <div class="input-group">
                                           <input type="text" class="form-control form-control-sm" name="quantity" value="${defaultQuantity}"/>
                                           <a href="javascript:document.the${requestAttributes.formNamePrefix!}${requestAttributes.listIndex!}form.submit()" class="btn btn-outline-secondary btn-sm">${uiLabelMap.OrderAddToCart}</a>
                                         </div>
                                         <#if mainProducts?has_content>
                                           <input type="hidden" name="product_id" value=""/>
-                                          <select name="productVariantId" onchange="javascript:displayProductVirtualId(this.value, '${product.productId}', this.form);" style="width: 100%;">
-                                            <option value="">Select Unit Of Measure</option>
+                                          <select name="productVariantId" style="width: 100%;">
+                                            <option value="">${uiLabelMap.ProductUnitOfMeasure}</option>
                                             <#list mainProducts as mainProduct>
                                               <option value="${mainProduct.productId}">${mainProduct.uomDesc} : ${mainProduct.piecesIncluded}</option>
                                             </#list>
@@ -255,7 +277,7 @@
                                       </div>
                                     </form>
                                     <a href="javascript:document.addToCompare${requestAttributes.listIndex!}form.submit()" class="btn btn-link btn-sm">${uiLabelMap.ProductAddToCompare}</a>
-                                    <#if prodCatMem?? && prodCatMem.quantity?? && 0.00 < prodCatMem.quantity?double>
+                                    <#if false && prodCatMem?? && prodCatMem.quantity?? && 0.00 < prodCatMem.quantity?double>
                                     <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="the${requestAttributes.formNamePrefix!}${requestAttributes.listIndex!}defaultform" style="margin: 0;">
                                       <input type="hidden" name="add_product_id" value="${prodCatMem.productId!}"/>
                                       <input type="hidden" name="quantity" value="${prodCatMem.quantity!}"/>

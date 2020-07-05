@@ -46,6 +46,27 @@ a.btn-primary {
 /*    width: auto;*/
     height: 140px;
 }
+.popular-categories {
+    margin-bottom:1px!important;
+}
+
+.popular-categories .card-header {
+    height: 10%;
+}
+.popular-categories .card-body {
+    height: 90%;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.popular-categories .card-body ul.subcategory {
+    height: 85%;
+    border: thin solid;
+    overflow: auto;
+}
+.popular-categories .card-body .card-text {
+    display: none;
+}
+
 .products-card .card {
     height: 100%;
 }
@@ -56,16 +77,19 @@ a.btn-primary {
 .products-card .card-title {
     height: 15%;
     overflow: auto;
-    margin-bottom: 0.15rem;
+    margin-top: 0.1rem;
+    margin-bottom: 0.1rem;
     border: thin solid;
 }
-.products-card .card-text p.product-id {
+.products-card .card-text p {
     margin-bottom: 0.25rem;
 }
 .products-card .card-text {
-    height: 50%;
+    height: 46%;
+    margin-bottom: 0;
     overflow: auto;
     border: thin solid;
+/*    position: relative;*/
 }
 .products-card .card-text .percent-16 {
     height: 16%;
@@ -88,8 +112,12 @@ a.btn-primary {
     border: thin solid;
 }
 .products-card .card-text .product-price {
-    height: 46%;
+    height: 49%;
+    min-height: 49%;
     border: thin solid;
+/*    position: absolute;
+    bottom: 0;
+*/
 }
 .products-card .card-text .product-price dl { /* what is this ? */
     display: none;
@@ -102,8 +130,8 @@ a.btn-primary {
     display: none;
 }
 .products-card .card-body .productbuy {
-    height: 42%;
-    min-height: 42%;
+    height: 39%;
+    min-height: 39%;
     border: thin solid;
     overflow: auto;
 }
@@ -113,7 +141,12 @@ a.btn-primary {
     padding-right: 0.125rem;
 }
 
-.product-price-aggregated, .product-price-compare, .product-price-list,
+.products-card .card-title a {
+    padding-top: 0.125rem;
+    padding-bottom: 0.125rem;
+}
+
+.product-price .product-id, .product-price-compare, .product-price-list,
 .product-price-saved, .product-price-details {
    display: none;
 }
@@ -121,6 +154,15 @@ a.btn-primary {
 .product-price-main p {
     margin-top: 0.2rem;
     margin-bottom: 0.2rem;
+}
+
+.product-price p {
+    line-height: initial;
+}
+
+.product-price-aggregated, .product-price-your {
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .card-body ul {
