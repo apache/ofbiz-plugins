@@ -81,7 +81,7 @@ public final class ProductUtil {
                 if (largeImage != null)
                     dispatchContext.put("largeImage", largeImage);                
                 
-                // if(product.get("productWeight") != null) dispatchContext.put("weight", "");
+                // if (product.get("productWeight") != null) dispatchContext.put("weight", "");
 
                 // Trying to set a correctand trail
                 List<GenericValue> category = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition(UtilMisc.toMap("productId", productId)), null, null, null, false);
@@ -127,8 +127,8 @@ public final class ProductUtil {
                 dispatchContext.put("catalog", catalogs);
 
                 // Alternative
-                // if(category.size()>0) dispatchContext.put("category", category);
-                // if(product.get("popularity") != null) dispatchContext.put("popularity", "");
+                // if (category.size()>0) dispatchContext.put("category", category);
+                // if (product.get("popularity") != null) dispatchContext.put("popularity", "");
 
                 Map<String, Object> featureSet = dispatcher.runSync("getProductFeatureSet", UtilMisc.toMap("productId", productId));
                 if (ServiceUtil.isError(featureSet)) {

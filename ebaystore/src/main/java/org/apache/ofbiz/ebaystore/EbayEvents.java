@@ -537,7 +537,7 @@ public class EbayEvents {
             request.setAttribute("_ERROR_MESSAGE_","Please select ebay category with low level of categories.");
             return "error";
         } else {
-            if (categoryId.contains("true")) categoryId = categoryId.substring(0,categoryId.indexOf(":"));
+            if (categoryId.contains("true")) categoryId = categoryId.substring(0, categoryId.indexOf(":"));
         }
         String productId = (String) requestParams.get("isProductId");
         EbayStoreCategoryFacade cf = null;
@@ -842,7 +842,7 @@ public class EbayEvents {
                                 request.setAttribute("_ERROR_MESSAGE_","Please select ebay store category with low level of categories.");
                                 return "error";
                             } else {
-                                if (ebayStore1Category.contains("true")) ebayStore1Category = ebayStore1Category.substring(0,ebayStore1Category.indexOf(":"));
+                                if (ebayStore1Category.contains("true")) ebayStore1Category = ebayStore1Category.substring(0, ebayStore1Category.indexOf(":"));
                             }
                             storeFront.setStoreCategoryID(new Long(ebayStore1Category));
                             attributeMapList.put("StoreCategoryID", ebayStore1Category);
@@ -854,7 +854,7 @@ public class EbayEvents {
                                 request.setAttribute("_ERROR_MESSAGE_","Please select ebay store category with low level of categories.");
                                 return "error";
                             } else {
-                                if (ebayStore2Category.contains("true")) ebayStore2Category = ebayStore2Category.substring(0,ebayStore2Category.indexOf(":"));
+                                if (ebayStore2Category.contains("true")) ebayStore2Category = ebayStore2Category.substring(0, ebayStore2Category.indexOf(":"));
                             }
                             storeFront.setStoreCategory2ID(new Long(ebayStore2Category));
                             attributeMapList.put("StoreCategory2ID", ebayStore2Category);

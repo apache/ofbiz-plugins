@@ -110,9 +110,9 @@ public class EbayStoreInventoryServices {
 
                 // checkProduct is true then update detail  but is false do create new one.
                 if (checkProd) {
-                    status = updateProductInEbayInventoryFolder(dctx,context);
+                    status = updateProductInEbayInventoryFolder(dctx, context);
                 } else {
-                    status = createNewProductInEbayInventoryFolder(dctx,context);
+                    status = createNewProductInEbayInventoryFolder(dctx, context);
                 }
                 if (status) {
                     Debug.logInfo("Done to updated product ".concat(context.get("productId").toString()), MODULE);
@@ -256,7 +256,7 @@ public class EbayStoreInventoryServices {
                         }
                     }
                     if (!flag) {
-                        folderId = createNewFolderInEbayStoreInventory(dctx,context);
+                        folderId = createNewFolderInEbayStoreInventory(dctx, context);
                     }
                 } else {
                     EbayStoreHelper.createErrorLogMessage(userLogin, dctx.getDispatcher(), context.get("productStoreId").toString(), resp.getAck().toString(), "GetSellingManagerInventoryFolderCall : getFolderInEbayStoreInventory", resp.getErrors(0).getLongMessage());
@@ -364,7 +364,7 @@ public class EbayStoreInventoryServices {
 
         try {
             if (context.get("productStoreId") != null && context.get("facilityId") != null) {
-                ebayProductStoreInventoryList = EntityQuery.use(delegator).from("EbayProductStoreInventory").where("facilityId",(String)context.get("facilityId"),"productStoreId",(String)context.get("productStoreId")).queryList();
+                ebayProductStoreInventoryList = EntityQuery.use(delegator).from("EbayProductStoreInventory").where("facilityId", (String)context.get("facilityId"),"productStoreId", (String)context.get("productStoreId")).queryList();
                 for (GenericValue ebayProductStoreInventory : ebayProductStoreInventoryList) {
                     if (ebayProductStoreInventory.get("ebayProductId") != null) {
                         Map<String, Object> result = dispatcher.runSync("updateEbayInventoryStatusByProductId", UtilMisc.toMap("productStoreId", (String)context.get("productStoreId"), "facilityId", (String)context.get("facilityId"), "folderId", ebayProductStoreInventory.get("folderId"), "productId", ebayProductStoreInventory.get("productId"), "ebayProductId", ebayProductStoreInventory.get("ebayProductId"), "userLogin", context.get("userLogin")));

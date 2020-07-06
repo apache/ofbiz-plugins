@@ -579,7 +579,7 @@ public class HtmlReport extends AbstractReport {
         for (int j=0; j<threads.length; j++) {
             Thread threadInstance = threads[j];
             if (threadInstance instanceof AbstractReportThread) {
-                if(((AbstractReportThread)threadInstance).getUUID().toString().equals(getParamThread(request))) {
+                if (((AbstractReportThread)threadInstance).getUUID().toString().equals(getParamThread(request))) {
                     thread = (AbstractReportThread) threadInstance;
                     break;
                 }

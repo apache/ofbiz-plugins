@@ -129,7 +129,7 @@ public class WebSiteFilter implements Filter {
             }
             request.setAttribute("webSiteId", webSiteId);
             session.setAttribute("displayMaintenancePage", webSite.getString("displayMaintenancePage"));
-            if(UtilValidate.isEmpty(webSite.getString("hostedPathAlias"))) {
+            if (UtilValidate.isEmpty(webSite.getString("hostedPathAlias"))) {
                 request.setAttribute("removePathAlias", false);
             } else {
                 request.setAttribute("removePathAlias", true);

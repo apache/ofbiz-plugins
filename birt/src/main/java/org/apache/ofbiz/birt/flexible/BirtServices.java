@@ -250,7 +250,7 @@ public class BirtServices {
             try {
                 Map<String, Object> resultContent = dispatcher.runSync("createFlexibleReportFromMasterEntityWorkflow", UtilMisc.toMap("entityViewName", entityViewName,
                         "reportName", reportName, "description", description, "writeFilters", writeFilters, "masterContentId", masterContentId, "userLogin", userLogin, "locale", locale));
-                if(ServiceUtil.isError(resultContent)) {
+                if (ServiceUtil.isError(resultContent)) {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultContent));
                 }
                 reportContentId = (String) resultContent.get("contentId");

@@ -201,7 +201,7 @@ public class EbayBestOfferAutoPref {
                 ebayPref.put("enabled", enabled);
                 ebayPref.put("autoPrefEnumId", "EBAY_AUTO_BEST_OFFER");
                 ebayPref.put("productStoreId",productStoreId);
-                result = dispatcher.runSync("createEbayProductStorePref",ebayPref);
+                result = dispatcher.runSync("createEbayProductStorePref", ebayPref);
                 if (ServiceUtil.isError(result)) {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
                 }
@@ -210,7 +210,7 @@ public class EbayBestOfferAutoPref {
                 ebayPref.put("enabled", enabled);
                 ebayPref.put("autoPrefEnumId", "EBAY_AUTO_BEST_OFFER");
                 ebayPref.put("productStoreId",productStoreId);
-                result = dispatcher.runSync("updateEbayProductStorePref",ebayPref);
+                result = dispatcher.runSync("updateEbayProductStorePref", ebayPref);
                 if (ServiceUtil.isError(result)) {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
                 }
@@ -222,8 +222,8 @@ public class EbayBestOfferAutoPref {
                     Map<String, Object> ebayPrefCond = UtilMisc.<String, Object>toMap("userLogin", userLogin);
                     for (int i = 0; i < productPref.size(); i++) {
                         ebayPrefCond.put("prefCondId",productPref.get(i).getString("prefCondId"));
-                        ebayPrefCond.put("acceptanceCondition",condition[i]);
-                        result = dispatcher.runSync("updateEbayProductStorePrefCond",ebayPrefCond);
+                        ebayPrefCond.put("acceptanceCondition", condition[i]);
+                        result = dispatcher.runSync("updateEbayProductStorePrefCond", ebayPrefCond);
                         if (ServiceUtil.isError(result)) {
                             return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
                         }

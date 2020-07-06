@@ -268,7 +268,7 @@ public final class SolrUtil {
                 solrQuery.setRows(0);
             }
             
-            if(UtilValidate.isNotEmpty(facetPrefix)){
+            if (UtilValidate.isNotEmpty(facetPrefix)){
                 solrQuery.setFacetPrefix(facetPrefix);
             }
             

@@ -230,7 +230,7 @@ public class EbayStore {
         if (UtilValidate.isEmpty(context.get("prodCatalogId")) || UtilValidate.isEmpty(context.get("productStoreId")) || UtilValidate.isEmpty(context.get("partyId"))) {
             return ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE, "EbayStoreSetCatalogIdAndProductStoreId", locale));
         }
-        if (!EbayStoreHelper.validatePartyAndRoleType(delegator,context.get("partyId").toString())) {
+        if (!EbayStoreHelper.validatePartyAndRoleType(delegator, context.get("partyId").toString())) {
             return ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE, "EbayStorePartyWithoutRoleEbayAccount", UtilMisc.toMap("partyId", context.get("partyId").toString()), locale));
         }
         try {
@@ -244,7 +244,7 @@ public class EbayStore {
                 for (GenericValue catalogCategory : catalogCategories) {
                     GenericValue productCategory = catalogCategory.getRelatedOne("ProductCategory", false);
                     if (productCategory != null) {
-                        String ebayCategoryId = EbayStoreHelper.retriveEbayCategoryIdByPartyId(delegator,productCategory.getString("productCategoryId"),context.get("partyId").toString());
+                        String ebayCategoryId = EbayStoreHelper.retriveEbayCategoryIdByPartyId(delegator,productCategory.getString("productCategoryId"), context.get("partyId").toString());
                         StoreCustomCategoryType categoryType = new StoreCustomCategoryType();
                         if (ebayCategoryId == null) {
                             categoryType.setName(productCategory.getString("categoryName"));
@@ -261,14 +261,14 @@ public class EbayStore {
                     categoryArrayType = new StoreCustomCategoryArrayType();
                     categoryArrayType.setCustomCategory(toStoreCustomCategoryTypeArray(listAdd));
                     req.setStoreCategories(categoryArrayType);
-                    result = excuteExportCategoryToEbayStore(call, req, StoreCategoryUpdateActionCodeType.ADD, delegator,context.get("partyId").toString(), catalogCategories, locale);
+                    result = excuteExportCategoryToEbayStore(call, req, StoreCategoryUpdateActionCodeType.ADD, delegator, context.get("partyId").toString(), catalogCategories, locale);
                 }
                 if (listEdit.size() > 0) {
                     req = new SetStoreCategoriesRequestType();
                     categoryArrayType = new StoreCustomCategoryArrayType();
                     categoryArrayType.setCustomCategory(toStoreCustomCategoryTypeArray(listEdit));
                     req.setStoreCategories(categoryArrayType);
-                    result = excuteExportCategoryToEbayStore(call, req, StoreCategoryUpdateActionCodeType.RENAME, delegator,context.get("partyId").toString(), catalogCategories, locale);
+                    result = excuteExportCategoryToEbayStore(call, req, StoreCategoryUpdateActionCodeType.RENAME, delegator, context.get("partyId").toString(), catalogCategories, locale);
                 }
 
                 //start at level 1 of categories
@@ -300,7 +300,7 @@ public class EbayStore {
                             categoryArrayType.setCustomCategory(toStoreCustomCategoryTypeArray(listAdd));
                             req.setStoreCategories(categoryArrayType);
                             req.setDestinationParentCategoryID(new Long(ebayParentCategoryId));
-                            result = excuteExportCategoryToEbayStore(call, req, StoreCategoryUpdateActionCodeType.ADD, delegator,context.get("partyId").toString(), catalogCategories, locale);
+                            result = excuteExportCategoryToEbayStore(call, req, StoreCategoryUpdateActionCodeType.ADD, delegator, context.get("partyId").toString(), catalogCategories, locale);
                         }
                         if (listEdit.size() > 0) {
                             req = new SetStoreCategoriesRequestType();
@@ -308,7 +308,7 @@ public class EbayStore {
                             categoryArrayType.setCustomCategory(toStoreCustomCategoryTypeArray(listEdit));
                             req.setStoreCategories(categoryArrayType);
                             req.setDestinationParentCategoryID(new Long(ebayParentCategoryId));
-                            result = excuteExportCategoryToEbayStore(call, req, StoreCategoryUpdateActionCodeType.RENAME, delegator,context.get("partyId").toString(), catalogCategories, locale);
+                            result = excuteExportCategoryToEbayStore(call, req, StoreCategoryUpdateActionCodeType.RENAME, delegator, context.get("partyId").toString(), catalogCategories, locale);
                         }
                     }
                 }
@@ -320,13 +320,13 @@ public class EbayStore {
                     if (productCategory != null) {
                         List<GenericValue> productParentCategoryRollupList = EntityQuery.use(delegator).from("ProductCategoryRollup").where("parentProductCategoryId",productCategory.getString("productCategoryId")).orderBy("sequenceNum ASC").queryList();
                         for (GenericValue productParentCategoryRollup : productParentCategoryRollupList) {
-                            String ebayParentCategoryId = EbayStoreHelper.retriveEbayCategoryIdByPartyId(delegator,productParentCategoryRollup.getString("productCategoryId"),context.get("partyId").toString());
+                            String ebayParentCategoryId = EbayStoreHelper.retriveEbayCategoryIdByPartyId(delegator,productParentCategoryRollup.getString("productCategoryId"), context.get("partyId").toString());
                             if (ebayParentCategoryId != null) {
                                 List<GenericValue> productChildCategoryRollupList = EntityQuery.use(delegator).from("ProductCategoryRollup").where("parentProductCategoryId",productParentCategoryRollup.getString("productCategoryId")).orderBy("sequenceNum ASC").queryList();
                                 for (GenericValue productChildCategoryRollup : productChildCategoryRollupList) {
                                     productCategory = EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", productChildCategoryRollup.getString("productCategoryId")).queryOne();
                                     StoreCustomCategoryType childCategoryType = new StoreCustomCategoryType();
-                                    String ebayChildCategoryId = EbayStoreHelper.retriveEbayCategoryIdByPartyId(delegator,productCategory.getString("productCategoryId"),context.get("partyId").toString());
+                                    String ebayChildCategoryId = EbayStoreHelper.retriveEbayCategoryIdByPartyId(delegator,productCategory.getString("productCategoryId"), context.get("partyId").toString());
                                     if (ebayChildCategoryId == null) {
                                         childCategoryType.setName(productCategory.getString("categoryName"));
                                         listAdd.add(childCategoryType);
@@ -398,7 +398,7 @@ public class EbayStore {
                         for (StoreCustomCategoryType returnCategoryType : returnCategoryTypeList) {
                             List<GenericValue> productCategoryList = EntityQuery.use(delegator).from("ProductCategory").where("categoryName",returnCategoryType.getName(),"productCategoryTypeId","EBAY_CATEGORY").queryList();
                             for (GenericValue productCategory : productCategoryList) {
-                                if (EbayStoreHelper.veriflyCategoryInCatalog(delegator,catalogCategories,productCategory.getString("productCategoryId"))) {
+                                if (EbayStoreHelper.veriflyCategoryInCatalog(delegator, catalogCategories,productCategory.getString("productCategoryId"))) {
                                     if (EbayStoreHelper.createEbayCategoryIdByPartyId(delegator, productCategory.getString("productCategoryId"), partyId, String.valueOf(returnCategoryType.getCategoryID()))) {
                                         Debug.logInfo("Create new ProductCategoryRollup with partyId "+partyId+" categoryId "+productCategory.getString("productCategoryId")+ " and ebayCategoryId "+String.valueOf(returnCategoryType.getCategoryID()), MODULE);
                                     }
@@ -649,7 +649,7 @@ public class EbayStore {
                     result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
                     //result.put(ModelService.SUCCESS_MESSAGE, UtilProperties.getMessage(RESOURCE, "EbayStoreLoadSuccess", locale));
                     // update product store in ofbiz
-                    updateProductStore(dctx, context, returnedStoreType,(String) context.get("productStoreId"));
+                    updateProductStore(dctx, context, returnedStoreType, (String) context.get("productStoreId"));
                     Map<String,Object> ebayResp = new HashMap<>();
                     ebayResp.put("storeName", returnedStoreType.getName());
                     ebayResp.put("storeUrl", returnedStoreType.getURL());
@@ -1184,7 +1184,7 @@ public class EbayStore {
                             descFaces.add(storeFontTypeDescFaceMap);
                             j++;
                         }
-                        advanceFontTheme.put("storeFontTypeFontDescList",descFaces);
+                        advanceFontTheme.put("storeFontTypeFontDescList", descFaces);
 
                         j = 0;
                         storeFontType.getDescSize();
@@ -1198,7 +1198,7 @@ public class EbayStore {
                             descSizes.add(storeFontSizeCodeTypeMap);
                             j++;
                         }
-                        advanceFontTheme.put("storeDescSizeList",descSizes);
+                        advanceFontTheme.put("storeDescSizeList", descSizes);
                         i++;
                     }
                     result = ServiceUtil.returnSuccess(UtilProperties.getMessage(RESOURCE, "EbayStoreLoadBasicThemeSuccess", locale));
@@ -1316,7 +1316,7 @@ public class EbayStore {
                     result = ServiceUtil.returnError(resp.getMessage());
                 }
                 LocalDispatcher dispatcher = dctx.getDispatcher();
-                Map<String,Object> results = dispatcher.runSync("getEbayStoreOutput",UtilMisc.toMap("productStoreId",(String) context.get("productStoreId"),"userLogin",context.get("userLogin")));
+                Map<String,Object> results = dispatcher.runSync("getEbayStoreOutput",UtilMisc.toMap("productStoreId", (String) context.get("productStoreId"),"userLogin", context.get("userLogin")));
                 if (ServiceUtil.isError(results)) {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(results));
                 }
@@ -2352,7 +2352,7 @@ public class EbayStore {
     
     public static Map<String ,Object> getClosedItem(ItemType tempItems) {
         Map <String, Object> result = new HashMap<>();
-        if(UtilValidate.isNotEmpty(tempItems)) {
+        if (UtilValidate.isNotEmpty(tempItems)) {
             double hitCount = 0;
             int quantity = 0;
             int bidCount = 0;
@@ -2367,26 +2367,26 @@ public class EbayStore {
             result.put("itemId", itemId);
             result.put("SKU", SKU);
             result.put("title", title);
-            if(UtilValidate.isNotEmpty(tempItems.getBuyItNowPrice())) {
+            if (UtilValidate.isNotEmpty(tempItems.getBuyItNowPrice())) {
                 buyItNowPrice = tempItems.getBuyItNowPrice().getValue();
             }
-            if(UtilValidate.isNotEmpty(tempItems.getHitCount())) {
+            if (UtilValidate.isNotEmpty(tempItems.getHitCount())) {
                 hitCount = tempItems.getHitCount();
             }
-            if(UtilValidate.isNotEmpty(tempItems.getReservePrice())) {
+            if (UtilValidate.isNotEmpty(tempItems.getReservePrice())) {
                 reservePrice = tempItems.getReservePrice().getValue();
             }
-            if(UtilValidate.isNotEmpty(tempItems.getSellingStatus().getBidCount())) {
+            if (UtilValidate.isNotEmpty(tempItems.getSellingStatus().getBidCount())) {
                 bidCount= tempItems.getSellingStatus().getBidCount();
             }
-            if(UtilValidate.isNotEmpty(tempItems.getListingDetails().getEndTime())) {
+            if (UtilValidate.isNotEmpty(tempItems.getListingDetails().getEndTime())) {
                 Calendar endTimeItem = tempItems.getListingDetails().getEndTime();
                 endTime = eBayUtil.toAPITimeString(endTimeItem.getTime());
             }
-            if(UtilValidate.isNotEmpty(tempItems.getListingDetails().getViewItemURL())) {
+            if (UtilValidate.isNotEmpty(tempItems.getListingDetails().getViewItemURL())) {
                 viewItemURL = tempItems.getListingDetails().getViewItemURL();
             }
-            if(UtilValidate.isNotEmpty(tempItems.getListingType().value())) {
+            if (UtilValidate.isNotEmpty(tempItems.getListingType().value())) {
                 listingType = tempItems.getListingType().value();
             }
 
@@ -2403,7 +2403,7 @@ public class EbayStore {
     }
 
     public static Map<String, Object> getShippingDetail(AddressType shippingAddress, Locale locale) {
-        if(UtilValidate.isEmpty(shippingAddress)) {
+        if (UtilValidate.isEmpty(shippingAddress)) {
             return ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE, "EbayStoreRequiredShippingAddressParameter", locale));
         }
         Map<String, Object> result = new HashMap<>();
@@ -2417,34 +2417,34 @@ public class EbayStore {
         String countryName = null;
         String phone = null;
         String postalCode = null;
-        if(UtilValidate.isNotEmpty(shippingAddress.getName())) {
+        if (UtilValidate.isNotEmpty(shippingAddress.getName())) {
             buyerName = shippingAddress.getName();
         }
-        if(UtilValidate.isNotEmpty(shippingAddress.getStreet())) {
+        if (UtilValidate.isNotEmpty(shippingAddress.getStreet())) {
             street = shippingAddress.getStreet();
         }
-        if(UtilValidate.isNotEmpty(shippingAddress.getStreet1())) {
+        if (UtilValidate.isNotEmpty(shippingAddress.getStreet1())) {
             street = shippingAddress.getStreet1();
         }
-        if(UtilValidate.isNotEmpty(shippingAddress.getStreet2())) {
+        if (UtilValidate.isNotEmpty(shippingAddress.getStreet2())) {
             street = shippingAddress.getStreet2();
         }
-        if(UtilValidate.isNotEmpty(shippingAddress.getCityName())) {
+        if (UtilValidate.isNotEmpty(shippingAddress.getCityName())) {
             cityName = shippingAddress.getCityName();
         }
-        if(UtilValidate.isNotEmpty(shippingAddress.getStateOrProvince())) {
+        if (UtilValidate.isNotEmpty(shippingAddress.getStateOrProvince())) {
             stateOrProvince = shippingAddress.getStateOrProvince();
         }
-        if(UtilValidate.isNotEmpty(shippingAddress.getCountry())) {
+        if (UtilValidate.isNotEmpty(shippingAddress.getCountry())) {
             county = shippingAddress.getCountry().value();
         }
-        if(UtilValidate.isNotEmpty(shippingAddress.getCountryName())) {
+        if (UtilValidate.isNotEmpty(shippingAddress.getCountryName())) {
             countryName = shippingAddress.getCountryName();
         }
-        if(UtilValidate.isNotEmpty(shippingAddress.getPhone())) {
+        if (UtilValidate.isNotEmpty(shippingAddress.getPhone())) {
             phone = shippingAddress.getPhone();
         }
-        if(UtilValidate.isNotEmpty(shippingAddress.getPostalCode())) {
+        if (UtilValidate.isNotEmpty(shippingAddress.getPostalCode())) {
             postalCode = shippingAddress.getPostalCode();
         }
         result.put("buyerName", buyerName);
@@ -2463,7 +2463,7 @@ public class EbayStore {
         boolean checkResult = false;
         try {
             GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne();
-            if(product != null) {
+            if (product != null) {
                 checkResult = true;
             }
         } catch(GenericEntityException e) {
@@ -2473,7 +2473,7 @@ public class EbayStore {
     }
     public static Map<String, Object> getTransactionHelper(TransactionType transaction, Locale locale) {
         Map<String, Object> orderMap = new HashMap<>();
-        if(UtilValidate.isNotEmpty(transaction)) {
+        if (UtilValidate.isNotEmpty(transaction)) {
             String orderId = null;
             String externalId = null;
             String createdDate = null;
@@ -2502,7 +2502,7 @@ public class EbayStore {
             Map<String, Object> itemSold = new HashMap<>();
             Map<String, Object> address = new HashMap<>();
 
-            if(UtilValidate.isNotEmpty(transaction.getItem())) {
+            if (UtilValidate.isNotEmpty(transaction.getItem())) {
                 ItemType item = transaction.getItem();
                 itemId = item.getItemID();
                 title = item.getTitle();
@@ -2510,7 +2510,7 @@ public class EbayStore {
                 buyItNowPrice = item.getBuyItNowPrice().getValue();
                 currency = item.getCurrency().value();
 
-                if(UtilValidate.isNotEmpty(item.getListingDetails())) {
+                if (UtilValidate.isNotEmpty(item.getListingDetails())) {
                     viewItemURL = item.getListingDetails().getViewItemURL();
                 }
             }
@@ -2541,7 +2541,7 @@ public class EbayStore {
             if (UtilValidate.isNotEmpty(transaction.getAmountPaid())) {
                 amountPaid = transaction.getAmountPaid().getValue();
             }
-            if(UtilValidate.isNotEmpty(transaction.getBuyer())) {
+            if (UtilValidate.isNotEmpty(transaction.getBuyer())) {
                 UserType getBuyer = transaction.getBuyer();
                 buyer = transaction.getBuyer().getUserID();
                 if (UtilValidate.isNotEmpty(getBuyer.getEmail())) {
@@ -2556,10 +2556,10 @@ public class EbayStore {
                     address = getShippingDetail(shipping, locale);
                 }
             }
-            if(UtilValidate.isNotEmpty(transaction.getStatus())) {
-                if(UtilValidate.isNotEmpty(transaction.getStatus().getPaymentMethodUsed()))
+            if (UtilValidate.isNotEmpty(transaction.getStatus())) {
+                if (UtilValidate.isNotEmpty(transaction.getStatus().getPaymentMethodUsed()))
                     paymentMethod = transaction.getStatus().getPaymentMethodUsed().value();
-                if(UtilValidate.isNotEmpty(transaction.getStatus().getCheckoutStatus()))
+                if (UtilValidate.isNotEmpty(transaction.getStatus().getCheckoutStatus()))
                     checkoutStatus = transaction.getStatus().getCheckoutStatus().value();
             }
             if (UtilValidate.isNotEmpty(transaction.getShippingServiceSelected())) {

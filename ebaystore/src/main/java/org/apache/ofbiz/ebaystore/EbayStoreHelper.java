@@ -217,7 +217,7 @@ public class EbayStoreHelper {
             productCategoryRole.put("partyId", partyId);
             productCategoryRole.put("roleTypeId","EBAY_ACCOUNT");
             productCategoryRole.put("fromDate",UtilDateTime.nowTimestamp());
-            productCategoryRole.put("comments",ebayCategoryId);
+            productCategoryRole.put("comments", ebayCategoryId);
             productCategoryRole.create();
         } catch (GenericEntityException e) {
             Debug.logError(e.getMessage(), MODULE);
@@ -236,7 +236,7 @@ public class EbayStoreHelper {
                     break;
                 } else {
                     // check from child category level 1
-                    List<GenericValue> productCategoryRollupList = EntityQuery.use(delegator).from("ProductCategoryRollup").where("parentProductCategoryId",catalogCategory.getString("productCategoryId")).queryList();
+                    List<GenericValue> productCategoryRollupList = EntityQuery.use(delegator).from("ProductCategoryRollup").where("parentProductCategoryId", catalogCategory.getString("productCategoryId")).queryList();
                     for (GenericValue productCategoryRollup : productCategoryRollupList) {
                         if (productCategoryRollup.containsValue(productCategoryId)) {
                             flag = true;

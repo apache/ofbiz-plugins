@@ -339,7 +339,7 @@ public abstract class SolrProductSearch {
                 solrQuery.setFields((String) context.get("returnFields"));
             }
 
-            // if((Boolean)context.get("sortByReverse"))order.reverse();
+            // if ((Boolean)context.get("sortByReverse"))order.reverse();
             if ((String) context.get("sortBy") != null && ((String) context.get("sortBy")).length() > 0) {
                 SolrQuery.ORDER order;
                 if (!((Boolean) context.get("sortByReverse")))

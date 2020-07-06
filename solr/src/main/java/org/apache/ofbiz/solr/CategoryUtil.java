@@ -141,7 +141,7 @@ public final class CategoryUtil {
         
         if (catMember.length() == 0){catMember.append(productCategoryId);}
         
-        if(showDepth) {
+        if (showDepth) {
             cm = i +"/"+ catMember.toString();
         } else {
             cm = catMember.toString();
