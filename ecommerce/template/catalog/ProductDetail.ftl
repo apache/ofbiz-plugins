@@ -63,7 +63,7 @@ ${virtualVariantJavaScript!}
         else {
             var elem = document.getElementById('variant_price_display');
             var price = getVariantPrice(sku);
-            var txt = document.createTextNode(price);
+            var txt = document.createTextNode(price || '');
             if(elem.hasChildNodes()) {
                 elem.replaceChild(txt, elem.firstChild);
             } else {
@@ -705,7 +705,7 @@ $(function(){
             <div id="addCart2" style="display:block;">
               <span style="white-space: nowrap;"><strong>${uiLabelMap.CommonQuantity}:</strong></span>&nbsp;
               <input type="text" class="form-control" size="5" value="1" disabled="disabled"/>
-              <a href="javascript:showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonPleaseSelectAllFeaturesFirst}");"
+              <a href="javascript:showErrorAlert('${uiLabelMap.CommonErrorMessage2}','${uiLabelMap.CommonPleaseSelectAllFeaturesFirst}');"
               class="btn btn-outline-secondary"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
               &nbsp;
             </div>
@@ -738,7 +738,7 @@ $(function(){
           <#if mainProducts?has_content>
             <input type="hidden" name="product_id" value=""/>
             <select name="productVariantId" class="form-control" onchange="javascript:displayProductVirtualVariantId(this.value);">
-              <option value="">Select Unit Of Measure</option>
+              <option value="">${uiLabelMap.CommonSelect} ${uiLabelMap.ProductUnitOfMeasure}</option>
               <#list mainProducts as mainProduct>
                 <option value="${mainProduct.productId}">${mainProduct.uomDesc} : ${mainProduct.piecesIncluded}</option>
               </#list>

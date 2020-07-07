@@ -264,7 +264,7 @@
                                         <#if mainProducts?has_content>
                                           <input type="hidden" name="product_id" value=""/>
                                           <select name="productVariantId" style="width: 100%;">
-                                            <option value="">${uiLabelMap.ProductUnitOfMeasure}</option>
+                                            <option value="">${uiLabelMap.CommonSelect} ${uiLabelMap.ProductUnitOfMeasure}</option>
                                             <#list mainProducts as mainProduct>
                                               <option value="${mainProduct.productId}">${mainProduct.uomDesc} : ${mainProduct.piecesIncluded}</option>
                                             </#list>
