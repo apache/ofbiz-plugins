@@ -197,10 +197,10 @@ public class EbayBestOfferAutoPref {
                 }
 
                 Map<String, Object> ebayPref = UtilMisc.<String, Object>toMap("userLogin", userLogin, "serviceName", "autoBestOffer");
-                ebayPref.put("parentPrefCondId",parentPrefCondId);
+                ebayPref.put("parentPrefCondId", parentPrefCondId);
                 ebayPref.put("enabled", enabled);
                 ebayPref.put("autoPrefEnumId", "EBAY_AUTO_BEST_OFFER");
-                ebayPref.put("productStoreId",productStoreId);
+                ebayPref.put("productStoreId", productStoreId);
                 result = dispatcher.runSync("createEbayProductStorePref", ebayPref);
                 if (ServiceUtil.isError(result)) {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
@@ -209,19 +209,19 @@ public class EbayBestOfferAutoPref {
                 Map<String, Object> ebayPref = UtilMisc.<String, Object>toMap("userLogin", userLogin, "serviceName", "autoBestOffer");
                 ebayPref.put("enabled", enabled);
                 ebayPref.put("autoPrefEnumId", "EBAY_AUTO_BEST_OFFER");
-                ebayPref.put("productStoreId",productStoreId);
+                ebayPref.put("productStoreId", productStoreId);
                 result = dispatcher.runSync("updateEbayProductStorePref", ebayPref);
                 if (ServiceUtil.isError(result)) {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
                 }
 
                 String parentPrefCondId = productStorePref.getString("parentPrefCondId");
-                List<GenericValue> productPref = EntityQuery.use(delegator).from("EbayProductStorePrefCond").where("parentPrefCondId",parentPrefCondId).queryList();
+                List<GenericValue> productPref = EntityQuery.use(delegator).from("EbayProductStorePrefCond").where("parentPrefCondId", parentPrefCondId).queryList();
                 if (productPref.size() != 0) {
                     String[] condition = {condition1, condition2, condition3, condition4, condition5, condition6, condition7, condition8, condition9, condition10, condition11};
                     Map<String, Object> ebayPrefCond = UtilMisc.<String, Object>toMap("userLogin", userLogin);
                     for (int i = 0; i < productPref.size(); i++) {
-                        ebayPrefCond.put("prefCondId",productPref.get(i).getString("prefCondId"));
+                        ebayPrefCond.put("prefCondId", productPref.get(i).getString("prefCondId"));
                         ebayPrefCond.put("acceptanceCondition", condition[i]);
                         result = dispatcher.runSync("updateEbayProductStorePrefCond", ebayPrefCond);
                         if (ServiceUtil.isError(result)) {

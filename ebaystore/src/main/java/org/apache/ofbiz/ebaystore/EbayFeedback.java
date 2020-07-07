@@ -74,7 +74,7 @@ public class EbayFeedback {
             String userID = (String)resultUser.get("userLoginId");
             GetFeedbackCall feedbackCall = new GetFeedbackCall();
             feedbackCall.setApiContext(apiContext);
-            SiteCodeType siteCodeType = EbayStoreHelper.getSiteCodeType(productStoreId,locale, delegator);
+            SiteCodeType siteCodeType = EbayStoreHelper.getSiteCodeType(productStoreId, locale, delegator);
             feedbackCall.setSite(siteCodeType);
             feedbackCall.setUserID(userID);
             DetailLevelCodeType[] detailLevelCodeType = {DetailLevelCodeType.RETURN_ALL};

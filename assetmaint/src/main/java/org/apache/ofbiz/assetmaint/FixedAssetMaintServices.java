@@ -102,7 +102,7 @@ public class FixedAssetMaintServices {
                 itemIssuanceCtx.put("maintHistSeqId", maintHistSeqId);
                 itemIssuanceCtx.put("quantity", issueQuantity);
                 // Call issuance service
-                result = dispatcher.runSync("issueInventoryItemToFixedAssetMaint",itemIssuanceCtx);
+                result = dispatcher.runSync("issueInventoryItemToFixedAssetMaint", itemIssuanceCtx);
                 if (ServiceUtil.isError(result)) {
                     return ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE, "AssetMaintProblemCallingService", locale), null, null, result);
                 }

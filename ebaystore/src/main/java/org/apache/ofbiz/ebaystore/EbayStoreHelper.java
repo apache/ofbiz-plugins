@@ -213,7 +213,7 @@ public class EbayStoreHelper {
                 return false;
             }
             GenericValue productCategoryRole = delegator.makeValue("ProductCategoryRole");
-            productCategoryRole.put("productCategoryId",productCategoryId);
+            productCategoryRole.put("productCategoryId", productCategoryId);
             productCategoryRole.put("partyId", partyId);
             productCategoryRole.put("roleTypeId","EBAY_ACCOUNT");
             productCategoryRole.put("fromDate",UtilDateTime.nowTimestamp());
@@ -243,7 +243,7 @@ public class EbayStoreHelper {
                             break;
                         } else {
                             // check from level 2
-                            List<GenericValue> prodCategoryRollupList = EntityQuery.use(delegator).from("ProductCategoryRollup").where("parentProductCategoryId",productCategoryRollup.getString("productCategoryId")).queryList();
+                            List<GenericValue> prodCategoryRollupList = EntityQuery.use(delegator).from("ProductCategoryRollup").where("parentProductCategoryId", productCategoryRollup.getString("productCategoryId")).queryList();
                             for (GenericValue prodCategoryRollup : prodCategoryRollupList) {
                                 if (prodCategoryRollup.containsValue(productCategoryId)) {
                                     flag = true;
@@ -736,7 +736,7 @@ public class EbayStoreHelper {
     }
 
     public static String convertDate(Date date, Locale locale) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",locale);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", locale);
         return simpleDateFormat.format(date);
     }
 }

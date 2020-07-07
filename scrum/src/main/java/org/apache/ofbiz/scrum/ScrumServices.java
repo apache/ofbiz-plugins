@@ -80,7 +80,7 @@ public class ScrumServices {
                                     communicationEventProduct.create();
                                 }
                                 try {
-                                    GenericValue productRoleMap = EntityQuery.use(delegator).from("ProductRole").where("productId",productId, "partyId", communicationEvent.getString("partyIdFrom"), "roleTypeId","PRODUCT_OWNER").queryFirst();
+                                    GenericValue productRoleMap = EntityQuery.use(delegator).from("ProductRole").where("productId", productId, "partyId", communicationEvent.getString("partyIdFrom"), "roleTypeId","PRODUCT_OWNER").queryFirst();
                                     GenericValue userLogin = (GenericValue) context.get("userLogin");
                                     // also close the incoming communication event
                                     if (UtilValidate.isNotEmpty(productRoleMap)) {

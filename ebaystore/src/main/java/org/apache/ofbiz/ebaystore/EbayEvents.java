@@ -284,7 +284,7 @@ public class EbayEvents {
                     request.setAttribute("productStoreId", request.getParameter("productStoreId"));
                     return "prepare";
                 }
-                getSiteFacade(apiContext,request);
+                getSiteFacade(apiContext, request);
             } else {
                 request.setAttribute("_ERROR_MESSAGE_","No apiContext for this account or this site please register on ebay or check you user account.");
                 return "error";
@@ -317,7 +317,7 @@ public class EbayEvents {
         }
 
         if (UtilValidate.isEmpty(session.getAttribute(siteFacadeName))) {
-            session.setAttribute(siteFacadeName,new EbayStoreSiteFacade(apiContext));
+            session.setAttribute(siteFacadeName, new EbayStoreSiteFacade(apiContext));
             if (UtilValidate.isNotEmpty(session.getAttribute(siteFacadeName))) {
                 siteFacade = (EbayStoreSiteFacade)session.getAttribute(siteFacadeName);
             }
@@ -388,7 +388,7 @@ public class EbayEvents {
         }
 
         ApiContext apiContext = getApiContext(request);
-        sf = getSiteFacade(apiContext,request);
+        sf = getSiteFacade(apiContext, request);
         if (UtilValidate.isNotEmpty(sf)) {
             Map<SiteCodeType, List<CategoryType>> csCateMaps = sf.getSiteCategoriesCSMap();
             List<CategoryType> csCateList = csCateMaps.get(apiContext.getSite());
@@ -445,7 +445,7 @@ public class EbayEvents {
         }
 
         ApiContext apiContext = getApiContext(request);
-        sf = getSiteFacade(apiContext,request);
+        sf = getSiteFacade(apiContext, request);
         if (UtilValidate.isNotEmpty(sf)) {
             Map<SiteCodeType, List<StoreCustomCategoryType>> csCateMaps = sf.getSiteStoreCategoriesMap();
             csCateList = csCateMaps.get(apiContext.getSite());
@@ -497,7 +497,7 @@ public class EbayEvents {
         }
 
         ApiContext apiContext = getApiContext(request);
-        sf = getSiteFacade(apiContext,request);
+        sf = getSiteFacade(apiContext, request);
         if (UtilValidate.isNotEmpty(sf)) {
             Map<SiteCodeType, List<CategoryType>> csCateMaps = sf.getSiteCategoriesCSMap();
             List<CategoryType> csCateList = csCateMaps.get(apiContext.getSite());

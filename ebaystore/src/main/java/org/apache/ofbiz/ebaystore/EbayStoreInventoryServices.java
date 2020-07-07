@@ -330,10 +330,10 @@ public class EbayStoreInventoryServices {
                         SellingManagerProductDetailsType productDetail = sellingManagerProductType.getSellingManagerProductDetails();
                         if (String.valueOf(productDetail.getFolderID()).equals(folderId) && String.valueOf(productDetail.getProductID()).equals(ebayProductId) && String.valueOf(productDetail.getCustomLabel()).equals(productId)) {
                             SellingManagerProductInventoryStatusType prodInventoryStatus = sellingManagerProductType.getSellingManagerProductInventoryStatus();
-                            ebayProductStoreInventory.put("activeListing",new BigDecimal(prodInventoryStatus.getQuantityActive()));
-                            ebayProductStoreInventory.put("scheduled",new BigDecimal(prodInventoryStatus.getQuantityScheduled()));
-                            ebayProductStoreInventory.put("sold",new BigDecimal(prodInventoryStatus.getQuantitySold()));
-                            ebayProductStoreInventory.put("unSold",new BigDecimal(prodInventoryStatus.getQuantityUnsold()));
+                            ebayProductStoreInventory.put("activeListing", new BigDecimal(prodInventoryStatus.getQuantityActive()));
+                            ebayProductStoreInventory.put("scheduled", new BigDecimal(prodInventoryStatus.getQuantityScheduled()));
+                            ebayProductStoreInventory.put("sold", new BigDecimal(prodInventoryStatus.getQuantitySold()));
+                            ebayProductStoreInventory.put("unSold", new BigDecimal(prodInventoryStatus.getQuantityUnsold()));
                             ebayProductStoreInventory.store();
                             result = ServiceUtil.returnSuccess(UtilProperties.getMessage(RESOURCE, "EbayStoreInventoryStatusUpdated", UtilMisc.toMap("productId", productId), locale));
                             break;
