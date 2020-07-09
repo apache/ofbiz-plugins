@@ -94,7 +94,7 @@ public class EbayStoreHelper {
     private static final String MODULE = EbayStoreHelper.class.getName();
     private static final String RESOURCE = "EbayStoreUiLabels";
 
-    public static ApiContext getApiContext(String productStoreId,Locale locale, Delegator delegator) {
+    public static ApiContext getApiContext(String productStoreId, Locale locale, Delegator delegator) {
        Map<String, Object> context = new HashMap<>();
        context.put("locale", locale);
        context.put("productStoreId", productStoreId);
@@ -168,12 +168,12 @@ public class EbayStoreHelper {
         GenericValue partyRole = null;
         try {
             if (partyId == null) {
-                Debug.logError("Require field partyId.",MODULE);
+                Debug.logError("Require field partyId.", MODULE);
                 return false;
             }
             partyRole = EntityQuery.use(delegator).from("PartyRole").where("partyId", partyId, "roleTypeId", "EBAY_ACCOUNT").queryOne();
             if (partyRole == null) {
-                Debug.logError("Party Id ".concat(partyId).concat("not have roleTypeId EBAY_ACCOUNT"),MODULE);
+                Debug.logError("Party Id ".concat(partyId).concat("not have roleTypeId EBAY_ACCOUNT"), MODULE);
                 return false;
             }
         } catch (GenericEntityException e) {
@@ -188,7 +188,7 @@ public class EbayStoreHelper {
         List<GenericValue> productCategoryRoles = null;
         try {
             if (partyId == null) {
-                Debug.logError("Require field partyId.",MODULE);
+                Debug.logError("Require field partyId.", MODULE);
                 return ebayCategoryId;
             }
             productCategoryRoles = EntityQuery.use(delegator).from("ProductCategoryRole").where("productCategoryId", productCategoryId, "partyId", partyId, "roleTypeId", "EBAY_ACCOUNT").queryList();
@@ -197,7 +197,7 @@ public class EbayStoreHelper {
                     ebayCategoryId = productCategoryRole.getString("comments");
                 }
             } else {
-                Debug.logInfo("Party Id ".concat(partyId).concat(" Not found productCategoryRole with productCategoryId "+ productCategoryId),MODULE);
+                Debug.logInfo("Party Id ".concat(partyId).concat(" Not found productCategoryRole with productCategoryId "+ productCategoryId), MODULE);
                 return ebayCategoryId;
             }
         } catch (GenericEntityException e) {
@@ -209,14 +209,14 @@ public class EbayStoreHelper {
     public static boolean createEbayCategoryIdByPartyId(Delegator delegator, String productCategoryId, String partyId, String ebayCategoryId) {
         try {
             if (partyId == null && ebayCategoryId != null) {
-                Debug.logError("Require field partyId and ebayCategoryId.",MODULE);
+                Debug.logError("Require field partyId and ebayCategoryId.", MODULE);
                 return false;
             }
             GenericValue productCategoryRole = delegator.makeValue("ProductCategoryRole");
             productCategoryRole.put("productCategoryId", productCategoryId);
             productCategoryRole.put("partyId", partyId);
             productCategoryRole.put("roleTypeId","EBAY_ACCOUNT");
-            productCategoryRole.put("fromDate",UtilDateTime.nowTimestamp());
+            productCategoryRole.put("fromDate", UtilDateTime.nowTimestamp());
             productCategoryRole.put("comments", ebayCategoryId);
             productCategoryRole.create();
         } catch (GenericEntityException e) {
@@ -366,7 +366,7 @@ public class EbayStoreHelper {
         return result;
     }
 
-    public static void mappedPaymentMethods(Map<String,Object> requestParams, String itemPkCateId, Map<String,Object> addItemObject, ItemType item, HashMap<String, Object> attributeMapList) {
+    public static void mappedPaymentMethods(Map<String, Object> requestParams, String itemPkCateId, Map<String, Object> addItemObject, ItemType item, HashMap<String, Object> attributeMapList) {
         String refName = "itemCateFacade_"+itemPkCateId;
         if (UtilValidate.isNotEmpty(addItemObject) && UtilValidate.isNotEmpty(requestParams)) {
             EbayStoreCategoryFacade cf = (EbayStoreCategoryFacade) addItemObject.get(refName);
@@ -422,7 +422,7 @@ public class EbayStoreHelper {
     }
 
     public static Map<String, Object> exportProductEachItem(DispatchContext dctx, Map<String, Object> context) {
-        Map<String,Object> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
         Map<String, Object> itemObject = UtilGenerics.checkMap(context.get("itemObject"));
@@ -475,7 +475,7 @@ public class EbayStoreHelper {
                     valueToClear.remove();
                 }
             }
-           for (Map.Entry<String,Object> entry : attributeMapList.entrySet()) {
+           for (Map.Entry<String, Object> entry : attributeMapList.entrySet()) {
                if (UtilValidate.isNotEmpty(entry.getKey())) {
                    ebayProductListingAttributeMap.put("productListingId", productListingId);
                    ebayProductListingAttributeMap.put("attrName", entry.getKey().toString());

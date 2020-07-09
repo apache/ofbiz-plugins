@@ -146,7 +146,6 @@ public final class CategoryUtil {
         } else {
             cm = catMember.toString();
         }
-        //Debug.logInfo("catMember "+cm,MODULE);
         return cm;
     }
     

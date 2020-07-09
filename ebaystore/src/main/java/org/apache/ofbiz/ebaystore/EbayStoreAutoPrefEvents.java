@@ -103,7 +103,7 @@ public class EbayStoreAutoPrefEvents{
             Map<String, Object> result = dispatcher.runSync("ebayBestOfferPrefCond", bestOfferCondition);
             if (ServiceUtil.isError(result)) {
                 request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(result));
-                Debug.log( ServiceUtil.getErrorMessage(result),MODULE);
+                Debug.log( ServiceUtil.getErrorMessage(result), MODULE);
                 return "error";
             }
         } catch (GenericServiceException e) {

@@ -82,9 +82,9 @@ public class EbayStoreOptions {
 
                     int i=0;
                     String colorSchemeId = themeId.substring(themeId.indexOf("-")+1);
-                    themeId = themeId.substring(0,themeId.indexOf("-"));
+                    themeId = themeId.substring(0, themeId.indexOf("-"));
 
-                    Map<String,Object> storeColorSchemeMap = new HashMap<>();
+                    Map<String, Object> storeColorSchemeMap = new HashMap<>();
                     while (i < storeBasicTheme.length) {
 
                         StoreThemeType storeThemeType = storeBasicTheme[i];
@@ -93,23 +93,23 @@ public class EbayStoreOptions {
                             if (colorSchemeType != null) {
                                 if (colorSchemeId.equals(colorSchemeType.getColorSchemeID().toString())) {
                                     StoreColorType storeColor = colorSchemeType.getColor();
-                                    storeColorSchemeMap.put("storeColorAccent",storeColor.getAccent());
-                                    storeColorSchemeMap.put("storeColorPrimary",storeColor.getPrimary());
-                                    storeColorSchemeMap.put("storeColorSecondary",storeColor.getSecondary());
+                                    storeColorSchemeMap.put("storeColorAccent", storeColor.getAccent());
+                                    storeColorSchemeMap.put("storeColorPrimary", storeColor.getPrimary());
+                                    storeColorSchemeMap.put("storeColorSecondary", storeColor.getSecondary());
 
-                                    // get font,size and color 
+                                    // get font, size and color
                                     StoreFontType storeFontType = colorSchemeType.getFont();
-                                    storeColorSchemeMap.put("storeFontTypeNameFaceColor",storeFontType.getNameColor());
-                                    storeColorSchemeMap.put("storeFontTypeFontFaceValue",storeFontType.getNameFace().value());
-                                    storeColorSchemeMap.put("storeFontTypeSizeFaceValue",storeFontType.getNameSize().value());
+                                    storeColorSchemeMap.put("storeFontTypeNameFaceColor", storeFontType.getNameColor());
+                                    storeColorSchemeMap.put("storeFontTypeFontFaceValue", storeFontType.getNameFace().value());
+                                    storeColorSchemeMap.put("storeFontTypeSizeFaceValue", storeFontType.getNameSize().value());
 
-                                    storeColorSchemeMap.put("storeFontTypeTitleColor",storeFontType.getTitleColor());
-                                    storeColorSchemeMap.put("storeFontTypeFontTitleValue",storeFontType.getTitleFace().value());
-                                    storeColorSchemeMap.put("storeFontSizeTitleValue",storeFontType.getTitleSize().value());
+                                    storeColorSchemeMap.put("storeFontTypeTitleColor", storeFontType.getTitleColor());
+                                    storeColorSchemeMap.put("storeFontTypeFontTitleValue", storeFontType.getTitleFace().value());
+                                    storeColorSchemeMap.put("storeFontSizeTitleValue", storeFontType.getTitleSize().value());
 
-                                    storeColorSchemeMap.put("storeFontTypeDescColor",storeFontType.getDescColor());
-                                    storeColorSchemeMap.put("storeFontTypeFontDescValue",storeFontType.getDescFace().value());
-                                    storeColorSchemeMap.put("storeDescSizeValue",storeFontType.getDescSize().value());
+                                    storeColorSchemeMap.put("storeFontTypeDescColor", storeFontType.getDescColor());
+                                    storeColorSchemeMap.put("storeFontTypeFontDescValue", storeFontType.getDescFace().value());
+                                    storeColorSchemeMap.put("storeDescSizeValue", storeFontType.getDescSize().value());
                                     request.setAttribute("storeColorSchemeMap", storeColorSchemeMap);
 
                                     break;
@@ -129,16 +129,16 @@ public class EbayStoreOptions {
         return "success";
     }
 
-    public static String retrieveItemTemplateByTemplateGroupId(HttpServletRequest request,HttpServletResponse response) {
+    public static String retrieveItemTemplateByTemplateGroupId(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> paramMap = UtilHttp.getCombinedMap(request);
         if (paramMap.get("productStoreId") != null) {
             String temGroupId = (String)paramMap.get("templateGroupId");
-            Map<String,Object> addItemObj = EbayEvents.getAddItemListingObject(request, EbayEvents.getApiContext(request));
+            Map<String, Object> addItemObj = EbayEvents.getAddItemListingObject(request, EbayEvents.getApiContext(request));
             if (UtilValidate.isNotEmpty(addItemObj)) {
                 String refName = "itemCateFacade_".concat((String) paramMap.get("pkCategoryId"));
                 if (UtilValidate.isNotEmpty(addItemObj.get(refName))) {
                     EbayStoreCategoryFacade cf = (EbayStoreCategoryFacade) addItemObj.get(refName);
-                    List<Map<String,Object>> theme = cf.getAdItemTemplates(temGroupId);
+                    List<Map<String, Object>> theme = cf.getAdItemTemplates(temGroupId);
                     if (theme.size() > 0) {
                         request.setAttribute("itemTemplates", theme);
                     }
@@ -159,7 +159,7 @@ public class EbayStoreOptions {
                     ebayCategoryId = ebayCategoryId.replace("CH_", "");
                     if (UtilValidate.isNotEmpty(ebayCategoryId)) {
                         ApiContext apiContext = EbayEvents.getApiContext(request);
-                        Map<String,Object> addItemObject = EbayEvents.getAddItemListingObject(request, apiContext);
+                        Map<String, Object> addItemObject = EbayEvents.getAddItemListingObject(request, apiContext);
                         String refName = "itemCateFacade_".concat(ebayCategoryId);
                         if (UtilValidate.isNotEmpty(addItemObject.get(refName))) {
                             addItemObject.remove(refName);
@@ -171,9 +171,9 @@ public class EbayStoreOptions {
                 request.setAttribute("categoryId", ebayCategoryId);
                 results = EbayEvents.getChildCategories(request);
                 if (UtilValidate.isNotEmpty(results)) {
-                    List<Map<String,Object>> categories = new LinkedList<>();
+                    List<Map<String, Object>> categories = new LinkedList<>();
                     for (CategoryType category : results) {
-                        Map<String,Object> context = new HashMap<>();
+                        Map<String, Object> context = new HashMap<>();
                         context.put("CategoryCode", category.getCategoryID());
                         context.put("CategoryName", category.getCategoryName());
                         String isLeaf = String.valueOf(category.isLeafCategory()!= null ? category.isLeafCategory() : "false");
@@ -206,7 +206,7 @@ public class EbayStoreOptions {
                     ebayStoreCategory = ebayStoreCategory.replace("CH_", "");
                     if (UtilValidate.isNotEmpty(ebayStoreCategory)) {
                         ApiContext apiContext = EbayEvents.getApiContext(request);
-                        Map<String,Object> addItemObject = EbayEvents.getAddItemListingObject(request, apiContext);
+                        Map<String, Object> addItemObject = EbayEvents.getAddItemListingObject(request, apiContext);
                         String refName = "itemCateFacade_".concat(ebayStoreCategory);
                         if (UtilValidate.isNotEmpty(addItemObject.get(refName))) {
                             addItemObject.remove(refName);
@@ -218,9 +218,9 @@ public class EbayStoreOptions {
                 request.setAttribute("categoryId", ebayStoreCategory);
                 results = EbayEvents.getStoreChildCategories(request);
                 if (UtilValidate.isNotEmpty(results)) {
-                    List<Map<String,Object>> categories = new LinkedList<>();
+                    List<Map<String, Object>> categories = new LinkedList<>();
                     for (StoreCustomCategoryType category : results) {
-                        Map<String,Object> context = new HashMap<>();
+                        Map<String, Object> context = new HashMap<>();
                         context.put("CategoryCode", category.getCategoryID());
                         context.put("CategoryName", category.getName());
                         String isLeaf = "false";

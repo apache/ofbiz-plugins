@@ -68,8 +68,8 @@ public class EbayStoreInventoryServices {
         // TODO Auto-generated constructor stub
     }
     /*update inventory on ebay site*/
-    public static Map<String,Object> updateEbayStoreInventory(DispatchContext dctx, Map<String,Object> context) {
-        Map<String,Object> result = new HashMap<>();
+    public static Map<String, Object> updateEbayStoreInventory(DispatchContext dctx, Map<String, Object> context) {
+        Map<String, Object> result = new HashMap<>();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
         Delegator delegator = dctx.getDelegator();
@@ -133,7 +133,7 @@ public class EbayStoreInventoryServices {
     }
 
     /* add new product and quantity to ebay inventory */
-    public static boolean createNewProductInEbayInventoryFolder(DispatchContext dctx, Map<String,Object> context) {
+    public static boolean createNewProductInEbayInventoryFolder(DispatchContext dctx, Map<String, Object> context) {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
         Delegator delegator = dctx.getDelegator();
@@ -177,7 +177,7 @@ public class EbayStoreInventoryServices {
     }
 
     /* update product and quantity to ebay inventory */
-    public static boolean updateProductInEbayInventoryFolder(DispatchContext dctx, Map<String,Object> context) {
+    public static boolean updateProductInEbayInventoryFolder(DispatchContext dctx, Map<String, Object> context) {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
         Delegator delegator = dctx.getDelegator();
@@ -228,8 +228,8 @@ public class EbayStoreInventoryServices {
         return flag;
     }
 
-    public static Map<String,Object> getFolderInEbayStoreInventory(DispatchContext dctx, Map<String,Object> context) {
-        Map<String,Object> result = new HashMap<>();
+    public static Map<String, Object> getFolderInEbayStoreInventory(DispatchContext dctx, Map<String, Object> context) {
+        Map<String, Object> result = new HashMap<>();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
         Delegator delegator = dctx.getDelegator();
@@ -273,7 +273,7 @@ public class EbayStoreInventoryServices {
     }
 
     /*create new folder for export product into inventory.*/
-    public static String createNewFolderInEbayStoreInventory(DispatchContext dctx, Map<String,Object> context) {
+    public static String createNewFolderInEbayStoreInventory(DispatchContext dctx, Map<String, Object> context) {
         Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Delegator delegator = dctx.getDelegator();
@@ -301,10 +301,10 @@ public class EbayStoreInventoryServices {
     }
 
     /* update inventory status from ebay store inventory */
-    public static Map<String,Object> updateEbayInventoryStatusByProductId(DispatchContext dctx, Map<String,Object> context) {
+    public static Map<String, Object> updateEbayInventoryStatusByProductId(DispatchContext dctx, Map<String, Object> context) {
         Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        Map<String,Object> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
         Delegator delegator = dctx.getDelegator();
         String productStoreId = (String)context.get("productStoreId");
         String facilityId = (String)context.get("facilityId");
@@ -356,9 +356,9 @@ public class EbayStoreInventoryServices {
         return result;
     }
 
-    public static Map<String,Object> updateEbayInventoryStatus(DispatchContext dctx, Map<String,Object> context) {
+    public static Map<String, Object> updateEbayInventoryStatus(DispatchContext dctx, Map<String, Object> context) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        Map<String,Object> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
         Delegator delegator = dctx.getDelegator();
         List<GenericValue> ebayProductStoreInventoryList = null;
 

@@ -152,7 +152,7 @@ public class EbayEvents {
     /* event to add products to prepare create & export listing */
     public static String addProductListing(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        Map<String,Object> requestParams = UtilHttp.getParameterMap(request);
+        Map<String, Object> requestParams = UtilHttp.getParameterMap(request);
         Locale locale = UtilHttp.getLocale(request);
 
         if (UtilValidate.isEmpty(requestParams.get("productStoreId"))) {
@@ -178,8 +178,8 @@ public class EbayEvents {
         ApiContext apiContext = EbayStoreHelper.getApiContext(productStoreId, locale, delegator);
         //String webSiteUrl = (String) requestParams.get("webSiteUrl");
         String webSiteUrl = "https://demo-trunk.ofbiz.apache.org";
-        Map<String,Object> addItemObject = getAddItemListingObject(request, apiContext);
-        List<Map<String,Object>> itemObjs = null;
+        Map<String, Object> addItemObject = getAddItemListingObject(request, apiContext);
+        List<Map<String, Object>> itemObjs = null;
         if (UtilValidate.isNotEmpty(addItemObject.get("itemListings"))) {
             itemObjs = UtilGenerics.checkList(addItemObject.get("itemListings"));
         } else {
@@ -190,7 +190,7 @@ public class EbayEvents {
             try {
                 // check  add new product obj ? to export 
                 for (String productId : productIds) {
-                    for (Map<String,Object> itObj : itemObjs) {
+                    for (Map<String, Object> itObj : itemObjs) {
                         if (UtilValidate.isNotEmpty(itObj.get(productId.concat("_Obj")))) {
                             productIds.remove(productId);
                         }
@@ -245,8 +245,8 @@ public class EbayEvents {
                     addItemCall.setItem(item);
                     addItemCall.setWarningLevel(WarningLevelCodeType.HIGH);
 
-                    Map<String,Object> itemListing = null;
-                    for (Map<String,Object> itemObj : itemObjs) {
+                    Map<String, Object> itemListing = null;
+                    for (Map<String, Object> itemObj : itemObjs) {
                         if (UtilValidate.isNotEmpty(itemObj.get(productId.concat("_Obj")))) {
                             itemListing = UtilGenerics.checkMap(itemObj.get(productId.concat("_Obj")));
                             itemListing.put("addItemCall", addItemCall);
@@ -324,7 +324,7 @@ public class EbayEvents {
         } else {
             siteFacade = (EbayStoreSiteFacade)session.getAttribute(siteFacadeName);
         }
-        Debug.logInfo("loaded session for ebay site Facade is ".concat(siteFacadeName).concat(session.getAttribute(siteFacadeName).toString()),MODULE);
+        Debug.logInfo("loaded session for ebay site Facade is ".concat(siteFacadeName).concat(session.getAttribute(siteFacadeName).toString()), MODULE);
         return siteFacade;
     }
 
@@ -348,15 +348,15 @@ public class EbayEvents {
     public static void removeItemListingObject(HttpServletRequest request, ApiContext apiContext) {
         HttpSession session = request.getSession(true);
         String siteCode = apiContext.getSite().name();
-        Map<String,Object> addItemObject = UtilGenerics.checkMap(session.getAttribute("itemListings_".concat(siteCode)));
+        Map<String, Object> addItemObject = UtilGenerics.checkMap(session.getAttribute("itemListings_".concat(siteCode)));
         if (UtilValidate.isNotEmpty(addItemObject)) {
             session.removeAttribute("itemListings_".concat(siteCode));
         }
     }
 
-    public static Map<String,Object> getAddItemListingObject(HttpServletRequest request, ApiContext apiContext) {
+    public static Map<String, Object> getAddItemListingObject(HttpServletRequest request, ApiContext apiContext) {
         String siteCode = apiContext.getSite().name();
-        Map<String,Object> addItemObject = UtilGenerics.checkMap(request.getAttribute("itemListings_".concat(siteCode)));
+        Map<String, Object> addItemObject = UtilGenerics.checkMap(request.getAttribute("itemListings_".concat(siteCode)));
         HttpSession session = request.getSession(true);
         if (addItemObject == null) {
             addItemObject = UtilGenerics.checkMap(session.getAttribute("itemListings_".concat(siteCode)));
@@ -517,7 +517,7 @@ public class EbayEvents {
     }
 
     public static String setSelectedEbayCategory(HttpServletRequest request, HttpServletResponse response) {
-        Map<String,Object> requestParams = UtilHttp.getParameterMap(request);
+        Map<String, Object> requestParams = UtilHttp.getParameterMap(request);
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         if (UtilValidate.isEmpty(requestParams.get("productStoreId"))) {
             request.setAttribute("_ERROR_MESSAGE_","Required productStoreId.");
@@ -546,11 +546,11 @@ public class EbayEvents {
         try {
             if (UtilValidate.isNotEmpty(EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne())) {
                 ApiContext apiContext = getApiContext(request);
-                Map<String,Object> addItemObject = getAddItemListingObject(request, apiContext);
-                List<Map<String,Object>> addItemlist = UtilGenerics.checkList(addItemObject.get("itemListing"));
+                Map<String, Object> addItemObject = getAddItemListingObject(request, apiContext);
+                List<Map<String, Object>> addItemlist = UtilGenerics.checkList(addItemObject.get("itemListing"));
 
                 if (UtilValidate.isNotEmpty(addItemlist)) {
-                    for (Map<String,Object> addItemCall : addItemlist) {
+                    for (Map<String, Object> addItemCall : addItemlist) {
                         AddItemCall itemCall = (AddItemCall) addItemCall.get("addItemCall");
                         ItemType item = itemCall.getItem();
                         if (productId.equals(item.getSKU())) {
@@ -619,7 +619,7 @@ public class EbayEvents {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         HttpSession session = request.getSession(true);
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        Map<String,Object> requestParams = UtilHttp.getParameterMap(request);
+        Map<String, Object> requestParams = UtilHttp.getParameterMap(request);
         Locale locale = UtilHttp.getLocale(request);
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         Map<String, Object> attributeMapList = new HashMap<>();
@@ -676,15 +676,15 @@ public class EbayEvents {
             
         try {
             ApiContext apiContext = EbayStoreHelper.getApiContext(productStoreId, locale, delegator);
-            Map<String,Object> addItemObject = getAddItemListingObject(request, apiContext);
-            List<Map<String,Object>> listAddItem = null;
+            Map<String, Object> addItemObject = getAddItemListingObject(request, apiContext);
+            List<Map<String, Object>> listAddItem = null;
             if (UtilValidate.isNotEmpty(addItemObject.get("itemListing"))) {
                 listAddItem = UtilGenerics.checkList(addItemObject.get("itemListing"));
             } else {
                 listAddItem = new LinkedList<>();
             }
 
-            for (Map<String,Object> itemObj : listAddItem) {
+            for (Map<String, Object> itemObj : listAddItem) {
                 AddItemCall addItemCall = (AddItemCall) itemObj.get("addItemCall");
                 ItemType item = addItemCall.getItem();
                 String SKU = item.getSKU();
@@ -876,7 +876,7 @@ public class EbayEvents {
                                 int intAtp = atp.intValue();
                                 if ((facilityId != "")  && (intAtp != 0)) {
                                     int newAtp = intAtp - 1;
-                                    Map<String,Object> inMap = new HashMap<>();
+                                    Map<String, Object> inMap = new HashMap<>();
                                     inMap.put("productStoreId", productStoreId);
                                     inMap.put("facilityId", facilityId);
                                     inMap.put("productId", productId);
@@ -998,7 +998,7 @@ public class EbayEvents {
     public static String verifyItemBeforeAddAndExportToEbay(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        Map<String,Object> requestParams = UtilHttp.getParameterMap(request);
+        Map<String, Object> requestParams = UtilHttp.getParameterMap(request);
         Locale locale = UtilHttp.getLocale(request);
         String productStoreId = (String) requestParams.get("productStoreId");
         HttpSession session = request.getSession(true);
@@ -1012,15 +1012,15 @@ public class EbayEvents {
 
 
             VerifyAddItemCall verifyCall = new VerifyAddItemCall(apiContext);
-            Map<String,Object> addItemObject = getAddItemListingObject(request, apiContext);
-            List<Map<String,Object>> listAddItem = null;
+            Map<String, Object> addItemObject = getAddItemListingObject(request, apiContext);
+            List<Map<String, Object>> listAddItem = null;
             if (UtilValidate.isNotEmpty(addItemObject.get("itemListing"))) {
                 listAddItem = UtilGenerics.checkList(addItemObject.get("itemListing"));
             } else {
                 listAddItem = new LinkedList<>();
             }
             double feesummary = 0.0;
-            for (Map<String,Object> itemObj : listAddItem) {
+            for (Map<String, Object> itemObj : listAddItem) {
                 AddItemCall addItemCall = (AddItemCall) itemObj.get("addItemCall");
                 ItemType item = addItemCall.getItem();
                 String SKU = item.getSKU();
@@ -1062,20 +1062,20 @@ public class EbayEvents {
 
     public static String removeProductFromListing(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        Map<String,Object> requestParams = UtilHttp.getParameterMap(request);
+        Map<String, Object> requestParams = UtilHttp.getParameterMap(request);
         Locale locale = UtilHttp.getLocale(request);
         String productStoreId = (String) requestParams.get("productStoreId");
         try {
             ApiContext apiContext = EbayStoreHelper.getApiContext(productStoreId, locale, delegator);
-            Map<String,Object> addItemObject = getAddItemListingObject(request, apiContext);
-            List<Map<String,Object>> listAddItem = null;
+            Map<String, Object> addItemObject = getAddItemListingObject(request, apiContext);
+            List<Map<String, Object>> listAddItem = null;
             if (UtilValidate.isNotEmpty(addItemObject.get("itemListing"))) {
                 listAddItem = UtilGenerics.checkList(addItemObject.get("itemListing"));
             } else {
                 listAddItem = new LinkedList<>();
             }
             int i = 0;
-            for (Map<String,Object> itemObj : listAddItem) {
+            for (Map<String, Object> itemObj : listAddItem) {
                 AddItemCall addItemCall = (AddItemCall) itemObj.get("addItemCall");
                 ItemType item = addItemCall.getItem();
                 String SKU = item.getSKU();
@@ -1102,21 +1102,21 @@ public class EbayEvents {
     public static String exportListingToEbay(HttpServletRequest request, HttpServletResponse response) {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        Map<String,Object> requestParams = UtilHttp.getParameterMap(request);
+        Map<String, Object> requestParams = UtilHttp.getParameterMap(request);
         Locale locale = UtilHttp.getLocale(request);
         String productStoreId = (String) requestParams.get("productStoreId");
         HttpSession session = request.getSession(true);
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         try {
             ApiContext apiContext = EbayStoreHelper.getApiContext(productStoreId, locale, delegator);
-            Map<String,Object> addItemObject = getAddItemListingObject(request, apiContext);
-            List<Map<String,Object>> listAddItem = null;
+            Map<String, Object> addItemObject = getAddItemListingObject(request, apiContext);
+            List<Map<String, Object>> listAddItem = null;
             if (UtilValidate.isNotEmpty(addItemObject.get("itemListing"))) {
                 listAddItem = UtilGenerics.checkList(addItemObject.get("itemListing"));
             } else {
                 listAddItem = new LinkedList<>();
             }
-            for (Map<String,Object> itemObj : listAddItem) {
+            for (Map<String, Object> itemObj : listAddItem) {
                 updateQuantityInventoryProduct(itemObj, productStoreId, locale, delegator, dispatcher, userLogin);
                 Map<String, Object> result = dispatcher.runSync("exportProductEachItem", UtilMisc.toMap("itemObject", itemObj));
                 if (ServiceUtil.isError(result)) {
@@ -1185,7 +1185,7 @@ public class EbayEvents {
     public static Map<String, Map<String, List<String>>> categorySpecifics(String categoryId, HttpServletRequest request) {
         Map<String, Map<String, List<String>>> recommendationMap = new HashMap<>();
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        Map<String,Object> requestParams = UtilHttp.getParameterMap(request);
+        Map<String, Object> requestParams = UtilHttp.getParameterMap(request);
         Locale locale = UtilHttp.getLocale(request);
         String productStoreId = (String) requestParams.get("productStoreId");
         

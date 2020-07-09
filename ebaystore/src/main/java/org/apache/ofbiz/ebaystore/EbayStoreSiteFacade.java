@@ -58,7 +58,7 @@ public class EbayStoreSiteFacade {
     private static final int MAP_SIZE = 30000;
     private Map<SiteCodeType, Map<String, CategoryType>> siteCategoriesMap = new HashMap<SiteCodeType, Map<String, CategoryType>>();
     private Map<SiteCodeType, List<StoreCustomCategoryType>> siteStoreCategoriesMap = new HashMap<SiteCodeType, List<StoreCustomCategoryType>>();
-    private Map<SiteCodeType, List<CategoryType>> siteCategoriesCSMap = new HashMap<SiteCodeType,List<CategoryType>>();
+    private Map<SiteCodeType, List<CategoryType>> siteCategoriesCSMap = new HashMap<SiteCodeType, List<CategoryType>>();
     private Map<SiteCodeType, Map<String, CategoryFeatureType>> siteCategoriesFeaturesMap = new HashMap<SiteCodeType, Map<String, CategoryFeatureType>>();
     private Map<SiteCodeType, SiteDefaultsType> siteFeatureDefaultMap = new HashMap<SiteCodeType, SiteDefaultsType>();
     private Map<SiteCodeType, FeatureDefinitionsType> siteFeatureDefinitionsMap = new HashMap<SiteCodeType, FeatureDefinitionsType>();

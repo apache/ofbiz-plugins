@@ -277,7 +277,7 @@ public class ProductDocument implements LuceneDocument {
     }
 
     // An attempt to boost/weight values in a similar manner to what OFBiz product search does.
-    private static void addTextField(Document doc, String fieldName, String value, boolean store,String fullTextFieldName, Delegator delegator) {
+    private static void addTextField(Document doc, String fieldName, String value, boolean store, String fullTextFieldName, Delegator delegator) {
         if (fieldName == null) return;
 
         Field field = new TextField(fieldName, checkValue(value), (store? Field.Store.YES: Field.Store.NO));

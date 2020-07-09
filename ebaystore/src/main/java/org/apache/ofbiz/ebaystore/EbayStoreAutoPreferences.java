@@ -1068,11 +1068,11 @@ public class EbayStoreAutoPreferences {
         return result;
     }
 
-    public static Map<String,Object> autoBlockItemsOutOfStock(DispatchContext dctx, Map<String,Object> context) {
+    public static Map<String, Object> autoBlockItemsOutOfStock(DispatchContext dctx, Map<String, Object> context) {
         Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Delegator delegator = dctx.getDelegator();
-        Map<String,Object> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
         GetSellingManagerInventoryRequestType req = new GetSellingManagerInventoryRequestType();
         GetSellingManagerInventoryResponseType resp =  null;
 
