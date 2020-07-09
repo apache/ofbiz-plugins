@@ -89,7 +89,6 @@ a.btn-primary {
     margin-bottom: 0;
     overflow: auto;
     border: thin solid;
-/*    position: relative;*/
 }
 .products-card .card-text .percent-16 {
     height: 16%;
@@ -111,13 +110,14 @@ a.btn-primary {
     overflow: auto;
     border: thin solid;
 }
+.width-percent-100 {
+    width: 100%;
+    max-width: 100%;
+}
 .products-card .card-text .product-price {
     height: 49%;
     min-height: 49%;
     border: thin solid;
-/*    position: absolute;
-    bottom: 0;
-*/
 }
 .products-card .card-text .product-price dl { /* what is this ? */
     display: none;
@@ -125,8 +125,11 @@ a.btn-primary {
 .products-card .card-text .product-rating {
     height: 10%;
 }
+.products-card .card-text p.product-price-your {
+    margin-top: 0;
+    margin-bottom: 0;
+}
 .products-card .card-text form.product-compare {
-    /*height: 10%;*/
     display: none;
 }
 .products-card .card-body .productbuy {
@@ -135,7 +138,9 @@ a.btn-primary {
     border: thin solid;
     overflow: auto;
 }
-
+.product-highlight-label {
+    background-color: yellow;
+}
 .products-card, .products-card .card-title a {
     padding-left: 0.125rem;
     padding-right: 0.125rem;

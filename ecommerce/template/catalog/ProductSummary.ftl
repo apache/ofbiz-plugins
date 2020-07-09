@@ -113,8 +113,12 @@
               <#assign productInfoLinkId = productInfoLinkId + product.productId/>
               <#assign productDetailId = "productDetailId"/>
               <#assign productDetailId = productDetailId + product.productId/>
+              <#assign summaryAdditionalClass = ""/>
+              <#if request.getAttribute("summaryAdditionalClass")??>
+                <#assign summaryAdditionalClass = request.getAttribute("summaryAdditionalClass")/>
+              </#if>
 
-              <div class="col-md-3 products-card">
+              <div class="col-md-3 products-card ${summaryAdditionalClass}">
                 <div class="card text-center">
                   <a href="${productUrl}">
                     <img class="card-img-top" src="<@ofbizContentUrl>${contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl>" alt="Small Image">
@@ -130,12 +134,18 @@
                         <#-- assign textNDivs = textNDivs + 1 + sizeProductFeatureAndAppls?size/ -->
                         <#assign textNDivs = textNDivs + 1/>
                       </#if>
+                      <#if request.getAttribute("highlightLabel")??>
+                        <#assign textNDivs = textNDivs + 1/>
+                      </#if>
                       <#assign textDivPercent = 50 / textNDivs/>
                       <div class="product-description percent-${textDivPercent?int}">${productContentWrapper.get("DESCRIPTION", "html")!}<#if daysToShip??>&nbsp;-&nbsp;${uiLabelMap.ProductUsuallyShipsIn} <b>${daysToShip}</b> ${uiLabelMap.CommonDays}!</#if></div>
 
                       <#-- Display category-specific product comments -->
                         <#if prodCatMem?? && prodCatMem.comments?has_content>
                           <p class="product-category-comment percent-${textDivPercent?int}">${prodCatMem.comments}</p>
+                        </#if>
+                        <#if request.getAttribute("highlightLabel")??>
+                          <div class="product-highlight-label percent-${textDivPercent?int}"><p>${request.getAttribute("highlightLabel")}</p></div>
                         </#if>
 
                         <#-- example of showing a certain type of feature with the product -->
@@ -182,9 +192,11 @@
                                     <#else>
                                       <#assign priceStyle = "regularPrice">
                                 </#if>
-                                <a class="product-price-expand" href="javascript:void(0);">?</a>
                                 <#if (price.price?default(0) > 0 && "N" == product.requireAmount?default("N"))>
-                                  <p class="product-price-your">${uiLabelMap.OrderYourPrice}: <#if "Y" = product.isVirtual!> ${uiLabelMap.CommonFrom} </#if><span class="${priceStyle}"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span></p>
+                                  <p class="product-price-your">
+                                    <a class="product-price-expand" href="javascript:void(0);">?</a>
+                                    ${uiLabelMap.OrderYourPrice}: <#if "Y" = product.isVirtual!> ${uiLabelMap.CommonFrom} </#if><span class="${priceStyle}"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
+                                  </p>
                                 </#if>
                               </b>
                               <#if price.listPrice?? && price.price?? && price.price?double < price.listPrice?double>

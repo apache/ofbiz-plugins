@@ -51,6 +51,7 @@ under the License.
                 <td>
                   ${setRequestAttribute("optProductId", productId)}
                   ${setRequestAttribute("listIndex", productId_index)}
+                  ${setRequestAttribute("summaryAdditionalClass", "width-percent-100")}
                   ${screens.render(productsummaryScreen)}
                 </td>
               </tr>
