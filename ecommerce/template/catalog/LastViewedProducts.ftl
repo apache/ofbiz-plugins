@@ -16,34 +16,30 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<table>
-  <tr>
-    <td colspan="2">
-      <h1>
+<div class="card">
+  <div class="card-header">
+      <h4>
         ${uiLabelMap.ProductProductsLastViewed}
-      </h1>
-    </td>
-  </tr>
-</table>
+      </h4>
+  </div>
 
+<div class="card-body">
 <#if sessionAttributes.lastViewedProducts?? && sessionAttributes.lastViewedProducts?has_content>
-  <table>
+  <div class="productsummary-container">
+    <div class="row row-eq-height">
     <#list sessionAttributes.lastViewedProducts as productId>
-      <tr>
-        <td>
           ${setRequestAttribute("optProductId", productId)}
           ${setRequestAttribute("listIndex", productId_index)}
           ${screens.render("component://ecommerce/widget/CatalogScreens.xml#productsummary")}
-        </td>
-      </tr>
     </#list>
-  </table>
+    </div>
+  </div>
 <#else>
-  <table>
-    <tr>
-      <td>
-        <div class='tabletext'>${uiLabelMap.ProductNotViewedAnyProducts}.</div>
-      </td>
-    </tr>
-  </table>
+  <div class="card-text">
+      <p>
+        ${uiLabelMap.ProductNotViewedAnyProducts}.
+      </p>
+  </div>
 </#if>
+</div>
+</div>
