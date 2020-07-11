@@ -177,7 +177,7 @@ public class ProductsExportToEbay {
         Locale locale = (Locale)context.get("locale");
         try {
             Delegator delegator = dctx.getDelegator();
-            String webSiteUrl = (String)context.get("webSiteUrl");
+            String webSiteUrl = (String) context.get("webSiteUrl");
 
             UtilCodec.SimpleEncoder encoder = UtilCodec.getEncoder("xml");
 
@@ -190,7 +190,7 @@ public class ProductsExportToEbay {
                 appendRequesterCredentials(itemRequestElem, itemDocument, token);
 
                 String title = prod.getString("internalName");
-                String qnt = (String)context.get("quantity");
+                String qnt = (String) context.get("quantity");
                 if (UtilValidate.isEmpty(qnt)) {
                     qnt = "1";
                 }
@@ -204,7 +204,7 @@ public class ProductsExportToEbay {
                 } else if (UtilValidate.isNotEmpty(prod.getString("productName"))) {
                     productDescription = prod.getString("productName");
                 }
-                String startPrice = (String)context.get("startPrice");
+                String startPrice = (String) context.get("startPrice");
                 String startPriceCurrencyUomId = null;
                 if (UtilValidate.isEmpty(startPrice)) {
                     GenericValue startPriceValue = EntityUtil.getFirst(EntityUtil.filterByDate(prod.getRelated("ProductPrice", UtilMisc.toMap("productPricePurposeId", "EBAY", "productPriceTypeId", "MINIMUM_PRICE"), null, false)));
@@ -215,7 +215,7 @@ public class ProductsExportToEbay {
                 }
 
                 // Buy it now is the optional value for a product that you send to eBay. Once this value is entered by user - this option allow user to win auction immediately.
-                String buyItNowPrice = (String)context.get("buyItNowPrice");
+                String buyItNowPrice = (String) context.get("buyItNowPrice");
                 String buyItNowCurrencyUomId = null;
                 if (UtilValidate.isEmpty(buyItNowPrice)) {
                     GenericValue buyItNowPriceValue = EntityUtil.getFirst(EntityUtil.filterByDate(prod.getRelated("ProductPrice", UtilMisc.toMap("productPricePurposeId", "EBAY", "productPriceTypeId", "MAXIMUM_PRICE"), null, false)));
@@ -227,15 +227,15 @@ public class ProductsExportToEbay {
                 
 
                 Element itemElem = UtilXml.addChildElement(itemRequestElem, "Item", itemDocument);
-                UtilXml.addChildElementValue(itemElem, "Country", (String)context.get("country"), itemDocument);
-                String location = (String)context.get("location");
+                UtilXml.addChildElementValue(itemElem, "Country", (String) context.get("country"), itemDocument);
+                String location = (String) context.get("location");
                 if (UtilValidate.isNotEmpty(location)) {
                     UtilXml.addChildElementValue(itemElem, "Location", location, itemDocument);
                 }
                 UtilXml.addChildElementValue(itemElem, "ApplicationData", prod.getString("productId"), itemDocument);
                 UtilXml.addChildElementValue(itemElem, "SKU", prod.getString("productId"), itemDocument);
                 UtilXml.addChildElementValue(itemElem, "Title", title, itemDocument);
-                UtilXml.addChildElementValue(itemElem, "ListingDuration", (String)context.get("listingDuration"), itemDocument);
+                UtilXml.addChildElementValue(itemElem, "ListingDuration", (String) context.get("listingDuration"), itemDocument);
                 UtilXml.addChildElementValue(itemElem, "Quantity", qnt, itemDocument);
 
                 String listingFormat = "";
@@ -289,7 +289,7 @@ public class ProductsExportToEbay {
 
                 setPaymentMethodAccepted(itemDocument, itemElem, context);
                 setMiscDetails(itemDocument, itemElem, context, delegator);
-                String categoryCode = (String)context.get("ebayCategory");
+                String categoryCode = (String) context.get("ebayCategory");
                 String primaryCategoryId = "";
                 if (categoryCode != null) {
                     if (categoryCode.indexOf("_") != -1) {
@@ -299,7 +299,7 @@ public class ProductsExportToEbay {
                         } else {
                             primaryCategoryId = params[1];
                         }
-                    }else{
+                    } else {
                         primaryCategoryId = categoryCode;
                     }
                 } else {
@@ -418,19 +418,19 @@ public class ProductsExportToEbay {
     */
 
     private static void setPaymentMethodAccepted(Document itemDocument, Element itemElem, Map<String, Object> context) {
-        String payPal = (String)context.get("paymentPayPal");
-        String payPalEmail = (String)context.get("payPalEmail");
-        String visaMC = (String)context.get("paymentVisaMC");
-        String amEx = (String)context.get("paymentAmEx");
-        String discover = (String)context.get("paymentDiscover");
-        String ccAccepted = (String)context.get("paymentCCAccepted");
-        String cashInPerson = (String)context.get("paymentCashInPerson");
-        String cashOnPickup = (String)context.get("paymentCashOnPickup");
-        String cod = (String)context.get("paymentCOD");
-        String codPrePayDelivery = (String)context.get("paymentCODPrePayDelivery");
-        String mocc = (String)context.get("paymentMOCC");
-        String moneyXferAccepted = (String)context.get("paymentMoneyXferAccepted");
-        String personalCheck = (String)context.get("paymentPersonalCheck");
+        String payPal = (String) context.get("paymentPayPal");
+        String payPalEmail = (String) context.get("payPalEmail");
+        String visaMC = (String) context.get("paymentVisaMC");
+        String amEx = (String) context.get("paymentAmEx");
+        String discover = (String) context.get("paymentDiscover");
+        String ccAccepted = (String) context.get("paymentCCAccepted");
+        String cashInPerson = (String) context.get("paymentCashInPerson");
+        String cashOnPickup = (String) context.get("paymentCashOnPickup");
+        String cod = (String) context.get("paymentCOD");
+        String codPrePayDelivery = (String) context.get("paymentCODPrePayDelivery");
+        String mocc = (String) context.get("paymentMOCC");
+        String moneyXferAccepted = (String) context.get("paymentMoneyXferAccepted");
+        String personalCheck = (String) context.get("paymentPersonalCheck");
 
         // PayPal
         if (UtilValidate.isNotEmpty(payPal) && "on".equals(payPal)) {
@@ -509,7 +509,7 @@ public class ProductsExportToEbay {
     public static Map<String, Object> getEbayCategories(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = dctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
-        String categoryCode = (String)context.get("categoryCode");
+        String categoryCode = (String) context.get("categoryCode");
         Map<String, Object> result = null;
 
         try {
@@ -605,11 +605,11 @@ public class ProductsExportToEbay {
         }
         return result;
     }
-    public static List<String> getProductExportSuccessMessageList(){
+    public static List<String> getProductExportSuccessMessageList() {
         return productExportSuccessMessageList;
     }
 
-    public static List<String> getproductExportFailureMessageList(){
+    public static List<String> getproductExportFailureMessageList() {
         return productExportFailureMessageList;
     }
 }

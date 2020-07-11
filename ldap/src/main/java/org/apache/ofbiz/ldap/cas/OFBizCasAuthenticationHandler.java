@@ -184,7 +184,7 @@ public final class OFBizCasAuthenticationHandler extends AbstractOFBizAuthentica
         String casUrl = UtilXml.childElementValue(rootElement, "CasUrl", "https://localhost:8443/cas");
         Cookie[] cookies = request.getCookies();
         if (cookies == null) return true;
-        for (int i=0; i < cookies.length; i++) {
+        for (int i = 0; i < cookies.length; i++) {
             Cookie cookie = cookies[i];
             if (cookie.getName().equals(casTGC) && casUrl.indexOf(cookie.getDomain()) > -1) {
                 return false;

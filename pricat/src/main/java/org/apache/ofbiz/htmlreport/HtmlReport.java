@@ -1272,7 +1272,6 @@ public class HtmlReport extends AbstractReport {
     public String dialogEnd() {
         return dialog(HTML_END, null);
     }
-    
     /**
      * Returns the http URI of the current dialog, to be used
      * as value for the "action" attribute of a html form.<p>
@@ -1284,7 +1283,6 @@ public class HtmlReport extends AbstractReport {
     public String getDialogRealUri(HttpServletRequest request) {
         return String.valueOf(request.getAttribute(DIALOG_URI));
     }
-
     /**
      * Set the report form uri.
      * 
@@ -1294,7 +1292,6 @@ public class HtmlReport extends AbstractReport {
     public void setFormRealUri(HttpServletRequest request, String formUri) {
         request.setAttribute(FORM_URI, formUri);
     }
-
     /**
      * Get the report form uri.
      * 
@@ -1304,7 +1301,6 @@ public class HtmlReport extends AbstractReport {
     public String getFormRealUri(HttpServletRequest request) {
         return (String) request.getAttribute(FORM_URI);
     }
-
     @Override
     public void addLogFile(String logFileName) {
         if (logFile == null || logFileOutputStream == null) {
@@ -1317,7 +1313,6 @@ public class HtmlReport extends AbstractReport {
             }
         }
     }
-    
     @Override
     public String closeLogFile() {
         if (logFileOutputStream != null) {
@@ -1338,16 +1333,13 @@ public class HtmlReport extends AbstractReport {
         }
         return logFileName;
     }
-    
     public String getLogFileName() {
         return logFileName;
     }
-    
     @Override
     public long getSequenceNum() {
         return sequenceNum;
     }
-
     @Override
     public void setSequenceNum(long sequenceNum) {
         this.sequenceNum = sequenceNum;

@@ -113,7 +113,7 @@ public final class BirtUtil {
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "docx",
             "application/vnd.openxmlformats-officedocument.presentationml.presentation", "pptx");
 
-    private BirtUtil() {}
+    private BirtUtil() { }
 
     /**
      * Return birt field type corresponding to given entity field type

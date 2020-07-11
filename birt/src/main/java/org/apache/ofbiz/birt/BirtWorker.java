@@ -72,7 +72,7 @@ public final class BirtWorker {
 
     private final static HTMLServerImageHandler imageHandler = new HTMLServerImageHandler();
 
-    private BirtWorker() {}
+    private BirtWorker() { }
 
     private static final Map<Integer, Level> levelIntMap = new HashMap<>();
     static {

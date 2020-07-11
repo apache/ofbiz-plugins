@@ -115,12 +115,12 @@ public class FirstDataPaymentServices {
             String responseString = EntityUtils.toString(entity);
 
             ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, Object> convertedMap = objectMapper.readValue(responseString, new TypeReference<Map<String, Object>>(){});
+            Map<String, Object> convertedMap = objectMapper.readValue(responseString, new TypeReference<Map<String, Object>>() {});
 
             String transactionStatus = (String) convertedMap.get("transactionStatus");
             String transactionId = (String) convertedMap.get("ipgTransactionId");
             String fdOrderId = (String) convertedMap.get("orderId");
-            Map<String, Object> processor = objectMapper.convertValue(convertedMap.get("processor"), new TypeReference<Map<String, Object>>(){});
+            Map<String, Object> processor = objectMapper.convertValue(convertedMap.get("processor"), new TypeReference<Map<String, Object>>() {});
             String gatewayMessage = (String) processor.get("responseMessage");
             int statusCode = response.getStatusLine().getStatusCode();
             result.put("authCode", String.valueOf(statusCode));
@@ -196,12 +196,12 @@ public class FirstDataPaymentServices {
             String responseString = EntityUtils.toString(entity);
 
             ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, Object> convertedMap = objectMapper.readValue(responseString, new TypeReference<Map<String, Object>>(){});
+            Map<String, Object> convertedMap = objectMapper.readValue(responseString, new TypeReference<Map<String, Object>>() {});
 
             String transactionStatus = (String) convertedMap.get("transactionStatus");
             String transactionId = (String) convertedMap.get("ipgTransactionId");
             String fdOrderId = (String) convertedMap.get("orderId");
-            Map<String, Object> processor = objectMapper.convertValue(convertedMap.get("processor"), new TypeReference<Map<String, Object>>(){});
+            Map<String, Object> processor = objectMapper.convertValue(convertedMap.get("processor"), new TypeReference<Map<String, Object>>() {});
             String gatewayMessage = (String) processor.get("responseMessage");
             int statusCode = response.getStatusLine().getStatusCode();
             result.put("captureCode", String.valueOf(statusCode));
@@ -280,12 +280,12 @@ public class FirstDataPaymentServices {
             String responseString = EntityUtils.toString(entity);
 
             ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, Object> convertedMap = objectMapper.readValue(responseString, new TypeReference<Map<String, Object>>(){});
+            Map<String, Object> convertedMap = objectMapper.readValue(responseString, new TypeReference<Map<String, Object>>() {});
 
             String transactionStatus = (String) convertedMap.get("transactionStatus");
             String transactionId = (String) convertedMap.get("ipgTransactionId");
             String fdOrderId = (String) convertedMap.get("orderId");
-            Map<String, Object> processor = objectMapper.convertValue(convertedMap.get("processor"), new TypeReference<Map<String, Object>>(){});
+            Map<String, Object> processor = objectMapper.convertValue(convertedMap.get("processor"), new TypeReference<Map<String, Object>>() {});
             String gatewayMessage = (String) processor.get("responseMessage");
             int statusCode = response.getStatusLine().getStatusCode();
             result.put("refundCode", String.valueOf(statusCode));
@@ -360,12 +360,12 @@ public class FirstDataPaymentServices {
             String responseString = EntityUtils.toString(entity);
 
             ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, Object> convertedMap = objectMapper.readValue(responseString, new TypeReference<Map<String, Object>>(){});
+            Map<String, Object> convertedMap = objectMapper.readValue(responseString, new TypeReference<Map<String, Object>>() {});
 
             String transactionStatus = (String) convertedMap.get("transactionStatus");
             String transactionId = (String) convertedMap.get("ipgTransactionId");
             String fdOrderId = (String) convertedMap.get("orderId");
-            Map<String, Object> processor = objectMapper.convertValue(convertedMap.get("processor"), new TypeReference<Map<String, Object>>(){});
+            Map<String, Object> processor = objectMapper.convertValue(convertedMap.get("processor"), new TypeReference<Map<String, Object>>() {});
             String gatewayMessage = (String) processor.get("responseMessage");
             int statusCode = response.getStatusLine().getStatusCode();
             result.put("releaseCode", String.valueOf(statusCode));

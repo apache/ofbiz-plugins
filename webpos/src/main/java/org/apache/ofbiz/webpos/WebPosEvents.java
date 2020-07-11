@@ -198,7 +198,7 @@ public class WebPosEvents {
                                             request.setAttribute("variantTree", variantTree);
                                             request.setAttribute("variantTreeSize", variantTree.size());
                                             List<String> featureOrder = new LinkedList<>(featureSet);
-                                            for (int i=0; i < featureOrder.size(); i++) {
+                                            for (int i = 0; i < featureOrder.size(); i++) {
                                                 String featureKey = featureOrder.get(i);
                                                 GenericValue featureValue = EntityQuery.use(delegator).from("ProductFeatureType").where("productFeatureTypeId", featureOrder.get(i)).cache().queryOne();
                                                 if (featureValue != null && 

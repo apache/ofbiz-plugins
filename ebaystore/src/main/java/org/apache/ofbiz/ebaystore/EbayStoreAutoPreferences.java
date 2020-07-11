@@ -1077,7 +1077,7 @@ public class EbayStoreAutoPreferences {
         GetSellingManagerInventoryResponseType resp =  null;
 
         if (context.get("productStoreId") != null) {
-            GetSellingManagerInventoryCall call = new GetSellingManagerInventoryCall(EbayStoreHelper.getApiContext((String)context.get("productStoreId"), locale, delegator));
+            GetSellingManagerInventoryCall call = new GetSellingManagerInventoryCall(EbayStoreHelper.getApiContext((String) context.get("productStoreId"), locale, delegator));
 
             try {
                 SellingManagerProductType[] returnedSellingManagerProductType = null;
@@ -1379,9 +1379,9 @@ public class EbayStoreAutoPreferences {
                     }
                 }
             }
-        } catch (ApiException e){
+        } catch (ApiException e) {
             return ServiceUtil.returnError(e.getMessage());
-        }catch(Exception e){
+        } catch (Exception e) {
             return ServiceUtil.returnError(e.getMessage());
         }
         return ServiceUtil.returnSuccess();

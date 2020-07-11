@@ -186,7 +186,7 @@ public class JanrainHelper {
         }
     }
 
-    public static String janrainCheckLogin(HttpServletRequest request, HttpServletResponse response){
+    public static String janrainCheckLogin(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         String token =  request.getParameter("token");
         String errMsg = "";

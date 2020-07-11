@@ -322,7 +322,7 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
                     }
                 }
             }
-        }catch (GenericEntityException e) {
+        } catch (GenericEntityException e) {
             Debug.logError(e.getMessage(), MODULE);
         }
         return facilities;

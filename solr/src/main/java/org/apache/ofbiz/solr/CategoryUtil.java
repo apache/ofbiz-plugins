@@ -41,7 +41,7 @@ public final class CategoryUtil {
     
     private static final String MODULE = CategoryUtil.class.getName();
 
-    private CategoryUtil () {}
+    private CategoryUtil() { }
 
     /**
      * Gets catalog IDs for specified product category.
@@ -130,7 +130,7 @@ public final class CategoryUtil {
         for (List<String> trailElement : trailElements) {
             for (Iterator<String> trailIter = trailElement.iterator(); trailIter.hasNext();) {
                 String trailString = trailIter.next();
-                if (catMember.length() > 0){
+                if (catMember.length() > 0) {
                     catMember.append("/");
                     i++;
                 }
@@ -139,10 +139,11 @@ public final class CategoryUtil {
             }
         }
         
-        if (catMember.length() == 0){catMember.append(productCategoryId);}
-        
+        if (catMember.length() == 0) {
+            catMember.append(productCategoryId);
+        }
         if (showDepth) {
-            cm = i +"/"+ catMember.toString();
+            cm = i + "/" + catMember.toString();
         } else {
             cm = catMember.toString();
         }
@@ -155,7 +156,7 @@ public final class CategoryUtil {
      * Ie for "1/SYRACUS2_CATEGORY/FICTION_C/" the returned value would be 2.
      */
     public static int getNextLevelFromCategoryId(String productCategoryId, DispatchContext dctx) {
-        try{
+        try {
             if (productCategoryId.contains("/")) {
                 String[] productCategories = productCategoryId.split("/");
                 int level = Integer.parseInt(productCategories[0]);
@@ -163,7 +164,7 @@ public final class CategoryUtil {
             } else {
                 return 0;
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             return 0;
         }
     }
@@ -175,13 +176,13 @@ public final class CategoryUtil {
      * "2/SYRACUS2_CATEGORY/FICTION_C/".
      */
     public static String getFacetFilterForCategory(String productCategoryId, DispatchContext dctx) {
-        try{
+        try {
             String[] productCategories = productCategoryId.split("/");
             int level = Integer.parseInt(productCategories[0]);
-            int nextLevel = level+1;
-            productCategories[0] = ""+nextLevel;
-            return StringUtils.join(productCategories,"/");
-        } catch(Exception e) {
+            int nextLevel = level + 1;
+            productCategories[0] = "" + nextLevel;
+            return StringUtils.join(productCategories, "/");
+        } catch (Exception e) {
             return productCategoryId;
         }
     }

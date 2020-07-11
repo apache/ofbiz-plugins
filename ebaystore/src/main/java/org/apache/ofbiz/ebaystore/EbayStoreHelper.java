@@ -416,7 +416,7 @@ public class EbayStoreHelper {
                     item.setShipToLocations(tempShipLocation);
                 }
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             Debug.logError(e.getMessage(), MODULE);
         }
     }

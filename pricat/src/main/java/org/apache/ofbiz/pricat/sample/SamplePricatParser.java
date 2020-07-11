@@ -83,7 +83,7 @@ public class SamplePricatParser extends AbstractPricatParser {
             try {
                 workbook = new XSSFWorkbook(is);
                 report.println(UtilProperties.getMessage(RESOURCE, "ok", locale), InterfaceReport.FORMAT_OK);
-            } catch(IOException e) {
+            } catch (IOException e) {
                 report.println(e);
                 report.println(UtilProperties.getMessage(RESOURCE, "PricatSuggestion", locale), InterfaceReport.FORMAT_ERROR);
                 return;
@@ -170,7 +170,7 @@ public class SamplePricatParser extends AbstractPricatParser {
                     errorMessages.put(new CellReference(currencyIdCell), errorMessage);
                     return false;
                 }
-            } catch(GenericEntityException e) {
+            } catch (GenericEntityException e) {
                 String errorMessage = UtilProperties.getMessage(RESOURCE, "CurrencyIdNotFound", new Object[] {currencyId}, locale);
                 report.println(errorMessage, InterfaceReport.FORMAT_ERROR);
                 errorMessages.put(new CellReference(currencyIdCell), errorMessage);
@@ -469,7 +469,7 @@ public class SamplePricatParser extends AbstractPricatParser {
      * @param version
      * @return List of Object[]
      */
-    private static List<Object[]> genExcelHeaderNames(String version){
+    private static List<Object[]> genExcelHeaderNames(String version) {
         switch (version) {
             case "V1.1":
             default:

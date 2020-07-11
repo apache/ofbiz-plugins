@@ -52,7 +52,7 @@ import org.apache.ofbiz.entity.GenericEntityException;
  */
 public final class SolrUtil {
     
-    private SolrUtil() {}
+    private SolrUtil() { }
     private static final String MODULE = SolrUtil.class.getName();
     private static final String[] solrProdAttribute = { "productId", "internalName", "manu", "size", "smallImage", "mediumImage", "largeImage", "listPrice", "defaultPrice", "inStock", "isVirtual" };
 
@@ -138,14 +138,13 @@ public final class SolrUtil {
         WebappInfo solrApp = null;
         try {
             ComponentConfig cc = ComponentConfig.getComponentConfig("solr");
-            for(WebappInfo currApp : cc.getWebappInfos()) {
+            for (WebappInfo currApp : cc.getWebappInfos()) {
                 if ("solr".equals(currApp.getName())) {
                     solrApp = currApp;
                     break;
                 }
             }
-        }
-        catch(ComponentException e) {
+        } catch (ComponentException e) {
             throw new IllegalStateException(e);
         }
         return solrApp;
@@ -268,7 +267,7 @@ public final class SolrUtil {
                 solrQuery.setRows(0);
             }
             
-            if (UtilValidate.isNotEmpty(facetPrefix)){
+            if (UtilValidate.isNotEmpty(facetPrefix)) {
                 solrQuery.setFacetPrefix(facetPrefix);
             }
             

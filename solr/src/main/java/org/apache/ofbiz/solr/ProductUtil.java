@@ -47,7 +47,7 @@ import org.apache.ofbiz.service.ServiceUtil;
 public final class ProductUtil {
     private static final String MODULE = ProductUtil.class.getName();
 
-    private ProductUtil () {}
+    private ProductUtil() { }
 
     public static Map<String, Object> getProductContent(GenericValue product, DispatchContext dctx, Map<String, Object> context) {
         GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
@@ -98,7 +98,7 @@ public final class ProductUtil {
                        
                         while (trailIter.hasNext()) {
                             String trailString = trailIter.next();
-                            if (catMember.length() > 0){
+                            if (catMember.length() > 0) {
                                 catMember.append("/");
                                 i++;
                             }

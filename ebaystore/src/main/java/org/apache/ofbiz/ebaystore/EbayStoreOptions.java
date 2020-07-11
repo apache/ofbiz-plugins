@@ -80,7 +80,7 @@ public class EbayStoreOptions {
                     returnedBasicThemeArray = resp.getBasicThemeArray();
                     StoreThemeType[] storeBasicTheme = returnedBasicThemeArray.getTheme();
 
-                    int i=0;
+                    int i = 0;
                     String colorSchemeId = themeId.substring(themeId.indexOf("-")+1);
                     themeId = themeId.substring(0, themeId.indexOf("-"));
 

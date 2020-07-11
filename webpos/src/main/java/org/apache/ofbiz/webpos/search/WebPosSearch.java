@@ -42,7 +42,7 @@ import org.apache.ofbiz.service.ServiceUtil;
 public class WebPosSearch {
 
     private static final String MODULE = WebPosSearch.class.getName();
-    
+
     public static Map<String, Object> findProducts(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         String searchByProductIdValue = (String) context.get("searchByProductIdValue");
@@ -50,11 +50,10 @@ public class WebPosSearch {
         String searchByProductDescription = (String) context.get("searchByProductDescription");
         String goodIdentificationTypeId = (String) context.get("goodIdentificationTypeId");
         Map<String, Object> result = ServiceUtil.returnSuccess();
-        
+
         List<EntityCondition> andExprs = new LinkedList<>();
         EntityCondition mainCond = null;
         String entityName = "Product";
-        
         // search by product name
         if (UtilValidate.isNotEmpty(searchByProductName)) {
             searchByProductName = searchByProductName.toUpperCase().trim();
@@ -84,7 +83,6 @@ public class WebPosSearch {
         result.put("productsList", products);
         return result;
     }
-    
     public static Map<String, Object> findParties(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         String searchByPartyLastName = (String) context.get("searchByPartyLastName");
@@ -94,12 +92,12 @@ public class WebPosSearch {
         String billingLocation = (String) context.get("billingLocation");
         String shippingLocation = (String) context.get("shippingLocation");
         Map<String, Object> result = ServiceUtil.returnSuccess();
-        
+
         List<EntityCondition> andExprs = new LinkedList<>();
         List<EntityCondition> orExprs = new LinkedList<>();
         EntityCondition mainCond = null;
         List<String> orderBy = new LinkedList<>();
-        
+
         // default view settings
         DynamicViewEntity dynamicView = new DynamicViewEntity();
         dynamicView.addMemberEntity("PT", "Party");
@@ -132,29 +130,23 @@ public class WebPosSearch {
         dynamicView.addAlias("PA", "countryGeoId");
         dynamicView.addAlias("PA", "stateProvinceGeoId");
         dynamicView.addViewLink("CM", "PA", Boolean.TRUE, ModelKeyMap.makeKeyMapList("contactMechId"));
-        
         if (UtilValidate.isNotEmpty(billingLocation) && "Y".equalsIgnoreCase(billingLocation)) {
             orExprs.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "BILLING_LOCATION"));
         }
-        
         if (UtilValidate.isNotEmpty(shippingLocation) && "Y".equalsIgnoreCase(shippingLocation)) {
             orExprs.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "SHIPPING_LOCATION"));
         }
-        
         if (orExprs.size() > 0) {
             andExprs.add(EntityCondition.makeCondition(orExprs, EntityOperator.OR));
         }
         andExprs.add(EntityCondition.makeCondition("partyTypeId", EntityOperator.EQUALS, "PERSON"));
         andExprs.add(EntityCondition.makeCondition("contactMechTypeId", EntityOperator.EQUALS, "POSTAL_ADDRESS"));
-        
         if (UtilValidate.isNotEmpty(shippingLocation) && "N".equalsIgnoreCase(shippingLocation) && UtilValidate.isNotEmpty(billingLocation) && "N".equalsIgnoreCase(billingLocation)) {
            andExprs.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.IN, UtilMisc.toList("SHIPPING_LOCATION", "BILLING_LOCATION")));
         }
         mainCond = EntityCondition.makeCondition(andExprs, EntityOperator.AND);
-        
         orderBy.add("lastName");
         orderBy.add("firstName");
-        
         // search by last name
         if (UtilValidate.isNotEmpty(searchByPartyLastName)) {
             searchByPartyLastName = searchByPartyLastName.toUpperCase().trim();

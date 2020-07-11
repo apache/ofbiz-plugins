@@ -31,7 +31,7 @@ import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.LocalDispatcher;
 
-public class EbayStoreAutoPrefEvents{
+public class EbayStoreAutoPrefEvents {
 
     private static final String MODULE = EbayStoreAutoPrefEvents.class.getName();
 

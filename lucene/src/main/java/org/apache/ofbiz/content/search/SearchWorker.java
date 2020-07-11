@@ -43,7 +43,7 @@ public final class SearchWorker {
 
     private static final Version LUCENE_VERSION = Version.LUCENE_8_5_0;
 
-    private SearchWorker() {}
+    private SearchWorker() { }
 
     public static void indexContentTree(LocalDispatcher dispatcher, Delegator delegator, String siteId) throws Exception {
         GenericValue content = delegator.makeValue("Content", UtilMisc.toMap("contentId", siteId));

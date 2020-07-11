@@ -302,7 +302,7 @@ public class EbayEvents {
         return "success";
     }
 
-    public static EbayStoreSiteFacade getSiteFacade(ApiContext apiContext, HttpServletRequest request) throws ApiException, SdkException, Exception{
+    public static EbayStoreSiteFacade getSiteFacade(ApiContext apiContext, HttpServletRequest request) throws ApiException, SdkException, Exception {
         String siteFacadeName = null;
         EbayStoreSiteFacade siteFacade = null;
 
@@ -371,7 +371,7 @@ public class EbayEvents {
     }
 
     // make ebay category list
-    public static List<CategoryType> getChildCategories(HttpServletRequest request) throws ApiException, SdkException, Exception{
+    public static List<CategoryType> getChildCategories(HttpServletRequest request) throws ApiException, SdkException, Exception {
         List<CategoryType> categories = new LinkedList<CategoryType>();
         EbayStoreSiteFacade sf = null;
         String categoryId = null;
@@ -479,7 +479,7 @@ public class EbayEvents {
         return categories;
     }
 
-    public static CategoryType getCsCategoriesMapped(HttpServletRequest request) throws ApiException, SdkException, Exception{
+    public static CategoryType getCsCategoriesMapped(HttpServletRequest request) throws ApiException, SdkException, Exception {
         EbayStoreSiteFacade sf = null;
         String categoryId = null;
         CategoryType cate = null;
@@ -667,7 +667,7 @@ public class EbayEvents {
                     valueListType = (String) paramMap.remove("categorySpecifics" + thisSuffix);
                 }
                 
-                if ((UtilValidate.isNotEmpty(nameValueListType)) && (UtilValidate.isNotEmpty(valueListType))){
+                if ((UtilValidate.isNotEmpty(nameValueListType)) && (UtilValidate.isNotEmpty(valueListType))) {
                    nameSpecificList.add(nameValueListType);
                    valueSpecificList.add(valueListType);
                 }
@@ -987,7 +987,7 @@ public class EbayEvents {
                 }
             }
             request.setAttribute("productStoreId", requestParams.get("productStoreId"));
-        } catch(Exception e) {
+        } catch (Exception e) {
             Debug.logError(e.getMessage(), MODULE);
             request.setAttribute("_ERROR_MESSAGE_","Exception: ".concat(e.getMessage()));
             return "error";

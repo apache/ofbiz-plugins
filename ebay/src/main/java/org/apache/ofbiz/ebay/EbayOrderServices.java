@@ -209,8 +209,8 @@ public class EbayOrderServices {
 
     private static Map<String, Object> buildGetSellerTransactionsRequest(Map<String, Object> context, StringBuffer sellerTransactionsItemsXml, String token) {
         Locale locale = (Locale)context.get("locale");
-        String fromDate = (String)context.get("fromDate");
-        String thruDate = (String)context.get("thruDate");
+        String fromDate = (String) context.get("fromDate");
+        String thruDate = (String) context.get("thruDate");
         try {
              Document transDoc = UtilXml.makeEmptyXmlDocument("GetSellerTransactionsRequest");
              Element transElem = transDoc.getDocumentElement();

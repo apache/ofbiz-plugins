@@ -233,7 +233,7 @@ public class EbayStore {
             return ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE, "EbayStorePartyWithoutRoleEbayAccount", UtilMisc.toMap("partyId", context.get("partyId").toString()), locale));
         }
         try {
-            SetStoreCategoriesCall  call = new SetStoreCategoriesCall(EbayStoreHelper.getApiContext((String)context.get("productStoreId"), locale, delegator));
+            SetStoreCategoriesCall  call = new SetStoreCategoriesCall(EbayStoreHelper.getApiContext((String) context.get("productStoreId"), locale, delegator));
 
             catalogCategories = EntityQuery.use(delegator).from("ProdCatalogCategory").where("prodCatalogId", context.get("prodCatalogId").toString(),"prodCatalogCategoryTypeId","PCCT_EBAY_ROOT").orderBy("sequenceNum ASC").queryList();
             if (catalogCategories != null && catalogCategories.size() > 0) {
@@ -373,7 +373,7 @@ public class EbayStore {
         StoreCustomCategoryType[] storeCustomCategoryTypeArry = null;
             if (list != null && list.size() > 0) {
                 storeCustomCategoryTypeArry = new StoreCustomCategoryType[list.size()];
-                int i=0;
+                int i = 0;
                 for (StoreCustomCategoryType val : list) {
                     storeCustomCategoryTypeArry[i] = val;
                 }
@@ -517,7 +517,7 @@ public class EbayStore {
             UtilXml.addChildElementValue(storeRequestElem, "Action", "Add", storeDocument);
 
             Element StoreCategoriesElem = UtilXml.addChildElement(storeRequestElem, "StoreCategories", storeDocument);
-            //UtilXml.addChildElementValue(StoreCategoriesElem, "Country", (String)context.get("country"), storeDocument);
+            //UtilXml.addChildElementValue(StoreCategoriesElem, "Country", (String) context.get("country"), storeDocument);
             GenericValue category = null;
             if (UtilValidate.isNotEmpty(context.get("prodCatalogId"))) {
                 category = EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", productCategoryId).cache().queryOne();
@@ -638,8 +638,8 @@ public class EbayStore {
                 e1.printStackTrace();
             }
             Debug.logInfo("userLoginId is "+userLoginId+" and productStoreId is "+ context.get("productStoreId"), MODULE);
-            GetStoreCall call = new GetStoreCall(EbayStoreHelper.getApiContext((String)context.get("productStoreId"), locale, delegator));
-            //call.setSite(EbayHelper.getSiteCodeType((String)context.get("productStoreId"), locale, delegator));
+            GetStoreCall call = new GetStoreCall(EbayStoreHelper.getApiContext((String) context.get("productStoreId"), locale, delegator));
+            //call.setSite(EbayHelper.getSiteCodeType((String) context.get("productStoreId"), locale, delegator));
             call.setCategoryStructureOnly(false);
             call.setUserID(userLoginId);
 
@@ -705,7 +705,7 @@ public class EbayStore {
                     StoreHeaderStyleCodeType[] storeHeaderStyleCodeList =  StoreHeaderStyleCodeType.values();
                     if (storeHeaderStyleCodeList != null) {
                         List<Map<String, Object>> storeHeaderStyleList = new LinkedList<>();
-                        int i=0;
+                        int i = 0;
                         while (i<storeHeaderStyleCodeList.length) {
                             Map<String, Object> storeHeaderStyleMap = new HashMap<>();
                             StoreHeaderStyleCodeType storeHeaderStyleCode = storeHeaderStyleCodeList[i];
@@ -881,9 +881,9 @@ public class EbayStore {
 
         try {
             if (context.get("productStoreId") != null) {
-                String themeId = (String)context.get("themeId");
+                String themeId = (String) context.get("themeId");
 
-                GetStoreOptionsCall  call = new GetStoreOptionsCall(EbayStoreHelper.getApiContext((String)context.get("productStoreId"), locale, delegator));
+                GetStoreOptionsCall  call = new GetStoreOptionsCall(EbayStoreHelper.getApiContext((String) context.get("productStoreId"), locale, delegator));
                 req = new GetStoreOptionsRequestType();
 
                 resp = (GetStoreOptionsResponseType) call.execute(req);
@@ -945,7 +945,7 @@ public class EbayStore {
         GetStoreOptionsResponseType resp  = null;
         try {
             if (context.get("productStoreId") != null) {
-                GetStoreOptionsCall  call = new GetStoreOptionsCall(EbayStoreHelper.getApiContext((String)context.get("productStoreId"), locale, delegator));
+                GetStoreOptionsCall  call = new GetStoreOptionsCall(EbayStoreHelper.getApiContext((String) context.get("productStoreId"), locale, delegator));
                 req = new GetStoreOptionsRequestType();
 
                 resp = (GetStoreOptionsResponseType) call.execute(req);
@@ -990,7 +990,7 @@ public class EbayStore {
         GetStoreOptionsResponseType resp  = null;
         try {
             if (context.get("productStoreId") != null) {
-                GetStoreOptionsCall  call = new GetStoreOptionsCall(EbayStoreHelper.getApiContext((String)context.get("productStoreId"), locale, delegator));
+                GetStoreOptionsCall  call = new GetStoreOptionsCall(EbayStoreHelper.getApiContext((String) context.get("productStoreId"), locale, delegator));
                 req = new GetStoreOptionsRequestType();
 
                 resp = (GetStoreOptionsResponseType) call.execute(req);
@@ -1042,7 +1042,7 @@ public class EbayStore {
         GetStoreOptionsResponseType resp  = null;
         try {
             if (context.get("productStoreId") != null) {
-                GetStoreOptionsCall  call = new GetStoreOptionsCall(EbayStoreHelper.getApiContext((String)context.get("productStoreId"), locale, delegator));
+                GetStoreOptionsCall  call = new GetStoreOptionsCall(EbayStoreHelper.getApiContext((String) context.get("productStoreId"), locale, delegator));
                 req = new GetStoreOptionsRequestType();
 
                 resp = (GetStoreOptionsResponseType) call.execute(req);
@@ -1100,7 +1100,7 @@ public class EbayStore {
         GetStoreOptionsResponseType resp  = null;
         try {
             if (context.get("productStoreId") != null) {
-                GetStoreOptionsCall  call = new GetStoreOptionsCall(EbayStoreHelper.getApiContext((String)context.get("productStoreId"), locale, delegator));
+                GetStoreOptionsCall  call = new GetStoreOptionsCall(EbayStoreHelper.getApiContext((String) context.get("productStoreId"), locale, delegator));
                 req = new GetStoreOptionsRequestType();
 
                 resp = (GetStoreOptionsResponseType) call.execute(req);
@@ -1227,20 +1227,20 @@ public class EbayStore {
         StoreType storeType = null;
         try {
             if (context.get("productStoreId") != null) {
-                SetStoreCall  call = new SetStoreCall(EbayStoreHelper.getApiContext((String)context.get("productStoreId"), locale, delegator));
+                SetStoreCall  call = new SetStoreCall(EbayStoreHelper.getApiContext((String) context.get("productStoreId"), locale, delegator));
                 req = new SetStoreRequestType();
 
                 storeType = new StoreType();
-                storeType.setName((String)context.get("storeName"));
-                storeType.setDescription((String)context.get("storeDesc"));
-                storeType.setURL((String)context.get("storeUrl"));
+                storeType.setName((String) context.get("storeName"));
+                storeType.setDescription((String) context.get("storeDesc"));
+                storeType.setURL((String) context.get("storeUrl"));
                 storeType.setURLPath("");
                 StoreLogoType storeLogo = new StoreLogoType();
                 if (context.get("storeLogoURL") == null) {
-                    if (context.get("storeLogoId") != null) storeLogo.setLogoID(Integer.parseInt((String)context.get("storeLogoId")));
-                    storeLogo.setName((String)context.get("storeLogoName"));
+                    if (context.get("storeLogoId") != null) storeLogo.setLogoID(Integer.parseInt((String) context.get("storeLogoId")));
+                    storeLogo.setName((String) context.get("storeLogoName"));
                 } else {
-                    storeLogo.setURL((String)context.get("storeLogoURL"));
+                    storeLogo.setURL((String) context.get("storeLogoURL"));
                 }
                 storeType.setLogo(storeLogo);
 
@@ -1250,20 +1250,20 @@ public class EbayStore {
                 StoreFontType storeFont = null;
                 if ("Advanced".equals(context.get("themeType"))) {
                     storeColorScheme = new StoreColorSchemeType();
-                    if (context.get("storeAdvancedThemeColor") != null) storeColorScheme.setColorSchemeID(Integer.parseInt((String)context.get("storeAdvancedThemeColor")));
+                    if (context.get("storeAdvancedThemeColor") != null) storeColorScheme.setColorSchemeID(Integer.parseInt((String) context.get("storeAdvancedThemeColor")));
 
                     storecolor = new StoreColorType();
-                    storecolor.setPrimary((String)context.get("storePrimaryColor"));
-                    storecolor.setSecondary((String)context.get("storeSecondaryColor"));
-                    storecolor.setAccent((String)context.get("storeAccentColor"));
+                    storecolor.setPrimary((String) context.get("storePrimaryColor"));
+                    storecolor.setSecondary((String) context.get("storeSecondaryColor"));
+                    storecolor.setAccent((String) context.get("storeAccentColor"));
                     storeColorScheme.setColor(storecolor);
                     storeTheme.setColorScheme(storeColorScheme);
                     storeTheme.setName(null);
-                    storeTheme.setThemeID(Integer.parseInt((String)context.get("storeAdvancedTheme")));
+                    storeTheme.setThemeID(Integer.parseInt((String) context.get("storeAdvancedTheme")));
                 } else if ("Basic".equals(context.get("themeType"))) {
                     storeColorScheme = new StoreColorSchemeType();
                     if (context.get("storeBasicTheme")!=null) {
-                        String storeBasicTheme = (String)context.get("storeBasicTheme");
+                        String storeBasicTheme = (String) context.get("storeBasicTheme");
                         String storeThemeId = null;
                         String storeColorSchemeId = null;
                         if (storeBasicTheme.indexOf("-") != -1) {
@@ -1273,23 +1273,23 @@ public class EbayStore {
                         if (storeColorSchemeId != null) storeColorScheme.setColorSchemeID(Integer.parseInt(storeColorSchemeId));
 
                         storecolor = new StoreColorType();
-                        storecolor.setPrimary((String)context.get("storePrimaryColor"));
-                        storecolor.setSecondary((String)context.get("storeSecondaryColor"));
-                        storecolor.setAccent((String)context.get("storeAccentColor"));
+                        storecolor.setPrimary((String) context.get("storePrimaryColor"));
+                        storecolor.setSecondary((String) context.get("storeSecondaryColor"));
+                        storecolor.setAccent((String) context.get("storeAccentColor"));
                         storeColorScheme.setColor(storecolor);
 
                         storeFont = new StoreFontType();
-                        storeFont.setNameColor((String)context.get("storeNameFontColor"));
-                        storeFont.setNameFace(StoreFontFaceCodeType.valueOf((String)context.get("storeNameFont")));
-                        storeFont.setNameSize(StoreFontSizeCodeType.valueOf((String)context.get("storeNameFontSize")));
+                        storeFont.setNameColor((String) context.get("storeNameFontColor"));
+                        storeFont.setNameFace(StoreFontFaceCodeType.valueOf((String) context.get("storeNameFont")));
+                        storeFont.setNameSize(StoreFontSizeCodeType.valueOf((String) context.get("storeNameFontSize")));
 
-                        storeFont.setTitleColor((String)context.get("storeTitleFontColor"));
-                        storeFont.setTitleFace(StoreFontFaceCodeType.valueOf((String)context.get("storeTitleFont")));
-                        storeFont.setTitleSize(StoreFontSizeCodeType.valueOf((String)context.get("storeTitleFontSize")));
+                        storeFont.setTitleColor((String) context.get("storeTitleFontColor"));
+                        storeFont.setTitleFace(StoreFontFaceCodeType.valueOf((String) context.get("storeTitleFont")));
+                        storeFont.setTitleSize(StoreFontSizeCodeType.valueOf((String) context.get("storeTitleFontSize")));
 
-                        storeFont.setDescColor((String)context.get("storeDescFontColor"));
-                        storeFont.setDescFace(StoreFontFaceCodeType.valueOf((String)context.get("storeDescFont")));
-                        storeFont.setDescSize(StoreFontSizeCodeType.valueOf((String)context.get("storeDescFontSize")));
+                        storeFont.setDescColor((String) context.get("storeDescFontColor"));
+                        storeFont.setDescFace(StoreFontFaceCodeType.valueOf((String) context.get("storeDescFont")));
+                        storeFont.setDescSize(StoreFontSizeCodeType.valueOf((String) context.get("storeDescFontSize")));
 
                         storeColorScheme.setFont(storeFont);
 
@@ -1299,14 +1299,14 @@ public class EbayStore {
                     }
                 }
                 storeType.setTheme(storeTheme);
-                storeType.setHeaderStyle(StoreHeaderStyleCodeType.valueOf((String)context.get("storeHeaderStyle")));
-                storeType.setItemListLayout(StoreItemListLayoutCodeType.valueOf((String)context.get("storeItemLayout")));
-                storeType.setItemListSortOrder(StoreItemListSortOrderCodeType.valueOf((String)context.get("storeItemSortOrder")));
-                storeType.setMerchDisplay(MerchDisplayCodeType.valueOf((String)context.get("storeMerchDisplay")));
-                storeType.setSubscriptionLevel(StoreSubscriptionLevelCodeType.valueOf((String)context.get("storeSubscriptionDisplay")));
+                storeType.setHeaderStyle(StoreHeaderStyleCodeType.valueOf((String) context.get("storeHeaderStyle")));
+                storeType.setItemListLayout(StoreItemListLayoutCodeType.valueOf((String) context.get("storeItemLayout")));
+                storeType.setItemListSortOrder(StoreItemListSortOrderCodeType.valueOf((String) context.get("storeItemSortOrder")));
+                storeType.setMerchDisplay(MerchDisplayCodeType.valueOf((String) context.get("storeMerchDisplay")));
+                storeType.setSubscriptionLevel(StoreSubscriptionLevelCodeType.valueOf((String) context.get("storeSubscriptionDisplay")));
 
-                storeType.setCustomHeader((String)context.get("storeCustomHeader"));
-                storeType.setCustomHeaderLayout(StoreCustomHeaderLayoutCodeType.valueOf((String)context.get("storeCustomHeaderLayout")));
+                storeType.setCustomHeader((String) context.get("storeCustomHeader"));
+                storeType.setCustomHeaderLayout(StoreCustomHeaderLayoutCodeType.valueOf((String) context.get("storeCustomHeaderLayout")));
 
                 req.setStore(storeType);
                 resp = (SetStoreResponseType) call.execute(req);
@@ -1709,7 +1709,7 @@ public class EbayStore {
         try {
             String itemId = (String) context.get("itemId");
             String transactionId = (String) context.get("transactionId");
-            DisputeReasonCodeType drct = EbayStore.getEbayDisputeReasonCodeType((String)context.get("disputeReasonCodeType"));
+            DisputeReasonCodeType drct = EbayStore.getEbayDisputeReasonCodeType((String) context.get("disputeReasonCodeType"));
             DisputeExplanationCodeType dect = EbayStore.getEbayDisputeExplanationCodeType((String) context.get("disputeExplanationCodeType"));
             DetailLevelCodeType[] detailLevels = new DetailLevelCodeType[] {
                     DetailLevelCodeType.RETURN_ALL,
@@ -2074,7 +2074,7 @@ public class EbayStore {
         return colsList;
     }
 
-    public static Map<String, Object> getTransaction(TransactionType transaction){
+    public static Map<String, Object> getTransaction(TransactionType transaction) {
         Map<String, Object> cols = new HashMap<>();
         ItemType item = transaction.getItem();
         String itemId = null;
@@ -2467,7 +2467,7 @@ public class EbayStore {
             if (product != null) {
                 checkResult = true;
             }
-        } catch(GenericEntityException e) {
+        } catch (GenericEntityException e) {
             return false;
         }
         return checkResult;

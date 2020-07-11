@@ -73,7 +73,7 @@ public class SolrTests extends OFBizTestCase {
 
     }
 
-    public void testAddToSolrIndex() throws Exception{
+    public void testAddToSolrIndex() throws Exception {
         context = new HashMap<>();
         context.put("productId", validTestProductId);
         response = dispatcher.runSync("addToSolrIndex", context);

@@ -88,7 +88,7 @@ public class DocumentIndexer extends Thread {
                     try {
                         indexWriter.close();
                         indexWriter = null;
-                    } catch(IOException ioe) {
+                    } catch (IOException ioe) {
                         Debug.logError(ioe, MODULE);
                     }
                 }
@@ -121,13 +121,13 @@ public class DocumentIndexer extends Thread {
                     indexWriter.updateDocument(documentIdentifier, document);
                     if (Debug.infoOn()) Debug.logInfo(getName() + ": indexed Lucene document: " + ofbizDocument, MODULE);
                 }
-            } catch(Exception e) {
+            } catch (Exception e) {
                 Debug.logError(e, getName() + ": error processing Lucene document: " + ofbizDocument, MODULE);
                 if (documentIndexQueue.peek() == null) {
                     try {
                         indexWriter.close();
                         indexWriter = null;
-                    } catch(IOException ioe) {
+                    } catch (IOException ioe) {
                         Debug.logError(ioe, MODULE);
                     }
                 }

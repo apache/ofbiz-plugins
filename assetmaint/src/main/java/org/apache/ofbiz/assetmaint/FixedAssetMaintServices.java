@@ -50,11 +50,11 @@ public class FixedAssetMaintServices {
         LocalDispatcher dispatcher = ctx.getDispatcher();
         Delegator delegator = ctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
-        String fixedAssetId = (String)context.get("fixedAssetId");
-        String maintHistSeqId = (String)context.get("maintHistSeqId");
-        String productId = (String)context.get("productId");
-        String facilityId = (String)context.get("facilityId");
-        Double quantity = (Double)context.get("quantity");
+        String fixedAssetId = (String) context.get("fixedAssetId");
+        String maintHistSeqId = (String) context.get("maintHistSeqId");
+        String productId = (String) context.get("productId");
+        String facilityId = (String) context.get("facilityId");
+        Double quantity = (Double) context.get("quantity");
         double requestedQty = quantity;
 
         try {

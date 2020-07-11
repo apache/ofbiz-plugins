@@ -66,7 +66,7 @@ public class BirtFactory {
      * @throws ParserConfigurationException
      */
     public static InputStream getReportInputStreamFromLocation(String resourceName)
-        throws IOException, SAXException, ParserConfigurationException{
+        throws IOException, SAXException, ParserConfigurationException {
 
         InputStream reportInputStream = null;
         synchronized (BirtFactory.class) {

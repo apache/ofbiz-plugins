@@ -170,7 +170,7 @@ public class ImportOrdersFromEbay {
                 String successMessage = (String)result.get("successMessage");
                 if (successMessage != null) {
                     return readCompleteSaleResponse(successMessage, locale);
-                } else{
+                } else {
                     ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.errorDuringPostCompleteSaleRequest", locale));
                 }
             }
@@ -183,7 +183,7 @@ public class ImportOrdersFromEbay {
 
     private static Map<String, Object> checkOrders(Delegator delegator, LocalDispatcher dispatcher, Locale locale, Map<String, Object> context, String response) {
         StringBuffer errorMessage = new StringBuffer();
-        List<Map<String, Object>> orders = readResponseFromEbay(response, locale, (String)context.get("productStoreId"), delegator, errorMessage);
+        List<Map<String, Object>> orders = readResponseFromEbay(response, locale, (String) context.get("productStoreId"), delegator, errorMessage);
         if (orders == null) {
             Debug.logError("Error :" + errorMessage.toString(), MODULE);
             return ServiceUtil.returnFailure(errorMessage.toString());
@@ -213,8 +213,8 @@ public class ImportOrdersFromEbay {
 
     private static Map<String, Object> buildGetSellerTransactionsRequest(Map<String, Object> context, StringBuffer dataItemsXml, String token) {
         Locale locale = (Locale)context.get("locale");
-        String fromDate = (String)context.get("fromDate");
-        String thruDate = (String)context.get("thruDate");
+        String fromDate = (String) context.get("fromDate");
+        String thruDate = (String) context.get("thruDate");
         try {
              Document transDoc = UtilXml.makeEmptyXmlDocument("GetSellerTransactionsRequest");
              Element transElem = transDoc.getDocumentElement();
@@ -250,8 +250,8 @@ public class ImportOrdersFromEbay {
     }
 
     public static Map<String, Object> buildCompleteSaleRequest(Delegator delegator, Locale locale, String externalId, String transactionId, Map<String, Object> context, StringBuffer dataItemsXml, String token) {
-        String paid = (String)context.get("paid");
-        String shipped = (String)context.get("shipped");
+        String paid = (String) context.get("paid");
+        String shipped = (String) context.get("shipped");
 
         try {
             if (externalId == null) {
