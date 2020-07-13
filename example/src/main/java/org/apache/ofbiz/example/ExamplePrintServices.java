@@ -65,13 +65,13 @@ public class ExamplePrintServices {
     private static final String RESOURCE = "ExampleUiLabels";
 
     public static Map<String, Object> printReportPdf(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Locale locale = (Locale)context.get("locale");
+        Locale locale = (Locale) context.get("locale");
         String screenLocation = "component://example/widget/example/ExampleReportScreens.xml";
         String reportScreenName = "ExampleReport";
         VisualTheme visualTheme = (VisualTheme) context.get("visualTheme");
         if (visualTheme == null) {
             visualTheme = ThemeFactory.resolveVisualTheme(null);
-        }        
+        }
         if (visualTheme == null) visualTheme = ThemeFactory.resolveVisualTheme(null);
         Map<String, Object> workContext = new HashMap<>();
         workContext.putAll(context);

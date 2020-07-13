@@ -29,9 +29,9 @@ import org.apache.ofbiz.base.util.Debug;
 public class PassportUtil {
 
     private static final String MODULE = PassportUtil.class.getName();
-    
+
     public static final String ClientIdLabel = "ClientId";
-    
+
     public static final String SecretLabel = "Secret";
 
     public static final String ReturnUrlLabel = "ReturnUrl";
@@ -89,15 +89,15 @@ public class PassportUtil {
     public static final String COMMON_APP_KEY = "AppKey";
 
     public static final String COMMON_APP_SECRET = "AppSecret";
-    
+
     public static final RequestConfig StandardRequestConfig = RequestConfig.custom()
                                                                            .setCookieSpec(CookieSpecs.STANDARD)
                                                                            .build();
-    
+
     protected PassportUtil() {
         // empty constructor
     }
-    
+
     public static PassportUtil getInstance() {
         return new PassportUtil();
     }

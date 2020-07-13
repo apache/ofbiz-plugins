@@ -110,7 +110,7 @@ public class ReportDesignGenerator {
         DesignConfig config = new DesignConfig();
         Platform.startup();
         IDesignEngine engine = ((IDesignEngineFactory) Platform.createFactoryObject(IDesignEngineFactory.EXTENSION_DESIGN_ENGINE_FACTORY)).createDesignEngine(config);
-        
+
         // creating main design elements
         SessionHandle session = engine.newSessionHandle(ULocale.forLocale(locale));
         design = session.createDesign();
@@ -219,7 +219,7 @@ public class ReportDesignGenerator {
         cell.getContent().add(label);
         label.setText("Dat is dat test !");
         // ################ CODE HERE IF YOU WANT TO ADD GENERATED DESIGN / MAY BE WORTH USING RPTTEMPLATE AND-OR RPTLIBRARY ################### */
-        
+
         design.saveAs(rptDesignName);
         design.close();
         if (Debug.infoOn())Debug.logInfo("####### Design generated: " + rptDesignName, MODULE);

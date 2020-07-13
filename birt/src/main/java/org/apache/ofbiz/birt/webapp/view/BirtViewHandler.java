@@ -77,7 +77,7 @@ public class BirtViewHandler implements ViewHandler {
     public void render(String name, String page, String info,
             String contentType, String encoding, HttpServletRequest request,
             HttpServletResponse response) throws ViewHandlerException {
-        
+
         try {
             IReportEngine engine = org.apache.ofbiz.birt.BirtFactory.getReportEngine();
             // open report design
@@ -97,7 +97,7 @@ public class BirtViewHandler implements ViewHandler {
             } else {
                 design = engine.openReportDesign(page);
             }
-            
+
             Map<String, Object> appContext = UtilGenerics.cast(engine.getConfig().getAppContext());
             BirtWorker.setWebContextObjects(appContext, request, response);
 
@@ -114,13 +114,13 @@ public class BirtViewHandler implements ViewHandler {
             if (locale == null) {
                 locale = UtilHttp.getLocale(request);
             }
-            
+
             // set override content type
             String overrideContentType = request.getParameter(BirtWorker.getBirtContentType());
             if (UtilValidate.isNotEmpty(overrideContentType)) {
                 contentType = overrideContentType;
             }
-            
+
             // set output file name to get also file extension
             String outputFileName = request.getParameter(BirtWorker.getBirtOutputFileName());
             if (UtilValidate.isNotEmpty(outputFileName)) {

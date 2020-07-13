@@ -132,7 +132,6 @@ public class EbayStoreCustomerService {
             GenericValue  ebayUserBestOffer = EntityQuery.use(delegator).from("EbayUserBestOffer").where("userId", userId, "itemId", itemId).queryOne();
             ebayUserBestOffer.set("contactStatus", contactStatus);
             ebayUserBestOffer.store();
-            
             result.put("userId", userId);
             result.put("itemId", itemId);
             result.put("productStoreId", productStoreId);

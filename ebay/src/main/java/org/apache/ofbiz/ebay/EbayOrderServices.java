@@ -208,7 +208,7 @@ public class EbayOrderServices {
     }
 
     private static Map<String, Object> buildGetSellerTransactionsRequest(Map<String, Object> context, StringBuffer sellerTransactionsItemsXml, String token) {
-        Locale locale = (Locale)context.get("locale");
+        Locale locale = (Locale) context.get("locale");
         String fromDate = (String) context.get("fromDate");
         String thruDate = (String) context.get("thruDate");
         try {
@@ -1115,26 +1115,22 @@ public class EbayOrderServices {
                 if (UtilValidate.isNotEmpty(shippingAddressCtx)) {
                     String buyerName = (String) shippingAddressCtx.get("buyerName");
                     String firstName = buyerName.substring(0, buyerName.indexOf(" "));
-                    String lastName = buyerName.substring(buyerName.indexOf(" ")+1);
+                    String lastName = buyerName.substring(buyerName.indexOf(" ") + 1);
 
                     String country = (String) shippingAddressCtx.get("shippingAddressCountry");
                     String state = (String) shippingAddressCtx.get("shippingAddressStateOrProvince");
                     String city = (String) shippingAddressCtx.get("shippingAddressCityName");
                     EbayHelper.correctCityStateCountry(dispatcher, shippingAddressCtx, city, state, country);
 
-                    List<GenericValue> shipInfo = 
+                    List<GenericValue> shipInfo =
                         PartyWorker.findMatchingPersonPostalAddresses
-                            (delegator, 
+                            (delegator,
                              shippingAddressCtx.get("shippingAddressStreet1").toString(),
-                            (UtilValidate.isEmpty(shippingAddressCtx.get("shippingAddressStreet2")) ? null : shippingAddressCtx.get("shippingAddressStreet2").toString()), 
-                             shippingAddressCtx.get("city").toString(), 
+                            (UtilValidate.isEmpty(shippingAddressCtx.get("shippingAddressStreet2")) ? null : shippingAddressCtx.get("shippingAddressStreet2").toString()),
+                             shippingAddressCtx.get("city").toString(),
                             (UtilValidate.isEmpty(shippingAddressCtx.get("stateProvinceGeoId")) ? null : shippingAddressCtx.get("stateProvinceGeoId").toString()),
-                             shippingAddressCtx.get("shippingAddressPostalCode").toString(), 
-                             null, 
-                             shippingAddressCtx.get("countryGeoId").toString(), 
-                             firstName, 
-                             null, 
-                             lastName);
+                             shippingAddressCtx.get("shippingAddressPostalCode").toString(),
+                             null, shippingAddressCtx.get("countryGeoId").toString(), firstName, null, lastName);
                     if (UtilValidate.isNotEmpty(shipInfo)) {
                         GenericValue first = EntityUtil.getFirst(shipInfo);
                         partyId = first.getString("partyId");

@@ -77,7 +77,6 @@ public class BirtEmailServices {
         Delegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
         Security security = ctx.getSecurity();
-        
         String webSiteId = (String) serviceContext.remove("webSiteId");
         String bodyText = (String) serviceContext.remove("bodyText");
         String bodyScreenUri = (String) serviceContext.remove("bodyScreenUri");
@@ -92,7 +91,7 @@ public class BirtEmailServices {
         VisualTheme visualTheme = (VisualTheme) context.get("visualTheme");
         if (visualTheme == null) {
             visualTheme = ThemeFactory.resolveVisualTheme(null);
-        }        
+        }
         if (visualTheme == null) visualTheme = ThemeFactory.resolveVisualTheme(null);
         if (bodyParameters == null) {
             bodyParameters = MapStack.create();
@@ -182,7 +181,6 @@ public class BirtEmailServices {
                 appContext.put("delegator", delegator);
                 appContext.put("dispatcher", dispatcher);
                 appContext.put("security", security);
-                
                 InputStream reportInputStream = BirtFactory.getReportInputStreamFromLocation(birtReportLocation);
                 IReportRunnable design = engine.openReportDesign(reportInputStream);
                 Debug.logInfo("Export report as content type:" + birtContentType, MODULE);

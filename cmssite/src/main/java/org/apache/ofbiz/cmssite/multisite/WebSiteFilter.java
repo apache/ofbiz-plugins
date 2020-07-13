@@ -160,7 +160,6 @@ public class WebSiteFilter implements Filter {
         session.setAttribute("dispatcher", dispatcher);
         session.setAttribute("security", security);
         session.setAttribute("_WEBAPP_NAME_", UtilHttp.getApplicationName(request));
-        
         // get rid of the visit info since it was pointing to the previous database, and get a new one
         session.removeAttribute("visitor");
         session.removeAttribute("visit");

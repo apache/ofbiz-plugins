@@ -333,7 +333,6 @@ public class EbayStoreAutoPreferences {
                 // if isAutoPositiveFeedback is N that means not start this job run service
                 if ("Y".equals(isAutoFeedbackReminder) && jobId.equals(ebayProductStorePref.getString("autoPrefJobId"))) {
                     afterDays = Integer.parseInt(ebayProductStorePref.getString("condition1"));
-                    
                     // start getting sold item list from ebay follow your site
                     GetSellingManagerSoldListingsCall sellingManagerSoldListings = new GetSellingManagerSoldListingsCall(apiContext);
                     List<SellingManagerSoldOrderType> items = new LinkedList<SellingManagerSoldOrderType>();

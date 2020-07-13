@@ -60,7 +60,6 @@ public final class ProductUtil {
         if (Debug.verboseOn()) {
             Debug.logVerbose("Solr: Getting product content for productId '" + productId + "'", MODULE);
         }
-        
         try {
             // Generate special ProductContentWrapper for the supported languages (de/en/fr)
             ProductContentWrapper productContentEn = new ProductContentWrapper(dispatcher, product, new Locale("en"), null);
@@ -79,8 +78,7 @@ public final class ProductUtil {
                     dispatchContext.put("mediumImage", mediumImage);
                 String largeImage = (String) product.get("largeImageUrl");
                 if (largeImage != null)
-                    dispatchContext.put("largeImage", largeImage);                
-                
+                    dispatchContext.put("largeImage", largeImage);
                 // if (product.get("productWeight") != null) dispatchContext.put("weight", "");
 
                 // Trying to set a correctand trail
@@ -95,7 +93,6 @@ public final class ProductUtil {
                         StringBuilder catMember = new StringBuilder();
                         int i = 0;
                         Iterator<String> trailIter = trailElement.iterator();
-                       
                         while (trailIter.hasNext()) {
                             String trailString = trailIter.next();
                             if (catMember.length() > 0) {
@@ -110,7 +107,6 @@ public final class ProductUtil {
                                 // Debug.log("trail for product " + productId + " ====> " + catMember.toString());
                             }
                         }
-                        
                     }
                 }
                 dispatchContext.put("category", trails);

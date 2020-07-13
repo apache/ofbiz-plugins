@@ -55,88 +55,75 @@ public interface InterfaceReport {
 
     /**
      * Adds an error object to the list of errors that occured during the report.<p>
-     * 
      * @param obj the error object
      */
     void addError(Object obj);
 
     /**
      * Adds a warning object to the list of warnings that occured during the report.<p>
-     * 
      * @param obj the error object
      */
     void addWarning(Object obj);
 
     /**
      * Formats the runtime formatted as "hh:mm:ss".<p>
-     * 
      * @return the runtime formatted as "hh:mm:ss"
      */
     String formatRuntime();
 
     /**
      * Returns a list of all errors that occured during the report.<p>
-     * 
      * @return an error list that occured during the report
      */
     List<Object> getErrors();
 
     /**
      * Returns the locale this report was initialized with.<p>
-     * 
      * @return the locale this report was initialized with
      */
     Locale getLocale();
 
     /**
-     * Updates this report, this processes all new output added since 
+     * Updates this report, this processes all new output added since
      * the last call to this method.<p>
-     * 
      * This is only required in case the output is written to a HTML page,
      * if the shell output is used, this will just return an empty String.<p>
-     * 
      * @return new elements that have been added to the report and not yet processed.
      */
     String getReportUpdate();
 
     /** 
      * Returns the time this report has been running.<p>
-     * 
      * @return the time this report has been running
      */
     long getRuntime();
 
     /**
      * Returns a list of all warnings that occured during the report.<p>
-     * 
      * @return a warning list that occured during the report
      */
     List<Object> getWarnings();
 
     /**
      * Returns if the report generated an error output.<p>
-     * 
      * @return true if the report generated an error, otherwise false
      */
     boolean hasError();
 
     /**
      * Returns if the report generated a warning output.<p>
-     * 
      * @return true if the report generated a warning, otherwise false
      */
     boolean hasWarning();
 
     /**
      * Prints a localized message to the report.<p>
-     * 
      * @param uiLabel the String to add
      */
     void print(String uiLabel);
 
     /**
      * Prints a localized message to the report, using the indicated formatting.<p>
-     * 
      * Use the contants starting with <code>FORMAT</code> from this interface
      * to indicate which formatting to use.<p>
      *
@@ -152,7 +139,6 @@ public interface InterfaceReport {
 
     /**
      * Prints a localized message to the report.<p>
-     * 
      * @param uiLabel the message to add
      */
     void println(String uiLabel);
@@ -171,18 +157,14 @@ public interface InterfaceReport {
     /**
      * Adds an Exception to the report, ensuring that the Exception content is
      * processed to generate a valid output esp. for HTML pages.<p>
-     * 
      * The exception will be stored and the output will later be processed
-     * in a special way.<p>    
-     * 
+     * in a special way.<p>
      * @param t the exception to add
-     * 
      */
     void println(Throwable t);
 
     /**
      * Prints a localized message followed by a parameter and dots to the report.<p>
-     * 
      * @param uiLabel the Message to add
      * @param param the Parameter to add
      */
@@ -190,14 +172,11 @@ public interface InterfaceReport {
 
     /**
      * Convenience method to print a localized message, followed by a parameter and dots to the report.<p>
-     * 
      * The output follows the pattern: ( 3 / 8 ) Deleting filename.txt ...
-     * 
      * @param m the number of the report output
      * @param n the total number of report outputs
      * @param uiLabel the Message to add
      * @param param the Parameter to add
-     * 
      */
     void printMessageWithParam(int m, int n, String uiLabel, Object param);
 
@@ -208,23 +187,19 @@ public interface InterfaceReport {
 
     /**
      * Add a log file to the report.
-     * 
      * @param logFileName
      */
     void addLogFile(String logFileName);
 
     /**
      * Close log file if necessary.
-     * 
      */
     String closeLogFile();
-    
     /**
      * Set log's sequence number.
      * @param sequenceNum
      */
     void setSequenceNum(long sequenceNum);
-    
     long getSequenceNum();
 
 }

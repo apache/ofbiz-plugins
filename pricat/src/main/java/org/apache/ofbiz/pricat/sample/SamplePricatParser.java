@@ -55,29 +55,28 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * 
  */
 public class SamplePricatParser extends AbstractPricatParser {
-    
+
     private static final String MODULE = SamplePricatParser.class.getName();
 
     public static final Map<String, List<Object[]>> ColNamesList = UtilMisc.toMap("V1.1", genExcelHeaderNames("V1.1"));
 
     public static final int headerRowNo = 4;
-    
+
     private List<String> headerColNames = new ArrayList<>();
-    
+
     public SamplePricatParser(LocalDispatcher dispatcher, Delegator delegator, Locale locale, InterfaceReport report, Map<String, String[]> facilities, File pricatFile, GenericValue userLogin) {
         super(dispatcher, delegator, locale, report, facilities, pricatFile, userLogin);
     }
 
     /**
      * Parse pricat excel file in xlsx format.
-     * 
      */
     public void parsePricatExcel(boolean writeFile) {
         XSSFWorkbook workbook = null;
         try {
             // 1. read the pricat excel file
             FileInputStream is = new FileInputStream(pricatFile);
-            
+
             // 2. use POI to load this bytes
             report.print(UtilProperties.getMessage(RESOURCE, "ParsePricatFileStatement", new Object[] { pricatFile.getName() }, locale), InterfaceReport.FORMAT_DEFAULT);
             try {
@@ -88,18 +87,18 @@ public class SamplePricatParser extends AbstractPricatParser {
                 report.println(UtilProperties.getMessage(RESOURCE, "PricatSuggestion", locale), InterfaceReport.FORMAT_ERROR);
                 return;
             }
-            
+
             // 3. only first sheet will be parsed
             // 3.1 verify the file has a sheet at least
             formatter = new HSSFDataFormatter(locale);
             isNumOfSheetsOK(workbook);
-            
+
             // 3.2 verify the version is supported
             XSSFSheet sheet = workbook.getSheetAt(0);
             if (!isVersionSupported(sheet)) {
                 return;
             }
-            
+
             // 3.3 get currencyId
             existsCurrencyId(sheet);
 
@@ -107,15 +106,15 @@ public class SamplePricatParser extends AbstractPricatParser {
             if (!isTableHeaderMatched(sheet)) {
                 return;
             }
-            
+
             // 3.5 verify the first table has 6 rows at least
             containsDataRows(sheet);
-            
+
             if (UtilValidate.isNotEmpty(errorMessages)) {
                 report.println(UtilProperties.getMessage(RESOURCE, "HeaderContainsError", locale), InterfaceReport.FORMAT_ERROR);
                 return;
             }
-            
+
             // 4. parse data
             // 4.1 parse row by row and store the contents into database
             parseRowByRow(sheet);
@@ -126,7 +125,7 @@ public class SamplePricatParser extends AbstractPricatParser {
                     writeCommentsToFile(workbook, sheet);
                 }
             }
-            
+
             // 5. clean up the log files and commented Excel files
             cleanupLogAndCommentedExcel();
         } catch (IOException e) {
@@ -232,7 +231,6 @@ public class SamplePricatParser extends AbstractPricatParser {
 
     /**
      * Check data according to business logic. If data is ok, store it.
-     * 
      * @param row
      * @param cellContents
      * @return
@@ -249,7 +247,7 @@ public class SamplePricatParser extends AbstractPricatParser {
                 return parseCellContentsAndStoreV1_X(row, cellContents);
         }
     }
-    
+
     private boolean parseCellContentsAndStoreV1_X(XSSFRow row, List<Object> cellContents) throws GenericTransactionException {
         if (UtilValidate.isEmpty(cellContents)) {
             return false;
@@ -259,11 +257,11 @@ public class SamplePricatParser extends AbstractPricatParser {
         String facilityId = (String) getCellContent(cellContents, "FacilityId");
         if (!isFacilityOk(row, facilityName, facilityId)) 
             return false;
-        
+
         // 2. get productCategoryId
         String ownerPartyId = facilities.get(facilityId)[1];
         String productCategoryId = getProductCategoryId(cellContents, ownerPartyId);
-        
+
         // 3. get productFeatureId of brand
         String brandName = (String) getCellContent(cellContents, "Brand");
         String brandId = getBrandId(brandName, ownerPartyId);
@@ -305,7 +303,7 @@ public class SamplePricatParser extends AbstractPricatParser {
         }
         String colorId = (String) features.get("colorId");
         String dimensionId = (String) features.get("dimensionId");
-        
+
         // 6. update skuIds by productId
         String barcode = (String) getCellContent(cellContents, "Barcode");
         BigDecimal inventory = (BigDecimal) getCellContent(cellContents, "Stock Qty");
@@ -314,14 +312,14 @@ public class SamplePricatParser extends AbstractPricatParser {
         if (UtilValidate.isEmpty(skuId)) {
             return false;
         }
-        
+
         // 7. store prices
         BigDecimal memberPrice = (BigDecimal) getCellContent(cellContents, "Member Price");
         Map<String, Object> results = updateSkuPrice(skuId, ownerPartyId, memberPrice);
         if (ServiceUtil.isError(results)) {
             return false;
         }
-        
+
         return true;
     }
 
@@ -407,7 +405,7 @@ public class SamplePricatParser extends AbstractPricatParser {
         } else {
             report.println(UtilProperties.getMessage(RESOURCE, "ok", locale), InterfaceReport.FORMAT_OK);
         }
-        
+
         report.print(UtilProperties.getMessage(RESOURCE, "StartCheckHeaderColLabel", new Object[] {pricatFileVersion}, locale), InterfaceReport.FORMAT_NOTE);
         boolean foundLabelNotMatch = false;
         for (int i = 0; i < cols; i++) {
@@ -465,7 +463,6 @@ public class SamplePricatParser extends AbstractPricatParser {
      * 2. Cell data type to return.
      * 3. Boolean value to indicate whether the column is required.
      * 4. Boolean value to indicate whether the column is a price when cell data type is BigDecimal, this element is optional.
-     * 
      * @param version
      * @return List of Object[]
      */
@@ -479,7 +476,6 @@ public class SamplePricatParser extends AbstractPricatParser {
 
     /**
      * Get V1.1 pricat excel header names and attributes. 
-     * 
      * @return list of Object[]
      */
     private static List<Object[]> genExcelHeaderNamesV1_1() {
@@ -545,7 +541,6 @@ public class SamplePricatParser extends AbstractPricatParser {
 
     /**
      * Get data by version definition.
-     * 
      * @param row
      * @param colNames 
      * @param size 
@@ -558,7 +553,7 @@ public class SamplePricatParser extends AbstractPricatParser {
         if (isEmptyRow(row, size, true)) {
             return null;
         }
-        
+
         // check and get data
         for (int i = 0; i < size; i++) {
             XSSFCell cell = null;

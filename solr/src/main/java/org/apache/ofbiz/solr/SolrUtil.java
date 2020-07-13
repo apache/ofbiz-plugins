@@ -51,46 +51,46 @@ import org.apache.ofbiz.entity.GenericEntityException;
  * Solr utility class.
  */
 public final class SolrUtil {
-    
+
     private SolrUtil() { }
     private static final String MODULE = SolrUtil.class.getName();
     private static final String[] solrProdAttribute = { "productId", "internalName", "manu", "size", "smallImage", "mediumImage", "largeImage", "listPrice", "defaultPrice", "inStock", "isVirtual" };
 
     private static final String solrConfigName = "solrconfig.properties";
     private static final String solrUrl = makeSolrWebappUrl();
-    
+
     private static final String socketTimeoutString = UtilProperties.getPropertyValue(solrConfigName, "solr.client.socket.timeout");
-    
+
     private static final String connectionTimeoutString = UtilProperties.getPropertyValue(solrConfigName, "solr.client.connection.timeout");
-    
+
     private static final String clientUsername = UtilProperties.getPropertyValue(solrConfigName, "solr.client.username");
-    
+
     private static final String clientPassword = UtilProperties.getPropertyValue(solrConfigName, "solr.client.password");
 
     private static final Integer socketTimeout = getSocketTimeout();
-    
+
     private static final Integer connectionTimeout = getConnectionTimeout();
-    
+
     private static final String trustSelfSignedCertString = UtilProperties.getPropertyValue(solrConfigName, "solr.client.trust.selfsigned.cert", "false");
-    
+
     private static final boolean trustSelfSignedCert = getTrustSelfSignedCert();
-    
+
     public static String makeSolrWebappUrl() {
         final String solrWebappProtocol = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.protocol");
         final String solrWebappDomainName = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.domainName");
         final String solrWebappPath = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.path");
         final String solrWebappPortOverride = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.portOverride");
-        
+
         String solrPort;
         if (UtilValidate.isNotEmpty(solrWebappPortOverride)) {
             solrPort = solrWebappPortOverride;
         } else {
             solrPort = UtilProperties.getPropertyValue("url", ("https".equals(solrWebappProtocol) ? "port.https" : "port.http"), ("https".equals(solrWebappProtocol) ? "8443" : "8080"));
         }
-        
+
         return solrWebappProtocol + "://" + solrWebappDomainName + ":" + solrPort + solrWebappPath;
     }
-    
+
     private static Integer getSocketTimeout() {
         if (UtilValidate.isNotEmpty(socketTimeoutString)) {
             try {
@@ -133,7 +133,7 @@ public final class SolrUtil {
         }
         return Boolean.TRUE.equals(ecaEnabled);
     }
-    
+
     public static WebappInfo getSolrWebappInfo() {
         WebappInfo solrApp = null;
         try {
@@ -149,13 +149,10 @@ public final class SolrUtil {
         }
         return solrApp;
     }
-    
     public static boolean isEcaTreatConnectErrorNonFatal() {
         Boolean treatConnectErrorNonFatal = UtilProperties.getPropertyAsBoolean(solrConfigName, "solr.eca.treatConnectErrorNonFatal", true);
         return Boolean.TRUE.equals(treatConnectErrorNonFatal);
     }
-    
-    
     public static SolrInputDocument generateSolrDocument(Map<String, Object> context) throws GenericEntityException {
         SolrInputDocument doc1 = new SolrInputDocument();
 
@@ -230,7 +227,6 @@ public final class SolrUtil {
 
         return doc1;
     }
-    
     public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId, boolean displayproducts, int viewIndex, int viewSize, String solrIndexName) {
         return categoriesAvailable(catalogId, categoryId, productId, null, displayproducts, viewIndex, viewSize, solrIndexName);
     }
@@ -266,11 +262,11 @@ public final class SolrUtil {
                 solrQuery.setFields("cat");
                 solrQuery.setRows(0);
             }
-            
+
             if (UtilValidate.isNotEmpty(facetPrefix)) {
                 solrQuery.setFacetPrefix(facetPrefix);
             }
-            
+
             solrQuery.setFacetMinCount(0);
             solrQuery.setFacet(true);
             solrQuery.addFacetField("cat");
@@ -291,14 +287,14 @@ public final class SolrUtil {
 
     public static HttpSolrClient getHttpSolrClient(String solrIndexName) throws ClientProtocolException, IOException {
         HttpClientContext httpContext = HttpClientContext.create();
-        
+
         CloseableHttpClient httpClient = null;
         if (trustSelfSignedCert) {
             httpClient = UtilHttp.getAllowAllHttpClient();
         } else {
             httpClient = HttpClients.createDefault();
         }
-        
+
         RequestConfig requestConfig = null;
         if (UtilValidate.isNotEmpty(socketTimeout) && UtilValidate.isNotEmpty(connectionTimeout)) {
             requestConfig = RequestConfig.custom()
@@ -328,5 +324,4 @@ public final class SolrUtil {
         loginResponse.close();
         return new HttpSolrClient.Builder(solrUrl + "/" + solrIndexName).withHttpClient(httpClient).build();
     }
-
 }

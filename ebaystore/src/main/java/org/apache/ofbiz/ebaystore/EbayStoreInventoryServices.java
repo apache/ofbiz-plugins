@@ -364,7 +364,7 @@ public class EbayStoreInventoryServices {
 
         try {
             if (context.get("productStoreId") != null && context.get("facilityId") != null) {
-                ebayProductStoreInventoryList = EntityQuery.use(delegator).from("EbayProductStoreInventory").where("facilityId", (String) context.get("facilityId"),"productStoreId", (String) context.get("productStoreId")).queryList();
+                ebayProductStoreInventoryList = EntityQuery.use(delegator).from("EbayProductStoreInventory").where("facilityId", (String) context.get("facilityId"), "productStoreId", (String) context.get("productStoreId")).queryList();
                 for (GenericValue ebayProductStoreInventory : ebayProductStoreInventoryList) {
                     if (ebayProductStoreInventory.get("ebayProductId") != null) {
                         Map<String, Object> result = dispatcher.runSync("updateEbayInventoryStatusByProductId", UtilMisc.toMap("productStoreId", (String) context.get("productStoreId"), "facilityId", (String) context.get("facilityId"), "folderId", ebayProductStoreInventory.get("folderId"), "productId", ebayProductStoreInventory.get("productId"), "ebayProductId", ebayProductStoreInventory.get("ebayProductId"), "userLogin", context.get("userLogin")));

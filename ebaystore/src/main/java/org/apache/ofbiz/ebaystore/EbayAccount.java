@@ -33,7 +33,6 @@ import com.ebay.soap.eBLBaseComponents.DetailLevelCodeType;
 import com.ebay.soap.eBLBaseComponents.UserType;
 
 public class EbayAccount {
-    
     public static Map<String, Object> getEbayUser(DispatchContext dctx, Map<String, ? extends Object> context) {
         Map<String, Object>result = new HashMap<>();
         Delegator delegator = dctx.getDelegator();
@@ -42,17 +41,17 @@ public class EbayAccount {
 
         // Output Variable
         String email = null,
-            cityName = null, 
-            companyName = null, 
-            country = null, 
-            firstName = null, 
+            cityName = null,
+            companyName = null,
+            country = null,
+            firstName = null,
             lastName = null,
             name = null,
-            phone = null, 
+            phone = null,
             postalCode = null,
-            stateOrProvince = null, 
-            street = null, 
-            street1 = null, 
+            stateOrProvince = null,
+            street = null,
+            street1 = null,
             street2 = null,
             status = null;
         Map<String, Object>registrationAddress = new HashMap<>();

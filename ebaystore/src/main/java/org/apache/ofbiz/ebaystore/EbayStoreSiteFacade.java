@@ -100,7 +100,7 @@ public class EbayStoreSiteFacade {
 
     //sync and cache all categories features in memory
     private void syncAllCategoriesFeatures() throws Exception {
-        if (!siteCategoriesFeaturesMap.containsKey(this.apiContext.getSite())) { 
+        if (!siteCategoriesFeaturesMap.containsKey(this.apiContext.getSite())) {
             FeaturesDownloader fd = new FeaturesDownloader(this.apiContext);
             GetCategoryFeaturesResponseType cfrt = fd.getAllCategoryFeatures();
             CategoryFeatureType[] categoryFeatures = cfrt.getCategory();
@@ -117,7 +117,6 @@ public class EbayStoreSiteFacade {
     /**
      * Get categories using GetCategory2CS and GetCategories calls,
      * and merge the categories
-     * 
      */
     public List<CategoryType> getAllMergedCategories() throws ApiException, SdkException, Exception {
         //Get all categories that are mapped to characteristics sets

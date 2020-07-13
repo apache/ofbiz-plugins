@@ -69,39 +69,29 @@ import org.apache.ofbiz.service.LocalDispatcher;
 public class GitHubEvents {
 
     private static final String MODULE = GitHubEvents.class.getName();
-    
     private static final String RESOURCE = "PassportUiLabels";
-    
     public static final String AuthorizeUri = "/login/oauth/authorize";
-    
     public static final String TokenServiceUri = "/login/oauth/access_token";
-    
     public static final String UserApiUri = "/user";
-
     public static final String DEFAULT_SCOPE = "user,gist";
-    
     public static final String ApiEndpoint = "https://api.github.com";
-    
     public static final String TokenEndpoint = "https://github.com";
-    
     public static final String SESSION_GITHUB_STATE = "_GITHUB_STATE_";
 
     public static final String envPrefix = UtilProperties.getPropertyValue(GitHubAuthenticator.props, "github.env.prefix", "test");
 
     /**
      * Redirect to GitHub login page.
-     * 
-     * @return 
+     * @return
      */
     public static String gitHubRedirect(HttpServletRequest request, HttpServletResponse response) {
         GenericValue oauth2GitHub = getOAuth2GitHubConfig(request);
         if (UtilValidate.isEmpty(oauth2GitHub)) {
             return "error";
         }
-        
         String clientId = oauth2GitHub.getString(PassportUtil.COMMON_CLIENT_ID);
         String returnURI = oauth2GitHub.getString(PassportUtil.COMMON_RETURN_RUL);
-        
+
         // Get user authorization code
         try {
             String state = System.currentTimeMillis() + String.valueOf((new Random(10)).nextLong());
@@ -123,14 +113,13 @@ public class GitHubEvents {
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
-        
+
         return "success";
     }
 
     /**
      * Parse GitHub login response and login the user if possible.
-     * 
-     * @return 
+     * @return
      */
     public static String parseGitHubResponse(HttpServletRequest request, HttpServletResponse response) {
         String authorizationCode = request.getParameter(PassportUtil.COMMON_CODE);
@@ -153,7 +142,7 @@ public class GitHubEvents {
             return "error";
         }
         Debug.logInfo("GitHub authorization code: " + authorizationCode, MODULE);
-        
+
         GenericValue oauth2GitHub = getOAuth2GitHubConfig(request);
         if (UtilValidate.isEmpty(oauth2GitHub)) {
             String errMsg = UtilProperties.getMessage(RESOURCE, "GitHubGetOAuth2ConfigError", UtilHttp.getLocale(request));
@@ -163,12 +152,12 @@ public class GitHubEvents {
         String clientId = oauth2GitHub.getString(PassportUtil.COMMON_CLIENT_ID);
         String secret = oauth2GitHub.getString(PassportUtil.COMMON_CLIENT_SECRET);
         String returnURI = oauth2GitHub.getString(PassportUtil.COMMON_RETURN_RUL);
-        
+
         // Grant token from authorization code and oauth2 token
         // Use the authorization code to obtain an access token
         String accessToken = null;
         String tokenType = null;
-        
+
         try {
             URI uri = new URIBuilder()
                     .setScheme(TokenEndpoint.substring(0, TokenEndpoint.indexOf(":")))
@@ -219,7 +208,7 @@ public class GitHubEvents {
             getMethod.releaseConnection();
         }
         // Debug.logInfo("GitHub User Info:" + userInfo, MODULE);
-        
+
         // Store the user info and check login the user
         return checkLoginGitHubUser(request, userInfo, accessToken);
     }
@@ -258,9 +247,9 @@ public class GitHubEvents {
                 }
             }
         } else {
-            gitHubUser = delegator.makeValue("GitHubUser", UtilMisc.toMap("accessToken", accessToken, 
-                                                                          "productStoreId", productStoreId, 
-                                                                          "envPrefix", envPrefix, 
+            gitHubUser = delegator.makeValue("GitHubUser", UtilMisc.toMap("accessToken", accessToken,
+                                                                          "productStoreId", productStoreId,
+                                                                          "envPrefix", envPrefix,
                                                                           "gitHubUserId", gitHubUserId));
             try {
                 gitHubUser.create();
@@ -302,7 +291,7 @@ public class GitHubEvents {
         }
         return null;
     }
-    
+
     public static GenericValue getOAuth2GitHubConfig(Delegator delegator, String productStoreId) throws GenericEntityException {
         return EntityQuery.use(delegator).from("OAuth2GitHub").where("productStoreId", productStoreId).filterByDate().queryFirst();
     }

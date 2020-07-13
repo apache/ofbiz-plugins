@@ -36,60 +36,37 @@ import org.apache.ofbiz.entity.transaction.GenericTransactionException;
  * 
  */
 public interface InterfacePricatParser {
-    
     public static final String PARSE_EXCEL = "parse_excel";
-    
     public static final String CONFIRM = "confirm_action";
-    
     public static final String[] messageLabels = new String[] {"FORMAT_DEFAULT", "FORMAT_WARNING", "FORMAT_HEADLINE", "FORMAT_NOTE", "FORMAT_OK", "FORMAT_ERROR", "FORMAT_THROWABLE"};
-    
     public static final List<String> messages = Collections.unmodifiableList(Arrays.asList(messageLabels));
-    
     public static final String tempFilesFolder = "runtime/pricat/";
-    
     public static final String FileDateTimePattern = "yyyyMMddHHmmss";
-    
     public static final String defaultColorName = "DefaultColor";
-    
     public static final String defaultDimensionName = "DefaultDimension";
-    
     public static final String defaultCategoryName = "DefaultCategory";
-    
     public static final String EXCEL_TEMPLATE_TYPE = "excelTemplateType";
-    
     public static final String FACILITY_ID = "facilityId";
-    
     public static final String RESOURCE = "PricatUiLabels";
-    
     public static final String PRICAT_FILE = "__PRICAT_FILE__";
-
     public static final String DEFAULT_PRICAT_TYPE = "ApacheOFBiz";
-    
     public static final Map<String, String> PricatTypeLabels = UtilMisc.toMap(DEFAULT_PRICAT_TYPE, "ApacheOFBizPricatTemplate", "SamplePricat", "SamplePricatTemplate");
-    
     public static final int HISTORY_MAX_FILENUMBER = UtilProperties.getPropertyAsInteger("pricat.properties", "pricat.history.max.filenumber", 20);
-    
     abstract void parsePricatExcel();
-    
     public void writeCommentsToFile(XSSFWorkbook workbook, XSSFSheet sheet);
-
     public void initBasicConds(List<String> orgPartyIds);
-
     public boolean existsCurrencyId(XSSFSheet sheet);
-
     abstract void parseRowByRow(XSSFSheet sheet);
-
     abstract boolean parseCellContentsAndStore(XSSFRow row, List<Object> cellContents) throws GenericTransactionException;
-    
     public Map<String, Object> updateSkuPrice(String skuId, String ownerPartyId, BigDecimal memberPrice);
 
     abstract String updateSku(XSSFRow row, String productId, String ownerPartyId, String facilityId, String barcode, BigDecimal inventory,
             String colorId, String color, String dimensionId, String dimension, BigDecimal listPrice, BigDecimal averageCost);
 
     public Map<String, Object> updateColorAndDimension(String productId, String ownerPartyId, String color, String dimension);
-    
+
     public Map<String, Object> getDimensionIds(String productId, String ownerPartyId, String dimension);
-    
+
     public Map<String, Object> getColorIds(String productId, String ownerPartyId, String color);
 
     abstract String getProductId(XSSFRow row, String brandId, String modelName, String productName, String productCategoryId, String ownerPartyId, BigDecimal listPrice);
@@ -115,6 +92,6 @@ public interface InterfacePricatParser {
     abstract void setFacilityId(String selectedFacilityId);
 
     public void endExcelImportHistory(String logFileName, String thruReasonId);
-    
+
     public boolean hasErrorMessages();
 }

@@ -36,18 +36,12 @@ import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.pricat.PricatEvents;
 
 public class SamplePricatEvents extends PricatEvents {
-    
     private static final String MODULE = SamplePricatEvents.class.getName();
-    
     public static final String PricatLatestVersion = UtilProperties.getPropertyValue("pricat", "pricat.latest.version", "V1.1");
-    
     public static final String DemoPricatFileName = "SamplePricatTemplate_" + PricatLatestVersion + ".xlsx";
-    
     public static final String DemoPricatPath = "component://pricat/webapp/pricatdemo/downloads/";
-    
     /**
      * Download excel template.
-     * 
      * @param request
      * @param response
      * @return

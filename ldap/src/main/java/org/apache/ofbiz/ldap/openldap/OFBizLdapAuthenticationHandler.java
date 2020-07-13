@@ -55,7 +55,7 @@ public final class OFBizLdapAuthenticationHandler extends AbstractOFBizAuthentic
         String authenType = UtilXml.childElementValue(rootElement, "AuthenType", "simple");
         String baseDN = UtilXml.childElementValue(rootElement, "BaseDN");
         Hashtable<String, String> env = new Hashtable<>();
-        env.put(Context.INITIAL_CONTEXT_FACTORY,"com.sun.jndi.ldap.LdapCtxFactory");
+        env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         env.put(Context.PROVIDER_URL, ldapURL);
         env.put(Context.SECURITY_AUTHENTICATION, "none");
         try {

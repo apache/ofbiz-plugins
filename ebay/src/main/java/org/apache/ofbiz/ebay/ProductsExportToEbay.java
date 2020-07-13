@@ -174,7 +174,7 @@ public class ProductsExportToEbay {
     }
 
     public static Map<String, Object> buildDataItemsXml(DispatchContext dctx, Map<String, Object> context, StringBuffer dataItemsXml, String token, GenericValue prod) {
-        Locale locale = (Locale)context.get("locale");
+        Locale locale = (Locale) context.get("locale");
         try {
             Delegator delegator = dctx.getDelegator();
             String webSiteUrl = (String) context.get("webSiteUrl");
@@ -334,7 +334,7 @@ public class ProductsExportToEbay {
     }
 
     private static Map<String, Object> buildCategoriesXml(Map<String, Object> context, StringBuffer dataItemsXml, String token, String siteID, String categoryParent, String levelLimit) {
-        Locale locale = (Locale)context.get("locale");
+        Locale locale = (Locale) context.get("locale");
         try {
             Document itemRequest = UtilXml.makeEmptyXmlDocument("GetCategoriesRequest");
             Element itemRequestElem = itemRequest.getDocumentElement();
@@ -366,7 +366,7 @@ public class ProductsExportToEbay {
 
     /*
     private static Map<String, Object> buildSetTaxTableRequestXml(DispatchContext dctx, Map<String, Object> context, StringBuffer setTaxTableRequestXml, String token) {
-        Locale locale = (Locale)context.get("locale");
+        Locale locale = (Locale) context.get("locale");
         try {
             Document taxRequestDocument = UtilXml.makeEmptyXmlDocument("SetTaxTableRequest");
             Element taxRequestElem = taxRequestDocument.getDocumentElement();
@@ -392,7 +392,7 @@ public class ProductsExportToEbay {
 
     /*
     private static Map<String, Object> buildAddTransactionConfirmationItemRequest(Map<String, Object> context, StringBuffer dataItemsXml, String token, String itemId) {
-        Locale locale = (Locale)context.get("locale");
+        Locale locale = (Locale) context.get("locale");
         try {
             Document transDoc = UtilXml.makeEmptyXmlDocument("AddTransactionConfirmationItemRequest");
             Element transElem = transDoc.getDocumentElement();

@@ -65,63 +65,38 @@ import org.apache.ofbiz.service.LocalDispatcher;
  * 
  */
 public class PricatParseExcelHtmlThread extends AbstractReportThread {
-    
-    private static final String MODULE = PricatParseExcelHtmlThread.class.getName();
 
+    private static final String MODULE = PricatParseExcelHtmlThread.class.getName();
     public static final String PARSE_EXCEL = "parse_excel";
-    
     public static final String CONFIRM = "confirm_action";
-    
     public static final String[] messageLabels = new String[] {"FORMAT_DEFAULT", "FORMAT_WARNING", "FORMAT_HEADLINE", "FORMAT_NOTE", "FORMAT_OK", "FORMAT_ERROR", "FORMAT_THROWABLE"};
-    
     public static final List<String> messages = Collections.unmodifiableList(Arrays.asList(messageLabels));
-    
     public static final String FileDateTimePattern = "yyyyMMddHHmmss";
-    
     public static final String defaultColorName = "DefaultColor";
-    
     public static final String defaultDimensionName = "DefaultDimension";
-    
     public static final String defaultCategoryName = "DefaultCategory";
-    
     public static final String EXCEL_TEMPLATE_TYPE = "excelTemplateType";
-    
     public static final String FACILITY_ID = "facilityId";
-    
     private LocalDispatcher dispatcher;
-    
     private Delegator delegator;
-    
     private List<FileItem> fileItems;
-    
     private File pricatFile;
-    
     private String userLoginId;
-    
     private GenericValue userLogin;
-    
     private Map<String, String[]> facilities = new HashMap<>();
-    
     private static final String RESOURCE = "PricatUiLabels";
-    
     private HttpSession session;
-    
     public static final String PRICAT_FILE = "__PRICAT_FILE__";
 
     public static final String DEFAULT_PRICAT_TYPE = "sample_pricat";
-    
     private String selectedPricatType = DEFAULT_PRICAT_TYPE;
-    
     public static final Map<String, String> PricatTypeLabels = UtilMisc.toMap("sample_pricat", "SamplePricatTemplate",
                                                                               "ofbiz_pricat", "OFBizPricatTemplate");
-    
+
     private InterfacePricatParser pricatParser;
-    
     private String thruReasonId = "EXCEL_IMPORT_SUCCESS";
-    
     /**
      * Constructor, creates a new html thread.
-     * 
      * @param request
      * @param response
      * @param name
@@ -140,7 +115,6 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
             userLoginId = userLogin.getString("userLoginId");
             session = request.getSession();
         }
-        
         long sequenceNum = addExcelImportHistory();
         File userFolder = FileUtil.getFile(InterfacePricatParser.tempFilesFolder + userLoginId + "/");
         if (!userFolder.exists()) {
@@ -168,13 +142,11 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
 
     @Override
     public String getReportUpdate() {
-
         return getReport().getReportUpdate();
     }
 
     @Override
     public void run() {
-
         try {
             if (getName().startsWith(PARSE_EXCEL) && UtilValidate.isNotEmpty(fileItems)) {
                 getReport().println();
@@ -227,7 +199,6 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
             getReport().println(" ... " + UtilProperties.getMessage(RESOURCE, "ok", getLocale()), InterfaceReport.FORMAT_OK);
             getReport().println();
         }
-        
         // 2. store the pricat excel file
         if (!storePricatFile()) {
             return false;
@@ -293,7 +264,6 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
             Timestamp now = UtilDateTime.nowTimestamp();
             organizations = EntityUtil.filterByDate(organizations, now, "twoFromDate", "twoThruDate", true);
             organizations = EntityUtil.filterByDate(organizations, now, "oneFromDate", "oneThruDate", true);
-            
             List<EntityCondition> ownerPartyConditions = new LinkedList<>();
             Set<String> orgPartyIds = new HashSet<>();
             for (GenericValue organization : organizations) {
@@ -306,7 +276,6 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
             if (UtilValidate.isEmpty(ownerPartyConditions)) {
                 return facilities;
             }
-            
             List<GenericValue> facilityValues = delegator.findList("Facility", EntityCondition.makeCondition(ownerPartyConditions, EntityOperator.OR), null, null, null, false);
             if (UtilValidate.isNotEmpty(facilityValues)) {
                 int i = 1;

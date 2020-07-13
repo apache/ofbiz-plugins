@@ -58,7 +58,6 @@ import org.apache.solr.servlet.SolrDispatchFilter;
 public class OFBizSolrContextFilter extends SolrDispatchFilter {
 
     private static final String MODULE = OFBizSolrContextFilter.class.getName();
-    
     private static final String RESOURCE = "SolrUiLabels";
 
     @Override
@@ -129,7 +128,7 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
                 }
             }
         }
-        
+
         String charset = request.getCharacterEncoding();
         String rname = null;
         if (httpRequest.getRequestURI() != null) {
@@ -172,7 +171,6 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
         cores.load();
         return cores;
     }
-    
     private static void sendJsonHeaderMessage(HttpServletRequest httpRequest, HttpServletResponse httpResponse,
             GenericValue userLogin, String notLoginMessage, String noPermissionMessage, Locale locale)
                     throws IOException {

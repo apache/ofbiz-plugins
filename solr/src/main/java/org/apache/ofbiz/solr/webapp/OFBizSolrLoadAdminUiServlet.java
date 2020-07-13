@@ -49,7 +49,6 @@ public class OFBizSolrLoadAdminUiServlet extends OFBizSolrRedirectServlet {
         if (isForwarded) {
             return;
         }
-        
         // This attribute is set by the SolrDispatchFilter
         CoreContainer cores = (CoreContainer) request.getAttribute("org.apache.solr.CoreContainer");
 

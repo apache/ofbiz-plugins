@@ -491,7 +491,7 @@ public class WebPosTransaction {
     public BigDecimal getPaymentTotal() {
         return getCart().getPaymentTotal();
     }
-    
+
     public BigDecimal getTotalQuantity() {
         return getCart().getTotalQuantity();
     }

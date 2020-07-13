@@ -52,7 +52,7 @@ public class ScrumServices {
     private static final String RESOURCE = "scrumUiLabels";
     public static Map<String, Object> linkToProduct(DispatchContext ctx, Map<String, ? extends Object> context) {
         Delegator delegator = ctx.getDelegator();
-        Locale locale = (Locale)context.get("locale");
+        Locale locale = (Locale) context.get("locale");
         LocalDispatcher dispatcher = ctx.getDispatcher();
         String communicationEventId = (String) context.get("communicationEventId");
         // Debug.logInfo("==== Processing Commevent: " +  communicationEventId, MODULE);
@@ -80,7 +80,7 @@ public class ScrumServices {
                                     communicationEventProduct.create();
                                 }
                                 try {
-                                    GenericValue productRoleMap = EntityQuery.use(delegator).from("ProductRole").where("productId", productId, "partyId", communicationEvent.getString("partyIdFrom"), "roleTypeId","PRODUCT_OWNER").queryFirst();
+                                    GenericValue productRoleMap = EntityQuery.use(delegator).from("ProductRole").where("productId", productId, "partyId", communicationEvent.getString("partyIdFrom"), "roleTypeId", "PRODUCT_OWNER").queryFirst();
                                     GenericValue userLogin = (GenericValue) context.get("userLogin");
                                     // also close the incoming communication event
                                     if (UtilValidate.isNotEmpty(productRoleMap)) {
@@ -209,7 +209,7 @@ public class ScrumServices {
                         Debug.logInfo("Revision Link ============== >>>>>>>>>>> "+ revisionLink, MODULE);
                         if (UtilValidate.isNotEmpty(taskId)) {
                             String version = "R" + i;
-                            List <GenericValue> workeffContentList = EntityQuery.use(delegator).from("WorkEffortAndContentDataResource").where("contentName", version.trim() ,"drObjectInfo", revisionLink.trim()).queryList();
+                            List <GenericValue> workeffContentList = EntityQuery.use(delegator).from("WorkEffortAndContentDataResource").where("contentName", version.trim() , "drObjectInfo", revisionLink.trim()).queryList();
                             List<EntityCondition> exprsAnd = new LinkedList<>();
                             exprsAnd.add(EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS, taskId));
 

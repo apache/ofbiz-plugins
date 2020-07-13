@@ -55,7 +55,7 @@ public class WebPosEvents {
 
     public static String posLogin(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
         HttpSession session = request.getSession(true);
-        
+
         // get the posTerminalId
         String posTerminalId = request.getParameter("posTerminalId");
         session.removeAttribute("shoppingCart");
@@ -63,7 +63,7 @@ public class WebPosEvents {
         WebPosSession webPosSession = WebPosEvents.getWebPosSession(request, posTerminalId);
         String responseString = LoginEvents.storeLogin(request, response);
         GenericValue userLoginNew = (GenericValue)session.getAttribute("userLogin");
-        
+
         if (userLoginNew != null && UtilValidate.isNotEmpty(posTerminalId)) {
             webPosSession.setUserLogin(userLoginNew);
         }
@@ -80,7 +80,7 @@ public class WebPosEvents {
         }
         return responseString;
     }
-    
+
     public static WebPosSession getWebPosSession(HttpServletRequest request, String posTerminalId) {
         HttpSession session = request.getSession(true);
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
@@ -101,7 +101,7 @@ public class WebPosEvents {
                     currencyUomId = productStore.getString("defaultCurrencyUomId");
                 }
             }
-            
+
             if (userLogin != null) {
                 session.setAttribute("userLogin", userLogin);
             }
@@ -116,7 +116,7 @@ public class WebPosEvents {
                 session.setAttribute("webPosSession", webPosSession);
             } else {
                 Debug.logError("PosTerminalId is empty cannot create a webPosSession", MODULE);
-            }  
+            }
         }
         return webPosSession;
     }
@@ -139,19 +139,18 @@ public class WebPosEvents {
         }
         return "success";
     }
-    
+
     public static String emptyCartAndClearAutoSaveList(HttpServletRequest request, HttpServletResponse response) throws GeneralException {
         HttpSession session = request.getSession(true);
         WebPosSession webPosSession = (WebPosSession) session.getAttribute("webPosSession");
         ShoppingCartEvents.clearCart(request, response);
-        
+
         if (UtilValidate.isNotEmpty(webPosSession)) {
             String autoSaveListId = ShoppingListEvents.getAutoSaveListId(webPosSession.getDelegator(), webPosSession.getDispatcher(), null, webPosSession.getUserLogin(), webPosSession.getProductStoreId());
             ShoppingListEvents.clearListInfo(webPosSession.getDelegator(), autoSaveListId);
         }
         return "success";
-    }    
-    
+    }
     public static String getProductType(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> featureMap = null;
         Map<String, Object> variantTreeMap = null;

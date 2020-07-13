@@ -55,7 +55,6 @@ import com.ebay.soap.eBLBaseComponents.StoreCustomCategoryType;
 public class EbayStoreOptions {
 
     private static final String MODULE = EbayStoreOptions.class.getName();
-    
     public static String retrieveThemeColorSchemeByThemeId(HttpServletRequest request, HttpServletResponse response) {
         Locale locale = UtilHttp.getLocale(request);
         HttpSession session = request.getSession(true);

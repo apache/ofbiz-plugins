@@ -81,7 +81,7 @@ public class WebPosSession {
     public GenericValue getUserLogin() {
         return this.userLogin;
     }
-    
+
     public void setUserLogin(GenericValue userLogin) {
         this.userLogin = userLogin;
     }

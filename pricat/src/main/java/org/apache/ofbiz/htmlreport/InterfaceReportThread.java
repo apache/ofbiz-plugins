@@ -33,7 +33,6 @@ public interface InterfaceReportThread {
 
     /**
      * Returns the UUID of this report thread.<p>
-     * 
      * @return the UUID of this report thread
      */
     UUID getUUID();

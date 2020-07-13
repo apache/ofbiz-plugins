@@ -235,7 +235,7 @@ public class EbayStore {
         try {
             SetStoreCategoriesCall  call = new SetStoreCategoriesCall(EbayStoreHelper.getApiContext((String) context.get("productStoreId"), locale, delegator));
 
-            catalogCategories = EntityQuery.use(delegator).from("ProdCatalogCategory").where("prodCatalogId", context.get("prodCatalogId").toString(),"prodCatalogCategoryTypeId","PCCT_EBAY_ROOT").orderBy("sequenceNum ASC").queryList();
+            catalogCategories = EntityQuery.use(delegator).from("ProdCatalogCategory").where("prodCatalogId", context.get("prodCatalogId").toString(), "prodCatalogCategoryTypeId", "PCCT_EBAY_ROOT").orderBy("sequenceNum ASC").queryList();
             if (catalogCategories != null && catalogCategories.size() > 0) {
                 List<StoreCustomCategoryType> listAdd = new LinkedList<StoreCustomCategoryType>();
                 List<StoreCustomCategoryType> listEdit = new LinkedList<StoreCustomCategoryType>();
@@ -397,7 +397,7 @@ public class EbayStore {
                     if (actionCode.equals(StoreCategoryUpdateActionCodeType.ADD) && returnedCustomCategory != null) {
                         StoreCustomCategoryType[] returnCategoryTypeList = returnedCustomCategory.getCustomCategory();
                         for (StoreCustomCategoryType returnCategoryType : returnCategoryTypeList) {
-                            List<GenericValue> productCategoryList = EntityQuery.use(delegator).from("ProductCategory").where("categoryName", returnCategoryType.getName(),"productCategoryTypeId","EBAY_CATEGORY").queryList();
+                            List<GenericValue> productCategoryList = EntityQuery.use(delegator).from("ProductCategory").where("categoryName", returnCategoryType.getName(), "productCategoryTypeId", "EBAY_CATEGORY").queryList();
                             for (GenericValue productCategory : productCategoryList) {
                                 if (EbayStoreHelper.veriflyCategoryInCatalog(delegator, catalogCategories, productCategory.getString("productCategoryId"))) {
                                     if (EbayStoreHelper.createEbayCategoryIdByPartyId(delegator, productCategory.getString("productCategoryId"), partyId, String.valueOf(returnCategoryType.getCategoryID()))) {
@@ -426,10 +426,9 @@ public class EbayStore {
     }
 
     public static Map<String, Object> buildSetStoreXml(DispatchContext dctx, Map<String, ? extends Object> context, StringBuffer dataStoreXml, String token, String siteID) {
-        Locale locale = (Locale)context.get("locale");
+        Locale locale = (Locale) context.get("locale");
         try {
             Delegator delegator = dctx.getDelegator();
-            
             // Get the list of products to be exported to eBay
             try {
                 Document storeDocument = UtilXml.makeEmptyXmlDocument("SetStoreRequest");
@@ -485,7 +484,7 @@ public class EbayStore {
     }
 
     public static Map<String, Object> buildGetStoreXml(Map<String, ? extends Object> context, StringBuffer dataStoreXml, String token, String siteID) {
-        Locale locale = (Locale)context.get("locale");
+        Locale locale = (Locale) context.get("locale");
         // Get the list of products to be exported to eBay
         try {
             Document storeDocument = UtilXml.makeEmptyXmlDocument("GetStoreRequest");
@@ -505,7 +504,7 @@ public class EbayStore {
 
     public static Map<String, Object> buildSetStoreCategoriesXml(DispatchContext dctx, Map<String, ? extends Object> context, StringBuffer dataStoreXml, String token, String siteID, String productCategoryId) {
         Delegator delegator = dctx.getDelegator();
-        Locale locale = (Locale)context.get("locale");
+        Locale locale = (Locale) context.get("locale");
         // Get the list of products to be exported to eBay
         try {
             Document storeDocument = UtilXml.makeEmptyXmlDocument("SetStoreCategoriesRequest");
@@ -625,7 +624,7 @@ public class EbayStore {
         if (context.get("productStoreId") != null) {
             String partyId = null;
             try {
-                List<GenericValue> productStoreRoles = EntityQuery.use(delegator).from("ProductStoreRole").where("productStoreId", context.get("productStoreId").toString(),"roleTypeId","EBAY_ACCOUNT").queryList();
+                List<GenericValue> productStoreRoles = EntityQuery.use(delegator).from("ProductStoreRole").where("productStoreId", context.get("productStoreId").toString(), "roleTypeId", "EBAY_ACCOUNT").queryList();
                 if (productStoreRoles.size() != 0) {
                     partyId=  (String)productStoreRoles.get(0).get("partyId");
                     List<GenericValue> userLogins = EntityQuery.use(delegator).from("UserLogin").where("partyId", partyId).queryList();
@@ -681,7 +680,7 @@ public class EbayStore {
                     ebayResp.put("storeNameColor", fontType.getNameColor());
                     ebayResp.put("storeTitleColor", fontType.getTitleColor());
 
-                    if (fontType != null) {// basic & advance theme
+                    if (fontType != null) { // basic & advance theme
                         String themeId = themeType.getThemeID().toString().concat("-").concat(colorSchemeType.getColorSchemeID().toString());
                         context.put("themeId", themeId);
                         Map<String, Object> results = retrieveThemeColorSchemeByThemeId(dctx, context);
@@ -1317,7 +1316,7 @@ public class EbayStore {
                     result = ServiceUtil.returnError(resp.getMessage());
                 }
                 LocalDispatcher dispatcher = dctx.getDispatcher();
-                Map<String, Object> results = dispatcher.runSync("getEbayStoreOutput", UtilMisc.toMap("productStoreId", (String) context.get("productStoreId"),"userLogin", context.get("userLogin")));
+                Map<String, Object> results = dispatcher.runSync("getEbayStoreOutput", UtilMisc.toMap("productStoreId", (String) context.get("productStoreId"), "userLogin", context.get("userLogin")));
                 if (ServiceUtil.isError(results)) {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(results));
                 }
@@ -1556,10 +1555,10 @@ public class EbayStore {
             }
             GenericValue userLogin = (GenericValue) context.get("userLogin");
             if (UtilValidate.isNotEmpty(context.get("productCategoryId"))) {
-                GenericValue prodCategoryMember = EntityQuery.use(delegator).from("ProductCategoryMember").where("productCategoryId", context.get("productCategoryId"),"productId", context.get("productId")).filterByDate().queryFirst();
+                GenericValue prodCategoryMember = EntityQuery.use(delegator).from("ProductCategoryMember").where("productCategoryId", context.get("productCategoryId"), "productId", context.get("productId")).filterByDate().queryFirst();
                 if (prodCategoryMember != null) {
                     GenericValue prodCategoryRole = EntityQuery.use(delegator).from("ProductCategoryRole").where("productCategoryId",
-                        prodCategoryMember.get("productCategoryId").toString(), "partyId", userLogin.get("partyId"),"roleTypeId", "EBAY_ACCOUNT")
+                        prodCategoryMember.get("productCategoryId").toString(), "partyId", userLogin.get("partyId"), "roleTypeId", "EBAY_ACCOUNT")
                         .filterByDate().queryFirst();
                     if (prodCategoryRole != null) {
                         context.put("ebayCategory", prodCategoryRole.get("comments"));

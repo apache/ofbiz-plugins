@@ -42,7 +42,7 @@ public class BirtViewerServlet extends ViewerServlet {
     @Override
     protected IContext __getContext(HttpServletRequest request, HttpServletResponse response) throws BirtException {
         BirtReportServiceFactory.getReportService().setContext(getServletContext(), null);
-        
+
         // set app context
         Map<String, Object> appContext = UtilGenerics.cast(ReportEngineService.getInstance().getEngineConfig().getAppContext());
         try {
@@ -50,8 +50,6 @@ public class BirtViewerServlet extends ViewerServlet {
         } catch (GeneralException e) {
             throw new BirtException(e.getMessage());
         }
-        
-        return new BirtContext(new ViewerServletRequest(ParameterAccessor.getParameter(request, ParameterAccessor.PARAM_REPORT)
-                        , request), response);
+        return new BirtContext(new ViewerServletRequest(ParameterAccessor.getParameter(request, ParameterAccessor.PARAM_REPORT), request), response);
     }
 }

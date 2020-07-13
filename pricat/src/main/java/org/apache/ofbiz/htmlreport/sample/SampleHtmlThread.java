@@ -34,25 +34,17 @@ import org.apache.ofbiz.htmlreport.InterfaceReport;
 
 /**
  * Thread for running sample html report.
- *  
  */
 public class SampleHtmlThread extends AbstractReportThread {
 
     public static final String COUNT_DOWN = "countdown";
-    
     public static final String COUNT_UP = "countup";
-    
     public static final String CONFIRM = "confirm_action";
-    
     public static final String[] messageLables = new String[] {"FORMAT_DEFAULT", "FORMAT_WARNING", "FORMAT_HEADLINE", "FORMAT_NOTE", "FORMAT_OK", "FORMAT_ERROR", "FORMAT_THROWABLE"};
-    
     public static final List<String> messages = Collections.unmodifiableList(Arrays.asList(messageLables));
-    
     private static final String RESOURCE = "PricatUiLabels";
-    
     /**
      * Constructor, creates a new HtmlImportThreat.
-     * 
      */
     public SampleHtmlThread(HttpServletRequest request, HttpServletResponse response, String name) {
         super(request, response, name);

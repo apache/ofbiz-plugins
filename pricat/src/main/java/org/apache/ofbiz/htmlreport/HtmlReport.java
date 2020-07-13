@@ -87,7 +87,7 @@ public class HtmlReport extends AbstractReport {
 
     /** Boolean flag indicating whether this report should generate HTML or JavaScript output. */
     protected boolean writeHtml;
-    
+
     /** Helper variable to deliver the html end part. */
     public static final int HTML_END = 1;
 
@@ -99,11 +99,11 @@ public class HtmlReport extends AbstractReport {
 
     /** The next thread to display after this report. */
     protected String paramThreadHasNext;
-    
+
     protected String paramAction;
-    
+
     protected String paramTitle;
-    
+
     protected String paramResource;
 
     /** Flag for refreching workplace .*/
@@ -147,45 +147,31 @@ public class HtmlReport extends AbstractReport {
 
     /** Request parameter value for the action: back. */
     public static final String DIALOG_BACK = "back";
-
     /** Request parameter value for the action: cancel. */
     public static final String DIALOG_CANCEL = "cancel";
-
     /** Request parameter value for the action: continue. */
     public static final String DIALOG_CONTINUE = "continue";
-
     /** Request parameter value for the action: set. */
     public static final String DIALOG_SET = "set";
-
     /** The RESOURCE list parameter value. */
     protected String paramResourcelist;
-
     /** The list of RESOURCE names for the multi operation. */
     protected List<String> resourceList;
-
     /** The key name which contains the localized message for the continue checkbox. */
     protected String paramReportContinueKey;
-
     public static final String DIALOG_URI = "dialoguri";
-    
     public static final String FORM_URI = "formuri";
-    
     private static final String RESOURCE = "PricatUiLabels";
-    
     /** Log file. */
     protected File logFile;
-    
     /** Log file name. */
     protected String logFileName;
-    
     /** Log file output stream. */
     protected FileOutputStream logFileOutputStream;
-    
     protected long sequenceNum = -1;
 
     /**
      * Constructs a new report using the provided locale for the output language.<p>
-     * 
      * @param request HttpServletRequest
      * @param response HttpServletResponse
      */
@@ -196,7 +182,6 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Constructs a new report using the provided locale for the output language.<p>
-     *  
      * @param request HttpServletRequest
      * @param response HttpServletResponse
      * @param writeHtml if <code>true</code>, this report should generate HTML instead of JavaScript output
@@ -211,7 +196,6 @@ public class HtmlReport extends AbstractReport {
         this.writeHtml = writeHtml;
         this.isTransient = isTransient;
     }
-    
     public static HtmlReport getInstance(HttpServletRequest request, HttpServletResponse response) {
         HtmlReport wp = (HtmlReport) request.getSession().getAttribute(SESSION_REPORT_CLASS);
         if (wp == null) {
@@ -220,7 +204,6 @@ public class HtmlReport extends AbstractReport {
         }
         return wp;
     }
-    
     public static HtmlReport getInstance(HttpServletRequest request, HttpServletResponse response, boolean writeHtml, boolean isTransient) {
         HtmlReport wp = (HtmlReport) request.getSession().getAttribute(SESSION_REPORT_CLASS);
         if (wp == null) {
@@ -229,7 +212,6 @@ public class HtmlReport extends AbstractReport {
         }
         return wp;
     }
-    
     public static HtmlReport getInstance(HttpServletRequest request, HttpServletResponse response, boolean writeHtml, boolean isTransient, String logFileName) {
         HtmlReport wp = (HtmlReport) request.getSession().getAttribute(SESSION_REPORT_CLASS);
         if (wp == null || UtilValidate.isEmpty(wp.getLogFileName()) || !wp.getLogFileName().equals(logFileName)) {
@@ -238,12 +220,10 @@ public class HtmlReport extends AbstractReport {
         }
         return wp;
     }
-    
     public String getParamAction(HttpServletRequest request) {
         paramAction = request.getParameter("action");
         return paramAction != null ? paramAction : "reportbegin";
     }
-    
     public void setParamAction(String action) {
         paramAction = action;
     }
@@ -280,9 +260,7 @@ public class HtmlReport extends AbstractReport {
                 }
             }
         }
-        
         indexNext = isTransient ? 0 : indexEnd;
-        
         if (isTransient && logFileOutputStream != null && logResult.toString().length() > 0) {
             try {
                 logFileOutputStream.write((logResult.toString() + "\n").getBytes());
@@ -295,8 +273,7 @@ public class HtmlReport extends AbstractReport {
     }
 
     /**
-     * Returns if the report writes html or javascript code.<p> 
-     * 
+     * Returns if the report writes html or javascript code.<p>
      * @return <code>true</code> if the report writes html, and <code>false</code> if the report writes javascript code
      */
     public boolean isWriteHtml() {
@@ -406,10 +383,9 @@ public class HtmlReport extends AbstractReport {
         content.add(getExceptionElementJS(t));
         logContent.add(getExceptionElementHtml(t));
     }
-    
+
     /**
      * Returns the correct line break notation depending on the output style of this report.
-     * 
      * @return the correct line break notation
      */
     protected String getLineBreak() {
@@ -418,14 +394,11 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Output helper method to format a reported <code>Throwable</code> element.<p>
-     * 
      * This method ensures that exception stack traces are properly escaped
      * when they are added to the report.<p>
-     * 
      * There is a member variable {@link #showExceptionStackTrace} in this
      * class that controls if the stack track is shown or not.
      * In a later version this might be configurable on a per-user basis.<p>
-     *      
      * @param throwable the exception to format
      * @return the formatted StringBuffer
      */
@@ -491,11 +464,9 @@ public class HtmlReport extends AbstractReport {
     }
 
     /**
-     * Builds the start html of the page, including setting of DOCTYPE and 
+     * Builds the start html of the page, including setting of DOCTYPE and
      * inserting a header with the content-type.<p>
-     * 
      * This overloads the default method of the parent class.<p>
-     * 
      * @return the start html of the page
      */
     public String htmlStart() {
@@ -504,11 +475,9 @@ public class HtmlReport extends AbstractReport {
     }
 
     /**
-     * Builds the start html of the page, including setting of DOCTYPE and 
+     * Builds the start html of the page, including setting of DOCTYPE and
      * inserting a header with the content-type.<p>
-     * 
      * This overloads the default method of the parent class.<p>
-     * 
      * @param loadStyles if true, the defaul style sheet will be loaded
      * @return the start html of the page
      */
@@ -518,11 +487,9 @@ public class HtmlReport extends AbstractReport {
     }
 
     /**
-     * Builds the start html of the page, including setting of DOCTYPE and 
+     * Builds the start html of the page, including setting of DOCTYPE and
      * inserting a header with the content-type.<p>
-     * 
      * This overloads the default method of the parent class.<p>
-     * 
      * @param segment the HTML segment (START / END)
      * @param loadStyles if true, the defaul style sheet will be loaded
      * @return the start html of the page
@@ -549,7 +516,6 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Builds the standard javascript for submitting the dialog.<p>
-     * 
      * @return the standard javascript for submitting the dialog
      */
     public String dialogScriptSubmit() {
@@ -567,7 +533,6 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Returns true if the report Thread is still alive (i.e. running), false otherwise.<p>
-     *  
      * @return true if the report Thread is still alive
      */
     public boolean isAlive(HttpServletRequest request) {
@@ -599,7 +564,7 @@ public class HtmlReport extends AbstractReport {
      */
     public String getParamThread(HttpServletRequest request) {
         String thread = request.getParameter("thread");
-        return ReportStringUtil.isNotEmptyOrWhitespaceOnly(thread) ? thread : (paramThread == null? "" : paramThread);
+        return ReportStringUtil.isNotEmptyOrWhitespaceOnly(thread) ? thread : (paramThread == null ? "" : paramThread);
     }
 
     /**
@@ -614,7 +579,6 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Builds the start html of the body.<p>
-     * 
      * @param className optional class attribute to add to the body tag
      * @param parameters optional parameters to add to the body tag
      * @return the start html of the body
@@ -625,7 +589,6 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Builds the html of the body.<p>
-     * 
      * @param segment the HTML segment (START / END)
      * @param className optional class attribute to add to the body tag
      * @param parameters optional parameters to add to the body tag
@@ -653,7 +616,6 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Builds the end html of the body.<p>
-     * 
      * @return the end html of the body
      */
     public String bodyEnd() {
@@ -662,7 +624,6 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Builds the end html of the page.<p>
-     * 
      * @return the end html of the page
      */
     public String htmlEnd() {
@@ -670,9 +631,8 @@ public class HtmlReport extends AbstractReport {
     }
 
     /**
-     * Returns the default html for a workplace page, including setting of DOCTYPE and 
+     * Returns the default html for a workplace page, including setting of DOCTYPE and
      * inserting a header with the content-type.<p>
-     * 
      * @param segment the HTML segment (START / END)
      * @param title the title of the page, if null no title tag is inserted
      * @return the default html for a workplace page
@@ -682,9 +642,8 @@ public class HtmlReport extends AbstractReport {
     }
 
     /**
-     * Returns the default html for a workplace page, including setting of DOCTYPE and 
+     * Returns the default html for a workplace page, including setting of DOCTYPE and
      * inserting a header with the content-type, allowing the selection of an individual style sheet.<p>
-     * 
      * @param segment the HTML segment (START / END)
      * @param title the title of the page, if null no title tag is inserted
      * @param stylesheet the used style sheet, if null the default stylesheet 'workplace.css' is inserted
@@ -713,7 +672,6 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Returns the start html for the outer dialog window border.
-     * 
      * @return the start html for the outer dialog window border
      */
     public String dialogStart() {
@@ -722,10 +680,8 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Builds the outer dialog window border.
-     * 
      * @param segment the HTML segment (START / END)
      * @param attributes optional additional attributes for the opening dialog table
-     * 
      * @return a dialog window start / end segment
      */
     public String dialog(int segment, String attributes) {
@@ -746,9 +702,7 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Returns the start html for the content area of the dialog window.<p>
-     * 
      * @param title the title for the dialog
-     * 
      * @return the start html for the content area of the dialog window
      */
     public String dialogContentStart(String title) {
@@ -757,10 +711,8 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Builds the content area of the dialog window.<p>
-     * 
      * @param segment the HTML segment (START / END)
      * @param title the title String for the dialog window
-     * 
      * @return a content area start / end segment
      */
     public String dialogContent(int segment, String title) {
@@ -778,9 +730,7 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Builds the title of the dialog window.<p>
-     * 
      * @param title the title String for the dialog window
-     * 
      * @return the HTML title String for the dialog window
      */
     public String dialogHead(String title) {
@@ -788,13 +738,11 @@ public class HtmlReport extends AbstractReport {
     }
 
     /**
-     * Returns the value of the title parameter, 
+     * Returns the value of the title parameter,
      * or null if this parameter was not provided.<p>
-     * 
-     * This parameter is used to build the title 
-     * of the dialog. It is a parameter so that the title 
+     * This parameter is used to build the title
+     * of the dialog. It is a parameter so that the title
      * can be passed to included elements.<p>
-     * 
      * @return the value of the title parameter
      */
     public String getParamTitle(HttpServletRequest request) {
@@ -805,9 +753,8 @@ public class HtmlReport extends AbstractReport {
     }
 
     /**
-     * Returns all initialized parameters of the current workplace class 
+     * Returns all initialized parameters of the current workplace class
      * as hidden field tags that can be inserted in a form.<p>
-     * 
      * @return all initialized parameters of the current workplace class
      * as hidden field tags that can be inserted in a html form
      */
@@ -816,11 +763,9 @@ public class HtmlReport extends AbstractReport {
     }
 
     /**
-     * Returns all initialized parameters of the current workplace class 
+     * Returns all initialized parameters of the current workplace class
      * that are not in the given exclusion list as hidden field tags that can be inserted in a form.<p>
-     * 
-     * @param excludes the parameters to exclude 
-     * 
+     * @param excludes the parameters to exclude
      * @return all initialized parameters of the current workplace class
      * that are not in the given exclusion list as hidden field tags that can be inserted in a form
      */
@@ -842,13 +787,12 @@ public class HtmlReport extends AbstractReport {
                 result.append("\">\n");
             }
         }
-        
+
         return result.toString();
     }
 
     /**
      * Returns the values of all parameter methods of this workplace class instance.<p>
-     * 
      * @return the values of all parameter methods of this workplace class instance
      */
     protected Map<String, Object> paramValues(HttpServletRequest request) {
@@ -871,10 +815,9 @@ public class HtmlReport extends AbstractReport {
     }
 
     /**
-     * Returns a list of all methods of the current class instance that 
-     * start with "getParam" and have no parameters.<p> 
-     * 
-     * @return a list of all methods of the current class instance that 
+     * Returns a list of all methods of the current class instance that
+     * start with "getParam" and have no parameters.<p>
+     * @return a list of all methods of the current class instance that
      * start with "getParam" and have no parameters
      */
     private List<Method> paramGetMethods() {
@@ -893,7 +836,6 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Returns an optional introduction text to be displayed above the report output.<p>
-     * 
      * @return an optional introduction text
      */
     public String reportIntroductionText() {
@@ -902,7 +844,6 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Returns an optional conclusion text to be displayed below the report output.<p>
-     * 
      * @return an optional conclusion text
      */
     public String reportConclusionText() {
@@ -911,7 +852,6 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Returns the end html for the content area of the dialog window.<p>
-     * 
      * @return the end html for the content area of the dialog window
      */
     public String dialogContentEnd() {
@@ -920,9 +860,7 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Builds a button row with an "Ok" and a "Cancel" button.<p>
-     * 
      * This row is displayed when the first report is running.<p>
-     * 
      * @param okAttrs optional attributes for the ok button
      * @param cancelAttrs optional attributes for the cancel button
      * @return the button row
@@ -935,9 +873,7 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Builds a button row with an "OK" and a "Cancel" button.<p>
-     * 
      * This row is used when a single report is running or after the first report has finished.<p>
-     * 
      * @param okAttrs optional attributes for the ok button
      * @param cancelAttrs optional attributes for the cancel button
      * @return the button row
@@ -954,9 +890,7 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Builds a button row with an "OK", a "Cancel" and a "Download" button.<p>
-     * 
      * This row is used when a single report is running or after the first report has finished.<p>
-     * 
      * @param okAttrs optional attributes for the ok button
      * @param cancelAttrs optional attributes for the cancel button
      * @param downloadAttrs optional attributes for the download button
@@ -982,10 +916,8 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Builds the html for the button row under the dialog content area, including buttons.<p>
-     * 
      * @param buttons array of constants of which buttons to include in the row
      * @param attributes array of Strings for additional button attributes
-     * 
      * @return the html for the button row under the dialog content area, including buttons
      */
     public String dialogButtons(int[] buttons, String[] attributes) {
@@ -1000,9 +932,7 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Builds the button row under the dialog content area without the buttons.<p>
-     * 
      * @param segment the HTML segment (START / END)
-     * 
      * @return the button row start / end segment
      */
     public String dialogButtonRow(int segment) {
@@ -1015,7 +945,6 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Renders the HTML for a single input button of a specified type.<p>
-     * 
      * @param result a string buffer where the rendered HTML gets appended to
      * @param button a integer key to identify the button
      * @param attribute an optional string with possible tag attributes, or null
@@ -1138,9 +1067,7 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Appends a space char. between tag attributes.<p>
-     * 
      * @param attribute a tag attribute
-     * 
      * @return the tag attribute with a leading space char
      */
     protected String appendDelimiter(String attribute) {
@@ -1157,7 +1084,6 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Returns true if the dialog operation has to be performed on multiple resources.<p>
-     * 
      * @return true if the dialog operation has to be performed on multiple resources, otherwise false
      */
     public boolean isMultiOperation(HttpServletRequest request) {
@@ -1166,10 +1092,8 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Returns the resources that are defined for the dialog operation.
-     * 
      * For single RESOURCE operations, the list contains one item: the RESOURCE name found
      * in the request parameter value of the "RESOURCE" parameter.
-     * 
      * @return the resources that are defined for the dialog operation
      */
     public List<String> getResourceList(HttpServletRequest request) {
@@ -1195,9 +1119,7 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Returns the value of the RESOURCE list parameter, or null if the parameter is not provided.<p>
-     * 
      * This parameter selects the resources to perform operations on.<p>
-     *  
      * @return the value of the RESOURCE list parameter or null, if the parameter is not provided
      */
     public String getParamResourcelist(HttpServletRequest request) {
@@ -1211,10 +1133,8 @@ public class HtmlReport extends AbstractReport {
     /**
      * Returns the value of the file parameter, 
      * or null if this parameter was not provided.<p>
-     * 
      * The file parameter selects the file on which the dialog action
      * is to be performed.<p>
-     * 
      * @return the value of the file parameter
      */
     public String getParamResource(HttpServletRequest request) {
@@ -1228,7 +1148,6 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Returns if the workplace must be refreshed.<p>
-     * 
      * @return <code>"true"</code> if the workplace must be refreshed.
      */
     public String getParamRefreshWorkplace() {
@@ -1237,7 +1156,6 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Returns the key name which contains the localized message for the continue checkbox.<p>
-     * 
      * @return the key name which contains the localized message for the continue checkbox
      */
     public String getParamReportContinueKey() {
@@ -1248,12 +1166,10 @@ public class HtmlReport extends AbstractReport {
     }
 
     /**
-     * Returns the value of the resourcelist parameter in form of a String separated 
+     * Returns the value of the resourcelist parameter in form of a String separated
      * with {@link #DELIMITER_RESOURCES}, or the value of the RESOURCE parameter if the
      * first parameter is not provided (no multiple choice has been done.<p>
-     * 
      * This may be used for jsps as value for the parameter for resources {@link #PARAM_RESOURCELIST}.<p>
-     *  
      * @return the value of the resourcelist parameter or null, if the parameter is not provided
      */
     public String getResourceListAsParam(HttpServletRequest request) {
@@ -1266,7 +1182,6 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Returns the end html for the outer dialog window border.<p>
-     * 
      * @return the end html for the outer dialog window border
      */
     public String dialogEnd() {
@@ -1285,7 +1200,6 @@ public class HtmlReport extends AbstractReport {
     }
     /**
      * Set the report form uri.
-     * 
      * @param request
      * @param formUri
      */
@@ -1294,7 +1208,6 @@ public class HtmlReport extends AbstractReport {
     }
     /**
      * Get the report form uri.
-     * 
      * @param request
      * @return
      */

@@ -42,18 +42,12 @@ import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.util.EntityQuery;
 
 public class PricatEvents {
-    
     private static final String MODULE = PricatEvents.class.getName();
-    
     public static final String PricatLatestVersion = UtilProperties.getPropertyValue("pricat", "pricat.latest.version", "V1.1");
-    
     public static final String PricatFileName = "PricatTemplate_" + PricatLatestVersion + ".xlsx";
-    
     public static final String PricatPath = "component://pricat/webapp/pricat/downloads/";
-    
     /**
      * Download excel template.
-     * 
      * @param request
      * @param response
      */
@@ -80,7 +74,6 @@ public class PricatEvents {
         }
         return "success";
     }
-    
     /**
      * Upload a pricat.
      */
@@ -127,7 +120,6 @@ public class PricatEvents {
 
     /**
      * Download commented excel file after it's parsed.
-     * 
      * @param request
      * @param response
      * @return

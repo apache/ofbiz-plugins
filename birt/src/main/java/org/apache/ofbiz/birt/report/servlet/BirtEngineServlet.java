@@ -41,7 +41,7 @@ public class BirtEngineServlet extends org.eclipse.birt.report.servlet.BirtEngin
     @Override
     protected IContext __getContext(HttpServletRequest request, HttpServletResponse response) throws BirtException {
         BirtReportServiceFactory.getReportService().setContext(getServletContext(), null);
-        
+
         // set app context
         Map<String, Object> appContext = UtilGenerics.cast(ReportEngineService.getInstance().getEngineConfig().getAppContext());
         try {

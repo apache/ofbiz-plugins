@@ -87,9 +87,8 @@ public class LinkedInAuthenticator implements Authenticator {
 
     /**
      * Method to authenticate a user.
-     * 
-     * For LinkedIn users, we only check if the username(userLoginId) exists an 
-     * externalAuthId, and the externalAuthId has a valid accessToken in 
+     * For LinkedIn users, we only check if the username(userLoginId) exists an
+     * externalAuthId, and the externalAuthId has a valid accessToken in
      * LinkedInUser entity.
      *
      * @param userLoginId   User's login id
@@ -243,7 +242,7 @@ public class LinkedInAuthenticator implements Authenticator {
         }
         return createUser(user, system);
     }
-    
+
     private String createUser(Document user, GenericValue system) throws AuthenticatorException {
         Map<String, String> userInfo = parseLinkedInUserInfo(user);
 

@@ -63,15 +63,15 @@ public class LuceneTests extends OFBizTestCase {
             throw new Exception(errorMessage);
         }
         assertTrue("Could not init search index", ServiceUtil.isSuccess(resp));
-        
+
         try {
             Thread.sleep(3000); // sleep 3 seconds to give enough time to the indexer to process the entries
         } catch (InterruptedException e) {
             Debug.logError("Thread interrupted :" + e, MODULE);
         }
-        
+
         Directory directory = FSDirectory.open(new File(SearchWorker.getIndexPath("content")).toPath());
-        
+
         DirectoryReader r = null;
         try {
             r = DirectoryReader.open(directory);

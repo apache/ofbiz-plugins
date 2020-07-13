@@ -38,7 +38,7 @@ import org.apache.ofbiz.service.DispatchContext;
  * Product category util class for solr.
  */
 public final class CategoryUtil {
-    
+
     private static final String MODULE = CategoryUtil.class.getName();
 
     private CategoryUtil() { }
@@ -64,8 +64,7 @@ public final class CategoryUtil {
             }
         }
         return catalogIds;
-    }    
-    
+    }
     public static List<List<String>> getCategoryTrail(String productCategoryId, DispatchContext dctx) {
        GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
         List<List<String>> trailElements = new ArrayList<>();
@@ -113,7 +112,7 @@ public final class CategoryUtil {
         }
         return trailElements;
     }
-    
+
     /**
      * Returns categoryName with trail
      */
@@ -125,7 +124,7 @@ public final class CategoryUtil {
         List<List<String>> trailElements = CategoryUtil.getCategoryTrail(productCategoryId, dctx);
         //Debug.log("trailElements ======> " + trailElements.toString());
         StringBuilder catMember = new StringBuilder();
-        String cm ="";
+        String cm = "";
         int i = 0;
         for (List<String> trailElement : trailElements) {
             for (Iterator<String> trailIter = trailElement.iterator(); trailIter.hasNext();) {
@@ -134,11 +133,11 @@ public final class CategoryUtil {
                     catMember.append("/");
                     i++;
                 }
-                
+
                 catMember.append(trailString);
             }
         }
-        
+
         if (catMember.length() == 0) {
             catMember.append(productCategoryId);
         }
@@ -149,9 +148,7 @@ public final class CategoryUtil {
         }
         return cm;
     }
-    
-    /**    
-     * Returns nextLevel from trailed category.
+    /**Returns nextLevel from trailed category.
      * <p>
      * Ie for "1/SYRACUS2_CATEGORY/FICTION_C/" the returned value would be 2.
      */
@@ -168,9 +165,8 @@ public final class CategoryUtil {
             return 0;
         }
     }
-    
-    /**    
-     * Returns proper FacetFilter from trailed category.
+
+    /** Returns proper FacetFilter from trailed category.
      * <p>
      * Ie for "1/SYRACUS2_CATEGORY/FICTION_C/" the returned value would be
      * "2/SYRACUS2_CATEGORY/FICTION_C/".
@@ -186,5 +182,4 @@ public final class CategoryUtil {
             return productCategoryId;
         }
     }
-    
 }

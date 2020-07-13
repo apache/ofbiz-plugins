@@ -211,7 +211,7 @@ public class EbayStoreCategoryFacade {
             m = cf.getClass().getMethod(methodName);
             if (m != null) {
                 return m.invoke(cf);
-            } 
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -277,7 +277,7 @@ public class EbayStoreCategoryFacade {
                 }
             }
         }
-        return adItemTemplates = temGroupList; 
+        return adItemTemplates = temGroupList;
     }
 
     public List<Map<String, Object>> getAdItemTemplates(String temGroupId) {

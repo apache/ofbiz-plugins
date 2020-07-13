@@ -72,37 +72,28 @@ import org.xml.sax.SAXException;
 public class LinkedInEvents {
 
     private static final String MODULE = LinkedInEvents.class.getName();
-    
     private static final String RESOURCE = "PassportUiLabels";
-    
     public static final String AuthorizeUri = "/uas/oauth2/authorization";
-    
     public static final String TokenServiceUri = "/uas/oauth2/accessToken";
-    
     public static final String UserApiUri = "/v1/people/~";
-
     public static final String DEFAULT_SCOPE = "r_basicprofile%20r_emailaddress";
-    
     public static final String TokenEndpoint = "https://www.linkedin.com";
-    
     public static final String SESSION_LINKEDIN_STATE = "_LINKEDIN_STATE_";
-
     public static final String envPrefix = UtilProperties.getPropertyValue(LinkedInAuthenticator.props, "linkedin.env.prefix", "test");
 
     /**
      * Redirect to LinkedIn login page.
-     * 
-     * @return 
+     * @return
      */
     public static String linkedInRedirect(HttpServletRequest request, HttpServletResponse response) {
         GenericValue oauth2LinkedIn = getOAuth2LinkedInConfig(request);
         if (UtilValidate.isEmpty(oauth2LinkedIn)) {
             return "error";
         }
-        
+
         String clientId = oauth2LinkedIn.getString(PassportUtil.ApiKeyLabel);
         String returnURI = oauth2LinkedIn.getString(envPrefix + PassportUtil.ReturnUrlLabel);
-        
+
         // Get user authorization code
         try {
             String state = System.currentTimeMillis() + String.valueOf((new Random(10)).nextLong());
@@ -124,14 +115,13 @@ public class LinkedInEvents {
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
-        
+
         return "success";
     }
 
     /**
      * Parse LinkedIn login response and login the user if possible.
-     * 
-     * @return 
+     * @return
      */
     public static String parseLinkedInResponse(HttpServletRequest request, HttpServletResponse response) {
         String authorizationCode = request.getParameter(PassportUtil.COMMON_CODE);
@@ -154,7 +144,7 @@ public class LinkedInEvents {
             return "error";
         }
         // Debug.logInfo("LinkedIn authorization code: " + authorizationCode, MODULE);
-        
+
         GenericValue oauth2LinkedIn = getOAuth2LinkedInConfig(request);
         if (UtilValidate.isEmpty(oauth2LinkedIn)) {
             String errMsg = UtilProperties.getMessage(RESOURCE, "LinkedInGetOAuth2ConfigError", UtilHttp.getLocale(request));
@@ -164,11 +154,11 @@ public class LinkedInEvents {
         String clientId = oauth2LinkedIn.getString(PassportUtil.ApiKeyLabel);
         String secret = oauth2LinkedIn.getString(PassportUtil.SecretKeyLabel);
         String returnURI = oauth2LinkedIn.getString(envPrefix + PassportUtil.ReturnUrlLabel);
-        
+
         // Grant token from authorization code and oauth2 token
         // Use the authorization code to obtain an access token
         String accessToken = null;
-        
+
         try {
             URI uri = new URIBuilder()
                     .setScheme(TokenEndpoint.substring(0, TokenEndpoint.indexOf(":")))
@@ -217,7 +207,7 @@ public class LinkedInEvents {
             getMethod.releaseConnection();
         }
         // Debug.logInfo("LinkedIn User Info:" + userInfo, MODULE);
-        
+
         // Store the user info and check login the user
         return checkLoginLinkedInUser(request, userInfo, accessToken);
     }
@@ -256,9 +246,9 @@ public class LinkedInEvents {
                 }
             }
         } else {
-            linkedInUser = delegator.makeValue("LinkedInUser", UtilMisc.toMap("accessToken", accessToken, 
-                                                                          "productStoreId", productStoreId, 
-                                                                          "envPrefix", envPrefix, 
+            linkedInUser = delegator.makeValue("LinkedInUser", UtilMisc.toMap("accessToken", accessToken,
+                                                                          "productStoreId", productStoreId,
+                                                                          "envPrefix", envPrefix,
                                                                           "linkedInUserId", linkedInUserId));
             try {
                 linkedInUser.create();
@@ -300,7 +290,7 @@ public class LinkedInEvents {
         }
         return null;
     }
-    
+
     public static GenericValue getOAuth2LinkedInConfig(Delegator delegator, String productStoreId) throws GenericEntityException {
         return EntityQuery.use(delegator).from("OAuth2LinkedIn").where("productStoreId", productStoreId).filterByDate().queryFirst();
     }

@@ -212,7 +212,7 @@ public class ImportOrdersFromEbay {
     }
 
     private static Map<String, Object> buildGetSellerTransactionsRequest(Map<String, Object> context, StringBuffer dataItemsXml, String token) {
-        Locale locale = (Locale)context.get("locale");
+        Locale locale = (Locale) context.get("locale");
         String fromDate = (String) context.get("fromDate");
         String thruDate = (String) context.get("thruDate");
         try {

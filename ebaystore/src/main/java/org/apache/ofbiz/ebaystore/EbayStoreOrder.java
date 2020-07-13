@@ -93,19 +93,19 @@ public class EbayStoreOrder {
         result.put("formSelect", "order");
         return result;
     }
-    
+
     public static Map<String, Object> EbayStoreCreateTransactionShoppingCart(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Map<String, Object> result = new HashMap<>();
-        
+
         String productStoreId = context.get("productStoreId").toString();
         String defaultCurrencyUomId = "";
         String payToPartyId = "";
         String facilityId = "";
-        
+
         try {
             if (UtilValidate.isEmpty(productStoreId)) {
                 return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.productStoreIdIsMandatory", locale));
@@ -119,7 +119,7 @@ public class EbayStoreOrder {
                     return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.productStoreIdIsMandatory", locale));
                 }
             }
-            
+
             ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale, defaultCurrencyUomId);
             String externalId = context.get("externalId").toString();
             if (UtilValidate.isNotEmpty(externalId)) {
@@ -211,7 +211,7 @@ public class EbayStoreOrder {
                     }
                 }
             }
-            
+
                 Debug.logInfo("Importing new order from eBay", MODULE);
                 // set partyId to
                 String partyId = null;

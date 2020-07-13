@@ -123,7 +123,7 @@ public class EbayStoreHelper {
        ApiContext apiContext = new ApiContext();
        apiContext.setApiCredential(apiCredential);
        apiContext.setApiServerUrl(apiServerUrl);
-       apiContext.setApiLogging(apiLogging); 
+       apiContext.setApiLogging(apiLogging);
        apiContext.setErrorLanguage("en_US");
        return apiContext;
     }
@@ -215,7 +215,7 @@ public class EbayStoreHelper {
             GenericValue productCategoryRole = delegator.makeValue("ProductCategoryRole");
             productCategoryRole.put("productCategoryId", productCategoryId);
             productCategoryRole.put("partyId", partyId);
-            productCategoryRole.put("roleTypeId","EBAY_ACCOUNT");
+            productCategoryRole.put("roleTypeId", "EBAY_ACCOUNT");
             productCategoryRole.put("fromDate", UtilDateTime.nowTimestamp());
             productCategoryRole.put("comments", ebayCategoryId);
             productCategoryRole.create();
@@ -322,10 +322,8 @@ public class EbayStoreHelper {
                 GenericValue jobV;
                 jobV = delegator.makeValue("JobSandbox", jFields);
                 GenericValue jobSandbox = delegator.createSetNextSeqId(jobV);
-                
                 ebayProductPref.set("autoPrefJobId", jobSandbox.getString("jobId"));
                 ebayProductPref.store();
-                
                 Map<String, Object>infoData = new HashMap<>();
                 infoData.put("jobId", jobSandbox.getString("jobId"));
                 infoData.put("productStoreId", ebayProductPref.getString("productStoreId"));
@@ -349,7 +347,7 @@ public class EbayStoreHelper {
         try {
             GenericValue ebayProductPref = EntityQuery.use(delegator).from("EbayProductStorePref").where("productStoreId", productStoreId, "autoPrefEnumId", autoPrefEnumId).queryOne();
             String jobId = ebayProductPref.getString("autoPrefJobId");
-            List<GenericValue> jobs = EntityQuery.use(delegator).from("JobSandbox").where("parentJobId", jobId ,"statusId", "SERVICE_PENDING").queryList();
+            List<GenericValue> jobs = EntityQuery.use(delegator).from("JobSandbox").where("parentJobId", jobId , "statusId", "SERVICE_PENDING").queryList();
 
             Map<String, Object>inMap = new HashMap<>();
             inMap.put("userLogin", userLogin);
