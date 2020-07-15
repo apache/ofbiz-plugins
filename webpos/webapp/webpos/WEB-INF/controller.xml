@@ -29,6 +29,7 @@
     <handler name="groovy" type="request" class="org.apache.ofbiz.webapp.event.GroovyEventHandler"/>    
     <handler name="jsp" type="view" class="org.apache.ofbiz.webapp.view.JspViewHandler"/>
     <handler name="screen" type="view" class="org.apache.ofbiz.widget.renderer.macro.MacroScreenViewHandler"/>
+    <handler name="ftl" type="view" class="org.apache.ofbiz.webapp.ftl.FreeMarkerViewHandler"/>
     
     <!-- Events run from here for the first hit in a visit -->
     <firstvisit>
@@ -495,7 +496,7 @@
     </request-map>
     
     <!-- View Mappings -->
-    <view-map name="error" page="/error/error.jsp"/>
+    <view-map name="error" type="ftl" page="component://common/webcommon/error/Error.ftl"/>
     <view-map name="Error" type="screen" page="component://webpos/widget/WebPosScreens.xml#Main"/>
     <view-map name="main" type="screen" page="component://webpos/widget/WebPosScreens.xml#Main"/>
     <view-map name="login" type="screen" page="component://webpos/widget/CommonScreens.xml#Login"/>
