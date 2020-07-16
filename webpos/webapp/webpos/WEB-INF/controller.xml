@@ -20,7 +20,6 @@
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="http://ofbiz.apache.org/Site-Conf" xsi:schemaLocation="http://ofbiz.apache.org/Site-Conf http://ofbiz.apache.org/dtds/site-conf.xsd">
     <description>Web Pos Component Site Configuration File</description>
-    <errorpage>/error/error.jsp</errorpage>
     
     <handler name="java" type="request" class="org.apache.ofbiz.webapp.event.JavaEventHandler"/>
     <handler name="service" type="request" class="org.apache.ofbiz.webapp.event.ServiceEventHandler"/>
