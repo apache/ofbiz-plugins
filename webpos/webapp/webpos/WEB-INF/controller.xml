@@ -21,6 +21,8 @@
         xmlns="http://ofbiz.apache.org/Site-Conf" xsi:schemaLocation="http://ofbiz.apache.org/Site-Conf http://ofbiz.apache.org/dtds/site-conf.xsd">
     <description>Web Pos Component Site Configuration File</description>
     
+    <errorpage>component://common/webcommon/error/Error.ftl</errorpage>
+    
     <handler name="java" type="request" class="org.apache.ofbiz.webapp.event.JavaEventHandler"/>
     <handler name="service" type="request" class="org.apache.ofbiz.webapp.event.ServiceEventHandler"/>
     <handler name="service-multi" type="request" class="org.apache.ofbiz.webapp.event.ServiceMultiEventHandler"/>
