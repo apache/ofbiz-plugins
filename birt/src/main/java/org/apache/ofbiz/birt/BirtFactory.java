@@ -81,7 +81,7 @@ public class BirtFactory {
                 throw new IllegalArgumentException("Could not resolve location to URL: " + resourceName);
             }
             reportInputStream = reportFileUrl.openStream();
-            double totalSeconds = (System.currentTimeMillis() - startTime)/1000.0;
+            double totalSeconds = (System.currentTimeMillis() - startTime) / 1000.0;
             Debug.logInfo("Got report in " + totalSeconds + "s from: " + reportFileUrl.toExternalForm(), MODULE);
         }
 

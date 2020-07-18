@@ -157,7 +157,7 @@ public class DimensionServices {
             dateValue.set("yearName", Long.valueOf(calendar.get(Calendar.YEAR)));
             dateValue.set("weekOfMonth", Long.valueOf(calendar.get(Calendar.WEEK_OF_MONTH)));
             dateValue.set("weekOfYear", Long.valueOf(calendar.get(Calendar.WEEK_OF_YEAR)));
-            dateValue.set("weekdayType", (dayOfWeek == 1 || dayOfWeek == 7? "Weekend": "Weekday"));
+            dateValue.set("weekdayType", (dayOfWeek == 1 || dayOfWeek == 7 ? "Weekend" : "Weekday"));
             dateValue.set("yearMonthDay", yearMonthDayFormat.format(currentDate));
             dateValue.set("yearAndMonth", yearMonthFormat.format(currentDate));
 

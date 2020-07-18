@@ -243,7 +243,7 @@ public class HtmlReport extends AbstractReport {
             if ((obj instanceof String) || (obj instanceof StringBuffer)) {
                 result.append(obj);
             } else if (obj instanceof Throwable) {
-                result.append(getExceptionElementJS((Throwable)obj));
+                result.append(getExceptionElementJS((Throwable) obj));
             }
             if (isTransient) {
                 content.remove(indexNext);
@@ -544,7 +544,7 @@ public class HtmlReport extends AbstractReport {
         for (int j=0; j<threads.length; j++) {
             Thread threadInstance = threads[j];
             if (threadInstance instanceof AbstractReportThread) {
-                if (((AbstractReportThread)threadInstance).getUUID().toString().equals(getParamThread(request))) {
+                if (((AbstractReportThread) threadInstance).getUUID().toString().equals(getParamThread(request))) {
                     thread = (AbstractReportThread) threadInstance;
                     break;
                 }

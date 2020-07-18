@@ -135,7 +135,7 @@ public class ProductsExportToEbay {
         if (Debug.verboseOn()) {
             Debug.logVerbose("Request of " + callName + " To eBay:\n" + dataItems.toString(), MODULE);
         }
-        HttpURLConnection connection = (HttpURLConnection)(new URL(postItemsUrl)).openConnection();
+        HttpURLConnection connection = (HttpURLConnection) (new URL(postItemsUrl)).openConnection();
         connection.setDoInput(true);
         connection.setDoOutput(true);
         connection.setRequestMethod("POST");
@@ -155,8 +155,7 @@ public class ProductsExportToEbay {
         Map<String, Object> result = new HashMap<>();
         String response = null;
 
-        if (responseCode == HttpURLConnection.HTTP_CREATED ||
-            responseCode == HttpURLConnection.HTTP_OK) {
+        if (responseCode == HttpURLConnection.HTTP_CREATED || responseCode == HttpURLConnection.HTTP_OK) {
             inputStream = connection.getInputStream();
             response = toString(inputStream);
             result = ServiceUtil.returnSuccess(response);
@@ -532,7 +531,7 @@ public class ProductsExportToEbay {
             StringBuffer dataItemsXml = new StringBuffer();
             if (!ServiceUtil.isFailure(buildCategoriesXml(context, dataItemsXml, eBayConfigResult.get("token").toString(), eBayConfigResult.get("siteID").toString(), categoryParent, levelLimit))) {
                 Map<String, Object> resultCat = postItem(eBayConfigResult.get("xmlGatewayUri").toString(), dataItemsXml, eBayConfigResult.get("devID").toString(), eBayConfigResult.get("appID").toString(), eBayConfigResult.get("certID").toString(), "GetCategories", eBayConfigResult.get("compatibilityLevel").toString(), eBayConfigResult.get("siteID").toString());
-                String successMessage = (String)resultCat.get("successMessage");
+                String successMessage = (String) resultCat.get("successMessage");
                 if (successMessage != null) {
                     result = readEbayCategoriesResponse(successMessage, locale);
                 } else {

@@ -67,7 +67,7 @@ public class FixedAssetMaintServices {
             // Call issuance service
             Map<String, Object> result = dispatcher.runSync("getInventoryAvailableByFacility", findCurrInventoryParams);
             if (ServiceUtil.isError(result)) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE, "AssetMaintProblemGettingInventoryLevel", locale) + productId , null, null, result);
+                return ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE, "AssetMaintProblemGettingInventoryLevel", locale) + productId, null, null, result);
             }
             Object atpObj = result.get("availableToPromiseTotal");
             double atp = 0.0;
@@ -75,7 +75,7 @@ public class FixedAssetMaintServices {
                 atp = Double.parseDouble(atpObj.toString());
             }
             if (requestedQty > atp) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE, "AssetMaintLowPartInventoryError", UtilMisc.toMap("productId", productId , "quantity", Double.toString(atp)), locale));
+                return ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE, "AssetMaintLowPartInventoryError", UtilMisc.toMap("productId", productId, "quantity", Double.toString(atp)), locale));
             }
             EntityConditionList<EntityExpr> ecl = EntityCondition.makeCondition(UtilMisc.toList(
                     EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId),

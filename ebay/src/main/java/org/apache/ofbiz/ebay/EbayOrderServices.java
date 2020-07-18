@@ -457,7 +457,7 @@ public class EbayOrderServices {
                             Element ordersElement = ordersElemIter.next();
                             String externalOrderId = UtilXml.childElementValue(ordersElement, "OrderID");
                             orderCtx.put("externalId", "EBO_" + externalOrderId);
-                            GenericValue orderExist = externalOrderExists(delegator, (String)orderCtx.get("externalId"));
+                            GenericValue orderExist = externalOrderExists(delegator, (String) orderCtx.get("externalId"));
                             if (orderExist != null) {
                                 orderCtx.put("orderId", orderExist.get("orderId"));
                             } else {
@@ -684,7 +684,7 @@ public class EbayOrderServices {
                             while (containingOrdersIter.hasNext()) {
                                 Element containingOrdersElement = containingOrdersIter.next();
                                 String orderId = UtilXml.childElementValue(containingOrdersElement, "OrderID");
-                                if (getSellerTransactionsContainingOrderList != null && ! getSellerTransactionsContainingOrderList.contains(orderId)) {
+                                if (getSellerTransactionsContainingOrderList != null && !getSellerTransactionsContainingOrderList.contains(orderId)) {
                                     getSellerTransactionsContainingOrderList.add(orderId);
                                 }
                             }
@@ -877,7 +877,7 @@ public class EbayOrderServices {
                             }
                             orderCtx.put("transactionId", "EBI_" + itemId);
 
-                            GenericValue orderExist = externalOrderExists(delegator, (String)orderCtx.get("externalId"));
+                            GenericValue orderExist = externalOrderExists(delegator, (String) orderCtx.get("externalId"));
                             if (orderExist != null) {
                                 orderCtx.put("orderId", orderExist.get("orderId"));
                             } else {

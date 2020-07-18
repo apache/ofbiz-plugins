@@ -105,11 +105,11 @@ public class EbayStoreHelper {
        apiLogging.setLogExceptions(false);
        apiLogging.setLogSOAPMessages(false);
 
-       String devID = (String)config.get("devId");
-        String appID = (String)config.get("appID");
-        String certID = (String)config.get("certID");
-        String token = (String)config.get("token");
-        String apiServerUrl = (String)config.get("apiServerUrl");
+       String devID = (String) config.get("devId");
+        String appID = (String) config.get("appID");
+        String certID = (String) config.get("certID");
+        String token = (String) config.get("token");
+        String apiServerUrl = (String) config.get("apiServerUrl");
 
        if (token != null) {
            apiCredential.seteBayToken(token);
@@ -133,7 +133,7 @@ public class EbayStoreHelper {
         context.put("locale", locale);
         context.put("productStoreId", productStoreId);
         Map<String, Object> config = EbayHelper.buildEbayConfig(context, delegator);
-        String siteId = (String)config.get("siteID");
+        String siteId = (String) config.get("siteID");
         if (siteId != null) {
             if ("0".equals(siteId)) return SiteCodeType.US;
             if ("2".equals(siteId)) return SiteCodeType.CANADA;
@@ -347,7 +347,7 @@ public class EbayStoreHelper {
         try {
             GenericValue ebayProductPref = EntityQuery.use(delegator).from("EbayProductStorePref").where("productStoreId", productStoreId, "autoPrefEnumId", autoPrefEnumId).queryOne();
             String jobId = ebayProductPref.getString("autoPrefJobId");
-            List<GenericValue> jobs = EntityQuery.use(delegator).from("JobSandbox").where("parentJobId", jobId , "statusId", "SERVICE_PENDING").queryList();
+            List<GenericValue> jobs = EntityQuery.use(delegator).from("JobSandbox").where("parentJobId", jobId, "statusId", "SERVICE_PENDING").queryList();
 
             Map<String, Object>inMap = new HashMap<>();
             inMap.put("userLogin", userLogin);
@@ -404,7 +404,7 @@ public class EbayStoreHelper {
                     String[] tempShipLocation = new String[shippingLocationDetails.length];
                     for (ShippingLocationDetailsType shippingLocationDetail : shippingLocationDetails) {
                         String shippingLocation = shippingLocationDetail.getShippingLocation();
-                        String shipParam = (String)requestParams.get("Shipping_".concat(shippingLocation));
+                        String shipParam = (String) requestParams.get("Shipping_".concat(shippingLocation));
                         if ("true".equals(shipParam)) {
                             tempShipLocation[i] = shippingLocation;
                             attributeMapList.put(""+shippingLocation, shippingLocation);

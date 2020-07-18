@@ -71,7 +71,7 @@ public class EbayFeedback {
             if (ServiceUtil.isError(resultUser)) {
                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultUser));
             }
-            String userID = (String)resultUser.get("userLoginId");
+            String userID = (String) resultUser.get("userLoginId");
             GetFeedbackCall feedbackCall = new GetFeedbackCall();
             feedbackCall.setApiContext(apiContext);
             SiteCodeType siteCodeType = EbayStoreHelper.getSiteCodeType(productStoreId, locale, delegator);

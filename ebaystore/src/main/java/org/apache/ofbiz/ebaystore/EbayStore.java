@@ -167,7 +167,7 @@ public class EbayStore {
         if (Debug.verboseOn()) {
             Debug.logVerbose("Request of " + callName + " To eBay:\n" + dataItems.toString(), MODULE);
         }
-        HttpURLConnection connection = (HttpURLConnection)(new URL(postItemsUrl)).openConnection();
+        HttpURLConnection connection = (HttpURLConnection) (new URL(postItemsUrl)).openConnection();
         connection.setDoInput(true);
         connection.setDoOutput(true);
         connection.setRequestMethod("POST");
@@ -187,8 +187,7 @@ public class EbayStore {
         Map<String, Object> result = new HashMap<>();
         String response = null;
 
-        if (responseCode == HttpURLConnection.HTTP_CREATED ||
-                responseCode == HttpURLConnection.HTTP_OK) {
+        if (responseCode == HttpURLConnection.HTTP_CREATED || responseCode == HttpURLConnection.HTTP_OK) {
             inputStream = connection.getInputStream();
             response = toString(inputStream);
             result = ServiceUtil.returnSuccess(response);
@@ -626,10 +625,10 @@ public class EbayStore {
             try {
                 List<GenericValue> productStoreRoles = EntityQuery.use(delegator).from("ProductStoreRole").where("productStoreId", context.get("productStoreId").toString(), "roleTypeId", "EBAY_ACCOUNT").queryList();
                 if (productStoreRoles.size() != 0) {
-                    partyId=  (String)productStoreRoles.get(0).get("partyId");
+                    partyId=  (String) productStoreRoles.get(0).get("partyId");
                     List<GenericValue> userLogins = EntityQuery.use(delegator).from("UserLogin").where("partyId", partyId).queryList();
                     if (userLogins.size() != 0) {
-                        userLoginId = (String)userLogins.get(0).get("userLoginId");
+                        userLoginId = (String) userLogins.get(0).get("userLoginId");
                     }
 
                 }
@@ -1341,8 +1340,8 @@ public class EbayStore {
             ApiContext apiContext = EbayStoreHelper.getApiContext(productStoreId, locale, delegator);
             GetMyeBaySellingCall getMyeBaySellingCall = new GetMyeBaySellingCall(apiContext);
             ItemListCustomizationType activeList = new ItemListCustomizationType();
-            getMyeBaySellingCall.setActiveList(activeList );
-            DetailLevelCodeType[] level = {DetailLevelCodeType.RETURN_ALL};
+            getMyeBaySellingCall.setActiveList(activeList);
+            DetailLevelCodeType[] level = { DetailLevelCodeType.RETURN_ALL };
             getMyeBaySellingCall.setDetailLevel(level);
             getMyeBaySellingCall.getMyeBaySelling();
             PaginatedItemArrayType itemListCustomizationType = getMyeBaySellingCall.getReturnedActiveList();
@@ -1412,7 +1411,7 @@ public class EbayStore {
             GetSellingManagerSoldListingsCall sellingManagerSoldListings = new GetSellingManagerSoldListingsCall(apiContext);
             if (UtilValidate.isNotEmpty(filter)) {
                 SellingManagerSoldListingsPropertyTypeCodeType[] filterObject = {SellingManagerSoldListingsPropertyTypeCodeType.valueOf(filter)};
-                sellingManagerSoldListings.setFilter(filterObject );
+                sellingManagerSoldListings.setFilter(filterObject);
             }
             if (UtilValidate.isNotEmpty(itemId)) {
                 SellingManagerSearchType search = new SellingManagerSearchType();
@@ -1763,7 +1762,7 @@ public class EbayStore {
             result.put("checkVerify", true);
         } catch (Exception e) {
             result.put("checkVerify", checkVerify);
-            result.put("errorMessage" , "This item ( " + itemID + " ) can not add second chance offer.");
+            result.put("errorMessage", "This item ( " + itemID + " ) can not add second chance offer.");
             result.put("responseMessage", "error");
             return result;
         }
@@ -2267,7 +2266,7 @@ public class EbayStore {
                 fileOutputStream.close();
 
                 // Set path file picture to api and set picture details.
-                String [] pictureFiles = {System.getProperty("ofbiz.home") + File.separator + "runtime" + File.separator + "tmp" + File.separator + imageFileName};
+                String[] pictureFiles = {System.getProperty("ofbiz.home") + File.separator + "runtime" + File.separator + "tmp" + File.separator + imageFileName};
                 PictureDetailsType pictureDetails = new PictureDetailsType();
                 pictureDetails.setGalleryType(GalleryTypeCodeType.GALLERY);
                 pictureDetails.setPhotoDisplay(PhotoDisplayCodeType.NONE);
@@ -2285,11 +2284,11 @@ public class EbayStore {
         return ServiceUtil.returnSuccess(UtilProperties.getMessage(RESOURCE, "EbayStoreUpdateItemSuccessfully", locale));
     }
     public Map<String, Object> geteBayClosedItem(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map <String, Object> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
         Delegator delegator = dctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
         String productStoreId = (String) context.get("productStoreId");
-        List <Map<String, Object>> closedItems = new LinkedList<>();
+        List<Map<String, Object>> closedItems = new LinkedList<>();
         try {
             ApiContext apiContext = EbayStoreHelper.getApiContext(productStoreId, locale, delegator);
             ItemListCustomizationType itemListType = new ItemListCustomizationType();
@@ -2350,8 +2349,8 @@ public class EbayStore {
         }
         return result;
     }
-    public static Map<String , Object> getClosedItem(ItemType tempItems) {
-        Map <String, Object> result = new HashMap<>();
+    public static Map<String, Object> getClosedItem(ItemType tempItems) {
+        Map<String, Object> result = new HashMap<>();
         if (UtilValidate.isNotEmpty(tempItems)) {
             double hitCount = 0;
             int quantity = 0;

@@ -350,7 +350,7 @@ public class BirtMasterReportServices {
                             .where(conditionOrderId)
                             .cache()
                             .queryFirst();
-                    if (UtilValidate.isNotEmpty(productStoreList) && ! productStoreList.contains(productStore.getString("productStoreId"))) {
+                    if (UtilValidate.isNotEmpty(productStoreList) && !productStoreList.contains(productStore.getString("productStoreId"))) {
                         continue; // FIXME pretty ugly... but had problems with the rare case where an invoice matches with several orders with more than one productStore
                     }
                     invoiceEditable.put("productStoreId", productStore.getString("productStoreId"));

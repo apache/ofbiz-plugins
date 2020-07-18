@@ -311,7 +311,7 @@ public class EbayStoreOrder {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        Map <String, Object> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
 
         String productStoreId = context.get("productStoreId").toString();
         String defaultCurrencyUomId = null;

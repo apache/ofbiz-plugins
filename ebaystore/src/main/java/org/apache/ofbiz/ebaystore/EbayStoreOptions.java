@@ -68,9 +68,9 @@ public class EbayStoreOptions {
         try {
             Map<String, Object> paramMap = UtilHttp.getCombinedMap(request);
             if (paramMap.get("productStoreId") != null) {
-                String themeId = (String)paramMap.get("themeId");
+                String themeId = (String) paramMap.get("themeId");
 
-                GetStoreOptionsCall  call = new GetStoreOptionsCall(EbayStoreHelper.getApiContext((String)paramMap.get("productStoreId"), locale, delegator));
+                GetStoreOptionsCall  call = new GetStoreOptionsCall(EbayStoreHelper.getApiContext((String) paramMap.get("productStoreId"), locale, delegator));
                 req = new GetStoreOptionsRequestType();
 
                 resp = (GetStoreOptionsResponseType) call.execute(req);
@@ -131,7 +131,7 @@ public class EbayStoreOptions {
     public static String retrieveItemTemplateByTemplateGroupId(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> paramMap = UtilHttp.getCombinedMap(request);
         if (paramMap.get("productStoreId") != null) {
-            String temGroupId = (String)paramMap.get("templateGroupId");
+            String temGroupId = (String) paramMap.get("templateGroupId");
             Map<String, Object> addItemObj = EbayEvents.getAddItemListingObject(request, EbayEvents.getApiContext(request));
             if (UtilValidate.isNotEmpty(addItemObj)) {
                 String refName = "itemCateFacade_".concat((String) paramMap.get("pkCategoryId"));
@@ -152,7 +152,7 @@ public class EbayStoreOptions {
         try {
             Map<String, Object> paramMap = UtilHttp.getCombinedMap(request);
             if (paramMap.get("productStoreId") != null) {
-                String ebayCategoryId = (String)paramMap.get("ebayCategoryId");
+                String ebayCategoryId = (String) paramMap.get("ebayCategoryId");
                 // when change category should be remove old category from session
                 if (ebayCategoryId.indexOf("CH_") != -1) {
                     ebayCategoryId = ebayCategoryId.replace("CH_", "");
@@ -199,7 +199,7 @@ public class EbayStoreOptions {
         try {
             Map<String, Object> paramMap = UtilHttp.getCombinedMap(request);
             if (paramMap.get("productStoreId") != null) {
-                String ebayStoreCategory = (String)paramMap.get("ebayCategoryId");
+                String ebayStoreCategory = (String) paramMap.get("ebayCategoryId");
                 // when change category should be remove old category from session
                 if (ebayStoreCategory.indexOf("CH_") != -1) {
                     ebayStoreCategory = ebayStoreCategory.replace("CH_", "");

@@ -46,11 +46,11 @@ public class SearchEvents {
         Map<String, Object> result;
         Map<String, Object> serviceInMap = new HashMap<>();
         HttpSession session = request.getSession();
-        GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
+        GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         serviceInMap.put("userLogin", userLogin);
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
-        String siteId = (String)paramMap.get("contentId");
+        String siteId = (String) paramMap.get("contentId");
         serviceInMap.put("contentId", siteId);
         try {
             result = dispatcher.runSync("indexContentTree", serviceInMap);

@@ -62,7 +62,7 @@ public class WebPosEvents {
         session.removeAttribute("webPosSession");
         WebPosSession webPosSession = WebPosEvents.getWebPosSession(request, posTerminalId);
         String responseString = LoginEvents.storeLogin(request, response);
-        GenericValue userLoginNew = (GenericValue)session.getAttribute("userLogin");
+        GenericValue userLoginNew = (GenericValue) session.getAttribute("userLogin");
 
         if (userLoginNew != null && UtilValidate.isNotEmpty(posTerminalId)) {
             webPosSession.setUserLogin(userLoginNew);

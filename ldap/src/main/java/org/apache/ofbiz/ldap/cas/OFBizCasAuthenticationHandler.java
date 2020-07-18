@@ -126,7 +126,7 @@ public final class OFBizCasAuthenticationHandler extends AbstractOFBizAuthentica
         int n = rand(lo, hi);
         byte b[] = new byte[n];
         for (int i = 0; i < n; i++) {
-            b[i] = (byte)rand('a', 'z');
+            b[i] = (byte) rand('a', 'z');
         }
         return new String(b);
     }

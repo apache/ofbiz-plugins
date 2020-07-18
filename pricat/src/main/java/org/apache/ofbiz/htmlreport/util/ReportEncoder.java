@@ -215,12 +215,12 @@ public final class ReportEncoder {
             int c = Integer.valueOf(value);
             if (c < 128) {
                 // first 128 chars are contained in almost every charset
-                entity = new String(new char[] {(char)c});
+                entity = new String(new char[] {(char) c});
                 // this is intended as performance improvement since 
                 // the canEncode() operation appears quite CPU heavy
-            } else if (encoder.canEncode((char)c)) {
+            } else if (encoder.canEncode((char) c)) {
                 // encoder can encode this char
-                entity = new String(new char[] {(char)c});
+                entity = new String(new char[] {(char) c});
             }
             matcher.appendReplacement(result, entity);
         }
@@ -303,12 +303,12 @@ public final class ReportEncoder {
             int c = buffer.get(i);
             if (c < 128) {
                 // first 128 chars are contained in almost every charset
-                result.append((char)c);
+                result.append((char) c);
                 // this is intended as performance improvement since 
                 // the canEncode() operation appears quite CPU heavy
-            } else if (encoder.canEncode((char)c)) {
+            } else if (encoder.canEncode((char) c)) {
                 // encoder can encode this char
-                result.append((char)c);
+                result.append((char) c);
             } else {
                 // append HTML entity reference
                 result.append(ENTITY_PREFIX);
@@ -337,12 +337,12 @@ public final class ReportEncoder {
             int c = buffer.get(i);
             if (c < 128) {
                 // first 128 chars are contained in almost every charset
-                result.append((char)c);
+                result.append((char) c);
                 // this is intended as performance improvement since 
                 // the canEncode() operation appears quite CPU heavy
-            } else if (encoder.canEncode((char)c)) {
+            } else if (encoder.canEncode((char) c)) {
                 // encoder can encode this char
-                result.append((char)c);
+                result.append((char) c);
             } else {
                 // append Java entity reference
                 result.append("\\u");
@@ -420,7 +420,7 @@ public final class ReportEncoder {
                 result.append(ch);
                 result.append(";");
             } else {
-                result.append((char)ch);
+                result.append((char) ch);
             }
         }
         return new String(result);
@@ -448,7 +448,7 @@ public final class ReportEncoder {
                 result.append(ch);
                 result.append(";");
             } else {
-                result.append((char)ch);
+                result.append((char) ch);
             }
         }
         return new String(result);

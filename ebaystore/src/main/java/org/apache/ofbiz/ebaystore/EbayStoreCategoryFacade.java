@@ -116,12 +116,12 @@ public class EbayStoreCategoryFacade {
         FeatureDefinitionsType featureDefinition = this.siteFacade.getSiteFeatureDefinitionsMap().get(apiContext.getSite());
 
         //get itemSpecificsEnabled feature
-        itemSpecificEnabled = (ItemSpecificsEnabledCodeType)getInheritProperty(catId, "getItemSpecificsEnabled", categoriesCacheMap, cfsMap);
+        itemSpecificEnabled = (ItemSpecificsEnabledCodeType) getInheritProperty(catId, "getItemSpecificsEnabled", categoriesCacheMap, cfsMap);
         if (itemSpecificEnabled == null) {
             itemSpecificEnabled = siteDefaults.getItemSpecificsEnabled();
         }
         //get returnPolicyEnabled feature
-        retPolicyEnabled = (Boolean)getInheritProperty(catId, "isReturnPolicyEnabled", categoriesCacheMap, cfsMap);
+        retPolicyEnabled = (Boolean) getInheritProperty(catId, "isReturnPolicyEnabled", categoriesCacheMap, cfsMap);
         if (retPolicyEnabled == null) {
             retPolicyEnabled = siteDefaults.isReturnPolicyEnabled();
         }
@@ -135,7 +135,7 @@ public class EbayStoreCategoryFacade {
         }
 
         //get listing types
-        ListingDurationReferenceType[] listingDuration = (ListingDurationReferenceType[])getInheritProperty(catId, "getListingDuration", categoriesCacheMap, cfsMap);
+        ListingDurationReferenceType[] listingDuration = (ListingDurationReferenceType[]) getInheritProperty(catId, "getListingDuration", categoriesCacheMap, cfsMap);
         if (listingDuration == null || listingDuration.length == 0) {
             listingDuration = siteDefaults.getListingDuration();
         }
@@ -145,7 +145,7 @@ public class EbayStoreCategoryFacade {
         }
 
         //get payment methods
-        paymentMethods = (BuyerPaymentMethodCodeType[])getInheritProperty(catId, "getPaymentMethod", categoriesCacheMap, cfsMap);
+        paymentMethods = (BuyerPaymentMethodCodeType[]) getInheritProperty(catId, "getPaymentMethod", categoriesCacheMap, cfsMap);
         if (paymentMethods == null || paymentMethods.length == 0) {
             paymentMethods = siteDefaults.getPaymentMethod();
         }

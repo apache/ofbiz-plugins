@@ -67,7 +67,7 @@ public class ImportOrdersFromEbay {
 
             if (!ServiceUtil.isFailure(buildGetSellerTransactionsRequest(context, sellerTransactionsItemsXml, eBayConfigResult.get("token").toString()))) {
                 result = EbayHelper.postItem(eBayConfigResult.get("xmlGatewayUri").toString(), sellerTransactionsItemsXml, eBayConfigResult.get("devID").toString(), eBayConfigResult.get("appID").toString(), eBayConfigResult.get("certID").toString(), "GetSellerTransactions", eBayConfigResult.get("compatibilityLevel").toString(), eBayConfigResult.get("siteID").toString());
-                String success = (String)result.get(ModelService.SUCCESS_MESSAGE);
+                String success = (String) result.get(ModelService.SUCCESS_MESSAGE);
                 if (success != null) {
                     result = checkOrders(delegator, dispatcher, locale, context, success);
                 }
@@ -152,7 +152,7 @@ public class ImportOrdersFromEbay {
                 }
 
                 // get externalId from OrderHeader
-                externalId = (String)orderHeader.get("externalId");
+                externalId = (String) orderHeader.get("externalId");
                 transactionId = orderHeader.getString("transactionId");
                 String productStoreId = (String) orderHeader.get("productStoreId");
                 if (UtilValidate.isNotEmpty(productStoreId)) {
@@ -167,7 +167,7 @@ public class ImportOrdersFromEbay {
             if (!ServiceUtil.isFailure(buildCompleteSaleRequest(delegator, locale, externalId, transactionId, context, completeSaleXml, eBayConfigResult.get("token").toString()))) {
                 result = EbayHelper.postItem(eBayConfigResult.get("xmlGatewayUri").toString(), completeSaleXml, eBayConfigResult.get("devID").toString(), eBayConfigResult.get("appID").toString(), eBayConfigResult.get("certID").toString(), "CompleteSale", eBayConfigResult.get("compatibilityLevel").toString(), eBayConfigResult.get("siteID").toString());
 
-                String successMessage = (String)result.get("successMessage");
+                String successMessage = (String) result.get("successMessage");
                 if (successMessage != null) {
                     return readCompleteSaleResponse(successMessage, locale);
                 } else {
@@ -464,7 +464,7 @@ public class ImportOrdersFromEbay {
                                 if (UtilValidate.isEmpty(productId)) {
                                     productId = UtilXml.childElementValue(itemElement, "ApplicationData", "");
                                     if (UtilValidate.isEmpty(productId)) {
-                                         productId = EbayHelper.retrieveProductIdFromTitle(delegator, (String)order.get("title"));
+                                         productId = EbayHelper.retrieveProductIdFromTitle(delegator, (String) order.get("title"));
                                     }
                                 }
                                 order.put("productId", productId);
@@ -507,7 +507,7 @@ public class ImportOrdersFromEbay {
                             }
                             order.put("transactionId", "EBI_" + itemId);
 
-                            GenericValue orderExist = externalOrderExists(delegator, (String)order.get("externalId"));
+                            GenericValue orderExist = externalOrderExists(delegator, (String) order.get("externalId"));
                             if (orderExist != null) {
                                 order.put("orderId", orderExist.get("orderId"));
                             } else {
@@ -794,7 +794,7 @@ public class ImportOrdersFromEbay {
                 Debug.logInfo("Creating order.", MODULE);
                 Map<String, Object> orderCreate = checkout.createOrder(userLogin);
 
-                String orderId = (String)orderCreate.get("orderId");
+                String orderId = (String) orderCreate.get("orderId");
                 Debug.logInfo("Created order with id: " + orderId, MODULE);
 
                 // approve the order

@@ -222,7 +222,7 @@ public class ReportDesignGenerator {
 
         design.saveAs(rptDesignName);
         design.close();
-        if (Debug.infoOn())Debug.logInfo("####### Design generated: " + rptDesignName, MODULE);
+        if (Debug.infoOn()) Debug.logInfo("####### Design generated: " + rptDesignName, MODULE);
         session.closeAll(false);
         Platform.shutdown();
     }

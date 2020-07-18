@@ -99,22 +99,22 @@ public class EbayEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Map<String, Object> requestParams = UtilHttp.getParameterMap(request);
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-        int feedbackSize = Integer.parseInt((String)requestParams.get("feedbackSize"));
-        String productStoreId = (String)requestParams.get("productStoreId");
+        int feedbackSize = Integer.parseInt((String) requestParams.get("feedbackSize"));
+        String productStoreId = (String) requestParams.get("productStoreId");
         for (int i = 1; i <= feedbackSize; i++) {
-            String commentType = (String)requestParams.get("commentType"+i);
-            String commentText = (String)requestParams.get("commentText"+i);
+            String commentType = (String) requestParams.get("commentType"+i);
+            String commentText = (String) requestParams.get("commentText"+i);
             if (!"none".equals(commentType) && commentText != null) {
-                String itemId = (String)requestParams.get("itemId"+i);
-                String transactionId = (String)requestParams.get("transactionId"+i);
-                String targetUser = (String)requestParams.get("targetUser"+i);
-                String commentingUser = (String)requestParams.get("commentingUser"+i);
-                String role = (String)requestParams.get("role"+i);
-                String ratingItem = (String)requestParams.get("ratingItem"+i);
-                String ratingComm = (String)requestParams.get("ratingComm"+i);
-                String ratingShip = (String)requestParams.get("ratingShip"+i);
-                String ratingShipHand = (String)requestParams.get("ratingShipHand"+i);
-                String AqItemAsDescribedId = (String)requestParams.get("AqItemAsDescribedId"+i);
+                String itemId = (String) requestParams.get("itemId"+i);
+                String transactionId = (String) requestParams.get("transactionId"+i);
+                String targetUser = (String) requestParams.get("targetUser"+i);
+                String commentingUser = (String) requestParams.get("commentingUser"+i);
+                String role = (String) requestParams.get("role"+i);
+                String ratingItem = (String) requestParams.get("ratingItem"+i);
+                String ratingComm = (String) requestParams.get("ratingComm"+i);
+                String ratingShip = (String) requestParams.get("ratingShip"+i);
+                String ratingShipHand = (String) requestParams.get("ratingShipHand"+i);
+                String AqItemAsDescribedId = (String) requestParams.get("AqItemAsDescribedId"+i);
 
                 Map<String, Object> leavefeedback = new HashMap<>();
                 leavefeedback.put("productStoreId", productStoreId);
@@ -319,10 +319,10 @@ public class EbayEvents {
         if (UtilValidate.isEmpty(session.getAttribute(siteFacadeName))) {
             session.setAttribute(siteFacadeName, new EbayStoreSiteFacade(apiContext));
             if (UtilValidate.isNotEmpty(session.getAttribute(siteFacadeName))) {
-                siteFacade = (EbayStoreSiteFacade)session.getAttribute(siteFacadeName);
+                siteFacade = (EbayStoreSiteFacade) session.getAttribute(siteFacadeName);
             }
         } else {
-            siteFacade = (EbayStoreSiteFacade)session.getAttribute(siteFacadeName);
+            siteFacade = (EbayStoreSiteFacade) session.getAttribute(siteFacadeName);
         }
         Debug.logInfo("loaded session for ebay site Facade is ".concat(siteFacadeName).concat(session.getAttribute(siteFacadeName).toString()), MODULE);
         return siteFacade;
@@ -336,7 +336,7 @@ public class EbayEvents {
             Debug.logError("Required productStoreId for get ebay API config data.", MODULE);
             return null;
         }
-        ApiContext apiContext = EbayStoreHelper.getApiContext(request.getParameter("productStoreId") != null ? request.getParameter("productStoreId"):(String)request.getAttribute("productStoreId"), locale, delegator);
+        ApiContext apiContext = EbayStoreHelper.getApiContext(request.getParameter("productStoreId") != null ? request.getParameter("productStoreId") : (String) request.getAttribute("productStoreId"), locale, delegator);
         return apiContext;
     }
 
@@ -454,7 +454,7 @@ public class EbayEvents {
                     // find child of selected ebay categories 
                     for (StoreCustomCategoryType csCate : csCateList) {
                         if (categoryId.equals(String.valueOf(csCate.getCategoryID()))) {
-                            StoreCustomCategoryType [] childCategories = csCate.getChildCategory();
+                            StoreCustomCategoryType[] childCategories = csCate.getChildCategory();
                             for (StoreCustomCategoryType childCategoryId : childCategories) {
                                 categories.add(childCategoryId);
                             }
@@ -489,7 +489,7 @@ public class EbayEvents {
             return null;
         }
         if (request.getParameter("categoryId") != null || request.getAttribute("categoryId") != null) {
-            categoryId = request.getParameter("categoryId") != null ? request.getParameter("categoryId") : (String)request.getAttribute("categoryId");
+            categoryId = request.getParameter("categoryId") != null ? request.getParameter("categoryId") : (String) request.getAttribute("categoryId");
             Debug.logInfo("Load child categories from session following site id and categoryId is ".concat(categoryId), MODULE);
         } else {
             Debug.logWarning("No categoryId to get child categories.", MODULE);
@@ -532,7 +532,7 @@ public class EbayEvents {
             request.setAttribute("_ERROR_MESSAGE_", "No ebay category or productId selected with form id ".concat(isProductId));
             return "error";
         }
-        String categoryId = (String)requestParams.get("ebayCategory");
+        String categoryId = (String) requestParams.get("ebayCategory");
         if (categoryId.contains("false")) {
             request.setAttribute("_ERROR_MESSAGE_", "Please select ebay category with low level of categories.");
             return "error";
@@ -832,7 +832,7 @@ public class EbayEvents {
                         }
                         StorefrontType storeFront = new StorefrontType();
                         if (UtilValidate.isNotEmpty(requestParams.get("ebayStore1Category"))) {
-                            String ebayStore1Category = (String)requestParams.get("ebayStore1Category");
+                            String ebayStore1Category = (String) requestParams.get("ebayStore1Category");
                             if (ebayStore1Category.contains("false")) {
                                 request.setAttribute("_ERROR_MESSAGE_", "Please select ebay store category with low level of categories.");
                                 return "error";
@@ -844,7 +844,7 @@ public class EbayEvents {
 
                         }
                         if (UtilValidate.isNotEmpty(requestParams.get("ebayStore2Category"))) {
-                            String ebayStore2Category = (String)requestParams.get("ebayStore2Category");
+                            String ebayStore2Category = (String) requestParams.get("ebayStore2Category");
                             if (ebayStore2Category.contains("false")) {
                                 request.setAttribute("_ERROR_MESSAGE_", "Please select ebay store category with low level of categories.");
                                 return "error";

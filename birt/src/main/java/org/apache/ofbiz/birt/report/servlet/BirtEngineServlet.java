@@ -49,7 +49,6 @@ public class BirtEngineServlet extends org.eclipse.birt.report.servlet.BirtEngin
         } catch (GeneralException e) {
             throw new BirtException(e.getMessage());
         }
-        return new BirtContext(new ViewerServletRequest(ParameterAccessor.getParameter(request, ParameterAccessor.PARAM_REPORT)
-                        , request), response);
+        return new BirtContext(new ViewerServletRequest(ParameterAccessor.getParameter(request, ParameterAccessor.PARAM_REPORT), request), response);
     }
 }

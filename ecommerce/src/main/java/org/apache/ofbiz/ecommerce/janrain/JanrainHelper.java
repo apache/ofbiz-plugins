@@ -83,11 +83,11 @@ public class JanrainHelper {
         HashMap<String, List<String>> result = new HashMap<>();
         NodeList mappings = getNodeList("/rsp/mappings/mapping", rsp);
         for (int i = 0; i < mappings.getLength(); i++) {
-            Element mapping = (Element)mappings.item(i);
+            Element mapping = (Element) mappings.item(i);
             List<String> identifiers = new ArrayList<>();
             NodeList rk_list = getNodeList("primaryKey", mapping);
             NodeList id_list = getNodeList("identifiers/identifier", mapping);
-            String remote_key = ((Element)rk_list.item(0)).getTextContent();
+            String remote_key = ((Element) rk_list.item(0)).getTextContent();
             for (int j = 0; j < id_list.getLength(); j++) {
                 Element ident = (Element) id_list.item(j);
                 identifiers.add(ident.getTextContent());
@@ -109,11 +109,11 @@ public class JanrainHelper {
         Map<String, Object> query = new HashMap<>();
         query.put("primaryKey", primaryKey);
         Element rsp = apiCall("mappings", query);
-        Element oids = (Element)rsp.getFirstChild();
+        Element oids = (Element) rsp.getFirstChild();
         List<String> result = new ArrayList<>();
         NodeList nl = oids.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
-            Element e = (Element)nl.item(i);
+            Element e = (Element) nl.item(i);
             result.add(e.getTextContent());
         }
         return result;
@@ -155,7 +155,7 @@ public class JanrainHelper {
         String data = sb.toString();
         try {
             URL url = new URL(baseUrl + "/api/v2/" + methodName);
-            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
             conn.connect();
