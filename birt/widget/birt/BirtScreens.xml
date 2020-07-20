@@ -43,6 +43,7 @@ under the License.
                 <set field="applicationMenuName" value="BirtAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://birt/widget/birt/BirtMenus.xml" global="true"/>
                 <set field="applicationTitle" from-field="uiLabelMap.BirtExampleApplication" global="true"/>
+                <set field="helpAnchor" from-field="helpAnchor" default-value="_birt_ofbiz_plugin"/>
             </actions>
             <widgets>
                 <include-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml"/>
@@ -225,12 +226,12 @@ under the License.
                     <field-map field-name="mainAction" value="CREATE"/>
                 </service>
                 <set field="hasCreatePermission" from-field="permCreateResult.hasPermission"/>
-    
+
                 <service service-name="genericBirtPermission" result-map="permDeleteResult">
                     <field-map field-name="mainAction" value="DELETE"/>
                 </service>
                 <set field="hasDeletePermission" from-field="permDeleteResult.hasPermission"/>
-    
+
                 <service service-name="genericBirtPermission" result-map="permUpdateResult">
                     <field-map field-name="mainAction" value="UPDATE"/>
                 </service>
