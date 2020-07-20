@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+////
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -16,13 +15,16 @@ software distributed under the License is distributed on an
 KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
--->
-<entity-engine-xml>
-    <DataResource dataResourceId="HELP_EBAY" localeString="en" dataResourceTypeId="OFBIZ_FILE"
-        objectInfo="plugins/ebay/data/HELP_EBAY.xml" dataTemplateTypeId="NONE" statusId="CTNT_IN_PROGRESS"
-        dataResourceName="Ebay" mimeTypeId="text/xml" isPublic="Y" />
-    <Content contentId="HELP_EBAY" contentTypeId="DOCUMENT" contentName="Ebay" templateDataResourceId="HELP_TEMPL"
-        dataResourceId="HELP_EBAY" statusId="CTNT_IN_PROGRESS" mimeTypeId="text/html"/>
-    <ContentAssoc contentId="HELP_ROOT" contentIdTo="HELP_EBAY" contentAssocTypeId="TREE_CHILD" fromDate="2006-01-12 01:01:01" sequenceNum="000"/>
+////
+= Apache OFBiz Plugins
+The Apache OFBiz Project
+Release trunk
+:imagesdir: ./images
+ifdef::backend-pdf[]
+:title-logo-image: image::OFBiz-Logo.svg[Apache OFBiz Logo, pdfwidth=4.25in, align=center]
+:source-highlighter: rouge
+endif::[]
+:toc:
+:sectnums:
 
-</entity-engine-xml>
+include::../../ebay/src/docs/asciidoc/ebay.adoc[leveloffset=+1]
