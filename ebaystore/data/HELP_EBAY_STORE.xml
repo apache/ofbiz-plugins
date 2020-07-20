@@ -17,10 +17,11 @@
     version="5.0" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude"
     xsi:schemaLocation="http://docbook.org/ns/docbook ../../../content/dtd/docbook.xsd"
     xmlns="http://docbook.org/ns/docbook">
-    <title>Ebay Store Export categories to ebay store screen.</title>
+    <title>Ebay Store help redirection.</title>
     <para>
-        The screen allow user to export categories and product to eBay store.
-        First you should select catalog and click on Export to eBay store button to complete function.
-        When you click Export to eBay store button, this function will add your categories that in catalog selected to eBay store also add product to categories too.
+This application allows the user to access to ebay store by using their account and you can set up and manage your ebay store in ofbiz.
+    </para>
+    <para>EbayStore Help has been migrated to a new system, you can access it by using
+      <link xl:href="https://ci.apache.org/projects/ofbiz/site/trunk/ofbizdoc/html5/user-manual.html#_ebay_store">OFBiz user documentation site / Ebay-Store</link>
     </para>
 </section>

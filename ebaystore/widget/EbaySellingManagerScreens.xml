@@ -24,11 +24,12 @@
         <section>
             <actions>
                 <set field="headerItem" value="ebayStore"/>
+                <set field="helpAnchor" value="_handle_ebay_product_inventory"/>
                 <set field="sellingManagerItem" value="inventory"/>
                 <entity-and entity-name="ProductStoreFacility" list="productStoreFacilityList">
                     <field-map field-name="productStoreId" from-field="parameters.productStoreId"/>
                 </entity-and>
-                <set  field="check"  value="${groovy: 
+                <set  field="check"  value="${groovy:
                     check= &quot;false&quot;;
                     if(productStoreFacilityList!=null &amp;&amp; productStoreFacilityList.size()== 1)  check = &quot;true&quot;;
                     return check;
@@ -84,7 +85,7 @@
                 </section>
             </widgets>
         </section>
-    </screen> 
+    </screen>
     <screen name="ebayLoadStoreInventory">
         <section>
             <actions>
@@ -160,6 +161,7 @@
         <section>
             <actions>
                 <set field="headerItem" value="ebayStore"/>
+                <set field="helpAnchor" value="_how_to_go_to_reserve_product"/>
                 <set field="sellingManagerItem" value="inventory"/>
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
                 <entity-one entity-name="Facility" value-field="facility">
@@ -236,6 +238,7 @@
         <section>
             <actions>
                 <set field="headerItem" value="ebayStore"/>
+                <set field="helpAnchor" value="_automation_re_list_items"/>
                 <set field="sellingManagerItem" value="automationPreferences"/>
                 <service service-name="getEbayStoreUser" result-map="result">
                     <field-map field-name="productStoreId" from-field="parameters.productStoreId"/>
