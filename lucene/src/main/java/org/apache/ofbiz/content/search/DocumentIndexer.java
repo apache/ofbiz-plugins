@@ -116,10 +116,14 @@ public class DocumentIndexer extends Thread {
             try {
                 if (document == null) {
                     indexWriter.deleteDocuments(documentIdentifier);
-                    if (Debug.infoOn()) Debug.logInfo(getName() + ": deleted Lucene document: " + ofbizDocument, MODULE);
+                    if (Debug.infoOn()) {
+                        Debug.logInfo(getName() + ": deleted Lucene document: " + ofbizDocument, MODULE);
+                    }
                 } else {
                     indexWriter.updateDocument(documentIdentifier, document);
-                    if (Debug.infoOn()) Debug.logInfo(getName() + ": indexed Lucene document: " + ofbizDocument, MODULE);
+                    if (Debug.infoOn()) {
+                        Debug.logInfo(getName() + ": indexed Lucene document: " + ofbizDocument, MODULE);
+                    }
                 }
             } catch (Exception e) {
                 Debug.logError(e, getName() + ": error processing Lucene document: " + ofbizDocument, MODULE);

@@ -24,7 +24,6 @@ import java.util.Locale;
 
 /**
  * Base report class.
- * 
  */
 public abstract class AbstractReport implements InterfaceReport {
 

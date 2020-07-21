@@ -54,7 +54,7 @@ public final class SolrUtil {
 
     private SolrUtil() { }
     private static final String MODULE = SolrUtil.class.getName();
-    private static final String[] solrProdAttribute = { "productId", "internalName", "manu", "size", "smallImage", "mediumImage", "largeImage", "listPrice", "defaultPrice", "inStock", "isVirtual" };
+    private static final String[] solrProdAttribute = {"productId", "internalName", "manu", "size", "smallImage", "mediumImage", "largeImage", "listPrice", "defaultPrice", "inStock", "isVirtual" };
 
     private static final String solrConfigName = "solrconfig.properties";
     private static final String solrUrl = makeSolrWebappUrl();
@@ -271,7 +271,9 @@ public final class SolrUtil {
             solrQuery.setFacet(true);
             solrQuery.addFacetField("cat");
             solrQuery.setFacetLimit(-1);
-            if (Debug.verboseOn()) Debug.logVerbose("solr: solrQuery: " + solrQuery, MODULE);
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("solr: solrQuery: " + solrQuery, MODULE);
+            }
             returnMap = client.query(solrQuery, METHOD.POST);
             result.put("rows", returnMap);
             result.put("numFound", returnMap.getResults().getNumFound());

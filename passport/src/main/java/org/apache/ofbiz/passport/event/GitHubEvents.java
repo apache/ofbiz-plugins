@@ -62,9 +62,7 @@ import org.apache.ofbiz.service.LocalDispatcher;
 
 /**
  * GitHubEvents - Events for GitHub login.
- * 
  * Refs: https://developer.github.com/v3/oauth/
- * 
  */
 public class GitHubEvents {
 

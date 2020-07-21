@@ -75,7 +75,6 @@ import org.apache.ofbiz.service.ServiceUtil;
 
 /**
  * Abstract class of pricat parser.
- * 
  */
 public abstract class AbstractPricatParser implements InterfacePricatParser {
 

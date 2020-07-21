@@ -26,7 +26,6 @@ import org.apache.ofbiz.htmlreport.util.ReportStringUtil;
 
 /**
  * HTML report output to be used for database create tables / drop tables operations.
- * 
  */
 public abstract class AbstractHtmlReport extends HtmlReport {
 

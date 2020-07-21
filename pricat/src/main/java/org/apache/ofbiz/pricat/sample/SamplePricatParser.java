@@ -52,7 +52,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  * Sample pricat excel parser.
- * 
  */
 public class SamplePricatParser extends AbstractPricatParser {
 
@@ -241,7 +240,7 @@ public class SamplePricatParser extends AbstractPricatParser {
         if (UtilValidate.isEmpty(cellContents)) {
             return false;
         }
-        switch(pricatFileVersion) {
+        switch (pricatFileVersion) {
             case "V1.1":
             default:
                 return parseCellContentsAndStoreV1_X(row, cellContents);

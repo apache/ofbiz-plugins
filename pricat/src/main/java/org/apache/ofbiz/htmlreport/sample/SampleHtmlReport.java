@@ -26,7 +26,6 @@ import org.apache.ofbiz.htmlreport.InterfaceReportThread;
 
 /**
  * Provides a report for running sample html report.
- * 
  */
 public class SampleHtmlReport extends AbstractHtmlReport {
 
@@ -58,7 +57,7 @@ public class SampleHtmlReport extends AbstractHtmlReport {
         Thread[] threads = new Thread[i];
         threadGroup.enumerate(threads, true);
         InterfaceReportThread thread = null;
-        for (int j=0; j<threads.length; j++) {
+        for (int j = 0; j < threads.length; j++) {
             Thread threadInstance = threads[j];
             if (threadInstance instanceof SampleHtmlThread) {
                 thread = (InterfaceReportThread) threadInstance;

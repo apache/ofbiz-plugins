@@ -23,7 +23,6 @@ import java.util.Iterator;
 
 /**
  * Provides String utility functions.<p>
- * 
  */
 public final class ReportStringUtil {
 

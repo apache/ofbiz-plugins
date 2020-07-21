@@ -33,7 +33,6 @@ import org.apache.ofbiz.entity.transaction.GenericTransactionException;
 
 /**
  * Interface of pricat parser.
- * 
  */
 public interface InterfacePricatParser {
     public static final String PARSE_EXCEL = "parse_excel";

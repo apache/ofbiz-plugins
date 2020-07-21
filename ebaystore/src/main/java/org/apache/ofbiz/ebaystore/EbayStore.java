@@ -477,7 +477,7 @@ public class EbayStore {
             }
         } catch (Exception e) {
             Debug.logError("Error in processing xml string" + e.getMessage(), MODULE);
-            result =  "Failure";
+            result = "Failure";
         }
         return result;
     }
@@ -617,7 +617,7 @@ public class EbayStore {
         Map<String, Object> result = new HashMap<>();
         StoreType returnedStoreType = null;
         GetStoreRequestType req = new GetStoreRequestType();
-        GetStoreResponseType resp =  null;
+        GetStoreResponseType resp = null;
 
         String userLoginId = null;
         if (context.get("productStoreId") != null) {
@@ -654,7 +654,7 @@ public class EbayStore {
                     ebayResp.put("storeUrl", returnedStoreType.getURL());
                     ebayResp.put("storeUrlPath", returnedStoreType.getURLPath());
                     String desc = returnedStoreType.getDescription();
-                    if (desc != null) desc  =  desc.trim();
+                    if (desc != null) desc  = desc.trim();
                     ebayResp.put("storeDesc", desc);
 
                     StoreLogoType logoType = returnedStoreType.getLogo();
@@ -700,7 +700,7 @@ public class EbayStore {
 
                     StoreHeaderStyleCodeType storeHeaderStyleCodeType = returnedStoreType.getHeaderStyle();
                     ebayResp.put("storeHeaderStyle", storeHeaderStyleCodeType.value());
-                    StoreHeaderStyleCodeType[] storeHeaderStyleCodeList =  StoreHeaderStyleCodeType.values();
+                    StoreHeaderStyleCodeType[] storeHeaderStyleCodeList = StoreHeaderStyleCodeType.values();
                     if (storeHeaderStyleCodeList != null) {
                         List<Map<String, Object>> storeHeaderStyleList = new LinkedList<>();
                         int i = 0;
@@ -1111,7 +1111,7 @@ public class EbayStore {
                     while (i < storeColorSchemeTypes.length) {
 
                         StoreColorSchemeType storeColorSchemeType = storeColorSchemeTypes[i];
-                        StoreFontType storeFontType =  storeColorSchemeType.getFont();
+                        StoreFontType storeFontType = storeColorSchemeType.getFont();
                         advanceFontTheme.put("storeFontTypeNameFaceColor", storeFontType.getNameColor());
                         int j = 0;
                         storeFontType.getNameFace();
@@ -1128,7 +1128,7 @@ public class EbayStore {
                         advanceFontTheme.put("storeFontTypeFontFaceList", nameFaces);
                         j = 0;
                         storeFontType.getNameSize();
-                        StoreFontSizeCodeType[] storeFontSizeCodeTypes =  StoreFontSizeCodeType.values();
+                        StoreFontSizeCodeType[] storeFontSizeCodeTypes = StoreFontSizeCodeType.values();
                         List<Map<String, Object>> sizeFaces = new LinkedList<>();
                         while (j < storeFontSizeCodeTypes.length) {
                             Map<String, Object> storeFontSizeCodeTypeMap = new HashMap<>();
@@ -1157,7 +1157,7 @@ public class EbayStore {
 
                         j = 0;
                         storeFontType.getTitleSize();
-                        StoreFontSizeCodeType[] storeTitleSizeCodeTypes =  StoreFontSizeCodeType.values();
+                        StoreFontSizeCodeType[] storeTitleSizeCodeTypes = StoreFontSizeCodeType.values();
                         List<Map<String, Object>> titleSizes = new LinkedList<>();
                         while (j < storeTitleSizeCodeTypes.length) {
                             Map<String, Object> storeFontSizeCodeTypeMap = new HashMap<>();
@@ -1187,7 +1187,7 @@ public class EbayStore {
 
                         j = 0;
                         storeFontType.getDescSize();
-                        StoreFontSizeCodeType[] storeDescSizeCodeTypes =   StoreFontSizeCodeType.values();
+                        StoreFontSizeCodeType[] storeDescSizeCodeTypes = StoreFontSizeCodeType.values();
                         List<Map<String, Object>> descSizes = new LinkedList<>();
                         while (j < storeDescSizeCodeTypes.length) {
                             Map<String, Object> storeFontSizeCodeTypeMap = new HashMap<>();
@@ -1916,7 +1916,7 @@ public class EbayStore {
             // add to list
             List<Map<String, Object>> soldList = new LinkedList<>();
             if (UtilValidate.isNotEmpty(tempSoldItems)) {
-                soldList =  EbayStore.getOrderTransactions(tempSoldItems);
+                soldList = EbayStore.getOrderTransactions(tempSoldItems);
             }
             int soldSize = tempSoldItems == null ? 0 : tempSoldItems.length;
             ItemType[] tempUnSoldItems = null;

@@ -62,7 +62,6 @@ import org.apache.ofbiz.service.LocalDispatcher;
 
 /**
  * Thread for running pricat import excel html report.
- * 
  */
 public class PricatParseExcelHtmlThread extends AbstractReportThread {
 

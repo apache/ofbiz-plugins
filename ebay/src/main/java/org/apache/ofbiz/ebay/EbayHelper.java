@@ -295,7 +295,9 @@ public class EbayHelper {
 
         try {
             if (UtilValidate.isNotEmpty(name) && userLogin != null) {
-                if (Debug.verboseOn()) Debug.logVerbose("Creating Customer Party: " + name, MODULE);
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose("Creating Customer Party: " + name, MODULE);
+                }
 
                 // Try to split the lastname from the firstname
                 String firstName = "";
@@ -317,7 +319,9 @@ public class EbayHelper {
                     return null;
                 }
                 partyId = (String) summaryResult.get("partyId");
-                if (Debug.verboseOn()) Debug.logVerbose("Created Customer Party: " + partyId, MODULE);
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose("Created Customer Party: " + partyId, MODULE);
+                }
             }
         } catch (GenericServiceException e) {
             Debug.logError(e, "Failed to createPerson", MODULE);

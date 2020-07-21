@@ -102,7 +102,9 @@ public abstract class SolrProductSearch {
             }
         } else {
             final String statusMsg = "Solr ECA indexing disabled; skipping indexing for productId '" + productId + "'";
-            if (Debug.verboseOn()) Debug.logVerbose("Solr: addToSolr: " + statusMsg, MODULE);
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("Solr: addToSolr: " + statusMsg, MODULE);
+            }
             result = ServiceUtil.returnSuccess();
         }
         return result;

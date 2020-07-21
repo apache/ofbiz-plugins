@@ -375,7 +375,7 @@ public class EbayStoreOrder {
                 cart.setBillFromVendorPartyId(payToPartyId);
             }
 
-            Map<String, Object> shippingServiceSelectedCtx =  UtilGenerics.checkMap(context.get("shippingServiceSelectedCtx"));
+            Map<String, Object> shippingServiceSelectedCtx = UtilGenerics.checkMap(context.get("shippingServiceSelectedCtx"));
             if (UtilValidate.isNotEmpty(shippingServiceSelectedCtx.get("shippingServiceCost"))) {
                 BigDecimal shippingAmount = new BigDecimal(shippingServiceSelectedCtx.get("shippingServiceCost").toString());
                 if (shippingAmount.doubleValue() > 0) {

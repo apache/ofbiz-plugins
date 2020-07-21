@@ -63,7 +63,7 @@ public class SampleHtmlThread extends AbstractReportThread {
                 getReport().println(UtilProperties.getMessage(RESOURCE, "START_COUNT_DOWN", getLocale()), InterfaceReport.FORMAT_HEADLINE);
                 Random random = new Random();
                 int j = 0;
-                for (int i=1000; i>0; i--) {
+                for (int i = 1000; i > 0; i--) {
                     sleep(20);
                     j = random.nextInt(7);
                     if (j == 6) {
@@ -77,7 +77,7 @@ public class SampleHtmlThread extends AbstractReportThread {
                 getReport().println(UtilProperties.getMessage(RESOURCE, "START_COUNT_UP", getLocale()), InterfaceReport.FORMAT_HEADLINE);
                 Random random = new Random();
                 int j = 0;
-                for (int i=1; i<=1000; i++) {
+                for (int i = 1; i <= 1000; i++) {
                     sleep(20);
                     j = random.nextInt(7);
                     if (j == 6) {

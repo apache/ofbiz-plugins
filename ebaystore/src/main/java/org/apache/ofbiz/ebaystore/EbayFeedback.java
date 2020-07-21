@@ -85,13 +85,13 @@ public class EbayFeedback {
                 GenericValue userLoginEx = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", userID).queryOne();
                 if (userLoginEx == null) {
                     //Party
-                    GenericValue party =  delegator.makeValue("Party");
+                    GenericValue party = delegator.makeValue("Party");
                     partyId = delegator.getNextSeqId("Party");
                     party.put("partyId", partyId);
                     party.put("partyTypeId", "PERSON");
                     party.create();
                     //UserLogin
-                    userLoginEx =  delegator.makeValue("UserLogin");
+                    userLoginEx = delegator.makeValue("UserLogin");
                     userLoginEx.put("userLoginId", userID);
                     userLoginEx.put("partyId", partyId);
                     userLoginEx.create();
@@ -103,7 +103,7 @@ public class EbayFeedback {
                                                     .where("partyId", partyId, "roleTypeId", "OWNER")
                                                     .queryOne();
                 if (UtilValidate.isEmpty(ownerPartyRole)) {
-                    GenericValue partyRole =  delegator.makeValue("PartyRole");
+                    GenericValue partyRole = delegator.makeValue("PartyRole");
                     partyRole.put("partyId", partyId);
                     partyRole.put("roleTypeId", "OWNER");
                     partyRole.create();

@@ -52,15 +52,14 @@ public class BirtMasterReportServices {
 
     private static final String MODULE = BirtServices.class.getName();
     private static final String RESOURCE = "BirtUiLabels";
-    private static final String RES_ERROR = "BirtErrorUiLabels";
 
     // The following methods are flexible report services as examples for reporting
     public static Map<String, Object> workEffortPerPersonPrepareDate(DispatchContext dctx, Map<String, Object> context) {
         Map<String, String> dataMap = UtilMisc.toMap(
-                "lastName", "name", 
-                "firstName", "name", 
-                "hours", "floating-point", 
-                "fromDate", "date-time", 
+                "lastName", "name",
+                "firstName", "name",
+                "hours", "floating-point",
+                "fromDate", "date-time",
                 "thruDate", "date-time");
         LinkedHashMap<String, String> filterMap = new LinkedHashMap<>();
         filterMap.put("firstName", "name");
@@ -68,10 +67,10 @@ public class BirtMasterReportServices {
         filterMap.put("fromDate", "date-time");
         filterMap.put("thruDate", "date-time");
         Map<String, String> fieldDisplayLabels = UtilMisc.toMap(
-                "lastName", "Last name", 
-                "firstName", "First name", 
-                "hours", "Hours", 
-                "fromDate", "From date", 
+                "lastName", "Last name",
+                "firstName", "First name",
+                "hours", "Hours",
+                "fromDate", "From date",
                 "thruDate", "Thru date");
         LinkedHashMap<String, String> filterDisplayLabels = new LinkedHashMap<>();
         filterDisplayLabels.put("firstName", "First name");
@@ -157,36 +156,36 @@ public class BirtMasterReportServices {
 
     public static Map<String, Object> turnOverPrepareFields(DispatchContext dctx, Map<String, Object> context) {
         Map<String, String> dataMap = UtilMisc.toMap(
-                "invoiceTypeId", "short-varchar", 
-                "invoicePartyId", "short-varchar", 
-                "statusId", "short-varchar", 
-                "invoiceDate", "date", 
-                "dueDate", "date", 
-                "currencyUomId", "short-varchar", 
-                "invoiceItemTypeId", "short-varchar", 
-                "invoiceItemSeqId", "short-varchar", 
-                "productId", "short-varchar", 
-                "partyId", "short-varchar", 
-                "primaryProductCategoryId", "short-varchar", 
-                "quantity", "numeric", 
-                "amount", "currency-amount", 
-                "productStoreId", "short-varchar", 
+                "invoiceTypeId", "short-varchar",
+                "invoicePartyId", "short-varchar",
+                "statusId", "short-varchar",
+                "invoiceDate", "date",
+                "dueDate", "date",
+                "currencyUomId", "short-varchar",
+                "invoiceItemTypeId", "short-varchar",
+                "invoiceItemSeqId", "short-varchar",
+                "productId", "short-varchar",
+                "partyId", "short-varchar",
+                "primaryProductCategoryId", "short-varchar",
+                "quantity", "numeric",
+                "amount", "currency-amount",
+                "productStoreId", "short-varchar",
                 "storeName", "short-varchar");
         Map<String, String> fieldDisplayLabels = UtilMisc.toMap(
-                "invoiceTypeId", "invoice Type", 
-                "invoicePartyId", "Invoice", 
-                "statusId", "Status", 
-                "invoiceDate", "Date", 
-                "dueDate", "Due date ", 
-                "currencyUomId", "Currency", 
-                "invoiceItemTypeId", "Invoice type line", 
-                "invoiceItemSeqId", "Invoice line", 
-                "productId", "Product", 
-                "partyId", "Customer", 
-                "primaryProductCategoryId", "Product category", 
-                "quantity", "Qty", 
-                "amount", "Amount", 
-                "productStoreId", "Product Store", 
+                "invoiceTypeId", "invoice Type",
+                "invoicePartyId", "Invoice",
+                "statusId", "Status",
+                "invoiceDate", "Date",
+                "dueDate", "Due date",
+                "currencyUomId", "Currency",
+                "invoiceItemTypeId", "Invoice type line",
+                "invoiceItemSeqId", "Invoice line",
+                "productId", "Product",
+                "partyId", "Customer",
+                "primaryProductCategoryId", "Product category",
+                "quantity", "Qty",
+                "amount", "Amount",
+                "productStoreId", "Product Store",
                 "storeName", "Product store name");
         LinkedHashMap<String, String> filterMap = new LinkedHashMap<>();
         filterMap.put("productCategoryId", "short-varchar");
@@ -337,7 +336,8 @@ public class BirtMasterReportServices {
                 // adding productStoreId and productStoreName
                 EntityExpr conditionInvoiceId = EntityCondition.makeCondition("invoiceId", invoice.getString("invoiceId"));
 //                EntityExpr conditionInvoiceItemSeqId = EntityCondition.makeCondition("invoiceItemSeqId", invoice.getString("invoiceItemSeqId"));
-//                List<GenericValue> listOrderBilling = delegator.findList("OrderItemBilling", EntityCondition.makeCondition(UtilMisc.toList(conditionInvoiceId, conditionInvoiceItemSeqId)), UtilMisc.toSet("orderId"), null, null, false);
+//                List<GenericValue> listOrderBilling = delegator.findList("OrderItemBilling", EntityCondition.makeCondition
+//                (UtilMisc.toList(conditionInvoiceId, conditionInvoiceItemSeqId)), UtilMisc.toSet("orderId"), null, null, false);
                 GenericValue orderBilling = EntityQuery.use(delegator)
                         .from("OrderItemBilling")
                         .where(conditionInvoiceId)

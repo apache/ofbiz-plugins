@@ -29,9 +29,8 @@ import org.safehaus.uuid.EthernetAddress;
 import org.safehaus.uuid.UUID;
 import org.safehaus.uuid.UUIDGenerator;
 
-/** 
+/**
  * Provides a common Thread class for the reports.
- * 
  */
 public abstract class AbstractReportThread extends Thread implements InterfaceReportThread {
 

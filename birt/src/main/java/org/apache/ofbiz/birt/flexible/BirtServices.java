@@ -551,7 +551,9 @@ public class BirtServices {
             return ServiceUtil.returnError("Error in createFormForDisplay service."); //TODO labelise
         }
 
-        if (Debug.infoOn()) Debug.logInfo(textData, MODULE);
+        if (Debug.infoOn()) {
+            Debug.logInfo(textData, MODULE);
+        }
         textData = textData.substring(textData.indexOf("<form "), textData.length());
         if (textData.contains("</form>")) {
             textData = textData.substring(0, textData.indexOf("</form>") + 7);
@@ -855,7 +857,9 @@ public class BirtServices {
         }
         designFromUser.close();
         designStored.close();
-        if (Debug.infoOn()) Debug.logInfo("####### Design uploaded: ".concat(rptDesignName), MODULE);
+        if (Debug.infoOn()) {
+            Debug.logInfo("####### Design uploaded: ".concat(rptDesignName), MODULE);
+        }
 
         // TODO check: should we, as a secondary safety precaution, delete any file finishing with _TEMP_.rptdesign?
         listSuccessMessage.add(UtilProperties.getMessage(RESOURCE, "BirtFlexibleRptDesignSuccessfullyUploaded", locale));

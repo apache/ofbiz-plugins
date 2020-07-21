@@ -27,8 +27,7 @@ import org.apache.ofbiz.htmlreport.InterfaceReportThread;
 import org.apache.ofbiz.htmlreport.util.ReportStringUtil;
 
 /**
- * Provides a html report for running parse a PriCat file.<p> 
- * 
+ * Provides a html report for running parse a PriCat file.<p>
  */
 public class PricatParseExcelHtmlReport extends AbstractHtmlReport {
 
@@ -61,7 +60,7 @@ public class PricatParseExcelHtmlReport extends AbstractHtmlReport {
         Thread[] threads = new Thread[i];
         threadGroup.enumerate(threads, true);
         InterfaceReportThread thread = null;
-        for (int j=0; j<threads.length; j++) {
+        for (int j = 0; j < threads.length; j++) {
             Thread threadInstance = threads[j];
             if (threadInstance instanceof PricatParseExcelHtmlThread) {
                 thread = (PricatParseExcelHtmlThread) threadInstance;

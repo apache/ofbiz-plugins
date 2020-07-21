@@ -118,7 +118,7 @@ public class BirtEmailServices {
         try {
             screenStringRenderer = new MacroScreenRenderer("screen", visualTheme.getModelTheme().getScreenRendererLocation("screen"));
         } catch (TemplateException e) {
-            String errMsg =  UtilProperties.getMessage(RESOURCE, "BirtErrorRenderingScreenForEmail", UtilMisc.toMap("errorString", e.toString()), locale);
+            String errMsg = UtilProperties.getMessage(RESOURCE, "BirtErrorRenderingScreenForEmail", UtilMisc.toMap("errorString", e.toString()), locale);
             Debug.logError(e, errMsg, MODULE);
             return ServiceUtil.returnError(errMsg);
         } catch (IOException e) {
@@ -252,7 +252,9 @@ public class BirtEmailServices {
         serviceContext.put("subject", subject);
         serviceContext.put("partyId", partyId);
 
-        if (Debug.verboseOn()) Debug.logVerbose("sendMailFromScreen sendMail context: " + serviceContext, MODULE);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("sendMailFromScreen sendMail context: " + serviceContext, MODULE);
+        }
 
         Map<String, Object> result = ServiceUtil.returnSuccess();
         try {

@@ -46,7 +46,6 @@ import org.apache.ofbiz.htmlreport.util.ReportStringUtil;
 
 /**
  * HTML report output to be used in report.ftl.<p>
- * 
  */
 public class HtmlReport extends AbstractReport {
 
@@ -541,7 +540,7 @@ public class HtmlReport extends AbstractReport {
         Thread[] threads = new Thread[i];
         threadGroup.enumerate(threads, true);
         AbstractReportThread thread = null;
-        for (int j=0; j<threads.length; j++) {
+        for (int j = 0; j < threads.length; j++) {
             Thread threadInstance = threads[j];
             if (threadInstance instanceof AbstractReportThread) {
                 if (((AbstractReportThread) threadInstance).getUUID().toString().equals(getParamThread(request))) {

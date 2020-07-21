@@ -1140,7 +1140,7 @@ public class EbayEvents {
             String productId = item.getSKU();
             if (UtilValidate.isNotEmpty(itemObj.get("requireEbayInventory")) && ("Y".equals(itemObj.get("requireEbayInventory")))) {
                 GetSellingManagerInventoryRequestType req = new GetSellingManagerInventoryRequestType();
-                GetSellingManagerInventoryResponseType resp =  null;
+                GetSellingManagerInventoryResponseType resp = null;
                 SellingManagerProductType[] returnedSellingManagerProductType = null;
                 GetSellingManagerInventoryCall call = new GetSellingManagerInventoryCall(EbayStoreHelper.getApiContext(productStoreId, locale, delegator));
                 resp = (GetSellingManagerInventoryResponseType)call.execute(req);
@@ -1193,7 +1193,7 @@ public class EbayEvents {
                     DetailLevelCodeType.ITEM_RETURN_DESCRIPTION
             };
             categorySpecifics.setDetailLevel(detailLevel);
-            RecommendationsType[] recommend =  categorySpecifics.getCategorySpecifics();
+            RecommendationsType[] recommend = categorySpecifics.getCategorySpecifics();
 
             for (RecommendationsType recommendationsType : recommend) {
                 NameRecommendationType[] nameRecommend = recommendationsType.getNameRecommendation();

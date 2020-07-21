@@ -53,7 +53,7 @@ public class ThirdPartyEvents {
         Map<String, Object> requestParams = UtilHttp.getParameterMap(request);
 
         // check distributor
-        String distriParam[] = { "distributor_id", "distributorid", "distributor" };
+        String distriParam[] = {"distributor_id", "distributorid", "distributor" };
         String distributorId = null;
 
         for (int i = 0; i < distriParam.length; i++) {
@@ -69,7 +69,7 @@ public class ThirdPartyEvents {
         }
 
         // check affiliate
-        String affiliParam[] = { "affiliate_id", "affiliateid", "affiliate", "affil" };
+        String affiliParam[] = {"affiliate_id", "affiliateid", "affiliate", "affil" };
         String affiliateId = null;
 
         for (int i = 0; i < affiliParam.length; i++) {
@@ -155,7 +155,9 @@ public class ThirdPartyEvents {
                     toBeStored.add(delegator.makeValue("PartyRole", UtilMisc.toMap("partyId", distributorId, "roleTypeId", "DISTRIBUTOR")));
                     try {
                         delegator.storeAll(toBeStored);
-                        if (Debug.infoOn()) Debug.logInfo("Distributor for user " + party.getString("partyId") + " set to " + distributorId, MODULE);
+                        if (Debug.infoOn()) {
+                            Debug.logInfo("Distributor for user " + party.getString("partyId") + " set to " + distributorId, MODULE);
+                        }
                     } catch (GenericEntityException gee) {
                         Debug.logWarning(gee, MODULE);
                     }
@@ -224,7 +226,9 @@ public class ThirdPartyEvents {
                     partyRelationship.set("partyRelationshipTypeId", "SALES_AFFILIATE");
                     try {
                         delegator.create(partyRelationship);
-                        if (Debug.infoOn()) Debug.logInfo("Affiliate for user " + party.getString("partyId") + " set to " + affiliateId, MODULE);
+                        if (Debug.infoOn()) {
+                            Debug.logInfo("Affiliate for user " + party.getString("partyId") + " set to " + affiliateId, MODULE);
+                        }
                     } catch (GenericEntityException gee) {
                         Debug.logWarning(gee, MODULE);
                     }

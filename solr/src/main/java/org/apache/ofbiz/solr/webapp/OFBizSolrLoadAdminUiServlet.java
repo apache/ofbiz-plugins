@@ -36,7 +36,6 @@ import org.apache.solr.core.SolrCore;
 
 /**
  * A simple servlet to load the Solr Admin UI
- * 
  */
 public class OFBizSolrLoadAdminUiServlet extends OFBizSolrRedirectServlet {
 
@@ -62,7 +61,7 @@ public class OFBizSolrLoadAdminUiServlet extends OFBizSolrRedirectServlet {
                 String html = IOUtils.toString(in, "UTF-8");
                 Package pack = SolrCore.class.getPackage();
 
-                String[] search = new String[] { "${contextPath}", "${adminPath}", "${version}" };
+                String[] search = new String[] {"${contextPath}", "${adminPath}", "${version}" };
                 String[] replace = new String[] {
                         StringEscapeUtils.escapeJavaScript(request.getContextPath()),
                         StringEscapeUtils.escapeJavaScript(CommonParams.CORES_HANDLER_PATH),

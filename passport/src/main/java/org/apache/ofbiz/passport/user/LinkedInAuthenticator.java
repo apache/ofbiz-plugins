@@ -199,7 +199,9 @@ public class LinkedInAuthenticator implements Authenticator {
             if (parentTx != null) {
                 try {
                     TransactionUtil.resume(parentTx);
-                    if (Debug.verboseOn()) Debug.logVerbose("Resumed the parent transaction.", MODULE);
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("Resumed the parent transaction.", MODULE);
+                    }
                 } catch (GenericTransactionException e) {
                     Debug.logError(e, "Could not resume parent nested transaction: " + e.getMessage(), MODULE);
                 }

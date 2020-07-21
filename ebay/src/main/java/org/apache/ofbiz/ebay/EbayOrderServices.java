@@ -1064,7 +1064,7 @@ public class EbayOrderServices {
                 cart.setBillFromVendorPartyId(payToPartyId);
             }
             // Apply shipping costs as order adjustment
-            Map<String, Object> shippingServiceSelectedCtx =  UtilGenerics.cast(context.get("shippingServiceSelectedCtx"));
+            Map<String, Object> shippingServiceSelectedCtx = UtilGenerics.cast(context.get("shippingServiceSelectedCtx"));
 
             String shippingCost = (String) shippingServiceSelectedCtx.get("shippingServiceCost");
             if (UtilValidate.isNotEmpty(shippingCost)) {

@@ -65,9 +65,7 @@ import org.xml.sax.SAXException;
 
 /**
  * LinkedEvents - Events for LinkedIn login.
- * 
  * Refs: https://developer.linkedin.com/documents/authentication
- * 
  */
 public class LinkedInEvents {
 

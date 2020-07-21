@@ -940,7 +940,7 @@ public class EbayStoreAutoPreferences {
         String productStoreId = (String) context.get("productStoreId");
         try {
             GenericValue userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "system").queryOne();
-            Map<String, Object> resultSold =  dispatcher.runSync("getEbaySoldItems", UtilMisc.toMap("productStoreId", productStoreId, "userLogin", userLogin));
+            Map<String, Object> resultSold = dispatcher.runSync("getEbaySoldItems", UtilMisc.toMap("productStoreId", productStoreId, "userLogin", userLogin));
             if (ServiceUtil.isError(resultSold)) {
                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultSold));
             }
@@ -1015,7 +1015,7 @@ public class EbayStoreAutoPreferences {
         try {
             GenericValue userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "system").queryOne();
             context.put("userLogin", userLogin);
-            Map<String, Object> resultSold =  dispatcher.runSync("getEbaySoldItems", context);
+            Map<String, Object> resultSold = dispatcher.runSync("getEbaySoldItems", context);
             if (ServiceUtil.isError(resultSold)) {
                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultSold));
             }
@@ -1073,7 +1073,7 @@ public class EbayStoreAutoPreferences {
         Delegator delegator = dctx.getDelegator();
         Map<String, Object> result = new HashMap<>();
         GetSellingManagerInventoryRequestType req = new GetSellingManagerInventoryRequestType();
-        GetSellingManagerInventoryResponseType resp =  null;
+        GetSellingManagerInventoryResponseType resp = null;
 
         if (context.get("productStoreId") != null) {
             GetSellingManagerInventoryCall call = new GetSellingManagerInventoryCall(EbayStoreHelper.getApiContext((String) context.get("productStoreId"), locale, delegator));

@@ -62,7 +62,7 @@ public class FixedAssetMaintServices {
             if (product == null) {
                 return ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE, "AssetMaintInvalidPartProductIdError", UtilMisc.toMap("productId", productId), locale));
             }
-            Map<String, ? extends Object> findCurrInventoryParams =  UtilMisc.toMap("productId", productId, "facilityId", facilityId);
+            Map<String, ? extends Object> findCurrInventoryParams = UtilMisc.toMap("productId", productId, "facilityId", facilityId);
             GenericValue userLogin = (GenericValue) context.get("userLogin");
             // Call issuance service
             Map<String, Object> result = dispatcher.runSync("getInventoryAvailableByFacility", findCurrInventoryParams);
