@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+////
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -16,13 +15,19 @@ software distributed under the License is distributed on an
 KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
--->
-<entity-engine-xml>
-    <DataResource dataResourceId="HELP_EBAY" localeString="en" dataResourceTypeId="OFBIZ_FILE"
-        objectInfo="plugins/ebay/data/HELP_EBAY.xml" dataTemplateTypeId="NONE" statusId="CTNT_IN_PROGRESS"
-        dataResourceName="Ebay" mimeTypeId="text/xml" isPublic="Y" />
-    <Content contentId="HELP_EBAY" contentTypeId="DOCUMENT" contentName="Ebay" templateDataResourceId="HELP_TEMPL"
-        dataResourceId="HELP_EBAY" statusId="CTNT_IN_PROGRESS" mimeTypeId="text/html"/>
-    <ContentAssoc contentId="HELP_ROOT" contentIdTo="HELP_EBAY" contentAssocTypeId="TREE_CHILD" fromDate="2006-01-12 01:01:01" sequenceNum="000"/>
+////
+= New Ebay Account.
+This screen allows the user to add new ebay account for access to using their ebay store.
 
-</entity-engine-xml>
+== Fields Description :
+. Enter  'Salutation' (ex:Mr,miss,Missis)
+. Enter  'First Name' (ex:Demo)
+. Enter  'Middle Name'
+. Enter  'Last Name' (ex: DemoLastName)
+. Enter  'Gender'
+. Enter  'User Login Id' (ex:exbaySandBox123) which you registered on ebay
+. Enter  'Current Password' the same which you registered on ebay
+. Press the 'Create' button.
+
+[NOTE]
+Go to Party module -> Search your party -> then you can update your profiles

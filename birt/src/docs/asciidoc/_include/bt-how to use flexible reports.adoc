@@ -1,21 +1,37 @@
-=== Using a flexible report 
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
 
-==== Introduction 
+http://www.apache.org/licenses/LICENSE-2.0
 
-NOTE: this feature will be officially available with the R17.12 branch first release 
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+=== Using a flexible report
 
-A flexible report is an OFBiz content of FLEXIBLE_REPORT type which allows the final user to obtain reports using the 
-Birt reporting module. It will be produced at a specific time of your choosing, with your chosen output format, 
-filtering the data with a few parameters defined during report design creation. 
+==== Introduction
 
-==== Pre-requisite 
+NOTE: this feature will be officially available with the R17.12 branch first release
 
+A flexible report is an OFBiz content of FLEXIBLE_REPORT type which allows the final user to obtain reports using the
+Birt reporting module. It will be produced at a specific time of your choosing, with your chosen output format,
+filtering the data with a few parameters defined during report design creation.
+
+==== Pre-requisite
 * OFBiz
 * The Birt plugin
 * Pre-published reports created from report masters
 
-==== Using the report 
-
+==== Using the report
 . go to the Birt component or to another page harboring reports.
 . In the Birt component, click "Use a report".
 . Select your report and hit "Send".

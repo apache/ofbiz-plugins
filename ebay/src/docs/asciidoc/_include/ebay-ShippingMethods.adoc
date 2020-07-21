@@ -1,0 +1,38 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+= Shipping Methods Configuration
+This screen allows the user to add shipping methods rate for intregrate ofbiz and Ebay.
+
+== How to add shipping methods?
+. Enter  'Shipment Method Name ' (ex:'LocalDelivery')
+. Select 'product store' (ex:'OFBiz E-Commerce Store [9000]')
+. Enter  'Amount'
+. Enter  'Additional Amount' (if you want )
+. Enter  'Additional Percent' (if you want )
+. Enter  'Method Type Enum Id' (ex:Flat Rate Shipping)
+. Enter  'Carrier Party Id' select from lookup (Default is UPS)
+. select   'Shipment Method Type Id'
+. Press the 'Add' button to add shipping method.
+
+== How to update shipping methods?
+. Update the fields required in the screen
+. Press the 'Update' button
+
+== How to delete shipping methods?
+. Press the 'Delete' button in each shipping method

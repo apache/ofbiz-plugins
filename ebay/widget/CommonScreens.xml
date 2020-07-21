@@ -34,13 +34,14 @@ under the License.
                 <set field="applicationMenuName" value="EbayAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://ebay/widget/EbayMenus.xml" global="true"/>
                 <set field="applicationTitle" from-field="uiLabelMap.EbayApplication" global="true"/>
+                <set field="helpAnchor" from-field="helpAnchor" default-value="_the_ebay_component"/>
             </actions>
             <widgets>
                 <include-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml"/>
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="CommonProductDecorator">
         <section>
             <actions>

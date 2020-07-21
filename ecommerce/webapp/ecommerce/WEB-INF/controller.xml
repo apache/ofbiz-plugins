@@ -21,6 +21,8 @@ under the License.
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="http://ofbiz.apache.org/Site-Conf" xsi:schemaLocation="http://ofbiz.apache.org/Site-Conf http://ofbiz.apache.org/dtds/site-conf.xsd">
     <description>OFBiz: eCommerce Controller Configuration File</description>
+    
+    <errorpage>component://common/webcommon/error/Error.ftl</errorpage>
 
     <handler name="java" type="request" class="org.apache.ofbiz.webapp.event.JavaEventHandler"/>
     <handler name="groovy" type="request" class="org.apache.ofbiz.webapp.event.GroovyEventHandler"/>

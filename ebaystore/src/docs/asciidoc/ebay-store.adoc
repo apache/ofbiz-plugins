@@ -1,0 +1,100 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+= Ebay Store
+
+The Ebay Store component provides an interface to the Ebay website. +
+It's desactivate in the default configuration.
+
+It is possible to export products from your store into  eBay category  also import an orders from ebay.
+
+== Ebay Store management in User Interface
+
+include::_include/ebs-main.adoc[leveloffset=+2]
+
+include::_include/ebs-new-ebay-account.adoc[leveloffset=+2]
+
+include::_include/ebs-store-setting.adoc[leveloffset=+2]
+
+=== Export categories to ebay store screen.
+The screen allow user to export categories and product to eBay store.
+
+First you should select catalog and click on Export to eBay store button to complete function. +
+When you click Export to eBay store button, this function will add your categories that in catalog selected
+to eBay store also add product to categories too.
+
+=== EBay Leave Feedback.
+This screen have 3 tab button All, bought, sold.
+
+* "All" = bought and sold,
+* "bought" = this account is buyer,
+* "sold" = this account is seller.
+
+All item in the list can leave message to buyer and  seller multi action that mean each item is seperated.
+
+If item is bought it have 3 options to select  and then when select "Positive", "Neutral" and "Negative" a rating
+section appear:
+
+. add rating to seller, and comment,
+. if select "I'll leave Feedback later" a rating section disappear.
+
+If item is sold it have 2 options to select and then when select "Positive" a comment box appear to add comment
+text to buyer, +
+if select "I'll leave Feedback later" this comment box will disappear.
+
+[NOTE]
+If you don't add comment in text box, leave feedback don't send.
+
+=== EBay Feedback.
+==== Items Awaiting Feedback
+This section list Items, they are sold or bought and have link to Leave Feedback screen.
+
+This list you can see itemId, title, user and link to leave feedback to buyer or seller.
+http://developer.ebay.com/DevZone/support/knowledgebase/[See more info]
+
+==== Recent Feedback
+This section list recent feedback message from commentator (buyer) who do transaction with this account.
+
+=== Ebay Store Auto-Setting
+This section contains all Auto setting of specify Account.
+
+=== Automation Re-list Items
+Automation Re-list Items is setting when items are sold or quantity empty or don't active and then auto re-listing those items.
+
+. Start Date have to start before today or finish date. Format: yyyy-MM-dd HH:mm:ss.SSS"
+. Finish Date have to is after start date. Format: yyyy-MM-dd HH:mm:ss.SSS"
+
+[NOTE]
+If you don't set finish date Automation Re-list continue to do.
+
+include::_include/ebs-product-inventory.adoc[leveloffset=+2]
+
+=== Reserve Product From Ofbiz Inventory.
+This screen allows the user to reserve products from ofbiz inventory for create listing and sell on ebay site.
+
+==== How to reserve product?
+. Go to Reserve Product section
+. Enter field productId (Click "look up" to find product or type in text the system will show list of product)
+. Enter quantity of product you want to reserve.
+. Press "" button
+
+=== Block item that out of stock.
+The screen allow user to block items that out of stock on eBay inventory.
+
+. First you should input your store id and click on Block out of stock button to complete this function.
+. When you click Block out of stock button, this function will block your items on inventory that quantity is zero.

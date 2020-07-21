@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+////
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -16,13 +15,15 @@ software distributed under the License is distributed on an
 KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
--->
-<entity-engine-xml>
-    <DataResource dataResourceId="HELP_EBAY" localeString="en" dataResourceTypeId="OFBIZ_FILE"
-        objectInfo="plugins/ebay/data/HELP_EBAY.xml" dataTemplateTypeId="NONE" statusId="CTNT_IN_PROGRESS"
-        dataResourceName="Ebay" mimeTypeId="text/xml" isPublic="Y" />
-    <Content contentId="HELP_EBAY" contentTypeId="DOCUMENT" contentName="Ebay" templateDataResourceId="HELP_TEMPL"
-        dataResourceId="HELP_EBAY" statusId="CTNT_IN_PROGRESS" mimeTypeId="text/html"/>
-    <ContentAssoc contentId="HELP_ROOT" contentIdTo="HELP_EBAY" contentAssocTypeId="TREE_CHILD" fromDate="2006-01-12 01:01:01" sequenceNum="000"/>
+////
+= Search Products in category screen.
+This screen allows the user to find products for export from ofbiz store to Ebay site. +
+First you must select product store, catalogs and category at products located.
+Then find products and select product you want to export to category on ebay site.
 
-</entity-engine-xml>
+== How to search products?
+. select  products store you want to export products example : OFBiz E-Commerce [9000]
+. select catalog 'eBay Catalog'
+. select category in example you can use 'Ebay E-Commerce ... [eBay_ECom_Category]'
+. select the other condition if you want
+. Press 'Find' button at the below of page to find products

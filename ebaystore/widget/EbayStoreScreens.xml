@@ -24,6 +24,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" from-field="uiLabelMap.EbayStore"/>
+                <set field="helpAnchor" value="_ebay_store_main_screen"/>
                 <set field="headerItem" value="ebayStore"/>
             </actions>
             <widgets>
@@ -42,6 +43,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" from-field="uiLabelMap.EbayStoreSetting"/>
+                <set field="helpAnchor" value="_ebay_store_detail_screen"/>
                 <set field="headerItem" value="ebayStore"/>
                 <set field="tabButtonItem" value="ebayStoreSetting"/>
                 <script  location="component://ebaystore/groovyScripts/store/RetrieveStoreOptions.groovy"/>
@@ -63,6 +65,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="EbayExportAllCategoryToEbayStore"/>
+                <set field="helpAnchor" value="_export_categories_to_ebay_store_screen"/>
                 <set field="headerItem" value="ebayStore"/>
                 <set field="tabButtonItem" value="ebayExportAllCategoryToEbayStore"/>
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
@@ -146,6 +149,7 @@ under the License.
     <screen name="NewEbayAccount">
         <section>
             <actions>
+                <set field="helpAnchor" value="_new_ebay_account"/>
                 <set field="headerItem" value="ebayStore"/>
                 <set field="tabButtonItem" value="NewEbayAccount"/>
             </actions>
