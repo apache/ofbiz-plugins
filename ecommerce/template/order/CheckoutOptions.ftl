@@ -214,7 +214,7 @@ function submitForm(form, mode, value) {
         <#-- Payment Method Selection -->
         <div class="card" >
             <h4 class="card-header">
-              3.&nbsp${uiLabelMap.OrderHowShallYouPay}?
+              3.&nbsp;${uiLabelMap.OrderHowShallYouPay}?
             </h4>
             <div class="card-body" >
                   <h5>${uiLabelMap.CommonAdd}:</h5>
