@@ -121,7 +121,7 @@ public final class SolrUtil {
         Boolean ecaEnabled = null;
         String sysProp = System.getProperty("ofbiz.solr.eca.enabled");
         if (UtilValidate.isNotEmpty(sysProp)) {
-            if ("true".equalsIgnoreCase(sysProp))  {
+            if ("true".equalsIgnoreCase(sysProp)) {
                 ecaEnabled = Boolean.TRUE;
             }
             else if ("false".equalsIgnoreCase(sysProp)) {

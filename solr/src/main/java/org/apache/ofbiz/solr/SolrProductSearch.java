@@ -145,13 +145,11 @@ public abstract class SolrProductSearch {
             final String statusStr = UtilProperties.getMessage(RESOURCE, "SolrDocumentForProductIdAddedToSolrIndex", UtilMisc.toMap("productId", context.get("productId")), locale);
             Debug.logInfo("Solr: " + statusStr, MODULE);
             result = ServiceUtil.returnSuccess(statusStr);
-        }
-        catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             Debug.logError(e, e.getMessage(), MODULE);
             result = ServiceUtil.returnError(e.toString());
             result.put("errorType", "urlError");
-        }
-        catch (SolrServerException e) {
+        } catch (SolrServerException e) {
             if (e.getCause() != null && e.getCause() instanceof ConnectException) {
                 final String statusStr = UtilProperties.getMessage(RESOURCE, "SolrFailureConnectingToSolrServerToCommitProductId",
                         UtilMisc.toMap("productId", context.get("productId")), locale);
@@ -168,18 +166,15 @@ public abstract class SolrProductSearch {
                 result = ServiceUtil.returnError(e.toString());
                 result.put("errorType", "solrServerError");
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             Debug.logError(e, e.getMessage(), MODULE);
             result = ServiceUtil.returnError(e.toString());
             result.put("errorType", "ioError");
-        }
-        finally {
+        } finally {
             if (client != null) {
                 try {
                     client.close();
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     // do nothing
                 }
             }
@@ -222,13 +217,11 @@ public abstract class SolrProductSearch {
             final String statusStr = UtilProperties.getMessage(RESOURCE, "SolrAddedDocumentsToSolrIndex", UtilMisc.toMap("fieldList", fieldList.size()), locale);
             Debug.logInfo("Solr: " + statusStr, MODULE);
             result = ServiceUtil.returnSuccess(statusStr);
-        }
-        catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             Debug.logError(e, e.getMessage(), MODULE);
             result = ServiceUtil.returnError(e.toString());
             result.put("errorType", "urlError");
-        }
-        catch (SolrServerException e) {
+        } catch (SolrServerException e) {
             if (e.getCause() != null && e.getCause() instanceof ConnectException) {
                 final String statusStr = UtilProperties.getMessage(RESOURCE, "SolrFailureConnectingToSolrServerToCommitProductList",
                         UtilMisc.toMap("productId", context.get("productId")), locale);
@@ -245,18 +238,15 @@ public abstract class SolrProductSearch {
                 result = ServiceUtil.returnError(e.toString());
                 result.put("errorType", "solrServerError");
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             Debug.logError(e, e.getMessage(), MODULE);
             result = ServiceUtil.returnError(e.toString());
             result.put("errorType", "ioError");
-        }
-        finally {
+        } finally {
             if (client != null) {
                 try {
                     client.close();
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     // do nothing
                 }
             }
@@ -358,17 +348,14 @@ public abstract class SolrProductSearch {
             QueryResponse rsp = client.query(solrQuery);
             result = ServiceUtil.returnSuccess();
             result.put("queryResult", rsp);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Debug.logError(e, e.getMessage(), MODULE);
             result = ServiceUtil.returnError(e.toString());
-        }
-        finally {
+        } finally {
             if (client != null) {
                 try {
                     client.close();
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     // do nothing
                 }
             }
@@ -419,8 +406,7 @@ public abstract class SolrProductSearch {
             } else {
                 result = ServiceUtil.returnFailure();
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Debug.logError(e, e.getMessage(), MODULE);
             result = ServiceUtil.returnError(e.toString());
         }
@@ -505,8 +491,7 @@ public abstract class SolrProductSearch {
             result.put("viewSize", queryResult.getResults().size());
             result.put("suggestions", suggestions);
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Debug.logError(e, e.getMessage(), MODULE);
             result = ServiceUtil.returnError(e.toString());
         }
@@ -561,8 +546,7 @@ public abstract class SolrProductSearch {
                     // Debug.logInfo("The returned map is this:" + result, MODULE);
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             result = ServiceUtil.returnError(e.toString());
             result.put("numFound", (long) 0);
         }
@@ -635,8 +619,7 @@ public abstract class SolrProductSearch {
             result.put("categories", catLevel);
             result.put("numFound", (long) 0);
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             result = ServiceUtil.returnError(e.toString());
             result.put("numFound", (long) 0);
         }
@@ -703,8 +686,7 @@ public abstract class SolrProductSearch {
         } catch (IOException | GenericServiceException e) {
             Debug.logError(e, e.getMessage(), MODULE);
             result = ServiceUtil.returnError(e.toString());
-        }
-        catch (SolrServerException e) {
+        } catch (SolrServerException e) {
             if (e.getCause() != null && e.getCause() instanceof ConnectException) {
                 final String statusStr = UtilProperties.getMessage(RESOURCE, "SolrFailureConnectingToSolrServerToRebuildIndex", locale);
                 if (Boolean.TRUE.equals(treatConnectErrorNonFatal)) {
@@ -722,8 +704,7 @@ public abstract class SolrProductSearch {
             if (client != null) {
                 try {
                     client.close();
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     // do nothing
                 }
             }

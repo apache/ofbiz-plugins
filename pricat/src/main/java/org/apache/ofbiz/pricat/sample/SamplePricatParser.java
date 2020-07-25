@@ -241,9 +241,9 @@ public class SamplePricatParser extends AbstractPricatParser {
             return false;
         }
         switch (pricatFileVersion) {
-            case "V1.1":
-            default:
-                return parseCellContentsAndStoreV1_X(row, cellContents);
+        case "V1.1":
+        default:
+            return parseCellContentsAndStoreV1_X(row, cellContents);
         }
     }
 
@@ -467,9 +467,9 @@ public class SamplePricatParser extends AbstractPricatParser {
      */
     private static List<Object[]> genExcelHeaderNames(String version) {
         switch (version) {
-            case "V1.1":
-            default:
-                return genExcelHeaderNamesV1_1();
+        case "V1.1":
+        default:
+            return genExcelHeaderNamesV1_1();
         }
     }
 

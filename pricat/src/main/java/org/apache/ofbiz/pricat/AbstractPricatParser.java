@@ -272,23 +272,23 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
                 CellType cellType = cell.getCellType();
                 newCell.setCellType(cellType);
                 switch (cellType) {
-                    case BOOLEAN:
-                        newCell.setCellValue(cell.getBooleanCellValue());
-                        break;
-                    case ERROR:
-                        newCell.setCellErrorValue(cell.getErrorCellValue());
-                        break;
-                    case FORMULA:
-                        newCell.setCellFormula(cell.getCellFormula());
-                        break;
-                    case NUMERIC:
-                        newCell.setCellValue(cell.getNumericCellValue());
-                        break;
-                    case STRING:
-                        newCell.setCellValue(cell.getRichStringCellValue());
-                        break;
-                    default:
-                        newCell.setCellValue(formatter.formatCellValue(cell));
+                case BOOLEAN:
+                    newCell.setCellValue(cell.getBooleanCellValue());
+                    break;
+                case ERROR:
+                    newCell.setCellErrorValue(cell.getErrorCellValue());
+                    break;
+                case FORMULA:
+                    newCell.setCellFormula(cell.getCellFormula());
+                    break;
+                case NUMERIC:
+                    newCell.setCellValue(cell.getNumericCellValue());
+                    break;
+                case STRING:
+                    newCell.setCellValue(cell.getRichStringCellValue());
+                    break;
+                default:
+                    newCell.setCellValue(formatter.formatCellValue(cell));
                 }
                 if (cell.getCellComment() != null) {
                     XSSFClientAnchor anchor = factory.createClientAnchor();

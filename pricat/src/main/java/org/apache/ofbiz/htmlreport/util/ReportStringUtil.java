@@ -53,8 +53,8 @@ public final class ReportStringUtil {
     /** Second constant. */
     private static final long SECONDS = 1000;
 
-    /** 
-     * Default constructor (empty), private because this class has only 
+    /**
+     * Default constructor (empty), private because this class has only
      * static methods.<p>
      */
     private ReportStringUtil() {
@@ -148,53 +148,53 @@ public final class ReportStringUtil {
         for (int i = 0; i < source.length(); ++i) {
             char ch = source.charAt(i);
             switch (ch) {
-                case '\\':
-                    result.append("\\\\");
-                    break;
-                case '/':
-                    result.append("\\/");
-                    break;
-                case '$':
-                    result.append("\\$");
-                    break;
-                case '^':
-                    result.append("\\^");
-                    break;
-                case '.':
-                    result.append("\\.");
-                    break;
-                case '*':
-                    result.append("\\*");
-                    break;
-                case '+':
-                    result.append("\\+");
-                    break;
-                case '|':
-                    result.append("\\|");
-                    break;
-                case '?':
-                    result.append("\\?");
-                    break;
-                case '{':
-                    result.append("\\{");
-                    break;
-                case '}':
-                    result.append("\\}");
-                    break;
-                case '[':
-                    result.append("\\[");
-                    break;
-                case ']':
-                    result.append("\\]");
-                    break;
-                case '(':
-                    result.append("\\(");
-                    break;
-                case ')':
-                    result.append("\\)");
-                    break;
-                default:
-                    result.append(ch);
+            case '\\':
+                result.append("\\\\");
+                break;
+            case '/':
+                result.append("\\/");
+                break;
+            case '$':
+                result.append("\\$");
+                break;
+            case '^':
+                result.append("\\^");
+                break;
+            case '.':
+                result.append("\\.");
+                break;
+            case '*':
+                result.append("\\*");
+                break;
+            case '+':
+                result.append("\\+");
+                break;
+            case '|':
+                result.append("\\|");
+                break;
+            case '?':
+                result.append("\\?");
+                break;
+            case '{':
+                result.append("\\{");
+                break;
+            case '}':
+                result.append("\\}");
+                break;
+            case '[':
+                result.append("\\[");
+                break;
+            case ']':
+                result.append("\\]");
+                break;
+            case '(':
+                result.append("\\(");
+                break;
+            case ')':
+                result.append("\\)");
+                break;
+            default:
+                result.append(ch);
             }
         }
         return new String(result);
@@ -407,7 +407,7 @@ public final class ReportStringUtil {
 
     /**
      * Returns the java String literal for the given String. <p>
-     * This is the form of the String that had to be written into source code 
+     * This is the form of the String that had to be written into source code
      * using the unicode escape sequence for special characters. <p>
      * Example: "�" would be transformed to "\\u00C4".<p>
      * @param s a string that may contain non-ascii characters

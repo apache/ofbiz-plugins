@@ -284,44 +284,44 @@ public class HtmlReport extends AbstractReport {
         StringBuffer buf = null;
         value = ReportStringUtil.escapeJavaScript(value);
         switch (format) {
-            case FORMAT_HEADLINE:
-                buf = new StringBuffer();
-                buf.append("aH('");
-                buf.append(value);
-                buf.append("'); ");
-                break;
-            case FORMAT_WARNING:
-                buf = new StringBuffer();
-                buf.append("aW('");
-                buf.append(value);
-                buf.append("'); ");
-                addWarning(value);
-                break;
-            case FORMAT_ERROR:
-                buf = new StringBuffer();
-                buf.append("aE('");
-                buf.append(value);
-                buf.append("'); ");
-                addError(value);
-                break;
-            case FORMAT_NOTE:
-                buf = new StringBuffer();
-                buf.append("aN('");
-                buf.append(value);
-                buf.append("'); ");
-                break;
-            case FORMAT_OK:
-                buf = new StringBuffer();
-                buf.append("aO('");
-                buf.append(value);
-                buf.append("'); ");
-                break;
-            case FORMAT_DEFAULT:
-            default:
-                buf = new StringBuffer();
-                buf.append("a('");
-                buf.append(value);
-                buf.append("'); ");
+        case FORMAT_HEADLINE:
+            buf = new StringBuffer();
+            buf.append("aH('");
+            buf.append(value);
+            buf.append("'); ");
+            break;
+        case FORMAT_WARNING:
+            buf = new StringBuffer();
+            buf.append("aW('");
+            buf.append(value);
+            buf.append("'); ");
+            addWarning(value);
+            break;
+        case FORMAT_ERROR:
+            buf = new StringBuffer();
+            buf.append("aE('");
+            buf.append(value);
+            buf.append("'); ");
+            addError(value);
+            break;
+        case FORMAT_NOTE:
+            buf = new StringBuffer();
+            buf.append("aN('");
+            buf.append(value);
+            buf.append("'); ");
+            break;
+        case FORMAT_OK:
+            buf = new StringBuffer();
+            buf.append("aO('");
+            buf.append(value);
+            buf.append("'); ");
+            break;
+        case FORMAT_DEFAULT:
+        default:
+            buf = new StringBuffer();
+            buf.append("a('");
+            buf.append(value);
+            buf.append("'); ");
         }
         if (value.trim().endsWith(getLineBreak())) {
             buf.append("aB(); ");
@@ -329,41 +329,41 @@ public class HtmlReport extends AbstractReport {
         content.add(buf.toString());
 
         switch (format) {
-            case FORMAT_HEADLINE:
-                buf = new StringBuffer();
-                buf.append("<span class='head'>");
-                buf.append(value);
-                buf.append("</span>");
-                break;
-            case FORMAT_WARNING:
-                buf = new StringBuffer();
-                buf.append("<span class='warn'>");
-                buf.append(value);
-                buf.append("</span>");
-                addWarning(value);
-                break;
-            case FORMAT_ERROR:
-                buf = new StringBuffer();
-                buf.append("<span class='err'>");
-                buf.append(value);
-                buf.append("</span>");
-                addError(value);
-                break;
-            case FORMAT_NOTE:
-                buf = new StringBuffer();
-                buf.append("<span class='note'>");
-                buf.append(value);
-                buf.append("</span>");
-                break;
-            case FORMAT_OK:
-                buf = new StringBuffer();
-                buf.append("<span class='ok'>");
-                buf.append(value);
-                buf.append("</span>");
-                break;
-            case FORMAT_DEFAULT:
-            default:
-                buf = new StringBuffer(value);
+        case FORMAT_HEADLINE:
+            buf = new StringBuffer();
+            buf.append("<span class='head'>");
+            buf.append(value);
+            buf.append("</span>");
+            break;
+        case FORMAT_WARNING:
+            buf = new StringBuffer();
+            buf.append("<span class='warn'>");
+            buf.append(value);
+            buf.append("</span>");
+            addWarning(value);
+            break;
+        case FORMAT_ERROR:
+            buf = new StringBuffer();
+            buf.append("<span class='err'>");
+            buf.append(value);
+            buf.append("</span>");
+            addError(value);
+            break;
+        case FORMAT_NOTE:
+            buf = new StringBuffer();
+            buf.append("<span class='note'>");
+            buf.append(value);
+            buf.append("</span>");
+            break;
+        case FORMAT_OK:
+            buf = new StringBuffer();
+            buf.append("<span class='ok'>");
+            buf.append(value);
+            buf.append("</span>");
+            break;
+        case FORMAT_DEFAULT:
+        default:
+            buf = new StringBuffer(value);
         }
         if (value.trim().endsWith(getLineBreak())) {
             buf.append("\n");
@@ -951,116 +951,116 @@ public class HtmlReport extends AbstractReport {
     protected void dialogButtonsHtml(StringBuffer result, int button, String attribute) {
         attribute = appendDelimiter(attribute);
         switch (button) {
-            case BUTTON_OK:
-                result.append("<input name=\"ok\" value=\"");
-                result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_OK", getLocale()) + "\"");
-                if (attribute.toLowerCase().indexOf("onclick") == -1) {
-                    result.append(" type=\"submit\"");
-                } else {
-                    result.append(" type=\"button\"");
-                }
-                result.append(" class=\"dialogbutton\"");
-                result.append(attribute);
-                result.append(">\n");
-                break;
-            case BUTTON_CANCEL:
-                result.append("<input name=\"cancel\" type=\"button\" value=\"");
-                result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_CANCEL", getLocale()) + "\"");
-                if (attribute.toLowerCase().indexOf("onclick") == -1) {
-                    result.append(" onclick=\"submitAction('" + DIALOG_CANCEL + "', form);\"");
-                }
-                result.append(" class=\"dialogbutton\"");
-                result.append(attribute);
-                result.append(">\n");
-                break;
-            case BUTTON_EDIT:
-                result.append("<input name=\"ok\" value=\"");
-                result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_EDIT", getLocale()) + "\"");
-                if (attribute.toLowerCase().indexOf("onclick") == -1) {
-                    result.append(" type=\"submit\"");
-                } else {
-                    result.append(" type=\"button\"");
-                }
-                result.append(" class=\"dialogbutton\"");
-                result.append(attribute);
-                result.append(">\n");
-                break;
-            case BUTTON_DISCARD:
-                result.append("<input name=\"cancel\" type=\"button\" value=\"");
-                result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_DISCARD", getLocale()) + "\"");
-                if (attribute.toLowerCase().indexOf("onclick") == -1) {
-                    result.append(" onclick=\"submitAction('" + DIALOG_CANCEL + "', form);\"");
-                }
-                result.append(" class=\"dialogbutton\"");
-                result.append(attribute);
-                result.append(">\n");
-                break;
-            case BUTTON_CLOSE:
-                result.append("<input name=\"close\" type=\"button\" value=\"");
-                result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_CLOSE", getLocale()) + "\"");
-                if (attribute.toLowerCase().indexOf("onclick") == -1) {
-                    result.append(" onclick=\"submitAction('" + DIALOG_CANCEL + "', form);\"");
-                }
-                result.append(" class=\"dialogbutton\"");
-                result.append(attribute);
-                result.append(">\n");
-                break;
-            case BUTTON_ADVANCED:
-                result.append("<input name=\"advanced\" type=\"button\" value=\"");
-                result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_ADVANCE", getLocale()) + "\"");
-                result.append(" class=\"dialogbutton\"");
-                result.append(attribute);
-                result.append(">\n");
-                break;
-            case BUTTON_SET:
-                result.append("<input name=\"set\" type=\"button\" value=\"");
-                result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_SET", getLocale()) + "\"");
-                if (attribute.toLowerCase().indexOf("onclick") == -1) {
-                    result.append(" onclick=\"submitAction('" + DIALOG_SET + "', form);\"");
-                }
-                result.append(" class=\"dialogbutton\"");
-                result.append(attribute);
-                result.append(">\n");
-                break;
-            case BUTTON_BACK:
-                result.append("<input name=\"set\" type=\"button\" value=\"");
-                result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_BACK", getLocale()) + "\"");
-                if (attribute.toLowerCase().indexOf("onclick") == -1) {
-                    result.append(" onclick=\"submitAction('" + DIALOG_BACK + "', form);\"");
-                }
-                result.append(" class=\"dialogbutton\"");
-                result.append(attribute);
-                result.append(">\n");
-                break;
-            case BUTTON_CONTINUE:
-                result.append("<input name=\"set\" type=\"button\" value=\"");
-                result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_CONTINUE", getLocale()) + "\"");
-                if (attribute.toLowerCase().indexOf("onclick") == -1) {
-                    result.append(" onclick=\"submitAction('" + DIALOG_CONTINUE + "', form);\"");
-                }
-                result.append(" class=\"dialogbutton\"");
-                result.append(attribute);
-                result.append(">\n");
-                break;
-            case BUTTON_DETAILS:
-                result.append("<input name=\"details\" type=\"button\" value=\"");
-                result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_DETAIL", getLocale()) + "\"");
-                result.append(" class=\"dialogbutton\"");
-                result.append(attribute);
-                result.append(">\n");
-                break;
-            case BUTTON_DOWNLOAD:
-                result.append("<input name=\"download\" type=\"button\" value=\"");
-                result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_DOWNLOAD", getLocale()) + "\"");
-                result.append(" class=\"dialogbutton\"");
-                result.append(attribute);
-                result.append(">\n");
-                break;
-            default:
-                // not a valid button code, just insert a warning in the HTML
-                result.append("<!-- invalid button code: ");
-                result.append(button);
-                result.append(" -->\n");
+        case BUTTON_OK:
+            result.append("<input name=\"ok\" value=\"");
+            result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_OK", getLocale()) + "\"");
+            if (attribute.toLowerCase().indexOf("onclick") == -1) {
+                result.append(" type=\"submit\"");
+            } else {
+                result.append(" type=\"button\"");
+            }
+            result.append(" class=\"dialogbutton\"");
+            result.append(attribute);
+            result.append(">\n");
+            break;
+        case BUTTON_CANCEL:
+            result.append("<input name=\"cancel\" type=\"button\" value=\"");
+            result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_CANCEL", getLocale()) + "\"");
+            if (attribute.toLowerCase().indexOf("onclick") == -1) {
+                result.append(" onclick=\"submitAction('" + DIALOG_CANCEL + "', form);\"");
+            }
+            result.append(" class=\"dialogbutton\"");
+            result.append(attribute);
+            result.append(">\n");
+            break;
+        case BUTTON_EDIT:
+            result.append("<input name=\"ok\" value=\"");
+            result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_EDIT", getLocale()) + "\"");
+            if (attribute.toLowerCase().indexOf("onclick") == -1) {
+                result.append(" type=\"submit\"");
+            } else {
+                result.append(" type=\"button\"");
+            }
+            result.append(" class=\"dialogbutton\"");
+            result.append(attribute);
+            result.append(">\n");
+            break;
+        case BUTTON_DISCARD:
+            result.append("<input name=\"cancel\" type=\"button\" value=\"");
+            result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_DISCARD", getLocale()) + "\"");
+            if (attribute.toLowerCase().indexOf("onclick") == -1) {
+                result.append(" onclick=\"submitAction('" + DIALOG_CANCEL + "', form);\"");
+            }
+            result.append(" class=\"dialogbutton\"");
+            result.append(attribute);
+            result.append(">\n");
+            break;
+        case BUTTON_CLOSE:
+            result.append("<input name=\"close\" type=\"button\" value=\"");
+            result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_CLOSE", getLocale()) + "\"");
+            if (attribute.toLowerCase().indexOf("onclick") == -1) {
+                result.append(" onclick=\"submitAction('" + DIALOG_CANCEL + "', form);\"");
+            }
+            result.append(" class=\"dialogbutton\"");
+            result.append(attribute);
+            result.append(">\n");
+            break;
+        case BUTTON_ADVANCED:
+            result.append("<input name=\"advanced\" type=\"button\" value=\"");
+            result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_ADVANCE", getLocale()) + "\"");
+            result.append(" class=\"dialogbutton\"");
+            result.append(attribute);
+            result.append(">\n");
+            break;
+        case BUTTON_SET:
+            result.append("<input name=\"set\" type=\"button\" value=\"");
+            result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_SET", getLocale()) + "\"");
+            if (attribute.toLowerCase().indexOf("onclick") == -1) {
+                result.append(" onclick=\"submitAction('" + DIALOG_SET + "', form);\"");
+            }
+            result.append(" class=\"dialogbutton\"");
+            result.append(attribute);
+            result.append(">\n");
+            break;
+        case BUTTON_BACK:
+            result.append("<input name=\"set\" type=\"button\" value=\"");
+            result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_BACK", getLocale()) + "\"");
+            if (attribute.toLowerCase().indexOf("onclick") == -1) {
+                result.append(" onclick=\"submitAction('" + DIALOG_BACK + "', form);\"");
+            }
+            result.append(" class=\"dialogbutton\"");
+            result.append(attribute);
+            result.append(">\n");
+            break;
+        case BUTTON_CONTINUE:
+            result.append("<input name=\"set\" type=\"button\" value=\"");
+            result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_CONTINUE", getLocale()) + "\"");
+            if (attribute.toLowerCase().indexOf("onclick") == -1) {
+                result.append(" onclick=\"submitAction('" + DIALOG_CONTINUE + "', form);\"");
+            }
+            result.append(" class=\"dialogbutton\"");
+            result.append(attribute);
+            result.append(">\n");
+            break;
+        case BUTTON_DETAILS:
+            result.append("<input name=\"details\" type=\"button\" value=\"");
+            result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_DETAIL", getLocale()) + "\"");
+            result.append(" class=\"dialogbutton\"");
+            result.append(attribute);
+            result.append(">\n");
+            break;
+        case BUTTON_DOWNLOAD:
+            result.append("<input name=\"download\" type=\"button\" value=\"");
+            result.append(UtilProperties.getMessage(RESOURCE, "DIALOG_BUTTON_DOWNLOAD", getLocale()) + "\"");
+            result.append(" class=\"dialogbutton\"");
+            result.append(attribute);
+            result.append(">\n");
+            break;
+        default:
+            // not a valid button code, just insert a warning in the HTML
+            result.append("<!-- invalid button code: ");
+            result.append(button);
+            result.append(" -->\n");
         }
     }
 

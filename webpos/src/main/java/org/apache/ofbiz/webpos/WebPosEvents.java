@@ -51,7 +51,7 @@ import org.apache.ofbiz.service.ServiceUtil;
 
 public class WebPosEvents {
 
-    public static String MODULE = WebPosEvents.class.getName();
+    private static final String MODULE = WebPosEvents.class.getName();
 
     public static String posLogin(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
         HttpSession session = request.getSession(true);

@@ -711,7 +711,7 @@ public class EbayStoreHelper {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
                 }
             } catch (Exception ex) {
-                Debug.logError("Error from create error log messages : "+ex.getMessage(), MODULE);
+                Debug.logError("Error from create error log messages : " + ex.getMessage(), MODULE);
             }
         }
     }

@@ -422,7 +422,7 @@ public class EbayStoreOrder {
             if (UtilValidate.isNotEmpty(shippingAddressCtx)) {
                 String buyerName = (String) shippingAddressCtx.get("buyerName");
                 String firstName = buyerName.substring(0, buyerName.indexOf(" "));
-                String lastName = buyerName.substring(buyerName.indexOf(" ")+1);
+                String lastName = buyerName.substring(buyerName.indexOf(" ") + 1);
 
                 String country = (String) shippingAddressCtx.get("shippingAddressCountry");
                 String state = (String) shippingAddressCtx.get("shippingAddressStateOrProvince");

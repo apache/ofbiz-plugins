@@ -84,14 +84,18 @@ public class EbayOrderServices {
         try {
             Map<String, Object> eBayConfigResult = EbayHelper.buildEbayConfig(context, delegator);
             if (UtilValidate.isEmpty(eBayConfigResult)) {
-                String eBayConfigErrorMsg = UtilProperties.getMessage(RESOURCE, "EbayConfigurationSettingsAreMissingForConnectingToEbayServer", locale);
+                String eBayConfigErrorMsg = UtilProperties.getMessage(RESOURCE, "EbayConfigurationSettingsAreMissingForConnectingToEbayServer",
+                    locale);
                 return ServiceUtil.returnError(eBayConfigErrorMsg);
             }
 
             StringBuffer sellerTransactionsItemsXml = new StringBuffer();
-            if (!ServiceUtil.isFailure(buildGetSellerTransactionsRequest(context, sellerTransactionsItemsXml, eBayConfigResult.get("token").toString()))) {
-                result = EbayHelper.postItem(eBayConfigResult.get("xmlGatewayUri").toString(), sellerTransactionsItemsXml, eBayConfigResult.get("devID").toString(), eBayConfigResult.get("appID").toString(), eBayConfigResult.get("certID").toString(), "GetSellerTransactions", eBayConfigResult.get("compatibilityLevel").toString(), eBayConfigResult.get("siteID").toString());
-                String  getSellerTransactionSuccessMsg = (String) result.get(ModelService.SUCCESS_MESSAGE);
+            if (!ServiceUtil.isFailure(buildGetSellerTransactionsRequest(context, sellerTransactionsItemsXml,
+                eBayConfigResult.get("token").toString()))) {
+                result = EbayHelper.postItem(eBayConfigResult.get("xmlGatewayUri").toString(), sellerTransactionsItemsXml, eBayConfigResult.get(
+                    "devID").toString(), eBayConfigResult.get("appID").toString(), eBayConfigResult.get("certID").toString(),
+                    "GetSellerTransactions", eBayConfigResult.get("compatibilityLevel").toString(), eBayConfigResult.get("siteID").toString());
+                String getSellerTransactionSuccessMsg = (String) result.get(ModelService.SUCCESS_MESSAGE);
                 if (getSellerTransactionSuccessMsg != null) {
                     isGetSellerTransactionsCall = true;
                     result = checkOrders(delegator, dispatcher, locale, context, getSellerTransactionSuccessMsg);
@@ -100,7 +104,9 @@ public class EbayOrderServices {
 
             StringBuffer getOrdersXml = new StringBuffer();
             if (!ServiceUtil.isFailure(buildGetOrdersRequest(context, getOrdersXml, eBayConfigResult.get("token").toString()))) {
-                result = EbayHelper.postItem(eBayConfigResult.get("xmlGatewayUri").toString(), getOrdersXml, eBayConfigResult.get("devID").toString(), eBayConfigResult.get("appID").toString(), eBayConfigResult.get("certID").toString(), "GetOrders", eBayConfigResult.get("compatibilityLevel").toString(), eBayConfigResult.get("siteID").toString());
+                result = EbayHelper.postItem(eBayConfigResult.get("xmlGatewayUri").toString(), getOrdersXml,
+                    eBayConfigResult.get("devID").toString(), eBayConfigResult.get("appID").toString(), eBayConfigResult.get("certID").toString(),
+                    "GetOrders", eBayConfigResult.get("compatibilityLevel").toString(), eBayConfigResult.get("siteID").toString());
                 String getOrdersSuccessMsg = (String) result.get(ModelService.SUCCESS_MESSAGE);
                 if (getOrdersSuccessMsg != null) {
                     isGetOrdersCall = true;
@@ -110,7 +116,9 @@ public class EbayOrderServices {
 
             StringBuffer getMyeBaySellingXml = new StringBuffer();
             if (!ServiceUtil.isFailure(buildGetMyeBaySellingRequest(context, getMyeBaySellingXml, eBayConfigResult.get("token").toString()))) {
-                result = EbayHelper.postItem(eBayConfigResult.get("xmlGatewayUri").toString(), getMyeBaySellingXml, eBayConfigResult.get("devID").toString(), eBayConfigResult.get("appID").toString(), eBayConfigResult.get("certID").toString(), "GetMyeBaySelling", eBayConfigResult.get("compatibilityLevel").toString(), eBayConfigResult.get("siteID").toString());
+                result = EbayHelper.postItem(eBayConfigResult.get("xmlGatewayUri").toString(), getMyeBaySellingXml,
+                    eBayConfigResult.get("devID").toString(), eBayConfigResult.get("appID").toString(), eBayConfigResult.get("certID").toString(),
+                    "GetMyeBaySelling", eBayConfigResult.get("compatibilityLevel").toString(), eBayConfigResult.get("siteID").toString());
                 String getMyeBaySellingSuccessMsg = (String) result.get(ModelService.SUCCESS_MESSAGE);
                 if (getMyeBaySellingSuccessMsg != null) {
                     isGetMyeBaySellingCall = true;
@@ -165,118 +173,129 @@ public class EbayOrderServices {
         String fromDate = (String) context.get("fromDate");
         String thruDate = (String) context.get("thruDate");
         try {
-             Document transDoc = UtilXml.makeEmptyXmlDocument("GetOrdersRequest");
-             Element transElem = transDoc.getDocumentElement();
-             transElem.setAttribute("xmlns", "urn:ebay:apis:eBLBaseComponents");
-             UtilXml.addChildElementValue(transElem, "DetailLevel", "ReturnAll", transDoc);
+            Document transDoc = UtilXml.makeEmptyXmlDocument("GetOrdersRequest");
+            Element transElem = transDoc.getDocumentElement();
+            transElem.setAttribute("xmlns", "urn:ebay:apis:eBLBaseComponents");
+            UtilXml.addChildElementValue(transElem, "DetailLevel", "ReturnAll", transDoc);
 
-             EbayHelper.appendRequesterCredentials(transElem, transDoc, token);
+            EbayHelper.appendRequesterCredentials(transElem, transDoc, token);
 
-             if (UtilValidate.isNotEmpty(getSellerTransactionsContainingOrderList)) {
-                 Element orderIdArrayElem = UtilXml.addChildElement(transElem, "OrderIDArray", transDoc);
-                 Iterator<String> orderIdListIter = getSellerTransactionsContainingOrderList.iterator();
-                 while (orderIdListIter.hasNext()) {
-                     String orderId = orderIdListIter.next();
-                     UtilXml.addChildElementValue(orderIdArrayElem, "OrderID", orderId, transDoc);
-                 }
-             } else {
-                 UtilXml.addChildElementValue(transElem, "OrderRole", "Seller", transDoc);
-                 UtilXml.addChildElementValue(transElem, "OrderStatus", "Completed", transDoc);
+            if (UtilValidate.isNotEmpty(getSellerTransactionsContainingOrderList)) {
+                Element orderIdArrayElem = UtilXml.addChildElement(transElem, "OrderIDArray", transDoc);
+                Iterator<String> orderIdListIter = getSellerTransactionsContainingOrderList.iterator();
+                while (orderIdListIter.hasNext()) {
+                    String orderId = orderIdListIter.next();
+                    UtilXml.addChildElementValue(orderIdArrayElem, "OrderID", orderId, transDoc);
+                }
+            } else {
+                UtilXml.addChildElementValue(transElem, "OrderRole", "Seller", transDoc);
+                UtilXml.addChildElementValue(transElem, "OrderStatus", "Completed", transDoc);
 
-                 String fromDateOut = EbayHelper.convertDate(fromDate, "yyyy-MM-dd HH:mm:ss.SSS", "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-                 if (fromDateOut != null) {
-                     UtilXml.addChildElementValue(transElem, "CreateTimeFrom", fromDateOut, transDoc);
-                 } else {
-                     Debug.logError("Cannot convert from date from yyyy-MM-dd HH:mm:ss.SSS date format to yyyy-MM-dd'T'HH:mm:ss.SSS'Z' date format", MODULE);
-                     return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.cannotConvertFromDate", locale));
-                 }
-                 fromDateOut = EbayHelper.convertDate(thruDate, "yyyy-MM-dd HH:mm:ss.SSS", "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-                 if (fromDateOut != null) {
-                     UtilXml.addChildElementValue(transElem, "CreateTimeTo", fromDateOut, transDoc);
-                 } else {
-                     Debug.logError("Cannot convert thru date from yyyy-MM-dd HH:mm:ss.SSS date format to yyyy-MM-dd'T'HH:mm:ss.SSS'Z' date format", MODULE);
-                     return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.cannotConvertThruDate", locale));
-                 }
-             }
-             //Debug.logInfo("The value of generated string is ======= " + UtilXml.writeXmlDocument(transDoc), MODULE);
-             dataItemsXml.append(UtilXml.writeXmlDocument(transDoc));
-         } catch (Exception e) {
-             Debug.logError("Exception during building get seller transactions request", MODULE);
-             return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.exceptionDuringBuildingGetSellerTransactionRequest", locale));
-         }
-         return ServiceUtil.returnSuccess();
+                String fromDateOut = EbayHelper.convertDate(fromDate, "yyyy-MM-dd HH:mm:ss.SSS", "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                if (fromDateOut != null) {
+                    UtilXml.addChildElementValue(transElem, "CreateTimeFrom", fromDateOut, transDoc);
+                } else {
+                    Debug.logError("Cannot convert from date from yyyy-MM-dd HH:mm:ss.SSS date format to yyyy-MM-dd'T'HH:mm:ss.SSS'Z' date format",
+                            MODULE);
+                    return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.cannotConvertFromDate", locale));
+                }
+                fromDateOut = EbayHelper.convertDate(thruDate, "yyyy-MM-dd HH:mm:ss.SSS", "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                if (fromDateOut != null) {
+                    UtilXml.addChildElementValue(transElem, "CreateTimeTo", fromDateOut, transDoc);
+                } else {
+                    Debug.logError("Cannot convert thru date from yyyy-MM-dd HH:mm:ss.SSS date format to yyyy-MM-dd'T'HH:mm:ss.SSS'Z' date format",
+                            MODULE);
+                    return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.cannotConvertThruDate", locale));
+                }
+            }
+            //Debug.logInfo("The value of generated string is ======= " + UtilXml.writeXmlDocument(transDoc), MODULE);
+            dataItemsXml.append(UtilXml.writeXmlDocument(transDoc));
+        } catch (Exception e) {
+            Debug.logError("Exception during building get seller transactions request", MODULE);
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay"
+                + ".exceptionDuringBuildingGetSellerTransactionRequest", locale));
+        }
+        return ServiceUtil.returnSuccess();
     }
 
-    private static Map<String, Object> buildGetSellerTransactionsRequest(Map<String, Object> context, StringBuffer sellerTransactionsItemsXml, String token) {
+    private static Map<String, Object> buildGetSellerTransactionsRequest(Map<String, Object> context, StringBuffer sellerTransactionsItemsXml,
+                                                                         String token) {
         Locale locale = (Locale) context.get("locale");
         String fromDate = (String) context.get("fromDate");
         String thruDate = (String) context.get("thruDate");
         try {
-             Document transDoc = UtilXml.makeEmptyXmlDocument("GetSellerTransactionsRequest");
-             Element transElem = transDoc.getDocumentElement();
-             transElem.setAttribute("xmlns", "urn:ebay:apis:eBLBaseComponents");
+            Document transDoc = UtilXml.makeEmptyXmlDocument("GetSellerTransactionsRequest");
+            Element transElem = transDoc.getDocumentElement();
+            transElem.setAttribute("xmlns", "urn:ebay:apis:eBLBaseComponents");
 
-             EbayHelper.appendRequesterCredentials(transElem, transDoc, token);
-             UtilXml.addChildElementValue(transElem, "DetailLevel", "ReturnAll", transDoc);
-             UtilXml.addChildElementValue(transElem, "IncludeContainingOrder", "true", transDoc);
+            EbayHelper.appendRequesterCredentials(transElem, transDoc, token);
+            UtilXml.addChildElementValue(transElem, "DetailLevel", "ReturnAll", transDoc);
+            UtilXml.addChildElementValue(transElem, "IncludeContainingOrder", "true", transDoc);
 
-             String fromDateOut = EbayHelper.convertDate(fromDate, "yyyy-MM-dd HH:mm:ss.SSS", "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-             if (fromDateOut != null) {
-                 UtilXml.addChildElementValue(transElem, "ModTimeFrom", fromDateOut, transDoc);
-             } else {
-                 Debug.logError("Cannot convert from date from yyyy-MM-dd HH:mm:ss.SSS date format to yyyy-MM-dd'T'HH:mm:ss.SSS'Z' date format", MODULE);
-                 return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.cannotConvertFromDate", locale));
-             }
+            String fromDateOut = EbayHelper.convertDate(fromDate, "yyyy-MM-dd HH:mm:ss.SSS", "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            if (fromDateOut != null) {
+                UtilXml.addChildElementValue(transElem, "ModTimeFrom", fromDateOut, transDoc);
+            } else {
+                Debug.logError("Cannot convert from date from yyyy-MM-dd HH:mm:ss.SSS date format to yyyy-MM-dd'T'HH:mm:ss.SSS'Z' date format",
+                        MODULE);
+                return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.cannotConvertFromDate", locale));
+            }
 
-             fromDateOut = EbayHelper.convertDate(thruDate, "yyyy-MM-dd HH:mm:ss.SSS", "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-             if (fromDateOut != null) {
-                 UtilXml.addChildElementValue(transElem, "ModTimeTo", fromDateOut, transDoc);
-             } else {
-                 Debug.logError("Cannot convert thru date from yyyy-MM-dd HH:mm:ss.SSS date format to yyyy-MM-dd'T'HH:mm:ss.SSS'Z' date format", MODULE);
-                 return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.cannotConvertThruDate", locale));
-             }
-             //Debug.logInfo("The value of generated string is ======= " + UtilXml.writeXmlDocument(transDoc), MODULE);
-             sellerTransactionsItemsXml.append(UtilXml.writeXmlDocument(transDoc));
-         } catch (Exception e) {
-             Debug.logError("Exception during building get seller transactions request", MODULE);
-             return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.exceptionDuringBuildingGetSellerTransactionRequest", locale));
-         }
-         return ServiceUtil.returnSuccess();
+            fromDateOut = EbayHelper.convertDate(thruDate, "yyyy-MM-dd HH:mm:ss.SSS", "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            if (fromDateOut != null) {
+                UtilXml.addChildElementValue(transElem, "ModTimeTo", fromDateOut, transDoc);
+            } else {
+                Debug.logError("Cannot convert thru date from yyyy-MM-dd HH:mm:ss.SSS date format to yyyy-MM-dd'T'HH:mm:ss.SSS'Z' date format",
+                        MODULE);
+                return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.cannotConvertThruDate", locale));
+            }
+            //Debug.logInfo("The value of generated string is ======= " + UtilXml.writeXmlDocument(transDoc), MODULE);
+            sellerTransactionsItemsXml.append(UtilXml.writeXmlDocument(transDoc));
+        } catch (Exception e) {
+            Debug.logError("Exception during building get seller transactions request", MODULE);
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay"
+                + ".exceptionDuringBuildingGetSellerTransactionRequest", locale));
+        }
+        return ServiceUtil.returnSuccess();
     }
 
     private static Map<String, Object> buildGetMyeBaySellingRequest(Map<String, Object> context, StringBuffer getMyeBaySellingXml, String token) {
         Locale locale = (Locale) context.get("locale");
         try {
-             Document transDoc = UtilXml.makeEmptyXmlDocument("GetMyeBaySellingRequest");
-             Element transElem = transDoc.getDocumentElement();
-             transElem.setAttribute("xmlns", "urn:ebay:apis:eBLBaseComponents");
+            Document transDoc = UtilXml.makeEmptyXmlDocument("GetMyeBaySellingRequest");
+            Element transElem = transDoc.getDocumentElement();
+            transElem.setAttribute("xmlns", "urn:ebay:apis:eBLBaseComponents");
 
-             EbayHelper.appendRequesterCredentials(transElem, transDoc, token);
+            EbayHelper.appendRequesterCredentials(transElem, transDoc, token);
 
-             Element deletedFromSoldListElem = UtilXml.addChildElement(transElem, "DeletedFromSoldList", transDoc);
-             UtilXml.addChildElementValue(deletedFromSoldListElem, "Sort", "ItemID", transDoc);
-             //Debug.logInfo("The value of generated string is ======= " + UtilXml.writeXmlDocument(transDoc), MODULE);
-             getMyeBaySellingXml.append(UtilXml.writeXmlDocument(transDoc));
-         } catch (Exception e) {
-             Debug.logError("Exception during building MyeBaySelling request", MODULE);
-             return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.exceptionDuringBuildingMyeBaySellingRequest", locale));
-         }
-         return ServiceUtil.returnSuccess();
+            Element deletedFromSoldListElem = UtilXml.addChildElement(transElem, "DeletedFromSoldList", transDoc);
+            UtilXml.addChildElementValue(deletedFromSoldListElem, "Sort", "ItemID", transDoc);
+            //Debug.logInfo("The value of generated string is ======= " + UtilXml.writeXmlDocument(transDoc), MODULE);
+            getMyeBaySellingXml.append(UtilXml.writeXmlDocument(transDoc));
+        } catch (Exception e) {
+            Debug.logError("Exception during building MyeBaySelling request", MODULE);
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.exceptionDuringBuildingMyeBaySellingRequest",
+                    locale));
+        }
+        return ServiceUtil.returnSuccess();
     }
 
-    private static Map<String, Object> checkOrders(Delegator delegator, LocalDispatcher dispatcher, Locale locale, Map<String, Object> context, String responseMsg) {
+    private static Map<String, Object> checkOrders(Delegator delegator, LocalDispatcher dispatcher, Locale locale, Map<String, Object> context,
+                                                   String responseMsg) {
         StringBuffer errorMessage = new StringBuffer();
         Map<String, Object> result = new HashMap<>();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         if (isGetSellerTransactionsCall) {
-            List<Map<String, Object>> getSellerTransactionList = readGetSellerTransactionResponse(responseMsg, locale, (String) context.get("productStoreId"), delegator, dispatcher, errorMessage, userLogin);
+            List<Map<String, Object>> getSellerTransactionList = readGetSellerTransactionResponse(responseMsg, locale, (String) context.get(
+                "productStoreId"), delegator, dispatcher, errorMessage, userLogin);
             if (UtilValidate.isNotEmpty(getSellerTransactionList)) {
                 orderList.addAll(getSellerTransactionList);
             }
             isGetSellerTransactionsCall = false;
             return ServiceUtil.returnSuccess();
         } else if (isGetOrdersCall) {
-            List<Map<String, Object>> getOrdersList = readGetOrdersResponse(responseMsg, locale, (String) context.get("productStoreId"), delegator, dispatcher, errorMessage, userLogin);
+            List<Map<String, Object>> getOrdersList = readGetOrdersResponse(responseMsg, locale, (String) context.get("productStoreId"), delegator,
+                dispatcher, errorMessage, userLogin);
             if (UtilValidate.isNotEmpty(getOrdersList)) {
                 orderList.addAll(getOrdersList);
             }
@@ -284,14 +303,15 @@ public class EbayOrderServices {
             return ServiceUtil.returnSuccess();
         } else if (isGetMyeBaySellingCall) {
             // for now fetching only deleted transaction & orders value from the sold list.
-            List<String> eBayDeletedOrdersAndTransactionList = readGetMyeBaySellingResponse(responseMsg, locale, (String) context.get("productStoreId"), delegator, dispatcher, errorMessage, userLogin);
+            List<String> eBayDeletedOrdersAndTransactionList = readGetMyeBaySellingResponse(responseMsg, locale, (String) context.get(
+                "productStoreId"), delegator, dispatcher, errorMessage, userLogin);
             if (UtilValidate.isNotEmpty(eBayDeletedOrdersAndTransactionList)) {
                 Debug.logInfo("The value of getMyeBaySellingList" + eBayDeletedOrdersAndTransactionList, MODULE);
                 Iterator<Map<String, Object>> orderListIter = orderList.iterator();
                 while (orderListIter.hasNext()) {
                     Map<String, Object> orderCtx = orderListIter.next();
                     if (eBayDeletedOrdersAndTransactionList.contains(orderCtx.get("externalId"))) {
-                         // Now finally exclude orders & transaction that has been deleted from sold list.
+                        // Now finally exclude orders & transaction that has been deleted from sold list.
                         orderList.remove(orderCtx);
                     }
                 }
@@ -427,7 +447,8 @@ public class EbayOrderServices {
 //</GetOrdersResponse>
 
 
-    private static List<Map<String, Object>> readGetOrdersResponse(String responseMsg, Locale locale, String productStoreId, Delegator delegator, LocalDispatcher dispatcher, StringBuffer errorMessage, GenericValue userLogin) {
+    private static List<Map<String, Object>> readGetOrdersResponse(String responseMsg, Locale locale, String productStoreId, Delegator delegator,
+                                                                   LocalDispatcher dispatcher, StringBuffer errorMessage, GenericValue userLogin) {
         List<Map<String, Object>> fetchedOrders = new LinkedList<>();
         try {
             Document docResponse = UtilXml.readXmlDocument(responseMsg, true);
@@ -485,9 +506,11 @@ public class EbayOrderServices {
                                 shippingAddressCtx.put("shippingAddressStreet1", UtilXml.childElementValue(shippingAddressElement, "Street1"));
                                 shippingAddressCtx.put("shippingAddressStreet2", UtilXml.childElementValue(shippingAddressElement, "Street2"));
                                 shippingAddressCtx.put("shippingAddressCityName", UtilXml.childElementValue(shippingAddressElement, "CityName"));
-                                shippingAddressCtx.put("shippingAddressStateOrProvince", UtilXml.childElementValue(shippingAddressElement, "StateOrProvince"));
+                                shippingAddressCtx.put("shippingAddressStateOrProvince", UtilXml.childElementValue(shippingAddressElement,
+                                    "StateOrProvince"));
                                 shippingAddressCtx.put("shippingAddressCountry", UtilXml.childElementValue(shippingAddressElement, "Country"));
-                                shippingAddressCtx.put("shippingAddressCountryName", UtilXml.childElementValue(shippingAddressElement, "CountryName"));
+                                shippingAddressCtx.put("shippingAddressCountryName", UtilXml.childElementValue(shippingAddressElement,
+                                        "CountryName"));
                                 shippingAddressCtx.put("shippingAddressPhone", UtilXml.childElementValue(shippingAddressElement, "Phone"));
                                 shippingAddressCtx.put("shippingAddressPostalCode", UtilXml.childElementValue(shippingAddressElement, "PostalCode"));
                             }
@@ -504,8 +527,10 @@ public class EbayOrderServices {
                             Iterator<? extends Element> shippingServiceSelectedElemIter = shippingServiceSelectedList.iterator();
                             while (shippingServiceSelectedElemIter.hasNext()) {
                                 Element shippingServiceSelectedElement = shippingServiceSelectedElemIter.next();
-                                shippingServiceSelectedCtx.put("shippingService", UtilXml.childElementValue(shippingServiceSelectedElement, "ShippingService"));
-                                shippingServiceSelectedCtx.put("shippingServiceCost", UtilXml.childElementValue(shippingServiceSelectedElement, "ShippingServiceCost", "0"));
+                                shippingServiceSelectedCtx.put("shippingService", UtilXml.childElementValue(shippingServiceSelectedElement,
+                                    "ShippingService"));
+                                shippingServiceSelectedCtx.put("shippingServiceCost", UtilXml.childElementValue(shippingServiceSelectedElement,
+                                    "ShippingServiceCost", "0"));
                                 String insuranceCost = UtilXml.childElementValue(shippingServiceSelectedElement, "ShippingInsuranceCost", "0");
                                 if (UtilValidate.isNotEmpty(insuranceCost)) {
                                     shippingServiceSelectedCtx.put("shippingTotalAdditionalCost", insuranceCost);
@@ -526,7 +551,8 @@ public class EbayOrderServices {
                                 Element shippingDetailsElement = shippingDetailsElemIter.next();
                                 shippingDetailsCtx.put("insuranceFee", UtilXml.childElementValue(shippingDetailsElement, "InsuranceFee", "0"));
                                 shippingDetailsCtx.put("insuranceOption", UtilXml.childElementValue(shippingDetailsElement, "InsuranceOption"));
-                                shippingDetailsCtx.put("insuranceWanted", UtilXml.childElementValue(shippingDetailsElement, "InsuranceWanted", "false"));
+                                shippingDetailsCtx.put("insuranceWanted", UtilXml.childElementValue(shippingDetailsElement, "InsuranceWanted",
+                                        "false"));
 
                                 // Retrieve sales Tax
                                 List<? extends Element> salesTaxList = UtilXml.childElementList(shippingDetailsElement, "SalesTax");
@@ -536,9 +562,10 @@ public class EbayOrderServices {
                                     shippingDetailsCtx.put("salesTaxAmount", UtilXml.childElementValue(salesTaxElement, "SalesTaxAmount", "0"));
                                     shippingDetailsCtx.put("salesTaxPercent", UtilXml.childElementValue(salesTaxElement, "SalesTaxPercent", "0"));
                                     shippingDetailsCtx.put("salesTaxState", UtilXml.childElementValue(salesTaxElement, "SalesTaxState", "0"));
-                                    shippingDetailsCtx.put("shippingIncludedInTax", UtilXml.childElementValue(salesTaxElement, "ShippingIncludedInTax", "false"));
-                                    }
+                                    shippingDetailsCtx.put("shippingIncludedInTax", UtilXml.childElementValue(salesTaxElement,
+                                            "ShippingIncludedInTax", "false"));
                                 }
+                            }
                             orderCtx.put("shippingDetailsCtx", shippingDetailsCtx);
 
                             // Retrieve checkout status
@@ -559,10 +586,14 @@ public class EbayOrderServices {
                             Iterator<? extends Element> externalTransactionElemIter = externalTransactionList.iterator();
                             while (externalTransactionElemIter.hasNext()) {
                                 Element externalTransactionElement = externalTransactionElemIter.next();
-                                externalTransactionCtx.put("externalTransactionID", UtilXml.childElementValue(externalTransactionElement, "ExternalTransactionID"));
-                                externalTransactionCtx.put("externalTransactionTime", UtilXml.childElementValue(externalTransactionElement, "ExternalTransactionTime"));
-                                externalTransactionCtx.put("feeOrCreditAmount", UtilXml.childElementValue(externalTransactionElement, "FeeOrCreditAmount", "0"));
-                                externalTransactionCtx.put("paymentOrRefundAmount", UtilXml.childElementValue(externalTransactionElement, "PaymentOrRefundAmount", "0"));
+                                externalTransactionCtx.put("externalTransactionID", UtilXml.childElementValue(externalTransactionElement,
+                                        "ExternalTransactionID"));
+                                externalTransactionCtx.put("externalTransactionTime", UtilXml.childElementValue(externalTransactionElement,
+                                        "ExternalTransactionTime"));
+                                externalTransactionCtx.put("feeOrCreditAmount", UtilXml.childElementValue(externalTransactionElement,
+                                        "FeeOrCreditAmount", "0"));
+                                externalTransactionCtx.put("paymentOrRefundAmount", UtilXml.childElementValue(externalTransactionElement,
+                                        "PaymentOrRefundAmount", "0"));
                             }
                             orderCtx.put("externalTransactionCtx", externalTransactionCtx);
 
@@ -621,7 +652,7 @@ public class EbayOrderServices {
                         }
                     }
                 }
-               //Debug.logInfo("The generated string is ======= " + fetchedOrders.toString(), MODULE);
+                //Debug.logInfo("The generated string is ======= " + fetchedOrders.toString(), MODULE);
             } else {
                 List<? extends Element> errorList = UtilXml.childElementList(elemResponse, "Errors");
                 Iterator<? extends Element> errorElemIter = errorList.iterator();
@@ -636,7 +667,9 @@ public class EbayOrderServices {
         return fetchedOrders;
     }
 
-    private static List<Map<String, Object>> readGetSellerTransactionResponse(String responseMsg, Locale locale, String productStoreId, Delegator delegator, LocalDispatcher dispatcher, StringBuffer errorMessage, GenericValue userLogin) {
+    private static List<Map<String, Object>> readGetSellerTransactionResponse(String responseMsg, Locale locale, String productStoreId,
+                                                                              Delegator delegator, LocalDispatcher dispatcher,
+                                                                              StringBuffer errorMessage, GenericValue userLogin) {
         List<Map<String, Object>> fetchedOrders = new LinkedList<>();
         try {
             Document docResponse = UtilXml.readXmlDocument(responseMsg, true);
@@ -715,15 +748,24 @@ public class EbayOrderServices {
                                     while (shippingAddressElemIter.hasNext()) {
                                         Element shippingAddressElement = shippingAddressElemIter.next();
                                         shippingAddressCtx.put("buyerName", UtilXml.childElementValue(shippingAddressElement, "Name", ""));
-                                        shippingAddressCtx.put("shippingAddressStreet", UtilXml.childElementValue(shippingAddressElement, "Street", ""));
-                                        shippingAddressCtx.put("shippingAddressStreet1", UtilXml.childElementValue(shippingAddressElement, "Street1", ""));
-                                        shippingAddressCtx.put("shippingAddressStreet2", UtilXml.childElementValue(shippingAddressElement, "Street2", ""));
-                                        shippingAddressCtx.put("shippingAddressCityName", UtilXml.childElementValue(shippingAddressElement, "CityName", ""));
-                                        shippingAddressCtx.put("shippingAddressStateOrProvince", UtilXml.childElementValue(shippingAddressElement, "StateOrProvince", ""));
-                                        shippingAddressCtx.put("shippingAddressCountry", UtilXml.childElementValue(shippingAddressElement, "Country", ""));
-                                        shippingAddressCtx.put("shippingAddressCountryName", UtilXml.childElementValue(shippingAddressElement, "CountryName", ""));
-                                        shippingAddressCtx.put("shippingAddressPhone", UtilXml.childElementValue(shippingAddressElement, "Phone", ""));
-                                        shippingAddressCtx.put("shippingAddressPostalCode", UtilXml.childElementValue(shippingAddressElement, "PostalCode", ""));
+                                        shippingAddressCtx.put("shippingAddressStreet", UtilXml.childElementValue(shippingAddressElement, "Street",
+                                                ""));
+                                        shippingAddressCtx.put("shippingAddressStreet1", UtilXml.childElementValue(shippingAddressElement,
+                                                "Street1", ""));
+                                        shippingAddressCtx.put("shippingAddressStreet2", UtilXml.childElementValue(shippingAddressElement,
+                                                "Street2", ""));
+                                        shippingAddressCtx.put("shippingAddressCityName", UtilXml.childElementValue(shippingAddressElement,
+                                                "CityName", ""));
+                                        shippingAddressCtx.put("shippingAddressStateOrProvince", UtilXml.childElementValue(shippingAddressElement,
+                                                "StateOrProvince", ""));
+                                        shippingAddressCtx.put("shippingAddressCountry", UtilXml.childElementValue(shippingAddressElement,
+                                                "Country", ""));
+                                        shippingAddressCtx.put("shippingAddressCountryName", UtilXml.childElementValue(shippingAddressElement,
+                                                "CountryName", ""));
+                                        shippingAddressCtx.put("shippingAddressPhone", UtilXml.childElementValue(shippingAddressElement, "Phone",
+                                                ""));
+                                        shippingAddressCtx.put("shippingAddressPostalCode", UtilXml.childElementValue(shippingAddressElement,
+                                                "PostalCode", ""));
                                     }
                                 }
                             }
@@ -736,11 +778,14 @@ public class EbayOrderServices {
                             Iterator<? extends Element> shippingServiceSelectedElemIter = shippingServiceSelected.iterator();
                             while (shippingServiceSelectedElemIter.hasNext()) {
                                 Element shippingServiceSelectedElement = shippingServiceSelectedElemIter.next();
-                                shippingServiceSelectedCtx.put("shippingService", UtilXml.childElementValue(shippingServiceSelectedElement, "ShippingService", ""));
-                                shippingServiceSelectedCtx.put("shippingServiceCost", UtilXml.childElementValue(shippingServiceSelectedElement, "ShippingServiceCost", "0"));
+                                shippingServiceSelectedCtx.put("shippingService", UtilXml.childElementValue(shippingServiceSelectedElement,
+                                    "ShippingService", ""));
+                                shippingServiceSelectedCtx.put("shippingServiceCost", UtilXml.childElementValue(shippingServiceSelectedElement,
+                                    "ShippingServiceCost", "0"));
 
                                 String incuranceCost = UtilXml.childElementValue(shippingServiceSelectedElement, "ShippingInsuranceCost", "0");
-                                String additionalCost = UtilXml.childElementValue(shippingServiceSelectedElement, "ShippingServiceAdditionalCost", "0");
+                                String additionalCost = UtilXml.childElementValue(shippingServiceSelectedElement, "ShippingServiceAdditionalCost",
+                                        "0");
                                 String surchargeCost = UtilXml.childElementValue(shippingServiceSelectedElement, "ShippingSurcharge", "0");
 
                                 double shippingInsuranceCost = 0;
@@ -770,7 +815,8 @@ public class EbayOrderServices {
                                 Element shippingDetailsElement = shippingDetailsElemIter.next();
                                 shippingDetailsCtx.put("insuranceFee", UtilXml.childElementValue(shippingDetailsElement, "InsuranceFee", "0"));
                                 shippingDetailsCtx.put("insuranceOption", UtilXml.childElementValue(shippingDetailsElement, "InsuranceOption", ""));
-                                shippingDetailsCtx.put("insuranceWanted", UtilXml.childElementValue(shippingDetailsElement, "InsuranceWanted", "false"));
+                                shippingDetailsCtx.put("insuranceWanted", UtilXml.childElementValue(shippingDetailsElement, "InsuranceWanted",
+                                        "false"));
 
                                 // retrieve sales Tax
                                 List<? extends Element> salesTax = UtilXml.childElementList(shippingDetailsElement, "SalesTax");
@@ -780,7 +826,8 @@ public class EbayOrderServices {
                                     shippingDetailsCtx.put("salesTaxAmount", UtilXml.childElementValue(salesTaxElement, "SalesTaxAmount", "0"));
                                     shippingDetailsCtx.put("salesTaxPercent", UtilXml.childElementValue(salesTaxElement, "SalesTaxPercent", "0"));
                                     shippingDetailsCtx.put("salesTaxState", UtilXml.childElementValue(salesTaxElement, "SalesTaxState", "0"));
-                                    shippingDetailsCtx.put("shippingIncludedInTax", UtilXml.childElementValue(salesTaxElement, "ShippingIncludedInTax", "false"));
+                                    shippingDetailsCtx.put("shippingIncludedInTax", UtilXml.childElementValue(salesTaxElement,
+                                            "ShippingIncludedInTax", "false"));
                                 }
 
                                 // retrieve tax table
@@ -794,9 +841,12 @@ public class EbayOrderServices {
                                     while (taxJurisdictionElemIter.hasNext()) {
                                         Element taxJurisdictionElement = taxJurisdictionElemIter.next();
 
-                                        shippingDetailsCtx.put("jurisdictionID", UtilXml.childElementValue(taxJurisdictionElement, "JurisdictionID", ""));
-                                        shippingDetailsCtx.put("jurisdictionSalesTaxPercent", UtilXml.childElementValue(taxJurisdictionElement, "SalesTaxPercent", "0"));
-                                        shippingDetailsCtx.put("jurisdictionShippingIncludedInTax", UtilXml.childElementValue(taxJurisdictionElement, "ShippingIncludedInTax", "0"));
+                                        shippingDetailsCtx.put("jurisdictionID", UtilXml.childElementValue(taxJurisdictionElement,
+                                                "JurisdictionID", ""));
+                                        shippingDetailsCtx.put("jurisdictionSalesTaxPercent", UtilXml.childElementValue(taxJurisdictionElement,
+                                            "SalesTaxPercent", "0"));
+                                        shippingDetailsCtx.put("jurisdictionShippingIncludedInTax",
+                                                UtilXml.childElementValue(taxJurisdictionElement, "ShippingIncludedInTax", "0"));
                                     }
                                 }
                             }
@@ -822,10 +872,14 @@ public class EbayOrderServices {
                             Iterator<? extends Element> externalTransactionElemIter = externalTransaction.iterator();
                             while (externalTransactionElemIter.hasNext()) {
                                 Element externalTransactionElement = externalTransactionElemIter.next();
-                                externalTransactionCtx.put("externalTransactionID", UtilXml.childElementValue(externalTransactionElement, "ExternalTransactionID", ""));
-                                externalTransactionCtx.put("externalTransactionTime", UtilXml.childElementValue(externalTransactionElement, "ExternalTransactionTime", ""));
-                                externalTransactionCtx.put("feeOrCreditAmount", UtilXml.childElementValue(externalTransactionElement, "FeeOrCreditAmount", "0"));
-                                externalTransactionCtx.put("paymentOrRefundAmount", UtilXml.childElementValue(externalTransactionElement, "PaymentOrRefundAmount", "0"));
+                                externalTransactionCtx.put("externalTransactionID", UtilXml.childElementValue(externalTransactionElement,
+                                        "ExternalTransactionID", ""));
+                                externalTransactionCtx.put("externalTransactionTime", UtilXml.childElementValue(externalTransactionElement,
+                                        "ExternalTransactionTime", ""));
+                                externalTransactionCtx.put("feeOrCreditAmount", UtilXml.childElementValue(externalTransactionElement,
+                                        "FeeOrCreditAmount", "0"));
+                                externalTransactionCtx.put("paymentOrRefundAmount", UtilXml.childElementValue(externalTransactionElement,
+                                        "PaymentOrRefundAmount", "0"));
                             }
                             orderCtx.put("externalTransactionCtx", externalTransactionCtx);
 
@@ -848,7 +902,7 @@ public class EbayOrderServices {
                                 if (UtilValidate.isEmpty(productId)) {
                                     productId = UtilXml.childElementValue(itemElement, "ApplicationData", "");
                                     if (UtilValidate.isEmpty(productId)) {
-                                         productId = EbayHelper.retrieveProductIdFromTitle(delegator, (String) orderItemCtx.get("title"));
+                                        productId = EbayHelper.retrieveProductIdFromTitle(delegator, (String) orderItemCtx.get("title"));
                                     }
                                 }
                                 orderItemCtx.put("productId", productId);
@@ -888,7 +942,8 @@ public class EbayOrderServices {
                             orderCtx.put("transactionPrice", UtilXml.childElementValue(transactionElement, "TransactionPrice", "0"));
 
                             if (UtilValidate.isEmpty(shippingServiceSelectedCtx.get("shippingService").toString())) {
-                                String shippingServiceMissingMsg = "Shipping Method is missing for eBay Order ID (" + orderCtx.get("externalId").toString() + ")";
+                                String shippingServiceMissingMsg =
+                                        "Shipping Method is missing for eBay Order ID (" + orderCtx.get("externalId").toString() + ")";
                                 orderImportFailureMessageList.add(shippingServiceMissingMsg);
                             }
 
@@ -919,7 +974,8 @@ public class EbayOrderServices {
         return fetchedOrders;
     }
 
-    private static List<String> readGetMyeBaySellingResponse(String responseMsg, Locale locale, String productStoreId, Delegator delegator, LocalDispatcher dispatcher, StringBuffer errorMessage, GenericValue userLogin) {
+    private static List<String> readGetMyeBaySellingResponse(String responseMsg, Locale locale, String productStoreId, Delegator delegator,
+                                                             LocalDispatcher dispatcher, StringBuffer errorMessage, GenericValue userLogin) {
         List<String> fetchDeletedOrdersAndTransactions = new LinkedList<>();
         try {
             Document docResponse = UtilXml.readXmlDocument(responseMsg, true);
@@ -984,7 +1040,8 @@ public class EbayOrderServices {
         return fetchDeletedOrdersAndTransactions;
     }
 
-    private static Map<String, Object> createShoppingCart(Delegator delegator, LocalDispatcher dispatcher, Locale locale, Map<String, Object> context, boolean create) {
+    private static Map<String, Object> createShoppingCart(Delegator delegator, LocalDispatcher dispatcher, Locale locale,
+                                                          Map<String, Object> context, boolean create) {
         try {
             String productStoreId = (String) context.get("productStoreId");
             GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -1070,7 +1127,8 @@ public class EbayOrderServices {
             if (UtilValidate.isNotEmpty(shippingCost)) {
                 double shippingAmount = Double.parseDouble(shippingCost);
                 if (shippingAmount > 0) {
-                    GenericValue shippingAdjustment = EbayHelper.makeOrderAdjustment(delegator, "SHIPPING_CHARGES", cart.getOrderId(), null, null, shippingAmount, 0.0);
+                    GenericValue shippingAdjustment = EbayHelper.makeOrderAdjustment(delegator, "SHIPPING_CHARGES", cart.getOrderId(), null, null,
+                            shippingAmount, 0.0);
                     if (shippingAdjustment != null) {
                         cart.addAdjustment(shippingAdjustment);
                     }
@@ -1081,7 +1139,8 @@ public class EbayOrderServices {
             if (UtilValidate.isNotEmpty(shippingTotalAdditionalCost)) {
                 double shippingAdditionalCost = Double.parseDouble(shippingTotalAdditionalCost);
                 if (shippingAdditionalCost > 0) {
-                    GenericValue shippingAdjustment = EbayHelper.makeOrderAdjustment(delegator, "MISCELLANEOUS_CHARGE", cart.getOrderId(), null, null, shippingAdditionalCost, 0.0);
+                    GenericValue shippingAdjustment = EbayHelper.makeOrderAdjustment(delegator, "MISCELLANEOUS_CHARGE", cart.getOrderId(), null,
+                            null, shippingAdditionalCost, 0.0);
                     if (shippingAdjustment != null) {
                         cart.addAdjustment(shippingAdjustment);
                     }
@@ -1098,7 +1157,8 @@ public class EbayOrderServices {
                     if (UtilValidate.isNotEmpty(salesTaxPercent)) {
                         salesPercent = Double.parseDouble(salesTaxPercent);
                     }
-                    GenericValue salesTaxAdjustment = EbayHelper.makeOrderAdjustment(delegator, "SALES_TAX", cart.getOrderId(), null, null, salesTaxAmountTotal, salesPercent);
+                    GenericValue salesTaxAdjustment = EbayHelper.makeOrderAdjustment(delegator, "SALES_TAX", cart.getOrderId(), null, null,
+                        salesTaxAmountTotal, salesPercent);
                     if (salesTaxAdjustment != null) {
                         cart.addAdjustment(salesTaxAdjustment);
                     }
@@ -1123,14 +1183,15 @@ public class EbayOrderServices {
                     EbayHelper.correctCityStateCountry(dispatcher, shippingAddressCtx, city, state, country);
 
                     List<GenericValue> shipInfo =
-                        PartyWorker.findMatchingPersonPostalAddresses
-                            (delegator,
-                             shippingAddressCtx.get("shippingAddressStreet1").toString(),
-                            (UtilValidate.isEmpty(shippingAddressCtx.get("shippingAddressStreet2")) ? null : shippingAddressCtx.get("shippingAddressStreet2").toString()),
-                             shippingAddressCtx.get("city").toString(),
-                            (UtilValidate.isEmpty(shippingAddressCtx.get("stateProvinceGeoId")) ? null : shippingAddressCtx.get("stateProvinceGeoId").toString()),
-                             shippingAddressCtx.get("shippingAddressPostalCode").toString(),
-                             null, shippingAddressCtx.get("countryGeoId").toString(), firstName, null, lastName);
+                        PartyWorker.findMatchingPersonPostalAddresses(delegator,
+                                shippingAddressCtx.get("shippingAddressStreet1").toString(),(
+                                UtilValidate.isEmpty(shippingAddressCtx.get("shippingAddressStreet2")) ? null : shippingAddressCtx.get(
+                                        "shippingAddressStreet2").toString()),
+                                shippingAddressCtx.get("city").toString(),(
+                                UtilValidate.isEmpty(shippingAddressCtx.get("stateProvinceGeoId")) ? null : shippingAddressCtx.get(
+                                        "stateProvinceGeoId").toString()),
+                                shippingAddressCtx.get("shippingAddressPostalCode").toString(),
+                                null, shippingAddressCtx.get("countryGeoId").toString(), firstName, null, lastName);
                     if (UtilValidate.isNotEmpty(shipInfo)) {
                         GenericValue first = EntityUtil.getFirst(shipInfo);
                         partyId = first.getString("partyId");
@@ -1222,7 +1283,8 @@ public class EbayOrderServices {
                 Debug.logInfo("Created order with id: " + orderId, MODULE);
 
                 if (UtilValidate.isNotEmpty(orderId)) {
-                    String orderCreatedMsg = "Order created successfully with ID (" + orderId + ") & eBay Order ID associated with this order is (" + externalId + ").";
+                    String orderCreatedMsg =
+                        "Order created successfully with ID (" + orderId + ") & eBay Order ID associated with this order is (" + externalId + ").";
                     orderImportSuccessMessageList.add(orderCreatedMsg);
                 }
 
@@ -1235,14 +1297,16 @@ public class EbayOrderServices {
                     // create the payment from the preference
                     if (approved) {
                         Debug.logInfo("Creating payment for approved order.", MODULE);
-                        EbayHelper.createPaymentFromPaymentPreferences(delegator, dispatcher, userLogin, orderId, externalId, cart.getOrderDate(), amountPaid, partyId);
+                        EbayHelper.createPaymentFromPaymentPreferences(delegator, dispatcher, userLogin, orderId, externalId, cart.getOrderDate(),
+                                amountPaid, partyId);
                         Debug.logInfo("Payment created.", MODULE);
                     }
                 }
             }
         } catch (Exception e) {
             Debug.logError("Exception in createShoppingCart: " + e.getMessage(), MODULE);
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.exceptionInCreateShoppingCart", locale) + ": " + e.getMessage());
+            return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.exceptionInCreateShoppingCart", locale) + ":"
+                    + " " + e.getMessage());
         }
         return ServiceUtil.returnSuccess();
     }
@@ -1250,10 +1314,10 @@ public class EbayOrderServices {
     // Made some changes transactionId removed.
     private static GenericValue externalOrderExists(Delegator delegator, String externalId) throws GenericEntityException {
         Debug.logInfo("Checking for existing externalId: " + externalId, MODULE);
-        EntityCondition condition = EntityCondition.makeCondition(UtilMisc.toList(EntityCondition.makeCondition("externalId", EntityComparisonOperator.EQUALS, externalId), EntityCondition.makeCondition("statusId", EntityComparisonOperator.NOT_EQUAL, "ORDER_CANCELLED")), EntityComparisonOperator.AND);
-        GenericValue orderHeader = EntityQuery.use(delegator).from("OrderHeader")
-                .where(condition)
-                .cache(true).queryFirst();
+        EntityCondition condition = EntityCondition.makeCondition(UtilMisc.toList(EntityCondition.makeCondition("externalId",
+                EntityComparisonOperator.EQUALS, externalId), EntityCondition.makeCondition("statusId", EntityComparisonOperator.NOT_EQUAL,
+                "ORDER_CANCELLED")), EntityComparisonOperator.AND);
+        GenericValue orderHeader = EntityQuery.use(delegator).from("OrderHeader").where(condition).cache(true).queryFirst();
         return orderHeader;
     }
 
@@ -1290,7 +1354,8 @@ public class EbayOrderServices {
             BigDecimal newQuantity = previouslyAddedItemInCart.getQuantity().add(qty);
             previouslyAddedItemInCart.setQuantity(newQuantity, dispatcher, cart);
         } else {
-            int idx = cart.addItemToEnd(productId, null, qty, null, null, attrs, null, null, dispatcher, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE);
+            int idx = cart.addItemToEnd(productId, null, qty, null, null, attrs, null, null, dispatcher, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE,
+                    Boolean.TRUE);
             ShoppingCartItem cartItem = cart.findCartItem(idx);
             cartItem.setQuantity(qty, dispatcher, cart, true, false);
             // locate the price verify it matches the expected price
@@ -1306,5 +1371,5 @@ public class EbayOrderServices {
             // assign the item to its ship group
             cart.setItemShipGroupQty(cartItem, qty, groupIdx);
         }
-    } 
+    }
 }

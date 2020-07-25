@@ -714,7 +714,7 @@ public class EbayEvents {
                             for (int i = 0; i < itemSpecificsSize; i++) {
                                 String name = nameSpecificList.get(i);
                                 String value = valueSpecificList.get(i);
-                                String[] valueArray = new String[] { value };
+                                String[] valueArray = new String[] {value };
                                 // set Name value list type.
                                 NameValueListType listType = new NameValueListType();
                                 listType.setName(name);
@@ -796,7 +796,7 @@ public class EbayEvents {
                         shippingDetail.setShippingServiceOptions(shippingOptions);
                         item.setShippingDetails(shippingDetail);
                         attributeMapList.put("ShippingService", shippingService);
-                        attributeMapList.put("ShippingServiceCost", ""+5.0);
+                        attributeMapList.put("ShippingServiceCost", ""+ 5.0);
                         attributeMapList.put("ShippingServiceCostCurrency", "USD");
                         attributeMapList.put("ShippingServicePriority", "1");
                         attributeMapList.put("ShippingType", "Flat");

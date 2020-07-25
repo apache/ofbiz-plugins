@@ -524,31 +524,31 @@ public final class ReportEncoder {
         for (int i = 0; i < source.length(); ++i) {
             char ch = source.charAt(i);
             switch (ch) {
-                case '<':
-                    result.append("&lt;");
-                    break;
-                case '>':
-                    result.append("&gt;");
-                    break;
-                case '&':
-                    // don't escape already escaped international and special characters
-                    if (!doubleEscape) {
-                        int terminatorIndex = source.indexOf(";", i);
-                        if (terminatorIndex > 0) {
-                            if (source.substring(i + 1, terminatorIndex).matches("#[0-9]+")) {
-                                result.append(ch);
-                                break;
-                            }
+            case '<':
+                result.append("&lt;");
+                break;
+            case '>':
+                result.append("&gt;");
+                break;
+            case '&':
+                // don't escape already escaped international and special characters
+                if (!doubleEscape) {
+                    int terminatorIndex = source.indexOf(";", i);
+                    if (terminatorIndex > 0) {
+                        if (source.substring(i + 1, terminatorIndex).matches("#[0-9]+")) {
+                            result.append(ch);
+                            break;
                         }
                     }
-                    // note that to other "break" in the above "if" block
-                    result.append("&amp;");
-                    break;
-                case '"':
-                    result.append("&quot;");
-                    break;
-                default:
-                    result.append(ch);
+                }
+                // note that to other "break" in the above "if" block
+                result.append("&amp;");
+                break;
+            case '"':
+                result.append("&quot;");
+                break;
+            default:
+                result.append(ch);
             }
         }
         return new String(result);

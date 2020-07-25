@@ -80,7 +80,7 @@ public class EbayStoreOptions {
                     StoreThemeType[] storeBasicTheme = returnedBasicThemeArray.getTheme();
 
                     int i = 0;
-                    String colorSchemeId = themeId.substring(themeId.indexOf("-")+1);
+                    String colorSchemeId = themeId.substring(themeId.indexOf("-") + 1);
                     themeId = themeId.substring(0, themeId.indexOf("-"));
 
                     Map<String, Object> storeColorSchemeMap = new HashMap<>();

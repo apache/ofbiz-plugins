@@ -864,7 +864,7 @@ public class EbayStore {
                 }
             }
         } catch (GenericServiceException e) {
-            Debug.logError("error message"+e, MODULE);
+            Debug.logError("error message" + e.getMessage(), MODULE);
         }
     }
 
@@ -1266,7 +1266,7 @@ public class EbayStore {
                         String storeColorSchemeId = null;
                         if (storeBasicTheme.indexOf("-") != -1) {
                             storeThemeId = storeBasicTheme.substring(0, storeBasicTheme.indexOf("-"));
-                            storeColorSchemeId = storeBasicTheme.substring(storeBasicTheme.indexOf("-")+1);
+                            storeColorSchemeId = storeBasicTheme.substring(storeBasicTheme.indexOf("-") + 1);
                         }
                         if (storeColorSchemeId != null) storeColorScheme.setColorSchemeID(Integer.parseInt(storeColorSchemeId));
 
@@ -2517,9 +2517,9 @@ public class EbayStore {
             externalId = transaction.getTransactionID();
             if ("0".equals(externalId)) {
                 // this is a Chinese Auction: ItemID is used to uniquely identify the transaction
-                externalId = "EBS_"+itemId;
+                externalId = "EBS_" + itemId;
             } else {
-                externalId = "EBS_"+externalId;
+                externalId = "EBS_" + externalId;
             }
 
             if (UtilValidate.isNotEmpty(transaction.getCreatedDate())) {

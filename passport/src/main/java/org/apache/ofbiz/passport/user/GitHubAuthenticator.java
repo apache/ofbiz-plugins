@@ -389,29 +389,29 @@ public class GitHubAuthenticator implements Authenticator {
         httpGet.setHeader(PassportUtil.AUTHORIZATION_HEADER, tokenType + " " + accessToken);
         httpGet.setHeader(PassportUtil.ACCEPT_HEADER, "application/json");
         CloseableHttpResponse getResponse = null;
-		try {
-			getResponse = jsonClient.execute(httpGet);
+        try {
+            getResponse = jsonClient.execute(httpGet);
             String responseString = new BasicResponseHandler().handleResponse(getResponse);
-	        if (getResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-	            // Debug.logInfo("Json Response from GitHub: " + responseString, MODULE);
-	            userInfo = JSON.from(responseString);
-	        } else {
-	            String errMsg = UtilProperties.getMessage(RESOURCE, "GetOAuth2AccessTokenError", UtilMisc.toMap("error", responseString), locale);
-	            throw new AuthenticatorException(errMsg);
-	        }
-		} catch (ClientProtocolException e) {
+            if (getResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                // Debug.logInfo("Json Response from GitHub: " + responseString, MODULE);
+                userInfo = JSON.from(responseString);
+            } else {
+                String errMsg = UtilProperties.getMessage(RESOURCE, "GetOAuth2AccessTokenError", UtilMisc.toMap("error", responseString), locale);
+                throw new AuthenticatorException(errMsg);
+            }
+        } catch (ClientProtocolException e) {
             throw new AuthenticatorException(e.getMessage());
-		} catch (IOException e) {
+        } catch (IOException e) {
             throw new AuthenticatorException(e.getMessage());
-		} finally {
-			if (getResponse != null) {
-	            try {
-					getResponse.close();
-				} catch (IOException e) {
-					// do nothing
-				}
-			}
-		}
+        } finally {
+            if (getResponse != null) {
+                try {
+                    getResponse.close();
+                } catch (IOException e) {
+                    // do nothing
+                }
+            }
+        }
         JSONToMap jsonMap = new JSONToMap();
         Map<String, Object> userMap;
         try {

@@ -308,8 +308,7 @@ public class ProductDocument implements LuceneDocument {
     private static final EntityCondition THRU_DATE_ONLY_CONDITION = EntityCondition.makeCondition(
             EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null),
             EntityOperator.OR,
-            EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, UtilDateTime.nowTimestamp())
-    );
+            EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, UtilDateTime.nowTimestamp()));
 
     private static List<GenericValue> filterByThruDate(List<GenericValue> values) {
         return EntityUtil.filterByCondition(values, THRU_DATE_ONLY_CONDITION);
@@ -319,8 +318,7 @@ public class ProductDocument implements LuceneDocument {
         return EntityUtil.filterByCondition(values, EntityCondition.makeCondition(
                 EntityCondition.makeCondition(thruDateName, EntityOperator.EQUALS, null),
                 EntityOperator.OR,
-                EntityCondition.makeCondition(thruDateName, EntityOperator.GREATER_THAN, UtilDateTime.nowTimestamp())
-        ));
+                EntityCondition.makeCondition(thruDateName, EntityOperator.GREATER_THAN, UtilDateTime.nowTimestamp())));
     }
 
     private Timestamp populateCategoryData(Document doc, GenericValue product) throws GenericEntityException {
@@ -377,8 +375,7 @@ public class ProductDocument implements LuceneDocument {
             doc.add(new StringField("productCategoryId", parentProductCategory.getString("productCategoryId"), Field.Store.NO));
             nextReIndex = checkSetNextReIndex(
                     this.getParentCategories(doc, parentProductCategory, indexedCategoryIds),
-                    nextReIndex
-            );
+                    nextReIndex);
         }
         return nextReIndex;
     }
