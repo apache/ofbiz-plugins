@@ -241,20 +241,23 @@ public final class SolrUtil {
             client = getHttpSolrClient(solrIndexName);
             // create Query Object
             String query = "inStock[1 TO *]";
-            if (categoryId != null)
-                query += " +cat:"+ categoryId;
-            else if (productId != null)
+            if (categoryId != null) {
+                query += " +cat:" + categoryId;
+            } else if (productId != null) {
                 query += " +productId:" + productId;
+            }
             SolrQuery solrQuery = new SolrQuery();
             solrQuery.setQuery(query);
 
-            if (catalogId != null)
+            if (catalogId != null) {
                 solrQuery.setFilterQueries("catalog:" + catalogId);
+            }
             if (displayproducts) {
                 if (viewSize > -1) {
                     solrQuery.setRows(viewSize);
-                } else
+                } else {
                     solrQuery.setRows(50000);
+                }
                 if (viewIndex > -1) {
                     solrQuery.setStart(viewIndex);
                 }

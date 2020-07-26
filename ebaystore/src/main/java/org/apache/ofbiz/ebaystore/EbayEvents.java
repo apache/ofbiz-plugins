@@ -102,19 +102,19 @@ public class EbayEvents {
         int feedbackSize = Integer.parseInt((String) requestParams.get("feedbackSize"));
         String productStoreId = (String) requestParams.get("productStoreId");
         for (int i = 1; i <= feedbackSize; i++) {
-            String commentType = (String) requestParams.get("commentType"+i);
-            String commentText = (String) requestParams.get("commentText"+i);
+            String commentType = (String) requestParams.get("commentType" + i);
+            String commentText = (String) requestParams.get("commentText" + i);
             if (!"none".equals(commentType) && commentText != null) {
-                String itemId = (String) requestParams.get("itemId"+i);
-                String transactionId = (String) requestParams.get("transactionId"+i);
-                String targetUser = (String) requestParams.get("targetUser"+i);
-                String commentingUser = (String) requestParams.get("commentingUser"+i);
-                String role = (String) requestParams.get("role"+i);
-                String ratingItem = (String) requestParams.get("ratingItem"+i);
-                String ratingComm = (String) requestParams.get("ratingComm"+i);
-                String ratingShip = (String) requestParams.get("ratingShip"+i);
-                String ratingShipHand = (String) requestParams.get("ratingShipHand"+i);
-                String AqItemAsDescribedId = (String) requestParams.get("AqItemAsDescribedId"+i);
+                String itemId = (String) requestParams.get("itemId" + i);
+                String transactionId = (String) requestParams.get("transactionId" + i);
+                String targetUser = (String) requestParams.get("targetUser" + i);
+                String commentingUser = (String) requestParams.get("commentingUser" + i);
+                String role = (String) requestParams.get("role" + i);
+                String ratingItem = (String) requestParams.get("ratingItem" + i);
+                String ratingComm = (String) requestParams.get("ratingComm" + i);
+                String ratingShip = (String) requestParams.get("ratingShip" + i);
+                String ratingShipHand = (String) requestParams.get("ratingShipHand" + i);
+                String AqItemAsDescribedId = (String) requestParams.get("AqItemAsDescribedId" + i);
 
                 Map<String, Object> leavefeedback = new HashMap<>();
                 leavefeedback.put("productStoreId", productStoreId);
@@ -196,7 +196,7 @@ public class EbayEvents {
                         }
                     }
                 }
-                Debug.logInfo("run in with productIds "+productIds, MODULE);
+                Debug.logInfo("run in with productIds " + productIds, MODULE);
                 for (String productId : productIds) {
                     AddItemCall addItemCall = new AddItemCall(apiContext);
                     ItemType item = new ItemType();
@@ -1145,7 +1145,7 @@ public class EbayEvents {
                 GetSellingManagerInventoryCall call = new GetSellingManagerInventoryCall(EbayStoreHelper.getApiContext(productStoreId, locale, delegator));
                 resp = (GetSellingManagerInventoryResponseType)call.execute(req);
                 if (resp != null && "SUCCESS".equals(resp.getAck().toString())) {
-                    returnedSellingManagerProductType  = resp.getSellingManagerProduct();
+                    returnedSellingManagerProductType = resp.getSellingManagerProduct();
                     for (SellingManagerProductType sellingManagerProductType : returnedSellingManagerProductType) {
                         SellingManagerProductDetailsType prodDetailType = sellingManagerProductType.getSellingManagerProductDetails();
                         String productIdInv = Long.toString(prodDetailType.getProductID());

@@ -62,7 +62,7 @@ public class EbayStoreOptions {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GetStoreOptionsRequestType req = null;
-        GetStoreOptionsResponseType resp  = null;
+        GetStoreOptionsResponseType resp = null;
         StoreThemeArrayType returnedBasicThemeArray = null;
 
         try {

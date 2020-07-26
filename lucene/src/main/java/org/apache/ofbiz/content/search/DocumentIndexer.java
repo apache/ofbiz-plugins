@@ -100,7 +100,7 @@ public class DocumentIndexer extends Thread {
                 try {
                 	StandardAnalyzer analyzer = new StandardAnalyzer();
                 	analyzer.setVersion(SearchWorker.getLuceneVersion());
-                    indexWriter  = new IndexWriter(this.indexDirectory, new IndexWriterConfig(analyzer));
+                    indexWriter = new IndexWriter(this.indexDirectory, new IndexWriterConfig(analyzer));
                 } catch (CorruptIndexException e) {
                     Debug.logError("Corrupted lucene index: "  + e.getMessage(), MODULE);
                     break;

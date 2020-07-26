@@ -191,7 +191,7 @@ public class BirtEmailServices {
                 // store in the list of maps for sendmail....
                 List<Map<String, ? extends Object>> bodyParts = new LinkedList<>();
                 if (bodyText != null) {
-                    bodyText = FlexibleStringExpander.expandString(bodyText, screenContext,  locale);
+                    bodyText = FlexibleStringExpander.expandString(bodyText, screenContext, locale);
                     bodyParts.add(UtilMisc.toMap("content", bodyText, "type", "text/html"));
                 } else {
                     bodyParts.add(UtilMisc.toMap("content", bodyWriter.toString(), "type", "text/html"));
@@ -231,7 +231,7 @@ public class BirtEmailServices {
             isMultiPart = false;
             // store body and type for single part message in the context.
             if (bodyText != null) {
-                bodyText = FlexibleStringExpander.expandString(bodyText, screenContext,  locale);
+                bodyText = FlexibleStringExpander.expandString(bodyText, screenContext, locale);
                 serviceContext.put("body", bodyText);
             } else {
                 serviceContext.put("body", bodyWriter.toString());

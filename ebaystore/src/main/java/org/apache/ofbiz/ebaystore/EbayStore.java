@@ -400,7 +400,7 @@ public class EbayStore {
                             for (GenericValue productCategory : productCategoryList) {
                                 if (EbayStoreHelper.veriflyCategoryInCatalog(delegator, catalogCategories, productCategory.getString("productCategoryId"))) {
                                     if (EbayStoreHelper.createEbayCategoryIdByPartyId(delegator, productCategory.getString("productCategoryId"), partyId, String.valueOf(returnCategoryType.getCategoryID()))) {
-                                        Debug.logInfo("Create new ProductCategoryRollup with partyId "+partyId+" categoryId "+productCategory.getString("productCategoryId")+ " and ebayCategoryId "+String.valueOf(returnCategoryType.getCategoryID()), MODULE);
+                                        Debug.logInfo("Create new ProductCategoryRollup with partyId " + partyId + " categoryId "+productCategory.getString("productCategoryId")+ " and ebayCategoryId "+String.valueOf(returnCategoryType.getCategoryID()), MODULE);
                                     }
                                     break;
                                 }
@@ -625,7 +625,7 @@ public class EbayStore {
             try {
                 List<GenericValue> productStoreRoles = EntityQuery.use(delegator).from("ProductStoreRole").where("productStoreId", context.get("productStoreId").toString(), "roleTypeId", "EBAY_ACCOUNT").queryList();
                 if (productStoreRoles.size() != 0) {
-                    partyId=  (String) productStoreRoles.get(0).get("partyId");
+                    partyId = (String) productStoreRoles.get(0).get("partyId");
                     List<GenericValue> userLogins = EntityQuery.use(delegator).from("UserLogin").where("partyId", partyId).queryList();
                     if (userLogins.size() != 0) {
                         userLoginId = (String) userLogins.get(0).get("userLoginId");
@@ -635,7 +635,7 @@ public class EbayStore {
             } catch (GenericEntityException e1) {
                 e1.printStackTrace();
             }
-            Debug.logInfo("userLoginId is "+userLoginId+" and productStoreId is "+ context.get("productStoreId"), MODULE);
+            Debug.logInfo("userLoginId is " + userLoginId + " and productStoreId is "+ context.get("productStoreId"), MODULE);
             GetStoreCall call = new GetStoreCall(EbayStoreHelper.getApiContext((String) context.get("productStoreId"), locale, delegator));
             //call.setSite(EbayHelper.getSiteCodeType((String) context.get("productStoreId"), locale, delegator));
             call.setCategoryStructureOnly(false);
@@ -644,7 +644,7 @@ public class EbayStore {
             try {
                 resp = (GetStoreResponseType)call.execute(req);
                 if (resp != null && "SUCCESS".equals(resp.getAck().toString())) {
-                    returnedStoreType  = resp.getStore();
+                    returnedStoreType = resp.getStore();
                     result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
                     //result.put(ModelService.SUCCESS_MESSAGE, UtilProperties.getMessage(RESOURCE, "EbayStoreLoadSuccess", locale));
                     // update product store in ofbiz
@@ -654,7 +654,7 @@ public class EbayStore {
                     ebayResp.put("storeUrl", returnedStoreType.getURL());
                     ebayResp.put("storeUrlPath", returnedStoreType.getURLPath());
                     String desc = returnedStoreType.getDescription();
-                    if (desc != null) desc  = desc.trim();
+                    if (desc != null) desc = desc.trim();
                     ebayResp.put("storeDesc", desc);
 
                     StoreLogoType logoType = returnedStoreType.getLogo();
@@ -721,7 +721,7 @@ public class EbayStore {
                     ebayResp.put("storeItemLayoutSelected", storeItemListLayoutCodeType.value());
                     StoreItemListLayoutCodeType[] storeItemListLayoutCodeTypeList = StoreItemListLayoutCodeType.values();
                     if (storeItemListLayoutCodeTypeList != null) {
-                        List<Map<String, Object>> storeItemListLayoutCodeList  = new LinkedList<>();
+                        List<Map<String, Object>> storeItemListLayoutCodeList = new LinkedList<>();
                         int i = 0;
                         while (i < storeItemListLayoutCodeTypeList.length) {
                             Map<String, Object> storeItemListLayoutCodeMap = new HashMap<>();
@@ -737,7 +737,7 @@ public class EbayStore {
                     ebayResp.put("storeItemSortOrderSelected", storeItemListSortOrderCodeType.value());
                     StoreItemListSortOrderCodeType[] storeItemListSortOrderCodeTypeList = StoreItemListSortOrderCodeType.values();
                     if (storeItemListSortOrderCodeTypeList != null) {
-                        List<Map<String, Object>> storeItemSortOrderCodeList  = new LinkedList<>();
+                        List<Map<String, Object>> storeItemSortOrderCodeList = new LinkedList<>();
                         int i = 0;
                         while (i < storeItemListSortOrderCodeTypeList.length) {
                             Map<String, Object> storeItemSortOrderCodeMap = new HashMap<>();
@@ -755,7 +755,7 @@ public class EbayStore {
                     ebayResp.put("storeCustomHeaderLayout", storeCustomHeaderLayoutCodeType.value());
                     StoreCustomHeaderLayoutCodeType[] storeCustomHeaderLayoutCodeTypeList = StoreCustomHeaderLayoutCodeType.values();
                     if (storeCustomHeaderLayoutCodeTypeList != null) {
-                        List<Map<String, Object>> storeCustomHeaderLayoutList  = new LinkedList<>();
+                        List<Map<String, Object>> storeCustomHeaderLayoutList = new LinkedList<>();
                         int i = 0;
                         while (i < storeCustomHeaderLayoutCodeTypeList.length) {
                             Map<String, Object> storeCustomHeaderLayoutMap = new HashMap<>();
@@ -780,7 +780,7 @@ public class EbayStore {
                         ebayResp.put("storeCustomListingHeaderDisplayValue", storeCustomListingHeaderDisplayCodeType.value());
                         StoreCustomListingHeaderDisplayCodeType[] storeCustomListingHeaderDisplayCodeTypeList = StoreCustomListingHeaderDisplayCodeType.values();
                         if (storeCustomListingHeaderDisplayCodeTypeList != null) {
-                            List<Map<String, Object>> storeCustomListingHeaderDisplayCodeList  = new LinkedList<>();
+                            List<Map<String, Object>> storeCustomListingHeaderDisplayCodeList = new LinkedList<>();
                             int i = 0;
                             while (i < storeCustomListingHeaderDisplayCodeTypeList.length) {
                                 Map<String, Object> storeCustomListingHeaderDisplayCodeMap = new HashMap<>();
@@ -874,7 +874,7 @@ public class EbayStore {
         Delegator delegator = dctx.getDelegator();
         Map<String, Object> result = new HashMap<>();
         GetStoreOptionsRequestType req = null;
-        GetStoreOptionsResponseType resp  = null;
+        GetStoreOptionsResponseType resp = null;
         StoreThemeArrayType returnedBasicThemeArray = null;
 
         try {
@@ -940,7 +940,7 @@ public class EbayStore {
         Delegator delegator = dctx.getDelegator();
         GetStoreOptionsRequestType req = null;
         StoreLogoArrayType returnedLogoArray = null;
-        GetStoreOptionsResponseType resp  = null;
+        GetStoreOptionsResponseType resp = null;
         try {
             if (context.get("productStoreId") != null) {
                 GetStoreOptionsCall  call = new GetStoreOptionsCall(EbayStoreHelper.getApiContext((String) context.get("productStoreId"), locale, delegator));
@@ -954,7 +954,7 @@ public class EbayStore {
                     int i = 0;
                     List<Map<String, Object>> logoList = new LinkedList<>();
                     while (i < returnedLogoArray.getLogoLength()) {
-                        Map<String, Object> logo  = new HashMap<>();
+                        Map<String, Object> logo = new HashMap<>();
                         StoreLogoType storeLogoType = returnedLogoArray.getLogo(i);
                         logo.put("storeLogoId", storeLogoType.getLogoID());
                         logo.put("storeLogoName", storeLogoType.getName());
@@ -985,7 +985,7 @@ public class EbayStore {
         Delegator delegator = dctx.getDelegator();
         GetStoreOptionsRequestType req = null;
         StoreThemeArrayType returnedBasicThemeArray = null;
-        GetStoreOptionsResponseType resp  = null;
+        GetStoreOptionsResponseType resp = null;
         try {
             if (context.get("productStoreId") != null) {
                 GetStoreOptionsCall  call = new GetStoreOptionsCall(EbayStoreHelper.getApiContext((String) context.get("productStoreId"), locale, delegator));
@@ -999,7 +999,7 @@ public class EbayStore {
                     int i = 0;
                     List<Map<String, Object>> themeList = new LinkedList<>();
                     while (i < returnedBasicThemeArray.getThemeLength()) {
-                        Map<String, Object> basictheme  = new HashMap<>();
+                        Map<String, Object> basictheme = new HashMap<>();
                         StoreThemeType storeBasicThemeType = returnedBasicThemeArray.getTheme(i);
                         basictheme.put("storeThemeId", storeBasicThemeType.getThemeID());
                         basictheme.put("storeThemeName", storeBasicThemeType.getName());
@@ -1037,7 +1037,7 @@ public class EbayStore {
         Delegator delegator = dctx.getDelegator();
         GetStoreOptionsRequestType req = null;
         StoreThemeArrayType returnedAdvancedThemeArray = null;
-        GetStoreOptionsResponseType resp  = null;
+        GetStoreOptionsResponseType resp = null;
         try {
             if (context.get("productStoreId") != null) {
                 GetStoreOptionsCall  call = new GetStoreOptionsCall(EbayStoreHelper.getApiContext((String) context.get("productStoreId"), locale, delegator));
@@ -1095,7 +1095,7 @@ public class EbayStore {
         Delegator delegator = dctx.getDelegator();
         GetStoreOptionsRequestType req = null;
         StoreThemeArrayType returnedThemeArray = null;
-        GetStoreOptionsResponseType resp  = null;
+        GetStoreOptionsResponseType resp = null;
         try {
             if (context.get("productStoreId") != null) {
                 GetStoreOptionsCall  call = new GetStoreOptionsCall(EbayStoreHelper.getApiContext((String) context.get("productStoreId"), locale, delegator));
@@ -1221,7 +1221,7 @@ public class EbayStore {
         Locale locale = (Locale) context.get("locale");
         Delegator delegator = dctx.getDelegator();
         SetStoreRequestType req = null;
-        SetStoreResponseType resp  = null;
+        SetStoreResponseType resp = null;
         StoreType storeType = null;
         try {
             if (context.get("productStoreId") != null) {
@@ -1591,7 +1591,7 @@ public class EbayStore {
             if (intAtp != 0) {
                 if (UtilValidate.isNotEmpty(context.get("listingTypeAuc")) && "on".equals(context.get("listingTypeAuc").toString())) {
                     context.put("listingFormat", "Chinese");
-                    context.put("listingDuration",  context.get("listingDurationAuc").toString());
+                    context.put("listingDuration", context.get("listingDurationAuc").toString());
 
                     StringBuffer dataItemsXml = new StringBuffer();
                     Map<String, Object> resultMap = ProductsExportToEbay.buildDataItemsXml(dctx, context, dataItemsXml, eBayConfigResult.get("token").toString(), product);
@@ -2333,7 +2333,7 @@ public class EbayStore {
                 }
             }
             OrderTransactionType[] tempSoldItems = null;
-            if (UtilValidate.isNotEmpty(getMyeBaySelling.getReturnedSoldList())) tempSoldItems  = (getMyeBaySelling.getReturnedSoldList().getOrderTransactionArray()).getOrderTransaction();
+            if (UtilValidate.isNotEmpty(getMyeBaySelling.getReturnedSoldList())) tempSoldItems = (getMyeBaySelling.getReturnedSoldList().getOrderTransactionArray()).getOrderTransaction();
 
             if (UtilValidate.isNotEmpty(tempSoldItems)) {
                 for (OrderTransactionType tempSoldItem : tempSoldItems) {
@@ -2570,7 +2570,7 @@ public class EbayStore {
                     shippingServiceCost = shippingServiceSelect.getShippingServiceCost().getValue();
                 }
                 if (UtilValidate.isNotEmpty(shippingServiceSelect.getShippingServiceAdditionalCost())) {
-                    shippingTotalAdditionalCost  = shippingServiceSelect.getShippingServiceAdditionalCost().getValue();
+                    shippingTotalAdditionalCost = shippingServiceSelect.getShippingServiceAdditionalCost().getValue();
                 }
             }
             if (UtilValidate.isNotEmpty(transaction.getShippingDetails().getSalesTax().getSalesTaxAmount())) {
@@ -2734,7 +2734,7 @@ public class EbayStore {
 
     private static Map<String, Object> getOrderHelper(OrderType order, Locale locale) {
         LinkedHashMap<String, Object> orderCtx = new LinkedHashMap<>();
-        String externalOrderId = "EBS_"+order.getOrderID();
+        String externalOrderId = "EBS_" + order.getOrderID();
         double amountPaid = 0.0;
         String emailBuyer = null;
         String createdTime = null;

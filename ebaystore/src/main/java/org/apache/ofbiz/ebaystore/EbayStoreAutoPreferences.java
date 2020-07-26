@@ -1082,7 +1082,7 @@ public class EbayStoreAutoPreferences {
                 SellingManagerProductType[] returnedSellingManagerProductType = null;
                 resp = (GetSellingManagerInventoryResponseType)call.execute(req);
                 if (resp != null && "SUCCESS".equals(resp.getAck().toString())) {
-                    returnedSellingManagerProductType  = resp.getSellingManagerProduct();
+                    returnedSellingManagerProductType = resp.getSellingManagerProduct();
                     for (SellingManagerProductType sellingManagerProductType : returnedSellingManagerProductType) {
                        SellingManagerProductDetailsType prodDetailType = sellingManagerProductType.getSellingManagerProductDetails();
                        int qty = prodDetailType.getQuantityAvailable();

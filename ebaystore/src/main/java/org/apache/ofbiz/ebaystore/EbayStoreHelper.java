@@ -365,7 +365,7 @@ public class EbayStoreHelper {
     }
 
     public static void mappedPaymentMethods(Map<String, Object> requestParams, String itemPkCateId, Map<String, Object> addItemObject, ItemType item, HashMap<String, Object> attributeMapList) {
-        String refName = "itemCateFacade_"+itemPkCateId;
+        String refName = "itemCateFacade_" + itemPkCateId;
         if (UtilValidate.isNotEmpty(addItemObject) && UtilValidate.isNotEmpty(requestParams)) {
             EbayStoreCategoryFacade cf = (EbayStoreCategoryFacade) addItemObject.get(refName);
             BuyerPaymentMethodCodeType[] paymentMethods = cf.getPaymentMethods();
@@ -377,7 +377,7 @@ public class EbayStoreHelper {
                     String payPara = (String) requestParams.get("Payments_".concat(pmName));
                     if ("true".equals(payPara)) {
                         tempPayments[i] = paymentMethod;
-                        attributeMapList.put(""+pmName, pmName);
+                        attributeMapList.put("" + pmName, pmName);
                         if ("PayPal".equals(pmName)) {
                             if (UtilValidate.isNotEmpty(requestParams.get("paymentMethodPaypalEmail"))) {
                                 item.setPayPalEmailAddress(requestParams.get("paymentMethodPaypalEmail").toString());
@@ -626,7 +626,7 @@ public class EbayStoreHelper {
                 ApiContext apiContext = EbayStoreHelper.getApiContext(productStoreId, locale, delegator);
                 GetOrdersCall ordersCall = new GetOrdersCall(apiContext);
                 OrderIDArrayType orderIdArr = new OrderIDArrayType();
-                String[] orderIdStr = {""+externalId};
+                String[] orderIdStr = {"" + externalId};
                 orderIdArr.setOrderID(orderIdStr);
                 req.setOrderIDArray(orderIdArr);
                 Calendar orderFrom = Calendar.getInstance();

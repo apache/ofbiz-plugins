@@ -72,7 +72,7 @@ public class ProductsExportToEbay {
         Map<String, Object> response = null;
         try {
             List<String> selectResult = UtilGenerics.checkCollection(context.get("selectResult"), String.class);
-            List<GenericValue> productsList  = EntityQuery.use(delegator).from("Product").where(EntityCondition.makeCondition("productId", EntityOperator.IN, selectResult)).queryList();
+            List<GenericValue> productsList = EntityQuery.use(delegator).from("Product").where(EntityCondition.makeCondition("productId", EntityOperator.IN, selectResult)).queryList();
             if (UtilValidate.isNotEmpty(productsList)) {
                 for (GenericValue product : productsList) {
                     GenericValue startPriceValue = EntityUtil.getFirst(EntityUtil.filterByDate(product.getRelated("ProductPrice", UtilMisc.toMap("productPricePurposeId", "EBAY", "productPriceTypeId", "MINIMUM_PRICE"), null, false)));

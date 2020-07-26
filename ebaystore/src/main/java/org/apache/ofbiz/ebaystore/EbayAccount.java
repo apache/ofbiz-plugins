@@ -58,7 +58,7 @@ public class EbayAccount {
 
         try {
             ApiContext apiContext = EbayStoreHelper.getApiContext(productStoreId, locale, delegator);
-            GetUserCall getUserCall  = new GetUserCall(apiContext);
+            GetUserCall getUserCall = new GetUserCall(apiContext);
             DetailLevelCodeType[] detailLevel = {DetailLevelCodeType.RETURN_ALL};
             getUserCall.setDetailLevel(detailLevel);
             UserType  user = getUserCall.getUser();

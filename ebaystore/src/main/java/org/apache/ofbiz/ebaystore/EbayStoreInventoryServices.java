@@ -195,7 +195,7 @@ public class EbayStoreInventoryServices {
                 GenericValue ebayProductStoreInventory = EntityQuery.use(delegator).from("EbayProductStoreInventory").where("productId", productId, "facilityId", context.get("facilityId"), "productStoreId", context.get("productStoreId")).queryOne();
                 Long ebayProductId = null;
                 if (ebayProductStoreInventory != null && ebayProductStoreInventory.getLong("ebayProductId") == null) {
-                    Debug.logError("Can not update product "+productId+" has no ebay product Id in EbayProductStoreInventory. ", MODULE);
+                    Debug.logError("Can not update product " + productId+" has no ebay product Id in EbayProductStoreInventory. ", MODULE);
                     return flag;
                 }
                 if (ebayProductStoreInventory != null && ebayProductStoreInventory.getLong("ebayProductId") != null) {

@@ -35,9 +35,9 @@ import org.apache.ofbiz.entity.transaction.GenericTransactionException;
  * Interface of pricat parser.
  */
 public interface InterfacePricatParser {
-    public static final String PARSE_EXCEL = "parse_excel";
-    public static final String CONFIRM = "confirm_action";
-    public static final String[] messageLabels = new String[] {"FORMAT_DEFAULT", "FORMAT_WARNING", "FORMAT_HEADLINE", "FORMAT_NOTE", "FORMAT_OK", "FORMAT_ERROR", "FORMAT_THROWABLE"};
+    static final String PARSE_EXCEL = "parse_excel";
+    static final String CONFIRM = "confirm_action";
+    static final String[] messageLabels = new String[] {"FORMAT_DEFAULT", "FORMAT_WARNING", "FORMAT_HEADLINE", "FORMAT_NOTE", "FORMAT_OK", "FORMAT_ERROR", "FORMAT_THROWABLE"};
     public static final List<String> messages = Collections.unmodifiableList(Arrays.asList(messageLabels));
     public static final String tempFilesFolder = "runtime/pricat/";
     public static final String FileDateTimePattern = "yyyyMMddHHmmss";

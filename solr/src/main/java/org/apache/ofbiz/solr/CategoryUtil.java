@@ -117,7 +117,7 @@ public final class CategoryUtil {
      * Returns categoryName with trail
      */
     public static String getCategoryNameWithTrail(String productCategoryId, DispatchContext dctx) {
-        return getCategoryNameWithTrail(productCategoryId, true,  dctx);
+        return getCategoryNameWithTrail(productCategoryId, true, dctx);
     }
 
     public static String getCategoryNameWithTrail(String productCategoryId, Boolean showDepth, DispatchContext dctx) {
