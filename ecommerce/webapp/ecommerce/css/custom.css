@@ -60,64 +60,49 @@ a.btn-primary {
 }
 .popular-categories .card-body ul.subcategory {
     height: 85%;
-    border: thin solid;
     overflow: auto;
 }
 .popular-categories .card-body .card-text {
     display: none;
 }
-
 .products-card .card {
     height: 100%;
 }
 .products-card .card-body {
     padding: 0.125rem;
     height: 100%;
+    height: 360px;
 }
 .products-card .card-title {
     height: 15%;
     overflow: auto;
     margin-top: 0.1rem;
     margin-bottom: 0.1rem;
-    border: thin solid;
 }
 .products-card .card-text p {
     margin-bottom: 0.25rem;
 }
+
 .products-card .card-text {
     height: 46%;
     margin-bottom: 0;
     overflow: auto;
-    border: thin solid;
 }
-.products-card .card-text .percent-16 {
-    height: 16%;
+.products-card .card-text .height-percent-33 {
+    height: 16.5%; /* half */
     overflow: auto;
-    border: thin solid;
 }
-.products-card .card-text .percent-17 {
-    height: 17%;
+.products-card .card-text .height-percent-50 {
+    height: 25%; /* half */
     overflow: auto;
-    border: thin solid;
 }
-.products-card .card-text .percent-25 {
-    height: 25%;
+.products-card .card-text .height-percent-100 {
+    height: 50%; /* half */
     overflow: auto;
-    border: thin solid;
-}
-.products-card .card-text .percent-50 {
-    height: 50%;
-    overflow: auto;
-    border: thin solid;
-}
-.width-percent-100 {
-    width: 100%;
-    max-width: 100%;
 }
 .products-card .card-text .product-price {
     height: 49%;
     min-height: 49%;
-    border: thin solid;
 }
 .products-card .card-text .product-price dl { /* what is this ? */
     display: none;
@@ -135,20 +120,27 @@ a.btn-primary {
 .products-card .card-body .productbuy {
     height: 39%;
     min-height: 39%;
-    border: thin solid;
     overflow: auto;
+}
+.card-body .productbuy a {
+    line-height: initial;
 }
 .product-highlight-label {
     background-color: yellow;
 }
 .products-card, .products-card .card-title a {
+    line-height: initial;
     padding-left: 0.125rem;
     padding-right: 0.125rem;
 }
-
-.products-card .card-title a {
+.products-card {
     padding-top: 0.125rem;
     padding-bottom: 0.125rem;
+}
+
+.products-card .card-title a {
+    padding-top: 0/*.125rem*/;
+    padding-bottom: 0/*.125rem*/;
 }
 
 .product-price .product-id, .product-price-compare, .product-price-list,
@@ -164,6 +156,17 @@ a.btn-primary {
 .product-price p {
     line-height: initial;
 }
+
+/*.popular-categories .card-body ul.subcategory,
+.products-card .card-title,
+.products-card .card-text,
+.products-card .card-text .height-percent-33,
+.products-card .card-text .height-percent-50,
+.products-card .card-text .height-percent-100,
+.products-card .card-text .product-price,
+.products-card .card-body .productbuy {
+    border: thin solid;
+}*/
 
 .product-price-aggregated, .product-price-your {
     margin-top: 0;
@@ -247,4 +250,8 @@ button.jGrowl-close {
 .hidden {
     height: 0;
     visibility: hidden;
+}
+.promotion-products .products-card {
+    width: 100%;
+    max-width: 100%;
 }

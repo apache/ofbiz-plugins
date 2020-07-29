@@ -17,31 +17,10 @@
     under the License.
     -->
   ${virtualJavaScript!}
+${screens.render("component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#productvariantjs")}
+${variantInfoJavaScript!}
   <script type="text/javascript">
-<!--
-    $( document ).ready(function() {
-        $("select[name='productVariantId']").on('change', function() {
-            var form = $(this).closest('form');
-            var price_div = $('.variant-price', form);
-            var variantId = $(this).val() || '';
-            $("[name='product_id']", form).val(variantId);
-            $('.product_id_display', price_div).text(variantId);
-    
-            var price = getVariantPrice(variantId);
-            $('.variant_price_display', price_div).text(price || '');
-            if (price) {
-                price_div.css('display', 'inline-block');
-            }
-            else {
-                price_div.hide();
-            }
-        });
-    });
-//-->
-</script>
-  ${virtualJavaScript!}
-  <script type="text/javascript">
-<!--
+//<!--
     function displayProductPrice(a, tag) {
         if (typeof(tag) == 'undefined') {
             tag = 'h4';
@@ -113,12 +92,8 @@
               <#assign productInfoLinkId = productInfoLinkId + product.productId/>
               <#assign productDetailId = "productDetailId"/>
               <#assign productDetailId = productDetailId + product.productId/>
-              <#assign summaryAdditionalClass = ""/>
-              <#if request.getAttribute("summaryAdditionalClass")??>
-                <#assign summaryAdditionalClass = request.getAttribute("summaryAdditionalClass")/>
-              </#if>
 
-              <div class="col-md-3 products-card ${summaryAdditionalClass}">
+              <div class="col-md-3 products-card">
                 <div class="card text-center">
                   <a href="${productUrl}">
                     <img class="card-img-top" src="<@ofbizContentUrl>${contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl>" alt="Small Image">
@@ -137,8 +112,8 @@
                       <#if request.getAttribute("highlightLabel")??>
                         <#assign textNDivs = textNDivs + 1/>
                       </#if>
-                      <#assign textDivPercent = 50 / textNDivs/>
-                      <div class="product-description percent-${textDivPercent?int}">${productContentWrapper.get("DESCRIPTION", "html")!}<#if daysToShip??>&nbsp;-&nbsp;${uiLabelMap.ProductUsuallyShipsIn} <b>${daysToShip}</b> ${uiLabelMap.CommonDays}!</#if></div>
+                      <#assign textDivPercent = 100 / textNDivs/>
+                      <div class="product-description height-percent-${textDivPercent?int}">${productContentWrapper.get("DESCRIPTION", "html")!}<#if daysToShip??>&nbsp;-&nbsp;${uiLabelMap.ProductUsuallyShipsIn} <b>${daysToShip}</b> ${uiLabelMap.CommonDays}!</#if></div>
 
                       <#-- Display category-specific product comments -->
                         <#if prodCatMem?? && prodCatMem.comments?has_content>
@@ -174,8 +149,8 @@
                                 <a class="product-price-expand" href="javascript:void(0);">?</a>&nbsp;
                                 <strong>${uiLabelMap.ProductAggregatedPrice}: <span class='basePrice'><@ofbizCurrency amount=totalPrice isoCode=totalPrice.currencyUsed/></span></strong>
                               </p>
-                            <#else>
-                              <#if price.competitivePrice?? && price.price?? && price.price?double < price.competitivePrice?double>
+                              <#else>
+                                <#if price.competitivePrice?? && price.price?? && price.price?double < price.competitivePrice?double>
                                 <p class="product-price-compare">
                                 ${uiLabelMap.ProductCompareAtPrice}: <span class='basePrice'><@ofbizCurrency amount=price.competitivePrice isoCode=price.currencyUsed/></span>
                                 </p>
@@ -220,10 +195,11 @@
           <div class="product-rating">${uiLabelMap.OrderAverageRating}: ${averageRating} (${uiLabelMap.CommonFrom} ${numRatings} ${uiLabelMap.OrderRatings})</div>
         </#if>
         <form class="product-compare" method="post" action="<@ofbizUrl secure="${request.isSecure()?string}">addToCompare</@ofbizUrl>" name="addToCompare${requestAttributes.listIndex!}form">
-          <input type="hidden" name="productId" value="${product.productId}"/>
-          <input type="hidden" name="mainSubmitted" value="Y"/>
-        </form>
-                    </div>
+      <input type="hidden" name="productId" value="${product.productId}"/>
+      <input type="hidden" name="mainSubmitted" value="Y"/>
+      </form>
+
+      </div>
       <div id="${productDetailId}" style="display:none;">
         <img src="<@ofbizContentUrl>${contentPathPrefix!}${largeImageUrl}</@ofbizContentUrl>" alt="Large Image"/>
         ${uiLabelMap.ProductProductId} ${product.productId!}
@@ -275,7 +251,7 @@
                                         </div>
                                         <#if mainProducts?has_content>
                                           <input type="hidden" name="product_id" value=""/>
-                                          <select name="productVariantId" style="width: 100%;">
+                                          <select name="productVariantId" onchange="javascript:variantUomSelection(this)" style="width: 100%;">
                                             <option value="">${uiLabelMap.CommonSelect} ${uiLabelMap.ProductUnitOfMeasure}</option>
                                             <#list mainProducts as mainProduct>
                                               <option value="${mainProduct.productId}">${mainProduct.uomDesc} : ${mainProduct.piecesIncluded}</option>

@@ -24,6 +24,8 @@ under the License.
 <#-- virtual product javascript -->
 ${virtualJavaScript!}
 ${virtualVariantJavaScript!}
+${screens.render("component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#productvariantjs")}
+${variantInfoJavaScript!}
 <script type="text/javascript">
 //<![CDATA[
     var detailImageUrl = null;

@@ -23,6 +23,8 @@ under the License.
 
 <#-- virtual product javascript -->
 ${virtualJavaScript!}
+${screens.render("component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#productvariantjs")}
+${variantInfoJavaScript!}
 <script language="JavaScript" type="text/javascript">
   <!--
   var detailImageUrl = null;
