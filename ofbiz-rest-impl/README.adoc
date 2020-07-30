@@ -1,14 +1,6 @@
 = Apache OFBiz® plugin for REST
 
-This draft implementation helps to expose existing or new OFBiz services as REST. To facilitate this, added a new "verb" attribute to service elements that helps to determine how a particular service can be accessed via REST.
-Those changes are here : https://github.com/girishvasmatkar/ofbiz-framework/tree/feature/add-service-verb
-So, you need to be on
-
-Repository : https://github.com/girishvasmatkar/ofbiz-framework.git +
-Branch : feature/add-service-verb
-
-Another DEMO plug-in has a POST service (searchProductsByGoodIdentificationValue)(exprt="true" verb="post") defined - +
-https://github.com/girishvasmatkar/rest-demo.git
+This initial implementation helps to expose existing or new OFBiz services as REST. To facilitate this, added a new "action" attribute to service elements that helps to determine how a particular service can be accessed via REST.
 
 ==== Important URLs
 * API https://localhost:8443/rest
@@ -23,7 +15,7 @@ Once deployed, following URLs can be accessed
 * POST /rest/services/{serviceName} (For this endpoint, the service in parameters must be part of Request Body)
 
 ==== Authentication
-Draft implementation inluced Bearer Auth Scheme. Authentication scheme is "Bearer <JWT>". The implementation can be update to include other authentication schemes as well.
+Initial implementation inluced Bearer Auth Scheme. Authentication scheme is "Bearer <JWT>". The implementation can be update to include other authentication schemes as well.
 Example -
 
 [source, json]
