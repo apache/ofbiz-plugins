@@ -869,7 +869,7 @@ public class EbayEvents {
                                 String facilityId = ebayProductStore.getString("facilityId");
                                 BigDecimal atp = ebayProductStore.getBigDecimal("availableToPromiseListing");
                                 int intAtp = atp.intValue();
-                                if ((facilityId != "")  && (intAtp != 0)) {
+                                if (("" != facilityId)  && (intAtp != 0)) {
                                     int newAtp = intAtp - 1;
                                     Map<String, Object> inMap = new HashMap<>();
                                     inMap.put("productStoreId", productStoreId);
