@@ -24,22 +24,6 @@
     <SurveyQuestion surveyQuestionId="1100" surveyQuestionCategoryId="1100" surveyQuestionTypeId="TEXT_LONG" description="activationSerialNumber" question="Activation Serial Number:"/>
     <SurveyQuestionAppl surveyId="1100" surveyQuestionId="1100" fromDate="2001-01-01 00:00:00.0" requiredField="Y" sequenceNum="1"/>
 
-    <!-- settings -->
-    <ProductStoreFinActSetting productStoreId="9000" finAccountTypeId="DEPOSIT_ACCOUNT" requirePinCode="N" validateGCFinAcct="Y" allowAuthToNegative="Y" replenishThreshold="0.0"
-        purchaseSurveyId="1100" purchSurveySendTo="recipientEmail" purchSurveyCopyMe="copyMe" accountCodeLength="12" pinCodeLength="4" accountValidDays="365" authValidDays="5"/>
-
-    <ProductStoreFinActSetting productStoreId="9000" finAccountTypeId="REPLENISH_ACCOUNT" requirePinCode="N" validateGCFinAcct="Y" allowAuthToNegative="Y" replenishThreshold="0.0"
-        purchaseSurveyId="1100" purchSurveySendTo="recipientEmail" purchSurveyCopyMe="copyMe" accountCodeLength="12" pinCodeLength="4" accountValidDays="365" authValidDays="5"/>
-    
-    <ProductStoreFinActSetting productStoreId="9000" finAccountTypeId="STORE_CREDIT_ACCT" requirePinCode="N" validateGCFinAcct="Y" allowAuthToNegative="Y" replenishThreshold="0.0"
-        purchaseSurveyId="1100" purchSurveySendTo="recipientEmail" purchSurveyCopyMe="copyMe" accountCodeLength="12" pinCodeLength="4" accountValidDays="365" authValidDays="5"/>
-
-    <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="FIN_ACCOUNT" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="ofbFaAuthorize" paymentCustomMethodId="FIN_AUTH_OFBIZ"/>
-    <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="FIN_ACCOUNT" paymentServiceTypeEnumId="PRDS_PAY_RELEASE" paymentService="ofbFaRelease" paymentCustomMethodId="FIN_RELEASE_OFBIZ"/>
-    <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="FIN_ACCOUNT" paymentServiceTypeEnumId="PRDS_PAY_CAPTURE" paymentService="ofbFaCapture" paymentCustomMethodId="FIN_CAPTURE_OFBIZ"/>
-    <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="FIN_ACCOUNT" paymentServiceTypeEnumId="PRDS_PAY_REAUTH" paymentService="ofbFaAuthorize" paymentCustomMethodId="FIN_AUTH_OFBIZ"/>
-    <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="FIN_ACCOUNT" paymentServiceTypeEnumId="PRDS_PAY_REFUND" paymentService="ofbFaRefund" paymentCustomMethodId="FIN_REFUND_OFBIZ"/>
-
     <!-- product / category -->
     <ProductCategory productCategoryId="FA-100" description="Account Activation" productCategoryTypeId="CATALOG_CATEGORY"/>
 
