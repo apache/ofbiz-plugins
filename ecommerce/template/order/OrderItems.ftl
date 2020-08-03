@@ -152,7 +152,7 @@ under the License.
           <#else>
             <#assign product = orderItem.getRelatedOne("Product", true)!/> <#-- should always exist because of FK constraint, but just in case -->
             <td>
-              <a href="<@ofbizCatalogAltUrl fullPath="true" secure="false" productId=orderItem.productId/>"
+              <a href="<@ofbizCatalogAltUrl secure="false" productId=orderItem.productId/>"
                   class="linktext">${orderItem.productId} - ${orderItem.itemDescription?default("")}</a>
               <#assign orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)/>
               <#if orderItemAttributes?has_content>
