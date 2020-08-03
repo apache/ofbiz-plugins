@@ -99,16 +99,16 @@ public final class OpenApiResource {
     private Info buildOpenApiInfo() {
         Info info = new Info().version("1.0.0").title("OFBiz REST Store")
                 .description("Open API specification for OFBiz RESTful APIs.").contact(buildOpenApiContact())
-                .termsOfService("https://ofbiz.apache.org/")
+                .termsOfService("http://www.apache.org/licenses/LICENSE-2.0.html")
                 .license(new License()
                         .name("Apache 2.0")
-                        .url("http://www.apache.org/licenses/LICENSE-2.0.html"));
+                        .url("http://www.apache.org/licenses/LICENSE-2.0.txt"));
 
         return info;
     }
 
     private Contact buildOpenApiContact() {
-        Contact contact = new Contact().name("OFBiz API Team").email("ofbiz@apache.org")
+        Contact contact = new Contact().name("OFBiz DEV API Team").email("dev@ofbiz.apache.org")
                 .url("https://ofbiz.apache.org/");
         return contact;
     }
