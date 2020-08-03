@@ -1632,7 +1632,7 @@ public class EbayStore {
                 }
             }
             if (UtilValidate.isNotEmpty(ProductsExportToEbay.getProductExportSuccessMessageList())) {
-                if ((facilityId != "")  && (intAtp != 0)) {
+                if (("" != facilityId)  && (intAtp != 0)) {
                     int newAtp = intAtp - 1;
                     Map<String, Object> inMap = new HashMap<>();
                     inMap.put("productStoreId", context.get("productStoreId").toString());

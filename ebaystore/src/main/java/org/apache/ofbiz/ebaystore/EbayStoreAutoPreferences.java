@@ -570,7 +570,7 @@ public class EbayStoreAutoPreferences {
                     Date paidTime = (Date) item.get("paidTime");
                     String unpaidItemStatus = (String) item.get("unpaidItemStatus");
                     int checkDays = UtilDateTime.getIntervalInDays(UtilDateTime.toTimestamp(creationTime), UtilDateTime.nowTimestamp());
-                    if (checkDays > afterDays && "CheckoutIncomplete".equals(checkoutStatus) && unpaidItemStatus == null && paidTime == null && checkoutStatus != "CheckoutComplete") {
+                    if (checkDays > afterDays && "CheckoutIncomplete".equals(checkoutStatus) && unpaidItemStatus == null && paidTime == null && "CheckoutComplete" != checkoutStatus) {
                         itemsToDispute.add(item);
                     }
                 }
@@ -643,7 +643,7 @@ public class EbayStoreAutoPreferences {
                     Date paidTime = (Date) item.get("paidTime");
                     String unpaidItemStatus = (String) item.get("unpaidItemStatus");
                     int checkDays = UtilDateTime.getIntervalInDays(UtilDateTime.toTimestamp(creationTime), UtilDateTime.nowTimestamp());
-                    if (checkDays > afterDays && unpaidItemStatus == null && paidTime == null && checkoutStatus == "CheckoutComplete") {
+                    if (checkDays > afterDays && unpaidItemStatus == null && paidTime == null && "CheckoutComplete" == checkoutStatus) {
                         itemsToDispute.add(item);
                     }
                 }

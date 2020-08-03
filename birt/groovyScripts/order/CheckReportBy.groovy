@@ -27,12 +27,12 @@ if (!parameters.fromDate) {
     return "error"
 }
 
-if (exportType == "pdf") {
-    if (reportBy == "day") {
+if ("pdf" == exportType) {
+    if ("day" == reportBy) {
         return "dayPDF"
-    } else if (reportBy == "week") {
+    } else if ("week" == reportBy) {
         return "weekPDF"
-    } else if (reportBy == "month") {
+    } else if ("month" == reportBy) {
         return "monthPDF"
     } else {
         request.setAttribute("_ERROR_MESSAGE_", "Please select Report By.")
@@ -40,12 +40,12 @@ if (exportType == "pdf") {
     }
 }
 
-if (exportType == "excel") {
-    if (reportBy == "day") {
+if ("excel" == exportType) {
+    if ("day" == reportBy) {
         return "dayExcel"
-    } else if (reportBy == "week") {
+    } else if ("week" == reportBy) {
         return "weekExcel"
-    } else if (reportBy == "month") {
+    } else if ("month" == reportBy) {
         return "monthExcel"
     } else {
         request.setAttribute("_ERROR_MESSAGE_", "Please select Report By.")
@@ -53,12 +53,12 @@ if (exportType == "excel") {
     }
 }
 
-if (exportType == "html") {
-    if (reportBy == "day") {
+if ("html" == exportType) {
+    if ("day" == reportBy) {
         return "dayHTML"
-    } else if (reportBy == "week") {
+    } else if ("week" == reportBy) {
         return "weekHTML"
-    } else if (reportBy == "month") {
+    } else if ("month"== reportBy) {
         return "monthHTML"
     } else {
         request.setAttribute("_ERROR_MESSAGE_", "Please select Report By.")
