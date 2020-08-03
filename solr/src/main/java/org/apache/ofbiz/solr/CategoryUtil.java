@@ -46,7 +46,7 @@ public final class CategoryUtil {
     /**
      * Gets catalog IDs for specified product category.
      * <p>
-     * This method is a supplement to CatalogWorker methods. 
+     * This method is a supplement to CatalogWorker methods.
      */
     public static List<String> getCatalogIdsByCategoryId(Delegator delegator, String productCategoryId) {
         List<String> catalogIds = new ArrayList<>();

@@ -60,8 +60,8 @@ public class HtmlReport extends AbstractReport {
     /** Constant for a HTML linebreak with added "real" line break. */
     protected static final String LINEBREAK = "<br>";
 
-    /** 
-     * Constant for a HTML linebreak with added "real" line break- 
+    /**
+     * Constant for a HTML linebreak with added "real" line break-
      * traditional style for report threads that still use XML templates for their output.
      */
     protected static final String LINEBREAK_TRADITIONAL = "<br>\n";
@@ -1130,7 +1130,7 @@ public class HtmlReport extends AbstractReport {
     }
 
     /**
-     * Returns the value of the file parameter, 
+     * Returns the value of the file parameter,
      * or null if this parameter was not provided.<p>
      * The file parameter selects the file on which the dialog action
      * is to be performed.<p>
@@ -1191,7 +1191,7 @@ public class HtmlReport extends AbstractReport {
      * as value for the "action" attribute of a html form.<p>
      *
      * This URI is the real one.<p>
-     *  
+     *
      * @return the http URI of the current dialog
      */
     public String getDialogRealUri(HttpServletRequest request) {

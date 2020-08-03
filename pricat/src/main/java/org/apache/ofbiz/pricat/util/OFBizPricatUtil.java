@@ -70,7 +70,7 @@ public final class OFBizPricatUtil {
                 XSSFVMLDrawing vml = (XSSFVMLDrawing) VMLDrawingMethod.invoke(sheet, true);
                 /** for POI 4.0 and later, use:
                 CTShape ctshape = vml.findCommentShape(rowNum, colNum);
-                */ 
+                */
                 CTShape ctshape = (CTShape) FindCommentShapeMethod.invoke(vml, rowNum, colNum);
                 ctshape.setType("#_x0000_t202");
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {

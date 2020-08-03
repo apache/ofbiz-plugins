@@ -67,21 +67,26 @@ import com.ibm.icu.util.ULocale;
 public class ReportDesignGenerator {
 
     private static final String MODULE = ReportDesignGenerator.class.getName();
+    private static final String RES_ERROR = "BirtErrorUiLabels";
     private Locale locale;
     private ElementFactory factory;
-    /** The generated design */
+    /**
+     * The generated design
+     */
     private ReportDesignHandle design;
     private Map<String, String> dataMap;
-    /** Map of all filter supported by the report design */
+    /**
+     * Map of all filter supported by the report design
+     */
     private Map<String, String> filterMap;
-    /** Service name to populate dataset of the report design*/
+    /**
+     * Service name to populate dataset of the report design
+     */
     private String serviceName;
     private Map<String, String> fieldDisplayLabels;
     private Map<String, String> filterDisplayLabels;
     private String rptDesignName;
     private boolean generateFilters = false;
-
-    private static final String RES_ERROR = "BirtErrorUiLabels";
 
     public ReportDesignGenerator(Map<String, Object> context, DispatchContext dctx) throws GeneralException, SemanticException {
         locale = (Locale) context.get("locale");
@@ -102,14 +107,16 @@ public class ReportDesignGenerator {
 
     /**
      * Generate report design (rtdesign file).
+     *
      * @throws IOException
      * @throws GeneralException
-     * @throws BirtException 
+     * @throws BirtException
      */
     public void buildReport() throws IOException, GeneralException, BirtException {
         DesignConfig config = new DesignConfig();
         Platform.startup();
-        IDesignEngine engine = ((IDesignEngineFactory) Platform.createFactoryObject(IDesignEngineFactory.EXTENSION_DESIGN_ENGINE_FACTORY)).createDesignEngine(config);
+        IDesignEngine engine = ((IDesignEngineFactory) Platform.createFactoryObject(
+                IDesignEngineFactory.EXTENSION_DESIGN_ENGINE_FACTORY)).createDesignEngine(config);
 
         // creating main design elements
         SessionHandle session = engine.newSessionHandle(ULocale.forLocale(locale));
@@ -156,10 +163,13 @@ public class ReportDesignGenerator {
                     displayFilterName = filter;
                 }
                 ScalarParameterHandle scalParam = factory.newScalarParameter(filter);
-                // scalParam.setDisplayName(displayFilterName); // TODO has no incidence at all right now, is only displayed when using birt's report parameter system. Not our case. I leave it here if any idea arise of how to translate these.
+                // scalParam.setDisplayName(displayFilterName); // TODO has no incidence at all right now, is only displayed when using birt's
+                // report parameter system. Not our case. I leave it here if any idea arise of how to translate these.
                 scalParam.setPromptText(displayFilterName);
-                if ("javaObject".equals(birtType)) { //Fields of type='blob' are rejected by Birt: org.eclipse.birt.report.model.api.metadata.PropertyValueException: The choice value "javaObject" is not allowed. 
-                    throw new GeneralException("Fields of type='blob' are rejected by Birt. Create a view entity, based on the requested entity, where you exclude the field of type='blob'");
+                if ("javaObject".equals(birtType)) { //Fields of type='blob' are rejected by Birt: org.eclipse.birt.report.model.api.metadata
+                    // .PropertyValueException: The choice value "javaObject" is not allowed.
+                    throw new GeneralException("Fields of type='blob' are rejected by Birt. Create a view entity, based on the requested entity, "
+                            + "where you exclude the field of type='blob'");
                 } else {
                     scalParam.setDataType(birtType);
                 }
@@ -250,6 +260,7 @@ public class ReportDesignGenerator {
      * Create the script that will define the OFBiz dataset in Birt Report design.
      * <p>This dataset will populate the OFBiz datasource of the design
      * with <code>records</code> returned by <code>serviceName</code> service</p>
+     *
      * @throws SemanticException
      * @throws GeneralException
      */
@@ -272,7 +283,8 @@ public class ReportDesignGenerator {
         StringBuffer dataSetOpenScript = new StringBuffer("importPackage(Packages.org.apache.ofbiz.birt);\n");
         dataSetOpenScript.append("Debug.logInfo(\"#### In open\", MODULE)\n");
         dataSetOpenScript.append("try {\n");
-        dataSetOpenScript.append("    listRes = dispatcher.runSync(\"" + serviceName + "\", UtilMisc.toMap(\"userLogin\", reportContext.getParameterValue(\"userLogin\"), \"locale\", reportContext.getParameterValue(\"locale\"), \"reportContext\", reportContext));\n");
+        dataSetOpenScript.append("    listRes = dispatcher.runSync(\"" + serviceName + "\", UtilMisc.toMap(\"userLogin\", reportContext"
+                + ".getParameterValue(\"userLogin\"), \"locale\", reportContext.getParameterValue(\"locale\"), \"reportContext\", reportContext));\n");
         dataSetOpenScript.append("    if (ServiceUtil.isError(listRes)) {\n");
         dataSetOpenScript.append("         Debug.logError(ServiceUtil.getErrorMessage(listRes));\n");
         dataSetOpenScript.append("    }\n");
@@ -312,7 +324,7 @@ public class ReportDesignGenerator {
             resultSetCol.setColumnName(field);
             String birtType = BirtUtil.convertFieldTypeToBirtType(dataMap.get(field));
             if (birtType == null) {
-                 throw new GeneralException(UtilProperties.getMessage(RES_ERROR, "BirtErrorConversionFieldToBirtFailed", locale));
+                throw new GeneralException(UtilProperties.getMessage(RES_ERROR, "BirtErrorConversionFieldToBirtFailed", locale));
             }
             resultSetCol.setPosition(i);
             resultSetCol.setDataType(birtType);
@@ -336,7 +348,9 @@ public class ReportDesignGenerator {
         design.getDataSets().add(dataSetHandle);
     }
 
-    /** Create new dataSource named OFBiz */
+    /**
+     * Create new dataSource named OFBiz
+     */
     private void createScriptedDataSource() throws SemanticException {
         ScriptDataSourceHandle dataSource = factory.newScriptDataSource("OFBiz");
         design.getDataSources().add(dataSource);

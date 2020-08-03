@@ -91,7 +91,7 @@ public interface InterfaceReport {
      */
     String getReportUpdate();
 
-    /** 
+    /**
      * Returns the time this report has been running.<p>
      * @return the time this report has been running
      */

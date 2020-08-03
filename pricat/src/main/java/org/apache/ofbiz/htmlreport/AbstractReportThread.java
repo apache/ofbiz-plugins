@@ -106,7 +106,7 @@ public abstract class AbstractReportThread extends Thread implements InterfaceRe
      */
     public abstract String getReportUpdate();
 
-    /** 
+    /**
      * Returns the time this report has been running.
      * @return the time this report has been running
      */

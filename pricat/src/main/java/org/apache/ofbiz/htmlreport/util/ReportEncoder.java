@@ -77,7 +77,7 @@ public final class ReportEncoder {
     }
 
     /**
-     * Adjusts the given String by making sure all characters that can be displayed 
+     * Adjusts the given String by making sure all characters that can be displayed
      * in the given charset are contained as chars, whereas all other non-displayable
      * characters are converted to HTML entities.<p>
      * Just calls {@link #decodeHtmlEntities(String, String)} first and feeds the result
@@ -134,7 +134,7 @@ public final class ReportEncoder {
             try {
                 return new String(bytes, enc);
             } catch (UnsupportedEncodingException e) {
-                // this can _never_ happen since the charset was looked up first 
+                // this can _never_ happen since the charset was looked up first
             }
         } else {
             enc = ENCODING_UTF_8;
@@ -162,7 +162,7 @@ public final class ReportEncoder {
     /**
      * This method is a substitute for <code>URLDecoder.decode()</code>.<p>
      * In case you don't know what encoding to use, set the value of
-     * the <code>encoding</code> parameter to <code>null</code>. 
+     * the <code>encoding</code> parameter to <code>null</code>.
      * This method will then default to UTF-8 encoding, which is probably the right one.<p>
      * @param source The string to decode
      * @param encoding The encoding to use (if null, the system default is used)
@@ -212,7 +212,7 @@ public final class ReportEncoder {
             if (c < 128) {
                 // first 128 chars are contained in almost every charset
                 entity = new String(new char[] {(char) c});
-                // this is intended as performance improvement since 
+                // this is intended as performance improvement since
                 // the canEncode() operation appears quite CPU heavy
             } else if (encoder.canEncode((char) c)) {
                 // encoder can encode this char
@@ -300,7 +300,7 @@ public final class ReportEncoder {
             if (c < 128) {
                 // first 128 chars are contained in almost every charset
                 result.append((char) c);
-                // this is intended as performance improvement since 
+                // this is intended as performance improvement since
                 // the canEncode() operation appears quite CPU heavy
             } else if (encoder.canEncode((char) c)) {
                 // encoder can encode this char
@@ -334,7 +334,7 @@ public final class ReportEncoder {
             if (c < 128) {
                 // first 128 chars are contained in almost every charset
                 result.append((char) c);
-                // this is intended as performance improvement since 
+                // this is intended as performance improvement since
                 // the canEncode() operation appears quite CPU heavy
             } else if (encoder.canEncode((char) c)) {
                 // encoder can encode this char
@@ -465,7 +465,7 @@ public final class ReportEncoder {
         StringBuffer ret = new StringBuffer(source.length() * 2);
 
         // URLEncode the text string
-        // this produces a very similar encoding to JavaSscript encoding, 
+        // this produces a very similar encoding to JavaSscript encoding,
         // except the blank which is not encoded into "%20" instead of "+"
 
         String enc = encode(source, encoding);

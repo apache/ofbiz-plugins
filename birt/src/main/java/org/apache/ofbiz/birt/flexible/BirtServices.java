@@ -91,7 +91,6 @@ public class BirtServices {
     private static final String MODULE = BirtServices.class.getName();
     private static final String RESOURCE = "BirtUiLabels";
     private static final String RES_ERROR = "BirtErrorUiLabels";
-    private static final String RES_PRODUCT = "BirtUiLabels";
 
     /**
      * Instantiate a new Flexible report, using the data given in parameters and <code>ReportDesignGenerator</code> class.
@@ -115,7 +114,8 @@ public class BirtServices {
 
     @Deprecated
     // TODO lack documentation about the reason of deprecation
-    // Seems to need to be simply removed since not used at all. But not sure it's not still useful in certain situations, else why not already removed?
+    // Seems to need to be simply removed since not used at all.
+    // But not sure it's not still useful in certain situations, else why not already removed?
     public static Map<String, Object> prepareFlexibleReportOptionFieldsFromEntity(DispatchContext dctx, Map<String, Object> context) {
         String entityViewName = (String) context.get("entityViewName");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -134,7 +134,8 @@ public class BirtServices {
             String fieldType = mField.getType();
             String birtType = null;
             try {
-                Map<String, Object> convertRes = dispatcher.runSync("convertFieldTypeToBirtType", UtilMisc.toMap("fieldType", fieldType, "userLogin", userLogin));
+                Map<String, Object> convertRes = dispatcher.runSync("convertFieldTypeToBirtType", UtilMisc.toMap("fieldType", fieldType,
+                        "userLogin", userLogin));
                 if (ServiceUtil.isError(convertRes)) {
                     String errMsg = UtilProperties.getMessage(RES_ERROR, "BirtErrorConversionFieldToBirtFailed", locale);
                     return ServiceUtil.returnError(errMsg + ServiceUtil.getErrorMessage(convertRes));
@@ -162,7 +163,6 @@ public class BirtServices {
     /**
      * Perform find data on given view/entity and return these into Birt compatible format.
      * This service is meant to be used as default for View/entity report design
-     *
      */
     public static Map<String, Object> callPerformFindFromBirt(DispatchContext dctx, Map<String, Object> context) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -183,7 +183,7 @@ public class BirtServices {
         }
 
         try {
-            resultPerformFind = dispatcher.runSync("performFind", UtilMisc.<String, Object>toMap("entityName", entityViewName, 
+            resultPerformFind = dispatcher.runSync("performFind", UtilMisc.<String, Object>toMap("entityName", entityViewName,
                     "inputFields", inputFields, "userLogin", userLogin, "noConditionFind", "Y", "locale", locale));
             if (ServiceUtil.isError(resultPerformFind)) {
                 return ServiceUtil.returnError(UtilProperties.getMessage(RES_ERROR, "BirtErrorRunningPerformFind", locale));
@@ -212,8 +212,8 @@ public class BirtServices {
      * Analyse given master and create report design from its data
      * Two cases are implemented :
      * <ul>
-     *     <li>Entity : data retieval is based on a simple view/entity</li>
-     *     <li>Service : data retrieval is based on service</li>
+     * <li>Entity : data retieval is based on a simple view/entity</li>
+     * <li>Service : data retrieval is based on service</li>
      * </ul>
      */
     public static Map<String, Object> createFlexibleReportFromMaster(DispatchContext dctx, Map<String, Object> context) {
@@ -248,8 +248,10 @@ public class BirtServices {
                 return ServiceUtil.returnError(UtilProperties.getMessage(RES_ERROR, "BirtErrorEntityViewNotExist", locale) + " " + entityViewName);
             }
             try {
-                Map<String, Object> resultContent = dispatcher.runSync("createFlexibleReportFromMasterEntityWorkflow", UtilMisc.toMap("entityViewName", entityViewName,
-                        "reportName", reportName, "description", description, "writeFilters", writeFilters, "masterContentId", masterContentId, "userLogin", userLogin, "locale", locale));
+                Map<String, Object> resultContent = dispatcher.runSync("createFlexibleReportFromMasterEntityWorkflow", UtilMisc.toMap(
+                        "entityViewName", entityViewName,
+                        "reportName", reportName, "description", description, "writeFilters", writeFilters, "masterContentId", masterContentId,
+                        "userLogin", userLogin, "locale", locale));
                 if (ServiceUtil.isError(resultContent)) {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultContent));
                 }
@@ -261,8 +263,9 @@ public class BirtServices {
         } else if ("Service".equalsIgnoreCase(attrName)) {
             String serviceName = masterContentAttribute.getString("attrValue");
             try {
-                Map<String, Object> resultContent = dispatcher.runSync("createFlexibleReportFromMasterServiceWorkflow", UtilMisc.toMap("serviceName", serviceName,
-                        "reportName", reportName, "description", description, "writeFilters", writeFilters, "masterContentId", masterContentId, "userLogin", userLogin, "locale", locale));
+                Map<String, Object> resultContent = dispatcher.runSync("createFlexibleReportFromMasterServiceWorkflow", UtilMisc.toMap(
+                        "serviceName", serviceName, "reportName", reportName, "description", description, "writeFilters", writeFilters,
+                        "masterContentId", masterContentId, "userLogin", userLogin, "locale", locale));
                 if (ServiceUtil.isError(resultContent)) {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultContent));
                 }
@@ -280,23 +283,28 @@ public class BirtServices {
         String textForm;
         Map<String, Object> resultFormDisplay;
         try {
-            resultFormDisplay = dispatcher.runSync("prepareFlexibleReportSearchFormToEdit", UtilMisc.toMap("reportContentId", reportContentId, "userLogin", userLogin, "locale", locale));
+            resultFormDisplay = dispatcher.runSync("prepareFlexibleReportSearchFormToEdit", UtilMisc.toMap("reportContentId", reportContentId,
+                    "userLogin", userLogin, "locale", locale));
             if (ServiceUtil.isError(resultFormDisplay)) {
                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultFormDisplay));
             }
             textForm = (String) resultFormDisplay.get("textForm");
         } catch (GenericServiceException e) {
             Debug.logError(e, MODULE);
-            return ServiceUtil.returnError(UtilProperties.getMessage(RES_ERROR, "BirtErrorCreatingDefaultSearchForm", locale).concat(": ").concat(e.getMessage()));
+            return ServiceUtil.returnError(UtilProperties.getMessage(RES_ERROR,
+                    "BirtErrorCreatingDefaultSearchForm", locale).concat(": ").concat(e.getMessage()));
         }
 
-        Map<String, Object> result = ServiceUtil.returnSuccess(UtilProperties.getMessage(RESOURCE, "BirtFlexibleReportSuccessfullyGenerated", locale).concat(" ").concat(reportName));
+        Map<String, Object> result = ServiceUtil.returnSuccess(UtilProperties.getMessage(RESOURCE, "BirtFlexibleReportSuccessfullyGenerated",
+                locale).concat(" ").concat(reportName));
         result.put("textForm", textForm);
         result.put("reportContentId", reportContentId);
         return result;
     }
 
-    // TODO check: I'm not a big fan of how I did the createFormForDisplay / overrideReportForm. Could probably be improved using a proper formForReport object or something similar.
+    // TODO check: I'm not a big fan of how I did the createFormForDisplay / overrideReportForm. Could probably be improved using a proper
+    // formForReport object or something similar.
+
     /**
      * Update search form of a report design
      */
@@ -310,18 +318,21 @@ public class BirtServices {
 
         // safety check : do not accept "${groovy", "${bsh" and "javascript"
         String overideFiltersNoWhiteSpace = overrideFilters.replaceAll("\\s", "");
-        if (overideFiltersNoWhiteSpace.contains("${groovy:") || overideFiltersNoWhiteSpace.contains("${bsh:") || overideFiltersNoWhiteSpace.contains("javascript:")) {
+        if (overideFiltersNoWhiteSpace.contains("${groovy:") || overideFiltersNoWhiteSpace.contains("${bsh:")
+                || overideFiltersNoWhiteSpace.contains("javascript:")) {
             return ServiceUtil.returnError(UtilProperties.getMessage(RES_ERROR, "BirtErrorUnauthorisedCharacter", locale));
         }
 
         try {
             GenericValue content = EntityQuery.use(delegator).from("Content").where("contentId", reportContentId).queryOne();
             String dataResourceId = content.getString("dataResourceId");
-            StringBuffer newForm = new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?> <forms xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://ofbiz.apache.org/dtds/widget-form.xsd\">");
+            StringBuffer newForm = new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?> <forms xmlns:xsi=\"http://www.w3"
+                    + ".org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://ofbiz.apache.org/dtds/widget-form.xsd\">");
             newForm.append(overrideFilters);
             newForm.append("</forms>");
             Document xmlForm = UtilXml.readXmlDocument(newForm.toString());
-            Map<String, Object> result = dispatcher.runSync("updateElectronicTextForm", UtilMisc.toMap("dataResourceId", dataResourceId, "textData", UtilXml.writeXmlDocument(xmlForm),
+            Map<String, Object> result = dispatcher.runSync("updateElectronicTextForm", UtilMisc.toMap("dataResourceId", dataResourceId,
+                    "textData", UtilXml.writeXmlDocument(xmlForm),
                     "userLogin", userLogin, "locale", locale));
             if (ServiceUtil.isError(result)) {
                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
@@ -348,7 +359,8 @@ public class BirtServices {
         String contentId = null;
         Map<String, Object> result = ServiceUtil.returnSuccess();
         try {
-            Map<String, Object> resultMapsForGeneration = dispatcher.runSync("prepareFlexibleReportFieldsFromEntity", UtilMisc.toMap("modelEntity", modelEntity,
+            Map<String, Object> resultMapsForGeneration = dispatcher.runSync("prepareFlexibleReportFieldsFromEntity", UtilMisc.toMap("modelEntity",
+                    modelEntity,
                     "userLogin", userLogin, "locale", locale));
             if (ServiceUtil.isError(resultMapsForGeneration)) {
                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultMapsForGeneration));
@@ -427,7 +439,7 @@ public class BirtServices {
             }
             try {
                 @SuppressWarnings("unused") // Used only to passively check
-                ModelService modelService = dctx.getModelService(serviceName);
+                        ModelService modelService = dctx.getModelService(serviceName);
             } catch (GenericServiceException e) {
                 Debug.logError(e, MODULE);
                 return ServiceUtil.returnError("No service define with name " + serviceName); //TODO labelise
@@ -477,7 +489,8 @@ public class BirtServices {
 
         List<String> listEntityFields = modelEntity.getAllFieldNames();
         Map<Object, Object> uiLabelMap = new HashMap<>();
-        final String[] resourceGlob = {"OrderUiLabels", "ProductUiLabels", "PartyUiLabels", "ContentUiLabels", "AccountingUiLabels", "CommonUiLabels", "BirtUiLabels"};
+        final String[] resourceGlob = {"OrderUiLabels", "ProductUiLabels", "PartyUiLabels", "ContentUiLabels", "AccountingUiLabels",
+                "CommonUiLabels", "BirtUiLabels"};
         for (String res : resourceGlob) {
             uiLabelMap.putAll(UtilProperties.getProperties(res, locale));
         }
@@ -507,15 +520,20 @@ public class BirtServices {
                 filterMap.put(field.concat("_fld0_op"), "short-varchar");
                 filterMap.put(field.concat("_fld1_value"), mField.getType());
                 filterMap.put(field.concat("_fld1_op"), "short-varchar");
-                filterDisplayLabels.put(field.concat("_fld0_value"), fieldDisplayLabels.get(field).concat(UtilProperties.getMessage(RESOURCE, "BirtFindFieldOptionValue0", locale)));
-                filterDisplayLabels.put(field.concat("_fld0_op"), fieldDisplayLabels.get(field).concat(UtilProperties.getMessage(RESOURCE, "BirtFindFieldOptionValue0", locale).concat(UtilProperties.getMessage(RESOURCE, "BirtFindCompareOperator", locale))));
-                filterDisplayLabels.put(field.concat("_fld1_value"), fieldDisplayLabels.get(field).concat(UtilProperties.getMessage(RESOURCE, "BirtFindFieldOptionValue1", locale)));
-                filterDisplayLabels.put(field.concat("_fld1_op"), fieldDisplayLabels.get(field).concat(UtilProperties.getMessage(RESOURCE, "BirtFindFieldOptionValue1", locale).concat(UtilProperties.getMessage(RESOURCE, "BirtFindCompareOperator", locale))));
+                filterDisplayLabels.put(field.concat("_fld0_value"), fieldDisplayLabels.get(field).concat(UtilProperties.getMessage(RESOURCE,
+                        "BirtFindFieldOptionValue0", locale)));
+                filterDisplayLabels.put(field.concat("_fld0_op"), fieldDisplayLabels.get(field).concat(UtilProperties.getMessage(RESOURCE,
+                        "BirtFindFieldOptionValue0", locale).concat(UtilProperties.getMessage(RESOURCE, "BirtFindCompareOperator", locale))));
+                filterDisplayLabels.put(field.concat("_fld1_value"), fieldDisplayLabels.get(field).concat(UtilProperties.getMessage(RESOURCE,
+                        "BirtFindFieldOptionValue1", locale)));
+                filterDisplayLabels.put(field.concat("_fld1_op"), fieldDisplayLabels.get(field).concat(UtilProperties.getMessage(RESOURCE,
+                        "BirtFindFieldOptionValue1", locale).concat(UtilProperties.getMessage(RESOURCE, "BirtFindCompareOperator", locale))));
             } else { // remaining types need 4 fields (fld0-1_op-value)
                 filterMap.put(field, mField.getType());
                 filterMap.put(field.concat("_op"), "short-varchar");
                 filterDisplayLabels.put(field, fieldDisplayLabels.get(field));
-                filterDisplayLabels.put(field.concat("_op"), fieldDisplayLabels.get(field).concat(UtilProperties.getMessage(RESOURCE, "BirtFindCompareOperator", locale)));
+                filterDisplayLabels.put(field.concat("_op"), fieldDisplayLabels.get(field).concat(UtilProperties.getMessage(RESOURCE,
+                        "BirtFindCompareOperator", locale)));
             }
         }
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -544,7 +562,8 @@ public class BirtServices {
         try {
             GenericValue content = EntityQuery.use(delegator).from("Content").where("contentId", reportContentId).cache().queryOne();
             String dataResourceId = content.getString("dataResourceId");
-            GenericValue electronicText = EntityQuery.use(delegator).from("ElectronicText").where("dataResourceId", dataResourceId).cache().queryOne();
+            GenericValue electronicText =
+                    EntityQuery.use(delegator).from("ElectronicText").where("dataResourceId", dataResourceId).cache().queryOne();
             textData = electronicText.getString("textData");
         } catch (GenericEntityException e) {
             Debug.logError(e, MODULE);
@@ -590,7 +609,8 @@ public class BirtServices {
 
         try {
             for (String contentId : listContentId) {
-                Map<String, Object> returnMap = dispatcher.runSync("deleteFlexibleReport", UtilMisc.toMap("contentId", contentId, "userLogin", userLogin, "locale", locale));
+                Map<String, Object> returnMap = dispatcher.runSync("deleteFlexibleReport", UtilMisc.toMap("contentId", contentId, "userLogin",
+                        userLogin, "locale", locale));
                 if (ServiceUtil.isError(returnMap)) {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(returnMap));
                 }
@@ -646,11 +666,13 @@ public class BirtServices {
         }
         try {
             delegator.removeByAnd("ContentAttribute", UtilMisc.toMap("contentId", contentId));
-            Map<String, Object> result = dispatcher.runSync("removeContentAndRelated", UtilMisc.toMap("contentId", contentId, "userLogin", userLogin, "locale", locale));
+            Map<String, Object> result = dispatcher.runSync("removeContentAndRelated", UtilMisc.toMap("contentId", contentId, "userLogin",
+                    userLogin, "locale", locale));
             if (ServiceUtil.isError(result)) {
                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
             }
-            result = dispatcher.runSync("removeContentAndRelated", UtilMisc.toMap("contentId", contentIdRpt, "userLogin", userLogin, "locale", locale));
+            result = dispatcher.runSync("removeContentAndRelated", UtilMisc.toMap("contentId", contentIdRpt, "userLogin", userLogin, "locale",
+                    locale));
             if (ServiceUtil.isError(result)) {
                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
             }
@@ -794,7 +816,8 @@ public class BirtServices {
                 }
             }
 
-            // FXIME ? adding simple master page => All these casts and other occurrences ... It's ugly, but it's so hard that when I find a solution that works ...
+            // FXIME ? adding simple master page => All these casts and other occurrences ... It's ugly, but it's so hard that when I find a
+            // solution that works ...
             @SuppressWarnings("unchecked")
             List<DesignElementHandle> listMasterPages = designFromUser.getMasterPages().getContents();
             for (DesignElementHandle masterPage : listMasterPages) {
@@ -866,5 +889,4 @@ public class BirtServices {
         result = ServiceUtil.returnSuccess(listSuccessMessage);
         return result;
     }
-
 }

@@ -99,7 +99,8 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
     protected Locale locale;
     protected long sequenceNum = -1L;
 
-    public AbstractPricatParser(LocalDispatcher dispatcher, Delegator delegator, Locale locale, InterfaceReport report, Map<String, String[]> facilities, File pricatFile, GenericValue userLogin) {
+    public AbstractPricatParser(LocalDispatcher dispatcher, Delegator delegator, Locale locale, InterfaceReport report,
+                                Map<String, String[]> facilities, File pricatFile, GenericValue userLogin) {
         this.dispatcher = dispatcher;
         this.delegator = delegator;
         this.locale = locale;
@@ -112,6 +113,39 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
         this.pricatFile = pricatFile;
         initBasicConds(UtilMisc.toList(userLogin.getString("partyId")));
     }
+
+    /**
+     * Check whether a commented file exists.
+     *
+     * @param request
+     * @param sequenceNum
+     * @return
+     */
+    public static boolean isCommentedExcelExists(HttpServletRequest request, Long sequenceNum) {
+        GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+        if (UtilValidate.isEmpty(sequenceNum) || UtilValidate.isEmpty(userLogin)) {
+            Debug.logError("sequenceNum[" + sequenceNum + "] or userLogin is empty", MODULE);
+            return false;
+        }
+        String userLoginId = userLogin.getString("userLoginId");
+        Delegator delegator = (Delegator) request.getAttribute("delegator");
+        GenericValue historyValue = null;
+        try {
+            historyValue = EntityQuery.use(delegator).from("ExcelImportHistory").where("userLoginId", userLoginId, "sequenceNum",
+                    Long.valueOf(sequenceNum)).queryOne();
+        } catch (NumberFormatException | GenericEntityException e) {
+            Debug.logError(e.getMessage(), MODULE);
+            return false;
+        }
+        if (UtilValidate.isEmpty(historyValue)) {
+            Debug.logError("No ExcelImportHistory value found by sequenceNum[" + sequenceNum + "] and userLoginId[" + userLoginId + "].", MODULE);
+            return false;
+        }
+        File file = FileUtil.getFile(tempFilesFolder + userLoginId + "/" + sequenceNum + ".xlsx");
+
+        return file.exists();
+    }
+
     @Override
     public void writeCommentsToFile(XSSFWorkbook workbook, XSSFSheet sheet) {
         report.println();
@@ -224,7 +258,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
                         rowMapping.put(rowNum, errorRow);
                         newRow.setHeight(row.getHeight());
                         copyRow(row, newRow, factory, errorPatriarch);
-                        newRowNum ++;
+                        newRowNum++;
                     }
                 }
             }
@@ -380,8 +414,8 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
     /**
      * Get data by version definition.
      * @param row
-     * @param colNames 
-     * @param size 
+     * @param colNames
+     * @param size
      * @return
      */
     @Override
@@ -398,8 +432,10 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
             }
             if (cell == null) {
                 if ((Boolean) colNames.get(i)[2]) {
-                    report.print(UtilProperties.getMessage(RESOURCE, "ErrorColCannotEmpty", new Object[] {colNames.get(i)[0]}, locale), InterfaceReport.FORMAT_WARNING);
-                    errorMessages.put(new CellReference(cell), UtilProperties.getMessage(RESOURCE, "ErrorColCannotEmpty", new Object[] {colNames.get(i)[0]}, locale));
+                    report.print(UtilProperties.getMessage(RESOURCE, "ErrorColCannotEmpty", new Object[]{colNames.get(i)[0]}, locale),
+                            InterfaceReport.FORMAT_WARNING);
+                    errorMessages.put(new CellReference(cell), UtilProperties.getMessage(RESOURCE, "ErrorColCannotEmpty",
+                            new Object[]{colNames.get(i)[0]}, locale));
                     foundError = true;
                     continue;
                 } else {
@@ -410,17 +446,20 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
             String cellValue = formatter.formatCellValue(cell);
             if (UtilValidate.isNotEmpty(cellValue)) {
                 if (cellType == CellType.FORMULA) {
-                    cellValue = BigDecimal.valueOf(cell.getNumericCellValue()).setScale(FinAccountHelper.getDecimals(), FinAccountHelper.getRounding()).toString();
-                    report.print(((i == 0)?"":", ") + cellValue, InterfaceReport.FORMAT_NOTE);
+                    cellValue = BigDecimal.valueOf(cell.getNumericCellValue()).setScale(FinAccountHelper.getDecimals(),
+                            FinAccountHelper.getRounding()).toString();
+                    report.print(((i == 0) ? "" : ", ") + cellValue, InterfaceReport.FORMAT_NOTE);
                 } else {
-                    report.print(((i == 0)?"":", ") + cellValue, InterfaceReport.FORMAT_NOTE);
+                    report.print(((i == 0) ? "" : ", ") + cellValue, InterfaceReport.FORMAT_NOTE);
                 }
             } else {
-                report.print(((i == 0)?"":","), InterfaceReport.FORMAT_NOTE);
+                report.print(((i == 0) ? "" : ","), InterfaceReport.FORMAT_NOTE);
             }
             if ((Boolean) colNames.get(i)[2] && UtilValidate.isEmpty(cellValue)) {
-                report.print(UtilProperties.getMessage(RESOURCE, "ErrorColCannotEmpty", new Object[] {colNames.get(i)[0]}, locale), InterfaceReport.FORMAT_WARNING);
-                errorMessages.put(new CellReference(cell), UtilProperties.getMessage(RESOURCE, "ErrorColCannotEmpty", new Object[] {colNames.get(i)[0]}, locale));
+                report.print(UtilProperties.getMessage(RESOURCE, "ErrorColCannotEmpty", new Object[]{colNames.get(i)[0]}, locale),
+                        InterfaceReport.FORMAT_WARNING);
+                errorMessages.put(new CellReference(cell), UtilProperties.getMessage(RESOURCE, "ErrorColCannotEmpty",
+                        new Object[]{colNames.get(i)[0]}, locale));
                 foundError = true;
                 results.add(null);
                 continue;
@@ -505,7 +544,8 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
             if (physicalNumberOfCells > i) {
                 cell = row.getCell(i);
             }
-            if (cell != null && UtilValidate.isNotEmpty(formatter.formatCellValue(cell)) && UtilValidate.isNotEmpty(formatter.formatCellValue(cell).trim())) {
+            if (cell != null && UtilValidate.isNotEmpty(formatter.formatCellValue(cell))
+                    && UtilValidate.isNotEmpty(formatter.formatCellValue(cell).trim())) {
                 isEmptyRow = false;
                 break;
             }
@@ -539,15 +579,17 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
         try {
             GenericValue historyValue = null;
             if (sequenceNum < 1L) {
-                historyValue = EntityQuery.use(delegator).from("ExcelImportHistory").where("userLoginId", userLoginId, "logFileName", logFileName).orderBy("sequenceNum DESC").filterByDate().queryFirst();
+                historyValue = EntityQuery.use(delegator).from("ExcelImportHistory").where("userLoginId", userLoginId, "logFileName", logFileName)
+                        .orderBy("sequenceNum DESC").filterByDate().queryFirst();
             } else {
-                historyValue = EntityQuery.use(delegator).from("ExcelImportHistory").where("userLoginId", userLoginId, "sequenceNum", sequenceNum).queryOne();
+                historyValue = EntityQuery.use(delegator).from("ExcelImportHistory").where("userLoginId", userLoginId, "sequenceNum", sequenceNum)
+                        .queryOne();
             }
             Timestamp now = UtilDateTime.nowTimestamp();
             if (UtilValidate.isEmpty(historyValue)) {
                 historyValue = delegator.makeValue("ExcelImportHistory", UtilMisc.toMap("sequenceNum", sequenceNum, "userLoginId", userLoginId,
-                                                    "fileName", pricatFile.getName(), "statusId", "EXCEL_IMPORTED", "fromDate", now,
-                                                    "thruDate", now, "threadName", threadName, "logFileName", logFileName));
+                        "fileName", pricatFile.getName(), "statusId", "EXCEL_IMPORTED", "fromDate", now,
+                        "thruDate", now, "threadName", threadName, "logFileName", logFileName));
             } else {
                 historyValue.set("statusId", "EXCEL_IMPORTED");
                 historyValue.set("thruDate", now);
@@ -561,50 +603,24 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
             // do nothing
         }
     }
+
     @Override
     public boolean hasErrorMessages() {
         return !errorMessages.keySet().isEmpty();
     }
 
-    /**
-     * Check whether a commented file exists.
-     * @param request
-     * @param sequenceNum
-     * @return
-     */
-    public static boolean isCommentedExcelExists(HttpServletRequest request, Long sequenceNum) {
-        GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
-        if (UtilValidate.isEmpty(sequenceNum) || UtilValidate.isEmpty(userLogin)) {
-            Debug.logError("sequenceNum[" + sequenceNum + "] or userLogin is empty", MODULE);
-            return false;
-        }
-        String userLoginId = userLogin.getString("userLoginId");
-        Delegator delegator = (Delegator) request.getAttribute("delegator");
-        GenericValue historyValue = null;
-        try {
-            historyValue = EntityQuery.use(delegator).from("ExcelImportHistory").where("userLoginId", userLoginId, "sequenceNum", Long.valueOf(sequenceNum)).queryOne();
-        } catch (NumberFormatException | GenericEntityException e) {
-            Debug.logError(e.getMessage(), MODULE);
-            return false;
-        }
-        if (UtilValidate.isEmpty(historyValue)) {
-            Debug.logError("No ExcelImportHistory value found by sequenceNum[" + sequenceNum + "] and userLoginId[" + userLoginId + "].", MODULE);
-            return false;
-        }
-        File file = FileUtil.getFile(tempFilesFolder + userLoginId + "/" + sequenceNum + ".xlsx");
-
-        return file.exists();
-    }
-
     protected void cleanupLogAndCommentedExcel() {
         try {
             report.print(UtilProperties.getMessage(RESOURCE, "CLEANUP_LOGANDEXCEL_BEGIN", locale), InterfaceReport.FORMAT_DEFAULT);
-            List<GenericValue> historyValues = EntityQuery.use(delegator).from("ExcelImportHistory").where("userLoginId", userLoginId).orderBy("sequenceNum DESC").queryList();
+            List<GenericValue> historyValues = EntityQuery.use(delegator).from("ExcelImportHistory").where("userLoginId", userLoginId).orderBy(
+                    "sequenceNum DESC").queryList();
             if (UtilValidate.isEmpty(historyValues) || historyValues.size() <= HISTORY_MAX_FILENUMBER) {
-                report.print(UtilProperties.getMessage(RESOURCE, "HistoryLessThan", new Object[] {String.valueOf(HISTORY_MAX_FILENUMBER)}, locale), InterfaceReport.FORMAT_NOTE);
+                report.print(UtilProperties.getMessage(RESOURCE, "HistoryLessThan", new Object[]{String.valueOf(HISTORY_MAX_FILENUMBER)}, locale),
+                        InterfaceReport.FORMAT_NOTE);
                 report.println(" ... " + UtilProperties.getMessage(RESOURCE, "skipped", locale), InterfaceReport.FORMAT_NOTE);
             } else {
-                report.print(" ... " + UtilProperties.getMessage(RESOURCE, "HistoryEntryToRemove", new Object[] {historyValues.size() - HISTORY_MAX_FILENUMBER}, locale), InterfaceReport.FORMAT_NOTE);
+                report.print(" ... " + UtilProperties.getMessage(RESOURCE, "HistoryEntryToRemove",
+                        new Object[]{historyValues.size() - HISTORY_MAX_FILENUMBER}, locale), InterfaceReport.FORMAT_NOTE);
                 List<GenericValue> valuesToRemove = new ArrayList<>();
                 for (int i = HISTORY_MAX_FILENUMBER; i < historyValues.size(); i++) {
                     GenericValue historyValue = historyValues.get(i);

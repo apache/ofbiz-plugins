@@ -170,7 +170,7 @@ public class EbayStoreCategoryFacade {
     }
 
     /**
-     * recursively check the parent category to find out category feature 
+     * recursively check the parent category to find out category feature
      * @param catId categoryID to be retrieved
      * @param methodName method name to be invoked
      * @param categoriesCacheMap cache of all the categories

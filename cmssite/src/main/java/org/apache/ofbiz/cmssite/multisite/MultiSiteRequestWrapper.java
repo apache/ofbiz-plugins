@@ -54,7 +54,9 @@ public class MultiSiteRequestWrapper implements HttpServletRequest {
     }
 
     @Override
-    public String changeSessionId() { return request.changeSessionId(); }
+    public String changeSessionId() {
+        return request.changeSessionId();
+    }
 
     @Override
     public String getAuthType() {
@@ -278,134 +280,134 @@ public class MultiSiteRequestWrapper implements HttpServletRequest {
     public String getProtocol() {
         return request.getProtocol();
     }
-
+    /** get reader */
     @Override
     public BufferedReader getReader() throws IOException {
         return request.getReader();
     }
-
+    /** get real path */
     @Override @Deprecated
     public String getRealPath(String arg0) {
         return request.getServletContext().getRealPath(arg0);
     }
-
+    /** get remote addr */
     @Override
     public String getRemoteAddr() {
         return request.getRemoteAddr();
     }
-
+    /** get remote host */
     @Override
     public String getRemoteHost() {
         return request.getRemoteHost();
     }
-
+    /** get remote port */
     @Override
     public int getRemotePort() {
         return request.getRemotePort();
     }
-
+    /** get request dispatcher */
     @Override
     public RequestDispatcher getRequestDispatcher(String arg0) {
         return request.getRequestDispatcher(arg0);
     }
-
+    /** get scheme */
     @Override
     public String getScheme() {
         return request.getScheme();
     }
-
+    /** get server name */
     @Override
     public String getServerName() {
         return request.getServerName();
     }
-
+    /** get server port */
     @Override
     public int getServerPort() {
         return request.getServerPort();
     }
-
+    /** is secure */
     @Override
     public boolean isSecure() {
         return request.isSecure();
     }
-
+    /** remove attribute */
     @Override
     public void removeAttribute(String arg0) {
         request.removeAttribute(arg0);
     }
-
+    /** set attribute */
     @Override
     public void setAttribute(String arg0, Object arg1) {
         request.setAttribute(arg0, arg1);
     }
-
+    /** set character encoding */
     @Override
     public void setCharacterEncoding(String arg0) throws UnsupportedEncodingException {
         request.setCharacterEncoding(arg0);
     }
-
+    /** authenticate */
     @Override
     public boolean authenticate(HttpServletResponse arg0) throws IOException, ServletException {
         return request.authenticate(arg0);
     }
-
+    /** get part */
     @Override
     public Part getPart(String arg0) throws IOException, IllegalStateException, ServletException {
         return request.getPart(arg0);
     }
-
+    /** get parts */
     @Override
     public Collection<Part> getParts() throws IOException, IllegalStateException, ServletException {
         return request.getParts();
     }
-
+    /** login */
     @Override
     public void login(String arg0, String arg1) throws ServletException {
         request.login(arg0, arg1);
     }
-
+    /** logout */
     @Override
     public void logout() throws ServletException {
         request.logout();
     }
-
+    /** get async context */
     @Override
     public AsyncContext getAsyncContext() {
         return request.getAsyncContext();
     }
-
+    /** get dispatcher type */
     @Override
     public DispatcherType getDispatcherType() {
         return request.getDispatcherType();
     }
-
+    /** get servlet context */
     @Override
     public ServletContext getServletContext() {
         return request.getServletContext();
     }
-
+    /** is async started */
     @Override
     public boolean isAsyncStarted() {
         return request.isAsyncStarted();
     }
-
+    /** is async supported */
     @Override
     public boolean isAsyncSupported() {
         return request.isAsyncSupported();
     }
-
+    /** start async */
     @Override
     public AsyncContext startAsync() {
         return request.startAsync();
     }
-
+    /** start async */
     @Override
     public AsyncContext startAsync(ServletRequest arg0, ServletResponse arg1) {
         return request.startAsync(arg0, arg1);
     }
-
+    /** upgrade */
     @Override
-    public <T extends HttpUpgradeHandler> T upgrade (Class<T> handlerClass) throws IOException, ServletException {
+    public <T extends HttpUpgradeHandler> T upgrade(Class<T> handlerClass) throws IOException, ServletException {
         return request.upgrade(handlerClass);
     }
 }

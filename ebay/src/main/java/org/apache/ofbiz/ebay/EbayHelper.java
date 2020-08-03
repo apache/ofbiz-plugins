@@ -220,7 +220,7 @@ public class EbayHelper {
                             return false;
                     }
                 }
-            } 
+            }
         } catch (GenericEntityException gee) {
             Debug.logError(gee, "Cannot get payment preferences for order #" + orderId, MODULE);
             return false;
