@@ -2,6 +2,7 @@
 <template>
   <div id="vue-display-field">
     <table v-if="fieldTitle">
+      <th></th>
       <tr>
         <td>
           <v-tooltip top>
