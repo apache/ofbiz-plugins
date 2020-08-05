@@ -21,6 +21,7 @@ package org.apache.ofbiz.widget.renderer.frontjs;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -192,10 +193,10 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
         String linkUrl = "";
         if (UtilValidate.isNotEmpty(target)) {
             if (!"hidden-form".equals(linkType)) {
-                StringBuilder sb = new StringBuilder();
-                WidgetWorker.buildHyperlinkUrl(sb, target, link.getUrlMode(), "layered-modal".equals(linkType)?null:link.getParameterMap(context), link.getPrefix(context),
-                        link.getFullPath(), link.getSecure(), link.getEncode(), request, response, context);
-                linkUrl = sb.toString();
+                final URI linkUri = WidgetWorker.buildHyperlinkUri(target, link.getUrlMode(),
+                		"layered-modal".equals(linkType)?null:link.getParameterMap(context), link.getPrefix(context),
+                        link.getFullPath(), link.getSecure(), link.getEncode(), request, response);
+                linkUrl = linkUri.toString();
             }
         }
         parameters.put("target", target);

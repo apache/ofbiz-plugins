@@ -21,6 +21,7 @@ package org.apache.ofbiz.widget.renderer.frontjs;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -167,8 +168,9 @@ public class FrontJsTreeRenderer implements TreeStringRenderer {
         HttpServletRequest request = (HttpServletRequest) context.get("request");
 
         if (UtilValidate.isNotEmpty(target)) {
-            WidgetWorker.buildHyperlinkUrl(linkUrl, target, link.getUrlMode(), link.getParameterMap(context), link.getPrefix(context),
-                    link.getFullPath(), link.getSecure(), link.getEncode(), request, response, context);
+        	final URI linkUri = WidgetWorker.buildHyperlinkUri(target, link.getUrlMode(), link.getParameterMap(context), link.getPrefix(context),
+                    link.getFullPath(), link.getSecure(), link.getEncode(), request, response);
+        	linkUrl.append(linkUri.toString());
         }
 
         String id = link.getId(context);

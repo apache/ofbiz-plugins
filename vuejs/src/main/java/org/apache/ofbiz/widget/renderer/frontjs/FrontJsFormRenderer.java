@@ -20,6 +20,7 @@
 package org.apache.ofbiz.widget.renderer.frontjs;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1051,7 +1052,8 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String targ = modelForm.getTarget(context, targetType);
         StringBuilder linkUrl = new StringBuilder();
         if (UtilValidate.isNotEmpty(targ)) {
-            WidgetWorker.buildHyperlinkUrl(linkUrl, targ, targetType, null, null, false, false, true, request, response, context);
+        	final URI linkUri = WidgetWorker.buildHyperlinkUri(targ, targetType, null, null, false, false, true, request, response);
+        	linkUrl.append(linkUri.toString());
         }
         String formType = modelForm.getType();
         String targetWindow = modelForm.getTargetWindow(context);
@@ -2566,7 +2568,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
                                     String targetWindow) throws IOException {
         if (description != null || UtilValidate.isNotEmpty(request.getAttribute("image"))) {
             StringBuilder linkUrl = new StringBuilder();
-            WidgetWorker.buildHyperlinkUrl(linkUrl, target, targetType, UtilValidate.isEmpty(request.getAttribute("uniqueItemName"))?parameterMap:null, null, false, false, true, request, response, context);
+            final URI linkUri = WidgetWorker.buildHyperlinkUri(target, targetType, UtilValidate.isEmpty(request.getAttribute("uniqueItemName"))?parameterMap:null,
+            		       null, false, false, true, request, response);
+        	linkUrl.append(linkUri.toString());
             String event = "";
             String action = "";
             String imgSrc = "";
