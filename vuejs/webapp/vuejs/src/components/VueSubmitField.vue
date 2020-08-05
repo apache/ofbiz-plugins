@@ -138,7 +138,7 @@
         })
       },
       submit() {
-        let uri = this.parseUrl(this.getDataFromForm({formId: this.props.attributes.formName, key: 'linkUrl'}), this.form)
+        let uri = this.parseUrl(this.getDataFromForm({formId: this.props.attributes.formName, key: 'target'}), this.form)
         return this.$store.dispatch('backOfficeApi/doRequest', {
           uri: uri,
           mode: 'post',

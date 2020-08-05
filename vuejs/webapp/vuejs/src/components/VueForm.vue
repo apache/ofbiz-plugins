@@ -32,8 +32,11 @@
       id() {
         return this.props.attributes.hasOwnProperty('id') ? this.props.attributes.id : ''
       },
-      linkUrl() {
-        return this.props.attributes.hasOwnProperty('linkUrl') ? this.props.attributes.linkUrl : ''
+      target() {
+        return this.props.attributes.hasOwnProperty('target') ? this.props.attributes.target : ''
+      },
+      targetType() {
+        return this.props.attributes.hasOwnProperty('targetType') ? this.props.attributes.targetType : ''
       },
       name() {
         return this.props.attributes.hasOwnProperty('name') ? this.props.attributes.name : ''
@@ -68,8 +71,13 @@
       this.$store.dispatch('form/addForm', this.name)
       this.$store.dispatch('form/setFieldToForm', {
         formId: this.name,
-        key: 'linkUrl',
-        value: this.linkUrl
+        key: 'target',
+        value: this.target
+      })
+      this.$store.dispatch('form/setFieldToForm', {
+        formId: this.name,
+        key: 'targetType',
+        value: this.targetType
       })
       this.$store.dispatch('form/setFieldToForm', {
         formId: this.name,
@@ -110,8 +118,13 @@
         this.$store.dispatch('form/addForm', to.name)
         this.$store.dispatch('form/setFieldToForm', {
           formId: this.name,
-          key: 'linkUrl',
-          value: this.linkUrl
+          key: 'target',
+          value: this.target
+        })
+        this.$store.dispatch('form/setFieldToForm', {
+          formId: this.name,
+          key: 'targetType',
+          value: this.targetType
         })
         this.$store.dispatch('form/setFieldToForm', {
           formId: this.name,

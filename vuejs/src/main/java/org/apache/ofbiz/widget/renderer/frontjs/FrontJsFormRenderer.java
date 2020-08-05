@@ -1049,12 +1049,16 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String action = null;
         Map<String, Object> data = null;
         String targetType = modelForm.getTargetType();
-        String targ = modelForm.getTarget(context, targetType);
+        String target = modelForm.getTarget(context, targetType);
+        /* buildHyperlinkUri not supports uri with parameters write with {xxxx}
+        // should be study to know if it's a bug or parameters like this should not appear
+        // in the code review, should test if targetType = inter-app <= not manage
         StringBuilder linkUrl = new StringBuilder();
-        if (UtilValidate.isNotEmpty(targ)) {
-        	final URI linkUri = WidgetWorker.buildHyperlinkUri(targ, targetType, null, null, false, false, true, request, response);
+        if (UtilValidate.isNotEmpty(target)) {
+        	final URI linkUri = WidgetWorker.buildHyperlinkUri(target, targetType, null, null, false, false, true, request, response);
         	linkUrl.append(linkUri.toString());
         }
+        */
         String formType = modelForm.getType();
         String targetWindow = modelForm.getTargetWindow(context);
         String containerId = FormRenderer.getCurrentContainerId(modelForm, context);
@@ -1078,10 +1082,18 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
         String focusFieldName = modelForm.getFocusFieldName();
         Map<String, Object> cb = new HashMap<>();
-        if (!targ.isEmpty() && !linkUrl.toString().isEmpty()) {
+        /* buildHyperlinkUri not supports uri with parameters write with {xxxx}
+        if (!target.isEmpty() && !linkUrl.toString().isEmpty()) {
             cb.put("linkUrl", linkUrl.toString());
         } else {
             cb.put("linkUrl", "");
+        }
+        */
+        if (!target.isEmpty()) {
+            cb.put("target", target);
+            cb.put("targetType", targetType);
+        } else {
+            cb.put("target", "");
         }
         cb.put("formType", formType);
         cb.put("targetWindow", targetWindow);
@@ -1097,7 +1109,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("viewSize", viewSize);
         cb.put("useRowSubmit", useRowSubmit);
         cb.put("entityName", modelForm.getDefaultEntityName());
-//        OH 2019.03.12 à prori non utilisé, s'il faut le réactiver, il faut gérer le format des champs date, cf ExampleFeatureppl
+//        OH 2019.03.12 à priori non utilisé, s'il faut le réactiver, il faut gérer le format des champs date, cf ExampleFeatureppl
 //        if (!modelForm.getDefaultMapName().equals("") && ((GenericValue) context.get(modelForm.getDefaultMapName())) != null) {
 //            cb.put("primaryKey", ((GenericValue) context.get(modelForm.getDefaultMapName())).getPrimaryKey());
 //        }
