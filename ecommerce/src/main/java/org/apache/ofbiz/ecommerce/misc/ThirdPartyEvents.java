@@ -41,8 +41,8 @@ public class ThirdPartyEvents {
 
     private static final String MODULE = ThirdPartyEvents.class.getName();
 
-    public final static String DISTRIBUTOR_ID = "_DISTRIBUTOR_ID_";
-    public final static String AFFILIATE_ID = "_AFFILIATE_ID_";
+    public static final String DISTRIBUTOR_ID = "_DISTRIBUTOR_ID_";
+    public static final String AFFILIATE_ID = "_AFFILIATE_ID_";
 
     /** Save the association id(s) specified in the request object into the session.
      *@param request The HTTPRequest object for the current request

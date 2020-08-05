@@ -57,12 +57,14 @@ public class WebPosSearch {
         // search by product name
         if (UtilValidate.isNotEmpty(searchByProductName)) {
             searchByProductName = searchByProductName.toUpperCase().trim();
-            andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("productName"), EntityOperator.LIKE, EntityFunction.UPPER("%" + searchByProductName + "%")));
+            andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("productName"), EntityOperator.LIKE,
+                    EntityFunction.UPPER("%" + searchByProductName + "%")));
         }
         // search by description
         if (UtilValidate.isNotEmpty(searchByProductDescription)) {
             searchByProductDescription = searchByProductDescription.toUpperCase().trim();
-            andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("description"), EntityOperator.LIKE, EntityFunction.UPPER("%" + searchByProductDescription + "%")));
+            andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("description"), EntityOperator.LIKE,
+                    EntityFunction.UPPER("%" + searchByProductDescription + "%")));
         }
         // search by good identification
         if (UtilValidate.isNotEmpty(searchByProductIdValue)) {
@@ -141,8 +143,10 @@ public class WebPosSearch {
         }
         andExprs.add(EntityCondition.makeCondition("partyTypeId", EntityOperator.EQUALS, "PERSON"));
         andExprs.add(EntityCondition.makeCondition("contactMechTypeId", EntityOperator.EQUALS, "POSTAL_ADDRESS"));
-        if (UtilValidate.isNotEmpty(shippingLocation) && "N".equalsIgnoreCase(shippingLocation) && UtilValidate.isNotEmpty(billingLocation) && "N".equalsIgnoreCase(billingLocation)) {
-           andExprs.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.IN, UtilMisc.toList("SHIPPING_LOCATION", "BILLING_LOCATION")));
+        if (UtilValidate.isNotEmpty(shippingLocation) && "N".equalsIgnoreCase(shippingLocation) && UtilValidate.isNotEmpty(billingLocation)
+                && "N".equalsIgnoreCase(billingLocation)) {
+            andExprs.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.IN, UtilMisc.toList("SHIPPING_LOCATION",
+                    "BILLING_LOCATION")));
         }
         mainCond = EntityCondition.makeCondition(andExprs, EntityOperator.AND);
         orderBy.add("lastName");
@@ -150,12 +154,14 @@ public class WebPosSearch {
         // search by last name
         if (UtilValidate.isNotEmpty(searchByPartyLastName)) {
             searchByPartyLastName = searchByPartyLastName.toUpperCase().trim();
-            andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("lastName"), EntityOperator.LIKE, EntityFunction.UPPER("%" + searchByPartyLastName + "%")));
+            andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("lastName"), EntityOperator.LIKE,
+                    EntityFunction.UPPER("%" + searchByPartyLastName + "%")));
         }
         // search by first name
         if (UtilValidate.isNotEmpty(searchByPartyFirstName)) {
             searchByPartyFirstName = searchByPartyFirstName.toUpperCase().trim();
-            andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("firstName"), EntityOperator.LIKE, EntityFunction.UPPER("%" + searchByPartyFirstName + "%")));
+            andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("firstName"), EntityOperator.LIKE,
+                    EntityFunction.UPPER("%" + searchByPartyFirstName + "%")));
         }
         // search by party identification
         if (UtilValidate.isNotEmpty(searchByPartyIdValue)) {

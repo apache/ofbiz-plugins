@@ -29,7 +29,7 @@ import org.apache.ofbiz.webapp.control.LoginWorker;
  */
 public final class OFBizSolrLoginWorker {
 
-    private final static String MODULE = OFBizSolrLoginWorker.class.getName();
+    private static final String MODULE = OFBizSolrLoginWorker.class.getName();
     protected OFBizSolrLoginWorker() { }
 
     /**

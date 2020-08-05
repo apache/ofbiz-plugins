@@ -37,7 +37,7 @@ import org.apache.ofbiz.birt.BirtWorker;
 @SuppressWarnings("serial")
 public class BirtViewerServlet extends ViewerServlet {
 
-    public final static String MODULE = BirtViewerServlet.class.getName();
+    private static final String MODULE = BirtViewerServlet.class.getName();
 
     @Override
     protected IContext __getContext(HttpServletRequest request, HttpServletResponse response) throws BirtException {

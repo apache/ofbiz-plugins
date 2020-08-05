@@ -43,7 +43,7 @@ import org.apache.ofbiz.service.testtools.OFBizTestCase;
 
 public class LuceneTests extends OFBizTestCase {
 
-    public final static String MODULE = LuceneTests.class.getName();
+    private static final String MODULE = LuceneTests.class.getName();
 
     public LuceneTests(String name) {
         super(name);

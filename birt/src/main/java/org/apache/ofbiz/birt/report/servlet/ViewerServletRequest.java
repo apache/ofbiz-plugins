@@ -30,7 +30,7 @@ import org.apache.ofbiz.base.location.FlexibleLocation;
 import org.apache.ofbiz.base.util.Debug;
 
 public class ViewerServletRequest extends HttpServletRequestWrapper {
-    public final static String MODULE = ViewerServletRequest.class.getName();
+    private static final String MODULE = ViewerServletRequest.class.getName();
 
     protected String originalReportParam = null;
 

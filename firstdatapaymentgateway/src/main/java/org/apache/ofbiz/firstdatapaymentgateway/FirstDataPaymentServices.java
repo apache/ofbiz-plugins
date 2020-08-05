@@ -66,7 +66,7 @@ public class FirstDataPaymentServices {
         Delegator delegator = ctx.getDelegator();
         BigDecimal processAmount = (BigDecimal) context.get("processAmount");
         String orderId = (String) context.get("orderId");
-        String currency = (String)  context.get("currency");
+        String currency = (String) context.get("currency");
         String cardSecurityCode = (String) context.get("cardSecurityCode");
         GenericValue creditCard = (GenericValue) context.get("creditCard");
         String paymentGatewayConfigId = (String) context.get("paymentGatewayConfigId");
@@ -93,7 +93,8 @@ public class FirstDataPaymentServices {
             ccAuthReqContext.put("expireYear", strYear);
 
             StringWriter outWriter = new StringWriter();
-            String firstDataPreAuthTemplate = EntityUtilProperties.getPropertyValue("firstdata", "paymentgateway.firstdata.template.preauth.location", delegator);
+            String firstDataPreAuthTemplate = EntityUtilProperties.getPropertyValue("firstdata", "paymentgateway.firstdata.template.preauth"
+                    + ".location", delegator);
             FreeMarkerWorker.renderTemplate(firstDataPreAuthTemplate, ccAuthReqContext, outWriter);
             String requestBody = outWriter.toString();
 
@@ -115,12 +116,14 @@ public class FirstDataPaymentServices {
             String responseString = EntityUtils.toString(entity);
 
             ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, Object> convertedMap = objectMapper.readValue(responseString, new TypeReference<Map<String, Object>>() {});
+            Map<String, Object> convertedMap = objectMapper.readValue(responseString, new TypeReference<Map<String, Object>>() {
+            });
 
             String transactionStatus = (String) convertedMap.get("transactionStatus");
             String transactionId = (String) convertedMap.get("ipgTransactionId");
             String fdOrderId = (String) convertedMap.get("orderId");
-            Map<String, Object> processor = objectMapper.convertValue(convertedMap.get("processor"), new TypeReference<Map<String, Object>>() {});
+            Map<String, Object> processor = objectMapper.convertValue(convertedMap.get("processor"), new TypeReference<Map<String, Object>>() {
+            });
             String gatewayMessage = (String) processor.get("responseMessage");
             int statusCode = response.getStatusLine().getStatusCode();
             result.put("authCode", String.valueOf(statusCode));
@@ -133,7 +136,8 @@ public class FirstDataPaymentServices {
                 }
             }
             if (!isSuccess) {
-                String errorMessage = "Transaction Type:" + (String) convertedMap.get("transactionType") + " Transaction Id: " + transactionId + " Transaction Status: " + transactionStatus;
+                String errorMessage = "Transaction Type:" + (String) convertedMap.get("transactionType") + " Transaction Id: " + transactionId + " "
+                        + "Transaction Status: " + transactionStatus;
                 errorMessage = errorMessage + " Message: " + statusCode + "-" + gatewayMessage;
                 result.put(ModelService.ERROR_MESSAGE, errorMessage);
             }
@@ -164,14 +168,17 @@ public class FirstDataPaymentServices {
             ccPostAuthReqContext.put("currency", currency);
 
             StringWriter outWriter = new StringWriter();
-            String firstDataPreAuthTemplate = EntityUtilProperties.getPropertyValue("firstdata", "paymentgateway.firstdata.template.postauth.location", delegator);
+            String firstDataPreAuthTemplate = EntityUtilProperties.getPropertyValue("firstdata", "paymentgateway.firstdata.template.postauth"
+                    + ".location", delegator);
             FreeMarkerWorker.renderTemplate(firstDataPreAuthTemplate, ccPostAuthReqContext, outWriter);
             String requestBody = outWriter.toString();
 
             String messageSignature = buildMessageSignature(paymentGatewayConfigId, requestBody, clientRequestId, epochTime, delegator);
 
             GenericValue paymentGatewayResponse = EntityQuery.use(delegator).from("PaymentGatewayResponse")
-                    .where("orderPaymentPreferenceId", orderPaymentPreference.getString("orderPaymentPreferenceId"), "paymentMethodId", orderPaymentPreference.getString("paymentMethodId"), "transCodeEnumId", "PGT_AUTHORIZE", "paymentServiceTypeEnumId", "PRDS_PAY_AUTH")
+                    .where("orderPaymentPreferenceId", orderPaymentPreference.getString("orderPaymentPreferenceId"), "paymentMethodId",
+                            orderPaymentPreference.getString("paymentMethodId"), "transCodeEnumId", "PGT_AUTHORIZE", "paymentServiceTypeEnumId",
+                            "PRDS_PAY_AUTH")
                     .queryFirst();
             String authTransactionId = null;
             if (UtilValidate.isNotEmpty(paymentGatewayResponse.getString("referenceNum"))) {
@@ -196,12 +203,14 @@ public class FirstDataPaymentServices {
             String responseString = EntityUtils.toString(entity);
 
             ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, Object> convertedMap = objectMapper.readValue(responseString, new TypeReference<Map<String, Object>>() {});
+            Map<String, Object> convertedMap = objectMapper.readValue(responseString, new TypeReference<Map<String, Object>>() {
+            });
 
             String transactionStatus = (String) convertedMap.get("transactionStatus");
             String transactionId = (String) convertedMap.get("ipgTransactionId");
             String fdOrderId = (String) convertedMap.get("orderId");
-            Map<String, Object> processor = objectMapper.convertValue(convertedMap.get("processor"), new TypeReference<Map<String, Object>>() {});
+            Map<String, Object> processor = objectMapper.convertValue(convertedMap.get("processor"), new TypeReference<Map<String, Object>>() {
+            });
             String gatewayMessage = (String) processor.get("responseMessage");
             int statusCode = response.getStatusLine().getStatusCode();
             result.put("captureCode", String.valueOf(statusCode));
@@ -214,7 +223,8 @@ public class FirstDataPaymentServices {
                 }
             }
             if (!isSuccess) {
-                String errorMessage = "Transaction Type:" + (String) convertedMap.get("transactionType") + " Transaction Id: " + transactionId + " Transaction Status: " + transactionStatus;
+                String errorMessage = "Transaction Type:" + (String) convertedMap.get("transactionType") + " Transaction Id: " + transactionId + " "
+                        + "Transaction Status: " + transactionStatus;
                 errorMessage = errorMessage + " Message: " + statusCode + "-" + gatewayMessage;
                 result.put(ModelService.ERROR_MESSAGE, errorMessage);
             }
@@ -245,7 +255,8 @@ public class FirstDataPaymentServices {
             ccRefundReqContext.put("currency", currency);
 
             StringWriter outWriter = new StringWriter();
-            String firstDataPreAuthTemplate = EntityUtilProperties.getPropertyValue("firstdata", "paymentgateway.firstdata.template.refund.location", delegator);
+            String firstDataPreAuthTemplate = EntityUtilProperties.getPropertyValue("firstdata", "paymentgateway.firstdata.template.refund"
+                    + ".location", delegator);
             FreeMarkerWorker.renderTemplate(firstDataPreAuthTemplate, ccRefundReqContext, outWriter);
             String requestBody = outWriter.toString();
 
@@ -280,12 +291,14 @@ public class FirstDataPaymentServices {
             String responseString = EntityUtils.toString(entity);
 
             ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, Object> convertedMap = objectMapper.readValue(responseString, new TypeReference<Map<String, Object>>() {});
+            Map<String, Object> convertedMap = objectMapper.readValue(responseString, new TypeReference<Map<String, Object>>() {
+            });
 
             String transactionStatus = (String) convertedMap.get("transactionStatus");
             String transactionId = (String) convertedMap.get("ipgTransactionId");
             String fdOrderId = (String) convertedMap.get("orderId");
-            Map<String, Object> processor = objectMapper.convertValue(convertedMap.get("processor"), new TypeReference<Map<String, Object>>() {});
+            Map<String, Object> processor = objectMapper.convertValue(convertedMap.get("processor"), new TypeReference<Map<String, Object>>() {
+            });
             String gatewayMessage = (String) processor.get("responseMessage");
             int statusCode = response.getStatusLine().getStatusCode();
             result.put("refundCode", String.valueOf(statusCode));
@@ -298,7 +311,8 @@ public class FirstDataPaymentServices {
                 }
             }
             if (!isSuccess) {
-                String errorMessage = "Transaction Type:" + (String) convertedMap.get("transactionType") + " Transaction Id: " + transactionId + " Transaction Status: " + transactionStatus;
+                String errorMessage = "Transaction Type:" + (String) convertedMap.get("transactionType") + " Transaction Id: " + transactionId + " "
+                        + "Transaction Status: " + transactionStatus;
                 errorMessage = errorMessage + " Message: " + statusCode + "-" + gatewayMessage;
                 result.put(ModelService.ERROR_MESSAGE, errorMessage);
             }
@@ -325,17 +339,22 @@ public class FirstDataPaymentServices {
             String epochTime = String.valueOf(System.currentTimeMillis());
 
             Map<String, Object> ccReleaseReqContext = new HashMap<String, Object>();
-            ccReleaseReqContext.put("comments", "The amount " + currency + " " + releaseAmount + " against OrderPaymentPreferenceId " + orderPaymentPreference.getString("orderPaymentPreferenceId") + " is released.");
+            ccReleaseReqContext.put("comments",
+                    "The amount " + currency + " " + releaseAmount + " against OrderPaymentPreferenceId " + orderPaymentPreference.getString(
+                            "orderPaymentPreferenceId") + " is released.");
 
             StringWriter outWriter = new StringWriter();
-            String firstDataPreAuthTemplate = EntityUtilProperties.getPropertyValue("firstdata", "paymentgateway.firstdata.template.release.location", delegator);
+            String firstDataPreAuthTemplate = EntityUtilProperties.getPropertyValue("firstdata", "paymentgateway.firstdata.template.release"
+                    + ".location", delegator);
             FreeMarkerWorker.renderTemplate(firstDataPreAuthTemplate, ccReleaseReqContext, outWriter);
             String requestBody = outWriter.toString();
 
             String messageSignature = buildMessageSignature(paymentGatewayConfigId, requestBody, clientRequestId, epochTime, delegator);
 
             GenericValue paymentGatewayResponse = EntityQuery.use(delegator).from("PaymentGatewayResponse")
-                    .where("orderPaymentPreferenceId", orderPaymentPreference.getString("orderPaymentPreferenceId"), "paymentMethodId", orderPaymentPreference.getString("paymentMethodId"), "transCodeEnumId", "PGT_AUTHORIZE", "paymentServiceTypeEnumId", "PRDS_PAY_AUTH")
+                    .where("orderPaymentPreferenceId", orderPaymentPreference.getString("orderPaymentPreferenceId"), "paymentMethodId",
+                            orderPaymentPreference.getString("paymentMethodId"), "transCodeEnumId", "PGT_AUTHORIZE", "paymentServiceTypeEnumId",
+                            "PRDS_PAY_AUTH")
                     .queryFirst();
             String releaseTransactionId = null;
             if (UtilValidate.isNotEmpty(paymentGatewayResponse.getString("referenceNum"))) {
@@ -360,12 +379,14 @@ public class FirstDataPaymentServices {
             String responseString = EntityUtils.toString(entity);
 
             ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, Object> convertedMap = objectMapper.readValue(responseString, new TypeReference<Map<String, Object>>() {});
+            Map<String, Object> convertedMap = objectMapper.readValue(responseString, new TypeReference<Map<String, Object>>() {
+            });
 
             String transactionStatus = (String) convertedMap.get("transactionStatus");
             String transactionId = (String) convertedMap.get("ipgTransactionId");
             String fdOrderId = (String) convertedMap.get("orderId");
-            Map<String, Object> processor = objectMapper.convertValue(convertedMap.get("processor"), new TypeReference<Map<String, Object>>() {});
+            Map<String, Object> processor = objectMapper.convertValue(convertedMap.get("processor"), new TypeReference<Map<String, Object>>() {
+            });
             String gatewayMessage = (String) processor.get("responseMessage");
             int statusCode = response.getStatusLine().getStatusCode();
             result.put("releaseCode", String.valueOf(statusCode));
@@ -378,7 +399,8 @@ public class FirstDataPaymentServices {
                 }
             }
             if (!isSuccess) {
-                String errorMessage = "Transaction Type:" + (String) convertedMap.get("transactionType") + " Transaction Id: " + transactionId + " Transaction Status: " + transactionStatus;
+                String errorMessage = "Transaction Type:" + (String) convertedMap.get("transactionType") + " Transaction Id: " + transactionId + " "
+                        + "Transaction Status: " + transactionStatus;
                 errorMessage = errorMessage + " Message: " + statusCode + "-" + gatewayMessage;
                 result.put(ModelService.ERROR_MESSAGE, errorMessage);
             }
@@ -414,7 +436,8 @@ public class FirstDataPaymentServices {
         String returnValue = null;
         if (UtilValidate.isNotEmpty(paymentGatewayConfigId)) {
             try {
-                GenericValue paymentGatewayFirstData = EntityQuery.use(delegator).from("PaymentGatewayFirstData").where("paymentGatewayConfigId", paymentGatewayConfigId).queryOne();
+                GenericValue paymentGatewayFirstData = EntityQuery.use(delegator).from("PaymentGatewayFirstData").where("paymentGatewayConfigId",
+                        paymentGatewayConfigId).queryOne();
                 if (paymentGatewayFirstData != null) {
                     Object payflowProField = paymentGatewayFirstData.get(paymentGatewayConfigParameterName);
                     if (payflowProField != null) {
@@ -428,7 +451,8 @@ public class FirstDataPaymentServices {
         return returnValue;
     }
 
-    private static String buildMessageSignature(String paymentGatewayConfigId, String requestBody, String clientRequestId, String epochTime, Delegator delegator) {
+    private static String buildMessageSignature(String paymentGatewayConfigId, String requestBody, String clientRequestId, String epochTime,
+                                                Delegator delegator) {
         String messageSignature = null;
         if (FDProperties == null) {
             buildFDProperties(paymentGatewayConfigId, delegator);

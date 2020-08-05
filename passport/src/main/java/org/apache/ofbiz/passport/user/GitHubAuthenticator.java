@@ -87,7 +87,7 @@ public class GitHubAuthenticator implements Authenticator {
     /**
      * Method to authenticate a user.
      * For GitHub users, we only check if the username(userLoginId) exists an
-     * externalAuthId, and the externalAuthId has a valid accessToken in 
+     * externalAuthId, and the externalAuthId has a valid accessToken in
      * GitHubUser entity.
      *
      * @param userLoginId   User's login id

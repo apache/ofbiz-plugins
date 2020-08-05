@@ -379,7 +379,7 @@ public class EbayStore {
             }
         } catch (Exception e) {
             Debug.logError(e.getMessage(), MODULE);
-            // TODO why is there an Exception catching here? 
+            // TODO why is there an Exception catching here?
         }
         return storeCustomCategoryTypeArry;
     }

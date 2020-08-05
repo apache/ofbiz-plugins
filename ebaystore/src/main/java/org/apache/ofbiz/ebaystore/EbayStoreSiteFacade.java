@@ -140,7 +140,7 @@ public class EbayStoreSiteFacade {
                     csCat.setCategoryName(cat.getCategoryName());
                     csCat.setLeafCategory(cat.isLeafCategory());
                 } else {
-                    //some category has no characteristic sets, 
+                    //some category has no characteristic sets,
                     //but it may has custom item specifics
                     csCatsMap.put(cat.getCategoryID(), cat);
                 }

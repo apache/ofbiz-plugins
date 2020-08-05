@@ -244,11 +244,15 @@ public class BirtMasterReportServices {
                     productCategoryList = UtilGenerics.cast(parameters.get("productCategoryId"));
                 }
                 // getting productIds in these categories
-                EntityExpr conditionProductCategory = EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.IN, productCategoryList);
-                EntityExpr conditionFromDate = EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.nowTimestamp());
-                EntityExpr conditionBeforeDate = EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.nowTimestamp());
+                EntityExpr conditionProductCategory = EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.IN,
+                        productCategoryList);
+                EntityExpr conditionFromDate = EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO,
+                        UtilDateTime.nowTimestamp());
+                EntityExpr conditionBeforeDate = EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO,
+                        UtilDateTime.nowTimestamp());
                 EntityExpr conditionNull = EntityCondition.makeCondition("thruDate", null);
-                EntityCondition conditionThroughDate = EntityCondition.makeCondition(EntityOperator.OR, UtilMisc.toList(conditionBeforeDate, conditionNull));
+                EntityCondition conditionThroughDate = EntityCondition.makeCondition(EntityOperator.OR, UtilMisc.toList(conditionBeforeDate,
+                        conditionNull));
                 List<GenericValue> listProductIds = EntityQuery.use(delegator)
                         .from("ProductCategoryMember")
                         .where(EntityCondition.makeCondition(UtilMisc.toList(conditionProductCategory, conditionFromDate, conditionThroughDate)))
@@ -269,10 +273,12 @@ public class BirtMasterReportServices {
                 }
                 // getting list of invoice Ids linked to these productStore
                 EntityExpr conditionProductStoreId = EntityCondition.makeCondition("productStoreId", EntityOperator.IN, productStoreList);
-                List<GenericValue> listOrderAndProductStores = EntityQuery.use(delegator).from("OrderAndProductStore").where(conditionProductStoreId).select("orderId").queryList();
+                List<GenericValue> listOrderAndProductStores =
+                        EntityQuery.use(delegator).from("OrderAndProductStore").where(conditionProductStoreId).select("orderId").queryList();
                 List<String> listOrderIds = EntityUtil.getFieldListFromEntityList(listOrderAndProductStores, "orderId", true);
                 EntityExpr conditionOrderId = EntityCondition.makeCondition("orderId", EntityOperator.IN, listOrderIds);
-                List<GenericValue> listInvoices = EntityQuery.use(delegator).from("OrderItemBilling").where(conditionOrderId).select("invoiceId").queryList();
+                List<GenericValue> listInvoices =
+                        EntityQuery.use(delegator).from("OrderItemBilling").where(conditionOrderId).select("invoiceId").queryList();
                 List<String> listInvoiceString = EntityUtil.getFieldListFromEntityList(listInvoices, "invoiceId", true);
 
                 EntityExpr conditionInvoiceIdProductStore = EntityCondition.makeCondition("invoiceId", EntityOperator.IN, listInvoiceString);
@@ -281,7 +287,8 @@ public class BirtMasterReportServices {
 
             // adding mandatory conditions
             // condition on invoice item type
-            List<String> listInvoiceItemType = UtilMisc.toList("ITM_PROMOTION_ADJ", "INV_PROD_ITEM", "INV_FPROD_ITEM", "INV_DPROD_ITEM", "INV_FDPROD_ITEM", "INV_PROD_FEATR_ITEM");
+            List<String> listInvoiceItemType = UtilMisc.toList("ITM_PROMOTION_ADJ", "INV_PROD_ITEM", "INV_FPROD_ITEM", "INV_DPROD_ITEM",
+                    "INV_FDPROD_ITEM", "INV_PROD_FEATR_ITEM");
             listInvoiceItemType.add("ITM_DISCOUNT_ADJ");
             listInvoiceItemType.add("CRT_FPROD_ITEM");
             listInvoiceItemType.add("CRT_DPROD_ITEM");
@@ -297,11 +304,13 @@ public class BirtMasterReportServices {
             // condition on invoice ((not cancelled) or null)
             EntityExpr conditionStatusNotCancelled = EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED");
             EntityExpr conditionStatusNull = EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, null);
-            EntityCondition conditionStatus = EntityCondition.makeCondition(UtilMisc.toList(conditionStatusNotCancelled, conditionStatusNull), EntityOperator.OR);
+            EntityCondition conditionStatus = EntityCondition.makeCondition(UtilMisc.toList(conditionStatusNotCancelled, conditionStatusNull),
+                    EntityOperator.OR);
             listAllConditions.add(conditionStatus);
 
             // condition sales invoice or customer return invoice
-            EntityExpr conditionSalesInvoice = EntityCondition.makeCondition("invoiceTypeId", EntityOperator.IN, UtilMisc.toList("SALES_INVOICE", "CUST_RTN_INVOICE"));
+            EntityExpr conditionSalesInvoice = EntityCondition.makeCondition("invoiceTypeId", EntityOperator.IN, UtilMisc.toList("SALES_INVOICE",
+                    "CUST_RTN_INVOICE"));
             listAllConditions.add(conditionSalesInvoice);
 
             // retrieving all invoices
@@ -335,9 +344,10 @@ public class BirtMasterReportServices {
 
                 // adding productStoreId and productStoreName
                 EntityExpr conditionInvoiceId = EntityCondition.makeCondition("invoiceId", invoice.getString("invoiceId"));
-//                EntityExpr conditionInvoiceItemSeqId = EntityCondition.makeCondition("invoiceItemSeqId", invoice.getString("invoiceItemSeqId"));
-//                List<GenericValue> listOrderBilling = delegator.findList("OrderItemBilling", EntityCondition.makeCondition
-//                (UtilMisc.toList(conditionInvoiceId, conditionInvoiceItemSeqId)), UtilMisc.toSet("orderId"), null, null, false);
+                //                EntityExpr conditionInvoiceItemSeqId = EntityCondition.makeCondition("invoiceItemSeqId", invoice.getString
+                // ("invoiceItemSeqId"));
+                //                List<GenericValue> listOrderBilling = delegator.findList("OrderItemBilling", EntityCondition.makeCondition
+                //                (UtilMisc.toList(conditionInvoiceId, conditionInvoiceItemSeqId)), UtilMisc.toSet("orderId"), null, null, false);
                 GenericValue orderBilling = EntityQuery.use(delegator)
                         .from("OrderItemBilling")
                         .where(conditionInvoiceId)
@@ -351,7 +361,8 @@ public class BirtMasterReportServices {
                             .cache()
                             .queryFirst();
                     if (UtilValidate.isNotEmpty(productStoreList) && !productStoreList.contains(productStore.getString("productStoreId"))) {
-                        continue; // FIXME pretty ugly... but had problems with the rare case where an invoice matches with several orders with more than one productStore
+                        continue; // FIXME pretty ugly... but had problems with the rare case where an invoice matches with several orders with
+                        // more than one productStore
                     }
                     invoiceEditable.put("productStoreId", productStore.getString("productStoreId"));
                     invoiceEditable.put("storeName", productStore.getString("storeName"));

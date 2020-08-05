@@ -109,7 +109,7 @@ public class WebSiteFilter implements Filter {
             if (!webSiteId.equals(session.getAttribute("webSiteId"))) {
                 ShoppingCart cart = (ShoppingCart) session.getAttribute("shoppingCart");
                 if (cart != null && !(webSite.getString("productStoreId").equals(cart.getProductStoreId())) ) {
-                    // clearing cart items from previous store 
+                    // clearing cart items from previous store
                     cart.clear();
                     // Put product Store for this webSite in cart
                     cart.setProductStoreId(webSite.getString("productStoreId"));

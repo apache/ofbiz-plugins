@@ -188,7 +188,7 @@ public class EbayEvents {
 
         if (UtilValidate.isNotEmpty(productIds)) {
             try {
-                // check  add new product obj ? to export 
+                // check  add new product obj ? to export
                 for (String productId : productIds) {
                     for (Map<String, Object> itObj : itemObjs) {
                         if (UtilValidate.isNotEmpty(itObj.get(productId.concat("_Obj")))) {
@@ -394,7 +394,7 @@ public class EbayEvents {
             List<CategoryType> csCateList = csCateMaps.get(apiContext.getSite());
             if (UtilValidate.isNotEmpty(csCateList)) {
                 if (UtilValidate.isNotEmpty(categoryId)) {
-                    // find child of selected ebay categories 
+                    // find child of selected ebay categories
                     for (CategoryType csCate : csCateList) {
                         String[] categoryParentIds = csCate.getCategoryParentID();
                         for (String categoryParentId : categoryParentIds) {
@@ -451,7 +451,7 @@ public class EbayEvents {
             csCateList = csCateMaps.get(apiContext.getSite());
             if (UtilValidate.isNotEmpty(csCateList)) {
                 if (UtilValidate.isNotEmpty(categoryId)) {
-                    // find child of selected ebay categories 
+                    // find child of selected ebay categories
                     for (StoreCustomCategoryType csCate : csCateList) {
                         if (categoryId.equals(String.valueOf(csCate.getCategoryID()))) {
                             StoreCustomCategoryType[] childCategories = csCate.getChildCategory();
@@ -503,7 +503,7 @@ public class EbayEvents {
             List<CategoryType> csCateList = csCateMaps.get(apiContext.getSite());
             if (UtilValidate.isNotEmpty(csCateList)) {
                 if (UtilValidate.isNotEmpty(categoryId)) {
-                    // find child of selected ebay categories 
+                    // find child of selected ebay categories
                     for (CategoryType csCate : csCateList) {
                         if (csCate.getCategoryID().equals(categoryId)) {
                             cate = csCate;

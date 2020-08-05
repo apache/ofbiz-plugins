@@ -24,6 +24,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import groovy.transform.AnnotationCollector;
+import org.apache.commons.math3.analysis.solvers.AllowedSolution;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.GeneralException;
 import org.apache.ofbiz.base.util.UtilDateTime;
@@ -96,7 +98,6 @@ public class WebPosTransaction {
 
         Debug.logInfo("Created WebPosTransaction [" + this.transactionId + "]", MODULE);
     }
-
     public String getUserLoginId() {
         return webPosSession.getUserLoginId();
     }
@@ -309,7 +310,7 @@ public class WebPosTransaction {
     }
 
     public String getPaymentMethodTypeId(int index) {
-        return getCart().getPaymentInfo(index).paymentMethodTypeId;
+        return getCart().getPaymentInfo(index).getPaymentMethodTypeId();
     }
 
     public int checkPaymentMethodType(String paymentMethodTypeId) {
@@ -446,8 +447,7 @@ public class WebPosTransaction {
     public void setPaymentRefNum(int paymentIndex, String refNum, String authCode) {
         Debug.logInfo("setting payment index reference number " + paymentIndex + " / " + refNum + " / " + authCode, MODULE);
         ShoppingCart.CartPaymentInfo inf = getCart().getPaymentInfo(paymentIndex);
-        inf.refNum[0] = refNum;
-        inf.refNum[1] = authCode;
+        inf.setRefNum(refNum, authCode);
     }
 
     /* CVV2 code should be entered when a card can't be swiped */
@@ -455,8 +455,8 @@ public class WebPosTransaction {
         Debug.logInfo("setting payment security code " + paymentId, MODULE);
         int paymentIndex = getCart().getPaymentInfoIndex(paymentId, refNum);
         ShoppingCart.CartPaymentInfo inf = getCart().getPaymentInfo(paymentIndex);
-        inf.securityCode = securityCode;
-        inf.isSwiped = false;
+        inf.setSecurityCode(securityCode);
+        inf.setIsSwiped(false);
     }
 
     /* Track2 data should be sent to processor when a card is swiped. */
@@ -464,8 +464,8 @@ public class WebPosTransaction {
         Debug.logInfo("setting payment security code " + paymentId, MODULE);
         int paymentIndex = getCart().getPaymentInfoIndex(paymentId, refNum);
         ShoppingCart.CartPaymentInfo inf = getCart().getPaymentInfo(paymentIndex);
-        inf.securityCode = securityCode;
-        inf.isSwiped = true;
+        inf.setSecurityCode(securityCode);
+        inf.setIsSwiped(true);
     }
 
     /* Postal code should be entered when a card can't be swiped */
@@ -473,7 +473,7 @@ public class WebPosTransaction {
         Debug.logInfo("setting payment security code " + paymentId, MODULE);
         int paymentIndex = getCart().getPaymentInfoIndex(paymentId, refNum);
         ShoppingCart.CartPaymentInfo inf = getCart().getPaymentInfo(paymentIndex);
-        inf.postalCode = postalCode;
+        inf.setPostalCode(postalCode);
     }
 
     public BigDecimal getTaxTotal() {
@@ -508,6 +508,7 @@ public class WebPosTransaction {
         return result;
     }
 
+    /** get cart */
     public ShoppingCart getCart() {
         return webPosSession.getCart();
     }
