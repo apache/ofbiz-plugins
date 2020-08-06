@@ -19,7 +19,6 @@
 package org.apache.ofbiz.pricat.sample;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;

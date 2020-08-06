@@ -53,9 +53,7 @@ import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.LocalDispatcher;
-import org.apache.ofbiz.service.ServiceAuthException;
 import org.apache.ofbiz.service.ServiceUtil;
-import org.apache.ofbiz.service.ServiceValidationException;
 
 /**
  * Base class for OFBiz Test Tools test case implementations.
