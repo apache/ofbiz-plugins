@@ -15,13 +15,32 @@ Once deployed, following URLs can be accessed
 * POST /rest/services/{serviceName} (For this endpoint, the service in parameters must be part of Request Body)
 
 ==== Authentication
-Initial implementation inluced Bearer Auth Scheme. Authentication scheme is "Bearer <JWT>". The implementation can be update to include other authentication schemes as well.
-Example -
+API is protected by JWT tokens, although other forms of access tokens may be supported in future. An API client must first needs to authenticate itself using Basic Auth using username and password. Username is nothing but OFBiz 'userLogin'. Token can also be generated using Swagger UI.
+[source, json]
+----
+curl -X POST "https://localhost:8443/rest/auth/token" -H "accept: application/json" -H "Authorization: Basic YWRtaW46b2ZiaXo="
+----
+If successfully validated, generated token should be received in response -
+[source, json]
+----
+{
+  "statusCode": 200,
+  "statusDescription": "OK",
+  "successMessage": "Token granted.",
+  "data": {
+    "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1c2VyTG9naW5JZCI6ImFkbWluIiwiaXNzIjoiQXBhY2hlT0ZCaXoiLCJleHAiOjE1OTY3MDk4MjAsImlhdCI6MTU5NjcwODAyMH0.9Hj4pkkeQowAMxPLrI_To0WTohxxgVR6FoViyx5HoboTACQZ4iqDyqiIBodkuCVsZwOTPT1RSAQJ0L_oSVMqBA",
+    "token_type": "Bearer",
+    "expires_in": "1800"
+  }
+}
+----
+
+Subsequent API calls must use received token using Bearer Authentication scheme as shown below -
 
 [source, json]
 ----
 GET /rest/services HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJBcGFjaGVPRkJpeiIsImlhdCI6MTU0NzczOTM0OCwiZXhwIjoxNjc5Mjc1MzQ4LCJhdWQiOiJ3d3cuZXhhbXBsZS5jb20iLCJzdWIiOiJqcm9ja2V0QGV4YW1wbGUuY29tIiwiR2l2ZW5OYW1lIjoiSm9obm55IiwiU3VybmFtZSI6IlJvY2tldCIsIkVtYWlsIjoianJvY2tldEBleGFtcGxlLmNvbSIsInVzZXJMb2dpbklkIjoiYWRtaW4iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.fwafgrgpodBJcXxNTQdZknKeWKb3sDOsQrcR2vcRw97FznD6mkE79p10Tu7cqpUx7LiXuROUAnXEgqDice-BSg
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1c2VyTG9naW5JZCI6ImFkbWluIiwiaXNzIjoiQXBhY2hlT0ZCaXoiLCJleHAiOjE1OTY3MDk4MjAsImlhdCI6MTU5NjcwODAyMH0.9Hj4pkkeQowAMxPLrI_To0WTohxxgVR6FoViyx5HoboTACQZ4iqDyqiIBodkuCVsZwOTPT1RSAQJ0L_oSVMqBA
 ----
 
 ==== Example
