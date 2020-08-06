@@ -36,7 +36,7 @@ import org.apache.ofbiz.webapp.WebAppUtil;
 import org.apache.ofbiz.ws.rs.listener.ApiContextListener;
 import org.apache.ofbiz.ws.rs.util.OpenApiUtil;
 
-import io.swagger.v3.oas.integration.ContextUtils;
+import io.swagger.v3.jaxrs2.Reader;
 import io.swagger.v3.oas.integration.api.OpenAPIConfiguration;
 import io.swagger.v3.oas.integration.api.OpenApiReader;
 import io.swagger.v3.oas.models.Components;
@@ -55,11 +55,11 @@ import io.swagger.v3.oas.models.parameters.QueryParameter;
 import io.swagger.v3.oas.models.parameters.RequestBody;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.responses.ApiResponses;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.tags.Tag;
 
-public final class OFBizOpenApiReader implements OpenApiReader {
+public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
 
-    private OpenAPIConfiguration openApiConfiguration;
     private Components components;
     private Paths paths;
     private Set<Tag> openApiTags;
@@ -68,36 +68,39 @@ public final class OFBizOpenApiReader implements OpenApiReader {
     private OpenAPI openApi;
 
     public OFBizOpenApiReader() {
-        paths = new Paths();
         openApiTags = new LinkedHashSet<>();
-        schemas = new HashMap<>();
     }
 
     @Override
     public void setConfiguration(OpenAPIConfiguration openApiConfiguration) {
-        if (openApiConfiguration != null) {
-            this.openApiConfiguration = ContextUtils.deepCopy(openApiConfiguration);
-            if (openApiConfiguration.getOpenAPI() != null) {
-                this.openApi = this.openApiConfiguration.getOpenAPI();
-                if (this.openApi.getComponents() != null) {
-                    this.components = this.openApi.getComponents();
-                } else {
-                    components = new Components();
-                }
-                components.schemas(schemas);
-            } else {
-                this.openApi = new OpenAPI();
-            }
-        }
+        super.setConfiguration(openApiConfiguration);
     }
 
     @Override
     public OpenAPI read(Set<Class<?>> classes, Map<String, Object> resources) {
-        openApi = openApiConfiguration.getOpenAPI();
+        openApi = super.read(classes, resources);
+        if (openApi.getTags() != null) {
+            openApiTags.addAll(openApi.getTags());
+        }
+
         Tag serviceResourceTag = new Tag().name("Exported Services")
                 .description("OFBiz services that are exposed via REST interface with export attribute set to true");
         openApiTags.add(serviceResourceTag);
         openApi.setTags(new ArrayList<Tag>(openApiTags));
+        components = openApi.getComponents();
+
+        if (components == null) {
+            components = new Components();
+        }
+        schemas = components.getSchemas();
+        if (schemas == null) {
+            schemas = new HashMap<>();
+            components.schemas(schemas);
+        }
+        paths = openApi.getPaths();
+        if (paths == null) {
+            paths = new Paths();
+        }
 
         ServletContext servletContext = ApiContextListener.getApplicationCntx();
         LocalDispatcher dispatcher = WebAppUtil.getDispatcher(servletContext);
@@ -112,9 +115,11 @@ public final class OFBizOpenApiReader implements OpenApiReader {
                 e.printStackTrace();
             }
             if (service != null && service.export && UtilValidate.isNotEmpty(service.action)) {
+                SecurityRequirement security = new SecurityRequirement();
+                security.addList("jwtToken");
                 final Operation operation = new Operation().summary(service.description)
                         .description(service.description).addTagsItem("Exported Services").operationId(service.name)
-                        .deprecated(false);
+                        .deprecated(false).addSecurityItem(security);
 
                 PathItem pathItemObject = new PathItem();
 

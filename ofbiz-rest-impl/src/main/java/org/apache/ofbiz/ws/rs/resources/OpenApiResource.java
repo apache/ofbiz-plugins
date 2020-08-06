@@ -18,6 +18,9 @@
  *******************************************************************************/
 package org.apache.ofbiz.ws.rs.resources;
 
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -34,6 +37,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.ws.rs.openapi.OFBizOpenApiReader;
+import org.apache.ofbiz.ws.rs.openapi.OFBizResourceScanner;
 
 import io.swagger.v3.core.util.Json;
 import io.swagger.v3.core.util.Yaml;
@@ -71,16 +75,28 @@ public final class OpenApiResource {
         OpenAPI openApi = new OpenAPI();
         openApi.addServersItem(buildOpenApiServer());
 
-        SecurityScheme securitySchemeApiKey = new SecurityScheme();
-        securitySchemeApiKey.setName("api-key");
-        securitySchemeApiKey.setType(SecurityScheme.Type.APIKEY);
-        securitySchemeApiKey.setIn(SecurityScheme.In.HEADER);
-        openApi.schemaRequirement(securitySchemeApiKey.getName(), securitySchemeApiKey);
+        SecurityScheme securitySchemeBearer = new SecurityScheme();
+        securitySchemeBearer.setName("jwtToken");
+        securitySchemeBearer.setType(SecurityScheme.Type.HTTP);
+        securitySchemeBearer.setScheme("bearer");
+        securitySchemeBearer.bearerFormat("JWT");
+        openApi.schemaRequirement(securitySchemeBearer.getName(), securitySchemeBearer);
+
+        SecurityScheme basicAuthScheme = new SecurityScheme();
+        basicAuthScheme.setName("basicAuth");
+        basicAuthScheme.setType(SecurityScheme.Type.HTTP);
+        basicAuthScheme.setScheme("basic");
+        openApi.schemaRequirement(basicAuthScheme.getName(), basicAuthScheme);
+
+
         SwaggerConfiguration config = new SwaggerConfiguration().openAPI(openApi.info(buildOpenApiInfo()))
-                .readerClass(OFBizOpenApiReader.class.getName());
+                .readerClass(OFBizOpenApiReader.class.getName())
+                .resourcePackages(Stream.of("org.apache.ofbiz.ws.rs.resources").collect(Collectors.toSet()))
+                .scannerClass(OFBizResourceScanner.class.getName());
 
 
-        OpenApiContext ctx = new GenericOpenApiContextBuilder<>().openApiConfiguration(config).buildContext(true);
+        OpenApiContext ctx = new GenericOpenApiContextBuilder<>().openApiConfiguration(config)
+                .buildContext(true);
 
         openApi = ctx.read();
 
@@ -114,7 +130,6 @@ public final class OpenApiResource {
     }
 
     private Server buildOpenApiServer() {
-        System.out.println(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath());
         Server serverItem =
                 new Server().url(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath())
                         .description("Server Hosting the REST API");
