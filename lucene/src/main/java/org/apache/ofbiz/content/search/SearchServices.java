@@ -18,8 +18,6 @@
  *******************************************************************************/
 package org.apache.ofbiz.content.search;
 
-import java.lang.Object;
-import java.lang.String;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
