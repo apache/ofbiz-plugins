@@ -325,7 +325,7 @@ under the License.
             </actions>
             <widgets>
                 <include-screen name="breadcrumbs"/>
-                <platform-specific><html><html-template location="component://ecommerce/template/catalog/ConfigProductDetail.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template multi-block="true" location="component://ecommerce/template/catalog/ConfigProductDetail.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
