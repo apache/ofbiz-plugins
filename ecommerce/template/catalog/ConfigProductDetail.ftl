@@ -47,15 +47,9 @@ ${virtualJavaScript!}
   }
 
   function addItem() {
-    var addForm = jQuery('#addFormId');
-    var formData = addForm.serializeArray();
-    var quantity = formData.find(function(item){
-        return "quantity" == item.name;
-    })
-    var configForm = jQuery('#configFormId');
-    configForm.attr("action", addForm.attr("action"));
-    configForm.find("[name='quantity']").val(quantity.value);
-    configForm.submit();
+    document.configform.action = document.addform.action;
+    document.configform.quantity.value = document.addform.quantity.value;
+    document.configform.submit();
   }
   function verifyConfig() {
     document.configform.submit();
@@ -310,7 +304,7 @@ ${virtualJavaScript!}
 
         <form method="post"
             action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>"
-            name="addform" id="addFormId">
+            name="addform">
         <#assign inStock = true>
         <#-- Variant Selection -->
         <#if product.isVirtual?? && "Y" == product.isVirtual?upper_case>
@@ -372,7 +366,7 @@ ${virtualJavaScript!}
             <div>[${uiLabelMap.EcommerceProductNotConfigured}]&nbsp;
               <input type="text" size="5" name="quantity" value="0" disabled="disabled"/></div>
           <#else>
-            <div class="input-group"><input type="text" size="5" form="addFormId" name="quantity" value="1" class="form-control form-control-sm"/>
+            <div class="input-group"><input type="text" size="5" name="quantity" value="1" class="form-control form-control-sm"/>
             <span class="input-group-button">
             <a href="javascript:addItem()" class="btn btn-outline-secondary btn-sm">
                   ${uiLabelMap.OrderAddToCart}
