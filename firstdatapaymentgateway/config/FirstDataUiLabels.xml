@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
+    <property key="FirstDataApplication">
+        <value xml:lang="en">FirstData Application</value>
+        <value xml:lang="zh">FirstData应用程序</value>
+        <value xml:lang="zh-TW">FirstData應用程式</value>
+    </property>
+    <property key="FirstDataCompanyName">
+        <value xml:lang="en">OFBiz: FirstData</value>
+        <value xml:lang="zh-TW">OFBiz: FirstData</value>
+    </property>
+    <property key="FirstDataCompanySubtitle">
+        <value xml:lang="en">Part of the Apache OFBiz Family of Open Source Software</value>
+        <value xml:lang="it">Un modulo della famiglia di software open source Apache OFBiz</value>
+        <value xml:lang="zh">开源软件OFBiz的组成部分</value>
+        <value xml:lang="zh-TW">開源軟體OFBiz的組成部分</value>
+    </property>
+    <property key="FirstDataViewPermissionError">
+        <value xml:lang="en">You are not allowed to view this page.</value>
+        <value xml:lang="zh">不允许你浏览这个页面。</value>
+        <value xml:lang="zh-TW">不允許您檢視這個頁面.</value>
+    </property>
+    <property key="FirstDataConfigurations">
+        <value xml:lang="en">First Data Configurations</value>
+    </property>
+    <property key="FirstDataEditConfigurations">
+        <value xml:lang="en">Edit Configurations</value>
+    </property>
+    <property key="FormFieldTitle_appName">
+        <value xml:lang="en">App Name</value>
+    </property>
+    <property key="FormFieldTitle_apiKey">
+        <value xml:lang="en">API Key</value>
+    </property>
+    <property key="FormFieldTitle_apiSecret">
+        <value xml:lang="en">API Secret</value>
+    </property>
+    <property key="FormFieldTitle_transactionUrl">
+        <value xml:lang="en">Transaction URL</value>
+    </property>
+    <property key="FormFieldTitle_enableDataVault">
+        <value xml:lang="en">Enable Data Vault</value>
+    </property>
+</resource>

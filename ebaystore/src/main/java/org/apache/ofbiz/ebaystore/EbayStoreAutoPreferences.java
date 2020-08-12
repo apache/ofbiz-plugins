@@ -138,7 +138,7 @@ public class EbayStoreAutoPreferences {
         String isAutoPositiveFeedback = "N";
         String feedbackEventCode = null;
         GenericValue ebayProductStorePref = null;
-        List<String> list = new LinkedList<String>();
+        List<String> list = new LinkedList<>();
 
         try {
             ApiContext apiContext = EbayStoreHelper.getApiContext(productStoreId, locale, delegator);
@@ -241,7 +241,7 @@ public class EbayStoreAutoPreferences {
         ApiContext apiContext = EbayStoreHelper.getApiContext(productStoreId, locale, delegator);
 
         try {
-            Map<String, Object> resultMap = new HashMap<String, Object>();
+            Map<String, Object> resultMap = new HashMap<>();
             GenericValue ebayProductStorePref = null;
             String comments = null;
             String autoPrefJobId = null;
@@ -300,10 +300,7 @@ public class EbayStoreAutoPreferences {
             }
             request.setAttribute("_EVENT_MESSAGE_", "Setting Automated Positive Feedback for Buyers Success with site " + apiContext.getSite().value());
 
-        } catch (GenericEntityException e) {
-            request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
-            return "error";
-        } catch (GenericServiceException e) {
+        } catch (GenericEntityException | GenericServiceException e) {
             request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
             return "error";
         }
@@ -336,7 +333,6 @@ public class EbayStoreAutoPreferences {
                 // if isAutoPositiveFeedback is N that means not start this job run service
                 if ("Y".equals(isAutoFeedbackReminder) && jobId.equals(ebayProductStorePref.getString("autoPrefJobId"))) {
                     afterDays = Integer.parseInt(ebayProductStorePref.getString("condition1"));
-                    
                     // start getting sold item list from ebay follow your site
                     GetSellingManagerSoldListingsCall sellingManagerSoldListings = new GetSellingManagerSoldListingsCall(apiContext);
                     List<SellingManagerSoldOrderType> items = new LinkedList<SellingManagerSoldOrderType>();
@@ -354,8 +350,8 @@ public class EbayStoreAutoPreferences {
                                     Calendar shippedTime = orderStatus.getShippedTime();
                                     Calendar afterShippedTime = orderStatus.getShippedTime();
                                     afterShippedTime.add(Calendar.DAY_OF_MONTH, afterDays);
-                                    Debug.logInfo("Verify date for send reminder feedback eamil by auto service: buyer " + solditem.getBuyerID() + " seller shippedTime " +
-                                            "" + formatter.format(shippedTime) + " codition days " + afterDays + " after shippedTime :" + formatter.format(afterShippedTime) + " now date" + formatter.format(right_now), MODULE);
+                                    Debug.logInfo("Verify date for send reminder feedback eamil by auto service: buyer " + solditem.getBuyerID() + " seller shippedTime "
+                                            + "" + formatter.format(shippedTime) + " codition days " + afterDays + " after shippedTime :" + formatter.format(afterShippedTime) + " now date" + formatter.format(right_now), MODULE);
                                     // if now date is after shipped time follow after days condition would be send reminder email to buyer
                                     if (right_now.after(afterShippedTime)) {
                                         items.add(solditem);
@@ -367,7 +363,7 @@ public class EbayStoreAutoPreferences {
                         // call service send email (get template follow productStoreId)
                         for (SellingManagerSoldOrderType item : items) {
                             // call send
-                            Map<String, Object> sendMap = new HashMap<String, Object>();
+                            Map<String, Object> sendMap = new HashMap<>();
                             GenericValue productStoreEmail = EntityQuery.use(delegator).from("ProductStoreEmailSetting").where("productStoreId", productStoreId, "emailType", "EBAY_FEEBACK_REMIN").queryOne();
                             String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
                             sendMap.put("bodyScreenUri", bodyScreenLocation);
@@ -380,7 +376,7 @@ public class EbayStoreAutoPreferences {
                             sendMap.put("sendBcc", productStoreEmail.get("bccAddress"));
                             sendMap.put("sendTo", item.getBuyerEmail());
 
-                            Map<String, Object> bodyParameters = new HashMap<String, Object>();
+                            Map<String, Object> bodyParameters = new HashMap<>();
                             bodyParameters.put("buyerUserId", item.getBuyerID());
                             sendMap.put("bodyParameters", bodyParameters);
 
@@ -408,7 +404,7 @@ public class EbayStoreAutoPreferences {
         String jobId = (String) context.get("jobId");
         try {
             GenericValue userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "system").queryOne();
-            Map<String, Object> serviceMap = new HashMap<String, Object>();
+            Map<String, Object> serviceMap = new HashMap<>();
             serviceMap.put("userLogin", userLogin);
             //ProductStore
             List<GenericValue> productStores = EntityQuery.use(delegator).from("EbayProductStorePref").where("autoPrefJobId", jobId).queryList();
@@ -437,12 +433,11 @@ public class EbayStoreAutoPreferences {
                     }
                     List<Map<String, Object>> soldItems = UtilGenerics.checkList(serviceResult.get("soldItems"));
                     if (soldItems.size() != 0) {
-                        for (int itemCount = 0; itemCount < soldItems.size(); itemCount++) {
-                            Map<String, Object> soldItemMap = soldItems.get(itemCount);
+                        for (Map<String, Object> soldItemMap : soldItems) {
                             if (UtilValidate.isNotEmpty(soldItemMap.get("itemId"))) {
                                 GenericValue productCheck = EntityQuery.use(delegator).from("Product").where("productId", soldItemMap.get("itemId")).queryOne();
                                 if (productCheck == null) {
-                                    Map<String, Object> inMap = new HashMap<String, Object>();
+                                    Map<String, Object> inMap = new HashMap<>();
                                     inMap.put("productId", soldItemMap.get("itemId"));
                                     inMap.put("productTypeId", "EBAY_ITEM");
                                     inMap.put("internalName", "eBay Item " + soldItemMap.get("title"));
@@ -454,7 +449,7 @@ public class EbayStoreAutoPreferences {
                                     // ProductRole (VENDOR)
                                     List<GenericValue> productRole = EntityQuery.use(delegator).from("ProductRole").where("partyId", partyId, "productId", soldItemMap.get("itemId"), "roleTypeId", "VENDOR").queryList();
                                     if (productRole.size() == 0) {
-                                        Map<String, Object> addRole = new HashMap<String, Object>();
+                                        Map<String, Object> addRole = new HashMap<>();
                                         addRole.put("productId", soldItemMap.get("itemId"));
                                         addRole.put("roleTypeId", "VENDOR");
                                         addRole.put("partyId", partyId);
@@ -470,7 +465,7 @@ public class EbayStoreAutoPreferences {
                         }
                     }
                     //check active items
-                    serviceMap = new HashMap<String, Object>();
+                    serviceMap = new HashMap<>();
                     serviceMap.put("userLogin", userLogin);
                     serviceMap.put("productStoreId", productStoreId);
                     serviceResult = dispatcher.runSync("getEbayActiveItems", serviceMap);
@@ -478,10 +473,10 @@ public class EbayStoreAutoPreferences {
                         return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultService));
                     }
                     List<Map<String, Object>> activeItems = UtilGenerics.checkList(serviceResult.get("activeItems"));
-                    List<String> activeItemMaps = new LinkedList<String>();
+                    List<String> activeItemMaps = new LinkedList<>();
                     if (activeItems.size() != 0) {
-                        for (int itemCount = 0; itemCount < activeItems.size(); itemCount++) {
-                            Map<String, Object> activeItemMap = UtilGenerics.checkMap(activeItems.get(itemCount));
+                        for (Map<String, Object> activeItem : activeItems) {
+                            Map<String, Object> activeItemMap = UtilGenerics.checkMap(activeItem);
                             if (UtilValidate.isNotEmpty(activeItemMap.get("itemId"))) {
                                 activeItemMaps.add((String) activeItemMap.get("itemId"));
                             }
@@ -489,14 +484,14 @@ public class EbayStoreAutoPreferences {
                     }
                     //check product role
                     List<GenericValue> productRoles = EntityQuery.use(delegator).from("ProductRole").where("partyId", partyId, "roleTypeId", "VENDOR").queryList();
-                    List<String> productRoleIds = new LinkedList<String>();
+                    List<String> productRoleIds = new LinkedList<>();
                     if (productRoles.size() != 0) {
-                        for (int itemCount = 0; itemCount < productRoles.size(); itemCount++) {
-                            String productId = productRoles.get(itemCount).getString("productId");
+                        for (GenericValue productRole : productRoles) {
+                            String productId = productRole.getString("productId");
                             productRoleIds.add(productId);
                         }
                     }
-                    List<EntityCondition> andExpr = new LinkedList<EntityCondition>();
+                    List<EntityCondition> andExpr = new LinkedList<>();
                     EntityCondition activeItemCond = EntityCondition.makeCondition("productId", EntityOperator.NOT_IN, activeItemMaps);
                     andExpr.add(activeItemCond);
                     EntityCondition productTypeCond = EntityCondition.makeCondition("productTypeId", EntityOperator.EQUALS, "EBAY_ITEM");
@@ -509,10 +504,10 @@ public class EbayStoreAutoPreferences {
                     if (itemsToRelist.size() != 0) {
                         //re-list sold items and not active
                         ApiContext apiContext = EbayStoreHelper.getApiContext(productStoreId, locale, delegator);
-                        for (int itemRelist = 0; itemRelist < itemsToRelist.size(); itemRelist++) {
+                        for (GenericValue genericValue : itemsToRelist) {
                             RelistItemCall relistItemCall = new RelistItemCall(apiContext);
                             ItemType itemToBeRelisted = new ItemType();
-                            GenericValue product = itemsToRelist.get(itemRelist);
+                            GenericValue product = genericValue;
                             itemToBeRelisted.setItemID(product.getString("productId"));
                             relistItemCall.setItemToBeRelisted(itemToBeRelisted);
                             relistItemCall.relistItem();
@@ -524,10 +519,8 @@ public class EbayStoreAutoPreferences {
                     }
                 }
             }
-        } catch (GenericEntityException|GenericServiceException ge) {
+        } catch (GenericEntityException | GenericServiceException ge) {
             return ServiceUtil.returnError(ge.getMessage());
-        } catch (Exception e) {
-            return ServiceUtil.returnError(e.getMessage());
         }
         return ServiceUtil.returnSuccess();
     }
@@ -560,7 +553,7 @@ public class EbayStoreAutoPreferences {
                     disputeExplanation = DisputeExplanationCodeType.valueOf(condition3);
                 }
                 // get sold items
-                Map<String, Object> serviceMap = new HashMap<String, Object>();
+                Map<String, Object> serviceMap = new HashMap<>();
                 serviceMap.put("productStoreId", productStoreId);
                 serviceMap.put("userLogin", userLogin);
                 Map<String, Object> serviceResult = dispatcher.runSync("getEbaySoldItems", serviceMap);
@@ -569,15 +562,15 @@ public class EbayStoreAutoPreferences {
                 }
                 List<Map<String, Object>> soldItems = UtilGenerics.checkList(serviceResult.get("soldItems"));
                 // check items to dispute
-                List<Map<String, Object>> itemsToDispute = new LinkedList<Map<String,Object>>();
-                for (int itemCount = 0; itemCount < soldItems.size(); itemCount++) {
-                    Map<String, Object> item = UtilGenerics.checkMap(soldItems.get(itemCount));
+                List<Map<String, Object>> itemsToDispute = new LinkedList<>();
+                for (Map<String, Object> soldItem : soldItems) {
+                    Map<String, Object> item = UtilGenerics.checkMap(soldItem);
                     String checkoutStatus = (String) item.get("checkoutStatus");
                     Date creationTime = (Date) item.get("creationTime");
                     Date paidTime = (Date) item.get("paidTime");
                     String unpaidItemStatus = (String) item.get("unpaidItemStatus");
                     int checkDays = UtilDateTime.getIntervalInDays(UtilDateTime.toTimestamp(creationTime), UtilDateTime.nowTimestamp());
-                    if (checkDays > afterDays && "CheckoutIncomplete".equals(checkoutStatus) && unpaidItemStatus == null && paidTime == null && checkoutStatus != "CheckoutComplete") {
+                    if (checkDays > afterDays && "CheckoutIncomplete".equals(checkoutStatus) && unpaidItemStatus == null && paidTime == null && "CheckoutComplete" != checkoutStatus) {
                         itemsToDispute.add(item);
                     }
                 }
@@ -589,8 +582,7 @@ public class EbayStoreAutoPreferences {
                             DetailLevelCodeType.ITEM_RETURN_ATTRIBUTES,
                             DetailLevelCodeType.ITEM_RETURN_DESCRIPTION
                     };
-                    for (int count = 0; count < itemsToDispute.size(); count++) {
-                        Map<String, Object> item = itemsToDispute.get(count);
+                    for (Map<String, Object> item : itemsToDispute) {
                         AddDisputeCall api = new AddDisputeCall(apiContext);
                         api.setDetailLevel(detailLevels);
                         api.setItemID((String) item.get("itemId"));
@@ -600,10 +592,8 @@ public class EbayStoreAutoPreferences {
                     }
                 }
             }
-        } catch (GenericEntityException|GenericServiceException ge) {
+        } catch (GenericEntityException | GenericServiceException ge) {
             return ServiceUtil.returnError(ge.getMessage());
-        } catch (Exception e) {
-            return ServiceUtil.returnError(e.getMessage());
         }
         return ServiceUtil.returnSuccess();
     }
@@ -636,7 +626,7 @@ public class EbayStoreAutoPreferences {
                     disputeExplanation = DisputeExplanationCodeType.valueOf(condition3);
                 }
                 // get sold items
-                Map<String, Object> serviceMap = new HashMap<String, Object>();
+                Map<String, Object> serviceMap = new HashMap<>();
                 serviceMap.put("productStoreId", productStoreId);
                 serviceMap.put("userLogin", userLogin);
                 Map<String, Object> serviceResult = dispatcher.runSync("getEbaySoldItems", serviceMap);
@@ -645,15 +635,15 @@ public class EbayStoreAutoPreferences {
                 }
                 List<Map<String, Object>> soldItems = UtilGenerics.checkList(serviceResult.get("soldItems"));
                 // check items to dispute
-                List<Map<String, Object>> itemsToDispute = new LinkedList<Map<String,Object>>();
-                for (int itemCount = 0; itemCount < soldItems.size(); itemCount++) {
-                    Map<String, Object> item = UtilGenerics.checkMap(soldItems.get(itemCount));
+                List<Map<String, Object>> itemsToDispute = new LinkedList<>();
+                for (Map<String, Object> soldItem : soldItems) {
+                    Map<String, Object> item = UtilGenerics.checkMap(soldItem);
                     String checkoutStatus = (String) item.get("checkoutStatus");
                     Date creationTime = (Date) item.get("creationTime");
                     Date paidTime = (Date) item.get("paidTime");
                     String unpaidItemStatus = (String) item.get("unpaidItemStatus");
                     int checkDays = UtilDateTime.getIntervalInDays(UtilDateTime.toTimestamp(creationTime), UtilDateTime.nowTimestamp());
-                    if (checkDays > afterDays && unpaidItemStatus == null && paidTime == null && checkoutStatus == "CheckoutComplete") {
+                    if (checkDays > afterDays && unpaidItemStatus == null && paidTime == null && "CheckoutComplete" == checkoutStatus) {
                         itemsToDispute.add(item);
                     }
                 }
@@ -665,8 +655,7 @@ public class EbayStoreAutoPreferences {
                             DetailLevelCodeType.ITEM_RETURN_ATTRIBUTES,
                             DetailLevelCodeType.ITEM_RETURN_DESCRIPTION
                     };
-                    for (int count = 0; count < itemsToDispute.size(); count++) {
-                        Map<String, Object> item = itemsToDispute.get(count);
+                    for (Map<String, Object> item : itemsToDispute) {
                         AddDisputeCall api = new AddDisputeCall(apiContext);
                         api.setDetailLevel(detailLevels);
                         api.setItemID((String) item.get("itemId"));
@@ -676,10 +665,8 @@ public class EbayStoreAutoPreferences {
                     }
                 }
             }
-        } catch (GenericEntityException|GenericServiceException ge) {
+        } catch (GenericEntityException | GenericServiceException ge) {
             return ServiceUtil.returnError(ge.getMessage());
-        } catch (Exception e) {
-            return ServiceUtil.returnError(e.getMessage());
         }
         return ServiceUtil.returnSuccess();
     }
@@ -727,7 +714,7 @@ public class EbayStoreAutoPreferences {
                         // call service send email (get template follow productStoreId)
                         for (SellingManagerSoldOrderType item : items) {
                             // call send
-                            Map<String, Object> sendMap = new HashMap<String, Object>();
+                            Map<String, Object> sendMap = new HashMap<>();
                             GenericValue productStoreEmail = EntityQuery.use(delegator).from("ProductStoreEmailSetting").where("productStoreId", productStoreId, "emailType", "EBAY_PAY_RECIEVED").queryOne();
                             String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
                             sendMap.put("bodyScreenUri", bodyScreenLocation);
@@ -740,7 +727,7 @@ public class EbayStoreAutoPreferences {
                             sendMap.put("sendBcc", productStoreEmail.get("bccAddress"));
                             sendMap.put("sendTo", item.getBuyerEmail());
 
-                            Map<String, Object> bodyParameters = new HashMap<String, Object>();
+                            Map<String, Object> bodyParameters = new HashMap<>();
                             bodyParameters.put("buyerUserId", item.getBuyerID());
                             sendMap.put("bodyParameters", bodyParameters);
 
@@ -763,7 +750,7 @@ public class EbayStoreAutoPreferences {
 
 
     public static Map<String, Object> runCombineOrders(DispatchContext dctx, Map<String, Object> context) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
@@ -780,13 +767,12 @@ public class EbayStoreAutoPreferences {
 
                     Timestamp beginDate = UtilDateTime.toTimestamp("01/01/2001 00:00:00");
                     Long daysCount = Long.parseLong(ebayPref.get("condition1").toString());
-                    Hashtable<String, List<Map<String, Object>>> h = new Hashtable<String, List<Map<String, Object>>>();
+                    Hashtable<String, List<Map<String, Object>>> h = new Hashtable<>();
 
-                    for (int i = 0; i < soldOrderLength; i++) {
-                        SellingManagerSoldOrderType sellingManagerSoldOrder = sellingManagerSoldOrders[i];
+                    for (SellingManagerSoldOrderType sellingManagerSoldOrder : sellingManagerSoldOrders) {
                         String buyerId = sellingManagerSoldOrder.getBuyerID().toString();
-                        List<Map<String, Object>> soldGroupList = new LinkedList<Map<String,Object>>();
-                        Map<String, Object> mymap = new HashMap<String, Object>();
+                        List<Map<String, Object>> soldGroupList = new LinkedList<>();
+                        Map<String, Object> mymap = new HashMap<>();
                         mymap.put("group", "");
                         mymap.put("soldorder", sellingManagerSoldOrder);
                         if (h.size() > 0) {
@@ -847,8 +833,7 @@ public class EbayStoreAutoPreferences {
                                 CurrencyCodeType currencyId = null;
                                 int totalQty = 0;
 
-                                for (int j = 0; j < soldGroupList.size(); j++) {
-                                    Map<String, Object> myMap = soldGroupList.get(j);
+                                for (Map<String, Object> myMap : soldGroupList) {
                                     if (UtilValidate.isNotEmpty(myMap.get("group"))) {
                                         if (x == Integer.parseInt(myMap.get("group").toString())) {
                                             SellingManagerSoldOrderType sellingManagerSoldOrder = (SellingManagerSoldOrderType) myMap.get("soldorder");
@@ -868,8 +853,7 @@ public class EbayStoreAutoPreferences {
                                                 totalAmt = totalAmt + totalAmount;
                                                 SellingManagerSoldTransactionType[] sellingManagerSoldTransactions = sellingManagerSoldOrder.getSellingManagerSoldTransaction();
                                                 //set transaction
-                                                for (int count = 0; count < sellingManagerSoldTransactions.length; count++) {
-                                                    SellingManagerSoldTransactionType sellingManagerSoldTransaction = sellingManagerSoldTransactions[count];
+                                                for (SellingManagerSoldTransactionType sellingManagerSoldTransaction : sellingManagerSoldTransactions) {
                                                     TransactionType transtype = new TransactionType();
                                                     ItemType itemtype = new ItemType();
                                                     if (UtilValidate.isNotEmpty(sellingManagerSoldTransaction.getItemID())) {
@@ -914,9 +898,7 @@ public class EbayStoreAutoPreferences {
                 }
             }
             result = ServiceUtil.returnSuccess();
-        } catch (GenericEntityException e) {
-            result = ServiceUtil.returnError(e.getMessage());
-        } catch (GenericServiceException e) {
+        } catch (GenericEntityException | GenericServiceException e) {
             result = ServiceUtil.returnError(e.getMessage());
         } catch (Exception e) {
             return ServiceUtil.returnError(e.getMessage());
@@ -951,45 +933,43 @@ public class EbayStoreAutoPreferences {
     }
 
     public static Map<String, Object> autoSendWinningBuyerNotification(DispatchContext dctx, Map<String, Object> context) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
         String productStoreId = (String) context.get("productStoreId");
         try {
             GenericValue userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "system").queryOne();
-            Map<String, Object> resultSold =  dispatcher.runSync("getEbaySoldItems", UtilMisc.toMap("productStoreId", productStoreId, "userLogin", userLogin));
+            Map<String, Object> resultSold = dispatcher.runSync("getEbaySoldItems", UtilMisc.toMap("productStoreId", productStoreId, "userLogin", userLogin));
             if (ServiceUtil.isError(resultSold)) {
                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultSold));
             }
             List<Map<String, Object>> soldItems = UtilGenerics.checkList(resultSold.get("soldItems"));
             if (soldItems.size() != 0) {
-                for (int i = 0; i < soldItems.size(); i++) {
-                    Map<String, Object> item = soldItems.get(i);
+                for (Map<String, Object> item : soldItems) {
                     Timestamp lastestTime = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp(), 1);
                     Date creationDate = (Date) item.get("creationTime");
                     Timestamp creationTime = UtilDateTime.toTimestamp(creationDate);
 
                     if (creationTime.equals(lastestTime) && ("Chinese".equals(item.get("listingType").toString()))) {
-                        Map<String, Object> serviceMap = new HashMap<String, Object>();
+                        Map<String, Object> serviceMap = new HashMap<>();
                         serviceMap.put("userLogin", userLogin);
                         serviceMap.put("locale", locale);
                         serviceMap.put("productStoreId", productStoreId);
                         serviceMap.put("itemId", item.get("itemId").toString());
-                        Map<String, Object> resultBid =  dispatcher.runSync("getEbayAllBidders", serviceMap);
+                        Map<String, Object> resultBid = dispatcher.runSync("getEbayAllBidders", serviceMap);
                         if (ServiceUtil.isError(resultBid)) {
                             return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultBid));
                         }
-                        List<Map<String, Object>> allBidders =  UtilGenerics.checkList(resultBid.get("allBidders"));
+                        List<Map<String, Object>> allBidders = UtilGenerics.checkList(resultBid.get("allBidders"));
 
                         if (allBidders.size() != 0) {
                             // call to send email to bidder
-                            for (int j = 0; j < allBidders.size(); j++) {
-                                Map<String, Object> bidder = allBidders.get(j);
+                            for (Map<String, Object> bidder : allBidders) {
                                 UserType user = (UserType) bidder.get("bidder");
                                 String buyerUserId = bidder.get("userId").toString();
 
-                                Map<String, Object> sendMap = new HashMap<String, Object>();
+                                Map<String, Object> sendMap = new HashMap<>();
                                 GenericValue productStoreEmail = EntityQuery.use(delegator).from("ProductStoreEmailSetting").where("productStoreId", productStoreId, "emailType", "EBAY_WIN_BUYER_NOTI").queryOne();
                                 String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
                                 sendMap.put("bodyScreenUri", bodyScreenLocation);
@@ -1002,7 +982,7 @@ public class EbayStoreAutoPreferences {
                                 sendMap.put("sendBcc", productStoreEmail.get("bccAddress"));
                                 sendMap.put("sendTo", user.getEmail());
 
-                                Map<String, Object> bodyParameters = new HashMap<String, Object>();
+                                Map<String, Object> bodyParameters = new HashMap<>();
                                 bodyParameters.put("buyerUserId", buyerUserId);
                                 sendMap.put("bodyParameters", bodyParameters);
 
@@ -1027,7 +1007,7 @@ public class EbayStoreAutoPreferences {
     }
 
     public static Map<String, Object> autoSendItemDispatchedNotification(DispatchContext dctx, Map<String, Object> context) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
         String productStoreId = (String) context.get("productStoreId");
@@ -1035,14 +1015,13 @@ public class EbayStoreAutoPreferences {
         try {
             GenericValue userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "system").queryOne();
             context.put("userLogin", userLogin);
-            Map<String, Object> resultSold =  dispatcher.runSync("getEbaySoldItems", context);
+            Map<String, Object> resultSold = dispatcher.runSync("getEbaySoldItems", context);
             if (ServiceUtil.isError(resultSold)) {
                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultSold));
             }
             List<Map<String, Object>> soldItems = UtilGenerics.checkList(resultSold.get("soldItems"));
             if (soldItems.size() != 0) {
-                for (int i = 0; i < soldItems.size(); i++) {
-                    Map<String, Object> item = soldItems.get(i);
+                for (Map<String, Object> item : soldItems) {
                     String shippedStatus = item.get("shippedStatus").toString();
                     Timestamp lastestTime = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp(), 1);
                     Date shippedTime = (Date) item.get("shippedTime");
@@ -1052,7 +1031,7 @@ public class EbayStoreAutoPreferences {
                         String buyerUserId = item.get("buyerUserId").toString();
                         String buyerEmail = item.get("buyerEmail").toString();
 
-                         Map<String, Object> sendMap = new HashMap<String, Object>();
+                         Map<String, Object> sendMap = new HashMap<>();
                          GenericValue productStoreEmail = EntityQuery.use(delegator).from("ProductStoreEmailSetting").where("productStoreId", productStoreId, "emailType", "EBAY_ITEM_DISPATCH").queryOne();
                          String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
                          sendMap.put("bodyScreenUri", bodyScreenLocation);
@@ -1065,7 +1044,7 @@ public class EbayStoreAutoPreferences {
                          sendMap.put("sendBcc", productStoreEmail.get("bccAddress"));
                          sendMap.put("sendTo", buyerEmail);
 
-                         Map<String, Object> bodyParameters = new HashMap<String, Object>();
+                         Map<String, Object> bodyParameters = new HashMap<>();
                          bodyParameters.put("buyerUserId", buyerUserId);
                          sendMap.put("bodyParameters", bodyParameters);
 
@@ -1075,7 +1054,7 @@ public class EbayStoreAutoPreferences {
                              Debug.logError(e, MODULE);
                              return ServiceUtil.returnError(e.getMessage());
                          }
-                        
+
                     }
                 }
             }
@@ -1088,44 +1067,44 @@ public class EbayStoreAutoPreferences {
         return result;
     }
 
-    public static Map<String,Object> autoBlockItemsOutOfStock(DispatchContext dctx, Map<String,Object> context) {
+    public static Map<String, Object> autoBlockItemsOutOfStock(DispatchContext dctx, Map<String, Object> context) {
         Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Delegator delegator = dctx.getDelegator();
-        Map<String,Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         GetSellingManagerInventoryRequestType req = new GetSellingManagerInventoryRequestType();
-        GetSellingManagerInventoryResponseType resp =  null;
+        GetSellingManagerInventoryResponseType resp = null;
 
         if (context.get("productStoreId") != null) {
-            GetSellingManagerInventoryCall call = new GetSellingManagerInventoryCall(EbayStoreHelper.getApiContext((String)context.get("productStoreId"), locale, delegator));
+            GetSellingManagerInventoryCall call = new GetSellingManagerInventoryCall(EbayStoreHelper.getApiContext((String) context.get("productStoreId"), locale, delegator));
 
             try {
                 SellingManagerProductType[] returnedSellingManagerProductType = null;
                 resp = (GetSellingManagerInventoryResponseType)call.execute(req);
                 if (resp != null && "SUCCESS".equals(resp.getAck().toString())) {
-                    returnedSellingManagerProductType  = resp.getSellingManagerProduct();
-                    for (int i = 0; i < returnedSellingManagerProductType.length; i++) {
-                       SellingManagerProductDetailsType prodDetailType = returnedSellingManagerProductType[i].getSellingManagerProductDetails();
+                    returnedSellingManagerProductType = resp.getSellingManagerProduct();
+                    for (SellingManagerProductType sellingManagerProductType : returnedSellingManagerProductType) {
+                       SellingManagerProductDetailsType prodDetailType = sellingManagerProductType.getSellingManagerProductDetails();
                        int qty = prodDetailType.getQuantityAvailable();
 
                        if (qty == 0) {
-                           SellingManagerTemplateDetailsArrayType sellingTempArr =  returnedSellingManagerProductType[i].getSellingManagerTemplateDetailsArray();
+                           SellingManagerTemplateDetailsArrayType sellingTempArr = sellingManagerProductType.getSellingManagerTemplateDetailsArray();
                            SellingManagerTemplateDetailsType[] selllingTempType = null;
                            if (UtilValidate.isNotEmpty(sellingTempArr)) {
                                selllingTempType = sellingTempArr.getSellingManagerTemplateDetails();
                            }
 
                            if (selllingTempType.length > 0) {
-                               for (int j = 0; j < selllingTempType.length; j++) {
-                                   Long longTemplete = Long.parseLong(selllingTempType[j].getSaleTemplateID());
-                                   DeleteSellingManagerTemplateCall tcall = new DeleteSellingManagerTemplateCall(EbayStoreHelper.getApiContext((String)context.get("productStoreId"), locale, delegator));
+                               for (SellingManagerTemplateDetailsType sellingManagerTemplateDetailsType : selllingTempType) {
+                                   Long longTemplete = Long.parseLong(sellingManagerTemplateDetailsType.getSaleTemplateID());
+                                   DeleteSellingManagerTemplateCall tcall = new DeleteSellingManagerTemplateCall(EbayStoreHelper.getApiContext((String) context.get("productStoreId"), locale, delegator));
                                    DeleteSellingManagerTemplateRequestType treq = new DeleteSellingManagerTemplateRequestType();
-                                   DeleteSellingManagerTemplateResponseType tresp =  null;
+                                   DeleteSellingManagerTemplateResponseType tresp = null;
                                    treq.setSaleTemplateID(longTemplete);
 
                                    tresp = (DeleteSellingManagerTemplateResponseType) tcall.execute(treq);
                                    if (tresp != null && "SUCCESS".equals(tresp.getAck().toString())) {
-                                      result = ServiceUtil.returnSuccess();
+                                       result = ServiceUtil.returnSuccess();
                                    } else {
                                        EbayStoreHelper.createErrorLogMessage(userLogin, dctx.getDispatcher(), context.get("productStoreId").toString(), tresp.getAck().toString(), "Delete selling manager template : autoBlockItemsOutOfStock", tresp.getErrors(0).getLongMessage());
                                    }
@@ -1138,11 +1117,7 @@ public class EbayStoreAutoPreferences {
                     EbayStoreHelper.createErrorLogMessage(userLogin, dctx.getDispatcher(), context.get("productStoreId").toString(), resp.getAck().toString(), "Get selling manager inventory : autoBlockItemsOutOfStock", resp.getErrors(0).getLongMessage());
                 }
                 result = ServiceUtil.returnSuccess();
-            } catch (ApiException e) {
-                e.printStackTrace();
-            } catch (SdkSoapException e) {
-                e.printStackTrace();
-            } catch (SdkException e) {
+            } catch (ApiException | SdkException | SdkSoapException e) {
                 e.printStackTrace();
             }
         }
@@ -1150,7 +1125,7 @@ public class EbayStoreAutoPreferences {
     }
 
     public static Map<String, Object> autoRelistingItems(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> itemObject = new HashMap<String, Object>();
+        Map<String, Object> itemObject = new HashMap<>();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
@@ -1159,16 +1134,16 @@ public class EbayStoreAutoPreferences {
             EntityCondition expression1 = EntityCondition.makeCondition("autoRelisting", EntityOperator.EQUALS, "Y");
             EntityCondition expression2 = EntityCondition.makeCondition("endDateTime", EntityOperator.LESS_THAN, UtilDateTime.nowTimestamp());
             EntityCondition expression3 = EntityCondition.makeCondition("itemId", EntityOperator.NOT_EQUAL, null);
-            List<EntityCondition> expressions = new LinkedList<EntityCondition>();
+            List<EntityCondition> expressions = new LinkedList<>();
             expressions.add(expression1);
             expressions.add(expression2);
             expressions.add(expression3);
             EntityCondition cond = EntityCondition.makeCondition(expressions, EntityOperator.AND);
             List<GenericValue> ebayProductListings = EntityQuery.use(delegator).from("EbayProductListing").where(expressions).queryList();
-            for (int index = 0; index < ebayProductListings.size(); index++) {
-                Map<String, Object> inMap = new HashMap<String, Object>();
-                AddItemCall addItemCall = new AddItemCall(EbayStoreHelper.getApiContext((String)context.get("productStoreId"), locale, delegator));
-                GenericValue ebayProductListing = ebayProductListings.get(index);
+            for (GenericValue productListing : ebayProductListings) {
+                Map<String, Object> inMap = new HashMap<>();
+                AddItemCall addItemCall = new AddItemCall(EbayStoreHelper.getApiContext((String) context.get("productStoreId"), locale, delegator));
+                GenericValue ebayProductListing = productListing;
                 ItemType item = EbayStoreHelper.prepareAddItem(delegator, ebayProductListing);
                 addItemCall.setItem(item);
                 itemObject.put("addItemCall", addItemCall);
@@ -1192,10 +1167,8 @@ public class EbayStoreAutoPreferences {
                     }
                 }
             }
-        } catch (GenericEntityException|GenericServiceException ge) {
+        } catch (GenericEntityException | GenericServiceException ge) {
             return ServiceUtil.returnError(ge.getMessage());
-        } catch (Exception e) {
-            return ServiceUtil.returnError(e.getMessage());
         }
         return ServiceUtil.returnSuccess();
     }
@@ -1320,13 +1293,12 @@ public class EbayStoreAutoPreferences {
                         getBestOfferCall.setBestOfferStatus(BestOfferStatusCodeType.ALL);
                         getBestOfferCall.getBestOffers();
                         BestOfferType[] bestOffers = getBestOfferCall.getReturnedBestOffers();
-                        List<String> acceptBestOfferIndexId = new LinkedList<String>();
-                        SortedMap<String, Object> acceptBestOfferIDs = new TreeMap<String, Object>();
+                        List<String> acceptBestOfferIndexId = new LinkedList<>();
+                        SortedMap<String, Object> acceptBestOfferIDs = new TreeMap<>();
                         //Loop for get data best offer from buyer
                         RespondToBestOfferCall respondToBestOfferCall = new RespondToBestOfferCall(apiContext);
                         respondToBestOfferCall.setItemID(itemID);
-                        for (int offerCount = 0; offerCount < bestOffers.length; offerCount++) {
-                            BestOfferType bestOfferType = bestOffers[offerCount];
+                        for (BestOfferType bestOfferType : bestOffers) {
                             BestOfferStatusCodeType bestOfferStatusCodeType = bestOfferType.getStatus();
                             //Check status of best offer
                             if (bestOfferStatusCodeType == BestOfferStatusCodeType.PENDING) {
@@ -1337,7 +1309,7 @@ public class EbayStoreAutoPreferences {
                                 String offerPrice = Double.toString(price.getValue());
                                 Double doCerrentPrice = Double.parseDouble(offerPrice);
                                 int offerQuantity = bestOfferType.getQuantity();
-                                String[] bestOfferIDs = { bestOfferID };
+                                String[] bestOfferIDs = {bestOfferID};
                                 respondToBestOfferCall.setBestOfferIDs(bestOfferIDs);
 
                                 if ("Y".equals(rejectOffer)) {
@@ -1368,7 +1340,7 @@ public class EbayStoreAutoPreferences {
                                     acceptBestOfferIndexId.add(bestOfferID);
                                     String Quantity = String.valueOf(offerQuantity);
                                     acceptBestOfferIDs.put(bestOfferID, Quantity);
-                                } else if ((cerrentPrice.compareTo(greaterPrice) >= 0) && (cerrentPrice.compareTo(lessThanPrice) <= 0 ) && "Y".equals(rejectGreaterEnable)) {
+                                } else if ((cerrentPrice.compareTo(greaterPrice) >= 0) && (cerrentPrice.compareTo(lessThanPrice) <= 0) && "Y".equals(rejectGreaterEnable)) {
                                     respondToBestOfferCall.setBestOfferAction(BestOfferActionCodeType.DECLINE);
                                     respondToBestOfferCall.setSellerResponse(rejectGreaterMsg);
                                     respondToBestOfferCall.respondToBestOffer();
@@ -1385,7 +1357,7 @@ public class EbayStoreAutoPreferences {
 
                         if (acceptBestOfferIndexId.size() > 0) {
                             int quantityAvailable = inventoryQuantityItem;
-                            Collections.sort(acceptBestOfferIndexId);
+                            acceptBestOfferIndexId.sort(null);
                             RespondToBestOfferCall respondAcceptBestOfferCall = new RespondToBestOfferCall(apiContext);
                             respondAcceptBestOfferCall.setItemID(itemID);
                             for (String bestOfferIdIndex : acceptBestOfferIndexId) {
@@ -1406,9 +1378,9 @@ public class EbayStoreAutoPreferences {
                     }
                 }
             }
-        } catch (ApiException e){
+        } catch (ApiException e) {
             return ServiceUtil.returnError(e.getMessage());
-        }catch(Exception e){
+        } catch (Exception e) {
             return ServiceUtil.returnError(e.getMessage());
         }
         return ServiceUtil.returnSuccess();

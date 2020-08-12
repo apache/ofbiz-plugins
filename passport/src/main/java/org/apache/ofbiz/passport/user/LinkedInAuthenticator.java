@@ -87,9 +87,8 @@ public class LinkedInAuthenticator implements Authenticator {
 
     /**
      * Method to authenticate a user.
-     * 
-     * For LinkedIn users, we only check if the username(userLoginId) exists an 
-     * externalAuthId, and the externalAuthId has a valid accessToken in 
+     * For LinkedIn users, we only check if the username(userLoginId) exists an
+     * externalAuthId, and the externalAuthId has a valid accessToken in
      * LinkedInUser entity.
      *
      * @param userLoginId   User's login id
@@ -114,15 +113,9 @@ public class LinkedInAuthenticator implements Authenticator {
                     user = LinkedInAuthenticator.getUserInfo(getMethod, Locale.getDefault());
                 }
             }
-        } catch (GenericEntityException e) {
-            throw new AuthenticatorException(e.getMessage(), e);
-        } catch (IOException e) {
-            throw new AuthenticatorException(e.getMessage(), e);
-        } catch (AuthenticatorException e) {
+        } catch (GenericEntityException | ParserConfigurationException | AuthenticatorException | IOException e) {
             throw new AuthenticatorException(e.getMessage(), e);
         } catch (SAXException e) {
-            throw new AuthenticatorException(e.getMessage(), e);
-        } catch (ParserConfigurationException e) {
             throw new AuthenticatorException(e.getMessage(), e);
         } finally {
             if (getMethod != null) {
@@ -206,7 +199,9 @@ public class LinkedInAuthenticator implements Authenticator {
             if (parentTx != null) {
                 try {
                     TransactionUtil.resume(parentTx);
-                    if (Debug.verboseOn()) Debug.logVerbose("Resumed the parent transaction.", MODULE);
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("Resumed the parent transaction.", MODULE);
+                    }
                 } catch (GenericTransactionException e) {
                     Debug.logError(e, "Could not resume parent nested transaction: " + e.getMessage(), MODULE);
                 }
@@ -228,15 +223,9 @@ public class LinkedInAuthenticator implements Authenticator {
                     user = getUserInfo(getMethod, Locale.getDefault());
                 }
             }
-        } catch (GenericEntityException e) {
-            throw new AuthenticatorException(e.getMessage(), e);
-        } catch (IOException e) {
-            throw new AuthenticatorException(e.getMessage(), e);
-        } catch (AuthenticatorException e) {
+        } catch (GenericEntityException | ParserConfigurationException | AuthenticatorException | IOException e) {
             throw new AuthenticatorException(e.getMessage(), e);
         } catch (SAXException e) {
-            throw new AuthenticatorException(e.getMessage(), e);
-        } catch (ParserConfigurationException e) {
             throw new AuthenticatorException(e.getMessage(), e);
         } finally {
             if (getMethod != null) {
@@ -255,7 +244,7 @@ public class LinkedInAuthenticator implements Authenticator {
         }
         return createUser(user, system);
     }
-    
+
     private String createUser(Document user, GenericValue system) throws AuthenticatorException {
         Map<String, String> userInfo = parseLinkedInUserInfo(user);
 

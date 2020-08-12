@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
  */
 public class BirtFactory {
 
-    public final static String MODULE = BirtFactory.class.getName();
+    private static final String MODULE = BirtFactory.class.getName();
 
     private static IReportEngine engine;
 
@@ -66,7 +66,7 @@ public class BirtFactory {
      * @throws ParserConfigurationException
      */
     public static InputStream getReportInputStreamFromLocation(String resourceName)
-        throws IOException, SAXException, ParserConfigurationException{
+        throws IOException, SAXException, ParserConfigurationException {
 
         InputStream reportInputStream = null;
         synchronized (BirtFactory.class) {
@@ -81,7 +81,7 @@ public class BirtFactory {
                 throw new IllegalArgumentException("Could not resolve location to URL: " + resourceName);
             }
             reportInputStream = reportFileUrl.openStream();
-            double totalSeconds = (System.currentTimeMillis() - startTime)/1000.0;
+            double totalSeconds = (System.currentTimeMillis() - startTime) / 1000.0;
             Debug.logInfo("Got report in " + totalSeconds + "s from: " + reportFileUrl.toExternalForm(), MODULE);
         }
 

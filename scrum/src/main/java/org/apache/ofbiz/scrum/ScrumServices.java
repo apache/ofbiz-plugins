@@ -43,6 +43,7 @@ import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceUtil;
+
 /**
  * Scrum Services
  */
@@ -50,16 +51,18 @@ public class ScrumServices {
 
     private static final String MODULE = ScrumServices.class.getName();
     private static final String RESOURCE = "scrumUiLabels";
+
     public static Map<String, Object> linkToProduct(DispatchContext ctx, Map<String, ? extends Object> context) {
         Delegator delegator = ctx.getDelegator();
-        Locale locale = (Locale)context.get("locale");
+        Locale locale = (Locale) context.get("locale");
         LocalDispatcher dispatcher = ctx.getDispatcher();
         String communicationEventId = (String) context.get("communicationEventId");
         // Debug.logInfo("==== Processing Commevent: " +  communicationEventId, MODULE);
 
         if (UtilValidate.isNotEmpty(communicationEventId)) {
             try {
-                GenericValue communicationEvent = EntityQuery.use(delegator).from("CommunicationEvent").where("communicationEventId", communicationEventId).queryOne();
+                GenericValue communicationEvent = EntityQuery.use(delegator).from("CommunicationEvent").where("communicationEventId",
+                        communicationEventId).queryOne();
                 if (UtilValidate.isNotEmpty(communicationEvent)) {
                     String subject = communicationEvent.getString("subject");
                     if (UtilValidate.isNotEmpty(subject)) {
@@ -74,24 +77,30 @@ public class ScrumServices {
                             // Debug.logInfo("=======================Product id found in subject: >>" + custRequestId + "<<", MODULE);
                             GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne();
                             if (product != null) {
-                                GenericValue communicationEventProductMap = EntityQuery.use(delegator).from("CommunicationEventProduct").where("productId", productId, "communicationEventId", communicationEventId).queryOne();
+                                GenericValue communicationEventProductMap = EntityQuery.use(delegator).from("CommunicationEventProduct").where(
+                                        "productId", productId, "communicationEventId", communicationEventId).queryOne();
                                 if (UtilValidate.isEmpty(communicationEventProductMap)) {
-                                    GenericValue communicationEventProduct = delegator.makeValue("CommunicationEventProduct", UtilMisc.toMap("productId", productId, "communicationEventId", communicationEventId));
+                                    GenericValue communicationEventProduct = delegator.makeValue("CommunicationEventProduct", UtilMisc.toMap(
+                                            "productId", productId, "communicationEventId", communicationEventId));
                                     communicationEventProduct.create();
                                 }
                                 try {
-                                    GenericValue productRoleMap = EntityQuery.use(delegator).from("ProductRole").where("productId",productId, "partyId", communicationEvent.getString("partyIdFrom"), "roleTypeId","PRODUCT_OWNER").queryFirst();
+                                    GenericValue productRoleMap = EntityQuery.use(delegator).from("ProductRole").where("productId", productId,
+                                            "partyId", communicationEvent.getString("partyIdFrom"), "roleTypeId", "PRODUCT_OWNER").queryFirst();
                                     GenericValue userLogin = (GenericValue) context.get("userLogin");
                                     // also close the incoming communication event
                                     if (UtilValidate.isNotEmpty(productRoleMap)) {
-                                        Map<String, Object> result = dispatcher.runSync("setCommunicationEventStatus", UtilMisc.<String, Object>toMap("communicationEventId", communicationEvent.getString("communicationEventId"), "statusId", "COM_COMPLETE", "userLogin", userLogin));
+                                        Map<String, Object> result = dispatcher.runSync("setCommunicationEventStatus",
+                                                UtilMisc.<String, Object>toMap("communicationEventId", communicationEvent.getString(
+                                                        "communicationEventId"), "statusId", "COM_COMPLETE", "userLogin", userLogin));
                                         if (ServiceUtil.isError(result)) {
                                             return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
                                         }
                                     }
                                 } catch (GenericServiceException e1) {
                                     Debug.logError(e1, "Error calling updating commevent status", MODULE);
-                                    return ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE, "ScrumErrorCallingUpdatingCommeventStatus", locale) + e1.toString());
+                                    return ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE, "ScrumErrorCallingUpdatingCommeventStatus",
+                                            locale) + e1.toString());
                                 }
                             } else {
                                 Debug.logInfo("Product id " + productId + " found in subject but not in database", MODULE);
@@ -117,7 +126,7 @@ public class ScrumServices {
      * <p>
      * Use for view Scrum Revision
      *
-     * @param ctx The DispatchContext that this service is operating in
+     * @param ctx     The DispatchContext that this service is operating in
      * @param context Map containing the input parameters
      * @return Map with the result of the service, the output parameters.
      */
@@ -162,7 +171,7 @@ public class ScrumServices {
      * <p>
      * Use for retrieve the missing data of the Revision
      *
-     * @param ctx The DispatchContext that this service is operating in
+     * @param ctx     The DispatchContext that this service is operating in
      * @param context Map containing the input parameters
      * @return Map with the result of the service, the output parameters.
      */
@@ -205,11 +214,13 @@ public class ScrumServices {
                                 taskId = taskInfo.substring(j - 4, j + 1);
                             }
                         }
-                        String revisionLink = repositoryRoot.substring(repositoryRoot.lastIndexOf("svn/") + 4, repositoryRoot.length()) + "&revision=" + i;
-                        Debug.logInfo("Revision Link ============== >>>>>>>>>>> "+ revisionLink, MODULE);
+                        String revisionLink = repositoryRoot.substring(repositoryRoot.lastIndexOf("svn/") + 4, repositoryRoot.length())
+                                + "&revision=" + i;
+                        Debug.logInfo("Revision Link ============== >>>>>>>>>>> " + revisionLink, MODULE);
                         if (UtilValidate.isNotEmpty(taskId)) {
                             String version = "R" + i;
-                            List <GenericValue> workeffContentList = EntityQuery.use(delegator).from("WorkEffortAndContentDataResource").where("contentName",version.trim() ,"drObjectInfo", revisionLink.trim()).queryList();
+                            List<GenericValue> workeffContentList = EntityQuery.use(delegator).from("WorkEffortAndContentDataResource").where(
+                                    "contentName", version.trim(), "drObjectInfo", revisionLink.trim()).queryList();
                             List<EntityCondition> exprsAnd = new LinkedList<>();
                             exprsAnd.add(EntityCondition.makeCondition("workEffortId", EntityOperator.EQUALS, taskId));
 
@@ -229,7 +240,7 @@ public class ScrumServices {
                                 inputMap.put("revisionLink", revisionLink);
                                 inputMap.put("revisionDescription", taskInfo);
                                 inputMap.put("userLogin", userLogin);
-                                Debug.logInfo("inputMap ============== >>>>>>>>>>> "+ inputMap, MODULE);
+                                Debug.logInfo("inputMap ============== >>>>>>>>>>> " + inputMap, MODULE);
                                 result = dispatcher.runSync("updateScrumRevision", inputMap);
                                 if (ServiceUtil.isError(result)) {
                                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
@@ -239,15 +250,9 @@ public class ScrumServices {
                     }
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | GenericServiceException | GenericEntityException e) {
             e.printStackTrace();
             return ServiceUtil.returnError(e.getMessage());
-        } catch (GenericEntityException entityEx) {
-            entityEx.printStackTrace();
-            return ServiceUtil.returnError(entityEx.getMessage());
-        } catch (GenericServiceException serviceEx) {
-            serviceEx.printStackTrace();
-            return ServiceUtil.returnError(serviceEx.getMessage());
         }
 
         return result;
@@ -258,7 +263,7 @@ public class ScrumServices {
      * <p>
      * Use for remove duplicate scrum revision
      *
-     * @param ctx The DispatchContext that this service is operating in
+     * @param ctx     The DispatchContext that this service is operating in
      * @param context Map containing the input parameters
      * @return Map with the result of the service.
      */
@@ -273,9 +278,10 @@ public class ScrumServices {
             exprsAnd.add(EntityCondition.makeCondition("workEffortContentTypeId", EntityOperator.EQUALS, "TASK_SUB_INFO"));
             exprsAnd.add(EntityCondition.makeCondition("contentTypeId", EntityOperator.EQUALS, "DOCUMENT"));
             exprsAnd.add(EntityCondition.makeCondition("drObjectInfo", EntityOperator.LIKE, revisionLink + "%"));
-            List<GenericValue> workEffortDataResourceList = EntityQuery.use(delegator).from("WorkEffortAndContentDataResource").where(exprsAnd).queryList();
+            List<GenericValue> workEffortDataResourceList =
+                    EntityQuery.use(delegator).from("WorkEffortAndContentDataResource").where(exprsAnd).queryList();
             if (UtilValidate.isNotEmpty(workEffortDataResourceList)) {
-                Debug.logInfo("Total Content Size ============== >>>>>>>>>>> "+ workEffortDataResourceList.size(), MODULE);
+                Debug.logInfo("Total Content Size ============== >>>>>>>>>>> " + workEffortDataResourceList.size(), MODULE);
                 Set<String> keys = new HashSet<>();
                 Set<GenericValue> exclusions = new HashSet<>();
                 for (GenericValue workEffort : workEffortDataResourceList) {
@@ -287,12 +293,14 @@ public class ScrumServices {
                     }
                 }
                 // remove the duplicate entry
-                Debug.logInfo("Remove size ============== >>>>>>>>>>> "+ exclusions.size(), MODULE);
+                Debug.logInfo("Remove size ============== >>>>>>>>>>> " + exclusions.size(), MODULE);
                 if (UtilValidate.isNotEmpty(exclusions)) {
                     for (GenericValue contentResourceMap : exclusions) {
-                        Debug.logInfo("Remove contentId ============== >>>>>>>>>>> "+ contentResourceMap.getString("contentId"), MODULE);
-                        GenericValue dataResourceMap = EntityQuery.use(delegator).from("DataResource").where("dataResourceId", contentResourceMap.getString("dataResourceId")).queryOne();
-                        GenericValue contentMap = EntityQuery.use(delegator).from("Content").where("contentId", contentResourceMap.getString("contentId")).queryOne();
+                        Debug.logInfo("Remove contentId ============== >>>>>>>>>>> " + contentResourceMap.getString("contentId"), MODULE);
+                        GenericValue dataResourceMap = EntityQuery.use(delegator).from("DataResource").where("dataResourceId",
+                                contentResourceMap.getString("dataResourceId")).queryOne();
+                        GenericValue contentMap = EntityQuery.use(delegator).from("Content").where("contentId", contentResourceMap.getString(
+                                "contentId")).queryOne();
                         contentMap.removeRelated("WorkEffortContent");
                         contentMap.removeRelated("ContentRole");
                         contentMap.remove();

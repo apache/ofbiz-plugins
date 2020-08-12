@@ -58,9 +58,39 @@ import org.apache.solr.servlet.SolrDispatchFilter;
 public class OFBizSolrContextFilter extends SolrDispatchFilter {
 
     private static final String MODULE = OFBizSolrContextFilter.class.getName();
-    
     private static final String RESOURCE = "SolrUiLabels";
 
+    private static void sendJsonHeaderMessage(HttpServletRequest httpRequest, HttpServletResponse httpResponse,
+                                              GenericValue userLogin, String notLoginMessage, String noPermissionMessage, Locale locale)
+            throws IOException {
+        httpResponse.setContentType("application/json");
+        MapToJSON mapToJson = new MapToJSON();
+        Map<String, Object> responseHeader = new HashMap<>();
+        JSON json;
+        String message = "";
+
+        try (OutputStream os = httpResponse.getOutputStream()) {
+            if (UtilValidate.isEmpty(userLogin)) {
+                httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                responseHeader.put("status", HttpServletResponse.SC_UNAUTHORIZED);
+                message = UtilProperties.getMessage(RESOURCE, notLoginMessage, locale);
+                responseHeader.put("message", message);
+            } else {
+                httpResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                responseHeader.put("status", HttpServletResponse.SC_FORBIDDEN);
+                message = UtilProperties.getMessage(RESOURCE, noPermissionMessage, locale);
+                responseHeader.put("message", message);
+            }
+            json = mapToJson.convert(UtilMisc.toMap("responseHeader", (Object) responseHeader));
+            os.write(json.toString().getBytes());
+            os.flush();
+            Debug.logInfo("[" + httpRequest.getRequestURI().substring(1) + "(Domain:" + httpRequest.getScheme() + "://" + httpRequest.getServerName()
+                    + ")] Request error: " + message, MODULE);
+        } catch (ConversionException e) {
+            Debug.logError("Error while converting responseHeader map to JSON.", MODULE);
+        }
+    }
+    /** Init */
     @Override
     public void init(FilterConfig config) throws ServletException {
         Properties props = System.getProperties();
@@ -69,7 +99,7 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
         props.setProperty("solr/home", UtilProperties.getPropertyValue("solrconfig", "solr/home"));
         super.init(config);
     }
-
+    /** Do filter */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
@@ -78,7 +108,7 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
 
         // check if the request is from an authorized user
         String servletPath = httpRequest.getServletPath();
-        if (UtilValidate.isNotEmpty(servletPath) && (servletPath.startsWith("/admin/") || servletPath.endsWith("/update") 
+        if (UtilValidate.isNotEmpty(servletPath) && (servletPath.startsWith("/admin/") || servletPath.endsWith("/update")
                 || servletPath.endsWith("/update/json") || servletPath.endsWith("/update/csv") || servletPath.endsWith("/update/extract")
                 || servletPath.endsWith("/replication") || servletPath.endsWith("/file") || servletPath.endsWith("/file/"))) {
             HttpSession session = httpRequest.getSession();
@@ -99,7 +129,8 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
                     } else {
                         message = UtilProperties.getMessage(RESOURCE, "SolrErrorNoManagePermission", locale);
                     }
-                    Debug.logInfo("[" + httpRequest.getRequestURI().substring(1) + "(Domain:" + request.getScheme() + "://" + request.getServerName() + ")] Request error: " + message, MODULE);
+                    Debug.logInfo("[" + httpRequest.getRequestURI().substring(1) + "(Domain:" + request.getScheme() + "://" + request.getServerName()
+                            + ")] Request error: " + message, MODULE);
                 } catch (ConversionException e) {
                     Debug.logError("Error while converting Solr ofbizLogin map to JSON.", MODULE);
                 } finally {
@@ -108,7 +139,8 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
                     }
                 }
                 return;
-            } else if (servletPath.endsWith("/update") || servletPath.endsWith("/update/json") || servletPath.endsWith("/update/csv") || servletPath.endsWith("/update/extract")) {
+            } else if (servletPath.endsWith("/update") || servletPath.endsWith("/update/json") || servletPath.endsWith("/update/csv")
+                    || servletPath.endsWith("/update/extract")) {
                 // NOTE: the update requests are defined in an index's solrconfig.xml
                 // get the Solr index name from the request
                 if (UtilValidate.isEmpty(userLogin) || !LoginWorker.hasBasePermission(userLogin, httpRequest)) {
@@ -118,37 +150,42 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
             } else if (servletPath.endsWith("/replication")) {
                 // get the Solr index name from the request
                 if (UtilValidate.isEmpty(userLogin) || !LoginWorker.hasBasePermission(userLogin, httpRequest)) {
-                    sendJsonHeaderMessage(httpRequest, httpResponse, userLogin, "SolrErrorReplicateLoginFirst", "SolrErrorNoReplicatePermission", locale);
+                    sendJsonHeaderMessage(httpRequest, httpResponse, userLogin, "SolrErrorReplicateLoginFirst", "SolrErrorNoReplicatePermission",
+                            locale);
                     return;
                 }
             } else if (servletPath.endsWith("/file") || servletPath.endsWith("/file/")) {
                 // get the Solr index name from the request
                 if (UtilValidate.isEmpty(userLogin) || !LoginWorker.hasBasePermission(userLogin, httpRequest)) {
-                    sendJsonHeaderMessage(httpRequest, httpResponse, userLogin, "SolrErrorViewFileLoginFirst", "SolrErrorNoViewFilePermission", locale);
+                    sendJsonHeaderMessage(httpRequest, httpResponse, userLogin, "SolrErrorViewFileLoginFirst", "SolrErrorNoViewFilePermission",
+                            locale);
                     return;
                 }
             }
         }
-        
+
         String charset = request.getCharacterEncoding();
         String rname = null;
         if (httpRequest.getRequestURI() != null) {
             rname = httpRequest.getRequestURI().substring(1);
         }
-        if (rname != null && (rname.endsWith(".css") || rname.endsWith(".js") || rname.endsWith(".ico") || rname.endsWith(".html") || rname.endsWith(".png") || rname.endsWith(".jpg") || rname.endsWith(".gif"))) {
+        if (rname != null && (rname.endsWith(".css") || rname.endsWith(".js") || rname.endsWith(".ico") || rname.endsWith(".html")
+                || rname.endsWith(".png") || rname.endsWith(".jpg") || rname.endsWith(".gif"))) {
             rname = null;
         }
         UtilTimer timer = null;
         if (Debug.timingOn() && rname != null) {
             timer = new UtilTimer();
             timer.setLog(true);
-            timer.timerString("[" + rname + "(Domain:" + request.getScheme() + "://" + request.getServerName() + ")] Request Begun, encoding=[" + charset + "]", MODULE);
+            timer.timerString("[" + rname + "(Domain:" + request.getScheme() + "://" + request.getServerName() + ")] Request Begun, encoding=["
+                    + charset + "]", MODULE);
         }
         // NOTE: there's a chain.doFilter in SolrDispatchFilter's doFilter
         super.doFilter(request, response, chain);
-        if (Debug.timingOn() && rname != null) timer.timerString("[" + rname + "(Domain:" + request.getScheme() + "://" + request.getServerName() + ")] Request Done", MODULE);
+        if (Debug.timingOn() && rname != null)
+            timer.timerString("[" + rname + "(Domain:" + request.getScheme() + "://" + request.getServerName() + ")] Request Done", MODULE);
     }
-
+    /** Destroy */
     @Override
     public void destroy() {
         super.destroy();
@@ -156,6 +193,7 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
 
     /**
      * Override this to change CoreContainer initialization
+     *
      * @return a CoreContainer to hold this server's cores
      */
     @Override
@@ -164,49 +202,13 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
         try {
             nodeConfig = loadNodeConfig(solrHome, extraProperties);
         } catch (SolrException e) {
-//            nodeConfig = loadNodeConfig("plugins/solr/home", extraProperties);
+            //            nodeConfig = loadNodeConfig("plugins/solr/home", extraProperties);
             Path path = Paths.get("plugins/solr/home");
             nodeConfig = loadNodeConfig(path, extraProperties);
         }
         cores = new CoreContainer(nodeConfig, extraProperties, true);
         cores.load();
         return cores;
-    }
-    
-    private static void sendJsonHeaderMessage(HttpServletRequest httpRequest, HttpServletResponse httpResponse,
-            GenericValue userLogin, String notLoginMessage, String noPermissionMessage, Locale locale)
-                    throws IOException {
-        httpResponse.setContentType("application/json");
-        MapToJSON mapToJson = new MapToJSON();
-        Map<String, Object> responseHeader = new HashMap<>();
-        JSON json;
-        String message = "";
-        OutputStream os = null;
-        
-        try {
-            os = httpResponse.getOutputStream();
-            if (UtilValidate.isEmpty(userLogin)) {
-                httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                responseHeader.put("status", HttpServletResponse.SC_UNAUTHORIZED);
-                message = UtilProperties.getMessage(RESOURCE, notLoginMessage, locale);
-                responseHeader.put("message", message);
-            } else {
-                httpResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                responseHeader.put("status", HttpServletResponse.SC_FORBIDDEN);
-                message = UtilProperties.getMessage(RESOURCE, noPermissionMessage, locale);
-                responseHeader.put("message", message);
-            }
-            json = mapToJson.convert(UtilMisc.toMap("responseHeader", (Object) responseHeader));
-            os.write(json.toString().getBytes());
-            os.flush();
-            Debug.logInfo("[" + httpRequest.getRequestURI().substring(1) + "(Domain:" + httpRequest.getScheme() + "://" + httpRequest.getServerName() + ")] Request error: " + message, MODULE);
-        } catch (ConversionException e) {
-            Debug.logError("Error while converting responseHeader map to JSON.", MODULE);
-        } finally {
-            if (os != null) {
-                os.close();
-            }
-        }
     }
 }
 

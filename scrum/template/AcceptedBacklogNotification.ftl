@@ -16,24 +16,26 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-        <title>${title}</title>
-    </head>
-    <body>
-        <p>Hello ${person.firstName!} ${person.lastName!},</p>
-        <p>Your backlog: <b>${custRequest.description!} [${custRequest.custRequestId}] 
-        <#if informationMap.workEffortId?has_content><br />in sprint: <b>${informationMap.workEffortName!} [${informationMap.workEffortId!}]</b></#if> 
-        <#if informationMap.productId?has_content><br />of the product: <b>${informationMap.internalName!} [${informationMap.productId!}]</b></#if>
-        <#if removedFromSprint = true> has been removed from sprint. <#else> has been received.</#if>
-        <br />
-        <br />
-        <#if custRequest.fromPartyId == partyIdTo>
-        The complete information of this backlog/request can be found <a href="${StringUtil.wrapString(baseSecureUrl!)}/scrum/control/ViewProdBacklogItem?custRequestId=${custRequest.custRequestId!}">here.....</a>
-        <br /><br />
-        </#if>
-        Regards.<br /><br />
-        Thank you for your business.
-    </body>
-</html>
+<#if person??>
+    <html xmlns="http://www.w3.org/1999/xhtml">
+        <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+            <title>${title}</title>
+        </head>
+        <body>
+                <p>Hello ${person.firstName!} ${person.lastName!},</p>
+                <p>Your backlog: <b>${custRequest.description!} [${custRequest.custRequestId}] 
+                <#if informationMap.workEffortId?has_content><br />in sprint: <b>${informationMap.workEffortName!} [${informationMap.workEffortId!}]</b></#if> 
+                <#if informationMap.productId?has_content><br />of the product: <b>${informationMap.internalName!} [${informationMap.productId!}]</b></#if>
+                <#if removedFromSprint = true> has been removed from sprint. <#else> has been received.</#if>
+                <br />
+                <br />
+                <#if custRequest.fromPartyId == partyIdTo>
+                The complete information of this backlog/request can be found <a href="${StringUtil.wrapString(baseSecureUrl!)}/scrum/control/ViewProdBacklogItem?custRequestId=${custRequest.custRequestId!}">here.....</a>
+                <br /><br />
+                </#if>
+                Regards.<br /><br />
+                Thank you for your business.
+        </body>
+    </html>
+</#if>

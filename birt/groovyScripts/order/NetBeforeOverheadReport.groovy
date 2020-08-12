@@ -26,11 +26,11 @@ DateDay = DateStr.substring(0,10)
 DateMonth = DateStr.substring(5,7)
 DateYear = DateStr.substring(0,4)
 
-if (DateMonth == "01"||DateMonth == "03"||DateMonth == "05"||DateMonth == "07"||DateMonth == "08"||DateMonth == "10"||DateMonth == "12")
+if ("01" == DateMonth||"03" == DateMonth||"05" == DateMonth||"07" == DateMonth||"08" == DateMonth||"10" == DateMonth||"12" == DateMonth)
 {
     NunberDate = 31
 }
-else if (DateMonth == "02")
+else if ("02" == DateMonth)
 {
     NunberDate = 29
 }

@@ -22,7 +22,6 @@ import org.safehaus.uuid.UUID;
 
 /**
  * Identifies a class that can be used as a report thread.
- * 
  */
 public interface InterfaceReportThread {
 
@@ -33,7 +32,6 @@ public interface InterfaceReportThread {
 
     /**
      * Returns the UUID of this report thread.<p>
-     * 
      * @return the UUID of this report thread
      */
     UUID getUUID();

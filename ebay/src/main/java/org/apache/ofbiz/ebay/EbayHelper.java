@@ -220,12 +220,9 @@ public class EbayHelper {
                             return false;
                     }
                 }
-            } 
+            }
         } catch (GenericEntityException gee) {
             Debug.logError(gee, "Cannot get payment preferences for order #" + orderId, MODULE);
-            return false;
-        } catch (Exception e) {
-            Debug.logError(e, "Cannot get payment preferences for order #" + orderId, MODULE);
             return false;
         }
         return true;
@@ -262,10 +259,7 @@ public class EbayHelper {
                 return false;
             }
             return true;
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Failed to create the payment for order " + orderId, MODULE);
-            return false;
-        } catch (GenericServiceException e) {
+        } catch (GenericEntityException | GenericServiceException e) {
             Debug.logError(e, "Failed to create the payment for order " + orderId, MODULE);
             return false;
         }
@@ -301,7 +295,9 @@ public class EbayHelper {
 
         try {
             if (UtilValidate.isNotEmpty(name) && userLogin != null) {
-                if (Debug.verboseOn()) Debug.logVerbose("Creating Customer Party: " + name, MODULE);
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose("Creating Customer Party: " + name, MODULE);
+                }
 
                 // Try to split the lastname from the firstname
                 String firstName = "";
@@ -323,11 +319,11 @@ public class EbayHelper {
                     return null;
                 }
                 partyId = (String) summaryResult.get("partyId");
-                if (Debug.verboseOn()) Debug.logVerbose("Created Customer Party: " + partyId, MODULE);
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose("Created Customer Party: " + partyId, MODULE);
+                }
             }
         } catch (GenericServiceException e) {
-            Debug.logError(e, "Failed to createPerson", MODULE);
-        } catch (Exception e) {
             Debug.logError(e, "Failed to createPerson", MODULE);
         }
         return partyId;

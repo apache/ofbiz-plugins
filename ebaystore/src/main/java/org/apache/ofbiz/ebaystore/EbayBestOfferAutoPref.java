@@ -41,9 +41,9 @@ public class EbayBestOfferAutoPref {
     private static final String RESOURCE = "EbayStoreUiLabels";
     public static Map<String, Object> ebayBestOfferPrefCond(DispatchContext dctx, Map<String, ? extends Object> context) {
 
-            Map<String, Object> result = new HashMap<String, Object>();
+            Map<String, Object> result = new HashMap<>();
             LocalDispatcher dispatcher = dctx.getDispatcher();
-            Locale locale = (Locale)context.get("locale");
+            Locale locale = (Locale) context.get("locale");
             GenericValue userLogin = (GenericValue) context.get("userLogin");
             Delegator delegator = dctx.getDelegator();
             String productStoreId = (String) context.get("productStoreId");
@@ -197,11 +197,11 @@ public class EbayBestOfferAutoPref {
                 }
 
                 Map<String, Object> ebayPref = UtilMisc.<String, Object>toMap("userLogin", userLogin, "serviceName", "autoBestOffer");
-                ebayPref.put("parentPrefCondId",parentPrefCondId);
+                ebayPref.put("parentPrefCondId", parentPrefCondId);
                 ebayPref.put("enabled", enabled);
                 ebayPref.put("autoPrefEnumId", "EBAY_AUTO_BEST_OFFER");
-                ebayPref.put("productStoreId",productStoreId);
-                result = dispatcher.runSync("createEbayProductStorePref",ebayPref);
+                ebayPref.put("productStoreId", productStoreId);
+                result = dispatcher.runSync("createEbayProductStorePref", ebayPref);
                 if (ServiceUtil.isError(result)) {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
                 }
@@ -209,29 +209,27 @@ public class EbayBestOfferAutoPref {
                 Map<String, Object> ebayPref = UtilMisc.<String, Object>toMap("userLogin", userLogin, "serviceName", "autoBestOffer");
                 ebayPref.put("enabled", enabled);
                 ebayPref.put("autoPrefEnumId", "EBAY_AUTO_BEST_OFFER");
-                ebayPref.put("productStoreId",productStoreId);
-                result = dispatcher.runSync("updateEbayProductStorePref",ebayPref);
+                ebayPref.put("productStoreId", productStoreId);
+                result = dispatcher.runSync("updateEbayProductStorePref", ebayPref);
                 if (ServiceUtil.isError(result)) {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
                 }
 
                 String parentPrefCondId = productStorePref.getString("parentPrefCondId");
-                List<GenericValue> productPref = EntityQuery.use(delegator).from("EbayProductStorePrefCond").where("parentPrefCondId",parentPrefCondId).queryList();
+                List<GenericValue> productPref = EntityQuery.use(delegator).from("EbayProductStorePrefCond").where("parentPrefCondId", parentPrefCondId).queryList();
                 if (productPref.size() != 0) {
                     String[] condition = {condition1, condition2, condition3, condition4, condition5, condition6, condition7, condition8, condition9, condition10, condition11};
                     Map<String, Object> ebayPrefCond = UtilMisc.<String, Object>toMap("userLogin", userLogin);
                     for (int i = 0; i < productPref.size(); i++) {
-                        ebayPrefCond.put("prefCondId",productPref.get(i).getString("prefCondId"));
-                        ebayPrefCond.put("acceptanceCondition",condition[i]);
-                        result = dispatcher.runSync("updateEbayProductStorePrefCond",ebayPrefCond);
+                        ebayPrefCond.put("prefCondId", productPref.get(i).getString("prefCondId"));
+                        ebayPrefCond.put("acceptanceCondition", condition[i]);
+                        result = dispatcher.runSync("updateEbayProductStorePrefCond", ebayPrefCond);
                         if (ServiceUtil.isError(result)) {
                             return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
                         }
                     }
                 }
-                
             }
-            
         } catch (GenericServiceException | GenericEntityException e) {
             String errorMessage = UtilProperties.getMessage(RESOURCE, "EbayStoreBestOfferToEntityFailed", locale);
             result = ServiceUtil.returnError(errorMessage);

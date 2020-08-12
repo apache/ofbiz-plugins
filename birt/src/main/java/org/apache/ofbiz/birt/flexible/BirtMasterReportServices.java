@@ -52,15 +52,14 @@ public class BirtMasterReportServices {
 
     private static final String MODULE = BirtServices.class.getName();
     private static final String RESOURCE = "BirtUiLabels";
-    private static final String RES_ERROR = "BirtErrorUiLabels";
 
     // The following methods are flexible report services as examples for reporting
     public static Map<String, Object> workEffortPerPersonPrepareDate(DispatchContext dctx, Map<String, Object> context) {
         Map<String, String> dataMap = UtilMisc.toMap(
-                "lastName", "name", 
-                "firstName", "name", 
-                "hours", "floating-point", 
-                "fromDate", "date-time", 
+                "lastName", "name",
+                "firstName", "name",
+                "hours", "floating-point",
+                "fromDate", "date-time",
                 "thruDate", "date-time");
         LinkedHashMap<String, String> filterMap = new LinkedHashMap<>();
         filterMap.put("firstName", "name");
@@ -68,10 +67,10 @@ public class BirtMasterReportServices {
         filterMap.put("fromDate", "date-time");
         filterMap.put("thruDate", "date-time");
         Map<String, String> fieldDisplayLabels = UtilMisc.toMap(
-                "lastName", "Last name", 
-                "firstName", "First name", 
-                "hours", "Hours", 
-                "fromDate", "From date", 
+                "lastName", "Last name",
+                "firstName", "First name",
+                "hours", "Hours",
+                "fromDate", "From date",
                 "thruDate", "Thru date");
         LinkedHashMap<String, String> filterDisplayLabels = new LinkedHashMap<>();
         filterDisplayLabels.put("firstName", "First name");
@@ -157,36 +156,36 @@ public class BirtMasterReportServices {
 
     public static Map<String, Object> turnOverPrepareFields(DispatchContext dctx, Map<String, Object> context) {
         Map<String, String> dataMap = UtilMisc.toMap(
-                "invoiceTypeId", "short-varchar", 
-                "invoicePartyId", "short-varchar", 
-                "statusId", "short-varchar", 
-                "invoiceDate", "date", 
-                "dueDate", "date", 
-                "currencyUomId", "short-varchar", 
-                "invoiceItemTypeId", "short-varchar", 
-                "invoiceItemSeqId", "short-varchar", 
-                "productId", "short-varchar", 
-                "partyId", "short-varchar", 
-                "primaryProductCategoryId", "short-varchar", 
-                "quantity", "numeric", 
-                "amount", "currency-amount", 
-                "productStoreId", "short-varchar", 
+                "invoiceTypeId", "short-varchar",
+                "invoicePartyId", "short-varchar",
+                "statusId", "short-varchar",
+                "invoiceDate", "date",
+                "dueDate", "date",
+                "currencyUomId", "short-varchar",
+                "invoiceItemTypeId", "short-varchar",
+                "invoiceItemSeqId", "short-varchar",
+                "productId", "short-varchar",
+                "partyId", "short-varchar",
+                "primaryProductCategoryId", "short-varchar",
+                "quantity", "numeric",
+                "amount", "currency-amount",
+                "productStoreId", "short-varchar",
                 "storeName", "short-varchar");
         Map<String, String> fieldDisplayLabels = UtilMisc.toMap(
-                "invoiceTypeId", "invoice Type", 
-                "invoicePartyId", "Invoice", 
-                "statusId", "Status", 
-                "invoiceDate", "Date", 
-                "dueDate", "Due date ", 
-                "currencyUomId", "Currency", 
-                "invoiceItemTypeId", "Invoice type line", 
-                "invoiceItemSeqId", "Invoice line", 
-                "productId", "Product", 
-                "partyId", "Customer", 
-                "primaryProductCategoryId", "Product category", 
-                "quantity", "Qty", 
-                "amount", "Amount", 
-                "productStoreId", "Product Store", 
+                "invoiceTypeId", "invoice Type",
+                "invoicePartyId", "Invoice",
+                "statusId", "Status",
+                "invoiceDate", "Date",
+                "dueDate", "Due date",
+                "currencyUomId", "Currency",
+                "invoiceItemTypeId", "Invoice type line",
+                "invoiceItemSeqId", "Invoice line",
+                "productId", "Product",
+                "partyId", "Customer",
+                "primaryProductCategoryId", "Product category",
+                "quantity", "Qty",
+                "amount", "Amount",
+                "productStoreId", "Product Store",
                 "storeName", "Product store name");
         LinkedHashMap<String, String> filterMap = new LinkedHashMap<>();
         filterMap.put("productCategoryId", "short-varchar");
@@ -245,11 +244,15 @@ public class BirtMasterReportServices {
                     productCategoryList = UtilGenerics.cast(parameters.get("productCategoryId"));
                 }
                 // getting productIds in these categories
-                EntityExpr conditionProductCategory = EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.IN, productCategoryList);
-                EntityExpr conditionFromDate = EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.nowTimestamp());
-                EntityExpr conditionBeforeDate = EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.nowTimestamp());
+                EntityExpr conditionProductCategory = EntityCondition.makeCondition("primaryProductCategoryId", EntityOperator.IN,
+                        productCategoryList);
+                EntityExpr conditionFromDate = EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO,
+                        UtilDateTime.nowTimestamp());
+                EntityExpr conditionBeforeDate = EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO,
+                        UtilDateTime.nowTimestamp());
                 EntityExpr conditionNull = EntityCondition.makeCondition("thruDate", null);
-                EntityCondition conditionThroughDate = EntityCondition.makeCondition(EntityOperator.OR, UtilMisc.toList(conditionBeforeDate, conditionNull));
+                EntityCondition conditionThroughDate = EntityCondition.makeCondition(EntityOperator.OR, UtilMisc.toList(conditionBeforeDate,
+                        conditionNull));
                 List<GenericValue> listProductIds = EntityQuery.use(delegator)
                         .from("ProductCategoryMember")
                         .where(EntityCondition.makeCondition(UtilMisc.toList(conditionProductCategory, conditionFromDate, conditionThroughDate)))
@@ -270,10 +273,12 @@ public class BirtMasterReportServices {
                 }
                 // getting list of invoice Ids linked to these productStore
                 EntityExpr conditionProductStoreId = EntityCondition.makeCondition("productStoreId", EntityOperator.IN, productStoreList);
-                List<GenericValue> listOrderAndProductStores = EntityQuery.use(delegator).from("OrderAndProductStore").where(conditionProductStoreId).select("orderId").queryList();
+                List<GenericValue> listOrderAndProductStores =
+                        EntityQuery.use(delegator).from("OrderAndProductStore").where(conditionProductStoreId).select("orderId").queryList();
                 List<String> listOrderIds = EntityUtil.getFieldListFromEntityList(listOrderAndProductStores, "orderId", true);
                 EntityExpr conditionOrderId = EntityCondition.makeCondition("orderId", EntityOperator.IN, listOrderIds);
-                List<GenericValue> listInvoices = EntityQuery.use(delegator).from("OrderItemBilling").where(conditionOrderId).select("invoiceId").queryList();
+                List<GenericValue> listInvoices =
+                        EntityQuery.use(delegator).from("OrderItemBilling").where(conditionOrderId).select("invoiceId").queryList();
                 List<String> listInvoiceString = EntityUtil.getFieldListFromEntityList(listInvoices, "invoiceId", true);
 
                 EntityExpr conditionInvoiceIdProductStore = EntityCondition.makeCondition("invoiceId", EntityOperator.IN, listInvoiceString);
@@ -282,7 +287,8 @@ public class BirtMasterReportServices {
 
             // adding mandatory conditions
             // condition on invoice item type
-            List<String> listInvoiceItemType = UtilMisc.toList("ITM_PROMOTION_ADJ", "INV_PROD_ITEM", "INV_FPROD_ITEM", "INV_DPROD_ITEM", "INV_FDPROD_ITEM", "INV_PROD_FEATR_ITEM");
+            List<String> listInvoiceItemType = UtilMisc.toList("ITM_PROMOTION_ADJ", "INV_PROD_ITEM", "INV_FPROD_ITEM", "INV_DPROD_ITEM",
+                    "INV_FDPROD_ITEM", "INV_PROD_FEATR_ITEM");
             listInvoiceItemType.add("ITM_DISCOUNT_ADJ");
             listInvoiceItemType.add("CRT_FPROD_ITEM");
             listInvoiceItemType.add("CRT_DPROD_ITEM");
@@ -298,11 +304,13 @@ public class BirtMasterReportServices {
             // condition on invoice ((not cancelled) or null)
             EntityExpr conditionStatusNotCancelled = EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED");
             EntityExpr conditionStatusNull = EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, null);
-            EntityCondition conditionStatus = EntityCondition.makeCondition(UtilMisc.toList(conditionStatusNotCancelled, conditionStatusNull), EntityOperator.OR);
+            EntityCondition conditionStatus = EntityCondition.makeCondition(UtilMisc.toList(conditionStatusNotCancelled, conditionStatusNull),
+                    EntityOperator.OR);
             listAllConditions.add(conditionStatus);
 
             // condition sales invoice or customer return invoice
-            EntityExpr conditionSalesInvoice = EntityCondition.makeCondition("invoiceTypeId", EntityOperator.IN, UtilMisc.toList("SALES_INVOICE", "CUST_RTN_INVOICE"));
+            EntityExpr conditionSalesInvoice = EntityCondition.makeCondition("invoiceTypeId", EntityOperator.IN, UtilMisc.toList("SALES_INVOICE",
+                    "CUST_RTN_INVOICE"));
             listAllConditions.add(conditionSalesInvoice);
 
             // retrieving all invoices
@@ -336,8 +344,10 @@ public class BirtMasterReportServices {
 
                 // adding productStoreId and productStoreName
                 EntityExpr conditionInvoiceId = EntityCondition.makeCondition("invoiceId", invoice.getString("invoiceId"));
-//                EntityExpr conditionInvoiceItemSeqId = EntityCondition.makeCondition("invoiceItemSeqId", invoice.getString("invoiceItemSeqId"));
-//                List<GenericValue> listOrderBilling = delegator.findList("OrderItemBilling", EntityCondition.makeCondition(UtilMisc.toList(conditionInvoiceId, conditionInvoiceItemSeqId)), UtilMisc.toSet("orderId"), null, null, false);
+                //                EntityExpr conditionInvoiceItemSeqId = EntityCondition.makeCondition("invoiceItemSeqId", invoice.getString
+                // ("invoiceItemSeqId"));
+                //                List<GenericValue> listOrderBilling = delegator.findList("OrderItemBilling", EntityCondition.makeCondition
+                //                (UtilMisc.toList(conditionInvoiceId, conditionInvoiceItemSeqId)), UtilMisc.toSet("orderId"), null, null, false);
                 GenericValue orderBilling = EntityQuery.use(delegator)
                         .from("OrderItemBilling")
                         .where(conditionInvoiceId)
@@ -350,8 +360,9 @@ public class BirtMasterReportServices {
                             .where(conditionOrderId)
                             .cache()
                             .queryFirst();
-                    if (UtilValidate.isNotEmpty(productStoreList) && ! productStoreList.contains(productStore.getString("productStoreId"))) {
-                        continue; // FIXME pretty ugly... but had problems with the rare case where an invoice matches with several orders with more than one productStore
+                    if (UtilValidate.isNotEmpty(productStoreList) && !productStoreList.contains(productStore.getString("productStoreId"))) {
+                        continue; // FIXME pretty ugly... but had problems with the rare case where an invoice matches with several orders with
+                        // more than one productStore
                     }
                     invoiceEditable.put("productStoreId", productStore.getString("productStoreId"));
                     invoiceEditable.put("storeName", productStore.getString("storeName"));

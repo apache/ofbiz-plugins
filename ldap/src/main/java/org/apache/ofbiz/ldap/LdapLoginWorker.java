@@ -46,7 +46,7 @@ import org.xml.sax.SAXException;
  */
 public final class LdapLoginWorker {
 
-    private final static String MODULE = LdapLoginWorker.class.getName();
+    private static final String MODULE = LdapLoginWorker.class.getName();
     private static final String RESOURCE = "SecurityextUiLabels";
     private static final String LDAP_CONFIG = "plugins/ldap/config/ldap.xml";
 
@@ -56,7 +56,7 @@ public final class LdapLoginWorker {
      * An HTTP WebEvent handler that checks to see is a userLogin is logged in.
      * If not, the user is forwarded to the login page.
      *
-     * @param request The HTTP request object for the current JSP or Servlet request.
+     * @param request  The HTTP request object for the current JSP or Servlet request.
      * @param response The HTTP response object for the current JSP or Servlet request.
      * @return String
      */
@@ -73,15 +73,18 @@ public final class LdapLoginWorker {
             Element rootElement = getRootElement(request);
             boolean hasLdapLoggedOut = false;
             if (rootElement != null) {
-                String className = UtilXml.childElementValue(rootElement, "AuthenticationHandler", "org.apache.ofbiz.ldap.openldap.OFBizLdapAuthenticationHandler");
+                String className = UtilXml.childElementValue(rootElement, "AuthenticationHandler", "org.apache.ofbiz.ldap.openldap"
+                        + ".OFBizLdapAuthenticationHandler");
                 try {
                     Class<?> handlerClass = Class.forName(className);
-                    InterfaceOFBizAuthenticationHandler authenticationHandler = (InterfaceOFBizAuthenticationHandler) handlerClass.getDeclaredConstructor().newInstance();
+                    InterfaceOFBizAuthenticationHandler authenticationHandler =
+                            (InterfaceOFBizAuthenticationHandler) handlerClass.getDeclaredConstructor().newInstance();
                     hasLdapLoggedOut = authenticationHandler.hasLdapLoggedOut(request, response, rootElement);
                 } catch (Exception e) {
                     Debug.logError(e, "Error calling checkLogin service", MODULE);
                     Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
-                    String errMsg = UtilProperties.getMessage(RESOURCE, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
+                    String errMsg = UtilProperties.getMessage(RESOURCE, "loginevents.following_error_occurred_during_login", messageMap,
+                            UtilHttp.getLocale(request));
                     request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 }
             }
@@ -103,25 +106,28 @@ public final class LdapLoginWorker {
     /**
      * An HTTP WebEvent handler that logs in a userLogin. This should run before the security check.
      *
-     * @param request The HTTP request object for the current JSP or Servlet request.
+     * @param request  The HTTP request object for the current JSP or Servlet request.
      * @param response The HTTP response object for the current JSP or Servlet request.
      * @return Return a boolean which specifies whether or not the calling Servlet or
-     *         JSP should generate its own content. This allows an event to override the default content.
+     * JSP should generate its own content. This allows an event to override the default content.
      */
     public static String login(HttpServletRequest request, HttpServletResponse response) {
 
         Element rootElement = getRootElement(request);
         String result = "error";
         if (rootElement != null) {
-            String className = UtilXml.childElementValue(rootElement, "AuthenticationHandler", "org.apache.ofbiz.ldap.openldap.OFBizLdapAuthenticationHandler");
+            String className = UtilXml.childElementValue(rootElement, "AuthenticationHandler", "org.apache.ofbiz.ldap.openldap"
+                    + ".OFBizLdapAuthenticationHandler");
             try {
                 Class<?> handlerClass = Class.forName(className);
-                InterfaceOFBizAuthenticationHandler authenticationHandler = (InterfaceOFBizAuthenticationHandler) handlerClass.getDeclaredConstructor().newInstance();
+                InterfaceOFBizAuthenticationHandler authenticationHandler =
+                        (InterfaceOFBizAuthenticationHandler) handlerClass.getDeclaredConstructor().newInstance();
                 result = authenticationHandler.login(request, response, rootElement);
             } catch (Exception e) {
                 Debug.logError(e, "Error calling userLogin service", MODULE);
                 Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
-                String errMsg = UtilProperties.getMessage(RESOURCE, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
+                String errMsg = UtilProperties.getMessage(RESOURCE, "loginevents.following_error_occurred_during_login", messageMap,
+                        UtilHttp.getLocale(request));
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
             }
         }
@@ -138,10 +144,10 @@ public final class LdapLoginWorker {
     /**
      * An HTTP WebEvent handler that logs out a userLogin by clearing the session.
      *
-     * @param request The HTTP request object for the current request.
+     * @param request  The HTTP request object for the current request.
      * @param response The HTTP response object for the current request.
      * @return Return a boolean which specifies whether or not the calling request
-     *        should generate its own content. This allows an event to override the default content.
+     * should generate its own content. This allows an event to override the default content.
      */
     public static String logout(HttpServletRequest request, HttpServletResponse response) {
         // run the before-logout events
@@ -157,15 +163,18 @@ public final class LdapLoginWorker {
 
         String result = "error";
         if (rootElement != null) {
-            String className = UtilXml.childElementValue(rootElement, "AuthenticationHandler", "org.apache.ofbiz.ldap.openldap.OFBizLdapAuthenticationHandler");
+            String className = UtilXml.childElementValue(rootElement, "AuthenticationHandler", "org.apache.ofbiz.ldap.openldap"
+                    + ".OFBizLdapAuthenticationHandler");
             try {
                 Class<?> handlerClass = Class.forName(className);
-                InterfaceOFBizAuthenticationHandler authenticationHandler = (InterfaceOFBizAuthenticationHandler) handlerClass.getDeclaredConstructor().newInstance();
+                InterfaceOFBizAuthenticationHandler authenticationHandler =
+                        (InterfaceOFBizAuthenticationHandler) handlerClass.getDeclaredConstructor().newInstance();
                 result = authenticationHandler.logout(request, response, rootElement);
             } catch (Exception e) {
                 Debug.logError(e, "Error calling userLogin service", MODULE);
                 Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
-                String errMsg = UtilProperties.getMessage(RESOURCE, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
+                String errMsg = UtilProperties.getMessage(RESOURCE, "loginevents.following_error_occurred_during_login", messageMap,
+                        UtilHttp.getLocale(request));
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
             }
         }
@@ -181,39 +190,34 @@ public final class LdapLoginWorker {
             Debug.logInfo("LDAP config file: " + LDAP_CONFIG, MODULE);
         }
         File configFile = new File(LDAP_CONFIG);
-        FileInputStream configFileIS = null;
         Element rootElement = null;
-        try {
-            configFileIS = new FileInputStream(configFile);
+        try (FileInputStream configFileIS = new FileInputStream(configFile)) {
             Document configDoc = UtilXml.readXmlDocument(configFileIS, "LDAP configuration file " + LDAP_CONFIG);
             rootElement = configDoc.getDocumentElement();
         } catch (FileNotFoundException e) {
             Debug.logError(e, "Error calling userLogin service", MODULE);
             Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
-            String errMsg = UtilProperties.getMessage(RESOURCE, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
+            String errMsg = UtilProperties.getMessage(RESOURCE, "loginevents.following_error_occurred_during_login", messageMap,
+                    UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
         } catch (SAXException e) {
             Debug.logError(e, "Error calling userLogin service", MODULE);
             Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
-            String errMsg = UtilProperties.getMessage(RESOURCE, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
+            String errMsg = UtilProperties.getMessage(RESOURCE, "loginevents.following_error_occurred_during_login", messageMap,
+                    UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
         } catch (ParserConfigurationException e) {
             Debug.logError(e, "Error calling userLogin service", MODULE);
             Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
-            String errMsg = UtilProperties.getMessage(RESOURCE, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
+            String errMsg = UtilProperties.getMessage(RESOURCE, "loginevents.following_error_occurred_during_login", messageMap,
+                    UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
         } catch (IOException e) {
             Debug.logError(e, "Error calling userLogin service", MODULE);
             Map<String, String> messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
-            String errMsg = UtilProperties.getMessage(RESOURCE, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
+            String errMsg = UtilProperties.getMessage(RESOURCE, "loginevents.following_error_occurred_during_login", messageMap,
+                    UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
-        } finally {
-            if (configFileIS != null) {
-                try {
-                    configFileIS.close();
-                } catch (IOException e) {
-                }
-            }
         }
 
         return rootElement;

@@ -1,0 +1,50 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+= Ebay Store Detail screen.
+This screen allows the user to manage store display setting (store detail, theme, and font color,logo etc.).
+You can setting in this screen and submit the system will sent your setting to your ebay store and store will update detail.
+
+== Fields Description :
+. Store Name(define 35 charactors)
+. Store Descrption(define 300 charactors)
+. Store Url
+. Store Logo Url(enter your company logo are located at the following URL..)
+. All of your Store's pages will appear with the theme you choose, On ebay there are two basic types of themes to choose from.
+. Store Advanced Theme (This is predesigned themes offer professionally designed background graphics and color combinations. +
+  Use one of these if you want to save time on creating an appealing, consistent look for your Store)
+. Store Advanced Theme Color
+. Store Basic Theme(Easily Customizable themes lend themselves to creating a more custom look. +
+  Use one of these if you'd prefer to have more control over the colors in your store)
+. http://developer.ebay.com/DevZone/XML/docs/WebHelp/images/CustomStoreLookAndFeelWithCallouts.jpg[See example layout on ebay]
+. Primary Color
+. Secondary Color
+. Accent Color
+. Store Name(Font,Size and Color)
+. Store Title(Font,Size and Color)
+. Store Description(Font,Size and Color)
+. Header Display +
+  - Select No, do not include additional information in the header, +
+  - Select Yes, include additional information
+  in the header. (Enter in text area below))
+. Select the eBay header style
+. Item List Display
+. Item Sort
+. Store Merch Display
+. Subscription Level
+. Press 'submit' to submit data to your ebay store site

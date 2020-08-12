@@ -87,7 +87,7 @@ def loadCurrencyDimension() {
                 currencyDim.store()
             }
         } else {
-            currencyDim = delegator.makeValue("CurrencyDimension",["dimensionId":currency.uomId])
+            currencyDim = makeValue("CurrencyDimension", [dimensionId: currency.uomId])
             currencyDim.currencyId = currency.uomId
             currencyDim.description = currency.description
             currencyDim.create()
@@ -100,7 +100,7 @@ def prepareProductDimensionData() {
     if (product == null) {
         return error(UtilProperties.getMessage('ProductUiLabels', 'ProductProductNotFoundWithProduct', locale))
     }
-    productDimension = delegator.makeValue("ProductDimension")
+    productDimension = makeValue("ProductDimension")
     productDimension.setNonPKFields(product)
     GenericValue productType = select("description").from("ProductType")
             .where("productTypeId", product.productTypeId).cache().queryOne()

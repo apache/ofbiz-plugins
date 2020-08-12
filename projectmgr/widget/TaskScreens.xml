@@ -162,7 +162,14 @@ under the License.
                 <set field="titleProperty" value="PageTitleFindTask"/>
                 <set field="headerItem" value="task"/>
                 <set field="tabButtonItem" value="find"/>
+                <set field="helpAnchor" value="_project_tasks"/>
                 <set field="labelTitleProperty" value="ProjectMgrListTasks"/>
+                <set field="asm_multipleSelectForm" value="FindTask"/>
+                <set field="asm_asmListItemPercentOfForm" value="110"/>
+                <set field="currentStatusId.asm_multipleSelect" value="FindTask_currentStatusId"/>
+                <set field="currentStatusId.asm_sortable" value="true"/>
+                <set field="currentStatusId.asm_title" value=" "/>
+                <set field="asm_listField[]" from-field="currentStatusId"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonTaskDecorator" location="${parameters.mainDecoratorLocation}">
@@ -173,6 +180,11 @@ under the License.
                             </condition>
                             <widgets>
                                 <screenlet  title="${uiLabelMap.PageTitleFindTask}" collapsible="true" id="findTask">
+                                    <platform-specific>
+                                        <html>
+                                            <html-template multi-block="true" location="component://common-theme/template/includes/SetMultipleSelectJsList.ftl"/>
+                                        </html>
+                                    </platform-specific>
                                     <include-form name="FindTask" location="component://projectmgr/widget/forms/TaskForms.xml"/>
                                     <include-form name="ListTasks" location="component://projectmgr/widget/forms/TaskForms.xml"/>
                                 </screenlet>
@@ -310,7 +322,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="ViewProjectTask">
         <section>
             <actions>
@@ -341,7 +353,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="TaskView">
         <section>
             <actions>

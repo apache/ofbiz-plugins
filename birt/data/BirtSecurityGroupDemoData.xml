@@ -18,12 +18,6 @@
     under the License.
 -->
 <entity-engine-xml>
-    <SecurityPermission permissionId="BIRT_ADMIN" description="ALL Birt component operations"/>
-    <SecurityPermission permissionId="BIRT_CREATE" description="Create report from master"/>
-    <SecurityPermission permissionId="BIRT_UPDATE" description="Update operations for reports"/>
-    <SecurityPermission permissionId="BIRT_DELETE" description="Delete reports"/>
-    <SecurityPermission permissionId="BIRT_VIEW" description="View and use all birt reports"/>
-
     <SecurityGroup groupId="BIRTADMIN" description="Birt - admin"/>
     <SecurityGroup groupId="BIRTUSER" description="Birt - user"/>
 

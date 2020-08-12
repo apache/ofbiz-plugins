@@ -33,33 +33,32 @@ import com.ebay.soap.eBLBaseComponents.DetailLevelCodeType;
 import com.ebay.soap.eBLBaseComponents.UserType;
 
 public class EbayAccount {
-    
     public static Map<String, Object> getEbayUser(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object>result = new HashMap<String, Object>();
+        Map<String, Object>result = new HashMap<>();
         Delegator delegator = dctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
         String productStoreId = (String) context.get("productStoreId");
 
         // Output Variable
         String email = null,
-            cityName = null, 
-            companyName = null, 
-            country = null, 
-            firstName = null, 
+            cityName = null,
+            companyName = null,
+            country = null,
+            firstName = null,
             lastName = null,
             name = null,
-            phone = null, 
+            phone = null,
             postalCode = null,
-            stateOrProvince = null, 
-            street = null, 
-            street1 = null, 
+            stateOrProvince = null,
+            street = null,
+            street1 = null,
             street2 = null,
             status = null;
-        Map<String, Object>registrationAddress = new HashMap<String, Object>();
+        Map<String, Object>registrationAddress = new HashMap<>();
 
         try {
             ApiContext apiContext = EbayStoreHelper.getApiContext(productStoreId, locale, delegator);
-            GetUserCall getUserCall  = new GetUserCall(apiContext);
+            GetUserCall getUserCall = new GetUserCall(apiContext);
             DetailLevelCodeType[] detailLevel = {DetailLevelCodeType.RETURN_ALL};
             getUserCall.setDetailLevel(detailLevel);
             UserType  user = getUserCall.getUser();

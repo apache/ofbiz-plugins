@@ -83,11 +83,11 @@ public class JanrainHelper {
         HashMap<String, List<String>> result = new HashMap<>();
         NodeList mappings = getNodeList("/rsp/mappings/mapping", rsp);
         for (int i = 0; i < mappings.getLength(); i++) {
-            Element mapping = (Element)mappings.item(i);
+            Element mapping = (Element) mappings.item(i);
             List<String> identifiers = new ArrayList<>();
             NodeList rk_list = getNodeList("primaryKey", mapping);
             NodeList id_list = getNodeList("identifiers/identifier", mapping);
-            String remote_key = ((Element)rk_list.item(0)).getTextContent();
+            String remote_key = ((Element) rk_list.item(0)).getTextContent();
             for (int j = 0; j < id_list.getLength(); j++) {
                 Element ident = (Element) id_list.item(j);
                 identifiers.add(ident.getTextContent());
@@ -109,11 +109,11 @@ public class JanrainHelper {
         Map<String, Object> query = new HashMap<>();
         query.put("primaryKey", primaryKey);
         Element rsp = apiCall("mappings", query);
-        Element oids = (Element)rsp.getFirstChild();
+        Element oids = (Element) rsp.getFirstChild();
         List<String> result = new ArrayList<>();
         NodeList nl = oids.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
-            Element e = (Element)nl.item(i);
+            Element e = (Element) nl.item(i);
             result.add(e.getTextContent());
         }
         return result;
@@ -155,7 +155,7 @@ public class JanrainHelper {
         String data = sb.toString();
         try {
             URL url = new URL(baseUrl + "/api/v2/" + methodName);
-            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
             conn.connect();
@@ -163,7 +163,7 @@ public class JanrainHelper {
                 conn.getOutputStream(), "UTF-8");
             osw.write(data);
             osw.close();
-            
+
             BufferedReader post = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String line = "";
             StringBuilder buf = new StringBuilder();
@@ -181,22 +181,20 @@ public class JanrainHelper {
             throw new RuntimeException("Unexpected URL error", e);
         } catch (IOException e) {
             throw new RuntimeException("Unexpected IO error", e);
-        } catch (ParserConfigurationException e) {
-            throw new RuntimeException("Unexpected XML error", e);
-        } catch (SAXException e) {
+        } catch (ParserConfigurationException | SAXException e) {
             throw new RuntimeException("Unexpected XML error", e);
         }
     }
 
-    public static String janrainCheckLogin(HttpServletRequest request, HttpServletResponse response){
+    public static String janrainCheckLogin(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        String token =  request.getParameter("token");
+        String token = request.getParameter("token");
         String errMsg = "";
         if (UtilValidate.isNotEmpty(token)) {
             Element authInfo = JanrainHelper.authInfo(token);
             Element profileElement = UtilXml.firstChildElement(authInfo, "profile");
             Element nameElement = UtilXml.firstChildElement(profileElement, "name");
-            
+
             // profile element
             String displayName = UtilXml.elementValue(UtilXml.firstChildElement(profileElement, "displayName"));
             String email = UtilXml.elementValue(UtilXml.firstChildElement(profileElement, "email"));
@@ -204,18 +202,18 @@ public class JanrainHelper {
             String preferredUsername = UtilXml.elementValue(UtilXml.firstChildElement(profileElement, "preferredUsername"));
             String providerName = UtilXml.elementValue(UtilXml.firstChildElement(profileElement, "providerName"));
             String url = UtilXml.elementValue(UtilXml.firstChildElement(profileElement, "url"));
-            
+
             // name element
             String givenName = UtilXml.elementValue(UtilXml.firstChildElement(nameElement, "givenName"));
             String familyName = UtilXml.elementValue(UtilXml.firstChildElement(nameElement, "familyName"));
             String formatted = UtilXml.elementValue(UtilXml.firstChildElement(nameElement, "formatted"));
-            
+
             if (UtilValidate.isEmpty("preferredUsername")) {
                 errMsg = UtilProperties.getMessage("SecurityextUiLabels", "loginevents.username_not_found_reenter", UtilHttp.getLocale(request));
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
-            
+
             Map<String, String> result = new HashMap<>();
             result.put("displayName", displayName);
             result.put("email", email);
@@ -227,7 +225,6 @@ public class JanrainHelper {
             result.put("familyName", familyName);
             result.put("formatted", formatted);
             request.setAttribute("userInfoMap", result);
-            
             try {
                 GenericValue userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", preferredUsername).cache().queryOne();
                 if (userLogin != null) {

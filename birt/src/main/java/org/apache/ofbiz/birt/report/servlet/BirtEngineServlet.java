@@ -36,12 +36,12 @@ import org.apache.ofbiz.birt.BirtWorker;
 @SuppressWarnings("serial")
 public class BirtEngineServlet extends org.eclipse.birt.report.servlet.BirtEngineServlet {
 
-    public final static String MODULE = BirtEngineServlet.class.getName();
+    private static final String MODULE = BirtEngineServlet.class.getName();
 
     @Override
     protected IContext __getContext(HttpServletRequest request, HttpServletResponse response) throws BirtException {
         BirtReportServiceFactory.getReportService().setContext(getServletContext(), null);
-        
+
         // set app context
         Map<String, Object> appContext = UtilGenerics.cast(ReportEngineService.getInstance().getEngineConfig().getAppContext());
         try {
@@ -49,7 +49,6 @@ public class BirtEngineServlet extends org.eclipse.birt.report.servlet.BirtEngin
         } catch (GeneralException e) {
             throw new BirtException(e.getMessage());
         }
-        return new BirtContext(new ViewerServletRequest(ParameterAccessor.getParameter(request, ParameterAccessor.PARAM_REPORT)
-                        , request), response);
+        return new BirtContext(new ViewerServletRequest(ParameterAccessor.getParameter(request, ParameterAccessor.PARAM_REPORT), request), response);
     }
 }

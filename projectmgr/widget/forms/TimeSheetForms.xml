@@ -91,7 +91,7 @@
             </hyperlink>
         </field>
     </form>
-    <form name="FindTimeSheet" target="FindTimeSheet" title="" type="single"
+    <form name="FindTimeSheet" target="FindTimeSheet" title="" type="single" default-map-name="parameters"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="timesheetId"><text-find ignore-case="true"/></field>
@@ -107,12 +107,12 @@
             </drop-down>
         </field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}" position="1">
-            <check all-checked="false">
+            <drop-down allow-multiple="true">
                 <entity-options entity-name="StatusItem" key-field-name="statusId">
                     <entity-constraint name="statusTypeId" value="TIMESHEET_STATUS"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
-            </check>
+            </drop-down>
         </field>
         <field name="fromDate"><date-find/></field>
         <field name="find" title="${uiLabelMap.CommonFind}"><submit/></field>

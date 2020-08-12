@@ -39,16 +39,16 @@ import org.eclipse.birt.report.model.api.elements.DesignChoiceConstants;
 
 public final class BirtUtil {
 
-    public final static String MODULE = BirtUtil.class.getName();
+    private static final String MODULE = BirtUtil.class.getName();
 
-    private final static Map<String, String> entityFieldTypeBirtTypeMap = MapUtils.unmodifiableMap(UtilMisc.toMap(
+    private static final Map<String, String> ENTITY_FIELD_TYPE_BIRT_TYPE_MAP = MapUtils.unmodifiableMap(UtilMisc.toMap(
             "id", DesignChoiceConstants.COLUMN_DATA_TYPE_STRING,
             "url", DesignChoiceConstants.COLUMN_DATA_TYPE_STRING,
             "name", DesignChoiceConstants.COLUMN_DATA_TYPE_STRING,
             "value", DesignChoiceConstants.COLUMN_DATA_TYPE_STRING,
             "email", DesignChoiceConstants.COLUMN_DATA_TYPE_STRING,
             "comment", DesignChoiceConstants.COLUMN_DATA_TYPE_STRING,
-            "id-long",DesignChoiceConstants.COLUMN_DATA_TYPE_STRING,
+            "id-long", DesignChoiceConstants.COLUMN_DATA_TYPE_STRING,
             "id-vlong", DesignChoiceConstants.COLUMN_DATA_TYPE_STRING,
             "very-long", DesignChoiceConstants.COLUMN_DATA_TYPE_STRING,
             "indicator", DesignChoiceConstants.COLUMN_DATA_TYPE_STRING,
@@ -70,14 +70,14 @@ public final class BirtUtil {
             "object", DesignChoiceConstants.COLUMN_DATA_TYPE_JAVA_OBJECT,
             "blob", DesignChoiceConstants.COLUMN_DATA_TYPE_BLOB));
 
-    private final static Map<String, String> entityFieldTypeBirtParameterTypeMap = MapUtils.unmodifiableMap(UtilMisc.toMap(
+    private static final Map<String, String> ENTITY_FIELD_TYPE_BIRT_PARAM_TYPE_MAP = MapUtils.unmodifiableMap(UtilMisc.toMap(
             "id", DesignChoiceConstants.PARAM_TYPE_STRING,
             "url", DesignChoiceConstants.PARAM_TYPE_STRING,
             "name", DesignChoiceConstants.PARAM_TYPE_STRING,
             "value", DesignChoiceConstants.PARAM_TYPE_STRING,
             "email", DesignChoiceConstants.PARAM_TYPE_STRING,
             "comment", DesignChoiceConstants.PARAM_TYPE_STRING,
-            "id-long",DesignChoiceConstants.PARAM_TYPE_STRING,
+            "id-long", DesignChoiceConstants.PARAM_TYPE_STRING,
             "id-vlong", DesignChoiceConstants.PARAM_TYPE_STRING,
             "very-long", DesignChoiceConstants.PARAM_TYPE_STRING,
             "indicator", DesignChoiceConstants.PARAM_TYPE_STRING,
@@ -99,7 +99,7 @@ public final class BirtUtil {
             "object", DesignChoiceConstants.PARAM_TYPE_JAVA_OBJECT,
             "blob", DesignChoiceConstants.PARAM_TYPE_JAVA_OBJECT));
 
-    private final static Map<String, String> mimeTypeOutputFormatMap = UtilMisc.toMap(
+    private static final Map<String, String> MIME_TYPE_OUTPUT_FORMAT_MAP = UtilMisc.toMap(
             "text/html", RenderOption.OUTPUT_FORMAT_HTML,
             "application/pdf", RenderOption.OUTPUT_FORMAT_PDF,
             "application/postscript", "postscript",
@@ -113,7 +113,7 @@ public final class BirtUtil {
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "docx",
             "application/vnd.openxmlformats-officedocument.presentationml.presentation", "pptx");
 
-    private BirtUtil() {}
+    private BirtUtil() { }
 
     /**
      * Return birt field type corresponding to given entity field type
@@ -124,11 +124,11 @@ public final class BirtUtil {
         if (UtilValidate.isEmpty(entityFieldType)) {
             return null;
         }
-        return entityFieldTypeBirtTypeMap.get(entityFieldType.toLowerCase());
+        return ENTITY_FIELD_TYPE_BIRT_TYPE_MAP.get(entityFieldType.toLowerCase());
     }
 
     /**
-     * Return birt parameter type corresponding to given entity field type 
+     * Return birt parameter type corresponding to given entity field type
      * @param entityFieldType
      * @return birt parameter type corresponding to given entity field type
      */
@@ -136,7 +136,7 @@ public final class BirtUtil {
         if (UtilValidate.isEmpty(entityFieldType)) {
             return null;
         }
-        return entityFieldTypeBirtParameterTypeMap.get(entityFieldType.toLowerCase());
+        return ENTITY_FIELD_TYPE_BIRT_PARAM_TYPE_MAP.get(entityFieldType.toLowerCase());
     }
 
     /**
@@ -145,7 +145,7 @@ public final class BirtUtil {
      * @return true if mime type related to a contentType is supported by Birt
      */
     public static boolean isSupportedMimeType(String contentType) {
-        return mimeTypeOutputFormatMap.containsKey(contentType);
+        return MIME_TYPE_OUTPUT_FORMAT_MAP.containsKey(contentType);
     }
 
     /**
@@ -156,7 +156,7 @@ public final class BirtUtil {
      */
     public static String getMimeTypeOutputFormat(String contentType) throws GeneralException {
         if (isSupportedMimeType(contentType)) {
-            return mimeTypeOutputFormatMap.get(contentType);
+            return MIME_TYPE_OUTPUT_FORMAT_MAP.get(contentType);
         }
         throw new GeneralException("Unknown content type : " + contentType);
     }

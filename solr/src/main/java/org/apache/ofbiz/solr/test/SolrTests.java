@@ -73,7 +73,7 @@ public class SolrTests extends OFBizTestCase {
 
     }
 
-    public void testAddToSolrIndex() throws Exception{
+    public void testAddToSolrIndex() throws Exception {
         context = new HashMap<>();
         context.put("productId", validTestProductId);
         response = dispatcher.runSync("addToSolrIndex", context);
@@ -109,7 +109,7 @@ public class SolrTests extends OFBizTestCase {
 
         products.add(product_1);
         products.add(product_2);
-        context  = new HashMap<>();
+        context = new HashMap<>();
         context.put("fieldList", products);
 
         response = dispatcher.runSync("addListToSolrIndex", context);
@@ -136,7 +136,7 @@ public class SolrTests extends OFBizTestCase {
 
         products.add(product_1);
         products.add(product_2);
-        context  = new HashMap<>();
+        context = new HashMap<>();
         context.put("fieldList", products);
 
         response = dispatcher.runSync("addListToSolrIndex", context);

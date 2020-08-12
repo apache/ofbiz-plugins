@@ -25,7 +25,7 @@ import org.apache.lucene.index.Term;
 
 public interface LuceneDocument {
 
-    public Term getDocumentIdentifier();
+    Term getDocumentIdentifier();
 
-    public Document prepareDocument(Delegator delegator);
+    Document prepareDocument(Delegator delegator);
 }

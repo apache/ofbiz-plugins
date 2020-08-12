@@ -67,7 +67,7 @@ currentValue = ContentWorker.getSubContentCache(delegator, contentIdTo, mapKey, 
 
 if (!currentValue) {
     parentValue = from("Content").where("contentId", contentIdTo).cache(true).queryOne()
-    currentValue = delegator.makeValue("Content")
+    currentValue = makeValue("Content")
     subject =  parentValue.contentName
     if ("SUMMARY".equals(mapKey)) {
         subject = "Short " + subject

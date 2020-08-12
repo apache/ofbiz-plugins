@@ -51,19 +51,19 @@ import org.apache.ofbiz.service.ServiceUtil;
 
 public class WebPosEvents {
 
-    public static String MODULE = WebPosEvents.class.getName();
+    private static final String MODULE = WebPosEvents.class.getName();
 
     public static String posLogin(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
         HttpSession session = request.getSession(true);
-        
+
         // get the posTerminalId
         String posTerminalId = request.getParameter("posTerminalId");
         session.removeAttribute("shoppingCart");
         session.removeAttribute("webPosSession");
         WebPosSession webPosSession = WebPosEvents.getWebPosSession(request, posTerminalId);
         String responseString = LoginEvents.storeLogin(request, response);
-        GenericValue userLoginNew = (GenericValue)session.getAttribute("userLogin");
-        
+        GenericValue userLoginNew = (GenericValue) session.getAttribute("userLogin");
+
         if (userLoginNew != null && UtilValidate.isNotEmpty(posTerminalId)) {
             webPosSession.setUserLogin(userLoginNew);
         }
@@ -80,7 +80,7 @@ public class WebPosEvents {
         }
         return responseString;
     }
-    
+
     public static WebPosSession getWebPosSession(HttpServletRequest request, String posTerminalId) {
         HttpSession session = request.getSession(true);
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
@@ -101,7 +101,7 @@ public class WebPosEvents {
                     currencyUomId = productStore.getString("defaultCurrencyUomId");
                 }
             }
-            
+
             if (userLogin != null) {
                 session.setAttribute("userLogin", userLogin);
             }
@@ -112,11 +112,12 @@ public class WebPosEvents {
             }
 
             if (UtilValidate.isNotEmpty(posTerminalId)) {
-                webPosSession = new WebPosSession(posTerminalId, null, userLogin, request.getLocale(), productStoreId, facilityId, currencyUomId, delegator, dispatcher, cart);
+                webPosSession = new WebPosSession(posTerminalId, null, userLogin, request.getLocale(), productStoreId, facilityId, currencyUomId,
+                        delegator, dispatcher, cart);
                 session.setAttribute("webPosSession", webPosSession);
             } else {
                 Debug.logError("PosTerminalId is empty cannot create a webPosSession", MODULE);
-            }  
+            }
         }
         return webPosSession;
     }
@@ -139,19 +140,19 @@ public class WebPosEvents {
         }
         return "success";
     }
-    
+
     public static String emptyCartAndClearAutoSaveList(HttpServletRequest request, HttpServletResponse response) throws GeneralException {
         HttpSession session = request.getSession(true);
         WebPosSession webPosSession = (WebPosSession) session.getAttribute("webPosSession");
         ShoppingCartEvents.clearCart(request, response);
-        
+
         if (UtilValidate.isNotEmpty(webPosSession)) {
-            String autoSaveListId = ShoppingListEvents.getAutoSaveListId(webPosSession.getDelegator(), webPosSession.getDispatcher(), null, webPosSession.getUserLogin(), webPosSession.getProductStoreId());
+            String autoSaveListId = ShoppingListEvents.getAutoSaveListId(webPosSession.getDelegator(), webPosSession.getDispatcher(), null,
+                    webPosSession.getUserLogin(), webPosSession.getProductStoreId());
             ShoppingListEvents.clearListInfo(webPosSession.getDelegator(), autoSaveListId);
         }
         return "success";
-    }    
-    
+    }
     public static String getProductType(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> featureMap = null;
         Map<String, Object> variantTreeMap = null;
@@ -185,8 +186,8 @@ public class WebPosEvents {
                                 if (UtilValidate.isNotEmpty(featureSet)) {
                                     request.setAttribute("featureSet", featureSet);
                                     try {
-                                        variantTreeMap = dispatcher.runSync("getProductVariantTree", 
-                                                         UtilMisc.toMap("productId", productId, "featureOrder", featureSet, "productStoreId", productStoreId));
+                                        variantTreeMap = dispatcher.runSync("getProductVariantTree",
+                                                UtilMisc.toMap("productId", productId, "featureOrder", featureSet, "productStoreId", productStoreId));
                                         if (ServiceUtil.isError(variantTreeMap)) {
                                             String errorMessage = ServiceUtil.getErrorMessage(variantTreeMap);
                                             request.setAttribute("_ERROR_MESSAGE_", errorMessage);
@@ -198,11 +199,12 @@ public class WebPosEvents {
                                             request.setAttribute("variantTree", variantTree);
                                             request.setAttribute("variantTreeSize", variantTree.size());
                                             List<String> featureOrder = new LinkedList<>(featureSet);
-                                            for (int i=0; i < featureOrder.size(); i++) {
+                                            for (int i = 0; i < featureOrder.size(); i++) {
                                                 String featureKey = featureOrder.get(i);
-                                                GenericValue featureValue = EntityQuery.use(delegator).from("ProductFeatureType").where("productFeatureTypeId", featureOrder.get(i)).cache().queryOne();
-                                                if (featureValue != null && 
-                                                    UtilValidate.isNotEmpty(featureValue.get("description"))) {
+                                                GenericValue featureValue = EntityQuery.use(delegator).from("ProductFeatureType").where(
+                                                        "productFeatureTypeId", featureOrder.get(i)).cache().queryOne();
+                                                if (featureValue != null
+                                                        && UtilValidate.isNotEmpty(featureValue.get("description"))) {
                                                     featureTypes.put(featureKey, featureValue.get("description"));
                                                 } else {
                                                     featureTypes.put(featureKey, featureValue.get("productFeatureTypeId"));

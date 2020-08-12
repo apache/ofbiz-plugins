@@ -22,7 +22,7 @@ import org.apache.ofbiz.base.util.*
 actionList = []
 hasAction = false
 //Unpaid Item Dispute
-if (unpaidItemStatus == null && paidTime == null && checkoutStatus != "CheckoutComplete") {
+if (unpaidItemStatus == null && paidTime == null && "CheckoutComplete" != checkoutStatus) {
     inMap = [:]
     inMap.put("action","openUnpaid")
     inMap.put("actionName","Open Unpaid")

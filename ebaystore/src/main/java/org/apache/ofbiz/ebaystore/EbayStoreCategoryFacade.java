@@ -64,13 +64,13 @@ public class EbayStoreCategoryFacade {
     private AttributeSet[] joinedAttrSets = null;
     private ItemSpecificsEnabledCodeType itemSpecificEnabled = null;
     private Boolean retPolicyEnabled = null;
-    private Map<Integer,String[]> listingDurationMap = null;
-    private Map<String,Integer> listingDurationReferenceMap = null;
+    private Map<Integer, String[]> listingDurationMap = null;
+    private Map<String, Integer> listingDurationReferenceMap = null;
     private BuyerPaymentMethodCodeType[] paymentMethods = null;
     private NameRecommendationType[] nameRecommendationTypes = null;
     private StoreOwnerExtendedListingDurationsType storeOwnerExtendedListingDuration = null;
     private BestOfferEnabledDefinitionType bestOfferEnabled = null;
-    private List<Map<String,Object>> adItemTemplates = null;
+    private List<Map<String, Object>> adItemTemplates = null;
 
     public EbayStoreCategoryFacade(String catId, ApiContext apiContext, IAttributesMaster attrMaster, EbayStoreSiteFacade siteFacade) throws SdkException, Exception {
         this.catId = catId;
@@ -116,12 +116,12 @@ public class EbayStoreCategoryFacade {
         FeatureDefinitionsType featureDefinition = this.siteFacade.getSiteFeatureDefinitionsMap().get(apiContext.getSite());
 
         //get itemSpecificsEnabled feature
-        itemSpecificEnabled = (ItemSpecificsEnabledCodeType)getInheritProperty(catId, "getItemSpecificsEnabled", categoriesCacheMap, cfsMap);
+        itemSpecificEnabled = (ItemSpecificsEnabledCodeType) getInheritProperty(catId, "getItemSpecificsEnabled", categoriesCacheMap, cfsMap);
         if (itemSpecificEnabled == null) {
             itemSpecificEnabled = siteDefaults.getItemSpecificsEnabled();
         }
         //get returnPolicyEnabled feature
-        retPolicyEnabled = (Boolean)getInheritProperty(catId, "isReturnPolicyEnabled", categoriesCacheMap, cfsMap);
+        retPolicyEnabled = (Boolean) getInheritProperty(catId, "isReturnPolicyEnabled", categoriesCacheMap, cfsMap);
         if (retPolicyEnabled == null) {
             retPolicyEnabled = siteDefaults.isReturnPolicyEnabled();
         }
@@ -129,23 +129,23 @@ public class EbayStoreCategoryFacade {
         //get listing durations
         ListingDurationDefinitionsType listDuration = featureDefinition.getListingDurations();
         ListingDurationDefinitionType[] durationArray = listDuration.getListingDuration();
-        listingDurationMap = new HashMap<Integer, String[]>();
-        for (int i = 0; i < durationArray.length; i++) {
-            listingDurationMap.put(durationArray[i].getDurationSetID(), durationArray[i].getDuration());
+        listingDurationMap = new HashMap<>();
+        for (ListingDurationDefinitionType listingDurationDefinitionType : durationArray) {
+            listingDurationMap.put(listingDurationDefinitionType.getDurationSetID(), listingDurationDefinitionType.getDuration());
         }
 
         //get listing types
-        ListingDurationReferenceType[] listingDuration = (ListingDurationReferenceType[])getInheritProperty(catId, "getListingDuration", categoriesCacheMap, cfsMap);
+        ListingDurationReferenceType[] listingDuration = (ListingDurationReferenceType[]) getInheritProperty(catId, "getListingDuration", categoriesCacheMap, cfsMap);
         if (listingDuration == null || listingDuration.length == 0) {
             listingDuration = siteDefaults.getListingDuration();
         }
-        listingDurationReferenceMap = new HashMap<String, Integer>();
-        for (int i = 0; i < listingDuration.length; i++) {
-            listingDurationReferenceMap.put(listingDuration[i].getType().value(),listingDuration[i].getValue());
+        listingDurationReferenceMap = new HashMap<>();
+        for (ListingDurationReferenceType listingDurationReferenceType : listingDuration) {
+            listingDurationReferenceMap.put(listingDurationReferenceType.getType().value(), listingDurationReferenceType.getValue());
         }
 
         //get payment methods
-        paymentMethods = (BuyerPaymentMethodCodeType[])getInheritProperty(catId, "getPaymentMethod", categoriesCacheMap, cfsMap);
+        paymentMethods = (BuyerPaymentMethodCodeType[]) getInheritProperty(catId, "getPaymentMethod", categoriesCacheMap, cfsMap);
         if (paymentMethods == null || paymentMethods.length == 0) {
             paymentMethods = siteDefaults.getPaymentMethod();
         }
@@ -170,7 +170,7 @@ public class EbayStoreCategoryFacade {
     }
 
     /**
-     * recursively check the parent category to find out category feature 
+     * recursively check the parent category to find out category feature
      * @param catId categoryID to be retrieved
      * @param methodName method name to be invoked
      * @param categoriesCacheMap cache of all the categories
@@ -178,7 +178,7 @@ public class EbayStoreCategoryFacade {
      * @return generic Object
      * @throws Exception
      */
-    private Object getInheritProperty(String catId,String methodName,
+    private Object getInheritProperty(String catId, String methodName,
             Map<String, CategoryType> categoriesCacheMap, Map<String, CategoryFeatureType> cfsMap) throws Exception {
         if (cfsMap.containsKey(catId)) {
             CategoryFeatureType cf = cfsMap.get(catId);
@@ -211,17 +211,17 @@ public class EbayStoreCategoryFacade {
             m = cf.getClass().getMethod(methodName);
             if (m != null) {
                 return m.invoke(cf);
-            } 
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public List<Map<String,Object>> syncAdItemTemplates() throws ApiException, SdkSoapException, SdkException {
+    public List<Map<String, Object>> syncAdItemTemplates() throws ApiException, SdkSoapException, SdkException {
         GetDescriptionTemplatesRequestType req = null;
         GetDescriptionTemplatesResponseType resp = null;
-        List<Map<String,Object>> temGroupList = new LinkedList<Map<String,Object>>();
+        List<Map<String, Object>> temGroupList = new LinkedList<>();
 
         GetDescriptionTemplatesCall call = new GetDescriptionTemplatesCall(this.apiContext);
         req = new GetDescriptionTemplatesRequestType();
@@ -231,25 +231,25 @@ public class EbayStoreCategoryFacade {
             DescriptionTemplateType[] descriptionTemplateTypeList = resp.getDescriptionTemplate();
             Debug.logInfo("layout of category "+ this.catId +":"+ resp.getLayoutTotal(), MODULE);
             for (DescriptionTemplateType descTemplateType : descriptionTemplateTypeList) {
-                List<Map<String,Object>> templateList = null;
-                Map<String,Object> templateGroup = null;
+                List<Map<String, Object>> templateList = null;
+                Map<String, Object> templateGroup = null;
                 if ("THEME".equals(String.valueOf(descTemplateType.getType()))) {
-                    Map<String,Object> template = new HashMap<String, Object>();
+                    Map<String, Object> template = new HashMap<>();
                     template.put("TemplateId", String.valueOf(descTemplateType.getID()));
                     template.put("TemplateImageURL", descTemplateType.getImageURL());
                     template.put("TemplateName", descTemplateType.getName());
                     template.put("TemplateType", descTemplateType.getType());
 
                     // check group template by groupId
-                    for (Map<String,Object> temGroup : temGroupList) {
+                    for (Map<String, Object> temGroup : temGroupList) {
                         if (temGroup.get("TemplateGroupId").equals(descTemplateType.getGroupID().toString())) {
                             templateGroup = temGroup;
                             break;
                         }
                     }
                     if (templateGroup == null) {
-                        templateGroup = new HashMap<String, Object>();
-                        templateList = new LinkedList<Map<String,Object>>();
+                        templateGroup = new HashMap<>();
+                        templateList = new LinkedList<>();
                         templateGroup.put("TemplateGroupId", descTemplateType.getGroupID().toString());
                         templateList.add(template);
                         templateGroup.put("Templates", templateList);
@@ -265,7 +265,7 @@ public class EbayStoreCategoryFacade {
             }
             ThemeGroupType[] themes = resp.getThemeGroup();
             if (themes != null && temGroupList != null) {
-                for (Map<String,Object> temGroup : temGroupList) {
+                for (Map<String, Object> temGroup : temGroupList) {
                     for (ThemeGroupType theme : themes) {
                         if (theme.getGroupID() == Integer.parseInt(temGroup.get("TemplateGroupId").toString())) {
                             if (theme != null) temGroup.put("TemplateGroupName", theme.getGroupName());
@@ -277,12 +277,12 @@ public class EbayStoreCategoryFacade {
                 }
             }
         }
-        return adItemTemplates = temGroupList; 
+        return adItemTemplates = temGroupList;
     }
 
-    public List<Map<String,Object>> getAdItemTemplates(String temGroupId) {
-        List<Map<String,Object>> themes = new LinkedList<Map<String,Object>>();
-        for (Map<String,Object> temp : this.adItemTemplates) {
+    public List<Map<String, Object>> getAdItemTemplates(String temGroupId) {
+        List<Map<String, Object>> themes = new LinkedList<>();
+        for (Map<String, Object> temp : this.adItemTemplates) {
             if (temp.get("TemplateGroupId").equals(temGroupId)) {
                 themes = UtilGenerics.checkList(temp.get("Templates"));
                 break;
@@ -339,7 +339,7 @@ public class EbayStoreCategoryFacade {
         return this.bestOfferEnabled;
     }
 
-    public List<Map<String,Object>> getAdItemTemplates() {
+    public List<Map<String, Object>> getAdItemTemplates() {
         return this.adItemTemplates;
     }
 }

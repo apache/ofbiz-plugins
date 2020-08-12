@@ -29,7 +29,7 @@ currentStatus = sprintStatus.currentStatusId
 if ("SPRINT_CLOSED".equals(currentStatus)) {
     backlogStatusId = null
 } else {
-    if (backlogStatusId == "Any") {
+    if ("Any" == backlogStatusId) {
         backlogStatusId = null
     } else {
         backlogStatusId = "CRQ_REVIEWED"

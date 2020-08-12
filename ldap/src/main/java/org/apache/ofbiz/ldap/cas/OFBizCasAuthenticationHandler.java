@@ -22,7 +22,6 @@ package org.apache.ofbiz.ldap.cas;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -126,7 +125,7 @@ public final class OFBizCasAuthenticationHandler extends AbstractOFBizAuthentica
         int n = rand(lo, hi);
         byte b[] = new byte[n];
         for (int i = 0; i < n; i++) {
-            b[i] = (byte)rand('a', 'z');
+            b[i] = (byte) rand('a', 'z');
         }
         return new String(b);
     }
@@ -150,7 +149,6 @@ public final class OFBizCasAuthenticationHandler extends AbstractOFBizAuthentica
         String logoutUri = UtilXml.childElementValue(rootElement, "CasLogoutUri", "/logout");
         try {
             response.sendRedirect(casUrl + logoutUri);
-        } catch (UnsupportedEncodingException e) {
         } catch (IOException e) {
         }
         return "success";
@@ -185,7 +183,7 @@ public final class OFBizCasAuthenticationHandler extends AbstractOFBizAuthentica
         String casUrl = UtilXml.childElementValue(rootElement, "CasUrl", "https://localhost:8443/cas");
         Cookie[] cookies = request.getCookies();
         if (cookies == null) return true;
-        for (int i=0; i < cookies.length; i++) {
+        for (int i = 0; i < cookies.length; i++) {
             Cookie cookie = cookies[i];
             if (cookie.getName().equals(casTGC) && casUrl.indexOf(cookie.getDomain()) > -1) {
                 return false;

@@ -20,7 +20,6 @@ package org.apache.ofbiz.pricat;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -42,18 +41,12 @@ import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.util.EntityQuery;
 
 public class PricatEvents {
-    
     private static final String MODULE = PricatEvents.class.getName();
-    
     public static final String PricatLatestVersion = UtilProperties.getPropertyValue("pricat", "pricat.latest.version", "V1.1");
-    
     public static final String PricatFileName = "PricatTemplate_" + PricatLatestVersion + ".xlsx";
-    
     public static final String PricatPath = "component://pricat/webapp/pricat/downloads/";
-    
     /**
      * Download excel template.
-     * 
      * @param request
      * @param response
      */
@@ -74,16 +67,12 @@ public class PricatEvents {
             Path file = Paths.get(path + fileName);
             byte[] bytes = Files.readAllBytes(file);
             UtilHttp.streamContentToBrowser(response, bytes, "application/octet-stream", URLEncoder.encode(fileName, "UTF-8"));
-        } catch (MalformedURLException e) {
-            Debug.logError(e.getMessage(), MODULE);
-            return "error";
         } catch (IOException e) {
             Debug.logError(e.getMessage(), MODULE);
             return "error";
         }
         return "success";
     }
-    
     /**
      * Upload a pricat.
      */
@@ -116,9 +105,6 @@ public class PricatEvents {
                         byte[] bytes = Files.readAllBytes(path);
                         path = Paths.get(originalPricatFileName);
                         UtilHttp.streamContentToBrowser(response, bytes, "application/octet-stream", URLEncoder.encode(path.getName(path.getNameCount() - 1).toString(), "UTF-8"));
-                    } catch (MalformedURLException e) {
-                        Debug.logError(e.getMessage(), MODULE);
-                        return "error";
                     } catch (IOException e) {
                         Debug.logError(e.getMessage(), MODULE);
                         return "error";
@@ -133,7 +119,6 @@ public class PricatEvents {
 
     /**
      * Download commented excel file after it's parsed.
-     * 
      * @param request
      * @param response
      * @return
@@ -150,10 +135,7 @@ public class PricatEvents {
         GenericValue historyValue = null;
         try {
             historyValue = EntityQuery.use(delegator).from("ExcelImportHistory").where("userLoginId", userLoginId, "sequenceNum", Long.valueOf(sequenceNum)).queryOne();
-        } catch (NumberFormatException e) {
-            Debug.logError(e.getMessage(), MODULE);
-            return "error";
-        } catch (GenericEntityException e) {
+        } catch (NumberFormatException | GenericEntityException e) {
             Debug.logError(e.getMessage(), MODULE);
             return "error";
         }
@@ -172,9 +154,6 @@ public class PricatEvents {
                 byte[] bytes = Files.readAllBytes(path);
                 UtilHttp.streamContentToBrowser(response, bytes, "application/octet-stream", URLEncoder.encode(fileName, "UTF-8"));
             }
-        } catch (MalformedURLException e) {
-            Debug.logError(e.getMessage(), MODULE);
-            return "error";
         } catch (IOException e) {
             Debug.logError(e.getMessage(), MODULE);
             return "error";

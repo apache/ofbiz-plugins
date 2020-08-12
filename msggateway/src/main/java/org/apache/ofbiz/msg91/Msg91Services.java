@@ -35,12 +35,11 @@ import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.ServiceUtil;
 
 public class Msg91Services {
-    public final static String MODULE = Msg91Services.class.getName();
+    private static final String MODULE = Msg91Services.class.getName();
 
     public static Map<String, Object> sendMsg91Sms(DispatchContext ctx, Map<String, ? extends Object> context) {
         Delegator delegator = ctx.getDelegator();
         Map<String, Object> result = ServiceUtil.returnSuccess();
-        
         List<String> numbers = UtilGenerics.cast(context.get("numbers"));
         String message = (String) context.get("message");
 

@@ -1,0 +1,33 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+= New Ebay Account.
+This screen allows the user to add new ebay account for access to using their ebay store.
+
+== Fields Description :
+. Enter  'Salutation' (ex:Mr,miss,Missis)
+. Enter  'First Name' (ex:Demo)
+. Enter  'Middle Name'
+. Enter  'Last Name' (ex: DemoLastName)
+. Enter  'Gender'
+. Enter  'User Login Id' (ex:exbaySandBox123) which you registered on ebay
+. Enter  'Current Password' the same which you registered on ebay
+. Press the 'Create' button.
+
+[NOTE]
+Go to Party module -> Search your party -> then you can update your profiles

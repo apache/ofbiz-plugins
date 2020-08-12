@@ -60,7 +60,7 @@ public final class OFBizActiveDirectoryAuthenticationHandler extends AbstractOFB
         String searchType = UtilXml.childElementValue(rootElement, "SearchType", "");
         String baseDN = UtilXml.childElementValue(rootElement, "BaseDN");
         Hashtable<String, String> env = new Hashtable<>();
-        env.put(Context.INITIAL_CONTEXT_FACTORY,"com.sun.jndi.ldap.LdapCtxFactory");
+        env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         env.put(Context.PROVIDER_URL, ldapURL);
         if (searchType == null || searchType.trim().equals("")) {
             env.put(Context.SECURITY_AUTHENTICATION, "none");

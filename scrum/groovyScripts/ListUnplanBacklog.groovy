@@ -24,7 +24,7 @@ taskStatusId = null
 paraBacklogStatusId = backlogStatusId
 
 orStsExprs = []
-    if (backlogStatusId != "Any") {
+    if ("Any" != backlogStatusId) {
         taskStatusId = "STS_CREATED"
         orStsExprs.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "CRQ_REVIEWED"))
     } else {

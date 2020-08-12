@@ -151,7 +151,7 @@ void retrieveWorkEffortData() {
         entry.acualTotal = taskTotal
         entry.planTotal = planTotal
         //Drop Down Lists
-        if (entry.checkComplete != "Y") {
+        if ("Y" != entry.checkComplete) {
             if (aHours > 0.00)
                 entries.add(entry)
         } else {
@@ -216,7 +216,7 @@ void retrieveEmplLeaveData() {
                 leaveEntry.plannedHours = result.hours
                 leaveEntry.planHours =  result.hours
             }
-            if (lastEmplLeaveEntry.leaveStatus == "LEAVE_APPROVED") {
+            if ("LEAVE_APPROVED" == lastEmplLeaveEntry.leaveStatus) {
                 leaveEntry.checkComplete = "Y"
             }
             leaveEntry.partyId = lastEmplLeaveEntry.partyId
@@ -447,7 +447,7 @@ projectSprintBacklogAndTaskList.each { projectSprintBacklogAndTaskMap ->
 projectSprintBacklogAndTaskList = UtilMisc.sortMaps(projectSprintBacklogAndTaskList, ["-projectName","sprintName","-taskTypeId","custRequestId"])
 projectSprintBacklogAndTaskList.each { projectSprintBacklogAndTaskMap ->
 	blTypeId = projectSprintBacklogAndTaskMap.custRequestTypeId
-	if (blTypeId == "RF_PROD_BACKLOG"){
+	if ("RF_PROD_BACKLOG" == blTypeId){
 		taskList.add(0,projectSprintBacklogAndTaskMap)
 	}
 }

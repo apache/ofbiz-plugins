@@ -26,23 +26,19 @@ import org.apache.ofbiz.htmlreport.InterfaceReportThread;
 
 /**
  * Provides a report for running sample html report.
- * 
  */
 public class SampleHtmlReport extends AbstractHtmlReport {
-    
+
     /**
      * Public constructor with report variables.<p>
-     * 
      * @param request the HttpServletRequest request
      * @param response the HttpServletResponse response
      */
     public SampleHtmlReport(HttpServletRequest request, HttpServletResponse response) {
-
         super(request, response);
     }
-    
+
     public static SampleHtmlReport getReport(HttpServletRequest request, HttpServletResponse response) {
-        
         SampleHtmlReport wp = (SampleHtmlReport) request.getAttribute(SESSION_REPORT_CLASS);
         if (wp == null) {
             wp = new SampleHtmlReport(request, response);
@@ -50,10 +46,9 @@ public class SampleHtmlReport extends AbstractHtmlReport {
         }
         return wp;
     }
-    
+
     @Override
     public InterfaceReportThread initializeThread(HttpServletRequest request, HttpServletResponse response, String name) {
-
         if (name == null) {
             name = "";
         }
@@ -62,14 +57,13 @@ public class SampleHtmlReport extends AbstractHtmlReport {
         Thread[] threads = new Thread[i];
         threadGroup.enumerate(threads, true);
         InterfaceReportThread thread = null;
-        for (int j=0; j<threads.length; j++) {
+        for (int j = 0; j < threads.length; j++) {
             Thread threadInstance = threads[j];
             if (threadInstance instanceof SampleHtmlThread) {
                 thread = (InterfaceReportThread) threadInstance;
                 break;
             }
         }
-
         if (thread == null) {
             thread = new SampleHtmlThread(request, response, name.toLowerCase());
         }

@@ -20,7 +20,6 @@ package org.apache.ofbiz.ebaystore;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -99,24 +98,24 @@ public class EbayEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Map<String, Object> requestParams = UtilHttp.getParameterMap(request);
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-        int feedbackSize = Integer.parseInt((String)requestParams.get("feedbackSize"));
-        String productStoreId = (String)requestParams.get("productStoreId");
+        int feedbackSize = Integer.parseInt((String) requestParams.get("feedbackSize"));
+        String productStoreId = (String) requestParams.get("productStoreId");
         for (int i = 1; i <= feedbackSize; i++) {
-            String commentType = (String)requestParams.get("commentType"+i);
-            String commentText = (String)requestParams.get("commentText"+i);
+            String commentType = (String) requestParams.get("commentType" + i);
+            String commentText = (String) requestParams.get("commentText" + i);
             if (!"none".equals(commentType) && commentText != null) {
-                String itemId = (String)requestParams.get("itemId"+i);
-                String transactionId = (String)requestParams.get("transactionId"+i);
-                String targetUser = (String)requestParams.get("targetUser"+i);
-                String commentingUser = (String)requestParams.get("commentingUser"+i);
-                String role = (String)requestParams.get("role"+i);
-                String ratingItem = (String)requestParams.get("ratingItem"+i);
-                String ratingComm = (String)requestParams.get("ratingComm"+i);
-                String ratingShip = (String)requestParams.get("ratingShip"+i);
-                String ratingShipHand = (String)requestParams.get("ratingShipHand"+i);
-                String AqItemAsDescribedId = (String)requestParams.get("AqItemAsDescribedId"+i);
+                String itemId = (String) requestParams.get("itemId" + i);
+                String transactionId = (String) requestParams.get("transactionId" + i);
+                String targetUser = (String) requestParams.get("targetUser" + i);
+                String commentingUser = (String) requestParams.get("commentingUser" + i);
+                String role = (String) requestParams.get("role" + i);
+                String ratingItem = (String) requestParams.get("ratingItem" + i);
+                String ratingComm = (String) requestParams.get("ratingComm" + i);
+                String ratingShip = (String) requestParams.get("ratingShip" + i);
+                String ratingShipHand = (String) requestParams.get("ratingShipHand" + i);
+                String AqItemAsDescribedId = (String) requestParams.get("AqItemAsDescribedId" + i);
 
-                Map<String, Object> leavefeedback =  new HashMap<String, Object>();
+                Map<String, Object> leavefeedback = new HashMap<>();
                 leavefeedback.put("productStoreId", productStoreId);
                 leavefeedback.put("userLogin", userLogin);
                 leavefeedback.put("itemId", itemId);
@@ -142,7 +141,7 @@ public class EbayEvents {
                     }
                 } catch (GenericServiceException e) {
                     Debug.logError(e, MODULE);
-                    request.setAttribute("_ERROR_MESSAGE_","Exception: ".concat(e.getMessage()));
+                    request.setAttribute("_ERROR_MESSAGE_", "Exception: ".concat(e.getMessage()));
                     return "error";
                 }
             }
@@ -152,11 +151,11 @@ public class EbayEvents {
     /* event to add products to prepare create & export listing */
     public static String addProductListing(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        Map<String,Object> requestParams = UtilHttp.getParameterMap(request);
+        Map<String, Object> requestParams = UtilHttp.getParameterMap(request);
         Locale locale = UtilHttp.getLocale(request);
 
         if (UtilValidate.isEmpty(requestParams.get("productStoreId"))) {
-            request.setAttribute("_ERROR_MESSAGE_","Required productStoreId and selected products.");
+            request.setAttribute("_ERROR_MESSAGE_", "Required productStoreId and selected products.");
             return "error";
         }
         List<String> productIds = UtilGenerics.checkList(requestParams.get("productIds"));
@@ -166,11 +165,11 @@ public class EbayEvents {
             try {
                 productIds = UtilGenerics.checkList(requestParams.get("selectResult"));
             } catch (ClassCastException e) {
-                if (UtilValidate.isEmpty(productIds)) productIds = new LinkedList<String>();
+                if (UtilValidate.isEmpty(productIds)) productIds = new LinkedList<>();
                 productIds.add((String) requestParams.get("selectResult"));
             }
         } else {
-            request.setAttribute("_ERROR_MESSAGE_","Required productStoreId and selected products.");
+            request.setAttribute("_ERROR_MESSAGE_", "Required productStoreId and selected products.");
             return "error";
         }
         String productStoreId = (String) requestParams.get("productStoreId");
@@ -178,25 +177,25 @@ public class EbayEvents {
         ApiContext apiContext = EbayStoreHelper.getApiContext(productStoreId, locale, delegator);
         //String webSiteUrl = (String) requestParams.get("webSiteUrl");
         String webSiteUrl = "https://demo-trunk.ofbiz.apache.org";
-        Map<String,Object> addItemObject = getAddItemListingObject(request, apiContext);
-        List<Map<String,Object>> itemObjs = null;
+        Map<String, Object> addItemObject = getAddItemListingObject(request, apiContext);
+        List<Map<String, Object>> itemObjs = null;
         if (UtilValidate.isNotEmpty(addItemObject.get("itemListings"))) {
             itemObjs = UtilGenerics.checkList(addItemObject.get("itemListings"));
         } else {
-            itemObjs = new LinkedList<Map<String,Object>>();
+            itemObjs = new LinkedList<>();
         }
 
         if (UtilValidate.isNotEmpty(productIds)) {
             try {
-                // check  add new product obj ? to export 
+                // check  add new product obj ? to export
                 for (String productId : productIds) {
-                    for (Map<String,Object> itObj : itemObjs) {
+                    for (Map<String, Object> itObj : itemObjs) {
                         if (UtilValidate.isNotEmpty(itObj.get(productId.concat("_Obj")))) {
                             productIds.remove(productId);
                         }
                     }
                 }
-                Debug.logInfo("run in with productIds "+productIds, MODULE);
+                Debug.logInfo("run in with productIds " + productIds, MODULE);
                 for (String productId : productIds) {
                     AddItemCall addItemCall = new AddItemCall(apiContext);
                     ItemType item = new ItemType();
@@ -245,8 +244,8 @@ public class EbayEvents {
                     addItemCall.setItem(item);
                     addItemCall.setWarningLevel(WarningLevelCodeType.HIGH);
 
-                    Map<String,Object> itemListing = null;
-                    for (Map<String,Object> itemObj : itemObjs) {
+                    Map<String, Object> itemListing = null;
+                    for (Map<String, Object> itemObj : itemObjs) {
                         if (UtilValidate.isNotEmpty(itemObj.get(productId.concat("_Obj")))) {
                             itemListing = UtilGenerics.checkMap(itemObj.get(productId.concat("_Obj")));
                             itemListing.put("addItemCall", addItemCall);
@@ -255,7 +254,7 @@ public class EbayEvents {
                         }
                     }
                     if (UtilValidate.isEmpty(itemListing)) {
-                        itemListing = new HashMap<String, Object>();
+                        itemListing = new HashMap<>();
                         itemListing.put("addItemCall", addItemCall);
                         itemListing.put("productId", productId);
                     }
@@ -264,7 +263,7 @@ public class EbayEvents {
                 addItemObject.put("itemListing", itemObjs);
             } catch (Exception e) {
                 Debug.logError(e.getMessage(), MODULE);
-                request.setAttribute("_ERROR_MESSAGE_","Exception: ".concat(e.getMessage()));
+                request.setAttribute("_ERROR_MESSAGE_", "Exception: ".concat(e.getMessage()));
                 return "error";
             }
         }
@@ -284,25 +283,25 @@ public class EbayEvents {
                     request.setAttribute("productStoreId", request.getParameter("productStoreId"));
                     return "prepare";
                 }
-                getSiteFacade(apiContext,request);
+                getSiteFacade(apiContext, request);
             } else {
-                request.setAttribute("_ERROR_MESSAGE_","No apiContext for this account or this site please register on ebay or check you user account.");
+                request.setAttribute("_ERROR_MESSAGE_", "No apiContext for this account or this site please register on ebay or check you user account.");
                 return "error";
             }
         } catch (ApiException e) {
-            request.setAttribute("_ERROR_MESSAGE_","ApiException ".concat(e.getMessage()));
+            request.setAttribute("_ERROR_MESSAGE_", "ApiException ".concat(e.getMessage()));
             return "error";
         } catch (SdkException e) {
-            request.setAttribute("_ERROR_MESSAGE_","SdkException ".concat(e.getMessage()));
+            request.setAttribute("_ERROR_MESSAGE_", "SdkException ".concat(e.getMessage()));
             return "error";
         } catch (Exception e) {
-            request.setAttribute("_ERROR_MESSAGE_","Exception ".concat(e.getMessage()));
+            request.setAttribute("_ERROR_MESSAGE_", "Exception ".concat(e.getMessage()));
             return "error";
         }
         return "success";
     }
 
-    public static EbayStoreSiteFacade getSiteFacade(ApiContext apiContext, HttpServletRequest request) throws ApiException, SdkException, Exception{
+    public static EbayStoreSiteFacade getSiteFacade(ApiContext apiContext, HttpServletRequest request) throws ApiException, SdkException, Exception {
         String siteFacadeName = null;
         EbayStoreSiteFacade siteFacade = null;
 
@@ -317,14 +316,14 @@ public class EbayEvents {
         }
 
         if (UtilValidate.isEmpty(session.getAttribute(siteFacadeName))) {
-            session.setAttribute(siteFacadeName,new EbayStoreSiteFacade(apiContext));
+            session.setAttribute(siteFacadeName, new EbayStoreSiteFacade(apiContext));
             if (UtilValidate.isNotEmpty(session.getAttribute(siteFacadeName))) {
-                siteFacade = (EbayStoreSiteFacade)session.getAttribute(siteFacadeName);
+                siteFacade = (EbayStoreSiteFacade) session.getAttribute(siteFacadeName);
             }
         } else {
-            siteFacade = (EbayStoreSiteFacade)session.getAttribute(siteFacadeName);
+            siteFacade = (EbayStoreSiteFacade) session.getAttribute(siteFacadeName);
         }
-        Debug.logInfo("loaded session for ebay site Facade is ".concat(siteFacadeName).concat(session.getAttribute(siteFacadeName).toString()),MODULE);
+        Debug.logInfo("loaded session for ebay site Facade is ".concat(siteFacadeName).concat(session.getAttribute(siteFacadeName).toString()), MODULE);
         return siteFacade;
     }
 
@@ -336,7 +335,7 @@ public class EbayEvents {
             Debug.logError("Required productStoreId for get ebay API config data.", MODULE);
             return null;
         }
-        ApiContext apiContext = EbayStoreHelper.getApiContext(request.getParameter("productStoreId") != null ? request.getParameter("productStoreId"):(String)request.getAttribute("productStoreId"), locale, delegator);
+        ApiContext apiContext = EbayStoreHelper.getApiContext(request.getParameter("productStoreId") != null ? request.getParameter("productStoreId") : (String) request.getAttribute("productStoreId"), locale, delegator);
         return apiContext;
     }
 
@@ -348,15 +347,15 @@ public class EbayEvents {
     public static void removeItemListingObject(HttpServletRequest request, ApiContext apiContext) {
         HttpSession session = request.getSession(true);
         String siteCode = apiContext.getSite().name();
-        Map<String,Object> addItemObject = UtilGenerics.checkMap(session.getAttribute("itemListings_".concat(siteCode)));
+        Map<String, Object> addItemObject = UtilGenerics.checkMap(session.getAttribute("itemListings_".concat(siteCode)));
         if (UtilValidate.isNotEmpty(addItemObject)) {
             session.removeAttribute("itemListings_".concat(siteCode));
         }
     }
 
-    public static Map<String,Object> getAddItemListingObject(HttpServletRequest request, ApiContext apiContext) {
+    public static Map<String, Object> getAddItemListingObject(HttpServletRequest request, ApiContext apiContext) {
         String siteCode = apiContext.getSite().name();
-        Map<String,Object> addItemObject = UtilGenerics.checkMap(request.getAttribute("itemListings_".concat(siteCode)));
+        Map<String, Object> addItemObject = UtilGenerics.checkMap(request.getAttribute("itemListings_".concat(siteCode)));
         HttpSession session = request.getSession(true);
         if (addItemObject == null) {
             addItemObject = UtilGenerics.checkMap(session.getAttribute("itemListings_".concat(siteCode)));
@@ -364,14 +363,14 @@ public class EbayEvents {
             session.setAttribute("itemListings_".concat(siteCode), addItemObject);
         }
         if (addItemObject == null) {
-            addItemObject = new HashMap<String, Object>();
+            addItemObject = new HashMap<>();
             session.setAttribute("itemListings_".concat(siteCode), addItemObject);
         }
         return addItemObject;
     }
 
     // make ebay category list
-    public static List<CategoryType> getChildCategories(HttpServletRequest request) throws ApiException, SdkException, Exception{
+    public static List<CategoryType> getChildCategories(HttpServletRequest request) throws ApiException, SdkException, Exception {
         List<CategoryType> categories = new LinkedList<CategoryType>();
         EbayStoreSiteFacade sf = null;
         String categoryId = null;
@@ -388,13 +387,13 @@ public class EbayEvents {
         }
 
         ApiContext apiContext = getApiContext(request);
-        sf = getSiteFacade(apiContext,request);
+        sf = getSiteFacade(apiContext, request);
         if (UtilValidate.isNotEmpty(sf)) {
             Map<SiteCodeType, List<CategoryType>> csCateMaps = sf.getSiteCategoriesCSMap();
             List<CategoryType> csCateList = csCateMaps.get(apiContext.getSite());
             if (UtilValidate.isNotEmpty(csCateList)) {
                 if (UtilValidate.isNotEmpty(categoryId)) {
-                    // find child of selected ebay categories 
+                    // find child of selected ebay categories
                     for (CategoryType csCate : csCateList) {
                         String[] categoryParentIds = csCate.getCategoryParentID();
                         for (String categoryParentId : categoryParentIds) {
@@ -415,14 +414,12 @@ public class EbayEvents {
                     }
                 }
                 //sort the cats list
-                Collections.sort(categories, new Comparator<Object>() {
-                    public int compare(Object a, Object b) {
-                        CategoryType cat1 = (CategoryType)a;
-                        CategoryType cat2 = (CategoryType)b;
-                        int catId1 = Integer.parseInt(cat1.getCategoryID());
-                        int catId2 = Integer.parseInt(cat2.getCategoryID());
-                        return catId1 - catId2;
-                    }
+                categories.sort((Comparator<Object>) (a, b) -> {
+                    CategoryType cat1 = (CategoryType) a;
+                    CategoryType cat2 = (CategoryType) b;
+                    int catId1 = Integer.parseInt(cat1.getCategoryID());
+                    int catId2 = Integer.parseInt(cat2.getCategoryID());
+                    return catId1 - catId2;
                 });
             }
         }
@@ -447,16 +444,16 @@ public class EbayEvents {
         }
 
         ApiContext apiContext = getApiContext(request);
-        sf = getSiteFacade(apiContext,request);
+        sf = getSiteFacade(apiContext, request);
         if (UtilValidate.isNotEmpty(sf)) {
             Map<SiteCodeType, List<StoreCustomCategoryType>> csCateMaps = sf.getSiteStoreCategoriesMap();
             csCateList = csCateMaps.get(apiContext.getSite());
             if (UtilValidate.isNotEmpty(csCateList)) {
                 if (UtilValidate.isNotEmpty(categoryId)) {
-                    // find child of selected ebay categories 
+                    // find child of selected ebay categories
                     for (StoreCustomCategoryType csCate : csCateList) {
                         if (categoryId.equals(String.valueOf(csCate.getCategoryID()))) {
-                            StoreCustomCategoryType [] childCategories = csCate.getChildCategory();
+                            StoreCustomCategoryType[] childCategories = csCate.getChildCategory();
                             for (StoreCustomCategoryType childCategoryId : childCategories) {
                                 categories.add(childCategoryId);
                             }
@@ -469,21 +466,19 @@ public class EbayEvents {
                     }
                 }
                 //sort the cats list
-                Collections.sort(categories, new Comparator<Object>() {
-                    public int compare(Object a, Object b) {
-                        StoreCustomCategoryType cat1 = (StoreCustomCategoryType) a;
-                        StoreCustomCategoryType cat2 = (StoreCustomCategoryType) b;
-                        int catId1 = Integer.parseInt(Long.toString(cat1.getCategoryID()));
-                        int catId2 = Integer.parseInt(Long.toString(cat2.getCategoryID()));
-                        return catId1 - catId2;
-                    }
+                categories.sort((Comparator<Object>) (a, b) -> {
+                    StoreCustomCategoryType cat1 = (StoreCustomCategoryType) a;
+                    StoreCustomCategoryType cat2 = (StoreCustomCategoryType) b;
+                    int catId1 = Integer.parseInt(Long.toString(cat1.getCategoryID()));
+                    int catId2 = Integer.parseInt(Long.toString(cat2.getCategoryID()));
+                    return catId1 - catId2;
                 });
             }
         }
         return categories;
     }
 
-    public static CategoryType getCsCategoriesMapped(HttpServletRequest request) throws ApiException, SdkException, Exception{
+    public static CategoryType getCsCategoriesMapped(HttpServletRequest request) throws ApiException, SdkException, Exception {
         EbayStoreSiteFacade sf = null;
         String categoryId = null;
         CategoryType cate = null;
@@ -493,7 +488,7 @@ public class EbayEvents {
             return null;
         }
         if (request.getParameter("categoryId") != null || request.getAttribute("categoryId") != null) {
-            categoryId = request.getParameter("categoryId") != null ? request.getParameter("categoryId") : (String)request.getAttribute("categoryId");
+            categoryId = request.getParameter("categoryId") != null ? request.getParameter("categoryId") : (String) request.getAttribute("categoryId");
             Debug.logInfo("Load child categories from session following site id and categoryId is ".concat(categoryId), MODULE);
         } else {
             Debug.logWarning("No categoryId to get child categories.", MODULE);
@@ -501,47 +496,47 @@ public class EbayEvents {
         }
 
         ApiContext apiContext = getApiContext(request);
-        sf = getSiteFacade(apiContext,request);
+        sf = getSiteFacade(apiContext, request);
         if (UtilValidate.isNotEmpty(sf)) {
             Map<SiteCodeType, List<CategoryType>> csCateMaps = sf.getSiteCategoriesCSMap();
             List<CategoryType> csCateList = csCateMaps.get(apiContext.getSite());
             if (UtilValidate.isNotEmpty(csCateList)) {
                 if (UtilValidate.isNotEmpty(categoryId)) {
-                    // find child of selected ebay categories 
+                    // find child of selected ebay categories
                     for (CategoryType csCate : csCateList) {
                         if (csCate.getCategoryID().equals(categoryId)) {
                             cate = csCate;
                             break;
                         }
                     }
-                } 
+                }
             }
         }
         return cate;
     }
 
     public static String setSelectedEbayCategory(HttpServletRequest request, HttpServletResponse response) {
-        Map<String,Object> requestParams = UtilHttp.getParameterMap(request);
+        Map<String, Object> requestParams = UtilHttp.getParameterMap(request);
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         if (UtilValidate.isEmpty(requestParams.get("productStoreId"))) {
-            request.setAttribute("_ERROR_MESSAGE_","Required productStoreId.");
+            request.setAttribute("_ERROR_MESSAGE_", "Required productStoreId.");
             return "error";
         }
         if (UtilValidate.isEmpty(requestParams.get("isProductId"))) {
-            request.setAttribute("_ERROR_MESSAGE_","Required can not find form Id.");
+            request.setAttribute("_ERROR_MESSAGE_", "Required can not find form Id.");
             return "error";
         }
         String isProductId = (String) requestParams.get("isProductId");
         if (UtilValidate.isEmpty(requestParams.get("productId")) || UtilValidate.isEmpty(requestParams.get("ebayCategory"))) {
-            request.setAttribute("_ERROR_MESSAGE_","No ebay category or productId selected with form id ".concat(isProductId));
+            request.setAttribute("_ERROR_MESSAGE_", "No ebay category or productId selected with form id ".concat(isProductId));
             return "error";
         }
-        String categoryId = (String)requestParams.get("ebayCategory");
+        String categoryId = (String) requestParams.get("ebayCategory");
         if (categoryId.contains("false")) {
-            request.setAttribute("_ERROR_MESSAGE_","Please select ebay category with low level of categories.");
+            request.setAttribute("_ERROR_MESSAGE_", "Please select ebay category with low level of categories.");
             return "error";
         } else {
-            if (categoryId.contains("true")) categoryId = categoryId.substring(0,categoryId.indexOf(":"));
+            if (categoryId.contains("true")) categoryId = categoryId.substring(0, categoryId.indexOf(":"));
         }
         String productId = (String) requestParams.get("isProductId");
         EbayStoreCategoryFacade cf = null;
@@ -550,11 +545,11 @@ public class EbayEvents {
         try {
             if (UtilValidate.isNotEmpty(EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne())) {
                 ApiContext apiContext = getApiContext(request);
-                Map<String,Object> addItemObject = getAddItemListingObject(request, apiContext);
-                List<Map<String,Object>> addItemlist = UtilGenerics.checkList(addItemObject.get("itemListing"));
+                Map<String, Object> addItemObject = getAddItemListingObject(request, apiContext);
+                List<Map<String, Object>> addItemlist = UtilGenerics.checkList(addItemObject.get("itemListing"));
 
                 if (UtilValidate.isNotEmpty(addItemlist)) {
-                    for (Map<String,Object> addItemCall : addItemlist) {
+                    for (Map<String, Object> addItemCall : addItemlist) {
                         AddItemCall itemCall = (AddItemCall) addItemCall.get("addItemCall");
                         ItemType item = itemCall.getItem();
                         if (productId.equals(item.getSKU())) {
@@ -570,7 +565,7 @@ public class EbayEvents {
                                     cf = new EbayStoreCategoryFacade(csCate.getCategoryID(), apiContext, sf.getAttrMaster(), sf);
                                     addItemObject.put(refName, cf);
                                 }
-                                request.setAttribute("_EVENT_MESSAGE_","Set selected ebay category ".concat(csCate.getCategoryID().toString()).concat(" with product ".concat(productId).concat(" successed."))); 
+                                request.setAttribute("_EVENT_MESSAGE_", "Set selected ebay category ".concat(csCate.getCategoryID().toString()).concat(" with product ".concat(productId).concat(" successed.")));
                             } else {
                                 Debug.logWarning(categoryId.concat(" This category is not leaf category or ?"), MODULE);
                             }
@@ -583,13 +578,13 @@ public class EbayEvents {
             Debug.logError(e.getMessage(), MODULE);
             return "error";
         } catch (ApiException e) {
-            request.setAttribute("_ERROR_MESSAGE_","ApiException ".concat(e.getMessage()));
+            request.setAttribute("_ERROR_MESSAGE_", "ApiException ".concat(e.getMessage()));
             return "error";
         } catch (SdkException e) {
-            request.setAttribute("_ERROR_MESSAGE_","SdkException ".concat(e.getMessage()));
+            request.setAttribute("_ERROR_MESSAGE_", "SdkException ".concat(e.getMessage()));
             return "error";
         } catch (Exception e) {
-            request.setAttribute("_ERROR_MESSAGE_","Exception ".concat(e.getMessage()));
+            request.setAttribute("_ERROR_MESSAGE_", "Exception ".concat(e.getMessage()));
             return "error";
         }
         request.setAttribute("productStoreId", requestParams.get("productStoreId"));
@@ -600,8 +595,8 @@ public class EbayEvents {
 
     /* for shipping service detail filter */
     private static boolean isFlat(ShippingTypeCodeType[] st) {
-        for (int i = 0; i < st.length; i++) {
-            if (st[i].compareTo(ShippingTypeCodeType.FLAT) == 0) {
+        for (ShippingTypeCodeType shippingTypeCodeType : st) {
+            if (shippingTypeCodeType.compareTo(ShippingTypeCodeType.FLAT) == 0) {
                 return true;
             }
         }
@@ -610,9 +605,10 @@ public class EbayEvents {
 
     public static ShippingServiceDetailsType[] filterShippingService(ShippingServiceDetailsType[] array) {
         List<ShippingServiceDetailsType> list = new ArrayList<ShippingServiceDetailsType>();
-        for (int i = 0; i < array.length; i++) {
-            if (isFlat(array[i].getServiceType()) && array[i].getShippingServiceID() < SHIPPING_SERVICE_ID_LIMIT) {
-                list.add(array[i]);
+        for (ShippingServiceDetailsType shippingServiceDetailsType : array) {
+            if (isFlat(shippingServiceDetailsType.getServiceType())
+                    && shippingServiceDetailsType.getShippingServiceID() < SHIPPING_SERVICE_ID_LIMIT) {
+                list.add(shippingServiceDetailsType);
             }
         }
         return list.toArray(new ShippingServiceDetailsType[0]);
@@ -622,10 +618,10 @@ public class EbayEvents {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         HttpSession session = request.getSession(true);
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        Map<String,Object> requestParams = UtilHttp.getParameterMap(request);
+        Map<String, Object> requestParams = UtilHttp.getParameterMap(request);
         Locale locale = UtilHttp.getLocale(request);
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-        Map<String, Object> attributeMapList = new HashMap<String, Object>();
+        Map<String, Object> attributeMapList = new HashMap<>();
         String id = "";
         if (UtilValidate.isNotEmpty(requestParams.get("listype"))) {
             if ("auction".equals(requestParams.get("listype"))) {
@@ -650,11 +646,11 @@ public class EbayEvents {
         String itemPkCateId = (String) requestParams.get("primaryCateId");
         String shippingService = (String) requestParams.get("ShippingService");
         String productStoreId = (String) requestParams.get("productStoreId");
-        
+
         // initialize request parameter.
         Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
-        List<String> nameSpecificList = new LinkedList<String>();
-        List<String> valueSpecificList = new LinkedList<String>();
+        List<String> nameSpecificList = new LinkedList<>();
+        List<String> valueSpecificList = new LinkedList<>();
         String nameValueListType = null;
         String valueListType = null;
         int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
@@ -669,31 +665,27 @@ public class EbayEvents {
                 if (paramMap.containsKey("categorySpecifics" + thisSuffix)) {
                     valueListType = (String) paramMap.remove("categorySpecifics" + thisSuffix);
                 }
-                
-                if ((UtilValidate.isNotEmpty(nameValueListType)) && (UtilValidate.isNotEmpty(valueListType))){
+                if ((UtilValidate.isNotEmpty(nameValueListType)) && (UtilValidate.isNotEmpty(valueListType))) {
                    nameSpecificList.add(nameValueListType);
                    valueSpecificList.add(valueListType);
                 }
             }
         }
-            
         try {
             ApiContext apiContext = EbayStoreHelper.getApiContext(productStoreId, locale, delegator);
-            Map<String,Object> addItemObject = getAddItemListingObject(request, apiContext);
-            List<Map<String,Object>> listAddItem = null;
+            Map<String, Object> addItemObject = getAddItemListingObject(request, apiContext);
+            List<Map<String, Object>> listAddItem = null;
             if (UtilValidate.isNotEmpty(addItemObject.get("itemListing"))) {
                 listAddItem = UtilGenerics.checkList(addItemObject.get("itemListing"));
             } else {
-                listAddItem = new LinkedList<Map<String,Object>>();
+                listAddItem = new LinkedList<>();
             }
-
-            for (Map<String,Object> itemObj : listAddItem) {
+            for (Map<String, Object> itemObj : listAddItem) {
                 AddItemCall addItemCall = (AddItemCall) itemObj.get("addItemCall");
                 ItemType item = addItemCall.getItem();
                 String SKU = item.getSKU();
                 if (UtilValidate.isNotEmpty(productId)) {
                     if (productId.equals(SKU)) {
-
                         attributeMapList.put("Title", item.getTitle());
                         attributeMapList.put("SKU", SKU);
                         attributeMapList.put("Currency", item.getCurrency().value());
@@ -721,8 +713,7 @@ public class EbayEvents {
                             for (int i = 0; i < itemSpecificsSize; i++) {
                                 String name = nameSpecificList.get(i);
                                 String value = valueSpecificList.get(i);
-                                String[] valueArray = new String[] { value };
-                                
+                                String[] valueArray = new String[] {value };
                                 // set Name value list type.
                                 NameValueListType listType = new NameValueListType();
                                 listType.setName(name);
@@ -804,7 +795,7 @@ public class EbayEvents {
                         shippingDetail.setShippingServiceOptions(shippingOptions);
                         item.setShippingDetails(shippingDetail);
                         attributeMapList.put("ShippingService", shippingService);
-                        attributeMapList.put("ShippingServiceCost", ""+5.0);
+                        attributeMapList.put("ShippingServiceCost", ""+ 5.0);
                         attributeMapList.put("ShippingServiceCostCurrency", "USD");
                         attributeMapList.put("ShippingServicePriority", "1");
                         attributeMapList.put("ShippingType", "Flat");
@@ -840,24 +831,24 @@ public class EbayEvents {
                         }
                         StorefrontType storeFront = new StorefrontType();
                         if (UtilValidate.isNotEmpty(requestParams.get("ebayStore1Category"))) {
-                            String ebayStore1Category = (String)requestParams.get("ebayStore1Category");
+                            String ebayStore1Category = (String) requestParams.get("ebayStore1Category");
                             if (ebayStore1Category.contains("false")) {
-                                request.setAttribute("_ERROR_MESSAGE_","Please select ebay store category with low level of categories.");
+                                request.setAttribute("_ERROR_MESSAGE_", "Please select ebay store category with low level of categories.");
                                 return "error";
                             } else {
-                                if (ebayStore1Category.contains("true")) ebayStore1Category = ebayStore1Category.substring(0,ebayStore1Category.indexOf(":"));
+                                if (ebayStore1Category.contains("true")) ebayStore1Category = ebayStore1Category.substring(0, ebayStore1Category.indexOf(":"));
                             }
                             storeFront.setStoreCategoryID(new Long(ebayStore1Category));
                             attributeMapList.put("StoreCategoryID", ebayStore1Category);
 
                         }
                         if (UtilValidate.isNotEmpty(requestParams.get("ebayStore2Category"))) {
-                            String ebayStore2Category = (String)requestParams.get("ebayStore2Category");
+                            String ebayStore2Category = (String) requestParams.get("ebayStore2Category");
                             if (ebayStore2Category.contains("false")) {
-                                request.setAttribute("_ERROR_MESSAGE_","Please select ebay store category with low level of categories.");
+                                request.setAttribute("_ERROR_MESSAGE_", "Please select ebay store category with low level of categories.");
                                 return "error";
                             } else {
-                                if (ebayStore2Category.contains("true")) ebayStore2Category = ebayStore2Category.substring(0,ebayStore2Category.indexOf(":"));
+                                if (ebayStore2Category.contains("true")) ebayStore2Category = ebayStore2Category.substring(0, ebayStore2Category.indexOf(":"));
                             }
                             storeFront.setStoreCategory2ID(new Long(ebayStore2Category));
                             attributeMapList.put("StoreCategory2ID", ebayStore2Category);
@@ -877,9 +868,9 @@ public class EbayEvents {
                                 String facilityId = ebayProductStore.getString("facilityId");
                                 BigDecimal atp = ebayProductStore.getBigDecimal("availableToPromiseListing");
                                 int intAtp = atp.intValue();
-                                if ((facilityId != "")  && (intAtp != 0)) {
+                                if (("" != facilityId)  && (intAtp != 0)) {
                                     int newAtp = intAtp - 1;
-                                    Map<String,Object> inMap = new HashMap<String, Object>();
+                                    Map<String, Object> inMap = new HashMap<>();
                                     inMap.put("productStoreId", productStoreId);
                                     inMap.put("facilityId", facilityId);
                                     inMap.put("productId", productId);
@@ -895,7 +886,7 @@ public class EbayEvents {
                                         }
                                     } catch (GenericServiceException ex) {
                                         Debug.logError(ex.getMessage(), MODULE);
-                                        request.setAttribute("_ERROR_MESSAGE_","Exception: ".concat(ex.getMessage()));
+                                        request.setAttribute("_ERROR_MESSAGE_", "Exception: ".concat(ex.getMessage()));
                                         return "error";
                                     }
                                     itemObj.put("requireEbayInventory", "Y");
@@ -905,7 +896,7 @@ public class EbayEvents {
                         addItemCall.setItem(item);
 
                         // create/update EbayProductListing entity
-                        Map<String, Object> prodMap = new HashMap<String, Object>();
+                        Map<String, Object> prodMap = new HashMap<>();
                         prodMap.put("productStoreId", productStoreId);
                         prodMap.put("productId", productId);
                         prodMap.put("userLogin", userLogin);
@@ -925,7 +916,7 @@ public class EbayEvents {
                             }
                         } catch (GenericEntityException ex) {
                             Debug.logError(ex.getMessage(), MODULE);
-                            request.setAttribute("_ERROR_MESSAGE_","Exception: ".concat(ex.getMessage()));
+                            request.setAttribute("_ERROR_MESSAGE_", "Exception: ".concat(ex.getMessage()));
                             return "error";
                         }
                         String productListingId = null;
@@ -944,7 +935,7 @@ public class EbayEvents {
                                 itemObj.put("isSaved", "Y");
                             } catch (GenericServiceException ex) {
                                 Debug.logError(ex.getMessage(), MODULE);
-                                request.setAttribute("_ERROR_MESSAGE_","Exception: ".concat(ex.getMessage()));
+                                request.setAttribute("_ERROR_MESSAGE_", "Exception: ".concat(ex.getMessage()));
                                 return "error";
                             }
                         } else {
@@ -960,7 +951,7 @@ public class EbayEvents {
                                 }
                             } catch (GenericServiceException ex) {
                                 Debug.logError(ex.getMessage(), MODULE);
-                                request.setAttribute("_ERROR_MESSAGE_","Exception: ".concat(ex.getMessage()));
+                                request.setAttribute("_ERROR_MESSAGE_", "Exception: ".concat(ex.getMessage()));
                                 return "error";
                             }
                         }
@@ -968,7 +959,7 @@ public class EbayEvents {
                         // create/update EbayProductListingAttribute
                         if (UtilValidate.isNotEmpty(productListingId)) {
                             attributeMapList.put("productListingId", productListingId);
-                            Map<String, Object> ebayProdAttrMap = new HashMap<String, Object>();
+                            Map<String, Object> ebayProdAttrMap = new HashMap<>();
                             ebayProdAttrMap.put("productListingId", productListingId);
                             ebayProdAttrMap.put("userLogin", userLogin);
                             ebayProdAttrMap.put("attributeMapList", attributeMapList);
@@ -982,7 +973,7 @@ public class EbayEvents {
                                 }
                             } catch (GenericServiceException ex) {
                                 Debug.logError(ex.getMessage(), MODULE);
-                                request.setAttribute("_ERROR_MESSAGE_","Exception: ".concat(ex.getMessage()));
+                                request.setAttribute("_ERROR_MESSAGE_", "Exception: ".concat(ex.getMessage()));
                                 return "error";
                             }
                         }
@@ -990,9 +981,9 @@ public class EbayEvents {
                 }
             }
             request.setAttribute("productStoreId", requestParams.get("productStoreId"));
-        } catch(Exception e) {
+        } catch (Exception e) {
             Debug.logError(e.getMessage(), MODULE);
-            request.setAttribute("_ERROR_MESSAGE_","Exception: ".concat(e.getMessage()));
+            request.setAttribute("_ERROR_MESSAGE_", "Exception: ".concat(e.getMessage()));
             return "error";
         }
         return "success";
@@ -1001,7 +992,7 @@ public class EbayEvents {
     public static String verifyItemBeforeAddAndExportToEbay(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        Map<String,Object> requestParams = UtilHttp.getParameterMap(request);
+        Map<String, Object> requestParams = UtilHttp.getParameterMap(request);
         Locale locale = UtilHttp.getLocale(request);
         String productStoreId = (String) requestParams.get("productStoreId");
         HttpSession session = request.getSession(true);
@@ -1015,15 +1006,15 @@ public class EbayEvents {
 
 
             VerifyAddItemCall verifyCall = new VerifyAddItemCall(apiContext);
-            Map<String,Object> addItemObject = getAddItemListingObject(request, apiContext);
-            List<Map<String,Object>> listAddItem = null;
+            Map<String, Object> addItemObject = getAddItemListingObject(request, apiContext);
+            List<Map<String, Object>> listAddItem = null;
             if (UtilValidate.isNotEmpty(addItemObject.get("itemListing"))) {
                 listAddItem = UtilGenerics.checkList(addItemObject.get("itemListing"));
             } else {
-                listAddItem = new LinkedList<Map<String,Object>>();
+                listAddItem = new LinkedList<>();
             }
             double feesummary = 0.0;
-            for (Map<String,Object> itemObj : listAddItem) {
+            for (Map<String, Object> itemObj : listAddItem) {
                 AddItemCall addItemCall = (AddItemCall) itemObj.get("addItemCall");
                 ItemType item = addItemCall.getItem();
                 String SKU = item.getSKU();
@@ -1057,7 +1048,7 @@ public class EbayEvents {
             request.setAttribute("productStoreId", requestParams.get("productStoreId"));
         } catch (Exception e) {
             Debug.logError(e.getMessage(), MODULE);
-            request.setAttribute("_ERROR_MESSAGE_","Exception: ".concat(e.getMessage()));
+            request.setAttribute("_ERROR_MESSAGE_", "Exception: ".concat(e.getMessage()));
             return "error";
         }
         return "success";
@@ -1065,20 +1056,20 @@ public class EbayEvents {
 
     public static String removeProductFromListing(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        Map<String,Object> requestParams = UtilHttp.getParameterMap(request);
+        Map<String, Object> requestParams = UtilHttp.getParameterMap(request);
         Locale locale = UtilHttp.getLocale(request);
         String productStoreId = (String) requestParams.get("productStoreId");
         try {
             ApiContext apiContext = EbayStoreHelper.getApiContext(productStoreId, locale, delegator);
-            Map<String,Object> addItemObject = getAddItemListingObject(request, apiContext);
-            List<Map<String,Object>> listAddItem = null;
+            Map<String, Object> addItemObject = getAddItemListingObject(request, apiContext);
+            List<Map<String, Object>> listAddItem = null;
             if (UtilValidate.isNotEmpty(addItemObject.get("itemListing"))) {
                 listAddItem = UtilGenerics.checkList(addItemObject.get("itemListing"));
             } else {
-                listAddItem = new LinkedList<Map<String,Object>>();
+                listAddItem = new LinkedList<>();
             }
             int i = 0;
-            for (Map<String,Object> itemObj : listAddItem) {
+            for (Map<String, Object> itemObj : listAddItem) {
                 AddItemCall addItemCall = (AddItemCall) itemObj.get("addItemCall");
                 ItemType item = addItemCall.getItem();
                 String SKU = item.getSKU();
@@ -1096,7 +1087,7 @@ public class EbayEvents {
             request.setAttribute("productStoreId", requestParams.get("productStoreId"));
         } catch (Exception e) {
             Debug.logError(e.getMessage(), MODULE);
-            request.setAttribute("_ERROR_MESSAGE_","Exception: ".concat(e.getMessage()));
+            request.setAttribute("_ERROR_MESSAGE_", "Exception: ".concat(e.getMessage()));
             return "error";
         }
         return "success";
@@ -1105,21 +1096,21 @@ public class EbayEvents {
     public static String exportListingToEbay(HttpServletRequest request, HttpServletResponse response) {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        Map<String,Object> requestParams = UtilHttp.getParameterMap(request);
+        Map<String, Object> requestParams = UtilHttp.getParameterMap(request);
         Locale locale = UtilHttp.getLocale(request);
         String productStoreId = (String) requestParams.get("productStoreId");
         HttpSession session = request.getSession(true);
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         try {
             ApiContext apiContext = EbayStoreHelper.getApiContext(productStoreId, locale, delegator);
-            Map<String,Object> addItemObject = getAddItemListingObject(request, apiContext);
-            List<Map<String,Object>> listAddItem = null;
+            Map<String, Object> addItemObject = getAddItemListingObject(request, apiContext);
+            List<Map<String, Object>> listAddItem = null;
             if (UtilValidate.isNotEmpty(addItemObject.get("itemListing"))) {
                 listAddItem = UtilGenerics.checkList(addItemObject.get("itemListing"));
             } else {
-                listAddItem = new LinkedList<Map<String,Object>>();
+                listAddItem = new LinkedList<>();
             }
-            for (Map<String,Object> itemObj : listAddItem) {
+            for (Map<String, Object> itemObj : listAddItem) {
                 updateQuantityInventoryProduct(itemObj, productStoreId, locale, delegator, dispatcher, userLogin);
                 Map<String, Object> result = dispatcher.runSync("exportProductEachItem", UtilMisc.toMap("itemObject", itemObj));
                 if (ServiceUtil.isError(result)) {
@@ -1131,11 +1122,11 @@ public class EbayEvents {
             }
         } catch (GenericServiceException gse) {
             Debug.logError(e.getMessage(), MODULE);
-            request.setAttribute("_ERROR_MESSAGE_","Exception: ".concat(gse.getMessage()));
+            request.setAttribute("_ERROR_MESSAGE_", "Exception: ".concat(gse.getMessage()));
             return "error";
         } catch (Exception e) {
             Debug.logError(e.getMessage(), MODULE);
-            request.setAttribute("_ERROR_MESSAGE_","Exception: ".concat(e.getMessage()));
+            request.setAttribute("_ERROR_MESSAGE_", "Exception: ".concat(e.getMessage()));
             return "error";
         }
         return "success";
@@ -1148,14 +1139,14 @@ public class EbayEvents {
             String productId = item.getSKU();
             if (UtilValidate.isNotEmpty(itemObj.get("requireEbayInventory")) && ("Y".equals(itemObj.get("requireEbayInventory")))) {
                 GetSellingManagerInventoryRequestType req = new GetSellingManagerInventoryRequestType();
-                GetSellingManagerInventoryResponseType resp =  null;
+                GetSellingManagerInventoryResponseType resp = null;
                 SellingManagerProductType[] returnedSellingManagerProductType = null;
                 GetSellingManagerInventoryCall call = new GetSellingManagerInventoryCall(EbayStoreHelper.getApiContext(productStoreId, locale, delegator));
                 resp = (GetSellingManagerInventoryResponseType)call.execute(req);
                 if (resp != null && "SUCCESS".equals(resp.getAck().toString())) {
-                    returnedSellingManagerProductType  = resp.getSellingManagerProduct();
-                    for (int i = 0; i < returnedSellingManagerProductType.length; i++) {
-                        SellingManagerProductDetailsType prodDetailType = returnedSellingManagerProductType[i].getSellingManagerProductDetails();
+                    returnedSellingManagerProductType = resp.getSellingManagerProduct();
+                    for (SellingManagerProductType sellingManagerProductType : returnedSellingManagerProductType) {
+                        SellingManagerProductDetailsType prodDetailType = sellingManagerProductType.getSellingManagerProductDetails();
                         String productIdInv = Long.toString(prodDetailType.getProductID());
                         if (productId.equals(productIdInv)) {
                             int qty = prodDetailType.getQuantityAvailable();
@@ -1168,7 +1159,8 @@ public class EbayEvents {
                                 revReq.setSellingManagerProductDetails(prodDetailType);
                                 revResp = (ReviseSellingManagerProductResponseType) revProdCall.execute(revReq);
                                 if (revResp != null && "SUCCESS".equals(revResp.getAck().toString())) {
-                                    Debug.logInfo("  Already update quantity on eBay inventory with product id ::"+revResp.getSellingManagerProductDetails().getProductID(), MODULE);
+                                    Debug.logInfo("Already update quantity on eBay inventory with product id ::"
+                                            + revResp.getSellingManagerProductDetails().getProductID(), MODULE);
                                 } else {
                                     EbayStoreHelper.createErrorLogMessage(userLogin, dispatcher, productStoreId, revResp.getAck().toString(), "ReviseSellingManagerProductCall : updateQuantityInventoryProduct", revResp.getErrors(0).getLongMessage());
                                 }
@@ -1183,14 +1175,12 @@ public class EbayEvents {
             Debug.logError(e.getMessage(), MODULE);
         }
     }
-    
     public static Map<String, Map<String, List<String>>> categorySpecifics(String categoryId, HttpServletRequest request) {
-        Map<String, Map<String, List<String>>> recommendationMap = new HashMap<String, Map<String,List<String>>>();
+        Map<String, Map<String, List<String>>> recommendationMap = new HashMap<>();
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        Map<String,Object> requestParams = UtilHttp.getParameterMap(request);
+        Map<String, Object> requestParams = UtilHttp.getParameterMap(request);
         Locale locale = UtilHttp.getLocale(request);
         String productStoreId = (String) requestParams.get("productStoreId");
-        
         try {
             ApiContext apiContext = EbayStoreHelper.getApiContext(productStoreId, locale, delegator);
             GetCategorySpecificsCall categorySpecifics = new GetCategorySpecificsCall(apiContext);
@@ -1202,17 +1192,17 @@ public class EbayEvents {
                     DetailLevelCodeType.ITEM_RETURN_DESCRIPTION
             };
             categorySpecifics.setDetailLevel(detailLevel);
-            RecommendationsType[] recommend =  categorySpecifics.getCategorySpecifics();
-            
-            for (int i = 0; i < recommend.length; i++) {
-                NameRecommendationType[] nameRecommend = recommend[i].getNameRecommendation();
-                Map<String, List<String>> nameRecommendationMap = new HashMap<String, List<String>>();
-                for (int j = 0; j < nameRecommend.length; j++) {
-                    String name = nameRecommend[j].getName();
-                    List<String> valueList = new LinkedList<String>();
-                    ValueRecommendationType[] valueRecommend = nameRecommend[j].getValueRecommendation();
-                    for (int k = 0; k < valueRecommend.length; k++) {
-                        String value = valueRecommend[k].getValue();
+            RecommendationsType[] recommend = categorySpecifics.getCategorySpecifics();
+
+            for (RecommendationsType recommendationsType : recommend) {
+                NameRecommendationType[] nameRecommend = recommendationsType.getNameRecommendation();
+                Map<String, List<String>> nameRecommendationMap = new HashMap<>();
+                for (NameRecommendationType nameRecommendationType : nameRecommend) {
+                    String name = nameRecommendationType.getName();
+                    List<String> valueList = new LinkedList<>();
+                    ValueRecommendationType[] valueRecommend = nameRecommendationType.getValueRecommendation();
+                    for (ValueRecommendationType valueRecommendationType : valueRecommend) {
+                        String value = valueRecommendationType.getValue();
                         valueList.add(value);
                     }
                     nameRecommendationMap.put(name, valueList);

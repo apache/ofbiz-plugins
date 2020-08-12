@@ -465,10 +465,20 @@ under the License.
         <input type="hidden" name="statusId" value="CTNT_PUBLISHED"/>
         <input type="hidden" name="roleTypeId" value="OWNER"/>
         <label class="mr-2">${uiLabelMap.EcommerceUploadNewFile}</label>
-        <label class="custom-file mr-2">
-          <input type="file" name="uploadedFile" class="custom-file-input"/>
+        <div class="custom-file mr-2">
+          <input type="file" class="custom-file-input" id="customFile" required/>
           <label class="custom-file-label" for="customFile">Choose file</label>
-        </label>
+          <div class="invalid-feedback">Example invalid custom file feedback</div>
+        </div>
+        <script>
+            $('#customFile').on('change',function(){
+                //get the file name
+                var fileName = $(this).val();
+                fileName = fileName.replace('C:\\fakepath\\', " ");
+                //replace the "Choose a file" label
+                $(this).next('.custom-file-label').html(fileName);
+            })
+        </script>
         <select name="partyContentTypeId" class="custom-select mr-2">
           <option value="">${uiLabelMap.PartySelectPurpose}</option>
           <#list partyContentTypes as partyContentType>

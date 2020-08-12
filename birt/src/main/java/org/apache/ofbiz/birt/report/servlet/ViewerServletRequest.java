@@ -30,8 +30,7 @@ import org.apache.ofbiz.base.location.FlexibleLocation;
 import org.apache.ofbiz.base.util.Debug;
 
 public class ViewerServletRequest extends HttpServletRequestWrapper {
-    
-    public final static String MODULE = ViewerServletRequest.class.getName();
+    private static final String MODULE = ViewerServletRequest.class.getName();
 
     protected String originalReportParam = null;
 
@@ -39,7 +38,6 @@ public class ViewerServletRequest extends HttpServletRequestWrapper {
         super(request);
         this.originalReportParam = originalReportParam;
     }
-    
     @Override
     public String getParameter(String name) {
         if (ParameterAccessor.PARAM_REPORT.equals(name)) {

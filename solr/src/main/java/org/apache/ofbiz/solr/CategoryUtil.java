@@ -38,15 +38,15 @@ import org.apache.ofbiz.service.DispatchContext;
  * Product category util class for solr.
  */
 public final class CategoryUtil {
-    
+
     private static final String MODULE = CategoryUtil.class.getName();
 
-    private CategoryUtil () {}
+    private CategoryUtil() { }
 
     /**
      * Gets catalog IDs for specified product category.
      * <p>
-     * This method is a supplement to CatalogWorker methods. 
+     * This method is a supplement to CatalogWorker methods.
      */
     public static List<String> getCatalogIdsByCategoryId(Delegator delegator, String productCategoryId) {
         List<String> catalogIds = new ArrayList<>();
@@ -64,8 +64,7 @@ public final class CategoryUtil {
             }
         }
         return catalogIds;
-    }    
-    
+    }
     public static List<List<String>> getCategoryTrail(String productCategoryId, DispatchContext dctx) {
        GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
         List<List<String>> trailElements = new ArrayList<>();
@@ -113,50 +112,48 @@ public final class CategoryUtil {
         }
         return trailElements;
     }
-    
+
     /**
      * Returns categoryName with trail
      */
     public static String getCategoryNameWithTrail(String productCategoryId, DispatchContext dctx) {
-        return getCategoryNameWithTrail(productCategoryId, true,  dctx);
+        return getCategoryNameWithTrail(productCategoryId, true, dctx);
     }
 
     public static String getCategoryNameWithTrail(String productCategoryId, Boolean showDepth, DispatchContext dctx) {
         List<List<String>> trailElements = CategoryUtil.getCategoryTrail(productCategoryId, dctx);
         //Debug.log("trailElements ======> " + trailElements.toString());
         StringBuilder catMember = new StringBuilder();
-        String cm ="";
+        String cm = "";
         int i = 0;
         for (List<String> trailElement : trailElements) {
             for (Iterator<String> trailIter = trailElement.iterator(); trailIter.hasNext();) {
                 String trailString = trailIter.next();
-                if (catMember.length() > 0){
+                if (catMember.length() > 0) {
                     catMember.append("/");
                     i++;
                 }
-                
+
                 catMember.append(trailString);
             }
         }
-        
-        if (catMember.length() == 0){catMember.append(productCategoryId);}
-        
-        if(showDepth) {
-            cm = i +"/"+ catMember.toString();
+
+        if (catMember.length() == 0) {
+            catMember.append(productCategoryId);
+        }
+        if (showDepth) {
+            cm = i + "/" + catMember.toString();
         } else {
             cm = catMember.toString();
         }
-        //Debug.logInfo("catMember "+cm,MODULE);
         return cm;
     }
-    
-    /**    
-     * Returns nextLevel from trailed category.
+    /**Returns nextLevel from trailed category.
      * <p>
      * Ie for "1/SYRACUS2_CATEGORY/FICTION_C/" the returned value would be 2.
      */
     public static int getNextLevelFromCategoryId(String productCategoryId, DispatchContext dctx) {
-        try{
+        try {
             if (productCategoryId.contains("/")) {
                 String[] productCategories = productCategoryId.split("/");
                 int level = Integer.parseInt(productCategories[0]);
@@ -164,27 +161,25 @@ public final class CategoryUtil {
             } else {
                 return 0;
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             return 0;
         }
     }
-    
-    /**    
-     * Returns proper FacetFilter from trailed category.
+
+    /** Returns proper FacetFilter from trailed category.
      * <p>
      * Ie for "1/SYRACUS2_CATEGORY/FICTION_C/" the returned value would be
      * "2/SYRACUS2_CATEGORY/FICTION_C/".
      */
     public static String getFacetFilterForCategory(String productCategoryId, DispatchContext dctx) {
-        try{
+        try {
             String[] productCategories = productCategoryId.split("/");
             int level = Integer.parseInt(productCategories[0]);
-            int nextLevel = level+1;
-            productCategories[0] = ""+nextLevel;
-            return StringUtils.join(productCategories,"/");
-        } catch(Exception e) {
+            int nextLevel = level + 1;
+            productCategories[0] = "" + nextLevel;
+            return StringUtils.join(productCategories, "/");
+        } catch (Exception e) {
             return productCategoryId;
         }
     }
-    
 }

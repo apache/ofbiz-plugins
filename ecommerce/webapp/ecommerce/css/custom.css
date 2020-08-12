@@ -119,3 +119,7 @@ button.jGrowl-close {
     height: 0;
     visibility: hidden;
 }
+.promotion-products .products-card {
+    width: 100%;
+    max-width: 100%;
+}

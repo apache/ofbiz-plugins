@@ -57,7 +57,7 @@ public class EbayStoreOrder {
     private static final String MODULE = EbayStoreOrder.class.getName();
 
     public static Map<String, Object> EbayStoreImportTransaction(DispatchContext dctx, Map<String, Object> context) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         try {
             if ("Complete".equals(context.get("checkoutStatus").toString()) && "NOT_IMPORT".equals(context.get("importStatus").toString())) {
@@ -78,7 +78,7 @@ public class EbayStoreOrder {
     }
     public static Map<String, Object> EbayStoreImportOrder(DispatchContext dctx, Map<String, Object> context) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         if (UtilValidate.isEmpty(context.get("orderId"))) {
             try {
                 result = dispatcher.runSync("EbayStoreCreateOrderShoppingCart", context);
@@ -93,19 +93,19 @@ public class EbayStoreOrder {
         result.put("formSelect", "order");
         return result;
     }
-    
+
     public static Map<String, Object> EbayStoreCreateTransactionShoppingCart(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        Map<String, Object> result = new HashMap<String, Object>();
-        
+        Map<String, Object> result = new HashMap<>();
+
         String productStoreId = context.get("productStoreId").toString();
         String defaultCurrencyUomId = "";
         String payToPartyId = "";
         String facilityId = "";
-        
+
         try {
             if (UtilValidate.isEmpty(productStoreId)) {
                 return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.productStoreIdIsMandatory", locale));
@@ -119,7 +119,7 @@ public class EbayStoreOrder {
                     return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.productStoreIdIsMandatory", locale));
                 }
             }
-            
+
             ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale, defaultCurrencyUomId);
             String externalId = context.get("externalId").toString();
             if (UtilValidate.isNotEmpty(externalId)) {
@@ -211,7 +211,7 @@ public class EbayStoreOrder {
                     }
                 }
             }
-            
+
                 Debug.logInfo("Importing new order from eBay", MODULE);
                 // set partyId to
                 String partyId = null;
@@ -311,7 +311,7 @@ public class EbayStoreOrder {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        Map <String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
 
         String productStoreId = context.get("productStoreId").toString();
         String defaultCurrencyUomId = null;
@@ -375,7 +375,7 @@ public class EbayStoreOrder {
                 cart.setBillFromVendorPartyId(payToPartyId);
             }
 
-            Map<String, Object> shippingServiceSelectedCtx =  UtilGenerics.checkMap(context.get("shippingServiceSelectedCtx"));
+            Map<String, Object> shippingServiceSelectedCtx = UtilGenerics.checkMap(context.get("shippingServiceSelectedCtx"));
             if (UtilValidate.isNotEmpty(shippingServiceSelectedCtx.get("shippingServiceCost"))) {
                 BigDecimal shippingAmount = new BigDecimal(shippingServiceSelectedCtx.get("shippingServiceCost").toString());
                 if (shippingAmount.doubleValue() > 0) {
@@ -422,7 +422,7 @@ public class EbayStoreOrder {
             if (UtilValidate.isNotEmpty(shippingAddressCtx)) {
                 String buyerName = (String) shippingAddressCtx.get("buyerName");
                 String firstName = buyerName.substring(0, buyerName.indexOf(" "));
-                String lastName = buyerName.substring(buyerName.indexOf(" ")+1);
+                String lastName = buyerName.substring(buyerName.indexOf(" ") + 1);
 
                 String country = (String) shippingAddressCtx.get("shippingAddressCountry");
                 String state = (String) shippingAddressCtx.get("shippingAddressStateOrProvince");
@@ -559,7 +559,7 @@ public class EbayStoreOrder {
         BigDecimal price = new BigDecimal(itemPrice);
         price = price.setScale(ShoppingCart.scale, ShoppingCart.rounding);
 
-        Map<String, Object> attrs = new HashMap<String, Object>();
+        Map<String, Object> attrs = new HashMap<>();
         attrs.put("shipGroup", groupIdx);
 
         int idx = cart.addItemToEnd(productId, null, qty, null, null, attrs, null, null, dispatcher, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE);

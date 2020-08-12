@@ -94,8 +94,8 @@ public class EbayStoreHelper {
     private static final String MODULE = EbayStoreHelper.class.getName();
     private static final String RESOURCE = "EbayStoreUiLabels";
 
-    public static ApiContext getApiContext(String productStoreId,Locale locale, Delegator delegator) {
-       Map<String, Object> context = new HashMap<String, Object>();
+    public static ApiContext getApiContext(String productStoreId, Locale locale, Delegator delegator) {
+       Map<String, Object> context = new HashMap<>();
        context.put("locale", locale);
        context.put("productStoreId", productStoreId);
        Map<String, Object> config = EbayHelper.buildEbayConfig(context, delegator);
@@ -105,11 +105,11 @@ public class EbayStoreHelper {
        apiLogging.setLogExceptions(false);
        apiLogging.setLogSOAPMessages(false);
 
-       String devID = (String)config.get("devId");
-        String appID = (String)config.get("appID");
-        String certID = (String)config.get("certID");
-        String token = (String)config.get("token");
-        String apiServerUrl = (String)config.get("apiServerUrl");
+       String devID = (String) config.get("devId");
+        String appID = (String) config.get("appID");
+        String certID = (String) config.get("certID");
+        String token = (String) config.get("token");
+        String apiServerUrl = (String) config.get("apiServerUrl");
 
        if (token != null) {
            apiCredential.seteBayToken(token);
@@ -123,17 +123,17 @@ public class EbayStoreHelper {
        ApiContext apiContext = new ApiContext();
        apiContext.setApiCredential(apiCredential);
        apiContext.setApiServerUrl(apiServerUrl);
-       apiContext.setApiLogging(apiLogging); 
+       apiContext.setApiLogging(apiLogging);
        apiContext.setErrorLanguage("en_US");
        return apiContext;
     }
 
     public static SiteCodeType getSiteCodeType(String productStoreId, Locale locale, Delegator delegator) {
-        Map<String, Object> context = new HashMap<String, Object>();
+        Map<String, Object> context = new HashMap<>();
         context.put("locale", locale);
         context.put("productStoreId", productStoreId);
         Map<String, Object> config = EbayHelper.buildEbayConfig(context, delegator);
-        String siteId = (String)config.get("siteID");
+        String siteId = (String) config.get("siteID");
         if (siteId != null) {
             if ("0".equals(siteId)) return SiteCodeType.US;
             if ("2".equals(siteId)) return SiteCodeType.CANADA;
@@ -168,12 +168,12 @@ public class EbayStoreHelper {
         GenericValue partyRole = null;
         try {
             if (partyId == null) {
-                Debug.logError("Require field partyId.",MODULE);
+                Debug.logError("Require field partyId.", MODULE);
                 return false;
             }
             partyRole = EntityQuery.use(delegator).from("PartyRole").where("partyId", partyId, "roleTypeId", "EBAY_ACCOUNT").queryOne();
             if (partyRole == null) {
-                Debug.logError("Party Id ".concat(partyId).concat("not have roleTypeId EBAY_ACCOUNT"),MODULE);
+                Debug.logError("Party Id ".concat(partyId).concat("not have roleTypeId EBAY_ACCOUNT"), MODULE);
                 return false;
             }
         } catch (GenericEntityException e) {
@@ -188,7 +188,7 @@ public class EbayStoreHelper {
         List<GenericValue> productCategoryRoles = null;
         try {
             if (partyId == null) {
-                Debug.logError("Require field partyId.",MODULE);
+                Debug.logError("Require field partyId.", MODULE);
                 return ebayCategoryId;
             }
             productCategoryRoles = EntityQuery.use(delegator).from("ProductCategoryRole").where("productCategoryId", productCategoryId, "partyId", partyId, "roleTypeId", "EBAY_ACCOUNT").queryList();
@@ -197,7 +197,7 @@ public class EbayStoreHelper {
                     ebayCategoryId = productCategoryRole.getString("comments");
                 }
             } else {
-                Debug.logInfo("Party Id ".concat(partyId).concat(" Not found productCategoryRole with productCategoryId "+ productCategoryId),MODULE);
+                Debug.logInfo("Party Id ".concat(partyId).concat(" Not found productCategoryRole with productCategoryId "+ productCategoryId), MODULE);
                 return ebayCategoryId;
             }
         } catch (GenericEntityException e) {
@@ -209,15 +209,15 @@ public class EbayStoreHelper {
     public static boolean createEbayCategoryIdByPartyId(Delegator delegator, String productCategoryId, String partyId, String ebayCategoryId) {
         try {
             if (partyId == null && ebayCategoryId != null) {
-                Debug.logError("Require field partyId and ebayCategoryId.",MODULE);
+                Debug.logError("Require field partyId and ebayCategoryId.", MODULE);
                 return false;
             }
             GenericValue productCategoryRole = delegator.makeValue("ProductCategoryRole");
-            productCategoryRole.put("productCategoryId",productCategoryId);
+            productCategoryRole.put("productCategoryId", productCategoryId);
             productCategoryRole.put("partyId", partyId);
-            productCategoryRole.put("roleTypeId","EBAY_ACCOUNT");
-            productCategoryRole.put("fromDate",UtilDateTime.nowTimestamp());
-            productCategoryRole.put("comments",ebayCategoryId);
+            productCategoryRole.put("roleTypeId", "EBAY_ACCOUNT");
+            productCategoryRole.put("fromDate", UtilDateTime.nowTimestamp());
+            productCategoryRole.put("comments", ebayCategoryId);
             productCategoryRole.create();
         } catch (GenericEntityException e) {
             Debug.logError(e.getMessage(), MODULE);
@@ -236,14 +236,14 @@ public class EbayStoreHelper {
                     break;
                 } else {
                     // check from child category level 1
-                    List<GenericValue> productCategoryRollupList = EntityQuery.use(delegator).from("ProductCategoryRollup").where("parentProductCategoryId",catalogCategory.getString("productCategoryId")).queryList();
+                    List<GenericValue> productCategoryRollupList = EntityQuery.use(delegator).from("ProductCategoryRollup").where("parentProductCategoryId", catalogCategory.getString("productCategoryId")).queryList();
                     for (GenericValue productCategoryRollup : productCategoryRollupList) {
                         if (productCategoryRollup.containsValue(productCategoryId)) {
                             flag = true;
                             break;
                         } else {
                             // check from level 2
-                            List<GenericValue> prodCategoryRollupList = EntityQuery.use(delegator).from("ProductCategoryRollup").where("parentProductCategoryId",productCategoryRollup.getString("productCategoryId")).queryList();
+                            List<GenericValue> prodCategoryRollupList = EntityQuery.use(delegator).from("ProductCategoryRollup").where("parentProductCategoryId", productCategoryRollup.getString("productCategoryId")).queryList();
                             for (GenericValue prodCategoryRollup : prodCategoryRollupList) {
                                 if (prodCategoryRollup.containsValue(productCategoryId)) {
                                     flag = true;
@@ -262,7 +262,7 @@ public class EbayStoreHelper {
     }
 
     public static Map<String, Object> startEbayAutoPreference(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object>result = new HashMap<String, Object>();
+        Map<String, Object>result = new HashMap<>();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Delegator delegator = dctx.getDelegator();
@@ -276,7 +276,7 @@ public class EbayStoreHelper {
             if (UtilValidate.isNotEmpty(jobId)) {
                 List<GenericValue> jobs = EntityQuery.use(delegator).from("JobSandbox").where("parentJobId", jobId, "statusId", "SERVICE_PENDING").queryList();
                 if (jobs.size() == 0) {
-                    Map<String, Object>inMap = new HashMap<String, Object>();
+                    Map<String, Object>inMap = new HashMap<>();
                     inMap.put("jobId", jobId);
                     inMap.put("userLogin", userLogin);
                     result = dispatcher.runSync("resetScheduledJob", inMap);
@@ -322,34 +322,23 @@ public class EbayStoreHelper {
                 GenericValue jobV;
                 jobV = delegator.makeValue("JobSandbox", jFields);
                 GenericValue jobSandbox = delegator.createSetNextSeqId(jobV);
-                
                 ebayProductPref.set("autoPrefJobId", jobSandbox.getString("jobId"));
                 ebayProductPref.store();
-                
-                Map<String, Object>infoData = new HashMap<String, Object>();
+                Map<String, Object>infoData = new HashMap<>();
                 infoData.put("jobId", jobSandbox.getString("jobId"));
                 infoData.put("productStoreId", ebayProductPref.getString("productStoreId"));
                 runtimeData.set("runtimeInfo", XmlSerializer.serialize(infoData));
                 runtimeData.store();
             }
-        } catch (GenericEntityException e) {
-            return ServiceUtil.returnError(e.getMessage());
-        } catch (GenericServiceException e) {
-            return ServiceUtil.returnError(e.getMessage());
-        } catch (SerializeException e) {
-            return ServiceUtil.returnError(e.getMessage());
-        } catch (IOException e) {
-            return ServiceUtil.returnError(e.getMessage());
-        }catch (RecurrenceInfoException e) {
-            return ServiceUtil.returnError(e.getMessage());
-        } catch (GenericConfigException e) {
+        } catch (GenericEntityException | GenericConfigException | RecurrenceInfoException | IOException | SerializeException
+                | GenericServiceException e) {
             return ServiceUtil.returnError(e.getMessage());
         }
         return result;
     }
 
     public static Map<String, Object> stopEbayAutoPreference(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object>result = new HashMap<String, Object>();
+        Map<String, Object>result = new HashMap<>();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Delegator delegator = dctx.getDelegator();
@@ -358,27 +347,25 @@ public class EbayStoreHelper {
         try {
             GenericValue ebayProductPref = EntityQuery.use(delegator).from("EbayProductStorePref").where("productStoreId", productStoreId, "autoPrefEnumId", autoPrefEnumId).queryOne();
             String jobId = ebayProductPref.getString("autoPrefJobId");
-            List<GenericValue> jobs = EntityQuery.use(delegator).from("JobSandbox").where("parentJobId", jobId ,"statusId", "SERVICE_PENDING").queryList();
+            List<GenericValue> jobs = EntityQuery.use(delegator).from("JobSandbox").where("parentJobId", jobId, "statusId", "SERVICE_PENDING").queryList();
 
-            Map<String, Object>inMap = new HashMap<String, Object>();
+            Map<String, Object>inMap = new HashMap<>();
             inMap.put("userLogin", userLogin);
-            for (int index = 0; index < jobs.size(); index++) {
-                inMap.put("jobId", jobs.get(index).getString("jobId"));
+            for (GenericValue job : jobs) {
+                inMap.put("jobId", job.getString("jobId"));
                 result = dispatcher.runSync("cancelScheduledJob", inMap);
                 if (ServiceUtil.isError(result)) {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
                 }
             }
-        } catch (GenericEntityException e) {
-            return ServiceUtil.returnError(e.getMessage());
-        } catch (GenericServiceException e) {
+        } catch (GenericEntityException | GenericServiceException e) {
             return ServiceUtil.returnError(e.getMessage());
         }
         return result;
     }
 
-    public static void mappedPaymentMethods(Map<String,Object> requestParams, String itemPkCateId, Map<String,Object> addItemObject, ItemType item, HashMap<String, Object> attributeMapList) {
-        String refName = "itemCateFacade_"+itemPkCateId;
+    public static void mappedPaymentMethods(Map<String, Object> requestParams, String itemPkCateId, Map<String, Object> addItemObject, ItemType item, HashMap<String, Object> attributeMapList) {
+        String refName = "itemCateFacade_" + itemPkCateId;
         if (UtilValidate.isNotEmpty(addItemObject) && UtilValidate.isNotEmpty(requestParams)) {
             EbayStoreCategoryFacade cf = (EbayStoreCategoryFacade) addItemObject.get(refName);
             BuyerPaymentMethodCodeType[] paymentMethods = cf.getPaymentMethods();
@@ -390,7 +377,7 @@ public class EbayStoreHelper {
                     String payPara = (String) requestParams.get("Payments_".concat(pmName));
                     if ("true".equals(payPara)) {
                         tempPayments[i] = paymentMethod;
-                        attributeMapList.put(""+pmName, pmName);
+                        attributeMapList.put("" + pmName, pmName);
                         if ("PayPal".equals(pmName)) {
                             if (UtilValidate.isNotEmpty(requestParams.get("paymentMethodPaypalEmail"))) {
                                 item.setPayPalEmailAddress(requestParams.get("paymentMethodPaypalEmail").toString());
@@ -417,7 +404,7 @@ public class EbayStoreHelper {
                     String[] tempShipLocation = new String[shippingLocationDetails.length];
                     for (ShippingLocationDetailsType shippingLocationDetail : shippingLocationDetails) {
                         String shippingLocation = shippingLocationDetail.getShippingLocation();
-                        String shipParam = (String)requestParams.get("Shipping_".concat(shippingLocation));
+                        String shipParam = (String) requestParams.get("Shipping_".concat(shippingLocation));
                         if ("true".equals(shipParam)) {
                             tempShipLocation[i] = shippingLocation;
                             attributeMapList.put(""+shippingLocation, shippingLocation);
@@ -427,13 +414,13 @@ public class EbayStoreHelper {
                     item.setShipToLocations(tempShipLocation);
                 }
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             Debug.logError(e.getMessage(), MODULE);
         }
     }
 
     public static Map<String, Object> exportProductEachItem(DispatchContext dctx, Map<String, Object> context) {
-        Map<String,Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
         Map<String, Object> itemObject = UtilGenerics.checkMap(context.get("itemObject"));
@@ -449,7 +436,7 @@ public class EbayStoreHelper {
             if (resp != null && "SUCCESS".equals(resp.getAck().toString()) || "WARNING".equals(resp.getAck().toString())) {
                 String itemId = resp.getItemID();
                 String listingXml = addItemCall.getRequestXml().toString();
-                Map<String, Object> updateItemMap = new HashMap<String, Object>();
+                Map<String, Object> updateItemMap = new HashMap<>();
                 updateItemMap.put("productListingId", productListingId);
                 updateItemMap.put("itemId", itemId);
                 updateItemMap.put("listingXml", listingXml);
@@ -466,9 +453,7 @@ public class EbayStoreHelper {
                 }
             }
             result = ServiceUtil.returnSuccess();
-        } catch (GenericEntityException e) {
-            return ServiceUtil.returnError(e.getMessage());
-        } catch (GenericServiceException e) {
+        } catch (GenericEntityException | GenericServiceException e) {
             return ServiceUtil.returnError(e.getMessage());
         }
         return result;
@@ -480,16 +465,15 @@ public class EbayStoreHelper {
         Map<String, Object> attributeMapList = UtilGenerics.cast(context.get("attributeMapList"));
         String productListingId = (String) context.get("productListingId");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        Map<String, Object> ebayProductListingAttributeMap = new HashMap<String, Object>();
+        Map<String, Object> ebayProductListingAttributeMap = new HashMap<>();
         try {
            List<GenericValue> attributeToClears = EntityQuery.use(delegator).from("EbayProductListingAttribute").where("productListingId", productListingId).queryList();
-           for (int clearCount = 0; clearCount < attributeToClears.size(); clearCount++) {
-              GenericValue valueToClear = attributeToClears.get(clearCount);
-              if (valueToClear != null) {
-                 valueToClear.remove();
-              }
-           }
-           for (Map.Entry<String,Object> entry : attributeMapList.entrySet()) {
+            for (GenericValue valueToClear : attributeToClears) {
+                if (valueToClear != null) {
+                    valueToClear.remove();
+                }
+            }
+           for (Map.Entry<String, Object> entry : attributeMapList.entrySet()) {
                if (UtilValidate.isNotEmpty(entry.getKey())) {
                    ebayProductListingAttributeMap.put("productListingId", productListingId);
                    ebayProductListingAttributeMap.put("attrName", entry.getKey().toString());
@@ -501,9 +485,7 @@ public class EbayStoreHelper {
                    }
                }
            }
-        } catch (GenericEntityException e) {
-            return ServiceUtil.returnError(e.getMessage());
-        } catch (GenericServiceException e) {
+        } catch (GenericEntityException | GenericServiceException e) {
             return ServiceUtil.returnError(e.getMessage());
         }
         return ServiceUtil.returnSuccess();
@@ -520,69 +502,69 @@ public class EbayStoreHelper {
             ListingDesignerType designer = new ListingDesignerType();
             ShippingDetailsType shippingDetail = new ShippingDetailsType();
             ShippingServiceOptionsType shippingOption = new ShippingServiceOptionsType();
-            for (int index = 0; index < attrs.size(); index++) {
-                if ("Title".equals(attrs.get(index).getString("attrName"))) {
-                    item.setTitle(attrs.get(index).getString("attrValue"));
-                } else if ("SKU".equals(attrs.get(index).getString("attrName"))) {
-                    item.setSKU(attrs.get(index).getString("attrValue"));
-                } else if ("Currency".equals(attrs.get(index).getString("attrName"))) {
-                    amount.setCurrencyID(CurrencyCodeType.valueOf(attrs.get(index).getString("attrValue")));
-                } else if ("Description".equals(attrs.get(index).getString("attrName"))) {
-                    item.setDescription(attrs.get(index).getString("attrValue"));
-                } else if ("ApplicationData".equals(attrs.get(index).getString("attrName"))) {
-                    item.setApplicationData(attrs.get(index).getString("attrValue"));
-                } else if ("Country".equals(attrs.get(index).getString("attrName"))) {
-                    item.setCountry(CountryCodeType.valueOf(attrs.get(index).getString("attrValue")));
-                } else if ("PictureURL".equals(attrs.get(index).getString("attrName"))) {
-                    String[] pictureUrl = {attrs.get(index).getString("attrValue")};
+            for (GenericValue attr : attrs) {
+                if ("Title".equals(attr.getString("attrName"))) {
+                    item.setTitle(attr.getString("attrValue"));
+                } else if ("SKU".equals(attr.getString("attrName"))) {
+                    item.setSKU(attr.getString("attrValue"));
+                } else if ("Currency".equals(attr.getString("attrName"))) {
+                    amount.setCurrencyID(CurrencyCodeType.valueOf(attr.getString("attrValue")));
+                } else if ("Description".equals(attr.getString("attrName"))) {
+                    item.setDescription(attr.getString("attrValue"));
+                } else if ("ApplicationData".equals(attr.getString("attrName"))) {
+                    item.setApplicationData(attr.getString("attrValue"));
+                } else if ("Country".equals(attr.getString("attrName"))) {
+                    item.setCountry(CountryCodeType.valueOf(attr.getString("attrValue")));
+                } else if ("PictureURL".equals(attr.getString("attrName"))) {
+                    String[] pictureUrl = {attr.getString("attrValue")};
                     picture.setPictureURL(pictureUrl);
-                } else if ("Site".equals(attrs.get(index).getString("attrName"))) {
-                    item.setSite(SiteCodeType.valueOf(attrs.get(index).getString("attrValue")));
-                } else if ("UseTaxTable".equals(attrs.get(index).getString("attrName"))) {
-                    item.setUseTaxTable(Boolean.valueOf(attrs.get(index).getString("attrValue")));
-                } else if ("BestOfferEnabled".equals(attrs.get(index).getString("attrName"))) {
-                    item.setBestOfferEnabled(Boolean.valueOf(attrs.get(index).getString("attrValue")));
-                } else if ("AutoPayEnabled".equals(attrs.get(index).getString("attrName"))) {
-                    item.setAutoPay(Boolean.valueOf(attrs.get(index).getString("attrValue")));
-                } else if ("CategoryID".equals(attrs.get(index).getString("attrName"))) {
-                    category.setCategoryID(attrs.get(index).getString("attrValue"));
-                } else if ("CategoryLevel".equals(attrs.get(index).getString("attrName"))) {
-                    category.setCategoryLevel(Integer.parseInt(attrs.get(index).getString("attrValue")));
-                } else if ("CategoryName".equals(attrs.get(index).getString("attrName"))) {
-                    category.setCategoryName(attrs.get(index).getString("attrValue"));
-                } else if ("CategoryParentID".equals(attrs.get(index).getString("attrName"))) {
-                    String[] parent = {attrs.get(index).getString("attrValue")};
-                    category.setCategoryParentID(parent );
-                } else if ("LeafCategory".equals(attrs.get(index).getString("attrName"))) {
-                    category.setLeafCategory(Boolean.valueOf(attrs.get(index).getString("attrValue")));
-                } else if ("LSD".equals(attrs.get(index).getString("attrName"))) {
-                    category.setLSD(Boolean.valueOf(attrs.get(index).getString("attrValue")));
-                } else if ("ReturnsAcceptedOption".equals(attrs.get(index).getString("attrName"))) {
+                } else if ("Site".equals(attr.getString("attrName"))) {
+                    item.setSite(SiteCodeType.valueOf(attr.getString("attrValue")));
+                } else if ("UseTaxTable".equals(attr.getString("attrName"))) {
+                    item.setUseTaxTable(Boolean.valueOf(attr.getString("attrValue")));
+                } else if ("BestOfferEnabled".equals(attr.getString("attrName"))) {
+                    item.setBestOfferEnabled(Boolean.valueOf(attr.getString("attrValue")));
+                } else if ("AutoPayEnabled".equals(attr.getString("attrName"))) {
+                    item.setAutoPay(Boolean.valueOf(attr.getString("attrValue")));
+                } else if ("CategoryID".equals(attr.getString("attrName"))) {
+                    category.setCategoryID(attr.getString("attrValue"));
+                } else if ("CategoryLevel".equals(attr.getString("attrName"))) {
+                    category.setCategoryLevel(Integer.parseInt(attr.getString("attrValue")));
+                } else if ("CategoryName".equals(attr.getString("attrName"))) {
+                    category.setCategoryName(attr.getString("attrValue"));
+                } else if ("CategoryParentID".equals(attr.getString("attrName"))) {
+                    String[] parent = {attr.getString("attrValue")};
+                    category.setCategoryParentID(parent);
+                } else if ("LeafCategory".equals(attr.getString("attrName"))) {
+                    category.setLeafCategory(Boolean.valueOf(attr.getString("attrValue")));
+                } else if ("LSD".equals(attr.getString("attrName"))) {
+                    category.setLSD(Boolean.valueOf(attr.getString("attrValue")));
+                } else if ("ReturnsAcceptedOption".equals(attr.getString("attrName"))) {
                     ReturnPolicyType policy = new ReturnPolicyType();
-                    policy.setReturnsAcceptedOption(attrs.get(index).getString("attrValue"));
+                    policy.setReturnsAcceptedOption(attr.getString("attrValue"));
                     item.setReturnPolicy(policy);
-                } else if ("LayoutID".equals(attrs.get(index).getString("attrName"))) {
-                    designer.setLayoutID(Integer.parseInt(attrs.get(index).getString("attrValue")));
-                } else if ("ThemeID".equals(attrs.get(index).getString("attrName"))) {
-                    designer.setThemeID(Integer.parseInt(attrs.get(index).getString("attrValue")));
-                } else if ("BuyItNowPrice".equals(attrs.get(index).getString("attrName"))) {
+                } else if ("LayoutID".equals(attr.getString("attrName"))) {
+                    designer.setLayoutID(Integer.parseInt(attr.getString("attrValue")));
+                } else if ("ThemeID".equals(attr.getString("attrName"))) {
+                    designer.setThemeID(Integer.parseInt(attr.getString("attrValue")));
+                } else if ("BuyItNowPrice".equals(attr.getString("attrName"))) {
                     amount = new AmountType();
-                    amount.setValue(Double.parseDouble(attrs.get(index).getString("attrValue")));
+                    amount.setValue(Double.parseDouble(attr.getString("attrValue")));
                     item.setBuyItNowPrice(amount);
-                } else if ("ReservePrice".equals(attrs.get(index).getString("attrName"))) {
+                } else if ("ReservePrice".equals(attr.getString("attrName"))) {
                     amount = new AmountType();
-                    amount.setValue(Double.parseDouble(attrs.get(index).getString("attrValue")));
+                    amount.setValue(Double.parseDouble(attr.getString("attrValue")));
                     item.setReservePrice(amount);
-                } else if ("ListingType".equals(attrs.get(index).getString("attrName"))) {
-                    item.setListingType(ListingTypeCodeType.valueOf(attrs.get(index).getString("attrValue")));
-                } else if ("StartPrice".equals(attrs.get(index).getString("attrName"))) {
+                } else if ("ListingType".equals(attr.getString("attrName"))) {
+                    item.setListingType(ListingTypeCodeType.valueOf(attr.getString("attrValue")));
+                } else if ("StartPrice".equals(attr.getString("attrName"))) {
                     amount = new AmountType();
-                    amount.setValue(Double.parseDouble(attrs.get(index).getString("attrValue")));
+                    amount.setValue(Double.parseDouble(attr.getString("attrValue")));
                     item.setStartPrice(amount);
-                } else if ("ShippingService".equals(attrs.get(index).getString("attrName"))) {
-                    shippingOption.setShippingService(attrs.get(index).getString("attrValue"));
-                } else if ("ShippingServiceCost".equals(attrs.get(index).getString("attrName"))) {
-                    shippingServiceCost.setValue(Double.parseDouble(attrs.get(index).getString("attrValue")));
+                } else if ("ShippingService".equals(attr.getString("attrName"))) {
+                    shippingOption.setShippingService(attr.getString("attrValue"));
+                } else if ("ShippingServiceCost".equals(attr.getString("attrName"))) {
+                    shippingServiceCost.setValue(Double.parseDouble(attr.getString("attrValue")));
                     shippingOption.setShippingServiceCost(shippingServiceCost);
                 } else if ("ShippingServiceCostCurrency".equals(attrs.get(index).getString("attrName"))) {
                     shippingServiceCost.setCurrencyID(CurrencyCodeType.valueOf(attrs.get(index).getString("attrValue")));
@@ -644,7 +626,7 @@ public class EbayStoreHelper {
                 ApiContext apiContext = EbayStoreHelper.getApiContext(productStoreId, locale, delegator);
                 GetOrdersCall ordersCall = new GetOrdersCall(apiContext);
                 OrderIDArrayType orderIdArr = new OrderIDArrayType();
-                String[] orderIdStr = {""+externalId};
+                String[] orderIdStr = {"" + externalId};
                 orderIdArr.setOrderID(orderIdStr);
                 req.setOrderIDArray(orderIdArr);
                 Calendar orderFrom = Calendar.getInstance();
@@ -710,8 +692,6 @@ public class EbayStoreHelper {
         }
     } catch (GenericEntityException gee) {
         return ServiceUtil.returnError(gee.getMessage());
-    } catch (Exception e) {
-        return ServiceUtil.returnError(e.getMessage());
     }
     return ServiceUtil.returnSuccess();
     }
@@ -719,7 +699,7 @@ public class EbayStoreHelper {
     public static void createErrorLogMessage(GenericValue userLogin, LocalDispatcher dispatcher, String productStoreId, String ack, String fuction, String errorMessage) {
         if (!"".equals(productStoreId) && (!"".equals(errorMessage))) {
             try {
-                Map<String, Object> newMap = new HashMap<String, Object>();
+                Map<String, Object> newMap = new HashMap<>();
                 newMap.put("productStoreId", productStoreId);
                 newMap.put("logAck", ack.toLowerCase());
                 newMap.put("functionName", fuction);
@@ -731,7 +711,7 @@ public class EbayStoreHelper {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
                 }
             } catch (Exception ex) {
-                Debug.logError("Error from create error log messages : "+ex.getMessage(), MODULE);
+                Debug.logError("Error from create error log messages : " + ex.getMessage(), MODULE);
             }
         }
     }
@@ -754,7 +734,7 @@ public class EbayStoreHelper {
     }
 
     public static String convertDate(Date date, Locale locale) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",locale);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", locale);
         return simpleDateFormat.format(date);
     }
 }

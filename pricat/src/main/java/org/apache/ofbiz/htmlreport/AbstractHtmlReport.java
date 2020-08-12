@@ -26,19 +26,15 @@ import org.apache.ofbiz.htmlreport.util.ReportStringUtil;
 
 /**
  * HTML report output to be used for database create tables / drop tables operations.
- * 
  */
 public abstract class AbstractHtmlReport extends HtmlReport {
-    
-    private static final String MODULE = AbstractHtmlReport.class.getName();
 
-    public final static String THREAD_TYPE = "thread_type";
-    
-    public final static String FILE_REPORT_OUTPUT = "plugins/pricat/template/pricat/report.ftl";
-    
+    private static final String MODULE = AbstractHtmlReport.class.getName();
+    public static final String THREAD_TYPE = "thread_type";
+    public static final String FILE_REPORT_OUTPUT = "plugins/pricat/template/pricat/report.ftl";
+
     /**
      * Constructs a new report using the provided locale for the output language.
-     * 
      * @param request HttpServletRequest
      * @param response HttpServletResponse
      */
@@ -48,7 +44,6 @@ public abstract class AbstractHtmlReport extends HtmlReport {
 
     /**
      * Constructs a new report using the provided locale for the output language.
-     *  
      * @param request HttpServletRequest
      * @param response HttpServletResponse
      * @param writeHtml if <code>true</code>, this report should generate HTML instead of JavaScript output
@@ -57,18 +52,15 @@ public abstract class AbstractHtmlReport extends HtmlReport {
     public AbstractHtmlReport(HttpServletRequest request, HttpServletResponse response, boolean writeHtml, boolean isTransient) {
         super(request, response, writeHtml, isTransient);
     }
-    
+
     /**
      * Prepare display an html report.
-     * 
-     * @throws IOException 
+     * @throws IOException
      */
     public void prepareDisplayReport(HttpServletRequest request, HttpServletResponse response, String name, String dialogUri) throws IOException {
-
         if (ReportStringUtil.isNotEmpty(dialogUri)) {
             setDialogRealUri(request, dialogUri);
         }
-        
         String action = getParamAction(request);
         if (action == null) action = "";
         if ("reportend".equals(action) || "cancel".equals(action)) {
@@ -85,14 +77,12 @@ public abstract class AbstractHtmlReport extends HtmlReport {
 
     /**
      * Initializes the report thread to use for this report.<p>
-     * 
      * @return the reported thread to use for this report.
      */
     public abstract InterfaceReportThread initializeThread(HttpServletRequest request, HttpServletResponse response, String name);
 
     /**
      * Set the report dialog uri.
-     * 
      * @param dialogUri
      */
     public void setDialogRealUri(HttpServletRequest request, String dialogUri) {
@@ -128,7 +118,6 @@ public abstract class AbstractHtmlReport extends HtmlReport {
                 return "cancel";
             }
         }
-        
         return "success";
     }
 }

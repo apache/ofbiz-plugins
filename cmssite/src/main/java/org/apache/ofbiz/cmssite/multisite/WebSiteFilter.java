@@ -109,7 +109,7 @@ public class WebSiteFilter implements Filter {
             if (!webSiteId.equals(session.getAttribute("webSiteId"))) {
                 ShoppingCart cart = (ShoppingCart) session.getAttribute("shoppingCart");
                 if (cart != null && !(webSite.getString("productStoreId").equals(cart.getProductStoreId())) ) {
-                    // clearing cart items from previous store 
+                    // clearing cart items from previous store
                     cart.clear();
                     // Put product Store for this webSite in cart
                     cart.setProductStoreId(webSite.getString("productStoreId"));
@@ -129,7 +129,7 @@ public class WebSiteFilter implements Filter {
             }
             request.setAttribute("webSiteId", webSiteId);
             session.setAttribute("displayMaintenancePage", webSite.getString("displayMaintenancePage"));
-            if(UtilValidate.isEmpty(webSite.getString("hostedPathAlias"))) {
+            if (UtilValidate.isEmpty(webSite.getString("hostedPathAlias"))) {
                 request.setAttribute("removePathAlias", false);
             } else {
                 request.setAttribute("removePathAlias", true);
@@ -160,7 +160,6 @@ public class WebSiteFilter implements Filter {
         session.setAttribute("dispatcher", dispatcher);
         session.setAttribute("security", security);
         session.setAttribute("_WEBAPP_NAME_", UtilHttp.getApplicationName(request));
-        
         // get rid of the visit info since it was pointing to the previous database, and get a new one
         session.removeAttribute("visitor");
         session.removeAttribute("visit");

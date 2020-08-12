@@ -44,8 +44,8 @@ public class ExampleWebSockets {
         try {
             if (session.isOpen()) {
                 synchronized (clients) {
-                    for(Session client : clients){
-                        if (!client.equals(session)){
+                    for (Session client : clients) {
+                        if (!client.equals(session)) {
                             client.getBasicRemote().sendText(msg);
                         }
                     }

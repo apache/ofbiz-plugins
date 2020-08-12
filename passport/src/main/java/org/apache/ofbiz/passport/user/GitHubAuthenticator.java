@@ -86,9 +86,8 @@ public class GitHubAuthenticator implements Authenticator {
 
     /**
      * Method to authenticate a user.
-     * 
-     * For GitHub users, we only check if the username(userLoginId) exists an 
-     * externalAuthId, and the externalAuthId has a valid accessToken in 
+     * For GitHub users, we only check if the username(userLoginId) exists an
+     * externalAuthId, and the externalAuthId has a valid accessToken in
      * GitHubUser entity.
      *
      * @param userLoginId   User's login id
@@ -114,9 +113,7 @@ public class GitHubAuthenticator implements Authenticator {
                     user = GitHubAuthenticator.getUserInfo(getMethod, accessToken, tokenType, Locale.getDefault());
                 }
             }
-        } catch (GenericEntityException e) {
-            throw new AuthenticatorException(e.getMessage(), e);
-        } catch (AuthenticatorException e) {
+        } catch (GenericEntityException | AuthenticatorException e) {
             throw new AuthenticatorException(e.getMessage(), e);
         } finally {
             if (getMethod != null) {
@@ -199,7 +196,9 @@ public class GitHubAuthenticator implements Authenticator {
             if (parentTx != null) {
                 try {
                     TransactionUtil.resume(parentTx);
-                    if (Debug.verboseOn()) Debug.logVerbose("Resumed the parent transaction.", MODULE);
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("Resumed the parent transaction.", MODULE);
+                    }
                 } catch (GenericTransactionException e) {
                     Debug.logError(e, "Could not resume parent nested transaction: " + e.getMessage(), MODULE);
                 }
@@ -222,9 +221,7 @@ public class GitHubAuthenticator implements Authenticator {
                     user = getUserInfo(getMethod, accessToken, tokenType, Locale.getDefault());
                 }
             }
-        } catch (GenericEntityException e) {
-            throw new AuthenticatorException(e.getMessage(), e);
-        } catch (AuthenticatorException e) {
+        } catch (GenericEntityException | AuthenticatorException e) {
             throw new AuthenticatorException(e.getMessage(), e);
         }
         return user;
@@ -239,7 +236,7 @@ public class GitHubAuthenticator implements Authenticator {
         }
         return createUser(userMap, system);
     }
-    
+
     private String createUser(Map<String, Object> userMap, GenericValue system) throws AuthenticatorException {
         // create person + userLogin
         Map<String, Serializable> createPersonUlMap = new HashMap<>();
@@ -392,29 +389,29 @@ public class GitHubAuthenticator implements Authenticator {
         httpGet.setHeader(PassportUtil.AUTHORIZATION_HEADER, tokenType + " " + accessToken);
         httpGet.setHeader(PassportUtil.ACCEPT_HEADER, "application/json");
         CloseableHttpResponse getResponse = null;
-		try {
-			getResponse = jsonClient.execute(httpGet);
+        try {
+            getResponse = jsonClient.execute(httpGet);
             String responseString = new BasicResponseHandler().handleResponse(getResponse);
-	        if (getResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-	            // Debug.logInfo("Json Response from GitHub: " + responseString, MODULE);
-	            userInfo = JSON.from(responseString);
-	        } else {
-	            String errMsg = UtilProperties.getMessage(RESOURCE, "GetOAuth2AccessTokenError", UtilMisc.toMap("error", responseString), locale);
-	            throw new AuthenticatorException(errMsg);
-	        }
-		} catch (ClientProtocolException e) {
+            if (getResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                // Debug.logInfo("Json Response from GitHub: " + responseString, MODULE);
+                userInfo = JSON.from(responseString);
+            } else {
+                String errMsg = UtilProperties.getMessage(RESOURCE, "GetOAuth2AccessTokenError", UtilMisc.toMap("error", responseString), locale);
+                throw new AuthenticatorException(errMsg);
+            }
+        } catch (ClientProtocolException e) {
             throw new AuthenticatorException(e.getMessage());
-		} catch (IOException e) {
+        } catch (IOException e) {
             throw new AuthenticatorException(e.getMessage());
-		} finally {
-			if (getResponse != null) {
-	            try {
-					getResponse.close();
-				} catch (IOException e) {
-					// do nothing
-				}
-			}
-		}
+        } finally {
+            if (getResponse != null) {
+                try {
+                    getResponse.close();
+                } catch (IOException e) {
+                    // do nothing
+                }
+            }
+        }
         JSONToMap jsonMap = new JSONToMap();
         Map<String, Object> userMap;
         try {

@@ -38,7 +38,6 @@ import org.apache.solr.servlet.RedirectServlet;
 public class OFBizSolrRedirectServlet extends RedirectServlet {
 
     private static final String MODULE = OFBizSolrRedirectServlet.class.getName();
-    
     /**
      * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
@@ -48,7 +47,6 @@ public class OFBizSolrRedirectServlet extends RedirectServlet {
         if (isForwarded) {
             return;
         }
-        
         super.doGet(request, response);
     }
 
@@ -63,7 +61,6 @@ public class OFBizSolrRedirectServlet extends RedirectServlet {
                 forwardToLogin = true;
             }
         }
-        
         if (forwardToLogin) {
             String contextPath = request.getContextPath();
             String uri = request.getRequestURI();
@@ -77,7 +74,6 @@ public class OFBizSolrRedirectServlet extends RedirectServlet {
             response.sendRedirect(contextPath + "/control/checkLogin" + uri);
             return true;
         }
-        
         return false;
     }
 }
