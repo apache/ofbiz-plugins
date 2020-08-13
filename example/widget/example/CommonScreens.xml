@@ -235,7 +235,6 @@ under the License.
                 <set field="geoChart.height" value="500px"/>
                 <set field="geoChart.points" from-field="geoPoints"/>
                 <set field="geoChart.center" from-field="geoCenter"/>
-                <set field="layoutSettings.styleSheets[+0]" value="/common/js/plugins/OpenLayers-5.3.0.css" global="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
