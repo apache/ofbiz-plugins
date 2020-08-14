@@ -18,8 +18,6 @@
  *******************************************************************************/
 package org.apache.ofbiz.content.search;
 
-import java.lang.Object;
-import java.lang.String;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;

@@ -339,10 +339,7 @@ ${virtualJavaScript!}
             </#if>
           </#if>
         </#if>
-      </td>
-    </tr>
-    <tr>
-      <td>
+
       <#-- check to see if introductionDate hasn't passed yet -->
       <#if product.introductionDate?? && nowTimestamp.before(product.introductionDate)>
         <p>&nbsp;</p>

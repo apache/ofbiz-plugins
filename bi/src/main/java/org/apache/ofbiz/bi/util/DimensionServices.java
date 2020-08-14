@@ -18,8 +18,6 @@ under the License.
 */
 package org.apache.ofbiz.bi.util;
 
-import java.lang.Object;
-import java.lang.String;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
