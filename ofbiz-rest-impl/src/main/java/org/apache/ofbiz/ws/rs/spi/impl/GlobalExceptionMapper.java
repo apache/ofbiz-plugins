@@ -28,17 +28,20 @@ import org.apache.ofbiz.ws.rs.spi.AbstractExceptionMapper;
 @Provider
 public class GlobalExceptionMapper extends AbstractExceptionMapper implements javax.ws.rs.ext.ExceptionMapper<Throwable> {
 
-	/** Module Name Used for debugging */
+    /**
+     * Module Name Used for debugging
+     */
     private static final String MODULE = GlobalExceptionMapper.class.getName();
+
     /**
      *
      */
     @Override
     public Response toResponse(Throwable throwable) {
-    	Debug.logError(throwable.getMessage(), MODULE);
-    	if(Debug.verboseOn()) {
-    		throwable.printStackTrace();
-    	}
+        Debug.logError(throwable.getMessage(), MODULE);
+        if (Debug.verboseOn()) {
+            throwable.printStackTrace();
+        }
         Response.StatusType type = getStatusType(throwable);
         Error error = new Error(type.getStatusCode(), type.getReasonPhrase(), throwable.getMessage());
         return errorResponse(type.getStatusCode(), error);
