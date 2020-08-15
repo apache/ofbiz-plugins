@@ -1,1 +1,0 @@
-The Ofbiz-rest-jersey Help file template.
