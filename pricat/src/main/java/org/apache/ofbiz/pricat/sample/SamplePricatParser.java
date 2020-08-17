@@ -71,7 +71,6 @@ public class SamplePricatParser extends AbstractPricatParser {
      * 2. Cell data type to return.
      * 3. Boolean value to indicate whether the column is required.
      * 4. Boolean value to indicate whether the column is a price when cell data type is BigDecimal, this element is optional.
-     *
      * @param version
      * @return List of Object[]
      */
@@ -85,7 +84,6 @@ public class SamplePricatParser extends AbstractPricatParser {
 
     /**
      * Get V1.1 pricat excel header names and attributes.
-     *
      * @return list of Object[]
      */
     private static List<Object[]> genExcelHeaderNamesV1() {
@@ -151,23 +149,23 @@ public class SamplePricatParser extends AbstractPricatParser {
         XSSFWorkbook workbook = null;
         try {
             // 1. read the pricat excel file
-            FileInputStream is = new FileInputStream(pricatFile);
+            FileInputStream is = new FileInputStream(getPricatFile());
 
             // 2. use POI to load this bytes
-            report.print(UtilProperties.getMessage(RESOURCE, "ParsePricatFileStatement", new Object[]{pricatFile.getName()}, locale),
+            getReport().print(UtilProperties.getMessage(RESOURCE, "ParsePricatFileStatement", new Object[]{getPricatFile().getName()}, getLocale()),
                     InterfaceReport.FORMAT_DEFAULT);
             try {
                 workbook = new XSSFWorkbook(is);
-                report.println(UtilProperties.getMessage(RESOURCE, "ok", locale), InterfaceReport.FORMAT_OK);
+                getReport().println(UtilProperties.getMessage(RESOURCE, "ok", getLocale()), InterfaceReport.FORMAT_OK);
             } catch (IOException e) {
-                report.println(e);
-                report.println(UtilProperties.getMessage(RESOURCE, "PricatSuggestion", locale), InterfaceReport.FORMAT_ERROR);
+                getReport().println(e);
+                getReport().println(UtilProperties.getMessage(RESOURCE, "PricatSuggestion", getLocale()), InterfaceReport.FORMAT_ERROR);
                 return;
             }
 
             // 3. only first sheet will be parsed
             // 3.1 verify the file has a sheet at least
-            formatter = new HSSFDataFormatter(locale);
+            setFormatter(new HSSFDataFormatter(getLocale()));
             isNumOfSheetsOK(workbook);
 
             // 3.2 verify the version is supported
@@ -187,18 +185,18 @@ public class SamplePricatParser extends AbstractPricatParser {
             // 3.5 verify the first table has 6 rows at least
             containsDataRows(sheet);
 
-            if (UtilValidate.isNotEmpty(errorMessages)) {
-                report.println(UtilProperties.getMessage(RESOURCE, "HeaderContainsError", locale), InterfaceReport.FORMAT_ERROR);
+            if (UtilValidate.isNotEmpty(getErrorMessages())) {
+                getReport().println(UtilProperties.getMessage(RESOURCE, "HeaderContainsError", getLocale()), InterfaceReport.FORMAT_ERROR);
                 return;
             }
 
             // 4. parse data
             // 4.1 parse row by row and store the contents into database
             parseRowByRow(sheet);
-            if (UtilValidate.isNotEmpty(errorMessages)) {
-                report.println(UtilProperties.getMessage(RESOURCE, "DataContainsError", locale), InterfaceReport.FORMAT_ERROR);
+            if (UtilValidate.isNotEmpty(getErrorMessages())) {
+                getReport().println(UtilProperties.getMessage(RESOURCE, "DataContainsError", getLocale()), InterfaceReport.FORMAT_ERROR);
                 if (writeFile) {
-                    sequenceNum = report.getSequenceNum();
+                    setSequenceNum(getReport().getSequenceNum());
                     writeCommentsToFile(workbook, sheet);
                 }
             }
@@ -206,14 +204,14 @@ public class SamplePricatParser extends AbstractPricatParser {
             // 5. clean up the log files and commented Excel files
             cleanupLogAndCommentedExcel();
         } catch (IOException e) {
-            report.println(e);
+            getReport().println(e);
             Debug.logError(e, MODULE);
         } finally {
-            if (UtilValidate.isNotEmpty(fileItems)) {
+            if (UtilValidate.isNotEmpty(getFileItems())) {
                 // remove tmp files
                 FileItem fi = null;
-                for (int i = 0; i < fileItems.size(); i++) {
-                    fi = fileItems.get(i);
+                for (int i = 0; i < getFileItems().size(); i++) {
+                    fi = getFileItems().get(i);
                     fi.delete();
                 }
             }
@@ -229,9 +227,13 @@ public class SamplePricatParser extends AbstractPricatParser {
     /** exists currency id */
     @Override
     public boolean existsCurrencyId(XSSFSheet sheet) {
+        InterfaceReport report = getReport();
+        Locale locale = getLocale();
+        Map<CellReference, String> errorMessages = getErrorMessages();
         report.print(UtilProperties.getMessage(RESOURCE, "StartCheckCurrencyId", locale), InterfaceReport.FORMAT_NOTE);
         XSSFCell currencyIdCell = sheet.getRow(2).getCell(1);
-        currencyId = currencyIdCell.getStringCellValue().trim().toUpperCase();
+        setCurrencyId(currencyIdCell.getStringCellValue().trim().toUpperCase());
+        String currencyId = getCurrencyId();
         if (UtilValidate.isEmpty(currencyId)) {
             String errorMessage = UtilProperties.getMessage(RESOURCE, "CurrencyIdRequired", locale);
             report.println(errorMessage, InterfaceReport.FORMAT_ERROR);
@@ -239,7 +241,7 @@ public class SamplePricatParser extends AbstractPricatParser {
             return false;
         } else {
             try {
-                GenericValue currencyUom = EntityQuery.use(delegator).from("Uom").where("uomId", currencyId).queryOne();
+                GenericValue currencyUom = EntityQuery.use(getDelegator()).from("Uom").where("uomId", currencyId).queryOne();
                 if (!"CURRENCY_MEASURE".equals(currencyUom.getString("uomTypeId"))) {
                     String errorMessage = UtilProperties.getMessage(RESOURCE, "CurrencyIdNotCurrency", new Object[]{currencyId}, locale);
                     report.println(errorMessage, InterfaceReport.FORMAT_ERROR);
@@ -260,8 +262,10 @@ public class SamplePricatParser extends AbstractPricatParser {
     /** parse row by row */
     @Override
     public void parseRowByRow(XSSFSheet sheet) {
+        InterfaceReport report = getReport();
+        Locale locale = getLocale();
         int rows = sheet.getLastRowNum() + 1;
-        List<Object[]> colNames = COL_NAMES_LIST.get(pricatFileVersion);
+        List<Object[]> colNames = COL_NAMES_LIST.get(getPricatFileVersion());
         int colNumber = colNames.size();
 
         int emptyRowStart = -1;
@@ -317,7 +321,7 @@ public class SamplePricatParser extends AbstractPricatParser {
         if (UtilValidate.isEmpty(cellContents)) {
             return false;
         }
-        switch (pricatFileVersion) {
+        switch (getPricatFileVersion()) {
         case "V1.1":
         default:
             return parseCellContentsAndStoreV1(row, cellContents);
@@ -331,11 +335,12 @@ public class SamplePricatParser extends AbstractPricatParser {
         // 1. check if facilityId is in the facilities belong to the user, or if the name is correct for the id
         String facilityName = (String) getCellContent(cellContents, "Facility Name");
         String facilityId = (String) getCellContent(cellContents, "FacilityId");
-        if (!isFacilityOk(row, facilityName, facilityId))
+        if (!isFacilityOk(row, facilityName, facilityId)) {
             return false;
+        }
 
         // 2. get productCategoryId
-        String ownerPartyId = facilities.get(facilityId)[1];
+        String ownerPartyId = getFacilities().get(facilityId)[1];
         String productCategoryId = getProductCategoryId(cellContents, ownerPartyId);
 
         // 3. get productFeatureId of brand
@@ -357,23 +362,23 @@ public class SamplePricatParser extends AbstractPricatParser {
         // 5. update color and size if necessary
         String color = (String) getCellContent(cellContents, "Color");
         if (UtilValidate.isEmpty(color) || UtilValidate.isEmpty(color.trim())) {
-            color = defaultColorName;
+            color = DEFAULT_COL_NAME;
         }
         String dimension = (String) getCellContent(cellContents, "Size");
         if (UtilValidate.isEmpty(dimension) || UtilValidate.isEmpty(dimension.trim())) {
-            dimension = defaultDimensionName;
+            dimension = DEFAULT_DIM_NAME;
         }
         Map<String, Object> features = updateColorAndDimension(productId, ownerPartyId, color, dimension);
         if (ServiceUtil.isError(features)) {
             if (features.containsKey("index") && String.valueOf(features.get("index")).contains("0")) {
                 int cell = headerColNames.indexOf("Color");
                 XSSFCell colorCell = row.getCell(cell);
-                errorMessages.put(new CellReference(colorCell), UtilProperties.getMessage(RESOURCE, "PricatColorError", locale));
+                getErrorMessages().put(new CellReference(colorCell), UtilProperties.getMessage(RESOURCE, "PricatColorError", getLocale()));
             }
             if (features.containsKey("index") && String.valueOf(features.get("index")).contains("1")) {
                 int cell = headerColNames.indexOf("Size");
                 XSSFCell colorCell = row.getCell(cell);
-                errorMessages.put(new CellReference(colorCell), UtilProperties.getMessage(RESOURCE, "PricatDimensionError", locale));
+                getErrorMessages().put(new CellReference(colorCell), UtilProperties.getMessage(RESOURCE, "PricatDimensionError", getLocale()));
             }
             return false;
         }
@@ -427,6 +432,10 @@ public class SamplePricatParser extends AbstractPricatParser {
 
     @Override
     public boolean isFacilityOk(XSSFRow row, String facilityName, String facilityId) {
+        InterfaceReport report = getReport();
+        Locale locale = getLocale();
+        Map<String, String[]> facilities = getFacilities();
+        Map<CellReference, String> errorMessages = getErrorMessages();
         if (!facilities.containsKey(facilityId)) {
             if (UtilValidate.isEmpty(facilityId) && facilities.keySet().size() == 1) {
                 if (UtilValidate.isEmpty(facilityName)) {
@@ -469,9 +478,11 @@ public class SamplePricatParser extends AbstractPricatParser {
 
     @Override
     public boolean isTableHeaderMatched(XSSFSheet sheet) {
-        List<Object[]> columnNames = COL_NAMES_LIST.get(pricatFileVersion);
+        InterfaceReport report = getReport();
+        Locale locale = getLocale();
+        List<Object[]> columnNames = COL_NAMES_LIST.get(getPricatFileVersion());
         short cols = sheet.getRow(HEADER_ROW_NO).getLastCellNum();
-        report.print(UtilProperties.getMessage(RESOURCE, "StartCheckHeaderColNum", new Object[]{pricatFileVersion}, locale),
+        report.print(UtilProperties.getMessage(RESOURCE, "StartCheckHeaderColNum", new Object[]{getPricatFileVersion()}, locale),
                 InterfaceReport.FORMAT_NOTE);
         if (cols != columnNames.size()) {
             report.print(UtilProperties.getMessage(RESOURCE, "HeaderColNumNotMatch", new Object[]{String.valueOf(cols),
@@ -489,7 +500,7 @@ public class SamplePricatParser extends AbstractPricatParser {
             report.println(UtilProperties.getMessage(RESOURCE, "ok", locale), InterfaceReport.FORMAT_OK);
         }
 
-        report.print(UtilProperties.getMessage(RESOURCE, "StartCheckHeaderColLabel", new Object[]{pricatFileVersion}, locale),
+        report.print(UtilProperties.getMessage(RESOURCE, "StartCheckHeaderColLabel", new Object[]{getPricatFileVersion()}, locale),
                 InterfaceReport.FORMAT_NOTE);
         boolean foundLabelNotMatch = false;
         for (int i = 0; i < cols; i++) {
@@ -517,6 +528,9 @@ public class SamplePricatParser extends AbstractPricatParser {
 
     @Override
     public boolean isVersionSupported(XSSFSheet sheet) {
+        InterfaceReport report = getReport();
+        Locale locale = getLocale();
+        String pricatFileVersion = getPricatFileVersion();
         report.print(UtilProperties.getMessage(RESOURCE, "StartCheckPricatVersion", locale), InterfaceReport.FORMAT_NOTE);
         pricatFileVersion = sheet.getRow(2).getCell(0).getStringCellValue().trim();
         if (COL_NAMES_LIST.containsKey(pricatFileVersion)) {
@@ -535,10 +549,10 @@ public class SamplePricatParser extends AbstractPricatParser {
     public boolean containsDataRows(XSSFSheet sheet) {
         int rows = sheet.getPhysicalNumberOfRows();
         if (rows > HEADER_ROW_NO + 1) {
-            report.println(UtilProperties.getMessage(RESOURCE, "PricatTableRows", new Object[]{String.valueOf(HEADER_ROW_NO + 1),
-                    String.valueOf(rows - HEADER_ROW_NO - 1), sheet.getSheetName()}, locale), InterfaceReport.FORMAT_NOTE);
+            getReport().println(UtilProperties.getMessage(RESOURCE, "PricatTableRows", new Object[]{String.valueOf(HEADER_ROW_NO + 1),
+                    String.valueOf(rows - HEADER_ROW_NO - 1), sheet.getSheetName()}, getLocale()), InterfaceReport.FORMAT_NOTE);
         } else {
-            report.println(UtilProperties.getMessage(RESOURCE, "PricatNoDataRows", new Object[]{sheet.getSheetName()}, locale),
+            getReport().println(UtilProperties.getMessage(RESOURCE, "PricatNoDataRows", new Object[]{sheet.getSheetName()}, getLocale()),
                     InterfaceReport.FORMAT_ERROR);
             return false;
         }
@@ -552,7 +566,6 @@ public class SamplePricatParser extends AbstractPricatParser {
 
     /**
      * Get data by version definition.
-     *
      * @param row
      * @param colNames
      * @param size
@@ -561,6 +574,10 @@ public class SamplePricatParser extends AbstractPricatParser {
     @Override
     public List<Object> getCellContents(XSSFRow row, List<Object[]> colNames, int size) {
         List<Object> results = new ArrayList<>();
+        InterfaceReport report = getReport();
+        Locale locale = getLocale();
+        Map<CellReference, String> errorMessages = getErrorMessages();
+        Map<String, String[]> facilities = getFacilities();
         boolean foundError = false;
         if (isEmptyRow(row, size, true)) {
             return null;
@@ -587,7 +604,7 @@ public class SamplePricatParser extends AbstractPricatParser {
                 }
             }
             CellType cellType = cell.getCellType();
-            String cellValue = formatter.formatCellValue(cell);
+            String cellValue = getFormatter().formatCellValue(cell);
             if (UtilValidate.isNotEmpty(cellValue) && UtilValidate.isNotEmpty(cellValue.trim())) {
                 if (cellType == CellType.FORMULA) {
                     try {

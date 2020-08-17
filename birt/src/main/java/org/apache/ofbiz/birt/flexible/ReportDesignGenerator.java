@@ -107,7 +107,6 @@ public class ReportDesignGenerator {
 
     /**
      * Generate report design (rtdesign file).
-     *
      * @throws IOException
      * @throws GeneralException
      * @throws BirtException
@@ -260,7 +259,6 @@ public class ReportDesignGenerator {
      * Create the script that will define the OFBiz dataset in Birt Report design.
      * <p>This dataset will populate the OFBiz datasource of the design
      * with <code>records</code> returned by <code>serviceName</code> service</p>
-     *
      * @throws SemanticException
      * @throws GeneralException
      */

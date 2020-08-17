@@ -78,25 +78,182 @@ import org.apache.ofbiz.service.ServiceUtil;
 public abstract class AbstractPricatParser implements InterfacePricatParser {
 
     private static final String MODULE = AbstractPricatParser.class.getName();
-    protected LocalDispatcher dispatcher;
-    protected Delegator delegator;
-    protected List<FileItem> fileItems;
-    protected File pricatFile;
-    protected String userLoginId;
-    protected GenericValue userLogin;
-    protected String pricatFileVersion;
-    protected String currencyId;
-    protected Map<CellReference, String> errorMessages = new HashMap<>();
-    protected HSSFDataFormatter formatter = new HSSFDataFormatter();
-    protected Map<String, String[]> facilities = new HashMap<>();
-    protected HttpSession session;
-    protected List<EntityCondition> basicCategoryConds;
-    protected List<EntityCondition> basicBrandConds;
-    protected String selectedPricatType = DEFAULT_PRICAT_TYPE;
-    protected String selectedFacilityId;
-    protected InterfaceReport report;
-    protected Locale locale;
-    protected long sequenceNum = -1L;
+    private LocalDispatcher dispatcher;
+    private Delegator delegator;
+    private List<FileItem> fileItems;
+    private File pricatFile;
+    private String userLoginId;
+    private GenericValue userLogin;
+    private String pricatFileVersion;
+    private String currencyId;
+    private Map<CellReference, String> errorMessages = new HashMap<>();
+    private HSSFDataFormatter formatter = new HSSFDataFormatter();
+    private Map<String, String[]> facilities = new HashMap<>();
+    private HttpSession session;
+    private List<EntityCondition> basicCategoryConds;
+    private List<EntityCondition> basicBrandConds;
+    private String selectedPricatType = DEFAULT_PRICAT_TYPE;
+    private String selectedFacilityId;
+    private InterfaceReport report;
+    private Locale locale;
+    private long sequenceNum = -1L;
+    /**
+     * Gets pricat file version.
+     * @return the pricat file version
+     */
+    public String getPricatFileVersion() {
+        return pricatFileVersion;
+    }
+    /**
+     * Gets delegator.
+     * @return the delegator
+     */
+    public Delegator getDelegator() {
+        return delegator;
+    }
+
+    /**
+     * Sets delegator.
+     * @param delegator the delegator
+     */
+    public void setDelegator(Delegator delegator) {
+        this.delegator = delegator;
+    }
+
+    /**
+     * Gets file items.
+     * @return the file items
+     */
+    public List<FileItem> getFileItems() {
+        return fileItems;
+    }
+
+    /**
+     * Sets file items.
+     * @param fileItems the file items
+     */
+    public void setFileItems(List<FileItem> fileItems) {
+        this.fileItems = fileItems;
+    }
+
+    /**
+     * Gets currency id.
+     * @return the currency id
+     */
+    public String getCurrencyId() {
+        return currencyId;
+    }
+
+    /**
+     * Sets currency id.
+     * @param currencyId the currency id
+     */
+    public void setCurrencyId(String currencyId) {
+        this.currencyId = currencyId;
+    }
+
+    /**
+     * Gets sequence num.
+     * @return the sequence num
+     */
+    public long getSequenceNum() {
+        return sequenceNum;
+    }
+
+    /**
+     * Sets sequence num.
+     * @param sequenceNum the sequence num
+     */
+    public void setSequenceNum(long sequenceNum) {
+        this.sequenceNum = sequenceNum;
+    }
+    /**
+     * Gets pricat file.
+     * @return the pricat file
+     */
+    public File getPricatFile() {
+        return pricatFile;
+    }
+
+    /**
+     * Sets pricat file.
+     * @param pricatFile the pricat file
+     */
+    public void setPricatFile(File pricatFile) {
+        this.pricatFile = pricatFile;
+    }
+
+    /**
+     * Gets formatter.
+     * @return the formatter
+     */
+    public HSSFDataFormatter getFormatter() {
+        return formatter;
+    }
+
+    /**
+     * Sets formatter.
+     * @param formatter the formatter
+     */
+    public void setFormatter(HSSFDataFormatter formatter) {
+        this.formatter = formatter;
+    }
+
+    /**
+     * Gets error messages.
+     * @return the error messages
+     */
+    public Map<CellReference, String> getErrorMessages() {
+        return errorMessages;
+    }
+
+    /**
+     * Sets error messages.
+     * @param errorMessages the error messages
+     */
+    public void setErrorMessages(Map<CellReference, String> errorMessages) {
+        this.errorMessages = errorMessages;
+    }
+
+    /**
+     * Gets facilities.
+     * @return the facilities
+     */
+    public Map<String, String[]> getFacilities() {
+        return facilities;
+    }
+
+    /**
+     * Sets facilities.
+     * @param facilities the facilities
+     */
+    public void setFacilities(Map<String, String[]> facilities) {
+        this.facilities = facilities;
+    }
+
+    /**
+     * Gets report.
+     * @return the report
+     */
+    public InterfaceReport getReport() {
+        return report;
+    }
+
+    /**
+     * Sets report.
+     * @param report the report
+     */
+    public void setReport(InterfaceReport report) {
+        this.report = report;
+    }
+
+    /**
+     * Gets locale.
+     * @return the locale
+     */
+    public Locale getLocale() {
+        return locale;
+    }
 
     public AbstractPricatParser(LocalDispatcher dispatcher, Delegator delegator, Locale locale, InterfaceReport report,
                                 Map<String, String[]> facilities, File pricatFile, GenericValue userLogin) {
@@ -115,7 +272,6 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
 
     /**
      * Check whether a commented file exists.
-     *
      * @param request
      * @param sequenceNum
      * @return
@@ -140,7 +296,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
             Debug.logError("No ExcelImportHistory value found by sequenceNum[" + sequenceNum + "] and userLoginId[" + userLoginId + "].", MODULE);
             return false;
         }
-        File file = FileUtil.getFile(tempFilesFolder + userLoginId + "/" + sequenceNum + ".xlsx");
+        File file = FileUtil.getFile(TEMP_FILES_FOLDER + userLoginId + "/" + sequenceNum + ".xlsx");
 
         return file.exists();
     }
@@ -264,7 +420,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
 
             // write to file
             if (sequenceNum > 0L) {
-                File commentedExcel = FileUtil.getFile(tempFilesFolder + userLoginId + "/" + sequenceNum + ".xlsx");
+                File commentedExcel = FileUtil.getFile(TEMP_FILES_FOLDER + userLoginId + "/" + sequenceNum + ".xlsx");
                 fos = new FileOutputStream(commentedExcel);
                 workbook.write(fos);
             } else {
@@ -624,7 +780,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
                 for (int i = HISTORY_MAX_FILENUMBER; i < historyValues.size(); i++) {
                     GenericValue historyValue = historyValues.get(i);
                     valuesToRemove.add(historyValue);
-                    File excelFile = FileUtil.getFile(tempFilesFolder + userLoginId + "/" + historyValue.getLong("sequenceNum") + ".xlsx");
+                    File excelFile = FileUtil.getFile(TEMP_FILES_FOLDER + userLoginId + "/" + historyValue.getLong("sequenceNum") + ".xlsx");
                     if (excelFile.exists()) {
                         try {
                             excelFile.delete();
@@ -633,7 +789,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
                             report.print(e.getMessage(), InterfaceReport.FORMAT_ERROR);
                         }
                     }
-                    File logFile = FileUtil.getFile(tempFilesFolder + userLoginId + "/" + historyValue.getLong("sequenceNum") + ".log");
+                    File logFile = FileUtil.getFile(TEMP_FILES_FOLDER + userLoginId + "/" + historyValue.getLong("sequenceNum") + ".log");
                     if (logFile.exists()) {
                         try {
                             logFile.delete();

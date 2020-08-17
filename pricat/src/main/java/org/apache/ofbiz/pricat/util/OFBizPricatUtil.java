@@ -29,15 +29,17 @@ import org.apache.poi.xssf.usermodel.XSSFVMLDrawing;
 import com.microsoft.schemas.vml.CTShape;
 
 public final class OFBizPricatUtil {
+    private OFBizPricatUtil() { }
+
     private static final String MODULE = OFBizPricatUtil.class.getName();
-    protected static Method VMLDrawingMethod;
+    private static Method vmlDrawingMethod;
     // for POI 4.0.0 and later, this field can be removed
-    protected static Method FindCommentShapeMethod;
+    private static Method findCommentShapeMethod;
     static {
         Method[] methods = XSSFSheet.class.getDeclaredMethods();
         for (Method method : methods) {
             if (method.getName().equals("getVMLDrawing")) {
-                VMLDrawingMethod = method;
+                vmlDrawingMethod = method;
                 break;
             }
         }
@@ -45,19 +47,19 @@ public final class OFBizPricatUtil {
         methods = XSSFVMLDrawing.class.getDeclaredMethods();
         for (Method method : methods) {
             if (method.getName().equals("findCommentShape")) {
-                FindCommentShapeMethod = method;
+                findCommentShapeMethod = method;
                 break;
             }
         }
     }
     public static void formatCommentShape(XSSFSheet sheet, CellReference cell) {
-        if (VMLDrawingMethod != null && FindCommentShapeMethod != null) {
+        if (vmlDrawingMethod != null && findCommentShapeMethod != null) {
             try {
-                XSSFVMLDrawing vml = (XSSFVMLDrawing) VMLDrawingMethod.invoke(sheet, true);
+                XSSFVMLDrawing vml = (XSSFVMLDrawing) vmlDrawingMethod.invoke(sheet, true);
                 /** for POI 4.0 and later, use:
                 CTShape ctshape = vml.findCommentShape(cell.getRow(), cell.getCol());
                 */
-                CTShape ctshape = (CTShape) FindCommentShapeMethod.invoke(vml, cell.getRow(), cell.getCol());
+                CTShape ctshape = (CTShape) findCommentShapeMethod.invoke(vml, cell.getRow(), cell.getCol());
                 ctshape.setType("#_x0000_t202");
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                 Debug.logError(e, MODULE);
@@ -65,13 +67,13 @@ public final class OFBizPricatUtil {
         }
     }
     public static void formatCommentShape(XSSFSheet sheet, int rowNum, short colNum) {
-        if (VMLDrawingMethod != null && FindCommentShapeMethod != null) {
+        if (vmlDrawingMethod != null && findCommentShapeMethod != null) {
             try {
-                XSSFVMLDrawing vml = (XSSFVMLDrawing) VMLDrawingMethod.invoke(sheet, true);
+                XSSFVMLDrawing vml = (XSSFVMLDrawing) vmlDrawingMethod.invoke(sheet, true);
                 /** for POI 4.0 and later, use:
                 CTShape ctshape = vml.findCommentShape(rowNum, colNum);
                 */
-                CTShape ctshape = (CTShape) FindCommentShapeMethod.invoke(vml, rowNum, colNum);
+                CTShape ctshape = (CTShape) findCommentShapeMethod.invoke(vml, rowNum, colNum);
                 ctshape.setType("#_x0000_t202");
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                 Debug.logError(e, MODULE);

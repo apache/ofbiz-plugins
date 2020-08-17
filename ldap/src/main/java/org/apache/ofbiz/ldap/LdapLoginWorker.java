@@ -55,7 +55,6 @@ public final class LdapLoginWorker {
     /**
      * An HTTP WebEvent handler that checks to see is a userLogin is logged in.
      * If not, the user is forwarded to the login page.
-     *
      * @param request  The HTTP request object for the current JSP or Servlet request.
      * @param response The HTTP response object for the current JSP or Servlet request.
      * @return String
@@ -105,7 +104,6 @@ public final class LdapLoginWorker {
 
     /**
      * An HTTP WebEvent handler that logs in a userLogin. This should run before the security check.
-     *
      * @param request  The HTTP request object for the current JSP or Servlet request.
      * @param response The HTTP response object for the current JSP or Servlet request.
      * @return Return a boolean which specifies whether or not the calling Servlet or
@@ -143,7 +141,6 @@ public final class LdapLoginWorker {
 
     /**
      * An HTTP WebEvent handler that logs out a userLogin by clearing the session.
-     *
      * @param request  The HTTP request object for the current request.
      * @param response The HTTP response object for the current request.
      * @return Return a boolean which specifies whether or not the calling request

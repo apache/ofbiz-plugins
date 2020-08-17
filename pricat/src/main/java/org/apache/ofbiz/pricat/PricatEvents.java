@@ -97,7 +97,7 @@ public class PricatEvents {
                 if (sequenceNum > 0 && AbstractPricatParser.isCommentedExcelExists(request, sequenceNum)) {
                     GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
                     String userLoginId = userLogin.getString("userLoginId");
-                    pricatFileName = InterfacePricatParser.tempFilesFolder + userLoginId + "/" + sequenceNum + ".xlsx";
+                    pricatFileName = InterfacePricatParser.TEMP_FILES_FOLDER + userLoginId + "/" + sequenceNum + ".xlsx";
                 }
                 if (UtilValidate.isNotEmpty(pricatFileName) && UtilValidate.isNotEmpty(originalPricatFileName)) {
                     try {
@@ -148,7 +148,7 @@ public class PricatEvents {
             fileName = sequenceNum + ".xlsx";
         }
         try {
-            File file = FileUtil.getFile(InterfacePricatParser.tempFilesFolder + userLoginId + "/" + sequenceNum + ".xlsx");
+            File file = FileUtil.getFile(InterfacePricatParser.TEMP_FILES_FOLDER + userLoginId + "/" + sequenceNum + ".xlsx");
             if (file.exists()) {
                 Path path = Paths.get(file.getPath());
                 byte[] bytes = Files.readAllBytes(path);

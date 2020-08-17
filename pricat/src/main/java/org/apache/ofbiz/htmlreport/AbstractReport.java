@@ -146,7 +146,6 @@ public abstract class AbstractReport implements InterfaceReport {
 
     /**
      * Prints a String to the report.<p>
-     *
      * @param value the String to add
      */
     @Override
@@ -158,7 +157,6 @@ public abstract class AbstractReport implements InterfaceReport {
      * Prints a String to the report, using the indicated formatting.<p>
      * Use the contants starting with <code>FORMAT</code> from this interface
      * to indicate which formatting to use.<p>
-     *
      * @param value the message container to add
      * @param format the formatting to use for the output
      */
@@ -179,7 +177,6 @@ public abstract class AbstractReport implements InterfaceReport {
      * Prints a String with line break to the report, using the indicated formatting.<p>
      * Use the contants starting with <code>FORMAT</code> from this interface
      * to indicate which formatting to use.<p>
-     *
      * @param value the String to add
      * @param format the formatting to use for the output
      */
