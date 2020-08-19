@@ -63,7 +63,7 @@ ${virtualVariantJavaScript!}
         else {
             var elem = document.getElementById('variant_price_display');
             var price = getVariantPrice(sku);
-            var txt = document.createTextNode(price);
+            var txt = document.createTextNode(price || '');
             if(elem.hasChildNodes()) {
                 elem.replaceChild(txt, elem.firstChild);
             } else {
@@ -522,7 +522,7 @@ $(function(){
       <div>
         <strong>
           <#if price.isSale?? && price.isSale>
-            <span class="salePrice">${uiLabelMap.OrderOnSale}!</span>
+            <span class="salePrice badge badge-info">${uiLabelMap.OrderOnSale}!</span>
             <#assign priceStyle = "salePrice" />
           <#else>
             <#assign priceStyle = "regularPrice" />
@@ -705,7 +705,7 @@ $(function(){
             <div id="addCart2" style="display:block;">
               <span style="white-space: nowrap;"><strong>${uiLabelMap.CommonQuantity}:</strong></span>&nbsp;
               <input type="text" class="form-control" size="5" value="1" disabled="disabled"/>
-              <a href="javascript:showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonPleaseSelectAllFeaturesFirst}");"
+              <a href="javascript:showErrorAlert('${uiLabelMap.CommonErrorMessage2}','${uiLabelMap.CommonPleaseSelectAllFeaturesFirst}');"
               class="btn btn-outline-secondary"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
               &nbsp;
             </div>
@@ -738,7 +738,7 @@ $(function(){
           <#if mainProducts?has_content>
             <input type="hidden" name="product_id" value=""/>
             <select name="productVariantId" class="form-control" onchange="javascript:displayProductVirtualVariantId(this.value);">
-              <option value="">Select Unit Of Measure</option>
+              <option value="">${uiLabelMap.CommonSelect} ${uiLabelMap.ProductUnitOfMeasure}</option>
               <#list mainProducts as mainProduct>
                 <option value="${mainProduct.productId}">${mainProduct.uomDesc} : ${mainProduct.piecesIncluded}</option>
               </#list>
@@ -1006,21 +1006,16 @@ $(function(){
         </h2>
 
         <div class="productsummary-container">
+          <div class="row">
           <#list assocProducts as productAssoc>
             <#if productAssoc.productId == product.productId>
               <#assign assocProductId = productAssoc.productIdTo />
             <#else>
               <#assign assocProductId = productAssoc.productId />
             </#if>
-            <div>
-              <a href="<@ofbizUrl>${targetRequest}/<#if categoryId??>~category_id=${categoryId}/</#if>~product_id=${assocProductId}</@ofbizUrl>"
-                 class="buttontext">
-              ${assocProductId}
-              </a>
-              <#if productAssoc.reason?has_content>
-                - <strong>${productAssoc.reason}</strong>
-              </#if>
-            </div>
+            <#if productAssoc.reason?has_content>
+              ${setRequestAttribute("highlightLabel", productAssoc.reason)}
+            </#if>
           ${setRequestAttribute("optProductId", assocProductId)}
           ${setRequestAttribute("listIndex", listIndex)}
           ${setRequestAttribute("formNamePrefix", formNamePrefix)}
@@ -1031,6 +1026,7 @@ $(function(){
             <#assign product = pageProduct />
             <#local listIndex = listIndex + 1 />
           </#list>
+          </div>
         </div>
 
       ${setRequestAttribute("optProductId", "")}
@@ -1065,6 +1061,7 @@ $(function(){
     <h2>${uiLabelMap.ProductSimilarProducts}</h2>
 
     <div class="productsummary-container">
+      <div class="row">
       <#list commonFeatureResultIds as commonFeatureResultId>
         ${setRequestAttribute("optProductId", commonFeatureResultId)}
         ${setRequestAttribute("listIndex", commonFeatureResultId_index)}
@@ -1072,6 +1069,7 @@ $(function(){
         <#-- ${setRequestAttribute("targetRequestName", targetRequestName)} -->
         ${screens.render(productsummaryScreen)}
       </#list>
+      </div>
     </div>
   </#if>
   <hr>

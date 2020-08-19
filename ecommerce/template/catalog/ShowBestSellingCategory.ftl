@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if productCategoryList?has_content>
-<div class="card">
+<div class="popular-categories card">
   <h4 class="card-header">
     Popular Categories
   </h4>
@@ -58,12 +58,12 @@ under the License.
                 </a>
                 <div class="card-body">
                   <h4 class="card-title">
-                    <a style="font-size:12px" href="<@ofbizCatalogAltUrl productCategoryId=productCategoryId/>">
+                    <a class="btn btn-link" href="<@ofbizCatalogAltUrl productCategoryId=productCategoryId/>">
                       ${productCategory.categoryName!productCategoryId}
                     </a>
                   </h4>
                   <p class="card-text">
-                    <ul class="">
+                    <ul class="subcategory">
                       <#if productCategoryMembers??>
                         <#assign i = 0/>
                         <#list productCategoryMembers as productCategoryMember>

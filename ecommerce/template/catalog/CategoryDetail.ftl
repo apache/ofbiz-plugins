@@ -44,7 +44,7 @@
     <#assign viewIndexMax = Static["java.lang.Math"].ceil((listSize)?double / viewSize?double)/>
     <#if (viewIndexMax?int > 0)>
       <div class="row">
-        <div class="col-sm-2 offset-sm-10">
+        <div class="col-sm-3 offset-sm-10 col-md-4 offset-md-8">
       <div class="product-prevnext px-2 py-1">
         <select name="pageSelect" onchange="callDocumentByPaginate(this[this.selectedIndex].value);" class="form-control">
           <option value="#">${uiLabelMap.CommonPage} ${viewIndex?int + 1} ${uiLabelMap.CommonOf} ${viewIndexMax}</option>

@@ -252,7 +252,7 @@ ${virtualJavaScript!}
         </#if>
         <div>
           <#if price.isSale?? && price.isSale>
-            <span class='salePrice'>${uiLabelMap.OrderOnSale}!</span>
+            <span class='salePrice badge badge-info'>${uiLabelMap.OrderOnSale}!</span>
             <#assign priceStyle = "salePrice">
           <#else>
             <#assign priceStyle = "regularPrice">
