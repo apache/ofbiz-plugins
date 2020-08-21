@@ -125,7 +125,6 @@ public class ScrumServices {
      * viewScrumRevision
      * <p>
      * Use for view Scrum Revision
-     *
      * @param ctx     The DispatchContext that this service is operating in
      * @param context Map containing the input parameters
      * @return Map with the result of the service, the output parameters.
@@ -170,7 +169,6 @@ public class ScrumServices {
      * retrieveMissingScrumRevision
      * <p>
      * Use for retrieve the missing data of the Revision
-     *
      * @param ctx     The DispatchContext that this service is operating in
      * @param context Map containing the input parameters
      * @return Map with the result of the service, the output parameters.
@@ -262,7 +260,6 @@ public class ScrumServices {
      * removeDuplicateScrumRevision
      * <p>
      * Use for remove duplicate scrum revision
-     *
      * @param ctx     The DispatchContext that this service is operating in
      * @param context Map containing the input parameters
      * @return Map with the result of the service.

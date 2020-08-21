@@ -96,7 +96,6 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
 
     /**
      * Constructor, creates a new html thread.
-     *
      * @param request
      * @param response
      * @param name
@@ -116,11 +115,11 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
             session = request.getSession();
         }
         long sequenceNum = addExcelImportHistory();
-        File userFolder = FileUtil.getFile(InterfacePricatParser.tempFilesFolder + userLoginId + "/");
+        File userFolder = FileUtil.getFile(InterfacePricatParser.TEMP_FILES_FOLDER + userLoginId + "/");
         if (!userFolder.exists()) {
             userFolder.mkdirs();
         }
-        String logFileName = InterfacePricatParser.tempFilesFolder + userLoginId + "/" + sequenceNum + ".log";
+        String logFileName = InterfacePricatParser.TEMP_FILES_FOLDER + userLoginId + "/" + sequenceNum + ".log";
         initHtmlReport(request, response, true, true, logFileName);
         if (sequenceNum > 0) {
             getReport().setSequenceNum(sequenceNum);
@@ -239,7 +238,7 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
                 pricatFi = fi;
                 pricatBytes = pricatFi.get();
                 Path path = Paths.get(fi.getName());
-                pricatFile = new File(InterfacePricatParser.tempFilesFolder + userLoginId + "/" + path.getFileName().toString());
+                pricatFile = new File(InterfacePricatParser.TEMP_FILES_FOLDER + userLoginId + "/" + path.getFileName().toString());
                 FileOutputStream fos = new FileOutputStream(pricatFile);
                 fos.write(pricatBytes);
                 fos.flush();
@@ -301,15 +300,15 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
         }
         return facilities;
     }
-
+    /** getDelegator */
     public Delegator getDelegator() {
         return delegator;
     }
-
+    /** setDelegator */
     public void setDelegator(Delegator delegator) {
         this.delegator = delegator;
     }
-
+    /** addExcelImportHistory */
     public synchronized long addExcelImportHistory() {
         long latestId = 1;
         try {
@@ -322,7 +321,7 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
                     userLoginId,
                     "fileName", pricatFile == null ? "" : pricatFile.getName(), "statusId", isAlive() ? "EXCEL_IMPORTING" : "EXCEL_IMPORTED",
                     "fromDate", UtilDateTime.nowTimestamp(), "threadName", getName(), "logFileName",
-                    InterfacePricatParser.tempFilesFolder + userLoginId + "/" + latestId + ".log"));
+                    InterfacePricatParser.TEMP_FILES_FOLDER + userLoginId + "/" + latestId + ".log"));
             newHistoryValue.create();
         } catch (GenericEntityException e) {
             Debug.logError(e, MODULE);

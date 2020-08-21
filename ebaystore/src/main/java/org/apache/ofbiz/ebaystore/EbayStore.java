@@ -598,7 +598,7 @@ public class EbayStore {
                 String partyId = (productStores.get(0)).getString("partyId");
                 List<GenericValue> userLoginStore = EntityQuery.use(delegator).from("UserLogin").where("partyId", partyId).queryList();
                 if (userLoginStore.size() != 0) {
-                String    userLoginId = (userLoginStore.get(0)).getString("userLoginId");
+                String userLoginId = (userLoginStore.get(0)).getString("userLoginId");
                 result.put("userLoginId", userLoginId);
                 }
             }

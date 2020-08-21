@@ -34,7 +34,6 @@ public final class OFBizSolrLoginWorker {
 
     /**
      * An HTTP WebEvent handler that logs in a userLogin. This should run before the security check.
-     *
      * @param request The HTTP request object for the current JSP or Servlet request.
      * @param response The HTTP response object for the current JSP or Servlet request.
      * @return Return a boolean which specifies whether or not the calling Servlet or

@@ -96,30 +96,31 @@ public class WebPosTransaction {
 
         Debug.logInfo("Created WebPosTransaction [" + this.transactionId + "]", MODULE);
     }
+    /** get user login id */
     public String getUserLoginId() {
         return webPosSession.getUserLoginId();
     }
-
+    /** get drawer number */
     public int getDrawerNumber() {
         return drawerIdx + 1;
     }
-
+    /** get transaction id */
     public String getTransactionId() {
         return this.transactionId;
     }
-
+    /** get terminal id */
     public String getTerminalId() {
         return webPosSession.getId();
     }
-
+    /** get facilityId */
     public String getFacilityId() {
         return webPosSession.getFacilityId();
     }
-
+    /** get terminal log id */
     public String getTerminalLogId() {
         return txLog.getString("posTerminalLogId");
     }
-
+    /** is open */
     public boolean isOpen() {
         this.isOpen = false;
         GenericValue terminalState = this.getTerminalState();
@@ -130,19 +131,20 @@ public class WebPosTransaction {
         }
         return this.isOpen;
     }
-
+    /** get terminal state */
     public GenericValue getTerminalState() {
         Delegator delegator = webPosSession.getDelegator();
         List<GenericValue> states = null;
         try {
-            states = delegator.findList("PosTerminalState", EntityCondition.makeCondition(UtilMisc.toMap("posTerminalId", webPosSession.getId(), "startingTxId", getTransactionId())), null, null, null, false);
+            states = delegator.findList("PosTerminalState", EntityCondition.makeCondition(UtilMisc.toMap("posTerminalId", webPosSession.getId(),
+                    "startingTxId", getTransactionId())), null, null, null, false);
         } catch (GenericEntityException e) {
             Debug.logError(e, MODULE);
         }
         states = EntityUtil.filterByDate(states, UtilDateTime.nowTimestamp(), "openedDate", "closedDate", true);
         return EntityUtil.getFirst(states);
     }
-
+    /** close tax */
     public void closeTx() {
         if (UtilValidate.isNotEmpty(txLog)) {
             txLog.set("statusId", "POSTX_CLOSED");
@@ -157,7 +159,7 @@ public class WebPosTransaction {
             Debug.logInfo("Transaction closed", MODULE);
         }
     }
-
+    /** paid in out */
     public void paidInOut(String type) {
         if (UtilValidate.isNotEmpty(txLog)) {
             txLog.set("statusId", "POSTX_PAID_" + type);
@@ -168,10 +170,10 @@ public class WebPosTransaction {
                 Debug.logError(e, "Unable to store TX log - not fatal", MODULE);
             }
             webPosSession.setCurrentTransaction(null);
-            Debug.logInfo("Paid "+ type, MODULE);
+            Debug.logInfo("Paid " + type, MODULE);
         }
     }
-
+    /** modify price */
     public void modifyPrice(int cartLineIdx, BigDecimal price) {
         ShoppingCartItem item = getCart().findCartItem(cartLineIdx);
         if (UtilValidate.isNotEmpty(item)) {
@@ -181,7 +183,7 @@ public class WebPosTransaction {
             Debug.logInfo("Item " + cartLineIdx + " not found", MODULE);
         }
     }
-
+    /** calc tax */
     public void calcTax() {
         try {
             ch.calcAndAddTax(this.getStoreOrgAddress());
@@ -189,7 +191,7 @@ public class WebPosTransaction {
             Debug.logError(e, MODULE);
         }
     }
-
+    /** process sale */
     public BigDecimal processSale() throws GeneralException {
         Debug.logInfo("Process sale", MODULE);
         BigDecimal grandTotal = this.getGrandTotal();
@@ -222,7 +224,8 @@ public class WebPosTransaction {
         Debug.logInfo("Processing the payment(s)", MODULE);
         Map<String, ? extends Object> payRes = null;
         try {
-            payRes = UtilGenerics.cast(ch.processPayment(ProductStoreWorker.getProductStore(webPosSession.getProductStoreId(), webPosSession.getDelegator()), webPosSession.getUserLogin(), true));
+            payRes = UtilGenerics.cast(ch.processPayment(ProductStoreWorker.getProductStore(webPosSession.getProductStoreId(),
+                    webPosSession.getDelegator()), webPosSession.getUserLogin(), true));
         } catch (GeneralException e) {
             Debug.logError(e, MODULE);
             throw e;
@@ -270,7 +273,8 @@ public class WebPosTransaction {
 
             List<GenericValue> fcp = null;
             try {
-                fcp = facility.getRelated("FacilityContactMechPurpose", UtilMisc.toMap("contactMechPurposeTypeId", "SHIP_ORIG_LOCATION"), null, false);
+                fcp = facility.getRelated("FacilityContactMechPurpose", UtilMisc.toMap("contactMechPurposeTypeId", "SHIP_ORIG_LOCATION"),
+                        null, false);
             } catch (GenericEntityException e) {
                 Debug.logError(e, MODULE);
             }
@@ -287,35 +291,37 @@ public class WebPosTransaction {
         }
         return this.shipAddress;
     }
-
+    /** clear payments */
     public void clearPayments() {
         Debug.logInfo("all payments cleared from sale", MODULE);
         getCart().clearPayments();
     }
-
+    /** clear payment */
     public void clearPayment(int index) {
         Debug.logInfo("removing payment " + index, MODULE);
         getCart().clearPayment(index);
     }
-
+    /** clear payment */
     public void clearPayment(String id) {
         Debug.logInfo("removing payment " + id, MODULE);
         getCart().clearPayment(id);
     }
-
+    /** get payment info */
     public CartPaymentInfo getPaymentInfo(int index) {
         return getCart().getPaymentInfo(index);
     }
-
+    /** get payment method type id */
     public String getPaymentMethodTypeId(int index) {
         return getCart().getPaymentInfo(index).getPaymentMethodTypeId();
     }
-
+    /** check payment method type */
     public int checkPaymentMethodType(String paymentMethodTypeId) {
-        Map<String, ? extends Object> fields = UtilMisc.toMap("paymentMethodTypeId", paymentMethodTypeId, "productStoreId", webPosSession.getProductStoreId());
+        Map<String, ? extends Object> fields = UtilMisc.toMap("paymentMethodTypeId", paymentMethodTypeId, "productStoreId",
+                webPosSession.getProductStoreId());
         List<GenericValue> values = null;
         try {
-            values = webPosSession.getDelegator().findList("ProductStorePaymentSetting", EntityCondition.makeCondition(fields), null, null, null, true);
+            values = webPosSession.getDelegator().findList("ProductStorePaymentSetting", EntityCondition.makeCondition(fields), null, null, null,
+                    true);
         } catch (GenericEntityException e) {
             Debug.logError(e, MODULE);
         }
@@ -353,11 +359,11 @@ public class WebPosTransaction {
     public static int getInternalPaymentCode() {
         return INTERNAL_PAYMENT;
     }
-
+    /** add payment */
     public BigDecimal addPayment(String id, BigDecimal amount) {
         return this.addPayment(id, amount, null, null);
     }
-
+    /** add payment */
     public BigDecimal addPayment(String id, BigDecimal amount, String refNum, String authCode) {
         Debug.logInfo("Added payment " + id + "/" + amount, MODULE);
         if ("CASH".equals(id)) {
@@ -367,7 +373,7 @@ public class WebPosTransaction {
         getCart().addPaymentAmount(id, amount, refNum, authCode, true, true, false);
         return this.getTotalDue();
     }
-
+    /** process amount */
     public BigDecimal processAmount(BigDecimal amount) throws GeneralException {
         if (UtilValidate.isEmpty(amount)) {
             Debug.logInfo("Amount is empty; assumption is full amount : " + this.getTotalDue(), MODULE);
@@ -378,7 +384,7 @@ public class WebPosTransaction {
         }
         return amount;
     }
-
+    /** process no payment */
     public synchronized void processNoPayment(String paymentMethodTypeId) {
         try {
             BigDecimal amount = processAmount(null);
@@ -390,7 +396,7 @@ public class WebPosTransaction {
             // errors handled
         }
     }
-
+    /** process external payment */
     public synchronized void processExternalPayment(String paymentMethodTypeId, BigDecimal amount, String refNum) {
         if (refNum == null) {
             //TODO handle error message
@@ -407,7 +413,7 @@ public class WebPosTransaction {
             // errors handled
         }
     }
-
+    /** make credit card vo */
     public String makeCreditCardVo(String cardNumber, String expDate, String firstName, String lastName) {
         LocalDispatcher dispatcher = webPosSession.getDispatcher();
         String expMonth = expDate.substring(0, 2);
@@ -441,14 +447,14 @@ public class WebPosTransaction {
             return (String) svcRes.get("paymentMethodId");
         }
     }
-
+    /** set payment ref num */
     public void setPaymentRefNum(int paymentIndex, String refNum, String authCode) {
         Debug.logInfo("setting payment index reference number " + paymentIndex + " / " + refNum + " / " + authCode, MODULE);
         ShoppingCart.CartPaymentInfo inf = getCart().getPaymentInfo(paymentIndex);
         inf.setRefNum(refNum, authCode);
     }
 
-    /* CVV2 code should be entered when a card can't be swiped */
+    /** CVV2 code should be entered when a card can't be swiped */
     public void setPaymentSecurityCode(String paymentId, String refNum, String securityCode) {
         Debug.logInfo("setting payment security code " + paymentId, MODULE);
         int paymentIndex = getCart().getPaymentInfoIndex(paymentId, refNum);
@@ -457,7 +463,7 @@ public class WebPosTransaction {
         inf.setIsSwiped(false);
     }
 
-    /* Track2 data should be sent to processor when a card is swiped. */
+    /** Track2 data should be sent to processor when a card is swiped. */
     public void setPaymentTrack2(String paymentId, String refNum, String securityCode) {
         Debug.logInfo("setting payment security code " + paymentId, MODULE);
         int paymentIndex = getCart().getPaymentInfoIndex(paymentId, refNum);
@@ -466,40 +472,40 @@ public class WebPosTransaction {
         inf.setIsSwiped(true);
     }
 
-    /* Postal code should be entered when a card can't be swiped */
+    /** Postal code should be entered when a card can't be swiped */
     public void setPaymentPostalCode(String paymentId, String refNum, String postalCode) {
         Debug.logInfo("setting payment security code " + paymentId, MODULE);
         int paymentIndex = getCart().getPaymentInfoIndex(paymentId, refNum);
         ShoppingCart.CartPaymentInfo inf = getCart().getPaymentInfo(paymentIndex);
         inf.setPostalCode(postalCode);
     }
-
+    /** get tax total */
     public BigDecimal getTaxTotal() {
         return getCart().getTotalSalesTax();
     }
-
+    /** get grand total */
     public BigDecimal getGrandTotal() {
         return getCart().getGrandTotal();
     }
-
+    /** get number of payments */
     public int getNumberOfPayments() {
         return getCart().selectedPayments();
     }
-
+    /** get payment total */
     public BigDecimal getPaymentTotal() {
         return getCart().getPaymentTotal();
     }
-
+    /** get total quantity */
     public BigDecimal getTotalQuantity() {
         return getCart().getTotalQuantity();
     }
-
+    /** get total due */
     public BigDecimal getTotalDue() {
         BigDecimal grandTotal = this.getGrandTotal();
         BigDecimal paymentAmt = this.getPaymentTotal();
         return grandTotal.subtract(paymentAmt);
     }
-
+    /** add product promo code */
     public String addProductPromoCode(String code) {
         String result = getCart().addProductPromoCode(code, webPosSession.getDispatcher());
         calcTax();

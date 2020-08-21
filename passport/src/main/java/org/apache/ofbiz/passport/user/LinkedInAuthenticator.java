@@ -76,7 +76,6 @@ public class LinkedInAuthenticator implements Authenticator {
     /**
      * Method called when authenticator is first initialized (the delegator
      * object can be obtained from the LocalDispatcher)
-     *
      * @param dispatcher The ServiceDispatcher to use for this Authenticator
      */
     @Override
@@ -90,7 +89,6 @@ public class LinkedInAuthenticator implements Authenticator {
      * For LinkedIn users, we only check if the username(userLoginId) exists an
      * externalAuthId, and the externalAuthId has a valid accessToken in
      * LinkedInUser entity.
-     *
      * @param userLoginId   User's login id
      * @param password      User's password
      * @param isServiceAuth true if authentication is for a service call
@@ -129,7 +127,6 @@ public class LinkedInAuthenticator implements Authenticator {
 
     /**
      * Logs a user out
-     *
      * @param username User's username
      * @throws org.apache.ofbiz.common.authentication.api.AuthenticatorException
      *          when logout fails
@@ -140,7 +137,6 @@ public class LinkedInAuthenticator implements Authenticator {
 
     /**
      * Reads user information and syncs it to OFBiz (i.e. UserLogin, Person, etc)
-     *
      * @param userLoginId
      * @throws org.apache.ofbiz.common.authentication.api.AuthenticatorException
      *          user synchronization fails
@@ -342,7 +338,6 @@ public class LinkedInAuthenticator implements Authenticator {
 
     /**
      * Updates a user's password.
-     *
      * @param username    User's username
      * @param password    User's current password
      * @param newPassword User's new password
@@ -356,7 +351,6 @@ public class LinkedInAuthenticator implements Authenticator {
 
     /**
      * Weight of this authenticator (lower weights are run first)
-     *
      * @return the weight of this Authenicator
      */
     @Override
@@ -366,7 +360,6 @@ public class LinkedInAuthenticator implements Authenticator {
 
     /**
      * Is the user synchronzied back to OFBiz
-     *
      * @return true if the user record is copied to the OFB database
      */
     @Override
@@ -376,7 +369,6 @@ public class LinkedInAuthenticator implements Authenticator {
 
     /**
      * Is this expected to be the only authenticator, if so errors will be thrown when users cannot be found
-     *
      * @return true if this is expected to be the only Authenticator
      */
     @Override
@@ -386,7 +378,6 @@ public class LinkedInAuthenticator implements Authenticator {
 
     /**
      * Flag to test if this Authenticator is enabled
-     *
      * @return true if the Authenticator is enabled
      */
     @Override

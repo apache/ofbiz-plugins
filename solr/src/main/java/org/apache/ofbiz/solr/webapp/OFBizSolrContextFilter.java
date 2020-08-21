@@ -193,7 +193,6 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
 
     /**
      * Override this to change CoreContainer initialization
-     *
      * @return a CoreContainer to hold this server's cores
      */
     @Override

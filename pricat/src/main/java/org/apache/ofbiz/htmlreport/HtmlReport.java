@@ -557,7 +557,6 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Returns the thread parameter value.<p>
-     *
      * @return the thread parameter value
      */
     public String getParamThread(HttpServletRequest request) {
@@ -567,7 +566,6 @@ public class HtmlReport extends AbstractReport {
 
     /**
      * Returns the threadhasnext parameter value.<p>
-     *
      * @return the threadhasnext parameter value
      */
     public String getParamThreadHasNext(HttpServletRequest request) {
@@ -1188,9 +1186,7 @@ public class HtmlReport extends AbstractReport {
     /**
      * Returns the http URI of the current dialog, to be used
      * as value for the "action" attribute of a html form.<p>
-     *
      * This URI is the real one.<p>
-     *
      * @return the http URI of the current dialog
      */
     public String getDialogRealUri(HttpServletRequest request) {

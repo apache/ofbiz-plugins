@@ -67,7 +67,6 @@ public class BirtEmailServices {
     private static final String RESOURCE = "BirtUiLabels";
     /**
      * send birt mail
-     *
      * @param ctx the dispatch context
      * @param context the context
      * @return returns the result of the service execution

@@ -156,7 +156,6 @@ public abstract class AbstractOFBizAuthenticationHandler implements InterfaceOFB
     /**
      * An HTTP WebEvent handler that checks to see is a userLogin is logged out.
      * If yes, the user is forwarded to the login page.
-     *
      * @param request The HTTP request object for the current JSP or Servlet request.
      * @param response The HTTP response object for the current JSP or Servlet request.
      * @param rootElement Element root element of ldap config file
