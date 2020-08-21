@@ -49,7 +49,7 @@ public final class OpenApiUtil {
         CLASS_ALIAS.put("java.sql.Time", "String");
         CLASS_ALIAS.put("Timestamp", "Timestamp");
         CLASS_ALIAS.put("java.sql.Timestamp", "Timestamp");
-        CLASS_ALIAS.put("Integer", "Int");
+        CLASS_ALIAS.put("Integer", "Integer");
         CLASS_ALIAS.put("java.lang.Integer", "Int");
         CLASS_ALIAS.put("Long", "Long");
         CLASS_ALIAS.put("java.lang.Long", "Long");
@@ -95,6 +95,7 @@ public final class OpenApiUtil {
         JAVA_OPEN_API_MAP.put("Float", NumberSchema.class);
         JAVA_OPEN_API_MAP.put("Double", NumberSchema.class);
         JAVA_OPEN_API_MAP.put("BigDecimal", NumberSchema.class);
+        JAVA_OPEN_API_MAP.put("BigInteger", IntegerSchema.class);
         JAVA_OPEN_API_MAP.put("Timestamp", DateSchema.class);
 
     }
