@@ -318,7 +318,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
         plainFont.setFontHeightInPoints((short) 9);
 
         XSSFSheet errorSheet = null;
-        if (errorMessages.keySet().size() > 0) {
+        if (!errorMessages.keySet().isEmpty()) {
             String errorSheetName = UtilDateTime.nowDateString("yyyy-MM-dd HHmm") + " Errors";
             errorSheetName = WorkbookUtil.createSafeSheetName(errorSheetName);
             errorSheet = workbook.createSheet(errorSheetName);

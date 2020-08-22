@@ -48,7 +48,9 @@ public class JacksonConfig implements ContextResolver<ObjectMapper> {
     }
 
     /**
-     *
+     * Gets context.
+     * @param type the type
+     * @return the context
      */
     @Override
     public ObjectMapper getContext(Class<?> type) {

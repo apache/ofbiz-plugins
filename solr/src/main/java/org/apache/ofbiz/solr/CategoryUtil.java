@@ -105,7 +105,7 @@ public final class CategoryUtil {
                 Debug.logError(e, "Cannot generate trail from product category", MODULE);
             }
         }
-        if (trailElements.size() == 0) {
+        if (trailElements.isEmpty()) {
             List<String> trailElement = new ArrayList<>();
             trailElement.add(productCategoryId);
             trailElements.add(trailElement);

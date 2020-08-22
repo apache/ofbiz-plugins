@@ -235,7 +235,7 @@ public class EbayStore {
             SetStoreCategoriesCall  call = new SetStoreCategoriesCall(EbayStoreHelper.getApiContext((String) context.get("productStoreId"), locale, delegator));
 
             catalogCategories = EntityQuery.use(delegator).from("ProdCatalogCategory").where("prodCatalogId", context.get("prodCatalogId").toString(), "prodCatalogCategoryTypeId", "PCCT_EBAY_ROOT").orderBy("sequenceNum ASC").queryList();
-            if (catalogCategories != null && catalogCategories.size() > 0) {
+            if (catalogCategories != null && !catalogCategories.isEmpty()) {
                 List<StoreCustomCategoryType> listAdd = new LinkedList<StoreCustomCategoryType>();
                 List<StoreCustomCategoryType> listEdit = new LinkedList<StoreCustomCategoryType>();
                 //start at level 0 of categories
@@ -255,14 +255,14 @@ public class EbayStore {
                         }
                     }
                 }
-                if (listAdd.size() > 0) {
+                if (!listAdd.isEmpty()) {
                     req = new SetStoreCategoriesRequestType();
                     categoryArrayType = new StoreCustomCategoryArrayType();
                     categoryArrayType.setCustomCategory(toStoreCustomCategoryTypeArray(listAdd));
                     req.setStoreCategories(categoryArrayType);
                     result = excuteExportCategoryToEbayStore(call, req, StoreCategoryUpdateActionCodeType.ADD, delegator, context.get("partyId").toString(), catalogCategories, locale);
                 }
-                if (listEdit.size() > 0) {
+                if (!listEdit.isEmpty()) {
                     req = new SetStoreCategoriesRequestType();
                     categoryArrayType = new StoreCustomCategoryArrayType();
                     categoryArrayType.setCustomCategory(toStoreCustomCategoryTypeArray(listEdit));
@@ -293,7 +293,7 @@ public class EbayStore {
                                 }
                             }
                         }
-                        if (listAdd.size() > 0) {
+                        if (!listAdd.isEmpty()) {
                             req = new SetStoreCategoriesRequestType();
                             categoryArrayType = new StoreCustomCategoryArrayType();
                             categoryArrayType.setCustomCategory(toStoreCustomCategoryTypeArray(listAdd));
@@ -301,7 +301,7 @@ public class EbayStore {
                             req.setDestinationParentCategoryID(new Long(ebayParentCategoryId));
                             result = excuteExportCategoryToEbayStore(call, req, StoreCategoryUpdateActionCodeType.ADD, delegator, context.get("partyId").toString(), catalogCategories, locale);
                         }
-                        if (listEdit.size() > 0) {
+                        if (!listEdit.isEmpty()) {
                             req = new SetStoreCategoriesRequestType();
                             categoryArrayType = new StoreCustomCategoryArrayType();
                             categoryArrayType.setCustomCategory(toStoreCustomCategoryTypeArray(listEdit));
@@ -337,7 +337,7 @@ public class EbayStore {
                                         listEdit.add(childCategoryType);
                                     }
                                 }
-                                if (listAdd.size() > 0) {
+                                if (!listAdd.isEmpty()) {
                                     req = new SetStoreCategoriesRequestType();
                                     categoryArrayType = new StoreCustomCategoryArrayType();
                                     categoryArrayType.setCustomCategory(toStoreCustomCategoryTypeArray(listAdd));
@@ -345,7 +345,7 @@ public class EbayStore {
                                     req.setDestinationParentCategoryID(new Long(ebayParentCategoryId));
                                     result = excuteExportCategoryToEbayStore(call, req, StoreCategoryUpdateActionCodeType.ADD, delegator, context.get("partyId").toString(), catalogCategories, locale);
                                 }
-                                if (listEdit.size() > 0) {
+                                if (!listEdit.isEmpty()) {
                                     req = new SetStoreCategoriesRequestType();
                                     categoryArrayType = new StoreCustomCategoryArrayType();
                                     categoryArrayType.setCustomCategory(toStoreCustomCategoryTypeArray(listEdit));
@@ -370,7 +370,7 @@ public class EbayStore {
     }
     public static StoreCustomCategoryType[] toStoreCustomCategoryTypeArray(List<StoreCustomCategoryType> list) {
         StoreCustomCategoryType[] storeCustomCategoryTypeArry = null;
-            if (list != null && list.size() > 0) {
+            if (list != null && !list.isEmpty()) {
                 storeCustomCategoryTypeArry = new StoreCustomCategoryType[list.size()];
                 int i = 0;
                 for (StoreCustomCategoryType val : list) {
@@ -594,10 +594,10 @@ public class EbayStore {
         String productStoreId = (String) context.get("productStoreId");
         try {
             List<GenericValue> productStores = EntityQuery.use(delegator).from("ProductStoreRole").where("productStoreId", productStoreId, "roleTypeId", "EBAY_ACCOUNT").queryList();
-            if (productStores.size() != 0) {
+            if (!productStores.isEmpty()) {
                 String partyId = (productStores.get(0)).getString("partyId");
                 List<GenericValue> userLoginStore = EntityQuery.use(delegator).from("UserLogin").where("partyId", partyId).queryList();
-                if (userLoginStore.size() != 0) {
+                if (!userLoginStore.isEmpty()) {
                 String userLoginId = (userLoginStore.get(0)).getString("userLoginId");
                 result.put("userLoginId", userLoginId);
                 }
@@ -624,10 +624,10 @@ public class EbayStore {
             String partyId = null;
             try {
                 List<GenericValue> productStoreRoles = EntityQuery.use(delegator).from("ProductStoreRole").where("productStoreId", context.get("productStoreId").toString(), "roleTypeId", "EBAY_ACCOUNT").queryList();
-                if (productStoreRoles.size() != 0) {
+                if (!productStoreRoles.isEmpty()) {
                     partyId = (String) productStoreRoles.get(0).get("partyId");
                     List<GenericValue> userLogins = EntityQuery.use(delegator).from("UserLogin").where("partyId", partyId).queryList();
-                    if (userLogins.size() != 0) {
+                    if (!userLogins.isEmpty()) {
                         userLoginId = (String) userLogins.get(0).get("userLoginId");
                     }
 
@@ -1756,7 +1756,7 @@ public class EbayStore {
             serviceMap.put("userLogin", userLogin);
             Map<String, Object> bidderTest = UtilGenerics.checkMap(getEbayAllBidders(dctx, serviceMap));
             List<Map<String, String>> test = UtilGenerics.checkList(bidderTest.get("allBidders"));
-            if (test.size() != 0) {
+            if (!test.isEmpty()) {
                 verify.setRecipientBidderUserID(test.get(0).get("userId"));
             }
             result.put("checkVerify", true);

@@ -259,7 +259,7 @@ public class HtmlReport extends AbstractReport {
             }
         }
         indexNext = isTransient ? 0 : indexEnd;
-        if (isTransient && logFileOutputStream != null && logResult.toString().length() > 0) {
+        if (isTransient && logFileOutputStream != null && !logResult.toString().isEmpty()) {
             try {
                 logFileOutputStream.write((logResult.toString() + "\n").getBytes());
                 logFileOutputStream.flush();

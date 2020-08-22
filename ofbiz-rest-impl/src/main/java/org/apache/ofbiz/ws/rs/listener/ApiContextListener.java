@@ -33,7 +33,6 @@ public class ApiContextListener implements ServletContextListener {
     private static ServletContext servletContext;
 
     /**
-     *
      */
     public void contextInitialized(ServletContextEvent sce) {
         servletContext = sce.getServletContext();
@@ -46,7 +45,6 @@ public class ApiContextListener implements ServletContextListener {
     }
 
     /**
-     *
      */
     public void contextDestroyed(ServletContextEvent sce) {
         ServletContext context = sce.getServletContext();

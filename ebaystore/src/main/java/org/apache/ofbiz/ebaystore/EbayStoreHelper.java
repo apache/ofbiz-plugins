@@ -192,7 +192,7 @@ public class EbayStoreHelper {
                 return ebayCategoryId;
             }
             productCategoryRoles = EntityQuery.use(delegator).from("ProductCategoryRole").where("productCategoryId", productCategoryId, "partyId", partyId, "roleTypeId", "EBAY_ACCOUNT").queryList();
-            if (productCategoryRoles != null && productCategoryRoles.size()>0) {
+            if (productCategoryRoles != null && !productCategoryRoles.isEmpty()) {
                 for (GenericValue productCategoryRole : productCategoryRoles) {
                     ebayCategoryId = productCategoryRole.getString("comments");
                 }
@@ -275,7 +275,7 @@ public class EbayStoreHelper {
             String jobId = ebayProductPref.getString("autoPrefJobId");
             if (UtilValidate.isNotEmpty(jobId)) {
                 List<GenericValue> jobs = EntityQuery.use(delegator).from("JobSandbox").where("parentJobId", jobId, "statusId", "SERVICE_PENDING").queryList();
-                if (jobs.size() == 0) {
+                if (jobs.isEmpty()) {
                     Map<String, Object>inMap = new HashMap<>();
                     inMap.put("jobId", jobId);
                     inMap.put("userLogin", userLogin);
@@ -621,7 +621,7 @@ public class EbayStoreHelper {
         if (orderHeader != null) {
             String externalId = orderHeader.getString("externalId").toString();
             List<GenericValue> orderShipment = orderHeader.getRelated("OrderShipment", null, null, false);
-            if (orderShipment.size() > 0) {
+            if (!orderShipment.isEmpty()) {
                 List<GenericValue> trackingOrders = orderHeader.getRelated("TrackingCodeOrder", null, null, false);
                 ApiContext apiContext = EbayStoreHelper.getApiContext(productStoreId, locale, delegator);
                 GetOrdersCall ordersCall = new GetOrdersCall(apiContext);
@@ -649,7 +649,7 @@ public class EbayStoreHelper {
                             AddOrderResponseType addResp = null;
                             OrderType newOrder = new OrderType();
                             ShippingDetailsType shippingDetail = order.getShippingDetails();
-                            if (trackingOrders.size() > 0) {
+                            if (!trackingOrders.isEmpty()) {
                                 ShipmentTrackingDetailsType[] trackDetails = new ShipmentTrackingDetailsType[trackingOrders.size()];
                                 for (int i = 0; i < trackDetails.length; i++) {
                                     ShipmentTrackingDetailsType track = new ShipmentTrackingDetailsType();

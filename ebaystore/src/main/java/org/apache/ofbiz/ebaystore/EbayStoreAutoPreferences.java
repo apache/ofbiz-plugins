@@ -189,7 +189,7 @@ public class EbayStoreAutoPreferences {
                                     LeaveFeedbackCall leaveFeedbackCall = new LeaveFeedbackCall(apiContext);
                                     FeedbackDetailType detail = new FeedbackDetailType();
                                     // ramdom comments
-                                    if (list.size() > 0) {
+                                    if (!list.isEmpty()) {
                                         Collections.shuffle(list, new Random());
                                         comment = list.get(0);
                                     }
@@ -256,7 +256,7 @@ public class EbayStoreAutoPreferences {
             }
             for (int i = 1; i <= 5; i++) {
                 String comment = (String) paramMap.get("comment_".concat(String.valueOf(i)));
-                if (comment != null && comment.length() > 0) {
+                if (comment != null && !comment.isEmpty()) {
                     if (comments == null) {
                         comments = comment;
                     } else {
@@ -408,7 +408,7 @@ public class EbayStoreAutoPreferences {
             serviceMap.put("userLogin", userLogin);
             //ProductStore
             List<GenericValue> productStores = EntityQuery.use(delegator).from("EbayProductStorePref").where("autoPrefJobId", jobId).queryList();
-            if (productStores.size() != 0) {
+            if (!productStores.isEmpty()) {
                 // get auto preference setting
                 String productStoreId = productStores.get(0).getString("productStoreId");
                 String condition1 = productStores.get(0).getString("condition1");
@@ -432,7 +432,7 @@ public class EbayStoreAutoPreferences {
                         return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultService));
                     }
                     List<Map<String, Object>> soldItems = UtilGenerics.checkList(serviceResult.get("soldItems"));
-                    if (soldItems.size() != 0) {
+                    if (!soldItems.isEmpty()) {
                         for (Map<String, Object> soldItemMap : soldItems) {
                             if (UtilValidate.isNotEmpty(soldItemMap.get("itemId"))) {
                                 GenericValue productCheck = EntityQuery.use(delegator).from("Product").where("productId", soldItemMap.get("itemId")).queryOne();
@@ -448,7 +448,7 @@ public class EbayStoreAutoPreferences {
                                     }
                                     // ProductRole (VENDOR)
                                     List<GenericValue> productRole = EntityQuery.use(delegator).from("ProductRole").where("partyId", partyId, "productId", soldItemMap.get("itemId"), "roleTypeId", "VENDOR").queryList();
-                                    if (productRole.size() == 0) {
+                                    if (productRole.isEmpty()) {
                                         Map<String, Object> addRole = new HashMap<>();
                                         addRole.put("productId", soldItemMap.get("itemId"));
                                         addRole.put("roleTypeId", "VENDOR");
@@ -474,7 +474,7 @@ public class EbayStoreAutoPreferences {
                     }
                     List<Map<String, Object>> activeItems = UtilGenerics.checkList(serviceResult.get("activeItems"));
                     List<String> activeItemMaps = new LinkedList<>();
-                    if (activeItems.size() != 0) {
+                    if (!activeItems.isEmpty()) {
                         for (Map<String, Object> activeItem : activeItems) {
                             Map<String, Object> activeItemMap = UtilGenerics.checkMap(activeItem);
                             if (UtilValidate.isNotEmpty(activeItemMap.get("itemId"))) {
@@ -485,7 +485,7 @@ public class EbayStoreAutoPreferences {
                     //check product role
                     List<GenericValue> productRoles = EntityQuery.use(delegator).from("ProductRole").where("partyId", partyId, "roleTypeId", "VENDOR").queryList();
                     List<String> productRoleIds = new LinkedList<>();
-                    if (productRoles.size() != 0) {
+                    if (!productRoles.isEmpty()) {
                         for (GenericValue productRole : productRoles) {
                             String productId = productRole.getString("productId");
                             productRoleIds.add(productId);
@@ -501,7 +501,7 @@ public class EbayStoreAutoPreferences {
                     EntityCondition productRole = EntityCondition.makeCondition("productId", EntityOperator.IN, productRoleIds);
                     andExpr.add(productRole);
                     List<GenericValue> itemsToRelist = EntityQuery.use(delegator).from("Product").where(andExpr).queryList();
-                    if (itemsToRelist.size() != 0) {
+                    if (!itemsToRelist.isEmpty()) {
                         //re-list sold items and not active
                         ApiContext apiContext = EbayStoreHelper.getApiContext(productStoreId, locale, delegator);
                         for (GenericValue genericValue : itemsToRelist) {
@@ -533,7 +533,7 @@ public class EbayStoreAutoPreferences {
         try {
             GenericValue userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "system").queryOne();
             List<GenericValue> productStores = EntityQuery.use(delegator).from("EbayProductStorePref").where("autoPrefJobId", jobId).queryList();
-            if (productStores.size() != 0) {
+            if (!productStores.isEmpty()) {
                 // get automatic setting
                 String productStoreId = productStores.get(0).getString("productStoreId");
                 String condition1 = productStores.get(0).getString("condition1");
@@ -575,7 +575,7 @@ public class EbayStoreAutoPreferences {
                     }
                 }
                 // Dispute items
-                if (disputeReason != null && disputeExplanation != null && itemsToDispute.size() != 0) {
+                if (disputeReason != null && disputeExplanation != null && !itemsToDispute.isEmpty()) {
                     ApiContext apiContext = EbayStoreHelper.getApiContext(productStoreId, locale, delegator);
                     DetailLevelCodeType[] detailLevels = new DetailLevelCodeType[]{
                             DetailLevelCodeType.RETURN_ALL,
@@ -606,7 +606,7 @@ public class EbayStoreAutoPreferences {
         try {
             GenericValue userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "system").queryOne();
             List<GenericValue> productStores = EntityQuery.use(delegator).from("EbayProductStorePref").where("autoPrefJobId", jobId).queryList();
-            if (productStores.size() != 0) {
+            if (!productStores.isEmpty()) {
                 // get automatic setting
                 String productStoreId = productStores.get(0).getString("productStoreId");
                 String condition1 = productStores.get(0).getString("condition1");
@@ -648,7 +648,7 @@ public class EbayStoreAutoPreferences {
                     }
                 }
                 // Dispute items
-                if (disputeReason != null && disputeExplanation != null && itemsToDispute.size() != 0) {
+                if (disputeReason != null && disputeExplanation != null && !itemsToDispute.isEmpty()) {
                     ApiContext apiContext = EbayStoreHelper.getApiContext(productStoreId, locale, delegator);
                     DetailLevelCodeType[] detailLevels = new DetailLevelCodeType[]{
                             DetailLevelCodeType.RETURN_ALL,
@@ -775,7 +775,7 @@ public class EbayStoreAutoPreferences {
                         Map<String, Object> mymap = new HashMap<>();
                         mymap.put("group", "");
                         mymap.put("soldorder", sellingManagerSoldOrder);
-                        if (h.size() > 0) {
+                        if (!h.isEmpty()) {
                             Enumeration<String> enums = h.keys();
                             String key = "";
                             while (enums.hasMoreElements()) {
@@ -810,7 +810,7 @@ public class EbayStoreAutoPreferences {
                                 Map<String, Object> myMap = soldGroupList.get(j);
                                 SellingManagerSoldOrderType soldorder = (SellingManagerSoldOrderType) myMap.get("soldorder");
                                 Timestamp createdate = UtilDateTime.toTimestamp(soldorder.getCreationTime().getTime());
-                                if (myMap.get("group").toString().length() == 0) {
+                                if (myMap.get("group").toString().isEmpty()) {
                                     beginDate = createdate;
                                 }
                                 beginDate = findStartDate(beginDate, soldGroupList);
@@ -911,7 +911,7 @@ public class EbayStoreAutoPreferences {
             SellingManagerSoldOrderType soldorder = (SellingManagerSoldOrderType) inMap.get("soldorder");
             Timestamp createTimestamp = UtilDateTime.toTimestamp(soldorder.getCreationTime().getTime());
             String group = (String) inMap.get("group");
-            if (createTimestamp.before(lessStartTimestamp) && group.length() == 0) {
+            if (createTimestamp.before(lessStartTimestamp) && group.isEmpty()) {
                 lessStartTimestamp = createTimestamp;
             }
         }
@@ -923,7 +923,7 @@ public class EbayStoreAutoPreferences {
         for (Map<String, Object> inMap : inList) {
             String group = inMap.get("group").toString();
             SellingManagerSoldOrderType soldorder = (SellingManagerSoldOrderType) inMap.get("soldorder");
-            if (group.length() == 0) {
+            if (group.isEmpty()) {
                 Timestamp createtimestamp = UtilDateTime.toTimestamp(soldorder.getCreationTime().getTime());
                 if (((createtimestamp.equals(startTimestamp)) || (createtimestamp.after(startTimestamp))) && (createtimestamp.before(endDate))) {
                     inMap.put("group", "" + groupRunning);
@@ -945,7 +945,7 @@ public class EbayStoreAutoPreferences {
                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultSold));
             }
             List<Map<String, Object>> soldItems = UtilGenerics.checkList(resultSold.get("soldItems"));
-            if (soldItems.size() != 0) {
+            if (!soldItems.isEmpty()) {
                 for (Map<String, Object> item : soldItems) {
                     Timestamp lastestTime = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp(), 1);
                     Date creationDate = (Date) item.get("creationTime");
@@ -963,7 +963,7 @@ public class EbayStoreAutoPreferences {
                         }
                         List<Map<String, Object>> allBidders = UtilGenerics.checkList(resultBid.get("allBidders"));
 
-                        if (allBidders.size() != 0) {
+                        if (!allBidders.isEmpty()) {
                             // call to send email to bidder
                             for (Map<String, Object> bidder : allBidders) {
                                 UserType user = (UserType) bidder.get("bidder");
@@ -1020,7 +1020,7 @@ public class EbayStoreAutoPreferences {
                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultSold));
             }
             List<Map<String, Object>> soldItems = UtilGenerics.checkList(resultSold.get("soldItems"));
-            if (soldItems.size() != 0) {
+            if (!soldItems.isEmpty()) {
                 for (Map<String, Object> item : soldItems) {
                     String shippedStatus = item.get("shippedStatus").toString();
                     Timestamp lastestTime = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp(), 1);
@@ -1355,7 +1355,7 @@ public class EbayStoreAutoPreferences {
                             }
                         }
 
-                        if (acceptBestOfferIndexId.size() > 0) {
+                        if (!acceptBestOfferIndexId.isEmpty()) {
                             int quantityAvailable = inventoryQuantityItem;
                             acceptBestOfferIndexId.sort(null);
                             RespondToBestOfferCall respondAcceptBestOfferCall = new RespondToBestOfferCall(apiContext);

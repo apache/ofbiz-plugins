@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.swagger.v3.oas.models.media.ArraySchema;
+import io.swagger.v3.oas.models.media.BooleanSchema;
 import io.swagger.v3.oas.models.media.DateSchema;
 import io.swagger.v3.oas.models.media.IntegerSchema;
 import io.swagger.v3.oas.models.media.MapSchema;
@@ -48,7 +49,7 @@ public final class OpenApiUtil {
         CLASS_ALIAS.put("java.sql.Time", "String");
         CLASS_ALIAS.put("Timestamp", "Timestamp");
         CLASS_ALIAS.put("java.sql.Timestamp", "Timestamp");
-        CLASS_ALIAS.put("Integer", "Int");
+        CLASS_ALIAS.put("Integer", "Integer");
         CLASS_ALIAS.put("java.lang.Integer", "Int");
         CLASS_ALIAS.put("Long", "Long");
         CLASS_ALIAS.put("java.lang.Long", "Long");
@@ -82,15 +83,19 @@ public final class OpenApiUtil {
         JAVA_OPEN_API_MAP.put("String", StringSchema.class);
         JAVA_OPEN_API_MAP.put("Integer", IntegerSchema.class);
         JAVA_OPEN_API_MAP.put("Long", IntegerSchema.class);
+        JAVA_OPEN_API_MAP.put("Boolean", BooleanSchema.class);
         JAVA_OPEN_API_MAP.put("Map", MapSchema.class);
         JAVA_OPEN_API_MAP.put("GenericEntity", MapSchema.class);
         JAVA_OPEN_API_MAP.put("GenericPK", MapSchema.class);
         JAVA_OPEN_API_MAP.put("GenericValue", MapSchema.class);
         JAVA_OPEN_API_MAP.put("HashMap", MapSchema.class);
         JAVA_OPEN_API_MAP.put("List", ArraySchema.class);
+        JAVA_OPEN_API_MAP.put("Set", ArraySchema.class);
+        JAVA_OPEN_API_MAP.put("Collection", ArraySchema.class);
         JAVA_OPEN_API_MAP.put("Float", NumberSchema.class);
         JAVA_OPEN_API_MAP.put("Double", NumberSchema.class);
         JAVA_OPEN_API_MAP.put("BigDecimal", NumberSchema.class);
+        JAVA_OPEN_API_MAP.put("BigInteger", IntegerSchema.class);
         JAVA_OPEN_API_MAP.put("Timestamp", DateSchema.class);
 
     }

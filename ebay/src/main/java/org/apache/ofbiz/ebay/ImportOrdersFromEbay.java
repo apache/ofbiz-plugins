@@ -66,7 +66,7 @@ public class ImportOrdersFromEbay {
             StringBuffer sellerTransactionsItemsXml = new StringBuffer();
 
             if (!ServiceUtil.isFailure(buildGetSellerTransactionsRequest(context, sellerTransactionsItemsXml,
-                eBayConfigResult.get("token").toString()))) {
+                    eBayConfigResult.get("token").toString()))) {
                 result = EbayHelper.postItem(eBayConfigResult.get("xmlGatewayUri").toString(), sellerTransactionsItemsXml, eBayConfigResult.get(
                     "devID").toString(), eBayConfigResult.get("appID").toString(), eBayConfigResult.get("certID").toString(),
                     "GetSellerTransactions", eBayConfigResult.get("compatibilityLevel").toString(), eBayConfigResult.get("siteID").toString());
@@ -170,7 +170,7 @@ public class ImportOrdersFromEbay {
             StringBuffer completeSaleXml = new StringBuffer();
 
             if (!ServiceUtil.isFailure(buildCompleteSaleRequest(delegator, locale, externalId, transactionId, context, completeSaleXml,
-                eBayConfigResult.get("token").toString()))) {
+                    eBayConfigResult.get("token").toString()))) {
                 result = EbayHelper.postItem(eBayConfigResult.get("xmlGatewayUri").toString(), completeSaleXml,
                     eBayConfigResult.get("devID").toString(), eBayConfigResult.get("appID").toString(), eBayConfigResult.get("certID").toString(),
                     "CompleteSale", eBayConfigResult.get("compatibilityLevel").toString(), eBayConfigResult.get("siteID").toString());
@@ -196,7 +196,7 @@ public class ImportOrdersFromEbay {
         if (orders == null) {
             Debug.logError("Error :" + errorMessage.toString(), MODULE);
             return ServiceUtil.returnFailure(errorMessage.toString());
-        } else if (orders.size() == 0) {
+        } else if (orders.isEmpty()) {
             Debug.logError("No orders found", MODULE);
             return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.noOrdersFound", locale));
         } else {
@@ -238,7 +238,7 @@ public class ImportOrdersFromEbay {
                 UtilXml.addChildElementValue(transElem, "ModTimeFrom", fromDateOut, transDoc);
             } else {
                 Debug.logError("Cannot convert from date from yyyy-MM-dd HH:mm:ss.SSS date format to yyyy-MM-dd'T'HH:mm:ss.SSS'Z' date format",
-                    MODULE);
+                        MODULE);
                 return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.cannotConvertFromDate", locale));
             }
 
@@ -248,7 +248,7 @@ public class ImportOrdersFromEbay {
                 UtilXml.addChildElementValue(transElem, "ModTimeTo", fromDateOut, transDoc);
             } else {
                 Debug.logError("Cannot convert thru date from yyyy-MM-dd HH:mm:ss.SSS date format to yyyy-MM-dd'T'HH:mm:ss.SSS'Z' date format",
-                    MODULE);
+                        MODULE);
                 return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.cannotConvertThruDate", locale));
             }
             //Debug.logInfo("The value of generated string is ======= " + UtilXml.writeXmlDocument(transDoc), MODULE);
@@ -256,7 +256,7 @@ public class ImportOrdersFromEbay {
         } catch (Exception e) {
             Debug.logError("Exception during building get seller transactions request", MODULE);
             return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay"
-                + ".exceptionDuringBuildingGetSellerTransactionRequest", locale));
+                    + ".exceptionDuringBuildingGetSellerTransactionRequest", locale));
         }
         return ServiceUtil.returnSuccess();
     }
@@ -269,7 +269,7 @@ public class ImportOrdersFromEbay {
         try {
             if (externalId == null) {
                 return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay"
-                    + ".errorDuringBuildItemAndTransactionIdFromExternalId", locale));
+                        + ".errorDuringBuildItemAndTransactionIdFromExternalId", locale));
             }
 
             Document transDoc = UtilXml.makeEmptyXmlDocument("CompleteSaleRequest");
@@ -416,7 +416,7 @@ public class ImportOrdersFromEbay {
                                         order.put("shippingAddressStreet2", UtilXml.childElementValue(shippingAddressElement, "Street2", ""));
                                         order.put("shippingAddressCityName", UtilXml.childElementValue(shippingAddressElement, "CityName", ""));
                                         order.put("shippingAddressStateOrProvince", UtilXml.childElementValue(shippingAddressElement,
-                                            "StateOrProvince", ""));
+                                                "StateOrProvince", ""));
                                         order.put("shippingAddressCountry", UtilXml.childElementValue(shippingAddressElement, "Country", ""));
                                         order.put("shippingAddressCountryName", UtilXml.childElementValue(shippingAddressElement, "CountryName", ""));
                                         order.put("shippingAddressPhone", UtilXml.childElementValue(shippingAddressElement, "Phone", ""));
@@ -457,9 +457,10 @@ public class ImportOrdersFromEbay {
                                         Element taxJurisdictionElement = taxJurisdictionElemIter.next();
 
                                         order.put("jurisdictionID", UtilXml.childElementValue(taxJurisdictionElement, "JurisdictionID", ""));
-                                        order.put("jurisdictionSalesTaxPercent", UtilXml.childElementValue(taxJurisdictionElement, "SalesTaxPercent", "0"));
+                                        order.put("jurisdictionSalesTaxPercent", UtilXml.childElementValue(taxJurisdictionElement,
+                                                "SalesTaxPercent", "0"));
                                         order.put("jurisdictionShippingIncludedInTax", UtilXml.childElementValue(taxJurisdictionElement,
-                                            "ShippingIncludedInTax", "0"));
+                                                "ShippingIncludedInTax", "0"));
                                     }
                                 }
                             }
@@ -541,11 +542,12 @@ public class ImportOrdersFromEbay {
                             while (externalTransactionElemIter.hasNext()) {
                                 Element externalTransactionElement = externalTransactionElemIter.next();
                                 order.put("externalTransactionID", UtilXml.childElementValue(externalTransactionElement, "ExternalTransactionID",
-                                    ""));
-                                order.put("externalTransactionTime", UtilXml.childElementValue(externalTransactionElement, "ExternalTransactionTime", ""));
+                                        ""));
+                                order.put("externalTransactionTime", UtilXml.childElementValue(externalTransactionElement, "ExternalTransactionTime",
+                                        ""));
                                 order.put("feeOrCreditAmount", UtilXml.childElementValue(externalTransactionElement, "FeeOrCreditAmount", "0"));
                                 order.put("paymentOrRefundAmount", UtilXml.childElementValue(externalTransactionElement, "PaymentOrRefundAmount",
-                                    "0"));
+                                        "0"));
                             }
 
                             // retrieve shipping service selected
@@ -555,11 +557,11 @@ public class ImportOrdersFromEbay {
                                 Element shippingServiceSelectedElement = shippingServiceSelectedElemIter.next();
                                 order.put("shippingService", UtilXml.childElementValue(shippingServiceSelectedElement, "ShippingService", ""));
                                 order.put("shippingServiceCost", UtilXml.childElementValue(shippingServiceSelectedElement, "ShippingServiceCost",
-                                    "0"));
+                                        "0"));
 
                                 String incuranceCost = UtilXml.childElementValue(shippingServiceSelectedElement, "ShippingInsuranceCost", "0");
                                 String additionalCost = UtilXml.childElementValue(shippingServiceSelectedElement, "ShippingServiceAdditionalCost",
-                                    "0");
+                                        "0");
                                 String surchargeCost = UtilXml.childElementValue(shippingServiceSelectedElement, "ShippingSurcharge", "0");
 
                                 double shippingInsuranceCost = 0;
@@ -707,7 +709,7 @@ public class ImportOrdersFromEbay {
                 double shippingAmount = Double.parseDouble(shippingCost);
                 if (shippingAmount > 0) {
                     GenericValue shippingAdjustment = EbayHelper.makeOrderAdjustment(delegator, "SHIPPING_CHARGES", cart.getOrderId(), null, null,
-                        shippingAmount, 0.0);
+                            shippingAmount, 0.0);
                     if (shippingAdjustment != null) {
                         cart.addAdjustment(shippingAdjustment);
                     }
@@ -720,7 +722,7 @@ public class ImportOrdersFromEbay {
                 double shippingAdditionalCost = Double.parseDouble(shippingTotalAdditionalCost);
                 if (shippingAdditionalCost > 0) {
                     GenericValue shippingAdjustment = EbayHelper.makeOrderAdjustment(delegator, "MISCELLANEOUS_CHARGE", cart.getOrderId(), null,
-                        null, shippingAdditionalCost, 0.0);
+                            null, shippingAdditionalCost, 0.0);
                     if (shippingAdjustment != null) {
                         cart.addAdjustment(shippingAdjustment);
                     }
@@ -738,7 +740,7 @@ public class ImportOrdersFromEbay {
                         salesPercent = Double.parseDouble(salesTaxPercent);
                     }
                     GenericValue salesTaxAdjustment = EbayHelper.makeOrderAdjustment(delegator, "SALES_TAX", cart.getOrderId(), null, null,
-                        salesTaxAmountTotal, salesPercent);
+                            salesTaxAmountTotal, salesPercent);
                     if (salesTaxAdjustment != null) {
                         cart.addAdjustment(salesTaxAdjustment);
                     }
@@ -793,7 +795,7 @@ public class ImportOrdersFromEbay {
                     EbayHelper.createPartyPhone(dispatcher, partyId, (String) parameters.get("shippingAddressPhone"), userLogin);
                     Debug.logInfo("Creating association to eBay buyer for party: " + partyId, MODULE);
                     EbayHelper.createEbayCustomer(dispatcher, partyId, (String) parameters.get("ebayUserIdBuyer"), (String) parameters.get(
-                        "eiasTokenBuyer"), userLogin);
+                            "eiasTokenBuyer"), userLogin);
                     String emailBuyer = (String) parameters.get("emailBuyer");
                     if (UtilValidate.isNotEmpty(emailBuyer) && !"Invalid Request".equalsIgnoreCase(emailBuyer)) {
                         Debug.logInfo("Creating new email for party: " + partyId, MODULE);
@@ -835,7 +837,7 @@ public class ImportOrdersFromEbay {
                     if (approved) {
                         Debug.logInfo("Creating payment for approved order.", MODULE);
                         EbayHelper.createPaymentFromPaymentPreferences(delegator, dispatcher, userLogin, orderId, externalId, cart.getOrderDate(),
-                            amountPaid, partyId);
+                                amountPaid, partyId);
                         Debug.logInfo("Payment created.", MODULE);
                     }
                 }
@@ -852,8 +854,8 @@ public class ImportOrdersFromEbay {
     private static GenericValue externalOrderExists(Delegator delegator, String externalId) throws GenericEntityException {
         Debug.logInfo("Checking for existing externalId: " + externalId, MODULE);
         EntityCondition condition = EntityCondition.makeCondition(UtilMisc.toList(EntityCondition.makeCondition("externalId",
-            EntityComparisonOperator.EQUALS, externalId), EntityCondition.makeCondition("statusId", EntityComparisonOperator.NOT_EQUAL,
-            "ORDER_CANCELLED")), EntityComparisonOperator.AND);
+                EntityComparisonOperator.EQUALS, externalId), EntityCondition.makeCondition("statusId", EntityComparisonOperator.NOT_EQUAL,
+                "ORDER_CANCELLED")), EntityComparisonOperator.AND);
         GenericValue orderHeader = EntityQuery.use(delegator).from("OrderHeader").where(condition).cache(true).queryFirst();
         return orderHeader;
     }

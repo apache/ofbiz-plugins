@@ -16,11 +16,6 @@
   specific language governing permissions and limitations
   under the License.
   -->
-<script type="application/javascript"
-        src="<@ofbizContentUrl>/common/js/jquery/plugins/jsTree/jquery.jstree.js</@ofbizContentUrl>"></script>
-<script type="application/javascript"
-        src="<@ofbizContentUrl>/common/js/jquery/ui/js/jquery.cookie-1.4.0.js</@ofbizContentUrl>"></script>
-
 <script type="application/javascript">
   <#-- some labels are not unescaped in the JSON object so we have to do this manuely -->
   function unescapeHtmlText(text) {
@@ -74,19 +69,24 @@
 
   <#-------------------------------------------------------------------------------------create Tree-->
   function createTree() {
-    jQuery(function () {
-      jQuery("#tree").jstree({
-        "themes": {
-          "theme": "classic",
-          "icons": false
-        },
-        "cookies": {
-          "cookie_options": {path: '/'}
-        },
-        "plugins": ["themes", "json_data", "cookies"],
-        "json_data": {
-          "data": rawdata
-        }
+    importLibrary(["/common/js/jquery/ui/js/jquery.cookie-1.4.0.js"], function(){
+      importLibrary(["/common/js/jquery/plugins/jsTree/jquery.jstree.js"], function(){
+        jQuery(function () {
+          jQuery("#tree").jstree({
+            "themes": {
+              "theme": "classic",
+              "url": "/common/js/jquery/plugins/jsTree/themes/classic/style.css",
+              "icons": false
+            },
+            "cookies": {
+              "cookie_options": {path: '/'}
+            },
+            "plugins": ["themes", "json_data", "cookies"],
+            "json_data": {
+              "data": rawdata
+            }
+          });
+        });
       });
     });
   }

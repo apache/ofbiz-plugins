@@ -30,8 +30,13 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 public class LinkSerializer extends JsonSerializer<javax.ws.rs.core.Link> {
     static final String HREF_PROPERTY = "href";
 
+
     /**
-     *
+     * Serialize.
+     * @param link               the link
+     * @param jsonGenerator      the json generator
+     * @param serializerProvider the serializer provider
+     * @throws IOException the io exception
      */
     public void serialize(Link link, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartObject();

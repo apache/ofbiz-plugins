@@ -121,12 +121,12 @@ public abstract class AbstractReport implements InterfaceReport {
 
     @Override
     public boolean hasError() {
-        return (errors.size() > 0);
+        return (!errors.isEmpty());
     }
 
     @Override
     public boolean hasWarning() {
-        return (warnings.size() > 0);
+        return (!warnings.isEmpty());
     }
 
     @Override

@@ -85,13 +85,13 @@ public class EbayOrderServices {
             Map<String, Object> eBayConfigResult = EbayHelper.buildEbayConfig(context, delegator);
             if (UtilValidate.isEmpty(eBayConfigResult)) {
                 String eBayConfigErrorMsg = UtilProperties.getMessage(RESOURCE, "EbayConfigurationSettingsAreMissingForConnectingToEbayServer",
-                    locale);
+                        locale);
                 return ServiceUtil.returnError(eBayConfigErrorMsg);
             }
 
             StringBuffer sellerTransactionsItemsXml = new StringBuffer();
             if (!ServiceUtil.isFailure(buildGetSellerTransactionsRequest(context, sellerTransactionsItemsXml,
-                eBayConfigResult.get("token").toString()))) {
+                    eBayConfigResult.get("token").toString()))) {
                 result = EbayHelper.postItem(eBayConfigResult.get("xmlGatewayUri").toString(), sellerTransactionsItemsXml, eBayConfigResult.get(
                     "devID").toString(), eBayConfigResult.get("appID").toString(), eBayConfigResult.get("certID").toString(),
                     "GetSellerTransactions", eBayConfigResult.get("compatibilityLevel").toString(), eBayConfigResult.get("siteID").toString());
@@ -287,7 +287,7 @@ public class EbayOrderServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         if (isGetSellerTransactionsCall) {
             List<Map<String, Object>> getSellerTransactionList = readGetSellerTransactionResponse(responseMsg, locale, (String) context.get(
-                "productStoreId"), delegator, dispatcher, errorMessage, userLogin);
+                    "productStoreId"), delegator, dispatcher, errorMessage, userLogin);
             if (UtilValidate.isNotEmpty(getSellerTransactionList)) {
                 orderList.addAll(getSellerTransactionList);
             }
@@ -295,7 +295,7 @@ public class EbayOrderServices {
             return ServiceUtil.returnSuccess();
         } else if (isGetOrdersCall) {
             List<Map<String, Object>> getOrdersList = readGetOrdersResponse(responseMsg, locale, (String) context.get("productStoreId"), delegator,
-                dispatcher, errorMessage, userLogin);
+                    dispatcher, errorMessage, userLogin);
             if (UtilValidate.isNotEmpty(getOrdersList)) {
                 orderList.addAll(getOrdersList);
             }
@@ -304,7 +304,7 @@ public class EbayOrderServices {
         } else if (isGetMyeBaySellingCall) {
             // for now fetching only deleted transaction & orders value from the sold list.
             List<String> eBayDeletedOrdersAndTransactionList = readGetMyeBaySellingResponse(responseMsg, locale, (String) context.get(
-                "productStoreId"), delegator, dispatcher, errorMessage, userLogin);
+                    "productStoreId"), delegator, dispatcher, errorMessage, userLogin);
             if (UtilValidate.isNotEmpty(eBayDeletedOrdersAndTransactionList)) {
                 Debug.logInfo("The value of getMyeBaySellingList" + eBayDeletedOrdersAndTransactionList, MODULE);
                 Iterator<Map<String, Object>> orderListIter = orderList.iterator();
@@ -507,7 +507,7 @@ public class EbayOrderServices {
                                 shippingAddressCtx.put("shippingAddressStreet2", UtilXml.childElementValue(shippingAddressElement, "Street2"));
                                 shippingAddressCtx.put("shippingAddressCityName", UtilXml.childElementValue(shippingAddressElement, "CityName"));
                                 shippingAddressCtx.put("shippingAddressStateOrProvince", UtilXml.childElementValue(shippingAddressElement,
-                                    "StateOrProvince"));
+                                        "StateOrProvince"));
                                 shippingAddressCtx.put("shippingAddressCountry", UtilXml.childElementValue(shippingAddressElement, "Country"));
                                 shippingAddressCtx.put("shippingAddressCountryName", UtilXml.childElementValue(shippingAddressElement,
                                         "CountryName"));
@@ -528,9 +528,9 @@ public class EbayOrderServices {
                             while (shippingServiceSelectedElemIter.hasNext()) {
                                 Element shippingServiceSelectedElement = shippingServiceSelectedElemIter.next();
                                 shippingServiceSelectedCtx.put("shippingService", UtilXml.childElementValue(shippingServiceSelectedElement,
-                                    "ShippingService"));
+                                        "ShippingService"));
                                 shippingServiceSelectedCtx.put("shippingServiceCost", UtilXml.childElementValue(shippingServiceSelectedElement,
-                                    "ShippingServiceCost", "0"));
+                                        "ShippingServiceCost", "0"));
                                 String insuranceCost = UtilXml.childElementValue(shippingServiceSelectedElement, "ShippingInsuranceCost", "0");
                                 if (UtilValidate.isNotEmpty(insuranceCost)) {
                                     shippingServiceSelectedCtx.put("shippingTotalAdditionalCost", insuranceCost);
@@ -779,9 +779,9 @@ public class EbayOrderServices {
                             while (shippingServiceSelectedElemIter.hasNext()) {
                                 Element shippingServiceSelectedElement = shippingServiceSelectedElemIter.next();
                                 shippingServiceSelectedCtx.put("shippingService", UtilXml.childElementValue(shippingServiceSelectedElement,
-                                    "ShippingService", ""));
+                                        "ShippingService", ""));
                                 shippingServiceSelectedCtx.put("shippingServiceCost", UtilXml.childElementValue(shippingServiceSelectedElement,
-                                    "ShippingServiceCost", "0"));
+                                        "ShippingServiceCost", "0"));
 
                                 String incuranceCost = UtilXml.childElementValue(shippingServiceSelectedElement, "ShippingInsuranceCost", "0");
                                 String additionalCost = UtilXml.childElementValue(shippingServiceSelectedElement, "ShippingServiceAdditionalCost",
@@ -844,7 +844,7 @@ public class EbayOrderServices {
                                         shippingDetailsCtx.put("jurisdictionID", UtilXml.childElementValue(taxJurisdictionElement,
                                                 "JurisdictionID", ""));
                                         shippingDetailsCtx.put("jurisdictionSalesTaxPercent", UtilXml.childElementValue(taxJurisdictionElement,
-                                            "SalesTaxPercent", "0"));
+                                                "SalesTaxPercent", "0"));
                                         shippingDetailsCtx.put("jurisdictionShippingIncludedInTax",
                                                 UtilXml.childElementValue(taxJurisdictionElement, "ShippingIncludedInTax", "0"));
                                     }
@@ -1158,7 +1158,7 @@ public class EbayOrderServices {
                         salesPercent = Double.parseDouble(salesTaxPercent);
                     }
                     GenericValue salesTaxAdjustment = EbayHelper.makeOrderAdjustment(delegator, "SALES_TAX", cart.getOrderId(), null, null,
-                        salesTaxAmountTotal, salesPercent);
+                            salesTaxAmountTotal, salesPercent);
                     if (salesTaxAdjustment != null) {
                         cart.addAdjustment(salesTaxAdjustment);
                     }
@@ -1183,11 +1183,11 @@ public class EbayOrderServices {
                     EbayHelper.correctCityStateCountry(dispatcher, shippingAddressCtx, city, state, country);
 
                     List<GenericValue> shipInfo =
-                        PartyWorker.findMatchingPersonPostalAddresses(delegator,
-                                shippingAddressCtx.get("shippingAddressStreet1").toString(),(
+                            PartyWorker.findMatchingPersonPostalAddresses(delegator,
+                                shippingAddressCtx.get("shippingAddressStreet1").toString(), (
                                 UtilValidate.isEmpty(shippingAddressCtx.get("shippingAddressStreet2")) ? null : shippingAddressCtx.get(
                                         "shippingAddressStreet2").toString()),
-                                shippingAddressCtx.get("city").toString(),(
+                                shippingAddressCtx.get("city").toString(), (
                                 UtilValidate.isEmpty(shippingAddressCtx.get("stateProvinceGeoId")) ? null : shippingAddressCtx.get(
                                         "stateProvinceGeoId").toString()),
                                 shippingAddressCtx.get("shippingAddressPostalCode").toString(),
@@ -1241,7 +1241,8 @@ public class EbayOrderServices {
                     Debug.logInfo("Creating new postal address for party: " + partyId, MODULE);
                     contactMechId = EbayHelper.createAddress(dispatcher, partyId, userLogin, "SHIPPING_LOCATION", shippingAddressCtx);
                     if (UtilValidate.isEmpty(contactMechId)) {
-                        return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "EbayStoreUnableToCreatePostalAddress", locale) + shippingAddressCtx);
+                        return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "EbayStoreUnableToCreatePostalAddress", locale)
+                                + shippingAddressCtx);
                     }
                     Debug.logInfo("Created postal address: " + contactMechId, MODULE);
                     Debug.logInfo("Creating new phone number for party: " + partyId, MODULE);
@@ -1283,8 +1284,8 @@ public class EbayOrderServices {
                 Debug.logInfo("Created order with id: " + orderId, MODULE);
 
                 if (UtilValidate.isNotEmpty(orderId)) {
-                    String orderCreatedMsg =
-                        "Order created successfully with ID (" + orderId + ") & eBay Order ID associated with this order is (" + externalId + ").";
+                    String orderCreatedMsg = "Order created successfully with ID (" + orderId + ") & eBay Order ID associated with this order is ("
+                            + externalId + ").";
                     orderImportSuccessMessageList.add(orderCreatedMsg);
                 }
 
@@ -1321,7 +1322,8 @@ public class EbayOrderServices {
         return orderHeader;
     }
 
-    private static void addItem(ShoppingCart cart, Map<String, Object> orderItem, LocalDispatcher dispatcher, Delegator delegator, int groupIdx) throws GeneralException {
+    private static void addItem(ShoppingCart cart, Map<String, Object> orderItem, LocalDispatcher dispatcher, Delegator delegator, int groupIdx)
+            throws GeneralException {
         String productId = (String) orderItem.get("productId");
         GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne();
         if (UtilValidate.isEmpty(product)) {
@@ -1366,7 +1368,8 @@ public class EbayOrderServices {
                 cartItem.setIsModifiedPrice(true);
                 cartItem.setBasePrice(price);
                 cart.setHoldOrder(true);
-                cart.addInternalOrderNote("Price received [" + price + "] (for item # " + productId + ") from eBay Checkout does not match the price in the database [" + cartPrice + "]. Order is held for manual review.");
+                cart.addInternalOrderNote("Price received [" + price + "] (for item # " + productId
+                        + ") from eBay Checkout does not match the price in the database [" + cartPrice + "]. Order is held for manual review.");
             }
             // assign the item to its ship group
             cart.setItemShipGroupQty(cartItem, qty, groupIdx);

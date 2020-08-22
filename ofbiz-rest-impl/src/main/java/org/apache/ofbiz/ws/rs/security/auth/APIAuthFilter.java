@@ -64,7 +64,6 @@ public class APIAuthFilter implements ContainerRequestFilter {
     private static final String REALM = "OFBiz";
 
     /**
-     *
      */
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {

@@ -138,7 +138,7 @@ public class WebPosSearch {
         if (UtilValidate.isNotEmpty(shippingLocation) && "Y".equalsIgnoreCase(shippingLocation)) {
             orExprs.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "SHIPPING_LOCATION"));
         }
-        if (orExprs.size() > 0) {
+        if (!orExprs.isEmpty()) {
             andExprs.add(EntityCondition.makeCondition(orExprs, EntityOperator.OR));
         }
         andExprs.add(EntityCondition.makeCondition("partyTypeId", EntityOperator.EQUALS, "PERSON"));

@@ -34,7 +34,9 @@ public class GlobalExceptionMapper extends AbstractExceptionMapper implements ja
     private static final String MODULE = GlobalExceptionMapper.class.getName();
 
     /**
-     *
+     * To response response.
+     * @param throwable the throwable
+     * @return the response
      */
     @Override
     public Response toResponse(Throwable throwable) {

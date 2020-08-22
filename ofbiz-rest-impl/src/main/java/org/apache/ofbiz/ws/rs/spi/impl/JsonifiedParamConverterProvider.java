@@ -41,7 +41,12 @@ public class JsonifiedParamConverterProvider implements ParamConverterProvider {
     }
 
     /**
-     *
+     * Gets converter.
+     * @param <T>         the type parameter
+     * @param rawType     the raw type
+     * @param genericType the generic type
+     * @param annotations the annotations
+     * @return the converter
      */
     @Override
     public <T> ParamConverter<T> getConverter(Class<T> rawType, Type genericType, Annotation[] annotations) {

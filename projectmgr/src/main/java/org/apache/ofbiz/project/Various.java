@@ -94,7 +94,7 @@ public class Various {
         if (timesheetId != null) {
             try {
                 List<GenericValue> actuals = EntityQuery.use(delegator).from("TimeEntry").where("timesheetId", timesheetId).queryList();
-                if (actuals.size() > 0) {
+                if (!actuals.isEmpty()) {
                     for (GenericValue actual : actuals) {
                         Double hour = (Double) actual.get("hours");
                         double hours = hour;

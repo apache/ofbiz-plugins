@@ -58,7 +58,7 @@ public class ServiceRequestProcessor {
         } catch (GenericServiceException gse) {
             throw new NotFoundException(gse.getMessage());
         }
-        if (UtilValidate.isNotEmpty(service.action) && !service.action.equalsIgnoreCase(httpVerb)) {
+        if (UtilValidate.isNotEmpty(service.getAction()) && !service.getAction().equalsIgnoreCase(httpVerb)) {
             throw new MethodNotAllowedException("HTTP " + httpVerb + " is not allowed on this service.");
         }
         Map<String, Object> serviceContext = dispatchContext.makeValidContext(serviceName, ModelService.IN_PARAM, requestMap);
@@ -69,7 +69,7 @@ public class ServiceRequestProcessor {
             Set<String> outParams = service.getOutParamNames();
             for (String outParamName : outParams) {
                 ModelParam outParam = service.getParam(outParamName);
-                if (!outParam.internal) {
+                if (!outParam.isInternal()) {
                     Object value = result.get(outParamName);
                     if (UtilValidate.isNotEmpty(value)) {
                         responseData.put(outParamName, value);

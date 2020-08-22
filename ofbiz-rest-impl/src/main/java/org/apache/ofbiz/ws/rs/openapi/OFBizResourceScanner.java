@@ -38,7 +38,6 @@ public class OFBizResourceScanner extends JaxrsApplicationAndResourcePackagesAnn
     }
 
     /**
-     *
      */
     public Set<Class<?>> classes() {
         Set<Class<?>> classes = super.classes();
@@ -52,7 +51,6 @@ public class OFBizResourceScanner extends JaxrsApplicationAndResourcePackagesAnn
     }
 
     /**
-     *
      */
     protected boolean isIgnored(String classOrPackageName) {
         if (UtilValidate.isEmpty(classOrPackageName)) {
