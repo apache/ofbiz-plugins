@@ -73,6 +73,7 @@ public class FirstDataPaymentServices {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         result.put("processAmount", processAmount);
         Boolean isSuccess = Boolean.FALSE;
+        String gatewayMessage = "";
         String cardNumber = creditCard.getString("cardNumber");
 
         try {
@@ -122,23 +123,26 @@ public class FirstDataPaymentServices {
             String transactionStatus = (String) convertedMap.get("transactionStatus");
             String transactionId = (String) convertedMap.get("ipgTransactionId");
             String fdOrderId = (String) convertedMap.get("orderId");
-            Map<String, Object> processor = objectMapper.convertValue(convertedMap.get("processor"), new TypeReference<Map<String, Object>>() {
-            });
-            String gatewayMessage = (String) processor.get("responseMessage");
-            int statusCode = response.getStatusLine().getStatusCode();
-            result.put("authCode", String.valueOf(statusCode));
-            result.put("authMessage", gatewayMessage);
-            if (UtilValidate.isNotEmpty(transactionId)) {
-                result.put("authRefNum", transactionId);
-                result.put("authAltRefNum", fdOrderId);
-                if ("approved".equalsIgnoreCase(transactionStatus)) {
-                    isSuccess = Boolean.TRUE;
+            result.put("authRefNum", transactionId);
+            result.put("authAltRefNum", fdOrderId);
+            if ("APPROVED".equalsIgnoreCase(transactionStatus) || "WAITING".equalsIgnoreCase(transactionStatus)) {
+                Map<String, Object> processor = objectMapper.convertValue(convertedMap.get("processor"), new TypeReference<Map<String, Object>>() {
+                });
+                gatewayMessage = (String) processor.get("responseMessage");
+                int statusCode = response.getStatusLine().getStatusCode();
+                result.put("authCode", String.valueOf(statusCode));
+                result.put("authMessage", gatewayMessage);
+                if (UtilValidate.isNotEmpty(transactionId)) {
+                    if ("APPROVED".equalsIgnoreCase(transactionStatus) || "WAITING".equalsIgnoreCase(transactionStatus)) {
+                        isSuccess = Boolean.TRUE;
+                    }
                 }
             }
             if (!isSuccess) {
                 String errorMessage = "Transaction Type:" + (String) convertedMap.get("transactionType") + " Transaction Id: " + transactionId + " "
                         + "Transaction Status: " + transactionStatus;
-                errorMessage = errorMessage + " Message: " + statusCode + "-" + gatewayMessage;
+                gatewayMessage = UtilValidate.isNotEmpty(gatewayMessage) ? gatewayMessage : "";
+                errorMessage = errorMessage + " Gateway Message: " + gatewayMessage;
                 result.put(ModelService.ERROR_MESSAGE, errorMessage);
             }
         } catch (ParseException | TemplateException | IOException e) {
@@ -264,8 +268,7 @@ public class FirstDataPaymentServices {
 
             GenericValue paymentGatewayResponse = EntityQuery.use(delegator)
                     .from("PaymentGatewayResponse")
-                    .where("orderPaymentPreferenceId", orderPaymentPreference.getString("orderPaymentPreferenceId"), "paymentMethodId",
-                            orderPaymentPreference.getString("paymentMethodId"), "transCodeEnumId", "PGT_CAPTURE",
+                    .where("paymentMethodId", orderPaymentPreference.getString("paymentMethodId"), "transCodeEnumId", "PGT_CAPTURE",
                             "paymentServiceTypeEnumId", "PRDS_PAY_CAPTURE")
                     .queryFirst();
             String captureTransactionId = null;
