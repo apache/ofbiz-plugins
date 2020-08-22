@@ -196,7 +196,7 @@ public class ImportOrdersFromEbay {
         if (orders == null) {
             Debug.logError("Error :" + errorMessage.toString(), MODULE);
             return ServiceUtil.returnFailure(errorMessage.toString());
-        } else if (orders.size() == 0) {
+        } else if (orders.isEmpty()) {
             Debug.logError("No orders found", MODULE);
             return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.noOrdersFound", locale));
         } else {

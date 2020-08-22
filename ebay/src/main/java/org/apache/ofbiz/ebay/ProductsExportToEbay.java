@@ -304,7 +304,7 @@ public class ProductsExportToEbay {
                 if (categoryCode != null) {
                     if (categoryCode.indexOf("_") != -1) {
                         String[] params = categoryCode.split("_");
-                        if (UtilValidate.isEmpty(params) || params[1].length() == 0) {
+                        if (UtilValidate.isEmpty(params) || params[1].isEmpty()) {
                             ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "productsExportToEbay"
                                     + ".parametersNotCorrectInGetEbayCategories", locale));
                         } else {

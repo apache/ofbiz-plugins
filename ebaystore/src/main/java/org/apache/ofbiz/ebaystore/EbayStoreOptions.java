@@ -137,7 +137,7 @@ public class EbayStoreOptions {
                 if (UtilValidate.isNotEmpty(addItemObj.get(refName))) {
                     EbayStoreCategoryFacade cf = (EbayStoreCategoryFacade) addItemObj.get(refName);
                     List<Map<String, Object>> theme = cf.getAdItemTemplates(temGroupId);
-                    if (theme.size() > 0) {
+                    if (!theme.isEmpty()) {
                         request.setAttribute("itemTemplates", theme);
                     }
                 }
@@ -178,7 +178,7 @@ public class EbayStoreOptions {
                         context.put("IsLeafCategory", isLeaf);
                         categories.add(context);
                     }
-                    if (categories.size() > 0) {
+                    if (!categories.isEmpty()) {
                         request.setAttribute("categories", categories);
                     }
                 }
@@ -230,7 +230,7 @@ public class EbayStoreOptions {
                         context.put("IsLeafCategory", isLeaf);
                         categories.add(context);
                     }
-                    if (categories.size() > 0) {
+                    if (!categories.isEmpty()) {
                         request.setAttribute("categories", categories);
                     }
                 }

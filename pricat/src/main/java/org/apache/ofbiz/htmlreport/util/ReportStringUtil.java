@@ -250,7 +250,7 @@ public final class ReportStringUtil {
      */
     public static boolean isEmpty(String value) {
 
-        return (value == null) || (value.length() == 0);
+        return (value == null) || (value.isEmpty());
     }
 
     /**
@@ -261,7 +261,7 @@ public final class ReportStringUtil {
      */
     public static boolean isEmptyOrWhitespaceOnly(String value) {
 
-        return isEmpty(value) || (value.trim().length() == 0);
+        return isEmpty(value) || (value.trim().isEmpty());
     }
 
     /**
@@ -288,7 +288,7 @@ public final class ReportStringUtil {
      */
     public static boolean isNotEmpty(String value) {
 
-        return (value != null) && (value.length() != 0);
+        return (value != null) && (!value.isEmpty());
     }
 
     /**
@@ -300,7 +300,7 @@ public final class ReportStringUtil {
      */
     public static boolean isNotEmptyOrWhitespaceOnly(String value) {
 
-        return (value != null) && (value.trim().length() > 0);
+        return (value != null) && (!value.trim().isEmpty());
     }
 
     /**

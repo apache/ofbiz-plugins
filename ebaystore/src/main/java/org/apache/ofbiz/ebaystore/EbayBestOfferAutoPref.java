@@ -217,7 +217,7 @@ public class EbayBestOfferAutoPref {
 
                 String parentPrefCondId = productStorePref.getString("parentPrefCondId");
                 List<GenericValue> productPref = EntityQuery.use(delegator).from("EbayProductStorePrefCond").where("parentPrefCondId", parentPrefCondId).queryList();
-                if (productPref.size() != 0) {
+                if (!productPref.isEmpty()) {
                     String[] condition = {condition1, condition2, condition3, condition4, condition5, condition6, condition7, condition8, condition9, condition10, condition11};
                     Map<String, Object> ebayPrefCond = UtilMisc.<String, Object>toMap("userLogin", userLogin);
                     for (int i = 0; i < productPref.size(); i++) {
