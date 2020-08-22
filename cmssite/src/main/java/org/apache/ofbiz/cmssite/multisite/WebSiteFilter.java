@@ -53,12 +53,12 @@ public class WebSiteFilter implements Filter {
 
     private static final String MODULE = WebSiteFilter.class.getName();
 
-    protected FilterConfig m_config = null;
+    private FilterConfig mConfig = null;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        m_config = filterConfig;
-        m_config.getServletContext().setAttribute("MULTI_SITE_ENABLED", true);
+        mConfig = filterConfig;
+        mConfig.getServletContext().setAttribute("MULTI_SITE_ENABLED", true);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class WebSiteFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         HttpSession session = httpRequest.getSession();
 
-        String webSiteId = (String) m_config.getServletContext().getAttribute("webSiteId");
+        String webSiteId = (String) mConfig.getServletContext().getAttribute("webSiteId");
         String pathInfo = httpRequest.getPathInfo();
         // get the WebSite id segment, cheat here and use existing logic
         String webSiteAlias = RequestHandler.getRequestUri(pathInfo);
@@ -103,12 +103,13 @@ public class WebSiteFilter implements Filter {
                 newLocale = session.getAttribute("locale").toString();
             }
 
-            if (newLocale == null)
+            if (newLocale == null) {
                 newLocale = UtilHttp.getLocale(httpRequest).toString();
+            }
             // If the webSiteId has changed then invalidate the existing session
             if (!webSiteId.equals(session.getAttribute("webSiteId"))) {
                 ShoppingCart cart = (ShoppingCart) session.getAttribute("shoppingCart");
-                if (cart != null && !(webSite.getString("productStoreId").equals(cart.getProductStoreId())) ) {
+                if (cart != null && !(webSite.getString("productStoreId").equals(cart.getProductStoreId()))) {
                     // clearing cart items from previous store
                     cart.clear();
                     // Put product Store for this webSite in cart
@@ -143,7 +144,8 @@ public class WebSiteFilter implements Filter {
         chain.doFilter(httpRequest, response);
     }
 
-    private static void setWebContextObjects(HttpServletRequest request, HttpServletResponse response, Delegator delegator, LocalDispatcher dispatcher) {
+    private static void setWebContextObjects(HttpServletRequest request, HttpServletResponse response, Delegator delegator,
+                                             LocalDispatcher dispatcher) {
         HttpSession session = request.getSession();
         Security security = null;
         try {

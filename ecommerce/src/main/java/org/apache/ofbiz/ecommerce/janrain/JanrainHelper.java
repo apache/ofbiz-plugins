@@ -65,18 +65,38 @@ public class JanrainHelper {
     private static String apiKey = UtilProperties.getPropertyValue("ecommerce", "janrain.apiKey");
     private static String baseUrl = UtilProperties.getPropertyValue("ecommerce", "janrain.baseUrl");
     public JanrainHelper(String apiKey, String baseUrl) {
-        while (baseUrl.endsWith("/"))
+        while (baseUrl.endsWith("/")) {
             baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
+        }
         JanrainHelper.apiKey = apiKey;
         JanrainHelper.baseUrl = baseUrl;
     }
-    public String getApiKey() { return apiKey; }
-    public String getBaseUrl() { return baseUrl; }
+
+    /**
+     * Gets api key.
+     * @return the api key
+     */
+    public String getApiKey() {
+        return apiKey;
+    }
+
+    /**
+     * Gets base url.
+     * @return the base url
+     */
+    public String getBaseUrl() {
+        return baseUrl;
+    }
     public static Element authInfo(String token) {
         Map<String, Object> query = new HashMap<>();
         query.put("token", token);
         return apiCall("auth_info", query);
     }
+
+    /**
+     * All mappings hash map.
+     * @return the hash map
+     */
     public HashMap<String, List<String>> allMappings() {
         Element rsp = apiCall("all_mappings", null);
         rsp.getFirstChild();
@@ -85,26 +105,32 @@ public class JanrainHelper {
         for (int i = 0; i < mappings.getLength(); i++) {
             Element mapping = (Element) mappings.item(i);
             List<String> identifiers = new ArrayList<>();
-            NodeList rk_list = getNodeList("primaryKey", mapping);
-            NodeList id_list = getNodeList("identifiers/identifier", mapping);
-            String remote_key = ((Element) rk_list.item(0)).getTextContent();
-            for (int j = 0; j < id_list.getLength(); j++) {
-                Element ident = (Element) id_list.item(j);
+            NodeList rkList = getNodeList("primaryKey", mapping);
+            NodeList idList = getNodeList("identifiers/identifier", mapping);
+            String remoteKey = ((Element) rkList.item(0)).getTextContent();
+            for (int j = 0; j < idList.getLength(); j++) {
+                Element ident = (Element) idList.item(j);
                 identifiers.add(ident.getTextContent());
             }
-            result.put(remote_key, identifiers);
+            result.put(remoteKey, identifiers);
         }
         return result;
     }
-    private static NodeList getNodeList(String xpath_expr, Element root) {
+    private static NodeList getNodeList(String xpathExpr, Element root) {
         XPathFactory factory = XPathFactory.newInstance();
         XPath xpath = factory.newXPath();
         try {
-            return (NodeList) xpath.evaluate(xpath_expr, root, XPathConstants.NODESET);
+            return (NodeList) xpath.evaluate(xpathExpr, root, XPathConstants.NODESET);
         } catch (XPathExpressionException e) {
             return null;
         }
     }
+
+    /**
+     * Mappings list.
+     * @param primaryKey the primary key
+     * @return the list
+     */
     public List<String> mappings(Object primaryKey) {
         Map<String, Object> query = new HashMap<>();
         query.put("primaryKey", primaryKey);
@@ -118,12 +144,24 @@ public class JanrainHelper {
         }
         return result;
     }
+
+    /**
+     * Map.
+     * @param identifier the identifier
+     * @param primaryKey the primary key
+     */
     public void map(String identifier, Object primaryKey) {
         Map<String, Object> query = new HashMap<>();
         query.put("identifier", identifier);
         query.put("primaryKey", primaryKey);
         apiCall("map", query);
     }
+
+    /**
+     * Unmap.
+     * @param identifier the identifier
+     * @param primaryKey the primary key
+     */
     public void unmap(String identifier, Object primaryKey) {
         Map<String, Object> query = new HashMap<>();
         query.put("identifier", identifier);
@@ -141,8 +179,9 @@ public class JanrainHelper {
         query.put("apiKey", apiKey);
         StringBuffer sb = new StringBuffer();
         for (Iterator<Map.Entry<String, Object>> it = query.entrySet().iterator(); it.hasNext();) {
-            if (sb.length() > 0)
+            if (sb.length() > 0) {
                 sb.append('&');
+            }
             try {
                 Map.Entry<String, Object> e = it.next();
                 sb.append(URLEncoder.encode(e.getKey().toString(), "UTF-8"));
@@ -160,7 +199,7 @@ public class JanrainHelper {
             conn.setDoOutput(true);
             conn.connect();
             OutputStreamWriter osw = new OutputStreamWriter(
-                conn.getOutputStream(), "UTF-8");
+                    conn.getOutputStream(), "UTF-8");
             osw.write(data);
             osw.close();
 
@@ -168,7 +207,7 @@ public class JanrainHelper {
             String line = "";
             StringBuilder buf = new StringBuilder();
             while ((line = post.readLine()) != null) {
-                 buf.append(line);
+                buf.append(line);
             }
             post.close();
             Document tagXml = UtilXml.readXmlDocument(buf.toString());

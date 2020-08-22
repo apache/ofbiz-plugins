@@ -90,8 +90,8 @@ public class ScrumEvents {
                                 List<GenericValue> timeEntryList = timesheetMap.getRelated("TimeEntry", UtilMisc.toMap("partyId", partyId,
                                         "timesheetId", timesheetId, "fromDate", realTimeDate), null, false);
                                 //check EmplLeave
-                                List<GenericValue> emplLeaveList = EntityQuery.use(delegator).from("EmplLeave").where("partyId", partyId, "fromDate"
-                                        , realTimeDate).cache(true).queryList();
+                                List<GenericValue> emplLeaveList = EntityQuery.use(delegator).from("EmplLeave").where("partyId", partyId, "fromDate",
+                                        realTimeDate).cache(true).queryList();
                                 if (UtilValidate.isEmpty(timeEntryList) && UtilValidate.isEmpty(emplLeaveList)) {
                                     Map<String, Object> noEntryMap = new HashMap<>();
                                     noEntryMap.put("timesheetId", timesheetId);

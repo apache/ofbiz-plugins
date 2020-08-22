@@ -114,27 +114,27 @@ public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
             } catch (GenericServiceException e) {
                 e.printStackTrace();
             }
-            if (service != null && service.export && UtilValidate.isNotEmpty(service.action)) {
+            if (service != null && service.isExport() && UtilValidate.isNotEmpty(service.getAction())) {
                 SecurityRequirement security = new SecurityRequirement();
                 security.addList("jwtToken");
-                final Operation operation = new Operation().summary(service.description)
-                        .description(service.description).addTagsItem("Exported Services").operationId(service.name)
+                final Operation operation = new Operation().summary(service.getDescription())
+                        .description(service.getDescription()).addTagsItem("Exported Services").operationId(service.getName())
                         .deprecated(false).addSecurityItem(security);
 
                 PathItem pathItemObject = new PathItem();
 
-                if (service.action.equalsIgnoreCase(HttpMethod.GET)) {
+                if (service.getAction().equalsIgnoreCase(HttpMethod.GET)) {
                     final QueryParameter serviceInParam = (QueryParameter) new QueryParameter().required(true)
                             .description("Service In Parameters in JSON").name("inParams");
                     Schema<?> refSchema = new Schema<>();
-                    refSchema.$ref(service.name + "Request");
+                    refSchema.$ref(service.getName() + "Request");
                     serviceInParam.schema(refSchema);
                     operation.addParametersItem(serviceInParam);
 
-                } else if (service.action.equalsIgnoreCase(HttpMethod.POST)) {
-                    RequestBody request = new RequestBody().description("Request Body for service " + service.name)
+                } else if (service.getAction().equalsIgnoreCase(HttpMethod.POST)) {
+                    RequestBody request = new RequestBody().description("Request Body for service " + service.getName())
                             .content(new Content().addMediaType(javax.ws.rs.core.MediaType.APPLICATION_JSON,
-                                    new MediaType().schema(new Schema<>().$ref(service.name + "Request"))));
+                                    new MediaType().schema(new Schema<>().$ref(service.getName() + "Request"))));
                     operation.setRequestBody(request);
                 }
 
@@ -143,16 +143,16 @@ public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
                 Content content = new Content();
                 MediaType jsonMediaType = new MediaType();
                 Schema<?> refSchema = new Schema<>();
-                refSchema.$ref(service.name + "Response");
+                refSchema.$ref(service.getName() + "Response");
                 jsonMediaType.setSchema(refSchema);
                 setOutSchemaForService(service);
                 setInSchemaForService(service);
                 content.addMediaType(javax.ws.rs.core.MediaType.APPLICATION_JSON, jsonMediaType);
 
                 apiResponsesObject.addApiResponse("200", successResponse.content(content));
-                setPathItemOperation(pathItemObject, service.action.toUpperCase(), operation);
+                setPathItemOperation(pathItemObject, service.getAction().toUpperCase(), operation);
                 operation.setResponses(apiResponsesObject);
-                paths.addPathItem("/services/" + service.name, pathItemObject);
+                paths.addPathItem("/services/" + service.getName(), pathItemObject);
 
             }
         }
@@ -194,7 +194,7 @@ public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
 
     private void setOutSchemaForService(ModelService service) {
         Schema<Object> parentSchema = new Schema<Object>();
-        parentSchema.setDescription("Out Schema for service: " + service.name + " response");
+        parentSchema.setDescription("Out Schema for service: " + service.getName() + " response");
         parentSchema.setType("object");
         parentSchema.addProperties("statusCode", new IntegerSchema().description("HTTP Status Code"));
         parentSchema.addProperties("statusDescription", new StringSchema().description("HTTP Status Code Description"));
@@ -217,12 +217,12 @@ public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
             }
             dataSchema.addProperties(name, schema.description(name));
         });
-        schemas.put(service.name + "Response", parentSchema);
+        schemas.put(service.getName() + "Response", parentSchema);
     }
 
     private void setInSchemaForService(ModelService service) {
         Schema<Object> parentSchema = new Schema<Object>();
-        parentSchema.setDescription("In Schema for service: " + service.name + " request");
+        parentSchema.setDescription("In Schema for service: " + service.getName() + " request");
         parentSchema.setType("object");
         service.getInParamNamesMap().forEach((name, type) -> {
             Schema<?> schema = null;
@@ -236,7 +236,7 @@ public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
             }
             parentSchema.addProperties(name, schema.description(name));
         });
-        schemas.put(service.name + "Request", parentSchema);
+        schemas.put(service.getName() + "Request", parentSchema);
     }
 
 }

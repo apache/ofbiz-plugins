@@ -54,7 +54,6 @@ public class AuthenticationResource extends OFBizResource {
     private HttpServletResponse httpResponse;
 
     /**
-     *
      */
     @POST
     @Produces(MediaType.APPLICATION_JSON)
