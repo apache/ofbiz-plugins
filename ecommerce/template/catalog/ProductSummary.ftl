@@ -84,6 +84,9 @@
                         <#if prodCatMem?? && prodCatMem.comments?has_content>
                           <p>${prodCatMem.comments}</p>
                         </#if>
+                        <#if request.getAttribute("highlightLabel")??>
+                          <p><strong>${request.getAttribute("highlightLabel")}</strong></p>
+                        </#if>
 
                         <#-- example of showing a certain type of feature with the product -->
                           <#if sizeProductFeatureAndAppls?has_content>
