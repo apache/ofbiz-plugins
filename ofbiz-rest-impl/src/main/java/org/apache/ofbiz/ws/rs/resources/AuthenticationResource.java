@@ -22,10 +22,12 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
@@ -38,6 +40,8 @@ import org.apache.ofbiz.ws.rs.security.AuthToken;
 import org.apache.ofbiz.ws.rs.util.RestApiUtil;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -61,7 +65,9 @@ public class AuthenticationResource extends OFBizResource {
     @AuthToken
     @Operation(security = @SecurityRequirement(name = "basicAuth"),
             operationId = "getAuthToken", description = "Generates JWT token for subsequent API calles.")
-    public Response getAuthToken() {
+    public Response getAuthToken(@Parameter(in = ParameterIn.HEADER, name = "Authorization",
+            description = "Authorization header using Basic Authentication", example = HttpHeaders.AUTHORIZATION + ": Basic YWRtaW46b2ZiaXo=")
+            @HeaderParam(HttpHeaders.AUTHORIZATION) String creds) {
         httpRequest.setAttribute("delegator", getDelegator());
         httpRequest.setAttribute("dispatcher", getDispatcher());
         GenericValue userLogin = (GenericValue) httpRequest.getAttribute("userLogin");
