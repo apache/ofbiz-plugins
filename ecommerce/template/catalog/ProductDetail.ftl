@@ -1005,21 +1005,16 @@ $(function(){
         </h2>
 
         <div class="productsummary-container">
+          <div class="row">
           <#list assocProducts as productAssoc>
             <#if productAssoc.productId == product.productId>
               <#local assocProductId = productAssoc.productIdTo />
             <#else>
               <#local assocProductId = productAssoc.productId />
             </#if>
-            <div>
-              <a href="<@ofbizUrl>${targetRequest}/<#if categoryId??>~category_id=${categoryId}/</#if>~product_id=${assocProductId}</@ofbizUrl>"
-                 class="buttontext">
-              ${assocProductId}
-              </a>
-              <#if productAssoc.reason?has_content>
-                - <strong>${productAssoc.reason}</strong>
-              </#if>
-            </div>
+            <#if productAssoc.reason?has_content>
+              ${setRequestAttribute("highlightLabel", productAssoc.reason)}
+            </#if>
           ${setRequestAttribute("optProductId", assocProductId)}
           ${setRequestAttribute("listIndex", listIndex)}
           ${setRequestAttribute("formNamePrefix", formNamePrefix)}
@@ -1030,6 +1025,7 @@ $(function(){
             <#local product = pageProduct />
             <#local listIndex = listIndex + 1 />
           </#list>
+          </div>
         </div>
 
       ${setRequestAttribute("optProductId", "")}
@@ -1064,6 +1060,7 @@ $(function(){
     <h2>${uiLabelMap.ProductSimilarProducts}</h2>
 
     <div class="productsummary-container">
+      <div class="row">
       <#list commonFeatureResultIds as commonFeatureResultId>
         ${setRequestAttribute("optProductId", commonFeatureResultId)}
         ${setRequestAttribute("listIndex", commonFeatureResultId_index)}
@@ -1071,6 +1068,7 @@ $(function(){
         <#-- ${setRequestAttribute("targetRequestName", targetRequestName)} -->
         ${screens.render(productsummaryScreen)}
       </#list>
+      </div>
     </div>
   </#if>
   <hr>
