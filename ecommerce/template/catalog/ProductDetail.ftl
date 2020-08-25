@@ -336,10 +336,10 @@ $(function(){
 </#macro>
 
 <div id="product-detail" class="card">
-  <#assign productAdditionalImage1 = productContentWrapper.get("ADDITIONAL_IMAGE_1", "url")! />
-  <#assign productAdditionalImage2 = productContentWrapper.get("ADDITIONAL_IMAGE_2", "url")! />
-  <#assign productAdditionalImage3 = productContentWrapper.get("ADDITIONAL_IMAGE_3", "url")! />
-  <#assign productAdditionalImage4 = productContentWrapper.get("ADDITIONAL_IMAGE_4", "url")! />
+  <#assign productAdditionalImage1 = productContentWrapper.get("XTRA_IMG_1_MEDIUM", "url")! />
+  <#assign productAdditionalImage2 = productContentWrapper.get("XTRA_IMG_2_MEDIUM", "url")! />
+  <#assign productAdditionalImage3 = productContentWrapper.get("XTRA_IMG_3_MEDIUM", "url")! />
+  <#assign productAdditionalImage4 = productContentWrapper.get("XTRA_IMG_4_MEDIUM", "url")! />
 
   <#-- Category next/previous -->
 
