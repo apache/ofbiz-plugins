@@ -60,7 +60,7 @@ import freemarker.template.TemplateException;
 public class FirstDataPaymentServices {
     private static final String MODULE = FirstDataPaymentServices.class.getName();
 
-    private static Properties FDProperties = null;
+    private static Properties fdProperties = null;
 
     public static Map<String, Object> ccAuth(DispatchContext ctx, Map<String, Object> context) {
         Delegator delegator = ctx.getDelegator();
@@ -103,10 +103,10 @@ public class FirstDataPaymentServices {
 
             CloseableHttpClient httpClient = HttpClients.createDefault();
             StringEntity stringEntity = new StringEntity(requestBody);
-            HttpPost httpPost = new HttpPost(FDProperties.getProperty("transactionUrl") + "/payments");
+            HttpPost httpPost = new HttpPost(fdProperties.getProperty("transactionUrl") + "/payments");
             httpPost.setEntity(stringEntity);
             httpPost.setHeader("Client-Request-Id", clientRequestId);
-            httpPost.setHeader("Api-Key", FDProperties.getProperty("apiKey"));
+            httpPost.setHeader("Api-Key", fdProperties.getProperty("apiKey"));
             httpPost.setHeader("Timestamp", epochTime);
             httpPost.setHeader("Message-Signature", messageSignature);
             httpPost.setHeader("Content-Type", "application/json");
@@ -193,10 +193,10 @@ public class FirstDataPaymentServices {
 
             CloseableHttpClient httpClient = HttpClients.createDefault();
             StringEntity stringEntity = new StringEntity(requestBody);
-            HttpPost httpPost = new HttpPost(FDProperties.getProperty("transactionUrl") + "/payments/" + authTransactionId);
+            HttpPost httpPost = new HttpPost(fdProperties.getProperty("transactionUrl") + "/payments/" + authTransactionId);
             httpPost.setEntity(stringEntity);
             httpPost.setHeader("Client-Request-Id", clientRequestId);
-            httpPost.setHeader("Api-Key", FDProperties.getProperty("apiKey"));
+            httpPost.setHeader("Api-Key", fdProperties.getProperty("apiKey"));
             httpPost.setHeader("Timestamp", epochTime);
             httpPost.setHeader("Message-Signature", messageSignature);
             httpPost.setHeader("Content-Type", "application/json");
@@ -280,10 +280,10 @@ public class FirstDataPaymentServices {
 
             CloseableHttpClient httpClient = HttpClients.createDefault();
             StringEntity stringEntity = new StringEntity(requestBody);
-            HttpPost httpPost = new HttpPost(FDProperties.getProperty("transactionUrl") + "/payments/" + captureTransactionId);
+            HttpPost httpPost = new HttpPost(fdProperties.getProperty("transactionUrl") + "/payments/" + captureTransactionId);
             httpPost.setEntity(stringEntity);
             httpPost.setHeader("Client-Request-Id", clientRequestId);
-            httpPost.setHeader("Api-Key", FDProperties.getProperty("apiKey"));
+            httpPost.setHeader("Api-Key", fdProperties.getProperty("apiKey"));
             httpPost.setHeader("Timestamp", epochTime);
             httpPost.setHeader("Message-Signature", messageSignature);
             httpPost.setHeader("Content-Type", "application/json");
@@ -368,10 +368,10 @@ public class FirstDataPaymentServices {
 
             CloseableHttpClient httpClient = HttpClients.createDefault();
             StringEntity stringEntity = new StringEntity(requestBody);
-            HttpPost httpPost = new HttpPost(FDProperties.getProperty("transactionUrl") + "/payments/" + releaseTransactionId);
+            HttpPost httpPost = new HttpPost(fdProperties.getProperty("transactionUrl") + "/payments/" + releaseTransactionId);
             httpPost.setEntity(stringEntity);
             httpPost.setHeader("Client-Request-Id", clientRequestId);
-            httpPost.setHeader("Api-Key", FDProperties.getProperty("apiKey"));
+            httpPost.setHeader("Api-Key", fdProperties.getProperty("apiKey"));
             httpPost.setHeader("Timestamp", epochTime);
             httpPost.setHeader("Message-Signature", messageSignature);
             httpPost.setHeader("Content-Type", "application/json");
@@ -428,8 +428,8 @@ public class FirstDataPaymentServices {
         props.put("apiSecret", apiSecret);
         //props.put("enableDataVault", enableDataVault);
 
-        if (FDProperties == null) {
-            FDProperties = props;
+        if (fdProperties == null) {
+            fdProperties = props;
         }
 
         return props;
@@ -457,12 +457,12 @@ public class FirstDataPaymentServices {
     private static String buildMessageSignature(String paymentGatewayConfigId, String requestBody, String clientRequestId, String epochTime,
                                                 Delegator delegator) {
         String messageSignature = null;
-        if (FDProperties == null) {
+        if (fdProperties == null) {
             buildFDProperties(paymentGatewayConfigId, delegator);
         }
 
-        String apiKey = FDProperties.getProperty("apiKey");
-        final HmacUtils hmacHelper = new HmacUtils(HmacAlgorithms.HMAC_SHA_256, FDProperties.getProperty("apiSecret"));
+        String apiKey = fdProperties.getProperty("apiKey");
+        final HmacUtils hmacHelper = new HmacUtils(HmacAlgorithms.HMAC_SHA_256, fdProperties.getProperty("apiSecret"));
         final Hex hexHelper = new Hex();
         final String msg = apiKey + clientRequestId + epochTime + requestBody;
         final byte[] raw = hmacHelper.hmac(msg);

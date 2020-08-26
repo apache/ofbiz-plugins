@@ -29,68 +29,39 @@ import org.apache.ofbiz.base.util.Debug;
 public class PassportUtil {
 
     private static final String MODULE = PassportUtil.class.getName();
+    private static final String CLIENT_ID_LABEL = "ClientId";
+    private static final String SECRET_LABEL = "Secret";
+    private static final String TOKEN_END_POINT_LABEL = "TokenEndpoint";
+    private static final String GRANT_TYPE_LABEL = "grantType";
+    private static final String CONTENT_TYPE_LABEL = "contentType";
+    private static final String USER_PROFILE_URL_LABEL = "UserProfileUrl";
+    private static final String GRANT_TYPE_PARAM = "grant_type";
+    private static final String CONTENT_TYPE_PARAM = "Content-Type";
+    private static final String APPLICATION_JSON = "application/json";
+    private static final String RESTAPI_END_POINT_LABEL = "RESTApiEndpoint";
+    private static final String COMMON_SCOPE = "scope";
+    private static final String AUTHOR_CODE_GRANT_TYPE = "authorization_code";
+    private static final String API_ID_LABEL = "apiId";
+    private static final String APP_KEY_LABEL = "appKey";
+    private static final String APP_SECRET_LABEL = "appSecret";
+    private static final String APP_ID_LABEL = "appId";
+    private static final String COMMON_APP_KEY = "AppKey";
+    private static final String COMMON_APP_SECRET = "AppSecret";
 
-    public static final String ClientIdLabel = "ClientId";
-
-    public static final String SecretLabel = "Secret";
-
-    public static final String ReturnUrlLabel = "ReturnUrl";
-
-    public static final String TokenEndpointLabel = "TokenEndpoint";
-
-    public static final String GrantTypeLabel = "grantType";
-
-    public static final String ContentTypeLabel = "contentType";
-
-    public static final String AUTHORIZATION_HEADER = "Authorization";
-
-    public static final String UserProfileUrlLabel = "UserProfileUrl";
-
-    public static final String GrantTypeParam = "grant_type";
-
-    public static final String ContentTypeParam = "Content-Type";
-
-    public static final String ACCEPT_HEADER = "Accept";
-
-    public static final String APPLICATION_JSON = "application/json";
-
-    public static final String RESTApiEndpointLabel = "RESTApiEndpoint";
-
-    public static final String COMMON_CODE = "code";
-
-    public static final String COMMON_SCOPE = "scope";
-
-    public static final String AuthorizationCodeGrantType = "authorization_code";
-
-    public static final String COMMON_STATE = "state";
-
-    public static final String COMMON_ERROR = "error";
-
-    public static final String COMMON_ERROR_DESCRIPTION = "error_description";
-
-    public static final String ApiKeyLabel = "apiKey";
-
-    public static final String SecretKeyLabel = "secretKey";
-
-    public static final String COMMON_CLIENT_ID = "clientId";
-
-    public static final String COMMON_RETURN_RUL = "returnUrl";
-
+    // TODO: Following should be made private
     public static final String COMMON_CLIENT_SECRET = "clientSecret";
-
-    public static final String ApiIdLabel = "apiId";
-
-    public static final String AppKeyLabel = "appKey";
-
-    public static final String AppSecretLabel = "appSecret";
-
-    public static final String AppIdLabel = "appId";
-
-    public static final String COMMON_APP_KEY = "AppKey";
-
-    public static final String COMMON_APP_SECRET = "AppSecret";
-
-    public static final RequestConfig StandardRequestConfig = RequestConfig.custom()
+    public static final String COMMON_CODE = "code";
+    public static final String RETURN_URL_LABEL = "ReturnUrl";
+    public static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String ACCEPT_HEADER = "Accept";
+    public static final String COMMON_STATE = "state";
+    public static final String COMMON_ERROR = "error";
+    public static final String COMMON_ERROR_DESCRIPTION = "error_description";
+    public static final String API_KEY_LABEL = "apiKey";
+    public static final String SECRET_KEY_LABEL = "secretKey";
+    public static final String COMMON_CLIENT_ID = "clientId";
+    public static final String COMMON_RETURN_RUL = "returnUrl";
+    public static final RequestConfig STANDARD_REQ_CONFIG = RequestConfig.custom()
                                                                            .setCookieSpec(CookieSpecs.STANDARD)
                                                                            .build();
 
@@ -103,7 +74,7 @@ public class PassportUtil {
     }
 
     public static String getEnvPrefixByHost(HttpServletRequest request) {
-        String prefix ="test";
+        String prefix = "test";
         try {
             InetAddress[] addresses = InetAddress.getAllByName(request.getServerName());
             for (InetAddress address : addresses) {

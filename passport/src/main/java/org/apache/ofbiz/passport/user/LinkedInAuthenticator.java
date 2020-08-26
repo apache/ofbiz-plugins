@@ -65,13 +65,14 @@ public class LinkedInAuthenticator implements Authenticator {
 
     private static final String MODULE = LinkedInAuthenticator.class.getName();
 
-    public static final String props = "linkedInAuth.properties";
+    public static String getPROPS() {
+        return PROPS;
+    }
 
+    private static final String PROPS = "linkedInAuth.properties";
     private static final String RESOURCE = "PassportUiLabels";
-
-    protected LocalDispatcher dispatcher;
-
-    protected Delegator delegator;
+    private LocalDispatcher dispatcher;
+    private Delegator delegator;
 
     /**
      * Method called when authenticator is first initialized (the delegator
@@ -107,7 +108,7 @@ public class LinkedInAuthenticator implements Authenticator {
             if (linkedInUser != null) {
                 String accessToken = linkedInUser.getString("accessToken");
                 if (UtilValidate.isNotEmpty(accessToken)) {
-                    getMethod = new HttpGet(LinkedInEvents.TokenEndpoint + LinkedInEvents.UserApiUri  + "?oauth2_access_token=" + accessToken);
+                    getMethod = new HttpGet(LinkedInEvents.TOKEN_END_POINT + LinkedInEvents.USER_API_URI + "?oauth2_access_token=" + accessToken);
                     user = LinkedInAuthenticator.getUserInfo(getMethod, Locale.getDefault());
                 }
             }
@@ -215,7 +216,7 @@ public class LinkedInAuthenticator implements Authenticator {
             if (linkedInUser != null) {
                 String accessToken = linkedInUser.getString("accessToken");
                 if (UtilValidate.isNotEmpty(accessToken)) {
-                    getMethod = new HttpGet(LinkedInEvents.TokenEndpoint + LinkedInEvents.UserApiUri + "?oauth2_access_token=" + accessToken);
+                    getMethod = new HttpGet(LinkedInEvents.TOKEN_END_POINT + LinkedInEvents.USER_API_URI + "?oauth2_access_token=" + accessToken);
                     user = getUserInfo(getMethod, Locale.getDefault());
                 }
             }
@@ -231,6 +232,12 @@ public class LinkedInAuthenticator implements Authenticator {
         return user;
     }
 
+    /**
+     * Create user string.
+     * @param user the user
+     * @return the string
+     * @throws AuthenticatorException the authenticator exception
+     */
     public String createUser(Document user) throws AuthenticatorException {
         GenericValue system;
         try {
@@ -382,12 +389,13 @@ public class LinkedInAuthenticator implements Authenticator {
      */
     @Override
     public boolean isEnabled() {
-        return "true".equalsIgnoreCase(UtilProperties.getPropertyValue(props, "linked.authenticator.enabled", "true"));
+        return "true".equalsIgnoreCase(UtilProperties.getPropertyValue(PROPS, "linked.authenticator.enabled", "true"));
     }
 
-    public static Document getUserInfo(HttpGet httpGet, Locale locale) throws IOException, AuthenticatorException, SAXException, ParserConfigurationException {
+    public static Document getUserInfo(HttpGet httpGet, Locale locale)
+            throws IOException, AuthenticatorException, SAXException, ParserConfigurationException {
         Document userInfo = null;
-        httpGet.setConfig(PassportUtil.StandardRequestConfig);
+        httpGet.setConfig(PassportUtil.STANDARD_REQ_CONFIG);
         CloseableHttpClient jsonClient = HttpClients.custom().build();
         CloseableHttpResponse getResponse = jsonClient.execute(httpGet);
         String responseString = new BasicResponseHandler().handleResponse(getResponse);

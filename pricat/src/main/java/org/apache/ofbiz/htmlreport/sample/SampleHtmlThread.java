@@ -40,8 +40,9 @@ public class SampleHtmlThread extends AbstractReportThread {
     public static final String COUNT_DOWN = "countdown";
     public static final String COUNT_UP = "countup";
     public static final String CONFIRM = "confirm_action";
-    public static final String[] messageLables = new String[] {"FORMAT_DEFAULT", "FORMAT_WARNING", "FORMAT_HEADLINE", "FORMAT_NOTE", "FORMAT_OK", "FORMAT_ERROR", "FORMAT_THROWABLE"};
-    public static final List<String> messages = Collections.unmodifiableList(Arrays.asList(messageLables));
+    public static final String[] MESSAGE_LABLES = new String[] {"FORMAT_DEFAULT", "FORMAT_WARNING", "FORMAT_HEADLINE", "FORMAT_NOTE",
+            "FORMAT_OK", "FORMAT_ERROR", "FORMAT_THROWABLE"};
+    public static final List<String> MESSAGES = Collections.unmodifiableList(Arrays.asList(MESSAGE_LABLES));
     private static final String RESOURCE = "PricatUiLabels";
     /**
      * Constructor, creates a new HtmlImportThreat.
@@ -67,9 +68,9 @@ public class SampleHtmlThread extends AbstractReportThread {
                     sleep(20);
                     j = random.nextInt(7);
                     if (j == 6) {
-                        getReport().println(new Throwable(UtilProperties.getMessage(RESOURCE, messages.get(j), new Object[] {i}, getLocale())));
+                        getReport().println(new Throwable(UtilProperties.getMessage(RESOURCE, MESSAGES.get(j), new Object[] {i}, getLocale())));
                     } else {
-                        getReport().println(UtilProperties.getMessage(RESOURCE, messages.get(j), new Object[] {i}, getLocale()), j);
+                        getReport().println(UtilProperties.getMessage(RESOURCE, MESSAGES.get(j), new Object[] {i}, getLocale()), j);
                     }
                 }
                 getReport().println(UtilProperties.getMessage(RESOURCE, "COUNT_COMPLETED", getLocale()), InterfaceReport.FORMAT_HEADLINE);
@@ -81,9 +82,9 @@ public class SampleHtmlThread extends AbstractReportThread {
                     sleep(20);
                     j = random.nextInt(7);
                     if (j == 6) {
-                        getReport().println(new Throwable(UtilProperties.getMessage(RESOURCE, messages.get(j), new Object[] {i}, getLocale())));
+                        getReport().println(new Throwable(UtilProperties.getMessage(RESOURCE, MESSAGES.get(j), new Object[] {i}, getLocale())));
                     } else {
-                        getReport().println(UtilProperties.getMessage(RESOURCE, messages.get(j), new Object[] {i}, getLocale()), j);
+                        getReport().println(UtilProperties.getMessage(RESOURCE, MESSAGES.get(j), new Object[] {i}, getLocale()), j);
                     }
                 }
                 getReport().println(UtilProperties.getMessage(RESOURCE, "COUNT_COMPLETED", getLocale()), InterfaceReport.FORMAT_HEADLINE);

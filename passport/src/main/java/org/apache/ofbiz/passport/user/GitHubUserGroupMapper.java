@@ -32,7 +32,7 @@ import org.apache.ofbiz.base.util.UtilProperties;
  */
 public class GitHubUserGroupMapper {
 
-    protected List<String> groups;
+    private List<String> groups;
 
     public GitHubUserGroupMapper(String[] groups) {
         this.groups = Arrays.asList(groups);
@@ -45,8 +45,12 @@ public class GitHubUserGroupMapper {
         groups.add(group);
     }
 
+    /**
+     * Gets security groups.
+     * @return the security groups
+     */
     public Set<String> getSecurityGroups() {
-        Properties props = UtilProperties.getProperties(GitHubAuthenticator.props);
+        Properties props = UtilProperties.getProperties(GitHubAuthenticator.PROPS);
 
         Set<String> secGroups = new HashSet<>();
         boolean running = true;
