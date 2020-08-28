@@ -641,4 +641,29 @@ under the License.
             </widgets>
         </section>
     </screen>
+
+    <screen name="ProductUomDropDownOnly">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://order/groovyScripts/entry/catalog/ProductUomDropDownOnly.groovy"/>
+                <!-- This screen is used to update uom dropdown using ajax request. Setting the last saved view in the last view to avoid
+                ajax request's view to be used in subsequent request with response type last view.-->
+                <set field="nothing" value="${groovy: session.setAttribute('_LAST_VIEW_NAME_', session.getAttribute('_SAVED_VIEW_NAME_'))}"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <not><if-empty field="product"/></not>
+                    </condition>
+                    <widgets>
+                        <platform-specific>
+                            <html><html-template location="component://order/template/entry/catalog/ProductUomDropDownOnly.ftl"/></html>
+                        </platform-specific>
+                    </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
 </screens>
