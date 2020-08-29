@@ -2,7 +2,7 @@
 
 # Ecommerce component
 
-## more information
+## More information
 How to use Janrain Engage Social Login.
 
 1.Get API Key from http://www.janrain.com/products/engage/social-login.
