@@ -222,7 +222,7 @@ public class ReportDesignGenerator {
         ImageHandle image = factory.newImage(null);
         CellHandle cell = (CellHandle) row.getCells().get(0);
         cell.getContent().add(image);
-        image.setURL("http://ofbiz.apache.org/images/ofbiz_logo.png");
+        image.setURL("https://ofbiz.apache.org/images/ofbiz_logo.png");
         LabelHandle label = factory.newLabel(null);
         cell = (CellHandle) row.getCells().get(1);
         cell.getContent().add(label);

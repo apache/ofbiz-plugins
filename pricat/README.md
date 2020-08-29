@@ -1,4 +1,4 @@
-<img src="http://ofbiz.apache.org/images/OFBiz-logo.png" alt="Apache OFBiz" />
+<img src="https://ofbiz.apache.org/images/ofbiz_logo.png" alt="Apache OFBiz" />
 
 # PriCat component
 PriCat is the abbreviation of Price and Catalog/Category. The PriCat component is to support importing/parsing excel files with price and catalog/category data. The excel files can be checked by version, header column names, currencyId. Each row can be validated by facility(name, Id and ownership), required fields, string or number and etc.

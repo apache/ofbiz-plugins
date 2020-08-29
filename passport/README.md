@@ -1,4 +1,4 @@
-<img src="http://ofbiz.apache.org/images/OFBiz-logo.png" alt="Apache OFBiz" />
+<img src="https://ofbiz.apache.org/images/ofbiz_logo.png" alt="Apache OFBiz" />
 
 # Passport component
 The passport component is to support users to login with a third party OAuth2 authentication such as GitHub, LinkedIn and etc.
