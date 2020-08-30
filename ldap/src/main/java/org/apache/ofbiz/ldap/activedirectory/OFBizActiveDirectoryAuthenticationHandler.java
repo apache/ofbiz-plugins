@@ -62,7 +62,7 @@ public final class OFBizActiveDirectoryAuthenticationHandler extends AbstractOFB
         Hashtable<String, String> env = new Hashtable<>();
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         env.put(Context.PROVIDER_URL, ldapURL);
-        if (searchType == null || searchType.trim().equals("")) {
+        if (searchType == null || "".equals(searchType.trim())) {
             env.put(Context.SECURITY_AUTHENTICATION, "none");
         } else if ("login".equals(searchType.trim())) {
             env.put(Context.SECURITY_AUTHENTICATION, authenType);
