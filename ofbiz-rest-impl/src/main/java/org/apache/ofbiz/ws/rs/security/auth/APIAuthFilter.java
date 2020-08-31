@@ -93,7 +93,8 @@ public class APIAuthFilter implements ContainerRequestFilter {
      * @return
      */
     private boolean isTokenBasedAuthentication(String authorizationHeader) {
-        return authorizationHeader != null && authorizationHeader.toLowerCase().startsWith(AuthenticationScheme.BEARER.getScheme() + " ");
+        return authorizationHeader != null
+                && authorizationHeader.toLowerCase().startsWith(AuthenticationScheme.BEARER.getScheme().toLowerCase() + " ");
     }
 
     /**
