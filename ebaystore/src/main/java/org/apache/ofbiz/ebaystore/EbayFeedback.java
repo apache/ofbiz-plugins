@@ -240,7 +240,7 @@ public class EbayFeedback {
                     entry.put("userID", transection.getItem().getSeller().getUserID());
                     entry.put("role", "seller");
                 }
-                if (transection.getShippingDetails()!=null) {
+                if (transection.getShippingDetails() != null) {
                     entry.put("shippingCost", transection.getShippingDetails().getDefaultShippingCost().getValue());
                     entry.put("shippingCurrency", transection.getShippingDetails().getDefaultShippingCost().getCurrencyID().name());
                 }

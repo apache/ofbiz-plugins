@@ -37,8 +37,14 @@ public class ExampleWebSockets {
 
     private static final String MODULE = ExampleWebSockets.class.getName();
     private static Set<Session> clients = Collections.synchronizedSet(new HashSet<Session>());
-    
 
+
+    /**
+     * On message.
+     * @param session the session
+     * @param msg the msg
+     * @param last the last
+     */
     @OnMessage
     public void onMessage(Session session, String msg, boolean last) {
         try {
@@ -60,19 +66,27 @@ public class ExampleWebSockets {
         }
     }
 
+    /**
+     * On open.
+     * @param session the session
+     */
     @OnOpen
-    public void onOpen (Session session) {
+    public void onOpen(Session session) {
         // Add session to the connected sessions clients set
         clients.add(session);
     }
 
+    /**
+     * On close.
+     * @param session the session
+     */
     @OnClose
-    public void onClose (Session session) {
+    public void onClose(Session session) {
         // Remove session from the connected sessions clients set
         clients.remove(session);
     }
 
-    public static Set<Session> getClients () {
+    public static Set<Session> getClients() {
         return clients;
     }
 }

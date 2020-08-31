@@ -116,9 +116,9 @@ public class MultiSiteRequestWrapper implements HttpServletRequest {
                 }
             }
             return pathInfo.substring(nextPathSegmentStart);
-       } else {
-           return pathInfo;
-       }
+        } else {
+            return pathInfo;
+        }
     }
 
     @Override
