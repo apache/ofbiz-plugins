@@ -70,22 +70,17 @@ public class APIAuthFilter implements ContainerRequestFilter {
         String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
         Delegator delegator = (Delegator) servletContext.getAttribute("delegator");
         if (!isTokenBasedAuthentication(authorizationHeader)) {
-            abortWithUnauthorized(requestContext, false, "Unauthorized: Access is denied due to invalid or absent Authorization header");
+            abortWithUnauthorized(requestContext, false, "Unauthorized: Access is denied due to invalid or absent Authorization header.");
             return;
         }
         String jwtToken = JWTManager.getHeaderAuthBearerToken(httpRequest);
         Map<String, Object> claims = JWTManager.validateToken(jwtToken, JWTManager.getJWTKey(delegator));
         if (claims.containsKey(ModelService.ERROR_MESSAGE)) {
-            abortWithUnauthorized(requestContext, true, (String) claims.get(ModelService.ERROR_MESSAGE));
+            abortWithUnauthorized(requestContext, true, "Unauthorized: " + (String) claims.get(ModelService.ERROR_MESSAGE));
         } else {
             GenericValue userLogin = extractUserLoginFromJwtClaim(delegator, claims);
-            if (UtilValidate.isEmpty(userLogin)) {
-                abortWithUnauthorized(requestContext, true, "Access Denied: User does not exist in the system");
-                return;
-            }
             httpRequest.setAttribute("userLogin", userLogin);
         }
-
     }
 
     /**
@@ -107,7 +102,7 @@ public class APIAuthFilter implements ContainerRequestFilter {
                             .header(HttpHeaders.WWW_AUTHENTICATE, AuthenticationScheme.BEARER.getScheme() + " realm=\"" + REALM + "\"").build());
         } else {
             requestContext
-                    .abortWith(RestApiUtil.error(Response.Status.FORBIDDEN.getStatusCode(), Response.Status.FORBIDDEN.getReasonPhrase(), message));
+                .abortWith(RestApiUtil.error(Response.Status.UNAUTHORIZED.getStatusCode(), Response.Status.UNAUTHORIZED.getReasonPhrase(), message));
         }
 
     }
