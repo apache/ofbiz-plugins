@@ -49,6 +49,8 @@
         }
     }
 </script>
+${screens.render("component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#productvariantjs")}
+${variantInfoJavaScript!}
   <#if product??>
     <#-- variable setup -->
       <#if "Y" == backendPath?default("N")>
@@ -197,15 +199,15 @@
                                         </div>
                                         <#if mainProducts?has_content>
                                           <input type="hidden" name="product_id" value=""/>
-                                          <select name="productVariantId" onchange="javascript:displayProductVirtualId(this.value, '${product.productId}', this.form);">
-                                            <option value="">Select Unit Of Measure</option>
+                                          <select name="productVariantId" onchange="javascript:variantUomSelection(this);" style="width: 100%;">
+                                            <option value="">${uiLabelMap.CommonSelect} ${uiLabelMap.ProductUnitOfMeasure}</option>
                                             <#list mainProducts as mainProduct>
                                               <option value="${mainProduct.productId}">${mainProduct.uomDesc} : ${mainProduct.piecesIncluded}</option>
                                             </#list>
                                           </select>
-                                          <div style="display: inline-block;">
-                                            <strong><span id="product_id_display"> </span></strong>
-                                            <strong><span id="variant_price_display"> </span></strong>
+                                          <div class="variant-price" style="display: none;">
+                                            <strong><span class="product_id_display"> </span></strong>
+                                            <strong><span class="variant_price_display"> </span></strong>
                                           </div>
                                         </#if>
                                       </div>
