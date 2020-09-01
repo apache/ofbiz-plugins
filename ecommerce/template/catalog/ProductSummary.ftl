@@ -81,9 +81,8 @@ ${variantInfoJavaScript!}
                   </a>
                   <div class="card-body">
                     <h4 class="card-title"><a href="${productUrl}" class="btn btn-link">${productContentWrapper.get("PRODUCT_NAME", "html")!}</a></h4>
-                    <div class="cart-text">
+                    <div class="card-text">
                       <div>${productContentWrapper.get("DESCRIPTION", "html")!}<#if daysToShip??>&nbsp;-&nbsp;${uiLabelMap.ProductUsuallyShipsIn} <b>${daysToShip}</b> ${uiLabelMap.CommonDays}!</#if></div>
-
                       <#-- Display category-specific product comments -->
                         <#if prodCatMem?? && prodCatMem.comments?has_content>
                           <p>${prodCatMem.comments}</p>
