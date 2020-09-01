@@ -2197,31 +2197,6 @@
     </simple-method>
     
     <simple-method method-name="deleteScrumResource" short-description="remove scrum resource">
-        <entity-one entity-name="UserLogin" value-field="sysUserLogin">
-            <field-map field-name="userLoginId" value="system"/>
-        </entity-one>
-        <if-compare operator="equals" value="SCRUM_PRODUCT_OWNER" field="parameters.groupId">
-            <set field="parameters.roleTypeId" value="PRODUCT_OWNER"/>
-        </if-compare>
-        <if-compare operator="equals" value="SCRUM_MASTER" field="parameters.groupId">
-            <set field="parameters.roleTypeId" value="SCRUM_MASTER"/>
-        </if-compare>
-        <if-compare operator="equals" value="SCRUM_TEAM" field="parameters.groupId">
-            <set field="parameters.roleTypeId" value="SCRUM_TEAM"/>
-        </if-compare>
-        <!-- For special role -->
-        <if-compare operator="equals" value="SCRUM_STAKEHOLDER" field="parameters.groupId">
-            <set field="parameters.roleTypeId" value="STAKEHOLDER"/>
-        </if-compare>
-        <entity-and entity-name="PartyRole" list="partyRoles">
-            <field-map field-name="partyId" from-field="parameters.partyId"/>
-            <field-map field-name="roleTypeId" from-field="parameters.roleTypeId"/>
-        </entity-and>
-        <if-not-empty field="partyRoles">
-            <set-service-fields service-name="deletePartyRole" map="parameters" to-map="deletePartyRoleMap"/>
-            <set field="deletePartyRoleMap.userLogin" from-field="sysUserLogin"/>
-            <call-service service-name="deletePartyRole" in-map-name="deletePartyRoleMap"/>
-        </if-not-empty>
         <now-timestamp field="nowTimestamp" />
         <entity-and entity-name="UserLoginSecurityGroup" list="userLoginSecurityGroups">
             <field-map field-name="userLoginId" from-field="parameters.userLoginId"/>
@@ -2229,7 +2204,8 @@
         </entity-and>
         <if-not-empty field="userLoginSecurityGroups">
             <iterate list="userLoginSecurityGroups" entry="userLoginSecurityGroup">
-                <remove-value value-field="userLoginSecurityGroup"/>
+                <set field="userLoginSecurityGroup.thruDate" from-field="nowTimestamp"/>
+                <store-value value-field="userLoginSecurityGroup"/>
             </iterate>
         </if-not-empty>
     </simple-method>
