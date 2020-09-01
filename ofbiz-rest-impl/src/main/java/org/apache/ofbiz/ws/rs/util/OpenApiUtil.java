@@ -38,7 +38,6 @@ import io.swagger.v3.oas.models.media.DateSchema;
 import io.swagger.v3.oas.models.media.IntegerSchema;
 import io.swagger.v3.oas.models.media.MapSchema;
 import io.swagger.v3.oas.models.media.NumberSchema;
-import io.swagger.v3.oas.models.media.ObjectSchema;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.media.StringSchema;
 
@@ -182,7 +181,7 @@ public final class OpenApiUtil {
         List<ModelParam> children = param.getChildren();
         Delegator delegator = WebAppUtil.getDelegator(ApiContextListener.getApplicationCntx());
         if (schema instanceof ArraySchema) {
-            ((ArraySchema) schema).setItems(getAttributeSchema(service, children.get(0)));
+            ((ArraySchema) schema).setItems(children.size() > 0 ? getAttributeSchema(service, children.get(0)) : new StringSchema());
         } else if (schema instanceof MapSchema) {
             if (isTypeGenericEntityOrGenericValue(param.getType())) {
                 if (UtilValidate.isEmpty(param.getEntityName())) {
@@ -218,24 +217,13 @@ public final class OpenApiUtil {
         parentSchema.addProperties("statusCode", new IntegerSchema().description("HTTP Status Code"));
         parentSchema.addProperties("statusDescription", new StringSchema().description("HTTP Status Code Description"));
         parentSchema.addProperties("successMessage", new StringSchema().description("Success Message"));
-        ObjectSchema dataSchema = new ObjectSchema();
+        Schema<Object> dataSchema = new Schema<Object>();
         parentSchema.addProperties("data", dataSchema);
         service.getOutParamNamesMap().forEach((name, type) -> {
-            Schema<?> schema = null;
-            Class<?> schemaClass = getOpenApiTypeForAttributeType(type);
-            if (schemaClass == null) {
-                return;
+            Schema<?> attrSchema = getAttributeSchema(service, service.getParam(name));
+            if (attrSchema != null) {
+                dataSchema.addProperties(name, getAttributeSchema(service, service.getParam(name)));
             }
-            try {
-                schema = (Schema<?>) schemaClass.newInstance();
-            } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-            if (schema instanceof ArraySchema) {
-                ArraySchema arraySchema = (ArraySchema) schema;
-                arraySchema.items(new StringSchema());
-            }
-            dataSchema.addProperties(name, schema.description(name));
         });
         return parentSchema;
     }
