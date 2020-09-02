@@ -61,8 +61,6 @@ public class APIAuthFilter implements ContainerRequestFilter {
     @Context
     private ServletContext servletContext;
 
-    private static final String REALM = "OFBiz";
-
     /**
      */
     @Override
@@ -99,7 +97,8 @@ public class APIAuthFilter implements ContainerRequestFilter {
         if (!isAuthHeaderPresent) {
             requestContext.abortWith(
                     RestApiUtil.errorBuilder(Response.Status.UNAUTHORIZED.getStatusCode(), Response.Status.UNAUTHORIZED.getReasonPhrase(), message)
-                            .header(HttpHeaders.WWW_AUTHENTICATE, AuthenticationScheme.BEARER.getScheme() + " realm=\"" + REALM + "\"").build());
+                    .header(HttpHeaders.WWW_AUTHENTICATE,
+                    AuthenticationScheme.BEARER.getScheme() + " realm=\"" + AuthenticationScheme.REALM + "\"").build());
         } else {
             requestContext
                 .abortWith(RestApiUtil.error(Response.Status.UNAUTHORIZED.getStatusCode(), Response.Status.UNAUTHORIZED.getReasonPhrase(), message));

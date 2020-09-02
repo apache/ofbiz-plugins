@@ -22,7 +22,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Response;
+
 import org.apache.ofbiz.base.util.Debug;
+import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.model.ModelEntity;
@@ -30,16 +34,21 @@ import org.apache.ofbiz.entity.model.ModelField;
 import org.apache.ofbiz.service.ModelParam;
 import org.apache.ofbiz.service.ModelService;
 import org.apache.ofbiz.webapp.WebAppUtil;
+import org.apache.ofbiz.ws.rs.common.AuthenticationScheme;
 import org.apache.ofbiz.ws.rs.listener.ApiContextListener;
 
+import io.swagger.v3.oas.models.headers.Header;
 import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.BooleanSchema;
+import io.swagger.v3.oas.models.media.Content;
 import io.swagger.v3.oas.models.media.DateSchema;
 import io.swagger.v3.oas.models.media.IntegerSchema;
 import io.swagger.v3.oas.models.media.MapSchema;
+import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.NumberSchema;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.media.StringSchema;
+import io.swagger.v3.oas.models.responses.ApiResponse;
 
 public final class OpenApiUtil {
 
@@ -52,6 +61,8 @@ public final class OpenApiUtil {
     private static final Map<String, String> CLASS_ALIAS = new HashMap<>();
     private static final Map<String, Class<?>> JAVA_OPEN_API_MAP = new HashMap<>();
     private static final Map<String, String> FIELD_TYPE_MAP = new HashMap<String, String>();
+    private static final Map<String, ApiResponse> RESPONSES = new HashMap<>();
+    private static final Map<String, Schema<?>> SCHEMAS = new HashMap<>();
 
     static {
         CLASS_ALIAS.put("String", "String");
@@ -141,6 +152,68 @@ public final class OpenApiUtil {
         FIELD_TYPE_MAP.put("byte-array", "Byte");
         FIELD_TYPE_MAP.put("blob", "Byte");
 
+        buildApiResponseSchemas();
+        buildApiResponses();
+    }
+
+    private static void buildApiResponseSchemas() {
+        Schema<?> unauthorized = new MapSchema().addProperties("statusCode", new IntegerSchema().description("HTTP Status Code"))
+                 .addProperties("statusDescription", new StringSchema().description("HTTP Status Code Description"))
+                 .addProperties("errorMessage", new StringSchema().description("Error Message"));
+        SCHEMAS.put("api.response.unauthorized.noheader", unauthorized);
+        SCHEMAS.put("api.response.unauthorized.invalidtoken", unauthorized);
+        SCHEMAS.put("api.response.forbidden", unauthorized);
+    }
+
+    public static Map<String, ApiResponse> getStandardApiResponses() {
+        return RESPONSES;
+    }
+
+    public static Map<String, Schema<?>> getStandardApiResponseSchemas() {
+        return SCHEMAS;
+    }
+
+    private static void buildApiResponses() {
+        Map<String, Object> unauthorizedNoHeaderExample = UtilMisc.toMap("statusCode", Response.Status.UNAUTHORIZED.getStatusCode(),
+                "statusDescription", Response.Status.UNAUTHORIZED.getReasonPhrase(),
+                "errorMessage", "Unauthorized: Access is denied due to invalid or absent Authorization header.");
+        Map<String, Object> unauthorizedInvalidTokenExample = UtilMisc.toMap("statusCode", Response.Status.UNAUTHORIZED.getStatusCode(),
+                "statusDescription", Response.Status.UNAUTHORIZED.getReasonPhrase(),
+                "errorMessage", "Unauthorized: Access is denied due to invalid or absent Authorization header.");
+        Map<String, Object> forbiddenExample = UtilMisc.toMap("statusCode", Response.Status.FORBIDDEN.getStatusCode(),
+                "statusDescription", Response.Status.FORBIDDEN.getReasonPhrase(),
+                "errorMessage", "Forbidden: Insufficient rights to perform this API call.");
+
+        final ApiResponse unauthorizedNoHeader = new ApiResponse().addHeaderObject(HttpHeaders.WWW_AUTHENTICATE, new Header()
+                .example(HttpHeaders.WWW_AUTHENTICATE + ": "
+                 + AuthenticationScheme.BEARER.getScheme() + " realm=\"" + AuthenticationScheme.REALM + "\""))
+                .description("Unauthorized: Access is denied due to invalid or absent Authorization header.")
+                .content(new Content()
+                        .addMediaType(javax.ws.rs.core.MediaType.APPLICATION_JSON, new MediaType()
+                                .schema(new Schema<>()
+                                        .$ref("#/components/schemas/" + "api.response.unauthorized.noheader"))
+                                .example(unauthorizedNoHeaderExample)));
+
+        final ApiResponse unauthorizedInvalidToken = new ApiResponse()
+                .description("Unauthorized: Access is denied due to invalid or absent Authorization header.")
+                .content(new Content()
+                        .addMediaType(javax.ws.rs.core.MediaType.APPLICATION_JSON, new MediaType()
+                                .schema(new Schema<>()
+                                        .$ref("#/components/schemas/" + "api.response.unauthorized.invalidtoken"))
+                                .example(unauthorizedInvalidTokenExample)));
+
+        final ApiResponse forbidden = new ApiResponse().addHeaderObject(HttpHeaders.WWW_AUTHENTICATE, new Header()
+                .example(HttpHeaders.WWW_AUTHENTICATE + ": "
+                + AuthenticationScheme.BEARER.getScheme() + " realm=\"" + AuthenticationScheme.REALM + "\""))
+                .description("Forbidden: Insufficient rights to perform this API call.")
+                .content(new Content()
+                        .addMediaType(javax.ws.rs.core.MediaType.APPLICATION_JSON, new MediaType()
+                                .schema(new Schema<>().$ref("#/components/schemas/" + "api.response.forbidden"))
+                                .example(forbiddenExample)));
+
+        RESPONSES.put(String.valueOf(Response.Status.UNAUTHORIZED.getStatusCode()), unauthorizedNoHeader);
+        RESPONSES.put(String.valueOf(Response.Status.UNAUTHORIZED.getStatusCode()), unauthorizedInvalidToken);
+        RESPONSES.put(String.valueOf(Response.Status.FORBIDDEN.getStatusCode()), forbidden);
     }
 
     public static Class<?> getOpenApiTypeForAttributeType(String attributeType) {
@@ -181,7 +254,8 @@ public final class OpenApiUtil {
         List<ModelParam> children = param.getChildren();
         Delegator delegator = WebAppUtil.getDelegator(ApiContextListener.getApplicationCntx());
         if (schema instanceof ArraySchema) {
-            ((ArraySchema) schema).setItems(children.size() > 0 ? getAttributeSchema(service, children.get(0)) : new StringSchema());
+            ArraySchema arrSch = (ArraySchema) schema;
+            arrSch.setItems(children.size() > 0 ? getAttributeSchema(service, children.get(0)) : new StringSchema());
         } else if (schema instanceof MapSchema) {
             if (isTypeGenericEntityOrGenericValue(param.getType())) {
                 if (UtilValidate.isEmpty(param.getEntityName())) {
@@ -254,5 +328,14 @@ public final class OpenApiUtil {
             dataSchema.addProperties(fieldNm, schema.description(fieldNm));
         }
         return dataSchema;
+    }
+
+    public static ApiResponse buildSuccessResponse(ModelService service) {
+        final ApiResponse success = new ApiResponse()
+                .description("Success response for the API call.")
+                .content(new Content()
+                        .addMediaType(javax.ws.rs.core.MediaType.APPLICATION_JSON, new MediaType()
+                                .schema(new Schema<>().$ref("#/components/schemas/" + "api.response." + service.getName() + ".success"))));
+        return success;
     }
 }
