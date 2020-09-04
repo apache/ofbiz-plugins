@@ -23,6 +23,7 @@ public enum AuthenticationScheme {
     BASIC("Basic"),
     BEARER("Bearer");
     private String scheme;
+    public static final String REALM = "OFBiz";
     AuthenticationScheme(String scheme) {
         this.scheme = scheme;
     }

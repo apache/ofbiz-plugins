@@ -26,6 +26,7 @@ import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.HttpMethod;
+import javax.ws.rs.core.Response;
 
 import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.service.DispatchContext;
@@ -97,7 +98,7 @@ public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
         if (paths == null) {
             paths = new Paths();
         }
-
+        addPredefinedSchemas();
         ServletContext servletContext = ApiContextListener.getApplicationCntx();
         LocalDispatcher dispatcher = WebAppUtil.getDispatcher(servletContext);
         DispatchContext context = dispatcher.getDispatchContext();
@@ -133,21 +134,10 @@ public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
                                     new MediaType().schema(new Schema<>().$ref(service.getName() + "Request"))));
                     operation.setRequestBody(request);
                 }
-
-                ApiResponses apiResponsesObject = new ApiResponses();
-                ApiResponse successResponse = new ApiResponse().description("Success");
-                Content content = new Content();
-                MediaType jsonMediaType = new MediaType();
-                Schema<?> refSchema = new Schema<>();
-                refSchema.$ref(service.getName() + "Response");
-                jsonMediaType.setSchema(refSchema);
-                setOutSchemaForService(service);
-                setInSchemaForService(service);
-                content.addMediaType(javax.ws.rs.core.MediaType.APPLICATION_JSON, jsonMediaType);
-
-                apiResponsesObject.addApiResponse("200", successResponse.content(content));
+                addServiceOutSchema(service);
+                addServiceInSchema(service);
+                addServiceOperationApiResponses(service, operation);
                 setPathItemOperation(pathItemObject, service.getAction().toUpperCase(), operation);
-                operation.setResponses(apiResponsesObject);
                 paths.addPathItem("/services/" + service.getName(), pathItemObject);
 
             }
@@ -187,12 +177,28 @@ public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
         }
     }
 
-    private void setOutSchemaForService(ModelService service) {
-        schemas.put(service.getName() + "Response", OpenApiUtil.getOutSchema(service));
+    private void addServiceOutSchema(ModelService service) {
+        schemas.put("api.response." + service.getName() + ".success", OpenApiUtil.getOutSchema(service));
     }
 
-    private void setInSchemaForService(ModelService service) {
-        schemas.put(service.getName() + "Request", OpenApiUtil.getInSchema(service));
+    private void addServiceInSchema(ModelService service) {
+        schemas.put("api.request." + service.getName(), OpenApiUtil.getInSchema(service));
+    }
+
+    private void addPredefinedSchemas() {
+        OpenApiUtil.getStandardApiResponseSchemas().forEach((name, schema) -> {
+            schemas.put(name, schema);
+        });
+    }
+
+    private void addServiceOperationApiResponses(ModelService service, Operation operation) {
+        ApiResponses apiResponsesObject = new ApiResponses();
+        ApiResponse successResponse = OpenApiUtil.buildSuccessResponse(service);
+        apiResponsesObject.addApiResponse(String.valueOf(Response.Status.OK.getStatusCode()), successResponse);
+        OpenApiUtil.getStandardApiResponses().forEach((code, response) -> {
+            apiResponsesObject.addApiResponse(code, response);
+        });
+        operation.setResponses(apiResponsesObject);
     }
 
 }
