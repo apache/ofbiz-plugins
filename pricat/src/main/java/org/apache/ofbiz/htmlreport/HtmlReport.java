@@ -1252,6 +1252,11 @@ public class HtmlReport extends AbstractReport {
         }
         return logFileName;
     }
+
+    /**
+     * Gets log file name.
+     * @return the log file name
+     */
     public String getLogFileName() {
         return logFileName;
     }

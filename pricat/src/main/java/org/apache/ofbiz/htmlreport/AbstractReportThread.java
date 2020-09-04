@@ -179,10 +179,24 @@ public abstract class AbstractReportThread extends Thread implements InterfaceRe
         ((HtmlReport) report).setParamThread(getUUID().toString());
     }
 
-    protected void initHtmlReport(HttpServletRequest request, HttpServletResponse response, boolean writeHtml, boolean isTransient, String logFileName) {
+    /**
+     * Init html report.
+     * @param request the request
+     * @param response the response
+     * @param writeHtml the write html
+     * @param isTransient the is transient
+     * @param logFileName the log file name
+     */
+    protected void initHtmlReport(HttpServletRequest request, HttpServletResponse response, boolean writeHtml, boolean isTransient,
+                                  String logFileName) {
         report = HtmlReport.getInstance(request, response, writeHtml, isTransient, logFileName);
         ((HtmlReport) report).setParamThread(getUUID().toString());
     }
+
+    /**
+     * Gets locale.
+     * @return the locale
+     */
     protected Locale getLocale() {
         return locale;
     }

@@ -134,8 +134,9 @@ public final class OFBizCasAuthenticationHandler extends AbstractOFBizAuthentica
         java.util.Random rn = new SecureRandom();
         int n = hi - lo + 1;
         int i = rn.nextInt() % n;
-        if (i < 0)
-                i = -i;
+        if (i < 0) {
+            i = -i;
+        }
         return lo + i;
     }
 
@@ -161,7 +162,8 @@ public final class OFBizCasAuthenticationHandler extends AbstractOFBizAuthentica
         String className = UtilXml.childElementValue(rootElement, "CasLdapHandler", "org.apache.ofbiz.ldap.openldap.OFBizLdapAuthenticationHandler");
         try {
             Class<?> handlerClass = Class.forName(className);
-            InterfaceOFBizAuthenticationHandler casLdapHandler = (InterfaceOFBizAuthenticationHandler) handlerClass.getDeclaredConstructor().newInstance();
+            InterfaceOFBizAuthenticationHandler casLdapHandler = (InterfaceOFBizAuthenticationHandler) handlerClass
+                    .getDeclaredConstructor().newInstance();
             return casLdapHandler.getLdapSearchResult(username, password, rootElement, bindRequired);
         } catch (ReflectiveOperationException e) {
             throw new NamingException(e.getLocalizedMessage());

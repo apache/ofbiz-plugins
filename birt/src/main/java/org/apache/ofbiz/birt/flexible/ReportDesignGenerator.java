@@ -282,7 +282,8 @@ public class ReportDesignGenerator {
         dataSetOpenScript.append("Debug.logInfo(\"#### In open\", MODULE)\n");
         dataSetOpenScript.append("try {\n");
         dataSetOpenScript.append("    listRes = dispatcher.runSync(\"" + serviceName + "\", UtilMisc.toMap(\"userLogin\", reportContext"
-                + ".getParameterValue(\"userLogin\"), \"locale\", reportContext.getParameterValue(\"locale\"), \"reportContext\", reportContext));\n");
+                + ".getParameterValue(\"userLogin\"), \"locale\", reportContext.getParameterValue(\"locale\"), "
+                + "\"reportContext\", reportContext));\n");
         dataSetOpenScript.append("    if (ServiceUtil.isError(listRes)) {\n");
         dataSetOpenScript.append("         Debug.logError(ServiceUtil.getErrorMessage(listRes));\n");
         dataSetOpenScript.append("    }\n");

@@ -145,7 +145,8 @@ public class ThirdPartyEvents {
                     // create distributor Party ?? why?
                     // create distributor PartyRole ?? why?
                     // create PartyRelationship
-                    GenericValue partyRelationship = delegator.makeValue("PartyRelationship", UtilMisc.toMap("partyIdFrom", party.getString("partyId"), "partyIdTo", distributorId, "roleTypeIdFrom", "CUSTOMER", "roleTypeIdTo", "DISTRIBUTOR"));
+                    GenericValue partyRelationship = delegator.makeValue("PartyRelationship", UtilMisc.toMap("partyIdFrom",
+                            party.getString("partyId"), "partyIdTo", distributorId, "roleTypeIdFrom", "CUSTOMER", "roleTypeIdTo", "DISTRIBUTOR"));
 
                     partyRelationship.set("fromDate", UtilDateTime.nowTimestamp());
                     partyRelationship.set("partyRelationshipTypeId", "DISTRIBUTION_CHANNEL");
@@ -198,12 +199,14 @@ public class ThirdPartyEvents {
 
         String store = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "affiliate.store.customer");
 
-        if (store == null || store.toUpperCase().startsWith("N"))
+        if (store == null || store.toUpperCase().startsWith("N")) {
             return "success";
+        }
         String storeOnClick = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "affiliate.store.onclick");
 
-        if (storeOnClick == null || storeOnClick.toUpperCase().startsWith("N"))
+        if (storeOnClick == null || storeOnClick.toUpperCase().startsWith("N")) {
             return "success";
+        }
 
         try {
             party = userLogin == null ? null : userLogin.getRelatedOne("Party", false);
@@ -220,7 +223,8 @@ public class ThirdPartyEvents {
 
                 if (UtilValidate.isNotEmpty(affiliateId)) {
                     // create PartyRelationship
-                    GenericValue partyRelationship = delegator.makeValue("PartyRelationship", UtilMisc.toMap("partyIdFrom", party.getString("partyId"), "partyIdTo", affiliateId, "roleTypeIdFrom", "CUSTOMER", "roleTypeIdTo", "AFFILIATE"));
+                    GenericValue partyRelationship = delegator.makeValue("PartyRelationship", UtilMisc.toMap("partyIdFrom",
+                            party.getString("partyId"), "partyIdTo", affiliateId, "roleTypeIdFrom", "CUSTOMER", "roleTypeIdTo", "AFFILIATE"));
 
                     partyRelationship.set("fromDate", UtilDateTime.nowTimestamp());
                     partyRelationship.set("partyRelationshipTypeId", "SALES_AFFILIATE");
@@ -251,7 +255,8 @@ public class ThirdPartyEvents {
 
     private static GenericValue getPartyRelationship(GenericValue party, String roleTypeTo) {
         try {
-            return EntityUtil.getFirst(EntityUtil.filterByDate(party.getRelated("FromPartyRelationship", UtilMisc.toMap("roleTypeIdTo", roleTypeTo), null, false), true));
+            return EntityUtil.getFirst(EntityUtil.filterByDate(party.getRelated("FromPartyRelationship", UtilMisc.toMap("roleTypeIdTo",
+                    roleTypeTo), null, false), true));
         } catch (GenericEntityException gee) {
             Debug.logWarning(gee, MODULE);
         }

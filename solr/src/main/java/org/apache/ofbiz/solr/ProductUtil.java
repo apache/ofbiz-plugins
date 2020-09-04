@@ -85,7 +85,8 @@ public final class ProductUtil {
                 // if (product.get("productWeight") != null) dispatchContext.put("weight", "");
 
                 // Trying to set a correctand trail
-                List<GenericValue> category = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition(UtilMisc.toMap("productId", productId)), null, null, null, false);
+                List<GenericValue> category = delegator.findList("ProductCategoryMember",
+                        EntityCondition.makeCondition(UtilMisc.toMap("productId", productId)), null, null, null, false);
                 List<String> trails = new ArrayList<>();
                 for (Iterator<GenericValue> catIterator = category.iterator(); catIterator.hasNext();) {
                     GenericValue cat = catIterator.next();
@@ -139,7 +140,8 @@ public final class ProductUtil {
                     dispatchContext.put("features", featureSet.get("featureSet"));
                 }
 
-                Map<String, Object> productInventoryAvailable = dispatcher.runSync("getProductInventoryAvailable", UtilMisc.toMap("productId", productId));
+                Map<String, Object> productInventoryAvailable = dispatcher.runSync("getProductInventoryAvailable",
+                        UtilMisc.toMap("productId", productId));
                 if (ServiceUtil.isError(productInventoryAvailable)) {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(productInventoryAvailable));
                 }
@@ -219,7 +221,8 @@ public final class ProductUtil {
                 // dispatchContext.put("last_modified", "");
 
                 if ("AGGREGATED".equals(product.getString("productTypeId"))) {
-                    ProductConfigWrapper configWrapper = new ProductConfigWrapper(delegator, dispatcher, productId, null, null, null, null, locale, userLogin);
+                    ProductConfigWrapper configWrapper = new ProductConfigWrapper(delegator, dispatcher, productId, null,
+                            null, null, null, locale, userLogin);
                     String listPrice = configWrapper.getTotalListPrice().setScale(2, RoundingMode.HALF_DOWN).toString();
                     if (listPrice != null) {
                         dispatchContext.put("listPrice", listPrice);
@@ -240,8 +243,9 @@ public final class ProductUtil {
                     }
                     if (priceMap.get("defaultPrice") != null) {
                         String defaultPrice = ((BigDecimal) priceMap.get("defaultPrice")).setScale(2, RoundingMode.HALF_DOWN).toString();
-                        if (defaultPrice != null)
+                        if (defaultPrice != null) {
                             dispatchContext.put("defaultPrice", defaultPrice);
+                        }
                     }
                 }
             }
