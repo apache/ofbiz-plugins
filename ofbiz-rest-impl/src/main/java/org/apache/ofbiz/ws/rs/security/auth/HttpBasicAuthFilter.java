@@ -40,6 +40,7 @@ import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceUtil;
+import org.apache.ofbiz.ws.rs.common.AuthenticationScheme;
 import org.apache.ofbiz.ws.rs.security.AuthToken;
 import org.apache.ofbiz.ws.rs.util.RestApiUtil;
 
@@ -59,7 +60,6 @@ public class HttpBasicAuthFilter implements ContainerRequestFilter {
     @Context
     private ServletContext servletContext;
 
-    private static final String AUTHENTICATION_SCHEME = "Basic";
     private static final String REALM = "OFBiz";
 
     /**
@@ -89,7 +89,8 @@ public class HttpBasicAuthFilter implements ContainerRequestFilter {
      * @return
      */
     private boolean isBasicAuth(String authorizationHeader) {
-        return authorizationHeader != null && authorizationHeader.toLowerCase().startsWith(AUTHENTICATION_SCHEME.toLowerCase() + " ");
+        return authorizationHeader != null
+                && authorizationHeader.toLowerCase().startsWith(AuthenticationScheme.BASIC.getScheme().toLowerCase() + " ");
     }
 
     /**
@@ -99,7 +100,7 @@ public class HttpBasicAuthFilter implements ContainerRequestFilter {
         if (!isAuthHeaderPresent) {
             requestContext.abortWith(
                     RestApiUtil.errorBuilder(Response.Status.UNAUTHORIZED.getStatusCode(), Response.Status.UNAUTHORIZED.getReasonPhrase(), message)
-                            .header(HttpHeaders.WWW_AUTHENTICATE, AUTHENTICATION_SCHEME + " realm=\"" + REALM + "\"").build());
+                            .header(HttpHeaders.WWW_AUTHENTICATE, AuthenticationScheme.BASIC.getScheme() + " realm=\"" + REALM + "\"").build());
         } else {
             requestContext
                     .abortWith(RestApiUtil.error(Response.Status.FORBIDDEN.getStatusCode(), Response.Status.FORBIDDEN.getReasonPhrase(), message));

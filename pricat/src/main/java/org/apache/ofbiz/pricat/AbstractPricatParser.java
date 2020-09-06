@@ -685,6 +685,13 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
         this.selectedFacilityId = selectedFacilityId;
     }
 
+    /**
+     * Is empty row boolean.
+     * @param row the row
+     * @param size the size
+     * @param display the display
+     * @return the boolean
+     */
     protected boolean isEmptyRow(XSSFRow row, int size, boolean display) {
         // check whether this row is empty
         if (UtilValidate.isEmpty(row)) {
@@ -764,6 +771,9 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
         return !errorMessages.keySet().isEmpty();
     }
 
+    /**
+     * Cleanup log and commented excel.
+     */
     protected void cleanupLogAndCommentedExcel() {
         try {
             report.print(UtilProperties.getMessage(RESOURCE, "CLEANUP_LOGANDEXCEL_BEGIN", locale), InterfaceReport.FORMAT_DEFAULT);

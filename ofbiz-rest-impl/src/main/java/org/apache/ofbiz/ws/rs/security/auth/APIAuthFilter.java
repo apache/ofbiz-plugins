@@ -39,6 +39,7 @@ import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.service.ModelService;
 import org.apache.ofbiz.webapp.control.JWTManager;
+import org.apache.ofbiz.ws.rs.common.AuthenticationScheme;
 import org.apache.ofbiz.ws.rs.security.Secured;
 import org.apache.ofbiz.ws.rs.util.RestApiUtil;
 
@@ -60,9 +61,6 @@ public class APIAuthFilter implements ContainerRequestFilter {
     @Context
     private ServletContext servletContext;
 
-    private static final String AUTHENTICATION_SCHEME = "Bearer";
-    private static final String REALM = "OFBiz";
-
     /**
      */
     @Override
@@ -70,22 +68,17 @@ public class APIAuthFilter implements ContainerRequestFilter {
         String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
         Delegator delegator = (Delegator) servletContext.getAttribute("delegator");
         if (!isTokenBasedAuthentication(authorizationHeader)) {
-            abortWithUnauthorized(requestContext, false, "Unauthorized: Access is denied due to invalid or absent Authorization header");
+            abortWithUnauthorized(requestContext, false, "Unauthorized: Access is denied due to invalid or absent Authorization header.");
             return;
         }
         String jwtToken = JWTManager.getHeaderAuthBearerToken(httpRequest);
         Map<String, Object> claims = JWTManager.validateToken(jwtToken, JWTManager.getJWTKey(delegator));
         if (claims.containsKey(ModelService.ERROR_MESSAGE)) {
-            abortWithUnauthorized(requestContext, true, (String) claims.get(ModelService.ERROR_MESSAGE));
+            abortWithUnauthorized(requestContext, true, "Unauthorized: " + (String) claims.get(ModelService.ERROR_MESSAGE));
         } else {
             GenericValue userLogin = extractUserLoginFromJwtClaim(delegator, claims);
-            if (UtilValidate.isEmpty(userLogin)) {
-                abortWithUnauthorized(requestContext, true, "Access Denied: User does not exist in the system");
-                return;
-            }
             httpRequest.setAttribute("userLogin", userLogin);
         }
-
     }
 
     /**
@@ -93,7 +86,8 @@ public class APIAuthFilter implements ContainerRequestFilter {
      * @return
      */
     private boolean isTokenBasedAuthentication(String authorizationHeader) {
-        return authorizationHeader != null && authorizationHeader.toLowerCase().startsWith(AUTHENTICATION_SCHEME.toLowerCase() + " ");
+        return authorizationHeader != null
+                && authorizationHeader.toLowerCase().startsWith(AuthenticationScheme.BEARER.getScheme().toLowerCase() + " ");
     }
 
     /**
@@ -103,10 +97,11 @@ public class APIAuthFilter implements ContainerRequestFilter {
         if (!isAuthHeaderPresent) {
             requestContext.abortWith(
                     RestApiUtil.errorBuilder(Response.Status.UNAUTHORIZED.getStatusCode(), Response.Status.UNAUTHORIZED.getReasonPhrase(), message)
-                            .header(HttpHeaders.WWW_AUTHENTICATE, AUTHENTICATION_SCHEME + " realm=\"" + REALM + "\"").build());
+                    .header(HttpHeaders.WWW_AUTHENTICATE,
+                    AuthenticationScheme.BEARER.getScheme() + " realm=\"" + AuthenticationScheme.REALM + "\"").build());
         } else {
             requestContext
-                    .abortWith(RestApiUtil.error(Response.Status.FORBIDDEN.getStatusCode(), Response.Status.FORBIDDEN.getReasonPhrase(), message));
+                .abortWith(RestApiUtil.error(Response.Status.UNAUTHORIZED.getStatusCode(), Response.Status.UNAUTHORIZED.getReasonPhrase(), message));
         }
 
     }

@@ -71,13 +71,13 @@ public class LinkedInEvents {
 
     private static final String MODULE = LinkedInEvents.class.getName();
     private static final String RESOURCE = "PassportUiLabels";
-    public static final String AuthorizeUri = "/uas/oauth2/authorization";
-    public static final String TokenServiceUri = "/uas/oauth2/accessToken";
-    public static final String UserApiUri = "/v1/people/~";
+    public static final String AUTHORIZE_URI = "/uas/oauth2/authorization";
+    public static final String TOKEN_SERVICE_URI = "/uas/oauth2/accessToken";
+    public static final String USER_API_URI = "/v1/people/~";
     public static final String DEFAULT_SCOPE = "r_basicprofile%20r_emailaddress";
-    public static final String TokenEndpoint = "https://www.linkedin.com";
+    public static final String TOKEN_END_POINT = "https://www.linkedin.com";
     public static final String SESSION_LINKEDIN_STATE = "_LINKEDIN_STATE_";
-    public static final String envPrefix = UtilProperties.getPropertyValue(LinkedInAuthenticator.props, "linkedin.env.prefix", "test");
+    public static final String ENV_PREFIX = UtilProperties.getPropertyValue(LinkedInAuthenticator.getPROPS(), "linkedin.env.prefix", "test");
 
     /**
      * Redirect to LinkedIn login page.
@@ -89,14 +89,14 @@ public class LinkedInEvents {
             return "error";
         }
 
-        String clientId = oauth2LinkedIn.getString(PassportUtil.ApiKeyLabel);
-        String returnURI = oauth2LinkedIn.getString(envPrefix + PassportUtil.ReturnUrlLabel);
+        String clientId = oauth2LinkedIn.getString(PassportUtil.API_KEY_LABEL);
+        String returnURI = oauth2LinkedIn.getString(ENV_PREFIX + PassportUtil.RETURN_URL_LABEL);
 
         // Get user authorization code
         try {
             String state = System.currentTimeMillis() + String.valueOf((new Random(10)).nextLong());
             request.getSession().setAttribute(SESSION_LINKEDIN_STATE, state);
-            String redirectUrl = TokenEndpoint + AuthorizeUri
+            String redirectUrl = TOKEN_END_POINT + AUTHORIZE_URI
                     + "?client_id=" + clientId
                     + "&response_type=code"
                     + "&scope=" + DEFAULT_SCOPE
@@ -134,7 +134,8 @@ public class LinkedInEvents {
             String errorDescpriton = request.getParameter(PassportUtil.COMMON_ERROR_DESCRIPTION);
             String errMsg = null;
             try {
-                errMsg = UtilProperties.getMessage(RESOURCE, "LinkedInFailedToGetAuthorizationCode", UtilMisc.toMap(PassportUtil.COMMON_ERROR, error, PassportUtil.COMMON_ERROR_DESCRIPTION, URLDecoder.decode(errorDescpriton, "UTF-8")), UtilHttp.getLocale(request));
+                errMsg = UtilProperties.getMessage(RESOURCE, "LinkedInFailedToGetAuthorizationCode", UtilMisc.toMap(PassportUtil.COMMON_ERROR,
+                        error, PassportUtil.COMMON_ERROR_DESCRIPTION, URLDecoder.decode(errorDescpriton, "UTF-8")), UtilHttp.getLocale(request));
             } catch (UnsupportedEncodingException e) {
                 errMsg = UtilProperties.getMessage(RESOURCE, "LinkedInGetAuthorizationCodeError", UtilHttp.getLocale(request));
             }
@@ -149,9 +150,9 @@ public class LinkedInEvents {
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
-        String clientId = oauth2LinkedIn.getString(PassportUtil.ApiKeyLabel);
-        String secret = oauth2LinkedIn.getString(PassportUtil.SecretKeyLabel);
-        String returnURI = oauth2LinkedIn.getString(envPrefix + PassportUtil.ReturnUrlLabel);
+        String clientId = oauth2LinkedIn.getString(PassportUtil.API_KEY_LABEL);
+        String secret = oauth2LinkedIn.getString(PassportUtil.SECRET_KEY_LABEL);
+        String returnURI = oauth2LinkedIn.getString(ENV_PREFIX + PassportUtil.RETURN_URL_LABEL);
 
         // Grant token from authorization code and oauth2 token
         // Use the authorization code to obtain an access token
@@ -159,9 +160,9 @@ public class LinkedInEvents {
 
         try {
             URI uri = new URIBuilder()
-                    .setScheme(TokenEndpoint.substring(0, TokenEndpoint.indexOf(":")))
-                    .setHost(TokenEndpoint.substring(TokenEndpoint.indexOf(":") + 3))
-                    .setPath(TokenServiceUri)
+                    .setScheme(TOKEN_END_POINT.substring(0, TOKEN_END_POINT.indexOf(":")))
+                    .setHost(TOKEN_END_POINT.substring(TOKEN_END_POINT.indexOf(":") + 3))
+                    .setPath(TOKEN_SERVICE_URI)
                     .setParameter("client_id", clientId)
                     .setParameter("client_secret", secret)
                     .setParameter("grant_type", "authorization_code")
@@ -171,7 +172,7 @@ public class LinkedInEvents {
             HttpPost postMethod = new HttpPost(uri);
             CloseableHttpClient jsonClient = HttpClients.custom().build();
             // Debug.logInfo("LinkedIn get access token query string: " + postMethod.getURI(), MODULE);
-            postMethod.setConfig(PassportUtil.StandardRequestConfig);
+            postMethod.setConfig(PassportUtil.STANDARD_REQ_CONFIG);
             CloseableHttpResponse postResponse = jsonClient.execute(postMethod);
             String responseString = new BasicResponseHandler().handleResponse(postResponse);
             // Debug.logInfo("LinkedIn get access token response code: " + postResponse.getStatusLine().getStatusCode(), MODULE);
@@ -184,7 +185,8 @@ public class LinkedInEvents {
                 accessToken = (String) userMap.get("access_token");
                 // Debug.logInfo("Generated Access Token : " + accessToken, MODULE);
             } else {
-                String errMsg = UtilProperties.getMessage(RESOURCE, "LinkedInGetOAuth2AccessTokenError", UtilMisc.toMap("error", responseString), UtilHttp.getLocale(request));
+                String errMsg = UtilProperties.getMessage(RESOURCE, "LinkedInGetOAuth2AccessTokenError", UtilMisc.toMap("error",
+                        responseString), UtilHttp.getLocale(request));
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
@@ -194,7 +196,7 @@ public class LinkedInEvents {
         }
 
         // Get User Profile
-        HttpGet getMethod = new HttpGet(TokenEndpoint + UserApiUri + "?oauth2_access_token=" + accessToken);
+        HttpGet getMethod = new HttpGet(TOKEN_END_POINT + USER_API_URI + "?oauth2_access_token=" + accessToken);
         Document userInfo = null;
         try {
             userInfo = LinkedInAuthenticator.getUserInfo(getMethod, UtilHttp.getLocale(request));
@@ -228,8 +230,8 @@ public class LinkedInEvents {
                 linkedInUser.set("accessToken", accessToken);
                 dataChanged = true;
             }
-            if (!envPrefix.equals(linkedInUser.getString("envPrefix"))) {
-                linkedInUser.set("envPrefix", envPrefix);
+            if (!ENV_PREFIX.equals(linkedInUser.getString("ENV_PREFIX"))) {
+                linkedInUser.set("ENV_PREFIX", ENV_PREFIX);
                 dataChanged = true;
             }
             if (!productStoreId.equals(linkedInUser.getString("productStoreId"))) {
@@ -246,7 +248,7 @@ public class LinkedInEvents {
         } else {
             linkedInUser = delegator.makeValue("LinkedInUser", UtilMisc.toMap("accessToken", accessToken,
                                                                           "productStoreId", productStoreId,
-                                                                          "envPrefix", envPrefix,
+                                                                          "ENV_PREFIX", ENV_PREFIX,
                                                                           "linkedInUserId", linkedInUserId));
             try {
                 linkedInUser.create();
@@ -262,7 +264,8 @@ public class LinkedInEvents {
                 String userLoginId = authn.createUser(userInfo);
                 userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", userLoginId).queryOne();
             }
-            String autoPassword = RandomStringUtils.randomAlphanumeric(EntityUtilProperties.getPropertyAsInteger("security", "password.length.min", 5));
+            String autoPassword = RandomStringUtils.randomAlphanumeric(EntityUtilProperties.getPropertyAsInteger("security",
+                    "password.length.min", 5));
             boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security", "password.encrypt"));
             userLogin.set("currentPassword", useEncryption ? HashCrypt.digestHash(LoginServices.getHashType(), null, autoPassword) : autoPassword);
             userLogin.store();

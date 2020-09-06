@@ -32,8 +32,7 @@ import org.apache.ofbiz.base.util.UtilProperties;
  */
 public class LinkedInUserGroupMapper {
 
-    protected List<String> groups;
-
+    private List<String> groups;
     public LinkedInUserGroupMapper(String[] groups) {
         this.groups = Arrays.asList(groups);
     }
@@ -45,8 +44,12 @@ public class LinkedInUserGroupMapper {
         groups.add(group);
     }
 
+    /**
+     * Gets security groups.
+     * @return the security groups
+     */
     public Set<String> getSecurityGroups() {
-        Properties props = UtilProperties.getProperties(LinkedInAuthenticator.props);
+        Properties props = UtilProperties.getProperties(LinkedInAuthenticator.getPROPS());
 
         Set<String> secGroups = new HashSet<>();
         boolean running = true;

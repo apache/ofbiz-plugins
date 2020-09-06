@@ -66,25 +66,25 @@ public class HtmlReport extends AbstractReport {
     protected static final String LINEBREAK_TRADITIONAL = "<br>\n";
 
     /** The list of report objects e.g. String, Exception ... */
-    protected List<Serializable> content;
+    private List<Serializable> content;
 
     /** The list of report objects e.g. String, Exception ... */
-    protected List<Serializable> logContent;
+    private List<Serializable> logContent;
 
     /**
      * Counter to remember what is already shown,
      * indicates the next index of the content list that has to be reported.
      */
-    protected int indexNext;
+    private int indexNext;
 
     /** Flag to indicate if an exception should be displayed long or short. */
-    protected boolean showExceptionStackTrace;
+    private boolean showExceptionStackTrace;
 
     /** If set to <code>true</code> nothing is kept in memory. */
-    protected boolean isTransient;
+    private boolean isTransient;
 
     /** Boolean flag indicating whether this report should generate HTML or JavaScript output. */
-    protected boolean writeHtml;
+    private boolean writeHtml;
 
     /** Helper variable to deliver the html end part. */
     public static final int HTML_END = 1;
@@ -93,19 +93,19 @@ public class HtmlReport extends AbstractReport {
     public static final int HTML_START = 0;
 
     /** The thread to display in this report. */
-    protected String paramThread;
+    private String paramThread;
 
     /** The next thread to display after this report. */
-    protected String paramThreadHasNext;
+    private String paramThreadHasNext;
 
-    protected String paramAction;
+    private String paramAction;
 
-    protected String paramTitle;
+    private String paramTitle;
 
-    protected String paramResource;
+    private String paramResource;
 
     /** Flag for refreching workplace .*/
-    protected String paramRefreshWorkplace;
+    private String paramRefreshWorkplace;
 
     /** Constant for the "OK" button in the build button methods. */
     public static final int BUTTON_OK = 0;
@@ -152,21 +152,21 @@ public class HtmlReport extends AbstractReport {
     /** Request parameter value for the action: set. */
     public static final String DIALOG_SET = "set";
     /** The RESOURCE list parameter value. */
-    protected String paramResourcelist;
+    private String paramResourcelist;
     /** The list of RESOURCE names for the multi operation. */
-    protected List<String> resourceList;
+    private List<String> resourceList;
     /** The key name which contains the localized message for the continue checkbox. */
-    protected String paramReportContinueKey;
+    private String paramReportContinueKey;
     public static final String DIALOG_URI = "dialoguri";
     public static final String FORM_URI = "formuri";
     private static final String RESOURCE = "PricatUiLabels";
     /** Log file. */
-    protected File logFile;
+    private File logFile;
     /** Log file name. */
-    protected String logFileName;
+    private String logFileName;
     /** Log file output stream. */
-    protected FileOutputStream logFileOutputStream;
-    protected long sequenceNum = -1;
+    private FileOutputStream logFileOutputStream;
+    private long sequenceNum = -1;
 
     /**
      * Constructs a new report using the provided locale for the output language.<p>
@@ -210,7 +210,8 @@ public class HtmlReport extends AbstractReport {
         }
         return wp;
     }
-    public static HtmlReport getInstance(HttpServletRequest request, HttpServletResponse response, boolean writeHtml, boolean isTransient, String logFileName) {
+    public static HtmlReport getInstance(HttpServletRequest request, HttpServletResponse response, boolean writeHtml, boolean isTransient,
+                                         String logFileName) {
         HtmlReport wp = (HtmlReport) request.getSession().getAttribute(SESSION_REPORT_CLASS);
         if (wp == null || UtilValidate.isEmpty(wp.getLogFileName()) || !wp.getLogFileName().equals(logFileName)) {
             wp = new HtmlReport(request, response, writeHtml, isTransient);
@@ -218,14 +219,29 @@ public class HtmlReport extends AbstractReport {
         }
         return wp;
     }
+
+    /**
+     * Gets param action.
+     * @param request the request
+     * @return the param action
+     */
     public String getParamAction(HttpServletRequest request) {
         paramAction = request.getParameter("action");
         return paramAction != null ? paramAction : "reportbegin";
     }
+
+    /**
+     * Sets param action.
+     * @param action the action
+     */
     public void setParamAction(String action) {
         paramAction = action;
     }
 
+    /**
+     * Sets param thread.
+     * @param name the name
+     */
     public void setParamThread(String name) {
         paramThread = name;
     }
@@ -776,9 +792,7 @@ public class HtmlReport extends AbstractReport {
                 result.append("<input type=\"hidden\" name=\"");
                 result.append(param);
                 result.append("\" value=\"");
-                String encoded = ReportEncoder.encode(
-                    entry.getValue().toString(),
-                    "UTF-8");
+                String encoded = ReportEncoder.encode(entry.getValue().toString(), "UTF-8");
                 result.append(encoded);
                 result.append("\">\n");
             }
@@ -875,8 +889,7 @@ public class HtmlReport extends AbstractReport {
      * @return the button row
      */
     public String dialogButtonsOkCancel(HttpServletRequest request, String okAttrs, String cancelAttrs) {
-        if (Boolean.valueOf(getParamThreadHasNext(request))
-            && ReportStringUtil.isNotEmpty(getParamReportContinueKey())) {
+        if (Boolean.valueOf(getParamThreadHasNext(request)) && ReportStringUtil.isNotEmpty(getParamReportContinueKey())) {
             return dialogButtons(new int[] {BUTTON_OK, BUTTON_CANCEL}, new String[] {
                 okAttrs,
                 cancelAttrs});
@@ -898,8 +911,7 @@ public class HtmlReport extends AbstractReport {
         } else {
             downloadAttrs += " ";
         }
-        if (Boolean.valueOf(getParamThreadHasNext(request))
-            && ReportStringUtil.isNotEmpty(getParamReportContinueKey())) {
+        if (Boolean.valueOf(getParamThreadHasNext(request)) && ReportStringUtil.isNotEmpty(getParamReportContinueKey())) {
             return dialogButtons(new int[] {BUTTON_OK, BUTTON_CANCEL, BUTTON_DOWNLOAD}, new String[] {
                 okAttrs,
                 cancelAttrs,
@@ -1240,6 +1252,11 @@ public class HtmlReport extends AbstractReport {
         }
         return logFileName;
     }
+
+    /**
+     * Gets log file name.
+     * @return the log file name
+     */
     public String getLogFileName() {
         return logFileName;
     }

@@ -38,7 +38,7 @@ public final class OFBizPricatUtil {
     static {
         Method[] methods = XSSFSheet.class.getDeclaredMethods();
         for (Method method : methods) {
-            if (method.getName().equals("getVMLDrawing")) {
+            if ("getVMLDrawing".equals(method.getName())) {
                 vmlDrawingMethod = method;
                 break;
             }
@@ -46,7 +46,7 @@ public final class OFBizPricatUtil {
         // for POI 4.0.0 and later, this part can be removed
         methods = XSSFVMLDrawing.class.getDeclaredMethods();
         for (Method method : methods) {
-            if (method.getName().equals("findCommentShape")) {
+            if ("findCommentShape".equals(method.getName())) {
                 findCommentShapeMethod = method;
                 break;
             }

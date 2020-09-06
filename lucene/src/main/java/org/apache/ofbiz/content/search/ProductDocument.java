@@ -100,7 +100,8 @@ public class ProductDocument implements LuceneDocument {
                 EntityCondition.makeCondition(thruDateName, EntityOperator.GREATER_THAN, UtilDateTime.nowTimestamp())));
     }
 
-    private static Timestamp getCategoryCatalogs(Document doc, GenericValue productCategory, Set<String> indexedCatalogIds) throws GenericEntityException {
+    private static Timestamp getCategoryCatalogs(Document doc, GenericValue productCategory, Set<String> indexedCatalogIds)
+            throws GenericEntityException {
         Timestamp nextReIndex = null;
         List<GenericValue> prodCatalogCategories = productCategory.getRelated("ProdCatalogCategory", null, null, false);
         prodCatalogCategories = filterByThruDate(prodCatalogCategories);

@@ -42,9 +42,9 @@ import org.apache.ofbiz.entity.util.EntityQuery;
 
 public class PricatEvents {
     private static final String MODULE = PricatEvents.class.getName();
-    public static final String PricatLatestVersion = UtilProperties.getPropertyValue("pricat", "pricat.latest.version", "V1.1");
-    public static final String PricatFileName = "PricatTemplate_" + PricatLatestVersion + ".xlsx";
-    public static final String PricatPath = "component://pricat/webapp/pricat/downloads/";
+    public static final String PRICAT_LATEST_VERSION = UtilProperties.getPropertyValue("pricat", "pricat.latest.version", "V1.1");
+    public static final String PRICAT_FILE_NAME = "PricatTemplate_" + PRICAT_LATEST_VERSION + ".xlsx";
+    public static final String PRICAT_PATH = "component://pricat/webapp/pricat/downloads/";
     /**
      * Download excel template.
      * @param request
@@ -56,10 +56,10 @@ public class PricatEvents {
             return "error";
         }
         try {
-            String path = ComponentLocationResolver.getBaseLocation(PricatPath).toString();
+            String path = ComponentLocationResolver.getBaseLocation(PRICAT_PATH).toString();
             String fileName = null;
             if ("pricatExcelTemplate".equals(templateType)) {
-                fileName = PricatFileName;
+                fileName = PRICAT_FILE_NAME;
             }
             if (UtilValidate.isEmpty(fileName)) {
                 return "error";
@@ -104,7 +104,8 @@ public class PricatEvents {
                         Path path = Paths.get(pricatFileName);
                         byte[] bytes = Files.readAllBytes(path);
                         path = Paths.get(originalPricatFileName);
-                        UtilHttp.streamContentToBrowser(response, bytes, "application/octet-stream", URLEncoder.encode(path.getName(path.getNameCount() - 1).toString(), "UTF-8"));
+                        UtilHttp.streamContentToBrowser(response, bytes, "application/octet-stream",
+                                URLEncoder.encode(path.getName(path.getNameCount() - 1).toString(), "UTF-8"));
                     } catch (IOException e) {
                         Debug.logError(e.getMessage(), MODULE);
                         return "error";
@@ -134,7 +135,8 @@ public class PricatEvents {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         GenericValue historyValue = null;
         try {
-            historyValue = EntityQuery.use(delegator).from("ExcelImportHistory").where("userLoginId", userLoginId, "sequenceNum", Long.valueOf(sequenceNum)).queryOne();
+            historyValue = EntityQuery.use(delegator).from("ExcelImportHistory").where("userLoginId", userLoginId, "sequenceNum",
+                    Long.valueOf(sequenceNum)).queryOne();
         } catch (NumberFormatException | GenericEntityException e) {
             Debug.logError(e.getMessage(), MODULE);
             return "error";

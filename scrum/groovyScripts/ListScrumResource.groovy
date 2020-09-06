@@ -28,6 +28,7 @@ inputFields.putAll(parameters)
 performFindInMap.noConditionFind = "Y"
 performFindInMap.inputFields = inputFields
 performFindInMap.orderBy = parameters.sortField
+performFindInMap.filterByDate = "Y"
 if (parameters.sortField) {
     performFindInMap.orderBy = "lastName"
 }

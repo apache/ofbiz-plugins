@@ -26,6 +26,7 @@ import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.HttpMethod;
+import javax.ws.rs.core.Response;
 
 import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.service.DispatchContext;
@@ -44,13 +45,9 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.Paths;
-import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.Content;
-import io.swagger.v3.oas.models.media.IntegerSchema;
 import io.swagger.v3.oas.models.media.MediaType;
-import io.swagger.v3.oas.models.media.ObjectSchema;
 import io.swagger.v3.oas.models.media.Schema;
-import io.swagger.v3.oas.models.media.StringSchema;
 import io.swagger.v3.oas.models.parameters.QueryParameter;
 import io.swagger.v3.oas.models.parameters.RequestBody;
 import io.swagger.v3.oas.models.responses.ApiResponse;
@@ -101,7 +98,7 @@ public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
         if (paths == null) {
             paths = new Paths();
         }
-
+        addPredefinedSchemas();
         ServletContext servletContext = ApiContextListener.getApplicationCntx();
         LocalDispatcher dispatcher = WebAppUtil.getDispatcher(servletContext);
         DispatchContext context = dispatcher.getDispatchContext();
@@ -137,21 +134,10 @@ public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
                                     new MediaType().schema(new Schema<>().$ref(service.getName() + "Request"))));
                     operation.setRequestBody(request);
                 }
-
-                ApiResponses apiResponsesObject = new ApiResponses();
-                ApiResponse successResponse = new ApiResponse().description("Success");
-                Content content = new Content();
-                MediaType jsonMediaType = new MediaType();
-                Schema<?> refSchema = new Schema<>();
-                refSchema.$ref(service.getName() + "Response");
-                jsonMediaType.setSchema(refSchema);
-                setOutSchemaForService(service);
-                setInSchemaForService(service);
-                content.addMediaType(javax.ws.rs.core.MediaType.APPLICATION_JSON, jsonMediaType);
-
-                apiResponsesObject.addApiResponse("200", successResponse.content(content));
+                addServiceOutSchema(service);
+                addServiceInSchema(service);
+                addServiceOperationApiResponses(service, operation);
                 setPathItemOperation(pathItemObject, service.getAction().toUpperCase(), operation);
-                operation.setResponses(apiResponsesObject);
                 paths.addPathItem("/services/" + service.getName(), pathItemObject);
 
             }
@@ -159,7 +145,6 @@ public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
 
         openApi.setPaths(paths);
         openApi.setComponents(components);
-
         return openApi;
     }
 
@@ -192,51 +177,28 @@ public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
         }
     }
 
-    private void setOutSchemaForService(ModelService service) {
-        Schema<Object> parentSchema = new Schema<Object>();
-        parentSchema.setDescription("Out Schema for service: " + service.getName() + " response");
-        parentSchema.setType("object");
-        parentSchema.addProperties("statusCode", new IntegerSchema().description("HTTP Status Code"));
-        parentSchema.addProperties("statusDescription", new StringSchema().description("HTTP Status Code Description"));
-        parentSchema.addProperties("successMessage", new StringSchema().description("Success Message"));
-        ObjectSchema dataSchema = new ObjectSchema();
-        parentSchema.addProperties("data", dataSchema);
-        service.getOutParamNamesMap().forEach((name, type) -> {
-            Schema<?> schema = null;
-            Class<?> schemaClass = OpenApiUtil.getOpenApiSchema(type);
-            if (schemaClass == null) {
-                return;
-            }
-            try {
-                schema = (Schema<?>) schemaClass.newInstance();
-            } catch (InstantiationException | IllegalAccessException e) {
-            }
-            if (schema instanceof ArraySchema) {
-                ArraySchema arraySchema = (ArraySchema) schema;
-                arraySchema.items(new StringSchema());
-            }
-            dataSchema.addProperties(name, schema.description(name));
-        });
-        schemas.put(service.getName() + "Response", parentSchema);
+    private void addServiceOutSchema(ModelService service) {
+        schemas.put("api.response." + service.getName() + ".success", OpenApiUtil.getOutSchema(service));
     }
 
-    private void setInSchemaForService(ModelService service) {
-        Schema<Object> parentSchema = new Schema<Object>();
-        parentSchema.setDescription("In Schema for service: " + service.getName() + " request");
-        parentSchema.setType("object");
-        service.getInParamNamesMap().forEach((name, type) -> {
-            Schema<?> schema = null;
-            Class<?> schemaClass = OpenApiUtil.getOpenApiSchema(type);
-            if (schemaClass == null) {
-                return;
-            }
-            try {
-                schema = (Schema<?>) schemaClass.newInstance();
-            } catch (InstantiationException | IllegalAccessException e) {
-            }
-            parentSchema.addProperties(name, schema.description(name));
+    private void addServiceInSchema(ModelService service) {
+        schemas.put("api.request." + service.getName(), OpenApiUtil.getInSchema(service));
+    }
+
+    private void addPredefinedSchemas() {
+        OpenApiUtil.getStandardApiResponseSchemas().forEach((name, schema) -> {
+            schemas.put(name, schema);
         });
-        schemas.put(service.getName() + "Request", parentSchema);
+    }
+
+    private void addServiceOperationApiResponses(ModelService service, Operation operation) {
+        ApiResponses apiResponsesObject = new ApiResponses();
+        ApiResponse successResponse = OpenApiUtil.buildSuccessResponse(service);
+        apiResponsesObject.addApiResponse(String.valueOf(Response.Status.OK.getStatusCode()), successResponse);
+        OpenApiUtil.getStandardApiResponses().forEach((code, response) -> {
+            apiResponsesObject.addApiResponse(code, response);
+        });
+        operation.setResponses(apiResponsesObject);
     }
 
 }

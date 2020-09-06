@@ -79,7 +79,7 @@ public class EbayAccount {
                     street1 = regAddress.getStreet1();
                     street2 = regAddress.getStreet2();
                 }
-                if (firstName == null && lastName == null && name !=null) {
+                if (firstName == null && lastName == null && name != null) {
                     String nameArray[] = name.split(" ");
                     firstName = nameArray[0];
                     lastName = nameArray[1];

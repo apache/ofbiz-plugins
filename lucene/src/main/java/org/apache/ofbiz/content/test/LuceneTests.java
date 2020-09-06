@@ -55,7 +55,7 @@ public class LuceneTests extends OFBizTestCase {
         Map<String, Object> ctx = new HashMap<>();
         ctx.put("contentId", "LuceneCONTENT");
         ctx.put("userLogin", getUserLogin("system"));
-        Map<String, Object> resp = dispatcher.runSync("indexContentTree", ctx);
+        Map<String, Object> resp = getDispatcher().runSync("indexContentTree", ctx);
         if (ServiceUtil.isError(resp)) {
             String errorMessage = ServiceUtil.getErrorMessage(resp);
             throw new Exception(errorMessage);

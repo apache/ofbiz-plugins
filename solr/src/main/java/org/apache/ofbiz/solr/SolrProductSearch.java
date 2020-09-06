@@ -488,8 +488,9 @@ public abstract class SolrProductSearch {
                 Map<String, Long> facetEntry = new HashMap<>();
                 List<FacetField.Count> facetEntries = facet.getValues();
                 if (UtilValidate.isNotEmpty(facetEntries)) {
-                    for (FacetField.Count fcount : facetEntries)
+                    for (FacetField.Count fcount : facetEntries) {
                         facetEntry.put(fcount.getName(), fcount.getCount());
+                    }
                     facetFields.put(facet.getName(), facetEntry);
                 }
             }
@@ -518,8 +519,9 @@ public abstract class SolrProductSearch {
         String solrIndexName = (String) context.get("indexName");
         try {
             boolean displayProducts = false;
-            if (UtilValidate.isNotEmpty(context.get("displayProducts")))
+            if (UtilValidate.isNotEmpty(context.get("displayProducts"))) {
                 displayProducts = (Boolean) context.get("displayProducts");
+            }
 
             int viewIndex = 0;
             int viewSize = 9;

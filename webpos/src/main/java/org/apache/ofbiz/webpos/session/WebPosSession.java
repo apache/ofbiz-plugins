@@ -56,7 +56,8 @@ public class WebPosSession {
     private WebPosTransaction webPosTransaction = null;
     private ShoppingCart cart = null;
 
-    public WebPosSession(String id, Map<String, Object> attributes, GenericValue userLogin, Locale locale, String productStoreId, String facilityId, String currencyUomId, Delegator delegator, LocalDispatcher dispatcher, ShoppingCart cart) {
+    public WebPosSession(String id, Map<String, Object> attributes, GenericValue userLogin, Locale locale, String productStoreId,
+                         String facilityId, String currencyUomId, Delegator delegator, LocalDispatcher dispatcher, ShoppingCart cart) {
         this.id = id;
         this.attributes = attributes;
         this.userLogin = userLogin;

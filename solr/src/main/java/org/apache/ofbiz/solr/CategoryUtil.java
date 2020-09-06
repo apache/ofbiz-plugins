@@ -66,7 +66,7 @@ public final class CategoryUtil {
         return catalogIds;
     }
     public static List<List<String>> getCategoryTrail(String productCategoryId, DispatchContext dctx) {
-       GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+        GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
         List<List<String>> trailElements = new ArrayList<>();
         String parentProductCategoryId = productCategoryId;
         while (UtilValidate.isNotEmpty(parentProductCategoryId)) {
@@ -75,7 +75,8 @@ public final class CategoryUtil {
                 List<EntityCondition> rolllupConds = new ArrayList<>();
                 rolllupConds.add(EntityCondition.makeCondition("productCategoryId", parentProductCategoryId));
                 rolllupConds.add(EntityUtil.getFilterByDateExpr());
-                List<GenericValue> productCategoryRollups = delegator.findList("ProductCategoryRollup", EntityCondition.makeCondition(rolllupConds), null, UtilMisc.toList("-fromDate"), null, true);
+                List<GenericValue> productCategoryRollups = delegator.findList("ProductCategoryRollup",
+                        EntityCondition.makeCondition(rolllupConds), null, UtilMisc.toList("-fromDate"), null, true);
                 if (UtilValidate.isNotEmpty(productCategoryRollups)) {
                     List<List<String>> trailElementsAux = new ArrayList<>();
                     trailElementsAux.addAll(trailElements);

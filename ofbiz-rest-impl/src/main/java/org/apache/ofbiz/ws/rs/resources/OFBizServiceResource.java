@@ -81,7 +81,8 @@ public class OFBizServiceResource extends OFBizResource {
                 Map<String, Object> serviceMap = new LinkedHashMap<String, Object>();
                 serviceMap.put("name", service.getName());
                 serviceMap.put("description", service.getDescription());
-                Link selfLink = Link.fromUriBuilder(uriInfo.getAbsolutePathBuilder().path(service.getName())).type(service.getAction()).rel("self").build();
+                Link selfLink = Link.fromUriBuilder(uriInfo.getAbsolutePathBuilder().path(service.getName()))
+                        .type(service.getAction()).rel("self").build();
                 serviceMap.put("link", selfLink);
                 serviceList.add(serviceMap);
             }
@@ -108,7 +109,6 @@ public class OFBizServiceResource extends OFBizResource {
         return processor.process(
                 UtilMisc.toMap("serviceName", serviceName, "httpVerb", HttpMethod.GET, "requestMap", serviceRequest.getInParams(), "dispatcher",
                         getDispatcher(), "request", httpRequest));
-
     }
 
     /**
@@ -128,6 +128,5 @@ public class OFBizServiceResource extends OFBizResource {
         return processor.process(
                 UtilMisc.toMap("serviceName", serviceName, "httpVerb", HttpMethod.POST, "requestMap", serviceInParams, "dispatcher", getDispatcher(),
                         "request", httpRequest));
-
     }
 }

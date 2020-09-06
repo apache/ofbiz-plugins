@@ -154,7 +154,7 @@ public class EbayStoreInventoryServices {
                 sellingManagerProductDetailsType.setProductName((EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne()).getString("internalName"));
                 //Must keep productId in SKU NUMBER because ebay allow productId field only long value.
                 sellingManagerProductDetailsType.setCustomLabel(productId);
-                if (ebayProductStoreInventory!=null) sellingManagerProductDetailsType.setQuantityAvailable(ebayProductStoreInventory.getBigDecimal("availableToPromiseListing").intValue());
+                if (ebayProductStoreInventory != null) sellingManagerProductDetailsType.setQuantityAvailable(ebayProductStoreInventory.getBigDecimal("availableToPromiseListing").intValue());
 
                 productReq.setSellingManagerProductDetails(sellingManagerProductDetailsType);
                 productResp = (AddSellingManagerProductResponseType) productCall.execute(productReq);
@@ -206,7 +206,7 @@ public class EbayStoreInventoryServices {
                 sellingManagerProductDetailsType.setProductName((EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne()).getString("internalName"));
                 //Must keep productId in SKU NUMBER because ebay allow productId field only long value.
                 sellingManagerProductDetailsType.setCustomLabel(productId);
-                if (ebayProductStoreInventory!=null) sellingManagerProductDetailsType.setQuantityAvailable(ebayProductStoreInventory.getBigDecimal("availableToPromiseListing").intValue());
+                if (ebayProductStoreInventory != null) sellingManagerProductDetailsType.setQuantityAvailable(ebayProductStoreInventory.getBigDecimal("availableToPromiseListing").intValue());
 
                 req.setSellingManagerProductDetails(sellingManagerProductDetailsType);
                 resp = (ReviseSellingManagerProductResponseType) call.execute(req);

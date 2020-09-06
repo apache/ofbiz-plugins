@@ -96,9 +96,22 @@ public abstract class AbstractOFBizAuthenticationHandler implements InterfaceOFB
     }
 
     @Override
-    public abstract SearchResult getLdapSearchResult(String username, String password, Element rootElement, boolean bindRequired) throws NamingException;
+    public abstract SearchResult getLdapSearchResult(String username, String password, Element rootElement, boolean bindRequired)
+            throws NamingException;
 
-    public String login(HttpServletRequest request, HttpServletResponse response, String username, String password, Element rootElement, SearchResult result) throws Exception {
+    /**
+     * Login string.
+     * @param request the request
+     * @param response the response
+     * @param username the username
+     * @param password the password
+     * @param rootElement the root element
+     * @param result the result
+     * @return the string
+     * @throws Exception the exception
+     */
+    public String login(HttpServletRequest request, HttpServletResponse response, String username, String password, Element rootElement,
+                        SearchResult result) throws Exception {
         HttpSession session = request.getSession();
 
         // get the visit id to pass to the userLogin for history
@@ -121,23 +134,26 @@ public abstract class AbstractOFBizAuthenticationHandler implements InterfaceOFB
                 throw new GenericEntityException(e.getLocalizedMessage());
             }
 
-            GenericValue userLoginSecurityGroup = delegator.makeValue("UserLoginSecurityGroup", UtilMisc.toMap("userLoginId", username, "groupId", getSecurityGroup(rootElement, result), "fromDate", UtilDateTime.nowTimestamp()));
+            GenericValue userLoginSecurityGroup = delegator.makeValue("UserLoginSecurityGroup", UtilMisc.toMap("userLoginId",
+                    username, "groupId", getSecurityGroup(rootElement, result), "fromDate", UtilDateTime.nowTimestamp()));
             try {
                 userLoginSecurityGroup.create();
             } catch (GenericEntityException e) {
                 throw new GenericEntityException(e.getLocalizedMessage());
             }
         } else {
-            userTryToLogin.setString("currentPassword", useEncryption ? HashCrypt.cryptUTF8(LoginServices.getHashType(), null, password) : password);
+            userTryToLogin.setString("currentPassword", useEncryption ? HashCrypt.cryptUTF8(LoginServices.getHashType(), null,
+                    password) : password);
             userTryToLogin.store();
         }
 
         Map<String, Object> loginResult = null;
 
         try {
-            loginResult = dispatcher.runSync("userLogin", UtilMisc.toMap("login.username", username, "login.password", password, "visitId", visitId, "locale", UtilHttp.getLocale(request)));
+            loginResult = dispatcher.runSync("userLogin", UtilMisc.toMap("login.username", username, "login.password", password,
+                    "visitId", visitId, "locale", UtilHttp.getLocale(request)));
             if (ServiceUtil.isError(loginResult)) {
-             throw new Exception(ServiceUtil.getErrorMessage(loginResult));
+                throw new Exception(ServiceUtil.getErrorMessage(loginResult));
             }
         } catch (GenericServiceException e) {
             throw new GenericServiceException(e.getLocalizedMessage());
@@ -148,7 +164,8 @@ public abstract class AbstractOFBizAuthenticationHandler implements InterfaceOFB
             return LoginWorker.doMainLogin(request, response, userLogin, userLoginSession);
         } else {
             Map<String, String> messageMap = UtilMisc.toMap("errorMessage", (String) loginResult.get(ModelService.ERROR_MESSAGE));
-            String errMsg = UtilProperties.getMessage("SecurityextUiLabels", "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
+            String errMsg = UtilProperties.getMessage("SecurityextUiLabels", "loginevents.following_error_occurred_during_login",
+                    messageMap, UtilHttp.getLocale(request));
             throw new Exception(errMsg);
         }
     }

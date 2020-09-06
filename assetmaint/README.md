@@ -1,20 +1,14 @@
-<img src="http://ofbiz.apache.org/images/OFBiz-logo.png" alt="Apache OFBiz" />
+<img src="https://camo.githubusercontent.com/b313d4ec52b77b5024e2988aaf76720258233e69/68747470733a2f2f6f6662697a2e6170616368652e6f72672f696d616765732f6f6662697a5f6c6f676f2e706e67" alt="Apache OFBiz" />
 
 # Assetmaint component
-The asset management and maintenance application enables organisations to 
-maintain a register of all kinds of assets. It enables them to plan maintenance 
-and keep track of allocations and use. Integrates with the accounting module 
-regarding depreciation bookings.
+The asset management and maintenance application enables organisations to maintain a register of all kinds of assets. It enables them to plan maintenance and keep track of allocations and use. Integrates with the accounting module regarding depreciation bookings.
 
-## more information
-For more information about this component visit the product page in the OFBiz 
-WIKI, which can be found at 
-https://cwiki.apache.org/confluence/display/OFBIZ/Asset+Management
 
-## issues
-JIRA issues related to this component can be found at
- https://issues.apache.org/jira/browse/OFBIZ/component/12311644
+## Features
 
-## commits
-Committed revisions can be viewed at 
-http://svn.apache.org/viewvc/ofbiz/trunk/plugins/assetmaint/
+    Asset registration
+    Maintenance planning
+    Depreciation calculation and registration
+    Meter registrations
+    Allocation registration
+
