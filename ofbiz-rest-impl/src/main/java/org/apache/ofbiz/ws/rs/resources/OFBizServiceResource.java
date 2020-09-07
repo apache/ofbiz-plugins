@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.GET;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.POST;
@@ -105,6 +106,9 @@ public class OFBizServiceResource extends OFBizResource {
     @Secured
     public Response invokeServiceByGet(@QueryParam(value = "inParams") ApiServiceRequest serviceRequest,
                                        @PathParam(value = "serviceName") String serviceName) throws IOException, GenericServiceException {
+        if (UtilValidate.isEmpty(serviceRequest) || UtilValidate.isEmpty(serviceRequest.getInParams())) {
+            throw new BadRequestException("Missing Parameter: 'inParams'");
+        }
         ServiceRequestProcessor processor = new ServiceRequestProcessor();
         return processor.process(
                 UtilMisc.toMap("serviceName", serviceName, "httpVerb", HttpMethod.GET, "requestMap", serviceRequest.getInParams(), "dispatcher",

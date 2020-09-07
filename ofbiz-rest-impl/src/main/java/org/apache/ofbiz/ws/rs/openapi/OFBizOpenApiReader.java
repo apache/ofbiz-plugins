@@ -131,7 +131,7 @@ public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
                 } else if (service.getAction().equalsIgnoreCase(HttpMethod.POST)) {
                     RequestBody request = new RequestBody().description("Request Body for service " + service.getName())
                             .content(new Content().addMediaType(javax.ws.rs.core.MediaType.APPLICATION_JSON,
-                                    new MediaType().schema(new Schema<>().$ref(service.getName() + "Request"))));
+                                    new MediaType().schema(new Schema<>().$ref("#/components/schemas/" + "api.request." + service.getName()))));
                     operation.setRequestBody(request);
                 }
                 addServiceOutSchema(service);
