@@ -25,6 +25,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleProjectAndSprintList"/>
                 <set field="headerItem" value="Sprints"/><!--this highlights the selected menu-item with name "Sprints" -->
+                <set field="helpAnchor" value="_sprint"/>
                 <set field="partyId" from-field="userLogin.partyId"/>
                 <set field="permissionMap.projectId" from-field="parameters.projectId"/>
                 <set field="workEffortId" from-field="parameters.projectId"/>
@@ -68,12 +69,13 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="AddSprint">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleAddSprint"/>
                 <set field="tabButtonItem" value="editProject"/>
+                <set field="helpAnchor" value="_create_the_first_sprint"/>
                 <set field="sprintId" from-field="parameters.sprintId"/>
                 <entity-one entity-name="WorkEffort" value-field="projectWorkEffort">
                     <field-map field-name="workEffortId" from-field="parameters.projectId"/>
@@ -106,12 +108,13 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="ViewSprint">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleSprintOverview"/>
                 <set field="tabButtonItem" value="SprintSummary"/>
+                <set field="helpAnchor" value="_sprint"/>
                 <set field="permissionMap.sprintId" from-field="parameters.sprintId"/>
                 <entity-one entity-name="WorkEffort" value-field="sprintStatus">
                     <field-map field-name="workEffortId" from-field="parameters.sprintId"/>
@@ -209,7 +212,7 @@ under the License.
                                                         </screenlet>
                                                     </fail-widgets>
                                                 </section>
-                                                
+
                                             </widgets>
                                             <fail-widgets>
                                                 <screenlet>
@@ -304,12 +307,13 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="EditSprint">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditSprint"/>
                 <set field="tabButtonItem" value="EditSprint"/>
+                <set field="helpAnchor" value="_sprint"/>
                 <set field="sprintId" from-field="parameters.sprintId"/>
             </actions>
             <widgets>
@@ -334,11 +338,12 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="AddSprintBacklog">
         <section>
         <actions>
             <set field="titleProperty" value="PageTitleAddSprintBacklog"/>
+            <set field="helpAnchor" value="_add_sprint_backlog"/>
             <entity-one entity-name="WorkEffort" value-field="sprintInfo">
                 <field-map field-name="workEffortId" from-field="parameters.sprintId"></field-map>
             </entity-one>
@@ -362,12 +367,13 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="editScrumProject">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditScrumProject"/>
                 <set field="headerItem" value="main"/>
+                <set field="helpAnchor" value="_create_new_scrum_project"/>
                 <set field="tabButtonItem" value="editProject"/>
                 <set field="workEffortId" from-field="parameters.projectId"/>
                 <entity-and entity-name="WorkEffortAndProduct" list="workEffortList">
@@ -408,12 +414,13 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="viewScrumProject">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleScrumProjectOverview"/>
                 <set field="tabButtonItem" value="projectSummary"/>
+                <set field="helpAnchor" value="_projectsprint"/>
                 <set field="workEffortId" from-field="parameters.projectId"/>
                 <set field="permissionMap.projectId" from-field="parameters.projectId"/>
                 <entity-and entity-name="WorkEffortAndProduct" list="projectList">
@@ -438,7 +445,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="sprintListInfo">
         <section>
             <widgets>
@@ -448,7 +455,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="productInfoList">
         <section>
             <widgets>
@@ -458,7 +465,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="tasksInfoList">
         <section>
             <actions>
@@ -482,12 +489,13 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="AddProdBacklog">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleProductBacklog"/>
                 <set field="tabButtonItem" value="editProductBacklog"/>
+                <set field="helpAnchor" value="_product_ui"/>
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one entity-name="Product" value-field="product">
                     <field-map field-name="productId"/>
@@ -690,6 +698,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleProductBacklogItemsOverview"/>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="tabButtonItem" value="view"/>
+                <set field="helpAnchor" value="_product_backlog_item_overview"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <entity-and entity-name="CustRequestItem" list="custRequestItemList">
                     <field-map field-name="custRequestId" from-field="parameters.custRequestId"/>
@@ -702,7 +711,7 @@ under the License.
                 <entity-condition entity-name="CustRequestAndContent" list="custRequestAndContents">
                     <condition-list combine="and">
                         <condition-expr field-name="custRequestId" from-field="custRequestId"/>
-                        <condition-expr field-name="fromDate" operator="less-equals" from-field="nowTimestamp"/>                        
+                        <condition-expr field-name="fromDate" operator="less-equals" from-field="nowTimestamp"/>
                         <condition-list combine="or">
                             <condition-expr field-name="thruDate" operator="greater-equals" from-field="nowTimestamp"/>
                             <condition-expr field-name="thruDate" from-field="null"/>
@@ -755,7 +764,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <actions>
-                                
+
                                 <entity-one entity-name="WorkEffort" value-field="workEffort">
                                     <field-map field-name="workEffortId" from-field="sprintId"/>
                                 </entity-one>
@@ -861,6 +870,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductBacklogItems"/>
                 <set field="tabButtonItem" value="editProductBacklogItem"/>
+                <set field="helpAnchor" value="_product_backlog_item"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <entity-and entity-name="CustRequestItem" list="custRequestItem">
                     <field-map field-name="custRequestId" from-field="parameters.custRequestId"/>
@@ -1023,13 +1033,14 @@ under the License.
                 <set field="titleProperty" value="PageTitleProductBacklogItemsContents"/>
                 <set field="tabButtonItem" value="productBacklogItemContent"/>
                 <set field="headerItem" value="request"/>
+                <set field="helpAnchor" value="_backlog_item_contents"/>
                 <set field="contentId" from-field="parameters.contentId"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-condition entity-name="CustRequestAndContent" list="custRequestAndContents">
                     <condition-list combine="and">
                         <condition-expr field-name="custRequestId" from-field="custRequestId"/>
-                        <condition-expr field-name="fromDate" operator="less-equals" from-field="nowTimestamp"/>                        
+                        <condition-expr field-name="fromDate" operator="less-equals" from-field="nowTimestamp"/>
                         <condition-list combine="or">
                             <condition-expr field-name="thruDate" operator="greater-equals" from-field="nowTimestamp"/>
                             <condition-expr field-name="thruDate" from-field="null"/>
@@ -1061,19 +1072,20 @@ under the License.
                                        <include-form name="ViewListCustRequestContent" location="component://scrum/widget/scrumForms.xml"/>
                                     </screenlet>
                                 </fail-widgets>
-                                
+
                       </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="ProductBacklogEmails">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleProductBacklogItemsCommunication"/>
                 <set field="tabButtonItem" value="productBacklogItemComm"/>
+                <set field="helpAnchor" value="_communication_2"/>
                 <entity-and entity-name="CustRequestItem" list="custRequestItem">
                     <field-map field-name="custRequestId" from-field="parameters.custRequestId"/>
                 </entity-and>
@@ -1171,7 +1183,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="EditDeleteBacklogItem">
         <section>
             <actions>
@@ -1217,6 +1229,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleScrumProjectContents"/>
                 <set field="tabButtonItem" value="projectContent"/>
                 <set field="headerItem" value="EditProjectContents"/>
+                <set field="helpAnchor" value="_project_contents"/>
                 <set field="contentId" from-field="parameters.contentId"/>
                 <set field="projectId" from-field="parameters.projectId" default-value="${parameters.workEffortId}"/>
                 <set field="workEffortId" from-field="parameters.projectId" default-value="${parameters.workEffortId}"/>
@@ -1252,7 +1265,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
      <screen name="ListProjectContent">
         <section>
             <actions>
@@ -1266,12 +1279,13 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="DailyScrumMeetingMinute">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleDailyMeetingMinutes"/>
                 <set field="tabButtonItem" value="DailySprintMeetingMinute"/>
+                <set field="helpAnchor" value="_daily_sprint_meeting"/>
                 <set field="workEffortId" from-field="parameters.projectId"/>
                 <set field="sprintId" from-field="parameters.sprintId"/>
                 <entity-one entity-name="WorkEffort" value-field="project"/>
@@ -1310,11 +1324,12 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="ListDailyMeetingMinutes">
         <section>
             <actions>
                 <set field="tabButtonItem" value="SprintList"/>
+                <set field="helpAnchor" value="_daily_sprint_meeting"/>
                 <set field="workEffortId" from-field="parameters.projectId"/>
                 <entity-one entity-name="WorkEffort" value-field="project"/>
                 <entity-one entity-name="CustRequest" value-field="custRequest"/>
@@ -1324,7 +1339,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="ViewDailyMeetingMinutes">
         <section>
             <actions>
@@ -1352,7 +1367,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="ViewDailyScrumMeetingMinute">
         <section>
             <actions>
@@ -1395,11 +1410,12 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="EditSprintBacklog">
         <section>
             <actions>
                 <set field="tabButtonItem" value="SprintList"/>
+                <set field="helpAnchor" value="_add_sprint_backlog"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProjectDecorator" location="${parameters.mainDecoratorLocation}">
@@ -1422,7 +1438,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="listResourcesProject">
         <section>
             <actions>
@@ -1547,6 +1563,7 @@ under the License.
             </condition>
             <actions>
                 <set field="titleProperty" value="PageTitleProduct"/>
+                <set field="helpAnchor" value="_product_backlog"/>
                 <set field="noConditionFind" value="Y"/>
                 <set field="parameters.statusId" default-value="PRODUCT_ACTIVE" from-field="parameters.statusId"/>
                 <script location="component://scrum/groovyScripts/ListCurrentProducts.groovy"/>
@@ -1595,6 +1612,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditProduct"/>
                 <set field="tabButtonItem" value="edit"/>
+                <set field="helpAnchor" value="_product_ui"/>
                 <entity-one entity-name="Product" value-field="product"/>
                 <set field="permissionMap.productId" from-field="parameters.productId"/>
                 <script location="component://scrum/groovyScripts/ListScrumRolesPersonAndCompany.groovy"/>
@@ -1769,7 +1787,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="ViewTotalBacklog">
         <section>
             <actions>
@@ -1792,7 +1810,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="ListProdBacklog">
         <section>
             <actions>
@@ -1848,9 +1866,9 @@ under the License.
                                     <include-form name="FindProductBilling" location="component://scrum/widget/scrumForms.xml"/>
                                 </screenlet>
                                 <screenlet id="hoursNotYetBilled" title="${uiLabelMap.PageTitleHoursNotYetBilled} ${uiLabelMap.CommonInformation}
-                                     : ${uiLabelMap.WorkEffortTimeBillFromParty} ${companyMap.groupName} [${companyMap.partyId}] ${uiLabelMap.WorkEffortTimeBillToParty} 
-                                     ${partyMap.groupName} ${partyMap.lastName} ${partyMap.firstName} [${partyMap.partyId}] : ${uiLabelMap.CommonFromDate} 
-                                     ${groovy: if(fromDate) (fromDate).toString().substring(0,10)} ${uiLabelMap.CommonThruDate} 
+                                     : ${uiLabelMap.WorkEffortTimeBillFromParty} ${companyMap.groupName} [${companyMap.partyId}] ${uiLabelMap.WorkEffortTimeBillToParty}
+                                     ${partyMap.groupName} ${partyMap.lastName} ${partyMap.firstName} [${partyMap.partyId}] : ${uiLabelMap.CommonFromDate}
+                                     ${groovy: if(fromDate) (fromDate).toString().substring(0,10)} ${uiLabelMap.CommonThruDate}
                                      ${groovy: if(thruDate) (thruDate).toString().substring(0,10)}" collapsible="true">
                                     <include-form name="HoursNotYetBilled" location="component://scrum/widget/scrumForms.xml"/>
                                 </screenlet>
@@ -1932,6 +1950,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleProductBacklogCategories"/>
                 <set field="tabButtonItem" value="categories"/>
+                <set field="helpAnchor" value="_list_of_productbacklog_categories"/>
                 <entity-one entity-name="Product" value-field="product"/>
                 <set field="productId" from-field="product.productId"/>
             </actions>
@@ -1963,6 +1982,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductBacklogCategories"/>
                 <set field="tabButtonItem" value="categories"/>
+                <set field="helpAnchor" value="_list_of_productbacklog_categories"/>
                 <entity-one entity-name="Product" value-field="product"/>
                 <set field="productId" from-field="product.productId"/>
                 <entity-one entity-name="CustRequest" value-field="custRequest"/>
@@ -1990,6 +2010,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleProductBacklogContents"/>
                 <set field="tabButtonItem" value="productContent"/>
                 <set field="headerItem" value="EditProductContent"/>
+                <set field="helpAnchor" value="_product_contents"/>
                 <set field="contentId" from-field="parameters.contentId"/>
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-and entity-name="ProductContent" list="productContent">
@@ -2034,13 +2055,14 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="ProductEmails">
         <section>
             <actions>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleProductBacklogCommunications"/>
                 <set field="tabButtonItem" value="productComm"/>
+                <set field="helpAnchor" value="_communication"/>
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one entity-name="Product" value-field="product"/>
                 <entity-condition entity-name="CommunicationEventAndProduct" list="commEvents">
@@ -2108,6 +2130,7 @@ under the License.
             <actions>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="tabButtonItem" value="productComm"/>
+                <set field="helpAnchor" value="_communication"/>
                 <set field="productId" from-field="parameters.productId"/>
                 <set field="titleProperty" value="PageTitleEditCommunication" />
                 <set field="target" from-field="parameters.target" default-value="updateEmailForProduct"/>
@@ -2128,7 +2151,7 @@ under the License.
                                 <set field="communicationEvent.partyIdFrom" from-field="partyIdFrom" />
                                 <set field="communicationEvent.partyIdTo" from-field="partyIdTo" />
                             </actions>
-                            <widgets/> 
+                            <widgets/>
                         </section>
                         <container style="lefthalf">
                             <screenlet title="${uiLabelMap.ScrumNewEmail}">
@@ -2321,6 +2344,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleSprintMembers"/>
                 <set field="tabButtonItem" value="SprintMember"/>
+                <set field="helpAnchor" value="_member"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSprintScreenDecorator" location="${parameters.mainDecoratorLocation}">
@@ -2485,7 +2509,7 @@ under the License.
                         <fail-widgets>
                             <screenlet title="${uiLabelMap.MarketingContactListCommStatus}">
                                 <include-form name="ListContactListCommStatuses" location="component://marketing/widget/ContactListForms.xml"/>
-                            </screenlet>                        
+                            </screenlet>
                         </fail-widgets>
                     </section>
                     <screenlet title="${uiLabelMap.PartyCommContent}">
@@ -2622,7 +2646,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="FindTotalBacklog">
         <section>
             <condition>
@@ -2696,9 +2720,9 @@ under the License.
                            </condition>
                            <widgets>
                                <screenlet id="totalHoursNotYetBilled" title="${uiLabelMap.PageTitleHoursNotYetBilled} ${uiLabelMap.CommonInformation}
-                                    : ${uiLabelMap.WorkEffortTimeBillFromParty} ${companyMap.groupName} [${companyMap.partyId}] ${uiLabelMap.WorkEffortTimeBillToParty} 
-                                    ${partyMap.groupName} ${partyMap.lastName} ${partyMap.firstName} [${partyMap.partyId}] : ${uiLabelMap.CommonFromDate} 
-                                    ${groovy: if(fromDate) (fromDate).toString().substring(0,10)} ${uiLabelMap.CommonThruDate} 
+                                    : ${uiLabelMap.WorkEffortTimeBillFromParty} ${companyMap.groupName} [${companyMap.partyId}] ${uiLabelMap.WorkEffortTimeBillToParty}
+                                    ${partyMap.groupName} ${partyMap.lastName} ${partyMap.firstName} [${partyMap.partyId}] : ${uiLabelMap.CommonFromDate}
+                                    ${groovy: if(fromDate) (fromDate).toString().substring(0,10)} ${uiLabelMap.CommonThruDate}
                                     ${groovy: if(thruDate) (thruDate).toString().substring(0,10)}" collapsible="true">
                                    <include-form name="TotalHoursNotYetBilled" location="component://scrum/widget/scrumForms.xml"/>
                                </screenlet>
@@ -2797,10 +2821,10 @@ under the License.
                 <set field="titleProperty" value="ScrumQuickAddBacklog"/>
                 <set field="headerItem" value="admin"/>
                 <set field="tabButtonItem" value="quickAddBacklog"/>
-                <set field="formTarget" value="${groovy: 
-                    if (parameters.unplanned.equals(&quot;Y&quot;)) 
+                <set field="formTarget" value="${groovy:
+                    if (parameters.unplanned.equals(&quot;Y&quot;))
                         formTarget=&quot;createQuickAddUnPlannedBacklog&quot;
-                    else 
+                    else
                         formTarget=&quot;createQuickAddBacklog&quot;
                     }"/>
                 <script location="component://scrum/groovyScripts/QuickAddBacklog.groovy"/>

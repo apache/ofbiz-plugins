@@ -25,6 +25,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleFindTimeSheet"/>
                 <set field="headerItem" value="admin"/>
+                <set field="helpAnchor" value="_current_timesheet"/>
                 <set field="labelTitleProperty" value="ScrumFindTimeSheet"/>
                 <set field="tabButtonItem" value="timesheets"/>
                 <script location="component://scrum/groovyScripts/ListTimeSheets.groovy"/>
@@ -61,8 +62,8 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonAdminDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleTimesheet} ${uiLabelMap.CommonNbr} ${timesheet.timesheetId} ${uiLabelMap.CommonWeek}: ${weekNumber} 
-                        ${uiLabelMap.CommonFrom} ${groovy:timesheet.get(&quot;fromDate&quot;).toString().substring(0,10)} ${uiLabelMap.CommonTo} 
+                        <screenlet title="${uiLabelMap.PageTitleTimesheet} ${uiLabelMap.CommonNbr} ${timesheet.timesheetId} ${uiLabelMap.CommonWeek}: ${weekNumber}
+                        ${uiLabelMap.CommonFrom} ${groovy:timesheet.get(&quot;fromDate&quot;).toString().substring(0,10)} ${uiLabelMap.CommonTo}
                         ${groovy:timesheet.get(&quot;thruDate&quot;).toString().substring(0,10)} ${uiLabelMap.PartyParty} : ${partyNameViewMap.lastName} ${partyNameViewMap.firstName} ${partyNameViewMap.middleName} [${timesheet.partyId}]">
                             <section>
                                 <condition>

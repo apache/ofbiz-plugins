@@ -37,6 +37,7 @@ under the License.
                 <set field="applicationMenuName" value="ScrumAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://scrum/widget/scrumMenus.xml" global="true"/>
                 <set field="applicationTitle" from-field="uiLabelMap.ScrumApplication" global="true"/>
+                <set field="helpAnchor" from-field="helpAnchor" default-value="_the_scrum_component"/>
             </actions>
             <widgets>
                 <include-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml"/>
@@ -68,6 +69,7 @@ under the License.
         <section>
             <actions>
                 <set field="headerItem" value="Sprints"/>
+                <set field="helpAnchor" value="_projectsprint"/>
                 <set field="workEffortId" from-field="parameters.projectId"/>
                 <entity-one entity-name="WorkEffort" value-field="project"/>
             </actions>
@@ -144,6 +146,7 @@ under the License.
         <section>
             <actions>
                 <set field="headerItem" value="products"/>
+                <set field="helpAnchor" value="_product_backlog"/>
                 <entity-one entity-name="Product" value-field="product">
                     <field-map field-name="productId" from-field="parameters.productId"/>
                 </entity-one>
@@ -454,6 +457,7 @@ under the License.
         <section>
             <actions>
                 <set field="headerItem" value="MyWork"/>
+                <set field="helpAnchor" value="_my_work"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -481,6 +485,7 @@ under the License.
             </condition>
             <actions>
                 <set field="headerItem" value="openTest"/>
+                <set field="helpAnchor" value="_open_test"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
