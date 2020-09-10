@@ -128,6 +128,9 @@ public class OFBizServiceResource extends OFBizResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response invokeServiceByPost(HashMap<String, Object> serviceInParams, @PathParam(value = "serviceName") String serviceName)
             throws IOException, GenericEntityException, GenericServiceException {
+        if (UtilValidate.isEmpty(serviceInParams)) {
+            throw new BadRequestException("The request body is missing.");
+        }
         ServiceRequestProcessor processor = new ServiceRequestProcessor();
         return processor.process(
                 UtilMisc.toMap("serviceName", serviceName, "httpVerb", HttpMethod.POST, "requestMap", serviceInParams, "dispatcher", getDispatcher(),
