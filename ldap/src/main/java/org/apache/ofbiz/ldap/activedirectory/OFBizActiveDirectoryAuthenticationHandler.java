@@ -94,7 +94,7 @@ public final class OFBizActiveDirectoryAuthenticationHandler extends AbstractOFB
             attribute = LdapUtils.getFilterWithValues(attribute, username);
             NamingEnumeration<SearchResult> answer = ctx.search(baseDN,
                     // Filter expression
-                    "(&(" + filter + ") (" + attribute +"))",
+                    "(&(" + filter + ") (" + attribute + "))",
                     controls);
             if (answer.hasMoreElements()) {
                 result = answer.next();

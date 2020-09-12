@@ -53,8 +53,7 @@ public class BirtViewHandler implements ViewHandler {
 
     private static final String MODULE = BirtViewHandler.class.getName();
     private static final String RES_ERROR = "BirtErrorUiLabels";
-
-    protected ServletContext servletContext = null;
+    private ServletContext servletContext = null;
 
     private String name = "birt";
 
@@ -103,7 +102,7 @@ public class BirtViewHandler implements ViewHandler {
 
             Map<String, Object> context = new HashMap<>();
             // set parameters from request
-             Map<String, Object> parameters = UtilGenerics.cast(request.getAttribute(BirtWorker.getBirtParameters()));
+            Map<String, Object> parameters = UtilGenerics.cast(request.getAttribute(BirtWorker.getBirtParameters()));
             if (parameters != null) {
                 context.put(BirtWorker.getBirtParameters(), parameters);
             } else {

@@ -79,7 +79,7 @@ public final class OFBizLdapAuthenticationHandler extends AbstractOFBizAuthentic
             attribute = LdapUtils.getFilterWithValues(attribute, username);
             NamingEnumeration<SearchResult> answer = ctx.search(baseDN,
                     // Filter expression
-                    "(&(" + filter + ") (" + attribute +"))",
+                    "(&(" + filter + ") (" + attribute + "))",
                     controls);
             if (answer.hasMoreElements()) {
                 result = answer.next();
