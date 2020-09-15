@@ -18,28 +18,15 @@
  *******************************************************************************/
 package org.apache.ofbiz.passport.user;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.transaction.Transaction;
 
-import org.apache.ofbiz.passport.event.GitHubEvents;
-import org.apache.ofbiz.passport.util.PassportUtil;
-import org.apache.ofbiz.common.authentication.api.Authenticator;
-import org.apache.ofbiz.common.authentication.api.AuthenticatorException;
-import org.apache.ofbiz.service.LocalDispatcher;
-import org.apache.ofbiz.service.GenericServiceException;
-import org.apache.ofbiz.service.ServiceUtil;
-import org.apache.ofbiz.entity.Delegator;
-import org.apache.ofbiz.entity.GenericValue;
-import org.apache.ofbiz.entity.GenericEntityException;
-import org.apache.ofbiz.entity.transaction.TransactionUtil;
-import org.apache.ofbiz.entity.transaction.GenericTransactionException;
-import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -50,11 +37,24 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.ofbiz.base.conversion.ConversionException;
 import org.apache.ofbiz.base.conversion.JSONConverters.JSONToMap;
 import org.apache.ofbiz.base.lang.JSON;
-import org.apache.ofbiz.base.util.UtilProperties;
 import org.apache.ofbiz.base.util.Debug;
-import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.base.util.UtilDateTime;
+import org.apache.ofbiz.base.util.UtilMisc;
+import org.apache.ofbiz.base.util.UtilProperties;
 import org.apache.ofbiz.base.util.UtilValidate;
+import org.apache.ofbiz.common.authentication.api.Authenticator;
+import org.apache.ofbiz.common.authentication.api.AuthenticatorException;
+import org.apache.ofbiz.entity.Delegator;
+import org.apache.ofbiz.entity.GenericEntityException;
+import org.apache.ofbiz.entity.GenericValue;
+import org.apache.ofbiz.entity.transaction.GenericTransactionException;
+import org.apache.ofbiz.entity.transaction.TransactionUtil;
+import org.apache.ofbiz.entity.util.EntityQuery;
+import org.apache.ofbiz.passport.event.GitHubEvents;
+import org.apache.ofbiz.passport.util.PassportUtil;
+import org.apache.ofbiz.service.GenericServiceException;
+import org.apache.ofbiz.service.LocalDispatcher;
+import org.apache.ofbiz.service.ServiceUtil;
 
 /**
  * GitHub OFBiz Authenticator
@@ -405,7 +405,7 @@ public class GitHubAuthenticator implements Authenticator {
                 try {
                     getResponse.close();
                 } catch (IOException e) {
-                    // do nothing
+                    Debug.logError(e, MODULE);
                 }
             }
         }

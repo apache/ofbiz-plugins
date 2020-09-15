@@ -614,7 +614,7 @@ public class SamplePricatParser extends AbstractPricatParser {
                         try {
                             cellValue = cell.getStringCellValue();
                         } catch (IllegalStateException e1) {
-                            // do nothing
+                            Debug.logError(e1, MODULE);
                         }
                     }
                     report.print(((i == 0) ? "" : ", ") + cellValue, InterfaceReport.FORMAT_NOTE);
