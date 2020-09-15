@@ -30,7 +30,7 @@ public class ModelOperation {
     /**
      * Gets the value of the service property.
      *
-     * @return possible object is {@link Service }
+     * @return possible object is {@link String }
      *
      */
     public String getService() {
@@ -40,7 +40,7 @@ public class ModelOperation {
     /**
      * Sets the value of the service property.
      *
-     * @param value allowed object is {@link Service }
+     * @param value allowed object is {@link String }
      *
      */
     public void setService(String value) {
