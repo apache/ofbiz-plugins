@@ -63,6 +63,7 @@ public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
     @SuppressWarnings("rawtypes")
     private Map<String, Schema> schemas;
     private OpenAPI openApi;
+    private DispatchContext context;
 
     public OFBizOpenApiReader() {
         openApiTags = new LinkedHashSet<>();
@@ -76,34 +77,24 @@ public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
     @Override
     public OpenAPI read(Set<Class<?>> classes, Map<String, Object> resources) {
         openApi = super.read(classes, resources);
-        if (openApi.getTags() != null) {
-            openApiTags.addAll(openApi.getTags());
-        }
-
-        Tag serviceResourceTag = new Tag().name("Exported Services")
-                .description("OFBiz services that are exposed via REST interface with export attribute set to true");
-        openApiTags.add(serviceResourceTag);
-        openApi.setTags(new ArrayList<Tag>(openApiTags));
-        components = openApi.getComponents();
-
-        if (components == null) {
-            components = new Components();
-        }
-        schemas = components.getSchemas();
-        if (schemas == null) {
-            schemas = new HashMap<>();
-            components.schemas(schemas);
-        }
-        paths = openApi.getPaths();
-        if (paths == null) {
-            paths = new Paths();
-        }
-        addPredefinedSchemas();
         ServletContext servletContext = ApiContextListener.getApplicationCntx();
         LocalDispatcher dispatcher = WebAppUtil.getDispatcher(servletContext);
-        DispatchContext context = dispatcher.getDispatchContext();
-        Set<String> serviceNames = context.getAllServiceNames();
+        context = dispatcher.getDispatchContext();
+        initializeStdOpenApiComponents();
+        addPredefinedSchemas();
+        addExportableServices();
+        addApiResources();
+        openApi.setPaths(paths);
+        openApi.setComponents(components);
+        return openApi;
+    }
 
+    //TODO - Add method contents
+    private void addApiResources() {
+    }
+
+    private void addExportableServices() {
+        Set<String> serviceNames = context.getAllServiceNames();
         for (String serviceName : serviceNames) {
             ModelService service = null;
             try {
@@ -139,13 +130,32 @@ public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
                 addServiceOperationApiResponses(service, operation);
                 setPathItemOperation(pathItemObject, service.getAction().toUpperCase(), operation);
                 paths.addPathItem("/services/" + service.getName(), pathItemObject);
-
             }
         }
+    }
+    private void initializeStdOpenApiComponents() {
+        if (openApi.getTags() != null) {
+            openApiTags.addAll(openApi.getTags());
+        }
 
-        openApi.setPaths(paths);
-        openApi.setComponents(components);
-        return openApi;
+        Tag serviceResourceTag = new Tag().name("Exported Services")
+                .description("OFBiz services that are exposed via REST interface with export attribute set to true");
+        openApiTags.add(serviceResourceTag);
+        openApi.setTags(new ArrayList<Tag>(openApiTags));
+        components = openApi.getComponents();
+
+        if (components == null) {
+            components = new Components();
+        }
+        schemas = components.getSchemas();
+        if (schemas == null) {
+            schemas = new HashMap<>();
+            components.schemas(schemas);
+        }
+        paths = openApi.getPaths();
+        if (paths == null) {
+            paths = new Paths();
+        }
     }
 
     private void setPathItemOperation(PathItem pathItemObject, String method, Operation operation) {
