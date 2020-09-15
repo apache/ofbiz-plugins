@@ -18,16 +18,26 @@
  *******************************************************************************/
 package org.apache.ofbiz.ws.rs.core;
 
+import java.io.File;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.ofbiz.base.component.ComponentConfig;
+import org.apache.ofbiz.base.component.ComponentException;
 import org.apache.ofbiz.base.util.Debug;
+import org.apache.ofbiz.ws.rs.model.ModelApi;
+import org.apache.ofbiz.ws.rs.model.ModelApiReader;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
 public class OFBizApiConfig extends ResourceConfig {
+    private static final String MODULE = OFBizApiConfig.class.getName();
+    private static final Map<String, ModelApi> MICRO_APIS = new HashMap<>();
     public OFBizApiConfig() {
         packages("org.apache.ofbiz.ws.rs.resources");
         packages("org.apache.ofbiz.ws.rs.security.auth");
@@ -39,5 +49,33 @@ public class OFBizApiConfig extends ResourceConfig {
             register(new LoggingFeature(Logger.getLogger(LoggingFeature.DEFAULT_LOGGER_NAME), Level.INFO,
                     LoggingFeature.Verbosity.PAYLOAD_ANY, 10000));
         }
+        registerDSLResources();
+    }
+
+    public static Map<String, ModelApi> getModelApis() {
+        return MICRO_APIS;
+    }
+
+    private void registerDSLResources() {
+        loadApiDefinitions();
+    }
+
+    private void loadApiDefinitions() {
+        Collection<ComponentConfig> components = ComponentConfig.getAllComponents();
+        components.forEach(component -> {
+            String cName = component.getComponentName();
+            try {
+                String apiSchema = ComponentConfig.getRootLocation(cName) + "/api/" + cName + ".rest.xml";
+                File apiSchemaF = new File(apiSchema);
+                if (apiSchemaF.exists()) {
+                    Debug.logInfo("Processing REST API " + cName + ".rest.xml" + " from component " + cName, MODULE);
+                    ModelApi api = ModelApiReader.getModelApi(apiSchemaF);
+                    MICRO_APIS.put(cName, api);
+                }
+            } catch (ComponentException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        });
     }
 }
