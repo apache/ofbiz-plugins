@@ -21,19 +21,29 @@ package org.apache.ofbiz.ws.rs.core;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.ws.rs.core.MediaType;
+
 import org.apache.ofbiz.base.component.ComponentConfig;
 import org.apache.ofbiz.base.component.ComponentException;
 import org.apache.ofbiz.base.util.Debug;
+import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.ws.rs.model.ModelApi;
 import org.apache.ofbiz.ws.rs.model.ModelApiReader;
+import org.apache.ofbiz.ws.rs.model.ModelOperation;
+import org.apache.ofbiz.ws.rs.model.ModelResource;
+import org.apache.ofbiz.ws.rs.process.ServiceRequestHandler;
+import org.apache.ofbiz.ws.rs.security.Secured;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.model.Resource;
+import org.glassfish.jersey.server.model.ResourceMethod;
 
 public class OFBizApiConfig extends ResourceConfig {
     private static final String MODULE = OFBizApiConfig.class.getName();
@@ -58,6 +68,7 @@ public class OFBizApiConfig extends ResourceConfig {
 
     private void registerDSLResources() {
         loadApiDefinitions();
+        traverseAndRegisterApiDefinitions();
     }
 
     private void loadApiDefinitions() {
@@ -76,6 +87,35 @@ public class OFBizApiConfig extends ResourceConfig {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+        });
+    }
+
+    private void traverseAndRegisterApiDefinitions() {
+        if (UtilValidate.isEmpty(MICRO_APIS)) {
+            Debug.logInfo("No API defintion to process", MODULE);
+            return;
+        }
+        MICRO_APIS.forEach((k, v) -> {
+            Debug.logInfo("Registring Resource Definitions from API - " + k, MODULE);
+            List<ModelResource> resources = v.getResources();
+            resources.forEach(modelResource -> {
+                Resource.Builder resourceBuilder = Resource.builder(modelResource.getPath()).name(modelResource.getName());
+                for (ModelOperation op : modelResource.getOperations()) {
+                    if (UtilValidate.isEmpty(op.getPath())) { // Add the method to the parent resource
+                        ResourceMethod.Builder methodBuilder = resourceBuilder.addMethod(op.getVerb().toUpperCase());
+                        methodBuilder.produces(MediaType.APPLICATION_JSON).nameBindings(Secured.class);
+                        String serviceName = op.getService();
+                        methodBuilder.handledBy(new ServiceRequestHandler(serviceName));
+                    } else {
+                        Resource.Builder childResourceBuilder = resourceBuilder.addChildResource(op.getPath());
+                        ResourceMethod.Builder childResourceMethodBuilder = childResourceBuilder.addMethod(op.getVerb().toUpperCase());
+                        childResourceMethodBuilder.produces(MediaType.APPLICATION_JSON).nameBindings(Secured.class);
+                        String serviceName = op.getService();
+                        childResourceMethodBuilder.handledBy(new ServiceRequestHandler(serviceName));
+                    }
+                }
+                registerResources(resourceBuilder.build());
+            });
         });
     }
 }
