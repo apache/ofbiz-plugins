@@ -24,10 +24,12 @@ under the License.
     <vendor></vendor>
     <version>1.0</version>
 
-    <service name="noSyntaxError" engine="interface">
-        <description>
-            Dummy service to prevent empty files and syntax error - Remove when the 1st real service will be added here
-        </description>
+    <service name="generateAuthTokenService" engine="java" require-new-transaction="true" max-retry="3"
+            location="org.apache.ofbiz.ws.rs.services.RestServices" invoke="generateAuthToken">
+        <description>Generates Authorization Token for the userLogin</description>
+        <attribute name="access_token" type="String" mode="OUT" optional="false"/>
+        <attribute name="expires_in" type="String" mode="OUT" optional="false"/>
+        <attribute name="token_type" type="String" mode="OUT" optional="false"/>
     </service>
 
 </services>
