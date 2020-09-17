@@ -28,9 +28,12 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.BadRequestException;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HttpMethod;
+import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -104,7 +107,7 @@ public class OFBizServiceResource extends OFBizResource {
     @Path("/{serviceName}")
     @Produces(MediaType.APPLICATION_JSON)
     @Secured
-    public Response invokeServiceByGet(@QueryParam(value = "inParams") ApiServiceRequest serviceRequest,
+    public Response doGet(@QueryParam(value = "inParams") ApiServiceRequest serviceRequest,
                                        @PathParam(value = "serviceName") String serviceName) throws IOException, GenericServiceException {
         if (UtilValidate.isEmpty(serviceRequest) || UtilValidate.isEmpty(serviceRequest.getInParams())) {
             throw new BadRequestException("Missing Parameter: 'inParams'");
@@ -126,7 +129,7 @@ public class OFBizServiceResource extends OFBizResource {
     @POST
     @Path("/{serviceName}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response invokeServiceByPost(HashMap<String, Object> serviceInParams, @PathParam(value = "serviceName") String serviceName)
+    public Response doPost(HashMap<String, Object> serviceInParams, @PathParam(value = "serviceName") String serviceName)
             throws IOException, GenericEntityException, GenericServiceException {
         if (UtilValidate.isEmpty(serviceInParams)) {
             throw new BadRequestException("The request body is missing.");
@@ -134,6 +137,72 @@ public class OFBizServiceResource extends OFBizResource {
         ServiceRequestProcessor processor = new ServiceRequestProcessor();
         return processor.process(
                 UtilMisc.toMap("serviceName", serviceName, "httpVerb", HttpMethod.POST, "requestMap", serviceInParams, "dispatcher", getDispatcher(),
+                        "request", httpRequest));
+    }
+
+    /**
+     * @param serviceInParams
+     * @param serviceName
+     * @return
+     * @throws IOException
+     * @throws GenericEntityException
+     * @throws GenericServiceException
+     */
+    @PUT
+    @Path("/{serviceName}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response doPut(HashMap<String, Object> serviceInParams, @PathParam(value = "serviceName") String serviceName)
+            throws IOException, GenericEntityException, GenericServiceException {
+        if (UtilValidate.isEmpty(serviceInParams)) {
+            throw new BadRequestException("The request body is missing.");
+        }
+        ServiceRequestProcessor processor = new ServiceRequestProcessor();
+        return processor.process(
+                UtilMisc.toMap("serviceName", serviceName, "httpVerb", HttpMethod.PUT, "requestMap", serviceInParams, "dispatcher", getDispatcher(),
+                        "request", httpRequest));
+    }
+
+    /**
+     * @param serviceInParams
+     * @param serviceName
+     * @return
+     * @throws IOException
+     * @throws GenericEntityException
+     * @throws GenericServiceException
+     */
+    @PATCH
+    @Path("/{serviceName}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response doPatch(HashMap<String, Object> serviceInParams, @PathParam(value = "serviceName") String serviceName)
+            throws IOException, GenericEntityException, GenericServiceException {
+        if (UtilValidate.isEmpty(serviceInParams)) {
+            throw new BadRequestException("The request body is missing.");
+        }
+        ServiceRequestProcessor processor = new ServiceRequestProcessor();
+        return processor.process(
+                UtilMisc.toMap("serviceName", serviceName, "httpVerb", HttpMethod.PATCH, "requestMap", serviceInParams, "dispatcher", getDispatcher(),
+                        "request", httpRequest));
+    }
+
+    /**
+     * @param serviceInParams
+     * @param serviceName
+     * @return
+     * @throws IOException
+     * @throws GenericEntityException
+     * @throws GenericServiceException
+     */
+    @DELETE
+    @Path("/{serviceName}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response doDelete(HashMap<String, Object> serviceInParams, @PathParam(value = "serviceName") String serviceName)
+            throws IOException, GenericEntityException, GenericServiceException {
+        if (UtilValidate.isEmpty(serviceInParams)) {
+            throw new BadRequestException("The request body is missing.");
+        }
+        ServiceRequestProcessor processor = new ServiceRequestProcessor();
+        return processor.process(
+                UtilMisc.toMap("serviceName", serviceName, "httpVerb", HttpMethod.DELETE, "requestMap", serviceInParams, "dispatcher", getDispatcher(),
                         "request", httpRequest));
     }
 }
