@@ -52,7 +52,8 @@ public final class ModelApiReader {
                     .description(UtilXml.checkEmpty(resourceEle.getAttribute("description")).intern())
                     .displayName(UtilXml.checkEmpty(resourceEle.getAttribute("displayName")).intern())
                     .path(UtilXml.checkEmpty(resourceEle.getAttribute("path")).intern())
-                    .enabled(Boolean.parseBoolean(UtilXml.checkEmpty(resourceEle.getAttribute("name")).intern()));
+                    .publish(Boolean.parseBoolean(UtilXml.checkEmpty(resourceEle.getAttribute("publish")).intern()))
+                    .auth(Boolean.parseBoolean(UtilXml.checkEmpty(resourceEle.getAttribute("auth")).intern()));
             createOperations(resourceEle, resource);
             Debug.logInfo(resource.toString(), MODULE);
             api.addResource(resource);
@@ -69,7 +70,8 @@ public final class ModelApiReader {
                     .verb(UtilXml.checkEmpty(operationEle.getAttribute("verb")).intern()).service(serviceName)
                     .produces(UtilXml.checkEmpty(operationEle.getAttribute("produces")).intern())
                     .consumes(UtilXml.checkEmpty(operationEle.getAttribute("consumes")).intern())
-                    .description(UtilXml.checkEmpty(operationEle.getAttribute("description")).intern());
+                    .description(UtilXml.checkEmpty(operationEle.getAttribute("description")).intern())
+                    .auth(Boolean.parseBoolean(UtilXml.checkEmpty(operationEle.getAttribute("auth")).intern()));
             resource.addOperation(op);
         }
     }

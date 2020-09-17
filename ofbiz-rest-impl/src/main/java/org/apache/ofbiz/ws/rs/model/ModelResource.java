@@ -28,7 +28,38 @@ public class ModelResource {
     private String path;
     private String displayName;
     private String description;
-    private boolean enabled;
+    private boolean publish;
+    private boolean auth;
+
+    /**
+     * @return the auth
+     */
+    public boolean isAuth() {
+        return auth;
+    }
+
+    /**
+     * @param auth the auth to set
+     */
+    public void setAuth(boolean auth) {
+        this.auth = auth;
+    }
+
+    /**
+     * @param auth
+     * @return
+     */
+    public ModelResource auth(boolean auth) {
+        this.auth = auth;
+        return this;
+    }
+
+    /**
+     * @param publish the publish to set
+     */
+    protected void setPublish(boolean publish) {
+        this.publish = publish;
+    }
 
     /**
      * @return the operation
@@ -142,25 +173,18 @@ public class ModelResource {
     }
 
     /**
-     * @return the enabled
+     * @return the publish
      */
-    public Boolean getEnabled() {
-        return enabled;
+    public boolean isPublish() {
+        return publish;
     }
 
     /**
-     * @param enabled the enabled to set
-     */
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    /**
-     * @param enabled
+     * @param publish
      * @return
      */
-    public ModelResource enabled(boolean enabled) {
-        this.enabled = enabled;
+    public ModelResource publish(boolean publish) {
+        this.publish = publish;
         return this;
     }
 
@@ -171,7 +195,7 @@ public class ModelResource {
     public String toString() {
         // TODO Auto-generated method stub
         return "name: " + name + ", path: " + path + ", displayName: " + displayName + ", description: " + description
-                + ", enabled: " + enabled;
+                + ", publish: " + publish;
     }
 
 }

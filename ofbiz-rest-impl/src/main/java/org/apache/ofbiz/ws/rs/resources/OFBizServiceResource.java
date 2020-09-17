@@ -91,8 +91,8 @@ public class OFBizServiceResource extends OFBizResource {
                 serviceList.add(serviceMap);
             }
         }
-        Success success = new Success(Response.Status.OK.getStatusCode(), Response.Status.OK.getReasonPhrase(), Response.Status.OK.getReasonPhrase(),
-                serviceList);
+        Success success = new Success(Response.Status.OK.getStatusCode(), Response.Status.OK.getReasonPhrase(),
+                Response.Status.OK.getReasonPhrase(), serviceList);
         return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(success).build();
     }
 
@@ -108,14 +108,13 @@ public class OFBizServiceResource extends OFBizResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Secured
     public Response doGet(@QueryParam(value = "inParams") ApiServiceRequest serviceRequest,
-                                       @PathParam(value = "serviceName") String serviceName) throws IOException, GenericServiceException {
+            @PathParam(value = "serviceName") String serviceName) throws IOException, GenericServiceException {
         if (UtilValidate.isEmpty(serviceRequest) || UtilValidate.isEmpty(serviceRequest.getInParams())) {
             throw new BadRequestException("Missing Parameter: 'inParams'");
         }
         ServiceRequestProcessor processor = new ServiceRequestProcessor();
-        return processor.process(
-                UtilMisc.toMap("serviceName", serviceName, "httpVerb", HttpMethod.GET, "requestMap", serviceRequest.getInParams(), "dispatcher",
-                        getDispatcher(), "request", httpRequest));
+        return processor.process(UtilMisc.toMap("serviceName", serviceName, "httpVerb", HttpMethod.GET, "requestMap",
+                serviceRequest.getInParams(), "dispatcher", getDispatcher(), "request", httpRequest));
     }
 
     /**
@@ -129,15 +128,15 @@ public class OFBizServiceResource extends OFBizResource {
     @POST
     @Path("/{serviceName}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response doPost(HashMap<String, Object> serviceInParams, @PathParam(value = "serviceName") String serviceName)
+    public Response doPost(HashMap<String, Object> serviceInParams,
+            @PathParam(value = "serviceName") String serviceName)
             throws IOException, GenericEntityException, GenericServiceException {
         if (UtilValidate.isEmpty(serviceInParams)) {
             throw new BadRequestException("The request body is missing.");
         }
         ServiceRequestProcessor processor = new ServiceRequestProcessor();
-        return processor.process(
-                UtilMisc.toMap("serviceName", serviceName, "httpVerb", HttpMethod.POST, "requestMap", serviceInParams, "dispatcher", getDispatcher(),
-                        "request", httpRequest));
+        return processor.process(UtilMisc.toMap("serviceName", serviceName, "httpVerb", HttpMethod.POST, "requestMap",
+                serviceInParams, "dispatcher", getDispatcher(), "request", httpRequest));
     }
 
     /**
@@ -157,9 +156,8 @@ public class OFBizServiceResource extends OFBizResource {
             throw new BadRequestException("The request body is missing.");
         }
         ServiceRequestProcessor processor = new ServiceRequestProcessor();
-        return processor.process(
-                UtilMisc.toMap("serviceName", serviceName, "httpVerb", HttpMethod.PUT, "requestMap", serviceInParams, "dispatcher", getDispatcher(),
-                        "request", httpRequest));
+        return processor.process(UtilMisc.toMap("serviceName", serviceName, "httpVerb", HttpMethod.PUT, "requestMap",
+                serviceInParams, "dispatcher", getDispatcher(), "request", httpRequest));
     }
 
     /**
@@ -173,15 +171,15 @@ public class OFBizServiceResource extends OFBizResource {
     @PATCH
     @Path("/{serviceName}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response doPatch(HashMap<String, Object> serviceInParams, @PathParam(value = "serviceName") String serviceName)
+    public Response doPatch(HashMap<String, Object> serviceInParams,
+            @PathParam(value = "serviceName") String serviceName)
             throws IOException, GenericEntityException, GenericServiceException {
         if (UtilValidate.isEmpty(serviceInParams)) {
             throw new BadRequestException("The request body is missing.");
         }
         ServiceRequestProcessor processor = new ServiceRequestProcessor();
-        return processor.process(
-                UtilMisc.toMap("serviceName", serviceName, "httpVerb", HttpMethod.PATCH, "requestMap", serviceInParams, "dispatcher", getDispatcher(),
-                        "request", httpRequest));
+        return processor.process(UtilMisc.toMap("serviceName", serviceName, "httpVerb", HttpMethod.PATCH, "requestMap",
+                serviceInParams, "dispatcher", getDispatcher(), "request", httpRequest));
     }
 
     /**
@@ -195,14 +193,14 @@ public class OFBizServiceResource extends OFBizResource {
     @DELETE
     @Path("/{serviceName}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response doDelete(HashMap<String, Object> serviceInParams, @PathParam(value = "serviceName") String serviceName)
+    public Response doDelete(HashMap<String, Object> serviceInParams,
+            @PathParam(value = "serviceName") String serviceName)
             throws IOException, GenericEntityException, GenericServiceException {
         if (UtilValidate.isEmpty(serviceInParams)) {
             throw new BadRequestException("The request body is missing.");
         }
         ServiceRequestProcessor processor = new ServiceRequestProcessor();
-        return processor.process(
-                UtilMisc.toMap("serviceName", serviceName, "httpVerb", HttpMethod.DELETE, "requestMap", serviceInParams, "dispatcher", getDispatcher(),
-                        "request", httpRequest));
+        return processor.process(UtilMisc.toMap("serviceName", serviceName, "httpVerb", HttpMethod.DELETE, "requestMap",
+                serviceInParams, "dispatcher", getDispatcher(), "request", httpRequest));
     }
 }

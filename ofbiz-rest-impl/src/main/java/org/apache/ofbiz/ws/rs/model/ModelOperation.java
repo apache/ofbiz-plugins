@@ -26,6 +26,30 @@ public class ModelOperation {
     private String consumes;
     private String path;
     private String description;
+    private boolean auth;
+
+    /**
+     * @return the auth
+     */
+    public boolean isAuth() {
+        return auth;
+    }
+
+    /**
+     * @param auth the auth to set
+     */
+    public void setAuth(boolean auth) {
+        this.auth = auth;
+    }
+
+    /**
+     * @param value
+     * @return
+     */
+    public ModelOperation auth(boolean auth) {
+        this.auth = auth;
+        return this;
+    }
 
     /**
      * Gets the value of the service property.

@@ -48,11 +48,13 @@ import org.glassfish.jersey.server.model.ResourceMethod;
 public class OFBizApiConfig extends ResourceConfig {
     private static final String MODULE = OFBizApiConfig.class.getName();
     private static final Map<String, ModelApi> MICRO_APIS = new HashMap<>();
+
     public OFBizApiConfig() {
         packages("org.apache.ofbiz.ws.rs.resources");
         packages("org.apache.ofbiz.ws.rs.security.auth");
         packages("org.apache.ofbiz.ws.rs.spi.impl");
-        //packages("io.swagger.v3.jaxrs2.integration.resources"); //commenting it out to generate customized OpenApi Spec
+        // packages("io.swagger.v3.jaxrs2.integration.resources"); //commenting it out
+        // to generate customized OpenApi Spec
         register(JacksonFeature.class);
         register(MultiPartFeature.class);
         if (Debug.verboseOn()) {
@@ -99,22 +101,31 @@ public class OFBizApiConfig extends ResourceConfig {
             Debug.logInfo("Registring Resource Definitions from API - " + k, MODULE);
             List<ModelResource> resources = v.getResources();
             resources.forEach(modelResource -> {
-                Resource.Builder resourceBuilder = Resource.builder(modelResource.getPath()).name(modelResource.getName());
-                for (ModelOperation op : modelResource.getOperations()) {
-                    if (UtilValidate.isEmpty(op.getPath())) { // Add the method to the parent resource
-                        ResourceMethod.Builder methodBuilder = resourceBuilder.addMethod(op.getVerb().toUpperCase());
-                        methodBuilder.produces(MediaType.APPLICATION_JSON).nameBindings(Secured.class);
-                        String serviceName = op.getService();
-                        methodBuilder.handledBy(new ServiceRequestHandler(serviceName));
-                    } else {
-                        Resource.Builder childResourceBuilder = resourceBuilder.addChildResource(op.getPath());
-                        ResourceMethod.Builder childResourceMethodBuilder = childResourceBuilder.addMethod(op.getVerb().toUpperCase());
-                        childResourceMethodBuilder.produces(MediaType.APPLICATION_JSON).nameBindings(Secured.class);
-                        String serviceName = op.getService();
-                        childResourceMethodBuilder.handledBy(new ServiceRequestHandler(serviceName));
+                if (modelResource.isPublish()) {
+                    Resource.Builder resourceBuilder = Resource.builder(modelResource.getPath())
+                            .name(modelResource.getName());
+                    for (ModelOperation op : modelResource.getOperations()) {
+                        if (UtilValidate.isEmpty(op.getPath())) { // Add the method to the parent resource
+                            ResourceMethod.Builder methodBuilder = resourceBuilder.addMethod(op.getVerb().toUpperCase());
+                            methodBuilder.produces(MediaType.APPLICATION_JSON);
+                            if (op.isAuth()) {
+                                methodBuilder.nameBindings(Secured.class);
+                            }
+                            String serviceName = op.getService();
+                            methodBuilder.handledBy(new ServiceRequestHandler(serviceName));
+                        } else {
+                            Resource.Builder childResourceBuilder = resourceBuilder.addChildResource(op.getPath());
+                            ResourceMethod.Builder childResourceMethodBuilder = childResourceBuilder.addMethod(op.getVerb().toUpperCase());
+                            childResourceMethodBuilder.produces(MediaType.APPLICATION_JSON);
+                            if (op.isAuth()) {
+                                childResourceMethodBuilder.nameBindings(Secured.class);
+                            }
+                            String serviceName = op.getService();
+                            childResourceMethodBuilder.handledBy(new ServiceRequestHandler(serviceName));
+                        }
                     }
+                    registerResources(resourceBuilder.build());
                 }
-                registerResources(resourceBuilder.build());
             });
         });
     }
