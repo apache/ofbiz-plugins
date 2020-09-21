@@ -35,6 +35,7 @@ import org.apache.ofbiz.service.ModelParam;
 import org.apache.ofbiz.service.ModelService;
 import org.apache.ofbiz.webapp.WebAppUtil;
 import org.apache.ofbiz.ws.rs.common.AuthenticationScheme;
+import org.apache.ofbiz.ws.rs.core.ResponseStatus;
 import org.apache.ofbiz.ws.rs.listener.ApiContextListener;
 
 import io.swagger.v3.oas.models.headers.Header;
@@ -157,12 +158,15 @@ public final class OpenApiUtil {
     }
 
     private static void buildApiResponseSchemas() {
-        Schema<?> unauthorized = new MapSchema().addProperties("statusCode", new IntegerSchema().description("HTTP Status Code"))
+        Schema<?> genericErrorSchema = new MapSchema().addProperties("statusCode", new IntegerSchema().description("HTTP Status Code"))
                  .addProperties("statusDescription", new StringSchema().description("HTTP Status Code Description"))
+                 .addProperties("errorTyoe", new StringSchema().description("Error Type for the error"))
                  .addProperties("errorMessage", new StringSchema().description("Error Message"));
-        SCHEMAS.put("api.response.unauthorized.noheader", unauthorized);
-        SCHEMAS.put("api.response.unauthorized.invalidtoken", unauthorized);
-        SCHEMAS.put("api.response.forbidden", unauthorized);
+        SCHEMAS.put("api.response.unauthorized.noheader", genericErrorSchema);
+        SCHEMAS.put("api.response.unauthorized.invalidtoken", genericErrorSchema);
+        SCHEMAS.put("api.response.forbidden", genericErrorSchema);
+        SCHEMAS.put("api.response.service.badrequest", genericErrorSchema);
+        SCHEMAS.put("api.response.service.unprocessableentity", genericErrorSchema);
     }
 
     public static Map<String, ApiResponse> getStandardApiResponses() {
@@ -174,15 +178,25 @@ public final class OpenApiUtil {
     }
 
     private static void buildApiResponses() {
-        Map<String, Object> unauthorizedNoHeaderExample = UtilMisc.toMap("statusCode", Response.Status.UNAUTHORIZED.getStatusCode(),
+        Map<String, Object> unauthorizedNoHeaderExample = UtilMisc.toOrderedMap("statusCode", Response.Status.UNAUTHORIZED.getStatusCode(),
                 "statusDescription", Response.Status.UNAUTHORIZED.getReasonPhrase(),
                 "errorMessage", "Unauthorized: Access is denied due to invalid or absent Authorization header.");
-        Map<String, Object> unauthorizedInvalidTokenExample = UtilMisc.toMap("statusCode", Response.Status.UNAUTHORIZED.getStatusCode(),
+        Map<String, Object> unauthorizedInvalidTokenExample = UtilMisc.toOrderedMap("statusCode", Response.Status.UNAUTHORIZED.getStatusCode(),
                 "statusDescription", Response.Status.UNAUTHORIZED.getReasonPhrase(),
                 "errorMessage", "Unauthorized: Access is denied due to invalid or absent Authorization header.");
-        Map<String, Object> forbiddenExample = UtilMisc.toMap("statusCode", Response.Status.FORBIDDEN.getStatusCode(),
+        Map<String, Object> forbiddenExample = UtilMisc.toOrderedMap("statusCode", Response.Status.FORBIDDEN.getStatusCode(),
                 "statusDescription", Response.Status.FORBIDDEN.getReasonPhrase(),
                 "errorMessage", "Forbidden: Insufficient rights to perform this API call.");
+        Map<String, Object> badRequestExample = UtilMisc.toOrderedMap("statusCode", Response.Status.BAD_REQUEST.getStatusCode(),
+                "statusDescription", Response.Status.BAD_REQUEST.getReasonPhrase(),
+                "errorType", "ServiceValidationException",
+                "errorMessage", "createProduct validation failed. The request contained invalid information and could not be processed.",
+                "errorDescription", "The following required parameter is missing: [IN] [createProduct.internalName]");
+        Map<String, Object> unprocessableEntExample = UtilMisc.toOrderedMap("statusCode", ResponseStatus.Custom.UNPROCESSABLE_ENTITY.getStatusCode(),
+                "statusDescription", ResponseStatus.Custom.UNPROCESSABLE_ENTITY.getReasonPhrase(),
+                "errorType", "GenericEntityException",
+                "errorMessage", "createProduct execution failed. The request contained invalid information and could not be processed.",
+                "errorDescription", "StandardException: A truncation error was encountered trying to shrink CHAR 'string' to length 1.");
 
         final ApiResponse unauthorizedNoHeader = new ApiResponse().addHeaderObject(HttpHeaders.WWW_AUTHENTICATE, new Header()
                 .example(HttpHeaders.WWW_AUTHENTICATE + ": "
@@ -211,9 +225,27 @@ public final class OpenApiUtil {
                                 .schema(new Schema<>().$ref("#/components/schemas/" + "api.response.forbidden"))
                                 .example(forbiddenExample)));
 
+        final ApiResponse badRequest = new ApiResponse()
+                .description("Bad Request: Due to malformed request syntax or invalid request message framing or incorrect request parameters.")
+                .content(new Content()
+                        .addMediaType(javax.ws.rs.core.MediaType.APPLICATION_JSON, new MediaType()
+                                .schema(new Schema<>()
+                                        .$ref("#/components/schemas/" + "api.response.service.badrequest"))
+                                .example(badRequestExample)));
+
+        final ApiResponse unprocessableEntity = new ApiResponse()
+                .description("Unprocessable Entity: Error indicating semantical errors. Request is syntactically correct though.")
+                .content(new Content()
+                        .addMediaType(javax.ws.rs.core.MediaType.APPLICATION_JSON, new MediaType()
+                                .schema(new Schema<>()
+                                        .$ref("#/components/schemas/" + "api.response.service.unprocessableentity"))
+                                .example(unprocessableEntExample)));
+
         RESPONSES.put(String.valueOf(Response.Status.UNAUTHORIZED.getStatusCode()), unauthorizedNoHeader);
         RESPONSES.put(String.valueOf(Response.Status.UNAUTHORIZED.getStatusCode()), unauthorizedInvalidToken);
         RESPONSES.put(String.valueOf(Response.Status.FORBIDDEN.getStatusCode()), forbidden);
+        RESPONSES.put(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()), badRequest);
+        RESPONSES.put(String.valueOf(ResponseStatus.Custom.UNPROCESSABLE_ENTITY.getStatusCode()), unprocessableEntity);
     }
 
     public static Class<?> getOpenApiTypeForAttributeType(String attributeType) {
