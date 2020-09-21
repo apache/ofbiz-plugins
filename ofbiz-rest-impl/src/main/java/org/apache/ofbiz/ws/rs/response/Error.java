@@ -20,15 +20,27 @@ package org.apache.ofbiz.ws.rs.response;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
 @JsonRootName(value = "error")
+@JsonPropertyOrder({ "statusCode", "statusDescription", "errorType", "errorMessage", "errorDescription",
+        "additionalErrors" })
 public class Error {
 
     private int statusCode;
     private String statusDescription;
     private String errorMessage;
+    @JsonProperty("errorType")
+    private String type;
+    @JsonProperty("errorDescription")
+    private String errorDesc;
     private List<String> additionalErrors;
+
+    public Error() {
+
+    }
 
     public Error(int statusCode, String statusDescription, String errorMessage) {
         this.statusCode = statusCode;
@@ -44,10 +56,80 @@ public class Error {
     }
 
     /**
+     * @param statusCode
+     * @return
+     */
+    public Error code(int statusCode) {
+        this.statusCode = statusCode;
+        return this;
+    }
+
+    /**
+     * @param statusDescription
+     * @return
+     */
+    public Error description(String statusDescription) {
+        this.statusDescription = statusDescription;
+        return this;
+    }
+
+    /**
+     * @param errorMessage
+     * @return
+     */
+    public Error message(String errorMessage) {
+        this.errorMessage = errorMessage;
+        return this;
+    }
+
+    /**
+     * @param type
+     * @return
+     */
+    public Error type(String type) {
+        this.type = type;
+        return this;
+    }
+
+    /**
+     * @param statusCode
+     * @return
+     */
+    public Error statusCode(int statusCode) {
+        this.statusCode = statusCode;
+        return this;
+    }
+
+    /**
+     * @param additionalErrors
+     * @return
+     */
+    public Error additionalErrors(List<String> additionalErrors) {
+        this.additionalErrors = additionalErrors;
+        return this;
+    }
+
+    /**
+     * @param errorDesc
+     * @return
+     */
+    public Error errorDesc(String errorDesc) {
+        this.setErrorDesc(errorDesc);
+        return this;
+    }
+
+    /**
      * @return the statusCode
      */
     public int getStatusCode() {
         return statusCode;
+    }
+
+    /**
+     * @return the type
+     */
+    public String getType() {
+        return type;
     }
 
     /**
@@ -97,6 +179,20 @@ public class Error {
      */
     public void setAdditionalErrors(List<String> additionalErrors) {
         this.additionalErrors = additionalErrors;
+    }
+
+    /**
+     * @return the errorDesc
+     */
+    public String getErrorDesc() {
+        return errorDesc;
+    }
+
+    /**
+     * @param errorDesc the errorDesc to set
+     */
+    public void setErrorDesc(String errorDesc) {
+        this.errorDesc = errorDesc;
     }
 
 }
