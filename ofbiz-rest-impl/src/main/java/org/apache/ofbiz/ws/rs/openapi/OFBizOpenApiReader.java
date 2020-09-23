@@ -18,9 +18,7 @@
  *******************************************************************************/
 package org.apache.ofbiz.ws.rs.openapi;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,6 +28,7 @@ import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 
+import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.GenericServiceException;
@@ -65,10 +64,9 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.tags.Tag;
 
 public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
-
+    private static final String MODULE = OFBizOpenApiReader.class.getName();
     private Components components;
     private Paths paths;
-    private Set<Tag> openApiTags;
     @SuppressWarnings("rawtypes")
     private Map<String, Schema> schemas;
     private OpenAPI openApi;
@@ -77,10 +75,6 @@ public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
             .schema(new StringSchema()).example(javax.ws.rs.core.MediaType.APPLICATION_JSON).required(true);
     private static final Parameter HEADER_ACCEPT_JSON = new HeaderParameter().name(HttpHeaders.ACCEPT)
             .schema(new StringSchema()).example(javax.ws.rs.core.MediaType.APPLICATION_JSON).required(true);
-
-    public OFBizOpenApiReader() {
-        openApiTags = new LinkedHashSet<>();
-    }
 
     @Override
     public void setConfiguration(OpenAPIConfiguration openApiConfiguration) {
@@ -110,7 +104,7 @@ public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
             List<ModelResource> resources = v.getResources();
             resources.forEach(modelResource -> {
                 Tag resourceTab = new Tag().name(modelResource.getDisplayName()).description(modelResource.getDescription());
-                openApiTags.add(resourceTab);
+                openApi.addTagsItem(resourceTab);
                 String basePath = modelResource.getPath();
                 for (ModelOperation op : modelResource.getOperations()) {
                     String uri = basePath + op.getPath();
@@ -130,7 +124,8 @@ public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
                     try {
                         service = context.getModelService(serviceName);
                     } catch (GenericServiceException e) {
-                        e.printStackTrace();
+                        Debug.logError("Service '" + serviceName + "' not found while trying to map REST resource " + uri + "; ignoring. ", MODULE);
+                        continue;
                     }
                     if (verb.equalsIgnoreCase(HttpMethod.GET)) {
                         final QueryParameter serviceInParam = (QueryParameter) new QueryParameter().required(true)
@@ -203,13 +198,9 @@ public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
     }
 
     private void initializeStdOpenApiComponents() {
-        if (openApi.getTags() != null) {
-            openApiTags.addAll(openApi.getTags());
-        }
         Tag serviceResourceTag = new Tag().name("Exported Services")
                 .description("OFBiz services that are exposed via REST interface with export attribute set to true");
-        openApiTags.add(serviceResourceTag);
-        openApi.setTags(new ArrayList<Tag>(openApiTags));
+        openApi.addTagsItem(serviceResourceTag);
         components = openApi.getComponents();
         if (components == null) {
             components = new Components();
