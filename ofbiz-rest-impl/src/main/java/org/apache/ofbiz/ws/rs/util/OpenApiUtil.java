@@ -178,21 +178,21 @@ public final class OpenApiUtil {
     }
 
     private static void buildApiResponses() {
-        Map<String, Object> unauthorizedNoHeaderExample = UtilMisc.toOrderedMap("statusCode", Response.Status.UNAUTHORIZED.getStatusCode(),
+        Map<String, Object> unauthorizedNoHeaderExample = UtilMisc.toMap("statusCode", Response.Status.UNAUTHORIZED.getStatusCode(),
                 "statusDescription", Response.Status.UNAUTHORIZED.getReasonPhrase(),
                 "errorMessage", "Unauthorized: Access is denied due to invalid or absent Authorization header.");
-        Map<String, Object> unauthorizedInvalidTokenExample = UtilMisc.toOrderedMap("statusCode", Response.Status.UNAUTHORIZED.getStatusCode(),
+        Map<String, Object> unauthorizedInvalidTokenExample = UtilMisc.toMap("statusCode", Response.Status.UNAUTHORIZED.getStatusCode(),
                 "statusDescription", Response.Status.UNAUTHORIZED.getReasonPhrase(),
                 "errorMessage", "Unauthorized: Access is denied due to invalid or absent Authorization header.");
-        Map<String, Object> forbiddenExample = UtilMisc.toOrderedMap("statusCode", Response.Status.FORBIDDEN.getStatusCode(),
+        Map<String, Object> forbiddenExample = UtilMisc.toMap("statusCode", Response.Status.FORBIDDEN.getStatusCode(),
                 "statusDescription", Response.Status.FORBIDDEN.getReasonPhrase(),
                 "errorMessage", "Forbidden: Insufficient rights to perform this API call.");
-        Map<String, Object> badRequestExample = UtilMisc.toOrderedMap("statusCode", Response.Status.BAD_REQUEST.getStatusCode(),
+        Map<String, Object> badRequestExample = UtilMisc.toMap("statusCode", Response.Status.BAD_REQUEST.getStatusCode(),
                 "statusDescription", Response.Status.BAD_REQUEST.getReasonPhrase(),
                 "errorType", "ServiceValidationException",
                 "errorMessage", "createProduct validation failed. The request contained invalid information and could not be processed.",
                 "errorDescription", "The following required parameter is missing: [IN] [createProduct.internalName]");
-        Map<String, Object> unprocessableEntExample = UtilMisc.toOrderedMap("statusCode", ResponseStatus.Custom.UNPROCESSABLE_ENTITY.getStatusCode(),
+        Map<String, Object> unprocessableEntExample = UtilMisc.toMap("statusCode", ResponseStatus.Custom.UNPROCESSABLE_ENTITY.getStatusCode(),
                 "statusDescription", ResponseStatus.Custom.UNPROCESSABLE_ENTITY.getReasonPhrase(),
                 "errorType", "GenericEntityException",
                 "errorMessage", "createProduct execution failed. The request contained invalid information and could not be processed.",
