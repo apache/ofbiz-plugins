@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.ofbiz.base.component.ComponentConfig;
@@ -105,9 +106,14 @@ public class OFBizApiConfig extends ResourceConfig {
                     Resource.Builder resourceBuilder = Resource.builder(modelResource.getPath())
                             .name(modelResource.getName());
                     for (ModelOperation op : modelResource.getOperations()) {
+                        String verb = op.getVerb().toUpperCase();
+                        boolean isOtherThanGet = verb.matches(HttpMethod.POST + "|" + HttpMethod.PUT + "|" + HttpMethod.PATCH);
                         if (UtilValidate.isEmpty(op.getPath())) { // Add the method to the parent resource
-                            ResourceMethod.Builder methodBuilder = resourceBuilder.addMethod(op.getVerb().toUpperCase());
+                            ResourceMethod.Builder methodBuilder = resourceBuilder.addMethod(verb);
                             methodBuilder.produces(MediaType.APPLICATION_JSON);
+                            if (isOtherThanGet) {
+                                methodBuilder.consumes(MediaType.APPLICATION_JSON);
+                            }
                             if (op.isAuth()) {
                                 methodBuilder.nameBindings(Secured.class);
                             }
@@ -115,8 +121,11 @@ public class OFBizApiConfig extends ResourceConfig {
                             methodBuilder.handledBy(new ServiceRequestHandler(serviceName));
                         } else {
                             Resource.Builder childResourceBuilder = resourceBuilder.addChildResource(op.getPath());
-                            ResourceMethod.Builder childResourceMethodBuilder = childResourceBuilder.addMethod(op.getVerb().toUpperCase());
+                            ResourceMethod.Builder childResourceMethodBuilder = childResourceBuilder.addMethod(verb);
                             childResourceMethodBuilder.produces(MediaType.APPLICATION_JSON);
+                            if (isOtherThanGet) {
+                                childResourceMethodBuilder.consumes(MediaType.APPLICATION_JSON);
+                            }
                             if (op.isAuth()) {
                                 childResourceMethodBuilder.nameBindings(Secured.class);
                             }
