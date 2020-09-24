@@ -131,11 +131,8 @@ public class ExamplePrintServices {
             Fop fop = ApacheFopWorker.createFopInstance(out, MimeConstants.MIME_PDF);
             ApacheFopWorker.transform(src, null, fop);
         } catch (FOPException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Debug.logError(e, MODULE);
         }
-
-
         /*
         // set the content type and length
         response.setContentType("application/pdf");

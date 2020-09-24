@@ -1390,7 +1390,6 @@ public class EbayStore {
             }
             result.put("activeItems", activeItems);
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             return ServiceUtil.returnError(e.getMessage());
         }
         return result;

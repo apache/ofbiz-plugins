@@ -31,6 +31,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.UtilProperties;
 import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.entity.GenericEntityException;
@@ -51,6 +52,7 @@ import org.codehaus.groovy.runtime.InvokerInvocationException;
 
 public final class ServiceRequestHandler extends RestRequestHandler {
 
+    private static final String MODULE = ServiceRequestHandler.class.getName();
     private static final String DEFAULT_MSG_UI_LABEL_RESOURCE = "ApiUiLabels";
     private String service;
 
@@ -61,18 +63,15 @@ public final class ServiceRequestHandler extends RestRequestHandler {
     /**
      * @param data
      * @return
-     * @throws GenericServiceException
      */
     @Override
     protected Response execute(ContainerRequestContext data, Map<String, Object> arguments) {
         LocalDispatcher dispatcher = (LocalDispatcher) getServletContext().getAttribute("dispatcher");
         Map<String, Object> serviceContext = null;
         try {
-            serviceContext = dispatcher.getDispatchContext().makeValidContext(service, ModelService.IN_PARAM,
-                    arguments);
+            serviceContext = dispatcher.getDispatchContext().makeValidContext(service, ModelService.IN_PARAM, arguments);
         } catch (GenericServiceException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Debug.logError(e, MODULE);
         }
         ModelService svc = getModelService(dispatcher.getDispatchContext());
         GenericValue userLogin = (GenericValue) getHttpRequest().getAttribute("userLogin");

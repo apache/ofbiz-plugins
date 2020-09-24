@@ -87,8 +87,7 @@ public class OFBizApiConfig extends ResourceConfig {
                     MICRO_APIS.put(cName, api);
                 }
             } catch (ComponentException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                Debug.logError(e, MODULE);
             }
         });
     }
