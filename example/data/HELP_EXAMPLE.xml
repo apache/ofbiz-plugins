@@ -17,9 +17,12 @@ License.
     version="5.0" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude"
     xsi:schemaLocation="http://docbook.org/ns/docbook ../../../../applications/content/dtd/docbook.xsd"
     xmlns="http://docbook.org/ns/docbook">
-    <title>The Example Main page.</title>
-    <para><link xl:href="showHelp?helpTopic=EXAMPLE">About the Example application</link></para>
-    <para>
-        In this page, you can create or search an example
-    </para>
+  <title>Example Help redirection.</title>
+  <para>
+    The Example application will allow you to discover the possibilities to create an application, with a lot of search boxes, lists and many more.</para>
+
+  <para>Example Help has been migrated to a new system, you can access it by using
+      <link xl:href="https://ci.apache.org/projects/ofbiz/site/trunk/ofbizdoc/html5/user-manual.html#_example">OFBiz user documentation site / Example</link>
+  </para>
+
 </section>
