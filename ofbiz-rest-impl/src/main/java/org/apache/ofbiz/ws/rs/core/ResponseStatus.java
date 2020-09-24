@@ -82,8 +82,7 @@ public final class ResponseStatus {
 
         /**
          * Convert a numerical status code into the corresponding Status.
-         *
-         * @param statusCode the numerical status code.
+         * @param code
          * @return the matching Status or null is no matching Status is defined.
          */
         public static ResponseStatus.Custom fromStatusCode(int code) {

@@ -43,8 +43,8 @@ public class ModelOperation {
     }
 
     /**
-     * @param value
-     * @return
+     * @param auth
+     * @return ModelOperation
      */
     public ModelOperation auth(boolean auth) {
         this.auth = auth;
@@ -73,7 +73,7 @@ public class ModelOperation {
 
     /**
      * @param value
-     * @return
+     * @return ModelOperation
      */
     public ModelOperation service(String value) {
         this.service = value;
@@ -102,7 +102,7 @@ public class ModelOperation {
 
     /**
      * @param value
-     * @return
+     * @return ModelOperation
      */
     public ModelOperation verb(String value) {
         this.verb = value;
@@ -131,7 +131,7 @@ public class ModelOperation {
 
     /**
      * @param value
-     * @return
+     * @return ModelOperation
      */
     public ModelOperation produces(String value) {
         this.produces = value;
@@ -160,7 +160,7 @@ public class ModelOperation {
 
     /**
      * @param value
-     * @return
+     * @return ModelOperation
      */
     public ModelOperation consumes(String value) {
         this.consumes = value;
@@ -189,7 +189,7 @@ public class ModelOperation {
 
     /**
      * @param value
-     * @return
+     * @return ModelOperation
      */
     public ModelOperation path(String value) {
         this.path = value;
@@ -218,7 +218,7 @@ public class ModelOperation {
 
     /**
      * @param value
-     * @return
+     * @return ModelOperation
      */
     public ModelOperation description(String value) {
         this.description = value;
@@ -226,7 +226,7 @@ public class ModelOperation {
     }
 
     /**
-     * @return
+     * @return String
      */
     @Override
     public String toString() {
