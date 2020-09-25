@@ -182,6 +182,14 @@ under the License.
         <response name="success" type="none"/>
     </request-map>
 
+    <!-- open the corresponding FTL file with IDE when the named border is clicked from browser -->
+    <request-map uri="openSourceFile">
+        <security https="false" auth="false"/>
+        <event type="java" path="org.apache.ofbiz.common.CommonEvents" invoke="openSourceFile"/>
+        <response name="success" type="none" />
+        <response name="error" type="none" />
+    </request-map>
+
     <!-- ShoppingList Requests -->
     <request-map uri="editShoppingList">
         <security auth="true" https="false"/>
