@@ -54,13 +54,17 @@ import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ModelService;
 import org.apache.ofbiz.ws.rs.ApiServiceRequest;
 import org.apache.ofbiz.ws.rs.ServiceRequestProcessor;
+import org.apache.ofbiz.ws.rs.annotation.ServiceRequestValidator;
 import org.apache.ofbiz.ws.rs.response.Success;
 import org.apache.ofbiz.ws.rs.security.Secured;
 
 @Secured
-@Path("/services")
+@Path(OFBizServiceResource.BASE_PATH)
 @Provider
+@ServiceRequestValidator
 public class OFBizServiceResource extends OFBizResource {
+
+    public static final String BASE_PATH = "/services";
 
     @Context
     private UriInfo uriInfo;

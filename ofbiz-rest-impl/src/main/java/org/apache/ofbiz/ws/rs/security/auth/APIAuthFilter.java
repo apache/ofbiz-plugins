@@ -21,14 +21,17 @@ package org.apache.ofbiz.ws.rs.security.auth;
 import java.io.IOException;
 import java.util.Map;
 
+import javax.annotation.Priority;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.Provider;
 
 import org.apache.ofbiz.base.util.Debug;
@@ -37,9 +40,12 @@ import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.util.EntityQuery;
+import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.ModelService;
+import org.apache.ofbiz.webapp.WebAppUtil;
 import org.apache.ofbiz.webapp.control.JWTManager;
 import org.apache.ofbiz.ws.rs.common.AuthenticationScheme;
+import org.apache.ofbiz.ws.rs.resources.OFBizServiceResource;
 import org.apache.ofbiz.ws.rs.security.Secured;
 import org.apache.ofbiz.ws.rs.util.RestApiUtil;
 
@@ -48,9 +54,13 @@ import org.apache.ofbiz.ws.rs.util.RestApiUtil;
  */
 @Secured
 @Provider
+@Priority(Priorities.AUTHORIZATION)
 public class APIAuthFilter implements ContainerRequestFilter {
 
     private static final String MODULE = APIAuthFilter.class.getName();
+
+    @Context
+    private UriInfo uriInfo;
 
     @Context
     private ResourceInfo resourceInfo;
@@ -65,6 +75,21 @@ public class APIAuthFilter implements ContainerRequestFilter {
      */
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
+        if (isServiceResource()) {
+            String service = (String) RestApiUtil.extractParams(uriInfo.getPathParameters()).get("serviceName");
+            if (UtilValidate.isNotEmpty(service)) {
+                ModelService mdService = null;
+                try {
+                    mdService = WebAppUtil.getDispatcher(servletContext).getDispatchContext().getModelService(service);
+                } catch (GenericServiceException e) {
+                    Debug.logError(e.getMessage(), MODULE);
+                }
+                // Skip auth for services auth=false in service definition
+                if (mdService != null && !mdService.isAuth()) {
+                    return;
+                }
+            }
+        }
         String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
         Delegator delegator = (Delegator) servletContext.getAttribute("delegator");
         if (!isTokenBasedAuthentication(authorizationHeader)) {
@@ -122,6 +147,10 @@ public class APIAuthFilter implements ContainerRequestFilter {
             Debug.logError(e, "Unable to get UserLogin information from JWT Token: " + e.getMessage(), MODULE);
         }
         return userLogin;
+    }
+
+    private boolean isServiceResource() {
+        return OFBizServiceResource.class.isAssignableFrom(resourceInfo.getResourceClass());
     }
 
 }
