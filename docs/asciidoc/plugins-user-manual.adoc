@@ -33,6 +33,8 @@ include::../../ebay/src/docs/asciidoc/ebay.adoc[leveloffset=+1]
 
 include::../../ebaystore/src/docs/asciidoc/ebay-store.adoc[leveloffset=+1]
 
+include::../../example/src/docs/asciidoc/example.adoc[leveloffset=+1]
+
 include::../../myportal/src/docs/asciidoc/my-portal.adoc[leveloffset=+1]
 
 include::../../projectmgr/src/docs/asciidoc/project-mgr.adoc[leveloffset=+1]
