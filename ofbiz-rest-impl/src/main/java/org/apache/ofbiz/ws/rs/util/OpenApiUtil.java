@@ -167,6 +167,7 @@ public final class OpenApiUtil {
         SCHEMAS.put("api.response.forbidden", genericErrorSchema);
         SCHEMAS.put("api.response.service.badrequest", genericErrorSchema);
         SCHEMAS.put("api.response.service.unprocessableentity", genericErrorSchema);
+        SCHEMAS.put("api.response.service.methodnotallowed", genericErrorSchema);
     }
 
     public static Map<String, ApiResponse> getStandardApiResponses() {
@@ -197,6 +198,9 @@ public final class OpenApiUtil {
                 "errorType", "GenericEntityException",
                 "errorMessage", "createProduct execution failed. The request contained invalid information and could not be processed.",
                 "errorDescription", "StandardException: A truncation error was encountered trying to shrink CHAR 'string' to length 1.");
+        Map<String, Object> methodNotAllowedExample = UtilMisc.toMap("statusCode", Response.Status.METHOD_NOT_ALLOWED.getStatusCode(),
+                "statusDescription", Response.Status.METHOD_NOT_ALLOWED.getReasonPhrase(),
+                "errorMessage", "HTTP POST is not allowed on service 'demoDoGetService'.");
 
         final ApiResponse unauthorizedNoHeader = new ApiResponse().addHeaderObject(HttpHeaders.WWW_AUTHENTICATE, new Header()
                 .example(HttpHeaders.WWW_AUTHENTICATE + ": "
@@ -240,12 +244,20 @@ public final class OpenApiUtil {
                                 .schema(new Schema<>()
                                         .$ref("#/components/schemas/" + "api.response.service.unprocessableentity"))
                                 .example(unprocessableEntExample)));
+        final ApiResponse methodNotAllowed = new ApiResponse()
+                .description("Method Not Allowed: Service called with HTTP method other than the declared one.")
+                .content(new Content()
+                        .addMediaType(javax.ws.rs.core.MediaType.APPLICATION_JSON, new MediaType()
+                                .schema(new Schema<>()
+                                        .$ref("#/components/schemas/" + "api.response.service.methodnotallowed"))
+                                .example(methodNotAllowedExample)));
 
         RESPONSES.put(String.valueOf(Response.Status.UNAUTHORIZED.getStatusCode()), unauthorizedNoHeader);
         RESPONSES.put(String.valueOf(Response.Status.UNAUTHORIZED.getStatusCode()), unauthorizedInvalidToken);
         RESPONSES.put(String.valueOf(Response.Status.FORBIDDEN.getStatusCode()), forbidden);
         RESPONSES.put(String.valueOf(Response.Status.BAD_REQUEST.getStatusCode()), badRequest);
         RESPONSES.put(String.valueOf(ResponseStatus.Custom.UNPROCESSABLE_ENTITY.getStatusCode()), unprocessableEntity);
+        RESPONSES.put(String.valueOf(Response.Status.METHOD_NOT_ALLOWED.getStatusCode()), methodNotAllowed);
     }
 
     public static Class<?> getOpenApiTypeForAttributeType(String attributeType) {
