@@ -75,6 +75,7 @@ public class APIAuthFilter implements ContainerRequestFilter {
      */
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
+        String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
         if (isServiceResource()) {
             String service = (String) RestApiUtil.extractParams(uriInfo.getPathParameters()).get("serviceName");
             if (UtilValidate.isNotEmpty(service)) {
@@ -84,13 +85,13 @@ public class APIAuthFilter implements ContainerRequestFilter {
                 } catch (GenericServiceException e) {
                     Debug.logError(e.getMessage(), MODULE);
                 }
-                // Skip auth for services auth=false in service definition
-                if (mdService != null && !mdService.isAuth()) {
+                // Skip auth for services auth=false in service definition and if Authorization header is absent
+                // Still validate the token if it is present even if service being called is auth=false
+                if (mdService != null && !mdService.isAuth() && authorizationHeader == null) {
                     return;
                 }
             }
         }
-        String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
         Delegator delegator = (Delegator) servletContext.getAttribute("delegator");
         if (!isTokenBasedAuthentication(authorizationHeader)) {
             abortWithUnauthorized(requestContext, false, "Unauthorized: Access is denied due to invalid or absent Authorization header.");
