@@ -59,9 +59,8 @@ public class GenericServiceExceptionMapper extends AbstractExceptionMapper imple
 
     /**
      * To response response.
-     *
-     * @param throwable the throwable
-     * @return the response
+     * @param gse GenericServiceException
+     * @return Response
      */
     @Override
     public Response toResponse(GenericServiceException gse) {

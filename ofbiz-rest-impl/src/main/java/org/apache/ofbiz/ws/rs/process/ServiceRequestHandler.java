@@ -49,8 +49,9 @@ public final class ServiceRequestHandler extends RestRequestHandler {
     }
 
     /**
-     * @param data
-     * @return
+     * @param ctx ContainerRequestContext
+     * @param arguments Map
+     * @return Response
      */
     @Override
     protected Response execute(ContainerRequestContext ctx, Map<String, Object> arguments) {
