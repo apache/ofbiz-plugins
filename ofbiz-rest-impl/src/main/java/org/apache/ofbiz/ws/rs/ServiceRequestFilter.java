@@ -77,7 +77,7 @@ public class ServiceRequestFilter implements ContainerRequestFilter {
             }
 
             if (mdService == null) {
-                throw new NotFoundException("Service '" + service + "' not found.");
+                throw new ServiceNotFoundException(service);
             }
 
             if (mdService != null && !mdService.isExport()) {
@@ -85,7 +85,7 @@ public class ServiceRequestFilter implements ContainerRequestFilter {
             }
 
             if (mdService != null && UtilValidate.isEmpty(mdService.getAction())) {
-                throw new ConflictException("Service '" + service + "' does not have HTTP action defined.");
+                throw new NotFoundException("Service '" + service + "' does not have HTTP action defined.");
             }
 
             if (!mdService.getAction().equalsIgnoreCase(method)) {
