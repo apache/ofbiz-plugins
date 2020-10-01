@@ -29,7 +29,7 @@ This screen includes details that need to create sprint.
 . Fill all of fields.
 . Click at the submit button.
 
-= Update Sprint.
+== Update Sprint.
 This part use to update Sprint backlog such as planned hours, ....
 
 . Product Name

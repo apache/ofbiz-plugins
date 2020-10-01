@@ -17,6 +17,7 @@ specific language governing permissions and limitations
 under the License.
 ////
 = Example Plugin
+
 The Example application will allow you to discover the possibilities to create an application, with a lot of search boxes,
 lists and many more.
 
