@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.HttpMethod;
@@ -39,6 +40,7 @@ import org.glassfish.jersey.message.internal.MediaTypes;
 import org.glassfish.jersey.process.Inflector;
 import org.glassfish.jersey.server.ContainerRequest;
 import org.glassfish.jersey.server.ExtendedUriInfo;
+import org.glassfish.jersey.spi.ExceptionMappers;
 
 public abstract class RestRequestHandler implements Inflector<ContainerRequestContext, Response> {
 
@@ -59,6 +61,9 @@ public abstract class RestRequestHandler implements Inflector<ContainerRequestCo
 
     @Inject
     private HttpServletRequest httpRequest;
+
+    @Inject
+    private Provider<ExceptionMappers> mappers;
 
     /**
      * @return the httpHeaders
@@ -252,5 +257,12 @@ public abstract class RestRequestHandler implements Inflector<ContainerRequestCo
         arguments.putAll(extractPathParameters(requestContext));
         arguments.putAll(extractQueryParameters(requestContext));
         return execute(requestContext, arguments);
+    }
+
+    /**
+     * @return the mappers
+     */
+    public Provider<ExceptionMappers> getMappers() {
+        return mappers;
     }
 }

@@ -34,6 +34,7 @@ import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ModelParam;
 import org.apache.ofbiz.service.ModelService;
 import org.apache.ofbiz.service.ServiceUtil;
+import org.apache.ofbiz.ws.rs.util.ErrorUtil;
 import org.apache.ofbiz.ws.rs.util.RestApiUtil;
 
 public class ServiceRequestProcessor {
@@ -78,8 +79,7 @@ public class ServiceRequestProcessor {
             }
             return RestApiUtil.success((String) result.get(ModelService.SUCCESS_MESSAGE), responseData);
         } else {
-            return RestApiUtil.error(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), Response.Status.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-                    (String) result.get(ModelService.ERROR_MESSAGE));
+            return ErrorUtil.buildErrorFromServiceResult(serviceName, result, request.getLocale());
         }
     }
 }

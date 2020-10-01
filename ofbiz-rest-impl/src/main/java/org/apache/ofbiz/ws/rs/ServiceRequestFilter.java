@@ -91,6 +91,9 @@ public class ServiceRequestFilter implements ContainerRequestFilter {
             if (!mdService.getAction().equalsIgnoreCase(method)) {
                 throw new MethodNotAllowedException("HTTP " + method + " is not allowed on service '" + service + "'");
             }
+            // If everything looks good, set the 'requestForService' property in the
+            // context. Indicates which service this request is for.
+            requestContext.setProperty("requestForService", service);
         }
     }
 

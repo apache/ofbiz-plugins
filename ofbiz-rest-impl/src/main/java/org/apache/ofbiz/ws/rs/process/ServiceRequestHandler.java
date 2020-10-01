@@ -19,24 +19,16 @@
 package org.apache.ofbiz.ws.rs.process;
 
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.ofbiz.base.util.Debug;
-import org.apache.ofbiz.base.util.UtilProperties;
 import org.apache.ofbiz.base.util.UtilValidate;
-import org.apache.ofbiz.entity.GenericEntityException;
-import org.apache.ofbiz.entity.GenericEntityNotFoundException;
-import org.apache.ofbiz.entity.GenericNoSuchEntityException;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.GenericServiceException;
@@ -44,16 +36,12 @@ import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ModelParam;
 import org.apache.ofbiz.service.ModelService;
 import org.apache.ofbiz.service.ServiceUtil;
-import org.apache.ofbiz.service.ServiceValidationException;
-import org.apache.ofbiz.ws.rs.core.ResponseStatus;
-import org.apache.ofbiz.ws.rs.response.Error;
+import org.apache.ofbiz.ws.rs.util.ErrorUtil;
 import org.apache.ofbiz.ws.rs.util.RestApiUtil;
-import org.codehaus.groovy.runtime.InvokerInvocationException;
 
 public final class ServiceRequestHandler extends RestRequestHandler {
 
     private static final String MODULE = ServiceRequestHandler.class.getName();
-    private static final String DEFAULT_MSG_UI_LABEL_RESOURCE = "ApiUiLabels";
     private String service;
 
     public ServiceRequestHandler(String service) {
@@ -65,13 +53,16 @@ public final class ServiceRequestHandler extends RestRequestHandler {
      * @return
      */
     @Override
-    protected Response execute(ContainerRequestContext data, Map<String, Object> arguments) {
+    protected Response execute(ContainerRequestContext ctx, Map<String, Object> arguments) {
+        ctx.setProperty("requestForService", service);
         LocalDispatcher dispatcher = (LocalDispatcher) getServletContext().getAttribute("dispatcher");
         Map<String, Object> serviceContext = null;
         try {
             serviceContext = dispatcher.getDispatchContext().makeValidContext(service, ModelService.IN_PARAM, arguments);
         } catch (GenericServiceException e) {
             Debug.logError(e, MODULE);
+            final ExceptionMapper<GenericServiceException> mapper = getMappers().get().findMapping(e);
+            return mapper.toResponse(e);
         }
         ModelService svc = getModelService(dispatcher.getDispatchContext());
         GenericValue userLogin = (GenericValue) getHttpRequest().getAttribute("userLogin");
@@ -80,7 +71,9 @@ public final class ServiceRequestHandler extends RestRequestHandler {
         try {
             result = dispatcher.runSync(service, serviceContext);
         } catch (GenericServiceException e) {
-            return handleException(e);
+            Debug.logError(e, MODULE);
+            final ExceptionMapper<GenericServiceException> mapper = getMappers().get().findMapping(e);
+            return mapper.toResponse(e);
         }
         Map<String, Object> responseData = new LinkedHashMap<>();
         if (ServiceUtil.isSuccess(result)) {
@@ -96,7 +89,7 @@ public final class ServiceRequestHandler extends RestRequestHandler {
             }
             return RestApiUtil.success((String) result.get(ModelService.SUCCESS_MESSAGE), responseData);
         } else {
-            return errorFromServiceResult(service, result);
+            return ErrorUtil.buildErrorFromServiceResult(service, result, getHttpRequest().getLocale());
         }
     }
 
@@ -108,77 +101,5 @@ public final class ServiceRequestHandler extends RestRequestHandler {
             throw new NotFoundException(gse.getMessage());
         }
         return svc;
-    }
-
-    private Response handleException(GenericServiceException gse) {
-        Response.ResponseBuilder builder = null;
-        Throwable actualCause = gse.getCause();
-        if (actualCause == null) {
-            actualCause = gse;
-        } else if (actualCause instanceof InvokerInvocationException) {
-            actualCause = actualCause.getCause();
-        }
-
-        if (actualCause instanceof ServiceValidationException) {
-            ServiceValidationException validationException = (ServiceValidationException) actualCause;
-            Error error = new Error().type(actualCause.getClass().getSimpleName()).code(Response.Status.BAD_REQUEST.getStatusCode())
-                    .description(Response.Status.BAD_REQUEST.getReasonPhrase())
-                    .message(getErrorMessage(service, "GenericServiceValidationErrorMessage", getHttpRequest().getLocale()))
-                    .errorDesc((validationException.getMessage())).additionalErrors(validationException.getMessageList());
-            builder = Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(error);
-        } else if (actualCause instanceof GenericNoSuchEntityException
-                || actualCause instanceof GenericEntityNotFoundException) {
-            Error error = new Error().type(actualCause.getClass().getSimpleName()).code(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())
-                    .description(Response.Status.INTERNAL_SERVER_ERROR.getReasonPhrase())
-                    .message(getErrorMessage(service, "NoSuchEntityDefaultMessage", getHttpRequest().getLocale()))
-                    .errorDesc(ExceptionUtils.getRootCauseMessage(gse));
-            builder = Response.status(Response.Status.INTERNAL_SERVER_ERROR).type(MediaType.APPLICATION_JSON)
-                    .entity(error);
-        } else if (actualCause instanceof GenericEntityException) {
-            Error error = new Error().type(actualCause.getClass().getSimpleName()).code(ResponseStatus.Custom.UNPROCESSABLE_ENTITY.getStatusCode())
-                    .description(ResponseStatus.Custom.UNPROCESSABLE_ENTITY.getReasonPhrase())
-                    .message(getErrorMessage(service, "GenericServiceExecutionGenericEntityOperationErrorMessage", getHttpRequest().getLocale()))
-                    .errorDesc(ExceptionUtils.getRootCauseMessage(gse));
-            builder = Response.status(ResponseStatus.Custom.UNPROCESSABLE_ENTITY).type(MediaType.APPLICATION_JSON)
-                    .entity(error);
-        } else {
-            Error error = new Error().type(actualCause.getClass().getSimpleName()).code(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())
-                    .description(Response.Status.INTERNAL_SERVER_ERROR.getReasonPhrase())
-                    .message(getErrorMessage(service, "GenericServiceExecutionGenericExceptionErrorMessage", getHttpRequest().getLocale()))
-                    .errorDesc(ExceptionUtils.getRootCauseMessage(gse));
-            builder = Response.status(Response.Status.INTERNAL_SERVER_ERROR).type(MediaType.APPLICATION_JSON)
-                    .entity(error);
-        }
-        return builder.build();
-    }
-
-    private String getErrorMessage(String serviceName, String errorKey, Locale locale) {
-        String error = UtilProperties.getMessage(DEFAULT_MSG_UI_LABEL_RESOURCE, errorKey, locale);
-        error = error.replace("${service}", serviceName);
-        return error;
-    }
-
-    @SuppressWarnings("unchecked")
-    private Response errorFromServiceResult(String service, Map<String, Object> result) {
-        String errorMessage = null;
-        List<String> additionalErrorMessages = new LinkedList<>();
-        if (!UtilValidate.isEmpty(result.get(ModelService.ERROR_MESSAGE))) {
-            errorMessage = result.get(ModelService.ERROR_MESSAGE).toString();
-        }
-        if (!UtilValidate.isEmpty(result.get(ModelService.ERROR_MESSAGE_LIST))) {
-            List<String> errorMessageList = (List<String>) result.get(ModelService.ERROR_MESSAGE_LIST);
-            if (UtilValidate.isEmpty(errorMessage)) {
-                errorMessage = errorMessageList.get(0);
-                errorMessageList.remove(0);
-            }
-            for (int i = 0; i < errorMessageList.size(); i++) {
-                additionalErrorMessages.add(errorMessageList.get(i));
-            }
-        }
-        Error error = new Error().type("ServiceError").code(ResponseStatus.Custom.UNPROCESSABLE_ENTITY.getStatusCode())
-                .description(ResponseStatus.Custom.UNPROCESSABLE_ENTITY.getReasonPhrase())
-                .message(getErrorMessage(service, "GenericServiceErrorMessage", getHttpRequest().getLocale()))
-                .errorDesc(errorMessage);
-        return Response.status(ResponseStatus.Custom.UNPROCESSABLE_ENTITY).type(MediaType.APPLICATION_JSON).entity(error).build();
     }
 }
