@@ -113,7 +113,7 @@ public final class OpenApiResource {
 
 
     private Info buildOpenApiInfo() {
-        Info info = new Info().version("1.0.0").title("OFBiz REST Store")
+        Info info = new Info().version("1.0.0").title("OFBiz REST APIs")
                 .description("Open API specification for OFBiz RESTful APIs.").contact(buildOpenApiContact())
                 .termsOfService("http://www.apache.org/licenses/LICENSE-2.0.html")
                 .license(new License()
