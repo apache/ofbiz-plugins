@@ -113,9 +113,6 @@ public class OFBizServiceResource extends OFBizResource {
     @Secured
     public Response doGet(@QueryParam(value = "inParams") ApiServiceRequest serviceRequest,
             @PathParam(value = "serviceName") String serviceName) throws IOException, GenericServiceException {
-        if (UtilValidate.isEmpty(serviceRequest) || UtilValidate.isEmpty(serviceRequest.getInParams())) {
-            throw new BadRequestException("Missing Parameter: 'inParams'");
-        }
         ServiceRequestProcessor processor = new ServiceRequestProcessor();
         return processor.process(UtilMisc.toMap("serviceName", serviceName, "httpVerb", HttpMethod.GET, "requestMap",
                 serviceRequest.getInParams(), "dispatcher", getDispatcher(), "request", httpRequest));

@@ -23,6 +23,8 @@ import java.io.IOException;
 import javax.annotation.Priority;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -47,6 +49,8 @@ public class ServiceRequestFilter implements ContainerRequestFilter {
 
     private static final String MODULE = ServiceRequestFilter.class.getName();
 
+    private static final String SVC_IN_PARAMS = "inParams";
+
     @Context
     private UriInfo uriInfo;
 
@@ -68,6 +72,7 @@ public class ServiceRequestFilter implements ContainerRequestFilter {
         Debug.logInfo("Service request is going to get validated!", MODULE);
         String service = (String) RestApiUtil.extractParams(uriInfo.getPathParameters()).get("serviceName");
         String method = requestContext.getMethod();
+        String action = null;
         if (UtilValidate.isNotEmpty(service)) {
             ModelService mdService = null;
             try {
@@ -84,12 +89,18 @@ public class ServiceRequestFilter implements ContainerRequestFilter {
                 throw new NotFoundException("Service '" + service + "' is not exportable.");
             }
 
-            if (mdService != null && UtilValidate.isEmpty(mdService.getAction())) {
+            action = mdService.getAction();
+            if (mdService != null && UtilValidate.isEmpty(action)) {
                 throw new NotFoundException("Service '" + service + "' does not have HTTP action defined.");
             }
 
-            if (!mdService.getAction().equalsIgnoreCase(method)) {
+            if (!action.equalsIgnoreCase(method)) {
                 throw new MethodNotAllowedException("HTTP " + method + " is not allowed on service '" + service + "'");
+            }
+
+            if (action.equalsIgnoreCase(HttpMethod.GET) && UtilValidate.isNotEmpty(mdService.getInParamNamesMap())
+                    && UtilValidate.isEmpty(httpRequest.getParameter(SVC_IN_PARAMS))) {
+                throw new BadRequestException("Missing Parameter: 'inParams'");
             }
             // If everything looks good, set the 'requestForService' property in the
             // context. Indicates which service this request is for.

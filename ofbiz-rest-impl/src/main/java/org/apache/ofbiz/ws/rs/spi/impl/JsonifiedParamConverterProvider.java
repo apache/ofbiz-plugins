@@ -20,12 +20,18 @@ package org.apache.ofbiz.ws.rs.spi.impl;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.ext.ParamConverter;
 import javax.ws.rs.ext.ParamConverterProvider;
 import javax.ws.rs.ext.Provider;
 
+import org.apache.ofbiz.base.util.Debug;
+import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.ws.rs.ApiServiceRequest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -34,6 +40,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Provider
 public class JsonifiedParamConverterProvider implements ParamConverterProvider {
+
+    private static final String MODULE = JsonifiedParamConverterProvider.class.getName();
+
+    @Context
+    private HttpServletRequest httpRequest;
+
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private static ObjectMapper getMapper() {
@@ -55,12 +67,16 @@ public class JsonifiedParamConverterProvider implements ParamConverterProvider {
                 @SuppressWarnings("unchecked")
                 @Override
                 public T fromString(String value) {
+                    if (UtilValidate.isEmpty(value)) {
+                        return (T) new ApiServiceRequest(new HashMap<String, Object>());
+                    }
                     Map<String, Object> map = null;
                     try {
                         map = getMapper().readValue(value, new TypeReference<Map<String, Object>>() {
                         });
                     } catch (JsonProcessingException e) {
-                        e.printStackTrace();
+                        Debug.logError(e.getMessage(), MODULE);
+                        throw new BadRequestException("Error parsing JSON, malformed JSON.");
                     }
                     return (T) new ApiServiceRequest(map);
                 }
