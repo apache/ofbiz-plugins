@@ -311,7 +311,9 @@ public class BirtServices {
         try {
             GenericValue content = EntityQuery.use(delegator).from("Content").where("contentId", reportContentId).queryOne();
             String dataResourceId = content.getString("dataResourceId");
-            StringBuffer newForm = new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?> <forms xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://ofbiz.apache.org/dtds/widget-form.xsd\">");
+            StringBuffer newForm = new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?> <forms xmlns:xsi=\"http://www.w3"
+                    + ".org/2001/XMLSchema-instance\" xsi:targetNamespace=\"http://ofbiz.apache.org/dtds/widget-form.xsd\">");
+            
             newForm.append(overrideFilters);
             newForm.append("</forms>");
             Document xmlForm = UtilXml.readXmlDocument(newForm.toString());

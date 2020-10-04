@@ -263,7 +263,8 @@ public final class BirtWorker {
         String reportForm = (String) resultElectronicText.get("textData");
         if (!reportForm.startsWith("<?xml")) {
             StringBuffer xmlHeaderForm = new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-            xmlHeaderForm.append("<forms xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://ofbiz.apache.org/dtds/widget-form.xsd\">");
+            xmlHeaderForm.append("<forms xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:targetNamespace=\"http://ofbiz"
+                    + ".apache.org/dtds/widget-form.xsd\">");
             xmlHeaderForm.append(reportForm);
             xmlHeaderForm.append("</forms>");
             reportForm = xmlHeaderForm.toString();
