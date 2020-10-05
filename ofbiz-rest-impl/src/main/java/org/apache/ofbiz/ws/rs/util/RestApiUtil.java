@@ -18,7 +18,9 @@
  *******************************************************************************/
 package org.apache.ofbiz.ws.rs.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
@@ -67,5 +69,24 @@ public final class RestApiUtil {
             }
         });
         return result;
+    }
+
+    /**
+     * Extracts path parameters from resource pathInfo
+     * @param pathInfo
+     * @return
+     */
+    public static List<String> getPathParameters(String pathInfo) {
+        List<String> pathParams = new ArrayList<>();
+        if (pathInfo == null) {
+            return pathParams;
+        }
+        String[] pathParts = pathInfo.split("/");
+        for (String pathSegement : pathParts) {
+            if (pathSegement.startsWith("{") && pathSegement.endsWith("}")) {
+                pathParams.add(pathSegement);
+            }
+        }
+        return pathParams;
     }
 }
