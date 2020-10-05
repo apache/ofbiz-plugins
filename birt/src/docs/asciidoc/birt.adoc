@@ -18,10 +18,8 @@ under the License.
 ////
 = Birt OFBiz® plugin
 The Apache OFBiz Project
-
 ifdef::backend-pdf[]
-:imagesdir: ./images
-:title-logo-image: image::OFBiz-Logo.svg[Apache OFBiz Logo, pdfwidth=4.25in, align=center]
+:title-logo-image: image::../OFBiz-Logo.svg[Apache OFBiz Logo, pdfwidth=4.25in, align=center]
 :source-highlighter: rouge
 endif::[]
 :imagesdir: ./images/birt
