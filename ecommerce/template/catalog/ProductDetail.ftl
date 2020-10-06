@@ -652,7 +652,7 @@ ${variantInfoJavaScript!}
             <div id="addCart2" style="display:block;">
               <span style="white-space: nowrap;"><strong>${uiLabelMap.CommonQuantity}:</strong></span>&nbsp;
               <input type="text" class="form-control" size="5" value="1" disabled="disabled"/>
-              <a href="javascript:showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonPleaseSelectAllFeaturesFirst}");"
+              <a href="javascript:showErrorAlert('${uiLabelMap.CommonErrorMessage2}','${uiLabelMap.CommonPleaseSelectAllFeaturesFirst}');"
               class="btn btn-outline-secondary"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
               &nbsp;
             </div>
