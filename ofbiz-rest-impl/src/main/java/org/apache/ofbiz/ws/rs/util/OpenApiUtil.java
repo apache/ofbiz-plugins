@@ -272,12 +272,18 @@ public final class OpenApiUtil {
         Schema<Object> parentSchema = new Schema<Object>();
         parentSchema.setDescription("In Schema for service: " + service.getName() + " request");
         parentSchema.setType("object");
+        List<String> required = UtilMisc.toList();
         service.getInParamNamesMap().forEach((name, type) -> {
-            Schema<?> attrSchema = getAttributeSchema(service, service.getParam(name));
+            ModelParam param = service.getParam(name);
+            if (!param.isOptional()) {
+                required.add(name);
+            }
+            Schema<?> attrSchema = getAttributeSchema(service, param);
             if (attrSchema != null) {
                 parentSchema.addProperties(name, getAttributeSchema(service, service.getParam(name)));
             }
         });
+        parentSchema.setRequired(required);
         return parentSchema;
     }
 
@@ -318,10 +324,14 @@ public final class OpenApiUtil {
                         MODULE);
                 return null;
             } else {
+                List<String> required = UtilMisc.toList();
                 for (ModelParam childParam : children) {
+                    if (!param.isOptional()) {
+                        required.add(childParam.getName());
+                    }
                     schema.addProperties(childParam.getName(), getAttributeSchema(service, childParam));
                 }
-
+                schema.setRequired(required);
             }
 
         }

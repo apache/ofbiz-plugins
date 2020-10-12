@@ -175,7 +175,7 @@ public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
                 PathItem pathItemObject = new PathItem();
                 if (service.getAction().equalsIgnoreCase(HttpMethod.GET)) {
                     final QueryParameter serviceInParam = (QueryParameter) new QueryParameter()
-                            .required(UtilValidate.isNotEmpty(service.getInParamNamesMap()) ? true: false)
+                            .required(UtilValidate.isNotEmpty(service.getInParamNamesMap()) ? true : false)
                             .description("Service In Parameters in JSON").name("inParams");
                     Schema<?> refSchema = new Schema<>();
                     refSchema.$ref("#/components/schemas/" + "api.request." + service.getName());
