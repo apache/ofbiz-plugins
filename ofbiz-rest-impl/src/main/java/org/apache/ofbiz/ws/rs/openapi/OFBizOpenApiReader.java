@@ -174,13 +174,16 @@ public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
                         .operationId(service.getName()).deprecated(false).addSecurityItem(security);
                 PathItem pathItemObject = new PathItem();
                 if (service.getAction().equalsIgnoreCase(HttpMethod.GET)) {
-                    final QueryParameter serviceInParam = (QueryParameter) new QueryParameter()
-                            .required(UtilValidate.isNotEmpty(service.getInParamNamesMap()) ? true : false)
-                            .description("Service In Parameters in JSON").name("inParams");
-                    Schema<?> refSchema = new Schema<>();
-                    refSchema.$ref("#/components/schemas/" + "api.request." + service.getName());
-                    serviceInParam.schema(refSchema);
-                    operation.addParametersItem(serviceInParam);
+                    boolean inParamsEmpty = UtilValidate.isEmpty(service.getInParamNamesMap());
+                    if (!inParamsEmpty) {
+                        final QueryParameter serviceInParam = (QueryParameter) new QueryParameter()
+                                .required(!inParamsEmpty)
+                                .description("Service In Parameters in JSON").name("inParams");
+                        Schema<?> refSchema = new Schema<>();
+                        refSchema.$ref("#/components/schemas/" + "api.request." + service.getName());
+                        serviceInParam.schema(refSchema);
+                        operation.addParametersItem(serviceInParam);
+                    }
                     operation.addParametersItem(HEADER_ACCEPT_JSON);
                 } else if (action.matches(HttpMethod.POST + "|" + HttpMethod.PUT + "|" + HttpMethod.PATCH)) {
                     RequestBody request = new RequestBody().description("Request Body for service " + service.getName())
