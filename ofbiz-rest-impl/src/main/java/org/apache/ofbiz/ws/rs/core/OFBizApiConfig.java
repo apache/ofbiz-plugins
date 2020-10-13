@@ -100,6 +100,10 @@ public class OFBizApiConfig extends ResourceConfig {
             return;
         }
         MICRO_APIS.forEach((k, v) -> {
+            if (!v.isPublish()) {
+                Debug.logInfo("API '" + v.getName() + "' is declared to be a non-publish, ignoring...", MODULE);
+                return;
+            }
             Debug.logInfo("Registring Resource Definitions from API - " + k, MODULE);
             List<ModelResource> resources = v.getResources();
             resources.forEach(modelResource -> {

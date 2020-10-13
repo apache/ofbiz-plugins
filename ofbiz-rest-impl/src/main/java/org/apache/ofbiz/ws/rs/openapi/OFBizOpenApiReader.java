@@ -101,6 +101,9 @@ public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
         SecurityRequirement security = new SecurityRequirement();
         security.addList("jwtToken");
         apis.forEach((k, v) -> {
+            if (!v.isPublish()) {
+                return;
+            }
             List<ModelResource> resources = v.getResources();
             resources.forEach(modelResource -> {
                 Tag resourceTab = new Tag().name(modelResource.getDisplayName()).description(modelResource.getDescription());

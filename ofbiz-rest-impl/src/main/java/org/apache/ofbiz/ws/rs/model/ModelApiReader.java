@@ -46,19 +46,26 @@ public final class ModelApiReader {
         }
         docElement.normalize();
         ModelApi api = new ModelApi();
+        api.setDisplayName(UtilXml.checkEmpty(docElement.getAttribute("displayName")).intern());
+        api.setName(UtilXml.checkEmpty(docElement.getAttribute("name")).intern());
+        api.setDescription(UtilXml.checkEmpty(docElement.getAttribute("description")).intern());
+        api.setPublish(Boolean.parseBoolean(UtilXml.checkEmpty(docElement.getAttribute("publish")).intern()));
         for (Element resourceEle : UtilXml.childElementList(docElement, "resource")) {
-            ModelResource resource = new ModelResource()
-                    .name(UtilXml.checkEmpty(resourceEle.getAttribute("name")).intern())
-                    .description(UtilXml.checkEmpty(resourceEle.getAttribute("description")).intern())
-                    .displayName(UtilXml.checkEmpty(resourceEle.getAttribute("displayName")).intern())
-                    .path(UtilXml.checkEmpty(resourceEle.getAttribute("path")).intern())
-                    .publish(Boolean.parseBoolean(UtilXml.checkEmpty(resourceEle.getAttribute("publish")).intern()))
-                    .auth(Boolean.parseBoolean(UtilXml.checkEmpty(resourceEle.getAttribute("auth")).intern()));
-            createOperations(resourceEle, resource);
-            Debug.logInfo(resource.toString(), MODULE);
-            api.addResource(resource);
+            createModelResource(resourceEle, api);
         }
         return api;
+    }
+
+    private static void createModelResource(Element resourceEle, ModelApi modelApi) {
+        ModelResource resource = new ModelResource().name(UtilXml.checkEmpty(resourceEle.getAttribute("name")).intern())
+                .description(UtilXml.checkEmpty(resourceEle.getAttribute("description")).intern())
+                .displayName(UtilXml.checkEmpty(resourceEle.getAttribute("displayName")).intern())
+                .path(UtilXml.checkEmpty(resourceEle.getAttribute("path")).intern())
+                .publish(Boolean.parseBoolean(UtilXml.checkEmpty(resourceEle.getAttribute("publish")).intern()))
+                .auth(Boolean.parseBoolean(UtilXml.checkEmpty(resourceEle.getAttribute("auth")).intern()));
+        createOperations(resourceEle, resource);
+        Debug.logInfo(resource.toString(), MODULE);
+        modelApi.addResource(resource);
     }
 
     private static void createOperations(Element resourceEle, ModelResource resource) {

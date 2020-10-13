@@ -27,6 +27,7 @@ public class ModelApi {
     private String name;
     private String displayName;
     private String description;
+    private boolean publish;
 
     /**
      * @return
@@ -108,6 +109,20 @@ public class ModelApi {
      */
     public void setDescription(String value) {
         this.description = value;
+    }
+
+    /**
+     * @return the publish
+     */
+    public boolean isPublish() {
+        return publish;
+    }
+
+    /**
+     * @param publish the publish to set
+     */
+    public void setPublish(boolean publish) {
+        this.publish = publish;
     }
 
 }
