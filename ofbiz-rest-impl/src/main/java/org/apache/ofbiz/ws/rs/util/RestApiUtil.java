@@ -84,7 +84,7 @@ public final class RestApiUtil {
         String[] pathParts = pathInfo.split("/");
         for (String pathSegement : pathParts) {
             if (pathSegement.startsWith("{") && pathSegement.endsWith("}")) {
-                pathParams.add(pathSegement);
+                pathParams.add(pathSegement.substring(1, pathSegement.length() - 1));
             }
         }
         return pathParams;
