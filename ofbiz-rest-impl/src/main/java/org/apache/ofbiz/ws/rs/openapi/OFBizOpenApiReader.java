@@ -135,7 +135,8 @@ public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
                                 .description("Operation Input Parameters in JSON").name("input");
                         Schema<?> refSchema = new Schema<>();
                         refSchema.$ref("#/components/schemas/" + "api.request." + service.getName());
-                        serviceInParam.schema(refSchema);
+                        serviceInParam.content(new Content().addMediaType(javax.ws.rs.core.MediaType.APPLICATION_JSON,
+                                new MediaType().schema(refSchema)));
                         operation.addParametersItem(serviceInParam);
                         operation.addParametersItem(HEADER_ACCEPT_JSON);
                     } else if (verb.matches(HttpMethod.POST + "|" + HttpMethod.PUT + "|" + HttpMethod.PATCH)) {
@@ -184,7 +185,8 @@ public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
                                 .description("Service In Parameters in JSON").name("inParams");
                         Schema<?> refSchema = new Schema<>();
                         refSchema.$ref("#/components/schemas/" + "api.request." + service.getName());
-                        serviceInParam.schema(refSchema);
+                        serviceInParam.content(new Content().addMediaType(javax.ws.rs.core.MediaType.APPLICATION_JSON,
+                                new MediaType().schema(refSchema)));
                         operation.addParametersItem(serviceInParam);
                     }
                     operation.addParametersItem(HEADER_ACCEPT_JSON);
