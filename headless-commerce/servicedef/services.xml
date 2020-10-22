@@ -24,10 +24,11 @@ under the License.
     <vendor></vendor>
     <version>1.0</version>
 
-    <service name="noSyntaxError" engine="interface">
-        <description>
-            Dummy service to prevent empty files and syntax error - Remove when the 1st real service will be added here 
-        </description>
-    </service> 
+    <service name="getPasswordHint" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="getPasswordHint">
+        <attribute name="username" mode="IN" type="String"/>
+        <attribute name="passwordHint" mode="OUT" type="String" optional="true"/>
+    </service>
+
     
 </services>
