@@ -1,0 +1,7 @@
+<api description="Customers API" displayName="Customers API" name="CustomersAPI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="rest-api.xsd">
+  <resource description="" displayName="" enabled="true" name="Customers Resource" path="/hcv1/customers">
+    <operation verb="get" path="/password-hint" description="Retrieves password hint">
+      <service name="getPasswordHint"/>
+    </operation>
+  </resource>
+</api>
