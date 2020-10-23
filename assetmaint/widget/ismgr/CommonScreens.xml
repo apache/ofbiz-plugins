@@ -34,6 +34,7 @@ under the License.
                 <set field="activeApp" value="ismgr" global="true"/>
                 <set field="applicationMenuName" value="IsMgrAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://assetmaint/widget/ismgr/Menus.xml" global="true"/>
+                <set field="helpAnchor" from-field="helpAnchor" default-value="_apache_ofbiz_plugins"/>
                 <set field="layoutSettings.companyName" from-field="uiLabelMap.IsMgrCompanyName" global="true"/>
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.IsMgrCompanySubtitle" global="true"/>
                 <!-- layoutSettings.headerImageUrl can be used to specify an application specific logo; if not set,
