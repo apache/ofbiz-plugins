@@ -29,6 +29,9 @@ under the License.
         <attribute name="username" mode="IN" type="String"/>
         <attribute name="passwordHint" mode="OUT" type="String" optional="true"/>
     </service>
-
-    
+    <service name="sendResetPasswordEmail" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="sendResetPasswordEmail">
+        <attribute name="username" mode="IN" type="String"/>
+        <attribute name="webSiteId" mode="IN" type="String"/>
+    </service>
 </services>

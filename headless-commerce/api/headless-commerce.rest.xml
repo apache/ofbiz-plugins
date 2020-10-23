@@ -3,5 +3,8 @@
     <operation verb="get" path="/password-hint" description="Retrieves password hint">
       <service name="getPasswordHint"/>
     </operation>
+    <operation verb="post" path="/reset-password" description="Sends reset password mail">
+      <service name="sendResetPasswordEmail"/>
+    </operation>
   </resource>
 </api>
