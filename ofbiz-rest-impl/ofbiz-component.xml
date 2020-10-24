@@ -52,10 +52,10 @@ under the License.
             location="webapp/ofbiz-rest-jersey"
             base-permission="OFBTOOLS,OFBIZ-REST-JERSEY"
             mount-point="/rest"/>
-    <webapp name="swagger"
-            title="Swagger Docs"
+    <webapp name="api-docs"
+            title="REST API Docs"
             app-bar-display="false"
             server="default-server"
-            location="webapp/swagger"
+            location="webapp/docs"
             mount-point="/docs"/>
 </ofbiz-component>
