@@ -34,4 +34,59 @@ under the License.
         <attribute name="username" mode="IN" type="String"/>
         <attribute name="webSiteId" mode="IN" type="String"/>
     </service>
+    <service name="createCustomer" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createCustomer">
+        <attribute name="webSiteId" mode="IN" type="String"/>
+        <attribute name="personalTitle" mode="IN" type="String" optional="true"/>
+        <attribute name="firstName" mode="IN" type="String"/>
+        <attribute name="middleName" mode="IN" type="String" optional="true"/>
+        <attribute name="lastName" mode="IN" type="String"/>
+        <attribute name="suffix" mode="IN" type="String" optional="true"/>
+        <attribute name="emailAddress" mode="IN" type="String"/>
+        <attribute name="emailSolicitation" mode="IN" type="String" optional="true"/>
+        <attribute name="username" mode="IN" type="String"/>
+        <attribute name="password" mode="IN" type="String"/>
+        <attribute name="confirmPassword" mode="IN" type="String"/>
+        <attribute name="passwordHint" mode="IN" type="String" optional="true"/>
+        <attribute name="shippingAddress" mode="IN" type="Map" optional="true">
+            <attribute name="address1" mode="IN" type="Map"/>
+            <attribute name="address2" mode="IN" type="Map" optional="true"/>
+            <attribute name="city" mode="IN" type="Map"/>
+            <attribute name="postalCode" mode="IN" type="Map"/>
+            <attribute name="state" mode="IN" type="Map" optional="true"/>
+            <attribute name="country" mode="IN" type="Map"/>
+            <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
+        </attribute>
+        <attribute name="homePhone" mode="IN" type="Map" optional="true">
+            <attribute name="countryCode" mode="IN" type="String" optional="true"/>
+            <attribute name="areaCode" mode="IN" type="String" optional="true"/>
+            <attribute name="contactNumber" mode="IN" type="String"/>
+            <attribute name="extension" mode="IN" type="String" optional="true"/>
+            <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
+        </attribute>
+        <attribute name="workPhone" mode="IN" type="Map" optional="true">
+            <attribute name="countryCode" mode="IN" type="String" optional="true"/>
+            <attribute name="areaCode" mode="IN" type="String" optional="true"/>
+            <attribute name="contactNumber" mode="IN" type="String"/>
+            <attribute name="extension" mode="IN" type="String" optional="true"/>
+            <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
+        </attribute>
+        <attribute name="faxNumber" mode="IN" type="Map" optional="true">
+            <attribute name="countryCode" mode="IN" type="String" optional="true"/>
+            <attribute name="areaCode" mode="IN" type="String" optional="true"/>
+            <attribute name="contactNumber" mode="IN" type="String"/>
+            <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
+        </attribute>
+        <attribute name="mobilePhone" mode="IN" type="Map" optional="true">
+            <attribute name="countryCode" mode="IN" type="String" optional="true"/>
+            <attribute name="areaCode" mode="IN" type="String" optional="true"/>
+            <attribute name="contactNumber" mode="IN" type="String"/>
+            <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
+        </attribute>
+    </service>
+    <service name="validateCreateCustomer" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="validateCreateCustomer">
+        <implements service="createCustomer"/>
+    </service>
+
 </services>

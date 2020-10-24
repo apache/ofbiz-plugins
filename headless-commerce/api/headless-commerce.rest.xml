@@ -6,5 +6,8 @@
     <operation verb="post" path="/reset-password" description="Sends reset password mail">
       <service name="sendResetPasswordEmail"/>
     </operation>
+    <operation verb="post" description="Creates Customer">
+      <service name="createCustomer"/>
+    </operation>
   </resource>
 </api>

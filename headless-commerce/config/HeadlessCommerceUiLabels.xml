@@ -39,4 +39,11 @@ under the License.
         <value xml:lang="zh">不允许你浏览这个页面。</value>
         <value xml:lang="zh-TW">不允許您檢視這個頁面.</value>
     </property>
+    <property key="HCCountrysStateIsNotValid">
+        <value xml:lang="en">State [${stateCode}] does not in country [${countryCode}]</value>
+    </property>
+    <property key="HCInvalidCountryCode">
+        <value xml:lang="en">Invalid country [${countryCode}]</value>
+    </property>
 </resource>
+
