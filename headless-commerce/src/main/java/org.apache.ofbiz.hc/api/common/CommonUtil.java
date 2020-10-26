@@ -22,6 +22,13 @@ public class CommonUtil {
         }
         return null;
     }
-
-
+    public static boolean isValidCutomer (Delegator delegator, GenericValue userLogin, String customerPartyId) throws GenericEntityException {
+        if (UtilValidate.isNotEmpty(customerPartyId) && userLogin != null && customerPartyId.equalsIgnoreCase(userLogin.getString("partyId"))) {
+            GenericValue partyRole = EntityQuery.use(delegator).from("PartyRole").where("partyId", customerPartyId, "roleTypeId", "CUSTOMER").queryOne();
+            if (partyRole != null) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

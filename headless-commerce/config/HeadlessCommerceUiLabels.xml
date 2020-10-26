@@ -45,5 +45,8 @@ under the License.
     <property key="HCInvalidCountryCode">
         <value xml:lang="en">Invalid country [${countryCode}]</value>
     </property>
+    <property key="HCAccessDeniedInvalidUser">
+        <value xml:lang="en">Access denied. Invalid user.</value>
+    </property>
 </resource>
 

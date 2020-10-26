@@ -34,6 +34,15 @@ under the License.
         <attribute name="username" mode="IN" type="String"/>
         <attribute name="webSiteId" mode="IN" type="String"/>
     </service>
+    <service name="changePassword" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="changePassword">
+        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="currentPassword" mode="IN" type="String"/>
+        <attribute name="newPassword" mode="IN" type="String"/>
+        <attribute name="newPasswordVerify" mode="IN" type="String"/>
+        <attribute name="passwordHint" mode="IN" type="String" optional="true"/>
+        <attribute name="requirePasswordChange" mode="IN" type="String" optional="true" default="N"/>
+    </service>
     <service name="createCustomer" engine="java"
             location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createCustomer">
         <attribute name="webSiteId" mode="IN" type="String"/>

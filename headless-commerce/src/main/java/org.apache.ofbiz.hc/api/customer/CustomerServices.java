@@ -159,6 +159,36 @@ public class CustomerServices {
         }
         return ServiceUtil.returnSuccess(UtilProperties.getMessage(SECRESOURCE, "loginevents.new_password_sent_check_email", locale));
     }
+    public static Map<String, Object> changePassword(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Locale locale = (Locale) context.get("locale");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String customerPartyId = (String) context.get("customerPartyId");
+
+        try {
+            if (!CommonUtil.isValidCutomer(delegator, userLogin, customerPartyId)) {
+                String errorMessage = UtilProperties.getMessage("HeadlessCommerceUiLabels", "HCAccessDeniedInvalidUser", locale);
+                Debug.logError(errorMessage, MODULE);
+                return ServiceUtil.returnError(errorMessage);
+            }
+            GenericValue customerUserLogin = EntityQuery.use(delegator).from("UserLogin").where("partyId", customerPartyId).queryFirst();
+            if (customerUserLogin != null) {
+                Map<String, Object> serviceContext = dctx.getModelService("updatePassword").makeValid(context, ModelService.IN_PARAM);
+                serviceContext.put("userLoginId", customerUserLogin.getString("userLoginId"));
+                serviceContext.put("userLogin", customerUserLogin);
+                Map<String, Object> result = dispatcher.runSync("updatePassword", serviceContext);
+                if (!ServiceUtil.isSuccess(result)) {
+                    Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                }
+            }
+        } catch (GenericEntityException | GenericServiceException e) {
+            Debug.logError(e, MODULE);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        return ServiceUtil.returnSuccess();
+    }
 
     public static Map<String, Object> createCustomer(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
