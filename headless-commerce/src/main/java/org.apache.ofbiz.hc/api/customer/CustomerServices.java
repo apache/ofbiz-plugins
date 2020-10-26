@@ -563,7 +563,6 @@ public class CustomerServices {
             Debug.logError(e, MODULE);
             return ServiceUtil.returnError(e.getMessage());
         }
-        Debug.log("===========errorList="+errorList+"============");
         if (UtilValidate.isNotEmpty(errorList)) {
             return ServiceUtil.returnError(errorList);
         }
