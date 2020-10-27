@@ -143,7 +143,7 @@
     <PortalPagePortlet portalPageId="MYPORTAL_CUSTOMER" portalPortletId="ListCustRequests" portletSeqId="00003" columnSeqId="00001"  sequenceNum="4"/>
     <PortletAttribute portalPageId="MYPORTAL_CUSTOMER" portalPortletId="ListCustRequests" portletSeqId="00003" attrName="statusGroup" attrValue="OPEN"/>
     <PortletAttribute portalPageId="MYPORTAL_CUSTOMER" portalPortletId="ListCustRequests" portletSeqId="00003" attrName="otherContacts" attrValue="Y"/>
-    
+
     <PortalPagePortlet portalPageId="MYPORTAL_CUSTOMER" portalPortletId="MyCommunications" portletSeqId="00001" columnSeqId="00001"  sequenceNum="6"/>
     <PortletAttribute portalPageId="MYPORTAL_CUSTOMER" portalPortletId="MyCommunications" portletSeqId="00001" attrName="internalNotesOnly" attrValue="Y"/>
     <PortalPagePortlet portalPageId="MYPORTAL_CUSTOMER1" portalPortletId="party" portletSeqId="00001" columnSeqId="00001"  sequenceNum="1"/>
@@ -164,16 +164,8 @@
     <PortletAttribute portalPageId="MYPORTAL_CUSTOMER4" portalPortletId="ListCustomerOrders" portletSeqId="00001" attrName="roleTypeId" attrValue="PLACING_CUSTOMER"/>
     <PortalPagePortlet portalPageId="MYPORTAL_CUSTOMER5" portalPortletId="ListCustReturns" portletSeqId="00001" columnSeqId="00001" sequenceNum="0"/>
     <PortletAttribute portalPageId="MYPORTAL_CUSTOMER5" portalPortletId="ListCustReturns" portletSeqId="00001" attrName="statusId" attrValue="RETURN_REQUESTED"/>
-    
+
     <PortletPortletCategory portalPortletId="ListCustomerProjects" portletCategoryId="LIST_CUSTOMER"/>
     <PortletPortletCategory portalPortletId="ListCustomerInvoices" portletCategoryId="LIST_CUSTOMER"/>
-
-    <!-- Myportal help pages -->
-    <DataResource dataResourceId="HELP_MYPORTAL" localeString="en" dataResourceTypeId="OFBIZ_FILE" 
-      objectInfo="plugins/myportal/data/helpdata/HELP_MYPORTAL.xml" dataTemplateTypeId="NONE" statusId="CTNT_IN_PROGRESS" 
-      dataResourceName="Calendar help file" mimeTypeId="text/xml" isPublic="Y" />
-    <Content contentId="HELP_MYPORTAL" contentTypeId="DOCUMENT" templateDataResourceId="HELP_TEMPL" dataResourceId="HELP_MYPORTAL" statusId="CTNT_IN_PROGRESS" 
-      contentName="My Portal" mimeTypeId="text/html"/>
-    <ContentAssoc contentId="HELP_ROOT" contentIdTo="HELP_MYPORTAL" contentAssocTypeId="TREE_CHILD" fromDate="2006-01-12 01:01:01"/>
 
 </entity-engine-xml>
