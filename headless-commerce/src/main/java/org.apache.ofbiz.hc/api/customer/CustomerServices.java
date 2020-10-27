@@ -173,14 +173,14 @@ public class CustomerServices {
                 Debug.logError(errorMessage, MODULE);
                 return ServiceUtil.returnError(errorMessage);
             }
-                Map<String, Object> serviceContext = dctx.getModelService("updatePassword").makeValid(context, ModelService.IN_PARAM);
-                serviceContext.put("userLoginId", userLogin.getString("userLoginId"));
-                serviceContext.put("userLogin", userLogin);
-                Map<String, Object> result = dispatcher.runSync("updatePassword", serviceContext);
-                if (!ServiceUtil.isSuccess(result)) {
-                    Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
-                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
-                }
+            Map<String, Object> serviceContext = dctx.getModelService("updatePassword").makeValid(context, ModelService.IN_PARAM);
+            serviceContext.put("userLoginId", userLogin.getString("userLoginId"));
+            serviceContext.put("userLogin", userLogin);
+            Map<String, Object> result = dispatcher.runSync("updatePassword", serviceContext);
+            if (!ServiceUtil.isSuccess(result)) {
+                Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+            }
         } catch (GenericEntityException | GenericServiceException e) {
             Debug.logError(e, MODULE);
             return ServiceUtil.returnError(e.getMessage());
