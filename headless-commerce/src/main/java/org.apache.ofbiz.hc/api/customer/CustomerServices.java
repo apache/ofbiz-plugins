@@ -10,6 +10,7 @@ import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.entity.util.EntityUtilProperties;
 import org.apache.ofbiz.hc.api.common.CommonUtil;
 import org.apache.ofbiz.party.contact.ContactHelper;
+import org.apache.ofbiz.party.contact.ContactMechWorker;
 import org.apache.ofbiz.security.SecurityUtil;
 import org.apache.ofbiz.service.*;
 
@@ -597,5 +598,107 @@ public class CustomerServices {
             return ServiceUtil.returnError(errorList);
         }
         return ServiceUtil.returnSuccess();
+    }
+    public static Map<String, Object> getCustomerProfile(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Locale locale = (Locale) context.get("locale");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String customerPartyId = (String) context.get("customerPartyId");
+        String showOldStr = (String) context.get("showOld");
+        Map <String, Object> response = ServiceUtil.returnSuccess();
+
+        try {
+            if (!CommonUtil.isValidCutomer(delegator, userLogin, customerPartyId)) {
+                String errorMessage = UtilProperties.getMessage("HeadlessCommerceUiLabels", "HCAccessDeniedInvalidUser", locale);
+                Debug.logError(errorMessage, MODULE);
+                return ServiceUtil.returnError(errorMessage);
+            }
+            boolean showOld = "true".equals(showOldStr);
+            GenericValue person = EntityQuery.use(delegator).from("Person").where("partyId", customerPartyId).queryFirst();
+            if (person != null) {
+                response.put("customerPartyId", person.getString("partyId"));
+                response.put("personalTitle", person.getString("personalTitle"));
+                response.put("firstName", person.getString("firstName"));
+                response.put("middleName", person.getString("middleName"));
+                response.put("lastName", person.getString("lastName"));
+                response.put("suffix", person.getString("suffix"));
+
+                Map <String, Object> contactInformation = new HashMap<>();
+                //postal addresses
+                List<Map<String, Object>> addresses = new ArrayList<>();
+                List<Map<String, Object>> partyContactMechValueMaps = ContactMechWorker.getPartyContactMechValueMaps(delegator, customerPartyId, showOld, "POSTAL_ADDRESS");
+                for (Map<String, Object> partyContactMechValueMap : partyContactMechValueMaps) {
+                    Map<String, Object> infoMap = new HashMap<>();
+                    GenericValue postalAddress = (GenericValue) partyContactMechValueMap.get("postalAddress");
+                    if (postalAddress != null) {
+                        infoMap.put("contactMechId", postalAddress.getString("contactMechId"));
+                        infoMap.put("toName", postalAddress.getString("toName"));
+                        infoMap.put("address1", postalAddress.getString("address1"));
+                        infoMap.put("address2", postalAddress.getString("address2"));
+                        infoMap.put("city", postalAddress.getString("city"));
+                        infoMap.put("postalCode", postalAddress.getString("postalCode"));
+
+                        Map<String, String> geoMap = new HashMap<>();
+                        GenericValue countryGeo = EntityQuery.use(delegator).from("Geo").where("geoId", postalAddress.getString("countryGeoId")).queryOne();
+                        if (countryGeo != null) {
+                            geoMap.put("geoId", countryGeo.getString("geoId"));
+                            geoMap.put("geoName", countryGeo.getString("geoName"));
+                            geoMap.put("geoCode", countryGeo.getString("abbreviation"));
+                            infoMap.put("country", geoMap);
+                        }
+                        geoMap = new HashMap<>();
+                        GenericValue stateGeo = EntityQuery.use(delegator).from("Geo").where("geoId", postalAddress.getString("stateProvinceGeoId")).queryOne();
+                        if (stateGeo != null) {
+                            geoMap.put("geoId", stateGeo.getString("geoId"));
+                            geoMap.put("geoName", stateGeo.getString("geoName"));
+                            geoMap.put("geoCode", stateGeo.getString("abbreviation"));
+                            infoMap.put("state", geoMap);
+                        }
+                        infoMap.put("contactMechPurposes", CustomerHelper.prepareContactMechPurposeList(
+                                delegator, UtilGenerics.cast(partyContactMechValueMap.get("partyContactMechPurposes"))));
+                        addresses.add(infoMap);
+                    }
+                }
+                //phone numbers
+                List<Map<String, Object>> phoneNumbers = new ArrayList<>();
+                partyContactMechValueMaps = ContactMechWorker.getPartyContactMechValueMaps(delegator, customerPartyId, showOld, "TELECOM_NUMBER");
+                for (Map<String, Object> partyContactMechValueMap : partyContactMechValueMaps) {
+                    Map<String, Object> infoMap = new HashMap<>();
+                    GenericValue telecomNumber = (GenericValue) partyContactMechValueMap.get("telecomNumber");
+                    if (telecomNumber != null) {
+                        infoMap.put("contactMechId", telecomNumber.getString("contactMechId"));
+                        infoMap.put("countryCode", telecomNumber.getString("countryCode"));
+                        infoMap.put("areaCode", telecomNumber.getString("areaCode"));
+                        infoMap.put("contactNumber", telecomNumber.getString("contactNumber"));
+                        infoMap.put("contactMechPurposes", CustomerHelper.prepareContactMechPurposeList(
+                                delegator, UtilGenerics.cast(partyContactMechValueMap.get("partyContactMechPurposes"))));
+                        phoneNumbers.add(infoMap);
+                    }
+                }
+                //emails
+                List<Map<String, Object>> emails = new ArrayList<>();
+                partyContactMechValueMaps = ContactMechWorker.getPartyContactMechValueMaps(delegator, customerPartyId, showOld, "EMAIL_ADDRESS");
+                for (Map<String, Object> partyContactMechValueMap : partyContactMechValueMaps) {
+                    Map<String, Object> infoMap = new HashMap<>();
+                    GenericValue contactMech = (GenericValue) partyContactMechValueMap.get("contactMech");
+                    if (contactMech != null) {
+                        infoMap.put("emailAddress", contactMech.getString("infoString"));
+                        infoMap.put("contactMechPurposes", CustomerHelper.prepareContactMechPurposeList(
+                                delegator, UtilGenerics.cast(partyContactMechValueMap.get("partyContactMechPurposes"))));
+                        emails.add(infoMap);
+                    }
+                }
+                contactInformation.put("addresses", addresses);
+                contactInformation.put("phoneNumbers", phoneNumbers);
+                contactInformation.put("emails", emails);
+                response.put("contactInformation", contactInformation);
+                response.put("loyaltyPoints", CustomerHelper.getLoyaltyPoints(dispatcher, customerPartyId, userLogin));
+            }
+        } catch (GenericEntityException | GenericServiceException e) {
+            Debug.logError(e, MODULE);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        return response;
     }
 }
