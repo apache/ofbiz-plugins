@@ -106,63 +106,41 @@ under the License.
         <attribute name="middleName" mode="OUT" type="String" optional="true"/>
         <attribute name="lastName" mode="OUT" type="String"/>
         <attribute name="suffix" mode="OUT" type="String" optional="true"/>
-        <attribute name="contactInformation" mode="OUT" type="Map" optional="true">
-            <attribute name="addresses" mode="OUT" type="List" optional="true">
-                <attribute name="address" mode="OUT" type="Map" optional="true">
-                    <attribute name="contactMechId" mode="OUT" type="String"/>
-                    <attribute name="address1" mode="OUT" type="String"/>
-                    <attribute name="address2" mode="OUT" type="String" optional="true"/>
-                    <attribute name="city" mode="OUT" type="String"/>
-                    <attribute name="postalCode" mode="OUT" type="String"/>
-                    <attribute name="allowSolicitation" mode="OUT" type="String" optional="true"/>
-                    <attribute name="isDefault" mode="OUT" type="String" optional="true"/>
-                    <attribute name="state" mode="OUT" type="Map" optional="true">
-                        <attribute name="geoId" mode="OUT" type="String" optional="true"/>
-                        <attribute name="geoCode" mode="OUT" type="String" optional="true"/>
-                        <attribute name="geoName" mode="OUT" type="String" optional="true"/>
-                    </attribute>
-                    <attribute name="country" mode="OUT" type="Map">
-                        <attribute name="geoId" mode="OUT" type="String" optional="true"/>
-                        <attribute name="geoCode" mode="OUT" type="String" optional="true"/>
-                        <attribute name="geoName" mode="OUT" type="String" optional="true"/>
-                    </attribute>
-                    <attribute name="contactMechPurposes" mode="OUT" type="List">
-                        <attribute name="contactMechPurpose" mode="OUT" type="Map" optional="true">
-                            <attribute name="contactMechPurposeTypeId" mode="OUT" type="String" optional="true"/>
-                            <attribute name="description" mode="OUT" type="String" optional="true"/>
-                        </attribute>
+        <attribute name="contactMechs" mode="OUT" type="List" optional="true">
+            <attribute name="contactMech" mode="OUT" type="Map" optional="true">
+                <attribute name="contactMechId" mode="OUT" type="String"/>
+                <attribute name="address1" mode="OUT" type="String"/>
+                <attribute name="address2" mode="OUT" type="String" optional="true"/>
+                <attribute name="city" mode="OUT" type="String"/>
+                <attribute name="postalCode" mode="OUT" type="String"/>
+                <attribute name="countryCode" mode="OUT" type="String" optional="true"/>
+                <attribute name="areaCode" mode="OUT" type="String" optional="true"/>
+                <attribute name="contactNumber" mode="OUT" type="String"/>
+                <attribute name="extension" mode="OUT" type="String" optional="true"/>
+                <attribute name="infoString" mode="OUT" type="String" optional="true"/>
+                <attribute name="allowSolicitation" mode="OUT" type="String" optional="true"/>
+                <attribute name="isDefault" mode="OUT" type="String" optional="true"/>
+                <attribute name="state" mode="OUT" type="Map" optional="true">
+                    <attribute name="geoId" mode="OUT" type="String" optional="true"/>
+                    <attribute name="geoCode" mode="OUT" type="String" optional="true"/>
+                    <attribute name="geoName" mode="OUT" type="String" optional="true"/>
+                </attribute>
+                <attribute name="country" mode="OUT" type="Map">
+                    <attribute name="geoId" mode="OUT" type="String" optional="true"/>
+                    <attribute name="geoCode" mode="OUT" type="String" optional="true"/>
+                    <attribute name="geoName" mode="OUT" type="String" optional="true"/>
+                </attribute>
+                <attribute name="contactMechType" mode="OUT" type="Map" optional="true">
+                    <attribute name="contactMechTypeId" mode="OUT" type="String" optional="true"/>
+                    <attribute name="description" mode="OUT" type="String" optional="true"/>
+                </attribute>
+                <attribute name="contactMechPurposes" mode="OUT" type="List">
+                    <attribute name="contactMechPurpose" mode="OUT" type="Map" optional="true">
+                        <attribute name="contactMechPurposeTypeId" mode="OUT" type="String" optional="true"/>
+                        <attribute name="description" mode="OUT" type="String" optional="true"/>
                     </attribute>
                 </attribute>
-            </attribute>
-            <attribute name="phoneNumbers" mode="OUT" type="List" optional="true">
-                <attribute name="phoneNumber" mode="OUT" type="Map" optional="true">
-                    <attribute name="countryCode" mode="OUT" type="String" optional="true"/>
-                    <attribute name="areaCode" mode="OUT" type="String" optional="true"/>
-                    <attribute name="contactNumber" mode="OUT" type="String"/>
-                    <attribute name="extension" mode="OUT" type="String" optional="true"/>
-                    <attribute name="allowSolicitation" mode="OUT" type="String" optional="true"/>
-                    <attribute name="isDefault" mode="OUT" type="String" optional="true"/>
-                    <attribute name="contactMechPurposes" mode="OUT" type="List">
-                        <attribute name="contactMechPurpose" mode="OUT" type="Map" optional="true">
-                            <attribute name="contactMechPurposeTypeId" mode="OUT" type="String" optional="true"/>
-                            <attribute name="description" mode="OUT" type="String" optional="true"/>
-                        </attribute>
-                    </attribute>
-                </attribute>
-            </attribute>
-            <attribute name="emails" mode="OUT" type="List" optional="true">
-                <attribute name="email" mode="OUT" type="Map" optional="true">
-                    <attribute name="emailAddress" mode="OUT" type="String" optional="true"/>
-                    <attribute name="allowSolicitation" mode="OUT" type="String" optional="true"/>
-                    <attribute name="isDefault" mode="OUT" type="String" optional="true"/>
-                    <attribute name="contactMechPurposes" mode="OUT" type="List">
-                        <attribute name="contactMechPurpose" mode="OUT" type="Map" optional="true">
-                            <attribute name="contactMechPurposeTypeId" mode="OUT" type="String" optional="true"/>
-                            <attribute name="description" mode="OUT" type="String" optional="true"/>
-                        </attribute>
-                    </attribute>
-                </attribute>
-            </attribute>
+             </attribute>
         </attribute>
         <attribute name="loyaltyPoints" mode="OUT" type="Map" optional="true">
             <attribute name="points" mode="OUT" type="Integer" optional="true"/>
