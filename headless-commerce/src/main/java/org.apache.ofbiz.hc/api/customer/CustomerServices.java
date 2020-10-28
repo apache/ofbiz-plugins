@@ -1,5 +1,6 @@
 package org.apache.ofbiz.hc.api.customer;
 
+import org.apache.ofbiz.accounting.payment.PaymentWorker;
 import org.apache.ofbiz.base.util.*;
 import org.apache.ofbiz.base.util.string.FlexibleStringExpander;
 import org.apache.ofbiz.common.login.LoginServices;
@@ -620,6 +621,7 @@ public class CustomerServices {
                 response.put("middleName", person.getString("middleName"));
                 response.put("lastName", person.getString("lastName"));
                 response.put("suffix", person.getString("suffix"));
+                response.put("userName", userLogin.getString("userLoginId"));
 
                 List<Map<String, Object>> contactMechs = new ArrayList<>();
                 List<Map<String, Object>> partyContactMechValueMaps = ContactMechWorker.getPartyContactMechValueMaps(delegator, customerPartyId, showOld);
@@ -687,6 +689,16 @@ public class CustomerServices {
                     }
                     contactMechs.add(infoMap);
                 }
+
+                Map<String, Object> serviceContext = new HashMap<>();
+                serviceContext.put("customerPartyId", customerPartyId);
+                serviceContext.put("showOld", showOld);
+                serviceContext.put("userLogin", userLogin);
+                Map<String, Object> result = dispatcher.runSync("getPartyPaymentMethods", serviceContext);
+                if (!ServiceUtil.isSuccess(result)) {
+                    Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
+                }
+                response.put("paymentMethods", UtilGenerics.cast(result.get("paymentMethods")));
                 response.put("contactMechs", contactMechs);
                 response.put("loyaltyPoints", CustomerHelper.getLoyaltyPoints(dispatcher, customerPartyId, userLogin));
             }
@@ -696,4 +708,70 @@ public class CustomerServices {
         }
         return response;
     }
+    public static Map<String, Object> getPartyPaymentMethods(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        Locale locale = (Locale) context.get("locale");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String customerPartyId = (String) context.get("customerPartyId");
+        String showOldStr = (String) context.get("showOld");
+        Map <String, Object> result = ServiceUtil.returnSuccess();
+        List<Map<String, Object>> paymentMethods = new ArrayList<>();
+
+        try {
+            if (!CommonUtil.isValidCutomer(delegator, userLogin, customerPartyId)) {
+                String errorMessage = UtilProperties.getMessage("HeadlessCommerceUiLabels", "HCAccessDeniedInvalidUser", locale);
+                Debug.logError(errorMessage, MODULE);
+                return ServiceUtil.returnError(errorMessage);
+            }
+            boolean showOld = "true".equals(showOldStr);
+            List<Map<String, GenericValue>> paymentMethodValueMaps = PaymentWorker.getPartyPaymentMethodValueMaps(delegator, customerPartyId, showOld);
+            for (Map<String, GenericValue> paymentMethodValueMap : paymentMethodValueMaps) {
+                Map<String, Object> infoMap = new HashMap<>();
+                GenericValue paymentMethod = (GenericValue) paymentMethodValueMap.get("paymentMethod");
+                infoMap.put("paymentMethodId", paymentMethod.getString("paymentMethodId"));
+                infoMap.put("description", paymentMethod.getString("description"));
+                infoMap.put("fromDate", paymentMethod.getString("fromDate"));
+                infoMap.put("thruDate", paymentMethod.getString("thruDate"));
+
+                //payment method type
+                Map<String, Object> paymentMethodTypeMap = new HashMap<>();
+                GenericValue paymentMethodType = EntityQuery.use(delegator).from("PaymentMethodType").where("paymentMethodTypeId", paymentMethod.getString("paymentMethodTypeId")).queryOne();
+                paymentMethodTypeMap.put("paymentMethodTypeId", paymentMethodType.getString("paymentMethodTypeId"));
+                paymentMethodTypeMap.put("description", paymentMethodType.getString("description"));
+                infoMap.put("paymentMethodType", paymentMethodTypeMap);
+
+                if (UtilValidate.isNotEmpty(paymentMethodValueMap.get("creditCard"))) {
+                    GenericValue creditCard = (GenericValue) paymentMethodValueMap.get("creditCard");
+                    infoMap.put("companyNameOnCard", creditCard.getString("companyNameOnCard"));
+                    infoMap.put("titleOnCard", creditCard.getString("titleOnCard"));
+                    infoMap.put("firstNameOnCard", creditCard.getString("firstNameOnCard"));
+                    infoMap.put("middleNameOnCard", creditCard.getString("middleNameOnCard"));
+                    infoMap.put("lastNameOnCard", creditCard.getString("lastNameOnCard"));
+                    infoMap.put("suffixOnCard", creditCard.getString("suffixOnCard"));
+                    infoMap.put("cardNumber", creditCard.getString("cardNumber"));
+                    infoMap.put("expireDate", creditCard.getString("expireDate"));
+                } else if (UtilValidate.isNotEmpty(paymentMethodValueMap.get("giftCard"))) {
+                    GenericValue giftCard = (GenericValue) paymentMethodValueMap.get("giftCard");
+                    infoMap.put("cardNumber", giftCard.getString("cardNumber"));
+                    infoMap.put("expireDate", giftCard.getString("expireDate"));
+
+                } else if (UtilValidate.isNotEmpty(paymentMethodValueMap.get("eftAccount"))) {
+                    GenericValue eftAccount = (GenericValue) paymentMethodValueMap.get("eftAccount");
+                    infoMap.put("bankName", eftAccount.getString("bankName"));
+                    infoMap.put("routingNumber", eftAccount.getString("routingNumber"));
+                    infoMap.put("accountType", eftAccount.getString("accountType"));
+                    infoMap.put("accountNumber", eftAccount.getString("accountNumber"));
+                    infoMap.put("nameOnAccount", eftAccount.getString("nameOnAccount"));
+                    infoMap.put("companyNameOnAccount", eftAccount.getString("companyNameOnAccount"));
+                }
+                paymentMethods.add(infoMap);
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, MODULE);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        result.put("paymentMethods", paymentMethods);
+        return result;
+    }
+
 }
