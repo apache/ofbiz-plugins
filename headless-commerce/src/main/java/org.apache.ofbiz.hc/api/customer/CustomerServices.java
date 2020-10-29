@@ -623,105 +623,104 @@ public class CustomerServices {
                 response.put("customerPartyId", customerPartyId);
                 if ("Y".equals(filters.get("showPersonalInformation"))) {
                     Map<String, String> personalInformationMap = new HashMap<>();
-                personalInformationMap.put("personalTitle", person.getString("personalTitle"));
-                personalInformationMap.put("firstName", person.getString("firstName"));
-                personalInformationMap.put("middleName", person.getString("middleName"));
-                personalInformationMap.put("lastName", person.getString("lastName"));
-                personalInformationMap.put("suffix", person.getString("suffix"));
-                personalInformationMap.put("userName", userLogin.getString("userLoginId"));
-                response.put("personalInformation", personalInformationMap);
+                    personalInformationMap.put("personalTitle", person.getString("personalTitle"));
+                    personalInformationMap.put("firstName", person.getString("firstName"));
+                    personalInformationMap.put("middleName", person.getString("middleName"));
+                    personalInformationMap.put("lastName", person.getString("lastName"));
+                    personalInformationMap.put("suffix", person.getString("suffix"));
+                    personalInformationMap.put("userName", userLogin.getString("userLoginId"));
+                    response.put("personalInformation", personalInformationMap);
                 }
                 if ("Y".equals(filters.get("showLoyaltyPoints"))) {
-                response.put("loyaltyPoints", CustomerHelper.getLoyaltyPoints(dispatcher, customerPartyId, userLogin));
+                    response.put("loyaltyPoints", CustomerHelper.getLoyaltyPoints(dispatcher, customerPartyId, userLogin));
                 }
                 if ("Y".equals(filters.get("showContactMechs"))) {
-                List<Map<String, Object>> contactMechs = new ArrayList<>();
-                List<Map<String, Object>> partyContactMechValueMaps = ContactMechWorker.getPartyContactMechValueMaps(delegator, customerPartyId, showOld);
-                for (Map<String, Object> partyContactMechValueMap : partyContactMechValueMaps) {
-                    Map<String, Object> infoMap = new HashMap<>();
-                    GenericValue contactMech = (GenericValue) partyContactMechValueMap.get("contactMech");
-                    GenericValue contactMechType = (GenericValue) partyContactMechValueMap.get("contactMechType");
-                    infoMap.put("contactMechId", contactMech.getString("contactMechId"));
-                    if (UtilValidate.isNotEmpty(partyContactMechValueMap.get("postalAddress"))) {
-                        //postal address
-                        GenericValue postalAddress = (GenericValue) partyContactMechValueMap.get("postalAddress");
-                        if (postalAddress != null) {
-                            infoMap.put("toName", postalAddress.getString("toName"));
-                            infoMap.put("address1", postalAddress.getString("address1"));
-                            infoMap.put("address2", postalAddress.getString("address2"));
-                            infoMap.put("city", postalAddress.getString("city"));
-                            infoMap.put("postalCode", postalAddress.getString("postalCode"));
+                    List<Map<String, Object>> contactMechs = new ArrayList<>();
+                    List<Map<String, Object>> partyContactMechValueMaps = ContactMechWorker.getPartyContactMechValueMaps(delegator, customerPartyId, showOld);
+                    for (Map<String, Object> partyContactMechValueMap : partyContactMechValueMaps) {
+                        Map<String, Object> infoMap = new HashMap<>();
+                        GenericValue contactMech = (GenericValue) partyContactMechValueMap.get("contactMech");
+                        GenericValue contactMechType = (GenericValue) partyContactMechValueMap.get("contactMechType");
+                        infoMap.put("contactMechId", contactMech.getString("contactMechId"));
+                        if (UtilValidate.isNotEmpty(partyContactMechValueMap.get("postalAddress"))) {
+                            //postal address
+                            GenericValue postalAddress = (GenericValue) partyContactMechValueMap.get("postalAddress");
+                            if (postalAddress != null) {
+                                infoMap.put("toName", postalAddress.getString("toName"));
+                                infoMap.put("address1", postalAddress.getString("address1"));
+                                infoMap.put("address2", postalAddress.getString("address2"));
+                                infoMap.put("city", postalAddress.getString("city"));
+                                infoMap.put("postalCode", postalAddress.getString("postalCode"));
 
-                            Map<String, String> geoMap = new HashMap<>();
-                            GenericValue countryGeo = EntityQuery.use(delegator).from("Geo").where("geoId", postalAddress.getString("countryGeoId")).queryOne();
-                            if (countryGeo != null) {
-                                geoMap.put("geoId", countryGeo.getString("geoId"));
-                                geoMap.put("geoName", countryGeo.getString("geoName"));
-                                geoMap.put("geoCode", countryGeo.getString("abbreviation"));
-                                infoMap.put("country", geoMap);
+                                Map<String, String> geoMap = new HashMap<>();
+                                GenericValue countryGeo = EntityQuery.use(delegator).from("Geo").where("geoId", postalAddress.getString("countryGeoId")).queryOne();
+                                if (countryGeo != null) {
+                                    geoMap.put("geoId", countryGeo.getString("geoId"));
+                                    geoMap.put("geoName", countryGeo.getString("geoName"));
+                                    geoMap.put("geoCode", countryGeo.getString("abbreviation"));
+                                    infoMap.put("country", geoMap);
+                                }
+                                geoMap = new HashMap<>();
+                                GenericValue stateGeo = EntityQuery.use(delegator).from("Geo").where("geoId", postalAddress.getString("stateProvinceGeoId")).queryOne();
+                                if (stateGeo != null) {
+                                    geoMap.put("geoId", stateGeo.getString("geoId"));
+                                    geoMap.put("geoName", stateGeo.getString("geoName"));
+                                    geoMap.put("geoCode", stateGeo.getString("abbreviation"));
+                                    infoMap.put("state", geoMap);
+                                }
+                                infoMap.put("contactMechPurposes", CustomerHelper.prepareContactMechPurposeList(
+                                        delegator, UtilGenerics.cast(partyContactMechValueMap.get("partyContactMechPurposes"))));
+                                contactMechs.add(infoMap);
                             }
-                            geoMap = new HashMap<>();
-                            GenericValue stateGeo = EntityQuery.use(delegator).from("Geo").where("geoId", postalAddress.getString("stateProvinceGeoId")).queryOne();
-                            if (stateGeo != null) {
-                                geoMap.put("geoId", stateGeo.getString("geoId"));
-                                geoMap.put("geoName", stateGeo.getString("geoName"));
-                                geoMap.put("geoCode", stateGeo.getString("abbreviation"));
-                                infoMap.put("state", geoMap);
+                        } else if (UtilValidate.isNotEmpty(partyContactMechValueMap.get("telecomNumber"))) {
+                            //phone number
+                            GenericValue telecomNumber = (GenericValue) partyContactMechValueMap.get("telecomNumber");
+                            if (telecomNumber != null) {
+                                infoMap.put("countryCode", telecomNumber.getString("countryCode"));
+                                infoMap.put("areaCode", telecomNumber.getString("areaCode"));
+                                infoMap.put("contactNumber", telecomNumber.getString("contactNumber"));
+                                infoMap.put("contactMechPurposes", CustomerHelper.prepareContactMechPurposeList(
+                                        delegator, UtilGenerics.cast(partyContactMechValueMap.get("partyContactMechPurposes"))));
+                                contactMechs.add(infoMap);
                             }
+                        } else {
+                            //email, web address, electronic address, etc.
+                            infoMap.put("infoString", contactMech.getString("infoString"));
+                        }
+
+                        //contact mech type
+                        Map<String, String> contactMechTypeMap = new HashMap<>();
+                        contactMechTypeMap.put("contactMechTypeId", contactMechType.getString("contactMechTypeId"));
+                        contactMechTypeMap.put("description", contactMechType.getString("description"));
+                        infoMap.put("contactMechType", contactMechTypeMap);
+
+                        //contact mech purpose
+                        if (UtilValidate.isNotEmpty(partyContactMechValueMap.get("partyContactMechPurposes"))) {
                             infoMap.put("contactMechPurposes", CustomerHelper.prepareContactMechPurposeList(
                                     delegator, UtilGenerics.cast(partyContactMechValueMap.get("partyContactMechPurposes"))));
-                            contactMechs.add(infoMap);
                         }
-                    } else if (UtilValidate.isNotEmpty(partyContactMechValueMap.get("telecomNumber"))) {
-                        //phone number
-                        GenericValue telecomNumber = (GenericValue) partyContactMechValueMap.get("telecomNumber");
-                        if (telecomNumber != null) {
-                            infoMap.put("countryCode", telecomNumber.getString("countryCode"));
-                            infoMap.put("areaCode", telecomNumber.getString("areaCode"));
-                            infoMap.put("contactNumber", telecomNumber.getString("contactNumber"));
-                            infoMap.put("contactMechPurposes", CustomerHelper.prepareContactMechPurposeList(
-                                    delegator, UtilGenerics.cast(partyContactMechValueMap.get("partyContactMechPurposes"))));
-                            contactMechs.add(infoMap);
-                        }
-                    } else {
-                        //email, web address, electronic address, etc.
-                        infoMap.put("infoString", contactMech.getString("infoString"));
+                        contactMechs.add(infoMap);
                     }
-
-                    //contact mech type
-                    Map<String, String> contactMechTypeMap = new HashMap<>();
-                    contactMechTypeMap.put("contactMechTypeId", contactMechType.getString("contactMechTypeId"));
-                    contactMechTypeMap.put("description", contactMechType.getString("description"));
-                    infoMap.put("contactMechType", contactMechTypeMap);
-
-                    //contact mech purpose
-                    if (UtilValidate.isNotEmpty(partyContactMechValueMap.get("partyContactMechPurposes"))) {
-                        infoMap.put("contactMechPurposes", CustomerHelper.prepareContactMechPurposeList(
-                                delegator, UtilGenerics.cast(partyContactMechValueMap.get("partyContactMechPurposes"))));
-                    }
-                    contactMechs.add(infoMap);
-                }
-                response.put("contactMechs", contactMechs);
+                    response.put("contactMechs", contactMechs);
                 }
 
                 if ("Y".equals(filters.get("showPaymentMethods"))) {
-                //payment information
-                Map<String, Object> serviceContext = new HashMap<>();
-                serviceContext.put("customerPartyId", customerPartyId);
-                serviceContext.put("showOld", showOld);
-                serviceContext.put("userLogin", userLogin);
-                Map<String, Object> result = dispatcher.runSync("getPartyPaymentMethods", serviceContext);
-                if (!ServiceUtil.isSuccess(result)) {
-                    Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
+                    //payment information
+                    Map<String, Object> serviceContext = new HashMap<>();
+                    serviceContext.put("customerPartyId", customerPartyId);
+                    serviceContext.put("showOld", showOld);
+                    serviceContext.put("userLogin", userLogin);
+                    Map<String, Object> result = dispatcher.runSync("getPartyPaymentMethods", serviceContext);
+                    if (!ServiceUtil.isSuccess(result)) {
+                        Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
+                    }
+                    response.put("paymentMethods", UtilGenerics.cast(result.get("paymentMethods")));
                 }
-                response.put("paymentMethods", UtilGenerics.cast(result.get("paymentMethods")));
-                }
-
                 if ("Y".equals(filters.get("showContactLists"))) {
-                response.put("contactLists", CustomerHelper.getPartyContactLists(delegator, customerPartyId));
+                    response.put("contactLists", CustomerHelper.getPartyContactLists(delegator, customerPartyId));
                 }
                 if ("Y".equals(filters.get("showCommunications"))) {
-                response.put("communications", CustomerHelper.getPartyCommunications(delegator, customerPartyId, true, false));
+                    response.put("communications", CustomerHelper.getPartyCommunications(delegator, customerPartyId, true, false));
                 }
             }
         } catch (GenericEntityException | GenericServiceException e) {
