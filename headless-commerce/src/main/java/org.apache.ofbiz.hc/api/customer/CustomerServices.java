@@ -604,9 +604,14 @@ public class CustomerServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String customerPartyId = (String) context.get("customerPartyId");
         String showOldStr = (String) context.get("showOld");
+        Map<String, String> filters = UtilGenerics.cast(context.get("filters"));
         Map <String, Object> response = ServiceUtil.returnSuccess();
 
         try {
+            if (UtilValidate.isEmpty(filters)) {
+                filters = UtilMisc.toMap("showPersonalInformation", "Y", "showLoyaltyPoints", "Y", "showContactMechs", "N", "showPaymentMethods", "N", "showContactLists", "N", "showCommunications", "N");
+            }
+            response.put("filters", filters);
             if (!CommonUtil.isValidCutomer(delegator, userLogin, customerPartyId)) {
                 String errorMessage = UtilProperties.getMessage("HeadlessCommerceUiLabels", "HCAccessDeniedInvalidUser", locale);
                 Debug.logError(errorMessage, MODULE);
@@ -615,14 +620,21 @@ public class CustomerServices {
             boolean showOld = "true".equals(showOldStr);
             GenericValue person = EntityQuery.use(delegator).from("Person").where("partyId", customerPartyId).queryFirst();
             if (person != null) {
-                response.put("customerPartyId", person.getString("partyId"));
-                response.put("personalTitle", person.getString("personalTitle"));
-                response.put("firstName", person.getString("firstName"));
-                response.put("middleName", person.getString("middleName"));
-                response.put("lastName", person.getString("lastName"));
-                response.put("suffix", person.getString("suffix"));
-                response.put("userName", userLogin.getString("userLoginId"));
-
+                response.put("customerPartyId", customerPartyId);
+                if ("Y".equals(filters.get("showPersonalInformation"))) {
+                    Map<String, String> personalInformationMap = new HashMap<>();
+                personalInformationMap.put("personalTitle", person.getString("personalTitle"));
+                personalInformationMap.put("firstName", person.getString("firstName"));
+                personalInformationMap.put("middleName", person.getString("middleName"));
+                personalInformationMap.put("lastName", person.getString("lastName"));
+                personalInformationMap.put("suffix", person.getString("suffix"));
+                personalInformationMap.put("userName", userLogin.getString("userLoginId"));
+                response.put("personalInformation", personalInformationMap);
+                }
+                if ("Y".equals(filters.get("showLoyaltyPoints"))) {
+                response.put("loyaltyPoints", CustomerHelper.getLoyaltyPoints(dispatcher, customerPartyId, userLogin));
+                }
+                if ("Y".equals(filters.get("showContactMechs"))) {
                 List<Map<String, Object>> contactMechs = new ArrayList<>();
                 List<Map<String, Object>> partyContactMechValueMaps = ContactMechWorker.getPartyContactMechValueMaps(delegator, customerPartyId, showOld);
                 for (Map<String, Object> partyContactMechValueMap : partyContactMechValueMaps) {
@@ -689,7 +701,10 @@ public class CustomerServices {
                     }
                     contactMechs.add(infoMap);
                 }
+                response.put("contactMechs", contactMechs);
+                }
 
+                if ("Y".equals(filters.get("showPaymentMethods"))) {
                 //payment information
                 Map<String, Object> serviceContext = new HashMap<>();
                 serviceContext.put("customerPartyId", customerPartyId);
@@ -699,12 +714,15 @@ public class CustomerServices {
                 if (!ServiceUtil.isSuccess(result)) {
                     Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
                 }
-
-                response.put("contactMechs", contactMechs);
                 response.put("paymentMethods", UtilGenerics.cast(result.get("paymentMethods")));
-                response.put("loyaltyPoints", CustomerHelper.getLoyaltyPoints(dispatcher, customerPartyId, userLogin));
+                }
+
+                if ("Y".equals(filters.get("showContactLists"))) {
                 response.put("contactLists", CustomerHelper.getPartyContactLists(delegator, customerPartyId));
+                }
+                if ("Y".equals(filters.get("showCommunications"))) {
                 response.put("communications", CustomerHelper.getPartyCommunications(delegator, customerPartyId, true, false));
+                }
             }
         } catch (GenericEntityException | GenericServiceException e) {
             Debug.logError(e, MODULE);
@@ -731,7 +749,7 @@ public class CustomerServices {
             List<Map<String, GenericValue>> paymentMethodValueMaps = PaymentWorker.getPartyPaymentMethodValueMaps(delegator, customerPartyId, showOld);
             for (Map<String, GenericValue> paymentMethodValueMap : paymentMethodValueMaps) {
                 Map<String, Object> infoMap = new HashMap<>();
-                GenericValue paymentMethod = (GenericValue) paymentMethodValueMap.get("paymentMethod");
+                GenericValue paymentMethod = UtilGenerics.cast(paymentMethodValueMap.get("paymentMethod"));
                 infoMap.put("paymentMethodId", paymentMethod.getString("paymentMethodId"));
                 infoMap.put("description", paymentMethod.getString("description"));
                 infoMap.put("fromDate", paymentMethod.getString("fromDate"));
@@ -745,7 +763,7 @@ public class CustomerServices {
                 infoMap.put("paymentMethodType", paymentMethodTypeMap);
 
                 if (UtilValidate.isNotEmpty(paymentMethodValueMap.get("creditCard"))) {
-                    GenericValue creditCard = (GenericValue) paymentMethodValueMap.get("creditCard");
+                    GenericValue creditCard = UtilGenerics.cast(paymentMethodValueMap.get("creditCard"));
                     infoMap.put("companyNameOnCard", creditCard.getString("companyNameOnCard"));
                     infoMap.put("titleOnCard", creditCard.getString("titleOnCard"));
                     infoMap.put("firstNameOnCard", creditCard.getString("firstNameOnCard"));
@@ -755,12 +773,12 @@ public class CustomerServices {
                     infoMap.put("cardNumber", creditCard.getString("cardNumber"));
                     infoMap.put("expireDate", creditCard.getString("expireDate"));
                 } else if (UtilValidate.isNotEmpty(paymentMethodValueMap.get("giftCard"))) {
-                    GenericValue giftCard = (GenericValue) paymentMethodValueMap.get("giftCard");
+                    GenericValue giftCard = UtilGenerics.cast(paymentMethodValueMap.get("giftCard"));
                     infoMap.put("cardNumber", giftCard.getString("cardNumber"));
                     infoMap.put("expireDate", giftCard.getString("expireDate"));
 
                 } else if (UtilValidate.isNotEmpty(paymentMethodValueMap.get("eftAccount"))) {
-                    GenericValue eftAccount = (GenericValue) paymentMethodValueMap.get("eftAccount");
+                    GenericValue eftAccount = UtilGenerics.cast(paymentMethodValueMap.get("eftAccount"));
                     infoMap.put("bankName", eftAccount.getString("bankName"));
                     infoMap.put("routingNumber", eftAccount.getString("routingNumber"));
                     infoMap.put("accountType", eftAccount.getString("accountType"));

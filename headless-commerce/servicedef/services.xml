@@ -99,14 +99,17 @@ under the License.
     </service>
     <service name="getCustomerProfile" engine="java"
             location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="getCustomerProfile">
-        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="customerPartyId" mode="INOUT" type="String"/>
         <attribute name="showOld" mode="IN" type="String" optional="true"/>
-        <attribute name="personalTitle" mode="OUT" type="String" optional="true"/>
-        <attribute name="firstName" mode="OUT" type="String"/>
-        <attribute name="middleName" mode="OUT" type="String" optional="true"/>
-        <attribute name="lastName" mode="OUT" type="String"/>
-        <attribute name="suffix" mode="OUT" type="String" optional="true"/>
-        <attribute name="userName" mode="OUT" type="String" optional="true"/>
+        <attribute name="filters" mode="INOUT" type="Map" optional="true"/>
+        <attribute name="personalInformation" mode="OUT" type="Map" optional="false">
+            <attribute name="personalTitle" mode="OUT" type="String" optional="true"/>
+            <attribute name="firstName" mode="OUT" type="String"/>
+            <attribute name="middleName" mode="OUT" type="String" optional="true"/>
+            <attribute name="lastName" mode="OUT" type="String"/>
+            <attribute name="suffix" mode="OUT" type="String" optional="true"/>
+            <attribute name="userName" mode="OUT" type="String" optional="true"/>
+        </attribute>
         <attribute name="contactMechs" mode="OUT" type="List" optional="true">
             <attribute name="contactMech" mode="OUT" type="Map" optional="true">
                 <attribute name="contactMechId" mode="OUT" type="String"/>
