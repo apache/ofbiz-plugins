@@ -690,6 +690,7 @@ public class CustomerServices {
                     contactMechs.add(infoMap);
                 }
 
+                //payment information
                 Map<String, Object> serviceContext = new HashMap<>();
                 serviceContext.put("customerPartyId", customerPartyId);
                 serviceContext.put("showOld", showOld);
@@ -698,9 +699,12 @@ public class CustomerServices {
                 if (!ServiceUtil.isSuccess(result)) {
                     Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
                 }
-                response.put("paymentMethods", UtilGenerics.cast(result.get("paymentMethods")));
+
                 response.put("contactMechs", contactMechs);
+                response.put("paymentMethods", UtilGenerics.cast(result.get("paymentMethods")));
                 response.put("loyaltyPoints", CustomerHelper.getLoyaltyPoints(dispatcher, customerPartyId, userLogin));
+                response.put("contactLists", CustomerHelper.getPartyContactLists(delegator, customerPartyId));
+                response.put("communications", CustomerHelper.getPartyCommunications(delegator, customerPartyId, true, false));
             }
         } catch (GenericEntityException | GenericServiceException e) {
             Debug.logError(e, MODULE);

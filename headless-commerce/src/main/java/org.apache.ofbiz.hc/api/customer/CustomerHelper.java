@@ -7,7 +7,10 @@ import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
+import org.apache.ofbiz.entity.condition.EntityCondition;
+import org.apache.ofbiz.entity.condition.EntityOperator;
 import org.apache.ofbiz.entity.util.EntityQuery;
+import org.apache.ofbiz.party.party.PartyHelper;
 import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceUtil;
@@ -49,4 +52,54 @@ public class CustomerHelper {
         }
         return contactMechPurposes;
     }
+    public static List<Map<String, Object>> getPartyContactLists(Delegator delegator, String customerPartyId) throws GenericEntityException {
+        List<Map<String, Object>> subscriptionList = new ArrayList<>();
+        List<GenericValue> contactListPartyList = EntityQuery.use(delegator).from("ContactListParty").where("partyId", customerPartyId).orderBy("-fromDate").queryList();
+        for (GenericValue contactListParty : contactListPartyList) {
+            Map<String, Object> infoMap = new HashMap<>();
+            GenericValue contactList = EntityQuery.use(delegator).from("ContactList").where("contactListId", contactListParty.getString("contactListId")).queryOne();
+            GenericValue statusItem = EntityQuery.use(delegator).from("StatusItem").where("statusId", contactListParty.getString("statusId")).queryOne();
+            GenericValue emailContactMech = EntityQuery.use(delegator).select("infoString").from("ContactMech").where("contactMechId", contactListParty.getString("preferredContactMechId"), "contactMechTypeId", "EMAIL_ADDRESS").queryOne();
+            infoMap.put("contactListId", contactList.getString("contactListId"));
+            infoMap.put("email", emailContactMech.getString("infoString"));
+            infoMap.put("contactListName", contactList.getString("contactListName"));
+            infoMap.put("description", contactList.getString("description"));
+            infoMap.put("fromDate", contactListParty.getString("fromDate"));
+            infoMap.put("thruDate", contactListParty.getString("thruDate"));
+            infoMap.put("status", UtilMisc.toMap("statusId", statusItem.getString("statusId"),
+                    "description", statusItem.getString("description"), "statusCode", statusItem.getString("statusCode")));
+            subscriptionList.add(infoMap);
+        }
+        return subscriptionList;
+    }
+    public static List<Map<String, Object>> getPartyCommunications(Delegator delegator, String customerPartyId, boolean showReceived, boolean showSent) throws GenericEntityException {
+        List<Map<String, Object>> communications = new ArrayList<>();
+        EntityCondition condition = null;
+        if (showReceived && showSent) {
+            condition = EntityCondition.makeCondition(
+                    EntityCondition.makeCondition("partyIdTo", customerPartyId),
+                    EntityOperator.OR,
+                    EntityCondition.makeCondition("partyIdFrom", customerPartyId));
+        } else if (showReceived) {
+            condition = EntityCondition.makeCondition("partyIdTo", customerPartyId);
+        } else if (showSent) {
+            condition = EntityCondition.makeCondition("partyIdFrom", customerPartyId);
+        }
+
+        List<GenericValue> communicationEvents = EntityQuery.use(delegator).from("CommunicationEvent").where(condition).orderBy("-entryDate").queryList();
+        for (GenericValue communicationEvent : communicationEvents) {
+            Map<String, Object> infoMap = new HashMap<>();
+            String fromPartyName = PartyHelper.getPartyName(delegator, communicationEvent.getString("partyIdFrom"), true) ;
+            String toPartyName = PartyHelper.getPartyName(delegator, communicationEvent.getString("partyIdTo"), true) ;
+            infoMap.put("communicationEventId", communicationEvent.getString("communicationEventId"));
+            infoMap.put("fromPartyName", fromPartyName);
+            infoMap.put("toPartyName", toPartyName);
+            infoMap.put("subject", communicationEvent.getString("subject"));
+            infoMap.put("entryDate", communicationEvent.getString("entryDate"));
+            infoMap.put("content", communicationEvent.getString("content"));
+            communications.add(infoMap);
+        }
+        return communications;
+    }
 }
+

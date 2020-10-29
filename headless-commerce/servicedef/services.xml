@@ -176,6 +176,31 @@ under the License.
                 </attribute>
             </attribute>
         </attribute>
+        <attribute name="contactLists" mode="OUT" type="List" optional="true">
+            <attribute name="contactList" mode="OUT" type="Map" optional="true">
+                <attribute name="contactListId" mode="OUT" type="String" optional="true"/>
+                <attribute name="contactListName" mode="OUT" type="String" optional="true"/>
+                <attribute name="description" mode="OUT" type="String" optional="true"/>
+                <attribute name="fromDate" mode="OUT" type="String" optional="true"/>
+                <attribute name="thruDate" mode="OUT" type="String" optional="true"/>
+                <attribute name="email" mode="OUT" type="String" optional="true"/>
+                <attribute name="status" mode="OUT" type="Map" optional="true">
+                    <attribute name="statusId" mode="OUT" type="String" optional="true"/>
+                    <attribute name="statusCode" mode="OUT" type="String" optional="true"/>
+                    <attribute name="description" mode="OUT" type="String" optional="true"/>
+                </attribute>
+            </attribute>
+        </attribute>
+        <attribute name="communications" mode="OUT" type="List" optional="true">
+            <attribute name="communication" mode="OUT" type="Map" optional="true">
+                <attribute name="communicationEventId" mode="OUT" type="String" optional="true"/>
+                <attribute name="fromPartyName" mode="OUT" type="String" optional="true"/>
+                <attribute name="toPartyName" mode="OUT" type="String" optional="true"/>
+                <attribute name="subject" mode="OUT" type="String" optional="true"/>
+                <attribute name="entryDate" mode="OUT" type="String" optional="true"/>
+                <attribute name="content" mode="OUT" type="String" optional="true"/>
+            </attribute>
+        </attribute>
     </service>
     <service name="getPartyPaymentMethods" engine="java"
             location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="getPartyPaymentMethods">
