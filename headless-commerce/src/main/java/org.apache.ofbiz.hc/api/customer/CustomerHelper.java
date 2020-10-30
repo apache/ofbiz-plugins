@@ -3,6 +3,7 @@ package org.apache.ofbiz.hc.api.customer;
 import jdk.nashorn.internal.runtime.logging.DebugLogger;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.UtilMisc;
+import org.apache.ofbiz.base.util.UtilProperties;
 import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
@@ -100,6 +101,25 @@ public class CustomerHelper {
             communications.add(infoMap);
         }
         return communications;
+    }
+    public static String getGeoId(Delegator delegator, String geoCode, String geoTypeId) throws GenericEntityException {
+        if (UtilValidate.isNotEmpty(geoCode)) {
+            GenericValue geo = EntityQuery.use(delegator).from("Geo").where("abbreviation", geoCode, "geoTypeId", geoTypeId).queryOne();
+            if (geo != null) {
+                return geo.getString("geoId");
+            }
+        }
+        return null;
+    }
+    public static boolean isValidGeoAssoc(Delegator delegator, String countryGeoId, String stateGeoId) throws GenericEntityException {
+        if (UtilValidate.isNotEmpty(countryGeoId) && UtilValidate.isNotEmpty(stateGeoId)) {
+            GenericValue regionGeo = EntityQuery.use(delegator).from("GeoAssocAndGeoToWithState").
+                            where("geoIdFrom", countryGeoId, "geoAssocTypeId", "REGIONS", "geoId", stateGeoId).queryFirst();
+            if (regionGeo != null) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 

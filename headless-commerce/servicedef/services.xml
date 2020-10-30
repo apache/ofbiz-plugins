@@ -211,4 +211,42 @@ under the License.
         <attribute name="showOld" mode="IN" type="String" optional="true"/>
         <attribute name="paymentMethods" mode="OUT" type="List" optional="true"/>
     </service>
+    <service name="createCustomerPostalAddress" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createCustomerPostalAddress">
+        <description>To create the postal address with purpose</description>
+        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="toName" mode="IN" type="String" optional="true"/>
+        <attribute name="address1" mode="IN" type="String"/>
+        <attribute name="address2" mode="IN" type="String" optional="true"/>
+        <attribute name="city" mode="IN" type="String"/>
+        <attribute name="postalCode" mode="IN" type="String"/>
+        <attribute name="stateCode" mode="IN" type="String" optional="true"/>
+        <attribute name="countryCode" mode="IN" type="String"/>
+        <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
+        <attribute name="isDefault" mode="IN" type="String" optional="true"/>
+        <attribute name="contactMechPurposeTypeId" mode="IN" type="String" optional="true"/>
+    </service>
+    <service name="updateCustomerPostalAddress" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="updateCustomerPostalAddress">
+        <description>To update the postal address and to add a purpose</description>
+        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="contactMechId" mode="IN" type="String"/>
+        <attribute name="toName" mode="IN" type="String" optional="true"/>
+        <attribute name="address1" mode="IN" type="String" optional="true"/>
+        <attribute name="address2" mode="IN" type="String" optional="true"/>
+        <attribute name="city" mode="IN" type="String" optional="true"/>
+        <attribute name="postalCode" mode="IN" type="String" optional="true"/>
+        <attribute name="stateCode" mode="IN" type="String" optional="true"/>
+        <attribute name="countryCode" mode="IN" type="String" optional="true"/>
+        <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
+        <attribute name="isDefault" mode="IN" type="String" optional="true"/>
+        <attribute name="contactMechPurposeTypeId" mode="IN" type="String" optional="true"/>
+    </service>
+    <service name="removeCustomerPostalAddress" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="removeCustomerPostalAddress">
+        <description>To remove the party contact mech purpose or the the party contact mech</description>
+        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="contactMechId" mode="IN" type="String"/>
+        <attribute name="contactMechPurposeTypeId" mode="IN" type="String" optional="true"/>
+    </service>
 </services>

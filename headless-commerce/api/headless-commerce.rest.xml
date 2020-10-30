@@ -9,7 +9,7 @@
     <operation verb="post" description="Creates Customer">
       <service name="createCustomer"/>
     </operation>
-    <operation verb="post" path="/{customerPartyId}" description="Updates customer's personal information">
+    <operation verb="put" path="/{customerPartyId}" description="Updates customer's personal information">
       <service name="updatePerson"/>
     </operation>
     <operation verb="post" path="/{customerPartyId}/change-password" description="Changes customer's account password">
@@ -17,6 +17,15 @@
     </operation>
     <operation verb="post" path="/{customerPartyId}/profile" description="Retrieves customer profile">
       <service name="getCustomerProfile"/>
+    </operation>
+    <operation verb="post" path="/{customerPartyId}/addresses" description="Creates postal address">
+      <service name="createCustomerPostalAddress"/>
+    </operation>
+    <operation verb="put" path="/{customerPartyId}/addresses/{contactMechId}" description="Updates postal address">
+      <service name="updateCustomerPostalAddress"/>
+    </operation>
+    <operation verb="delete" path="/{customerPartyId}/addresses/{contactMechId}" description="Expires postal address">
+      <service name="removeCustomerPostalAddress"/>
     </operation>
   </resource>
 </api>
