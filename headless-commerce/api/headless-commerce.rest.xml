@@ -9,6 +9,9 @@
     <operation verb="post" description="Creates Customer">
       <service name="createCustomer"/>
     </operation>
+    <operation verb="post" path="/{customerPartyId}" description="Updates customer's personal information">
+      <service name="updatePerson"/>
+    </operation>
     <operation verb="post" path="/{customerPartyId}/change-password" description="Changes customer's account password">
       <service name="changePassword"/>
     </operation>
