@@ -859,16 +859,16 @@ public class CustomerServices {
                 }
             } else {
                 //create postal address with purpose
-            serviceCtx = dctx.getModelService("createPartyPostalAddress").makeValid(context, ModelService.IN_PARAM);
-            serviceCtx.put("partyId", customerPartyId);
-            serviceCtx.put("stateProvinceGeoId", stateProvinceGeoId);
-            serviceCtx.put("countryGeoId", countryGeoId);
-            serviceCtx.put("userLogin", userLogin);
-            result = dispatcher.runSync("createPartyPostalAddress", serviceCtx);
-            if (!ServiceUtil.isSuccess(result)) {
-                Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
-                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
-            }
+                serviceCtx = dctx.getModelService("createPartyPostalAddress").makeValid(context, ModelService.IN_PARAM);
+                serviceCtx.put("partyId", customerPartyId);
+                serviceCtx.put("stateProvinceGeoId", stateProvinceGeoId);
+                serviceCtx.put("countryGeoId", countryGeoId);
+                serviceCtx.put("userLogin", userLogin);
+                result = dispatcher.runSync("createPartyPostalAddress", serviceCtx);
+                if (!ServiceUtil.isSuccess(result)) {
+                    Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                }
             }
         } catch (GenericEntityException | GenericServiceException e) {
             Debug.logError(e, MODULE);
