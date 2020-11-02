@@ -794,7 +794,7 @@ public class CustomerServices {
         result.put("paymentMethods", paymentMethods);
         return result;
     }
-    public static Map<String, Object> createCustomerPostalAddress(DispatchContext dctx, Map<String, ? extends Object> context) {
+    public static Map<String, Object> createUpdateCustomerPostalAddress(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
@@ -803,6 +803,10 @@ public class CustomerServices {
         String stateCode = (String) context.get("stateCode");
         String countryCode = (String) context.get("countryCode");
         String contactMechPurposeTypeId = (String) context.get("contactMechPurposeTypeId");
+        String contactMechId = (String) context.get("contactMechId");
+        String address1 = (String) context.get("address1");
+        Map <String, Object> serviceCtx = new HashMap<>();
+        Map <String, Object> result = new HashMap<>();
 
         try {
             if (!CommonUtil.isValidCutomer(delegator, userLogin, customerPartyId)) {
@@ -810,7 +814,8 @@ public class CustomerServices {
                 Debug.logError(errorMessage, MODULE);
                 return ServiceUtil.returnError(errorMessage);
             }
-            String countryGeoId = CustomerHelper.getGeoId(delegator, stateCode, "COUNTRY");
+
+            String countryGeoId = CustomerHelper.getGeoId(delegator, countryCode, "COUNTRY");
             String stateProvinceGeoId = null;
             if (UtilValidate.isNotEmpty(stateCode)) {
                 stateProvinceGeoId = CustomerHelper.getGeoId(delegator, stateCode, "STATE");
@@ -821,82 +826,49 @@ public class CustomerServices {
                     return ServiceUtil.returnError(errorMessage);
                 }
             }
-
-            Map <String, Object> serviceCtx = dctx.getModelService("createPartyPostalAddress").makeValid(context, ModelService.IN_PARAM);
-            serviceCtx.put("partyId", customerPartyId);
-            serviceCtx.put("stateProvinceGeoId", stateProvinceGeoId);
-            serviceCtx.put("countryGeoId", countryGeoId);
-            serviceCtx.put("userLogin", userLogin);
-            Map <String, Object> result = dispatcher.runSync("createPartyPostalAddress", serviceCtx);
-            if (!ServiceUtil.isSuccess(result)) {
-                Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
-                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
-            }
-        } catch (GenericEntityException | GenericServiceException e) {
-            Debug.logError(e, MODULE);
-            return ServiceUtil.returnError(e.getMessage());
-        }
-        return ServiceUtil.returnSuccess();
-    }
-    public static Map<String, Object> updateCustomerPostalAddress(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Delegator delegator = dctx.getDelegator();
-        LocalDispatcher dispatcher = dctx.getDispatcher();
-        Locale locale = (Locale) context.get("locale");
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
-        String customerPartyId = (String) context.get("customerPartyId");
-        String contactMechPurposeTypeId = (String) context.get("contactMechPurposeTypeId");
-        String contactMechId = (String) context.get("contactMechId");
-        String address1 = (String) context.get("address1");
-        String stateCode = (String) context.get("stateCode");
-        String countryCode = (String) context.get("countryCode");
-        Map <String, Object> serviceCtx = new HashMap<>();
-        Map <String, Object> result = new HashMap<>();
-
-        try {
-            if (!CommonUtil.isValidCutomer(delegator, userLogin, customerPartyId)) {
-                String errorMessage = UtilProperties.getMessage("HeadlessCommerceUiLabels", "HCAccessDeniedInvalidUser", locale);
-                Debug.logError(errorMessage, MODULE);
-                return ServiceUtil.returnError(errorMessage);
-            }
-            if (UtilValidate.isNotEmpty(address1)) {
-                String countryGeoId = CustomerHelper.getGeoId(delegator, stateCode, "COUNTRY");
-                String stateProvinceGeoId = null;
-                if (UtilValidate.isNotEmpty(stateCode)) {
-                    stateProvinceGeoId = CustomerHelper.getGeoId(delegator, stateCode, "STATE");
-                    if (!CustomerHelper.isValidGeoAssoc(delegator, countryGeoId, stateProvinceGeoId)) {
-                        String errorMessage = UtilProperties.getMessage("HeadlessCommerceUiLabels", "HCCountrysStateIsNotValid",
-                                UtilMisc.toMap("stateCode", stateCode, "countryCode", countryCode), locale);
-                        Debug.logError(errorMessage, MODULE);
-                        return ServiceUtil.returnError(errorMessage);
-                    }
-                }
-                serviceCtx = dctx.getModelService("updatePartyPostalAddress").makeValid(context, ModelService.IN_PARAM);
-                serviceCtx.put("partyId", customerPartyId);
-                serviceCtx.put("stateProvinceGeoId", stateProvinceGeoId);
-                serviceCtx.put("countryGeoId", countryGeoId);
-                serviceCtx.put("userLogin", userLogin);
-                result = dispatcher.runSync("updatePartyPostalAddress", serviceCtx);
-                if (!ServiceUtil.isSuccess(result)) {
-                    Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
-                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
-                }
-            }
-            if (UtilValidate.isNotEmpty(contactMechPurposeTypeId)) {
-                GenericValue partyContactMechPurpose = EntityQuery.use(delegator).from("PartyContactMechPurpose").where("partyId", customerPartyId,
-                        "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId).filterByDate().queryFirst();
-                if (partyContactMechPurpose == null) {
-                    serviceCtx.clear();
-                    result.clear();
+            if (UtilValidate.isNotEmpty(contactMechId)) {
+                //update postal address and purpose
+                if (UtilValidate.isNotEmpty(address1)) {
+                    serviceCtx = dctx.getModelService("updatePartyPostalAddress").makeValid(context, ModelService.IN_PARAM);
                     serviceCtx.put("partyId", customerPartyId);
-                    serviceCtx.put("contactMechId", contactMechId);
-                    serviceCtx.put("contactMechPurposeTypeId", contactMechPurposeTypeId);
+                    serviceCtx.put("stateProvinceGeoId", stateProvinceGeoId);
+                    serviceCtx.put("countryGeoId", countryGeoId);
                     serviceCtx.put("userLogin", userLogin);
-                    result = dispatcher.runSync("createPartyContactMechPurpose", serviceCtx);
+                    result = dispatcher.runSync("updatePartyPostalAddress", serviceCtx);
                     if (!ServiceUtil.isSuccess(result)) {
                         Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
                         return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
                     }
                 }
+                if (UtilValidate.isNotEmpty(contactMechPurposeTypeId)) {
+                    GenericValue partyContactMechPurpose = EntityQuery.use(delegator).from("PartyContactMechPurpose").where("partyId", customerPartyId,
+                            "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId).filterByDate().queryFirst();
+                    if (partyContactMechPurpose == null) {
+                        serviceCtx.clear();
+                        result.clear();
+                        serviceCtx.put("partyId", customerPartyId);
+                        serviceCtx.put("contactMechId", contactMechId);
+                        serviceCtx.put("contactMechPurposeTypeId", contactMechPurposeTypeId);
+                        serviceCtx.put("userLogin", userLogin);
+                        result = dispatcher.runSync("createPartyContactMechPurpose", serviceCtx);
+                        if (!ServiceUtil.isSuccess(result)) {
+                            Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
+                            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                        }
+                    }
+                }
+            } else {
+                //create postal address with purpose
+            serviceCtx = dctx.getModelService("createPartyPostalAddress").makeValid(context, ModelService.IN_PARAM);
+            serviceCtx.put("partyId", customerPartyId);
+            serviceCtx.put("stateProvinceGeoId", stateProvinceGeoId);
+            serviceCtx.put("countryGeoId", countryGeoId);
+            serviceCtx.put("userLogin", userLogin);
+            result = dispatcher.runSync("createPartyPostalAddress", serviceCtx);
+            if (!ServiceUtil.isSuccess(result)) {
+                Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+            }
             }
         } catch (GenericEntityException | GenericServiceException e) {
             Debug.logError(e, MODULE);

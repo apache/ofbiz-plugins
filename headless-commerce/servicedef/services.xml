@@ -212,7 +212,7 @@ under the License.
         <attribute name="paymentMethods" mode="OUT" type="List" optional="true"/>
     </service>
     <service name="createCustomerPostalAddress" engine="java"
-            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createCustomerPostalAddress">
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerPostalAddress">
         <description>To create the postal address with purpose</description>
         <attribute name="customerPartyId" mode="IN" type="String"/>
         <attribute name="toName" mode="IN" type="String" optional="true"/>
@@ -227,7 +227,7 @@ under the License.
         <attribute name="contactMechPurposeTypeId" mode="IN" type="String" optional="true"/>
     </service>
     <service name="updateCustomerPostalAddress" engine="java"
-            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="updateCustomerPostalAddress">
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerPostalAddress">
         <description>To update the postal address and to add a purpose</description>
         <attribute name="customerPartyId" mode="IN" type="String"/>
         <attribute name="contactMechId" mode="IN" type="String"/>
