@@ -894,7 +894,7 @@ public class CustomerServices {
             if (UtilValidate.isNotEmpty(contactMechPurposeTypeId)) {
                 //expiring party contact mech purpose only
                 GenericValue partyContactMech = EntityQuery.use(delegator).from("PartyContactMechPurpose").where("partyId", customerPartyId, "contactMechId", contactMechId,
-                        "contactMechPurposeTypeId" contactMechPurposeTypeId).filterByDate().queryFirst();
+                        "contactMechPurposeTypeId", contactMechPurposeTypeId).filterByDate().queryFirst();
                 if (partyContactMech != null) {
                     Map <String, Object> serviceCtx = dctx.getModelService("expirePartyContactMechPurpose").makeValid(partyContactMech, ModelService.IN_PARAM);
                     serviceCtx.put("partyId", customerPartyId);
