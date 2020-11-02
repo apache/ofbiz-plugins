@@ -243,10 +243,17 @@ under the License.
         <attribute name="contactMechPurposeTypeId" mode="IN" type="String" optional="true"/>
     </service>
     <service name="removeCustomerContactMech" engine="java"
-            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="removeCustomerContactMech">
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="removeCustomerContactMechAndPurpose">
         <description>To remove the the party contact mech</description>
         <attribute name="customerPartyId" mode="IN" type="String"/>
         <attribute name="contactMechId" mode="IN" type="String"/>
+    </service>
+    <service name="removeCustomerContactMechPurpose" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="removeCustomerContactMechAndPurpose">
+        <description>To remove the the party contact mech purpose</description>
+        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="contactMechId" mode="IN" type="String"/>
+        <attribute name="contactMechPurposeTypeId" mode="IN" type="String"/>
     </service>
     <service name="createCustomerTelecomNumber" engine="java"
             location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerTelecomNumber">
