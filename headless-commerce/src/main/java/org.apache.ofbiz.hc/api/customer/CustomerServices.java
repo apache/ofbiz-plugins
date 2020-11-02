@@ -832,22 +832,6 @@ public class CustomerServices {
                 Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
             }
-            String contactMechId = (String) result.get("contactMechId");
-
-            //assign purpose
-            if (UtilValidate.isNotEmpty(contactMechPurposeTypeId)) {
-                serviceCtx.clear();
-                result.clear();
-                serviceCtx.put("partyId", customerPartyId);
-                serviceCtx.put("contactMechId", contactMechId);
-                serviceCtx.put("contactMechPurposeTypeId", contactMechPurposeTypeId);
-                serviceCtx.put("userLogin", userLogin);
-                result = dispatcher.runSync("createPartyContactMechPurpose", serviceCtx);
-                if (!ServiceUtil.isSuccess(result)) {
-                    Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
-                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
-                }
-            }
         } catch (GenericEntityException | GenericServiceException e) {
             Debug.logError(e, MODULE);
             return ServiceUtil.returnError(e.getMessage());
@@ -861,6 +845,7 @@ public class CustomerServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String customerPartyId = (String) context.get("customerPartyId");
         String contactMechPurposeTypeId = (String) context.get("contactMechPurposeTypeId");
+        String contactMechId = (String) context.get("contactMechId");
         String address1 = (String) context.get("address1");
         String stateCode = (String) context.get("stateCode");
         String countryCode = (String) context.get("countryCode");
@@ -898,11 +883,12 @@ public class CustomerServices {
             }
             if (UtilValidate.isNotEmpty(contactMechPurposeTypeId)) {
                 GenericValue partyContactMechPurpose = EntityQuery.use(delegator).from("PartyContactMechPurpose").where("partyId", customerPartyId,
-                        "contactMechPurposeTypeId", contactMechPurposeTypeId).filterByDate().queryFirst();
+                        "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId).filterByDate().queryFirst();
                 if (partyContactMechPurpose == null) {
                     serviceCtx.clear();
                     result.clear();
                     serviceCtx.put("partyId", customerPartyId);
+                    serviceCtx.put("contactMechId", contactMechId);
                     serviceCtx.put("contactMechPurposeTypeId", contactMechPurposeTypeId);
                     serviceCtx.put("userLogin", userLogin);
                     result = dispatcher.runSync("createPartyContactMechPurpose", serviceCtx);
@@ -918,13 +904,12 @@ public class CustomerServices {
         }
         return ServiceUtil.returnSuccess();
     }
-    public static Map<String, Object> removeCustomerPostalAddress(DispatchContext dctx, Map<String, ? extends Object> context) {
+    public static Map<String, Object> removeCustomerContactMech(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String customerPartyId = (String) context.get("customerPartyId");
-        String contactMechPurposeTypeId = (String) context.get("contactMechPurposeTypeId");
 
         try {
             if (!CommonUtil.isValidCutomer(delegator, userLogin, customerPartyId)) {
@@ -932,27 +917,13 @@ public class CustomerServices {
                 Debug.logError(errorMessage, MODULE);
                 return ServiceUtil.returnError(errorMessage);
             }
-            //expiring the contact mech purpose only
-            if (UtilValidate.isNotEmpty(contactMechPurposeTypeId)) {
-                GenericValue partyContactMechPurpse = EntityQuery.use(delegator).from("PartyContactMechPurpse").where("partyId", customerPartyId, "contactMechPurposeTypeId", contactMechPurposeTypeId).filterByDate().queryFirst();
-                if (partyContactMechPurpse != null) {
-                    Map <String, Object> serviceCtx = dctx.getModelService("deletePartyContactMech").makeValid(partyContactMechPurpse, ModelService.IN_PARAM);
-                    serviceCtx.put("userLogin", userLogin);
-                    Map <String, Object> result = dispatcher.runSync("expirePartyContactMechPurpose", serviceCtx);
-                    if (!ServiceUtil.isSuccess(result)) {
-                        Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
-                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
-                    }
-                }
-            } else {
-                //expiring party contact mech only
-                Map <String, Object> serviceCtx = dctx.getModelService("deletePartyContactMech").makeValid(context, ModelService.IN_PARAM);
-                serviceCtx.put("partyId", customerPartyId);
-                Map <String, Object> result = dispatcher.runSync("deletePartyContactMech", serviceCtx);
-                if (!ServiceUtil.isSuccess(result)) {
-                    Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
-                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
-                }
+            //expiring party contact mech only
+            Map <String, Object> serviceCtx = dctx.getModelService("deletePartyContactMech").makeValid(context, ModelService.IN_PARAM);
+            serviceCtx.put("partyId", customerPartyId);
+            Map <String, Object> result = dispatcher.runSync("deletePartyContactMech", serviceCtx);
+            if (!ServiceUtil.isSuccess(result)) {
+                Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
             }
 
         } catch (GenericEntityException | GenericServiceException e) {
@@ -961,5 +932,68 @@ public class CustomerServices {
         }
         return ServiceUtil.returnSuccess();
     }
+    public static Map<String, Object> createUpdateCustomerTelecomNumber(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Locale locale = (Locale) context.get("locale");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String customerPartyId = (String) context.get("customerPartyId");
+        String contactMechPurposeTypeId = (String) context.get("contactMechPurposeTypeId");
+        String contactMechId = (String) context.get("contactMechId");
+        String contactNumber = (String) context.get("contactNumber");
+        Map <String, Object> serviceCtx = new HashMap<>();
+        Map <String, Object> result = new HashMap<>();
 
+
+        try {
+            if (!CommonUtil.isValidCutomer(delegator, userLogin, customerPartyId)) {
+                String errorMessage = UtilProperties.getMessage("HeadlessCommerceUiLabels", "HCAccessDeniedInvalidUser", locale);
+                Debug.logError(errorMessage, MODULE);
+                return ServiceUtil.returnError(errorMessage);
+            }
+
+            if (UtilValidate.isNotEmpty(contactMechId)) {
+                //upate telecom number and purpose
+                if (UtilValidate.isNotEmpty(contactNumber)) {
+                    serviceCtx = dctx.getModelService("updatePartyTelecomNumber").makeValid(context, ModelService.IN_PARAM);
+                    serviceCtx.put("partyId", customerPartyId);
+                    result = dispatcher.runSync("updatePartyTelecomNumber", serviceCtx);
+                    if (!ServiceUtil.isSuccess(result)) {
+                        Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
+                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                    }
+                }
+                if (UtilValidate.isNotEmpty(contactMechPurposeTypeId)) {
+                    GenericValue partyContactMechPurpose = EntityQuery.use(delegator).from("PartyContactMechPurpose").where("partyId", customerPartyId,
+                            "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId).filterByDate().queryFirst();
+                    if (partyContactMechPurpose == null) {
+                        serviceCtx.clear();
+                        result.clear();
+                        serviceCtx.put("partyId", customerPartyId);
+                        serviceCtx.put("contactMechId", contactMechId);
+                        serviceCtx.put("contactMechPurposeTypeId", contactMechPurposeTypeId);
+                        serviceCtx.put("userLogin", userLogin);
+                        result = dispatcher.runSync("createPartyContactMechPurpose", serviceCtx);
+                        if (!ServiceUtil.isSuccess(result)) {
+                            Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
+                            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                        }
+                    }
+                }
+            } else {
+                //create telecom number with purpose
+                serviceCtx = dctx.getModelService("createPartyTelecomNumber").makeValid(context, ModelService.IN_PARAM);
+                serviceCtx.put("partyId", customerPartyId);
+                result = dispatcher.runSync("createPartyTelecomNumber", serviceCtx);
+                if (!ServiceUtil.isSuccess(result)) {
+                    Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                }
+            }
+        } catch (GenericEntityException | GenericServiceException e) {
+            Debug.logError(e, MODULE);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        return ServiceUtil.returnSuccess();
+    }
 }

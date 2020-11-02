@@ -242,11 +242,35 @@ under the License.
         <attribute name="isDefault" mode="IN" type="String" optional="true"/>
         <attribute name="contactMechPurposeTypeId" mode="IN" type="String" optional="true"/>
     </service>
-    <service name="removeCustomerPostalAddress" engine="java"
-            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="removeCustomerPostalAddress">
-        <description>To remove the party contact mech purpose or the the party contact mech</description>
+    <service name="removeCustomerContactMech" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="removeCustomerContactMech">
+        <description>To remove the the party contact mech</description>
         <attribute name="customerPartyId" mode="IN" type="String"/>
         <attribute name="contactMechId" mode="IN" type="String"/>
+    </service>
+    <service name="createCustomerTelecomNumber" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerTelecomNumber">
+        <description>To create the telecom number with purpose</description>
+        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="countryCode" mode="IN" type="String" optional="true"/>
+        <attribute name="areaCode" mode="IN" type="String" optional="true"/>
+        <attribute name="contactNumber" mode="IN" type="String"/>
+        <attribute name="extension" mode="IN" type="String" optional="true"/>
+        <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
+        <attribute name="isDefault" mode="IN" type="String" optional="true"/>
+        <attribute name="contactMechPurposeTypeId" mode="IN" type="String" optional="true"/>
+    </service>
+    <service name="updateCustomerTelecomNumber" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerTelecomNumber">
+        <description>To update the telecom number and to add a purpose</description>
+        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="contactMechId" mode="IN" type="String"/>
+        <attribute name="countryCode" mode="IN" type="String" optional="true"/>
+        <attribute name="areaCode" mode="IN" type="String" optional="true"/>
+        <attribute name="contactNumber" mode="IN" type="String" optional="true"/>
+        <attribute name="extension" mode="IN" type="String" optional="true"/>
+        <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
+        <attribute name="isDefault" mode="IN" type="String" optional="true"/>
         <attribute name="contactMechPurposeTypeId" mode="IN" type="String" optional="true"/>
     </service>
 </services>
