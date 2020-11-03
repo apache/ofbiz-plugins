@@ -24,12 +24,6 @@
     <operation verb="put" path="/{customerPartyId}/addresses/{contactMechId}" description="Updates postal address">
       <service name="updateCustomerPostalAddress"/>
     </operation>
-    <operation verb="delete" path="/{customerPartyId}/addresses/{contactMechId}" description="Expires contact information">
-      <service name="removeCustomerContactMech"/>
-    </operation>
-    <operation verb="delete" path="/{customerPartyId}/contact-info/{contactMechId}/purposes/{contactMechPurposeTypeId}" description="Expires contact information purpose">
-      <service name="removeCustomerContactMechPurpose"/>
-    </operation>
     <operation verb="post" path="/{customerPartyId}/phones" description="Creates telecom number">
       <service name="createCustomerTelecomNumber"/>
     </operation>
@@ -41,6 +35,18 @@
     </operation>
     <operation verb="put" path="/{customerPartyId}/emails/{contactMechId}" description="Updates email address">
       <service name="updateCustomerEmailAddress"/>
+    </operation>
+    <operation verb="post" path="/{customerPartyId}/contact-info" description="Creates contact information">
+      <service name="createCustomerContactMech"/>
+    </operation>
+    <operation verb="put" path="/{customerPartyId}/contact-info/{contactMechId}" description="Updates contact information">
+      <service name="updateCustomerContactMech"/>
+    </operation>
+    <operation verb="delete" path="/{customerPartyId}/contact-info/{contactMechId}" description="Expires contact information">
+      <service name="removeCustomerContactMech"/>
+    </operation>
+    <operation verb="delete" path="/{customerPartyId}/contact-info/{contactMechId}/purposes/{contactMechPurposeTypeId}" description="Expires contact information purpose">
+      <service name="removeCustomerContactMechPurpose"/>
     </operation>
   </resource>
 </api>

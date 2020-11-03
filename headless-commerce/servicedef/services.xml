@@ -297,4 +297,21 @@ under the License.
         <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
         <attribute name="contactMechPurposeTypeId" mode="IN" type="String" optional="true"/>
     </service>
+    <service name="createCustomerContactMech" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerContactMech">
+        <description>To create contact mech</description>
+        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="contactMechTypeId" mode="IN" type="String"/>
+        <attribute name="infoString" mode="IN" type="String"/>
+        <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
+    </service>
+    <service name="updateCustomerContactMech" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerContactMech">
+        <description>To update contact mech</description>
+        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="contactMechTypeId" mode="IN" type="String"/>
+        <attribute name="contactMechId" mode="IN" type="String"/>
+        <attribute name="infoString" mode="IN" type="String" optional="true"/>
+        <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
+    </service>
 </services>

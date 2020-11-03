@@ -1049,4 +1049,51 @@ public class CustomerServices {
         }
         return ServiceUtil.returnSuccess();
     }
+    public static Map<String, Object> createUpdateCustomerContactMech(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Locale locale = (Locale) context.get("locale");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String customerPartyId = (String) context.get("customerPartyId");
+        String contactMechId = (String) context.get("contactMechId");
+        String infoString = (String) context.get("infoString");
+        Map <String, Object> serviceCtx = new HashMap<>();
+        Map <String, Object> result = new HashMap<>();
+
+
+        try {
+            if (!CommonUtil.isValidCutomer(delegator, userLogin, customerPartyId)) {
+                String errorMessage = UtilProperties.getMessage("HeadlessCommerceUiLabels", "HCAccessDeniedInvalidUser", locale);
+                Debug.logError(errorMessage, MODULE);
+                return ServiceUtil.returnError(errorMessage);
+            }
+
+            if (UtilValidate.isNotEmpty(contactMechId)) {
+                //update contact mech
+                if (UtilValidate.isNotEmpty(infoString)) {
+                    serviceCtx = dctx.getModelService("updatePartyContactMech").makeValid(context, ModelService.IN_PARAM);
+                    serviceCtx.put("partyId", customerPartyId);
+                    result = dispatcher.runSync("updatePartyContactMech", serviceCtx);
+                    if (!ServiceUtil.isSuccess(result)) {
+                        Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
+                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                    }
+                }
+            } else {
+                //create email address
+                serviceCtx = dctx.getModelService("createPartyContactMech").makeValid(context, ModelService.IN_PARAM);
+                serviceCtx.put("partyId", customerPartyId);
+                result = dispatcher.runSync("createPartyContactMech", serviceCtx);
+                if (!ServiceUtil.isSuccess(result)) {
+                    Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                }
+            }
+        } catch (GenericEntityException | GenericServiceException e) {
+            Debug.logError(e, MODULE);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        return ServiceUtil.returnSuccess();
+    }
+
 }
