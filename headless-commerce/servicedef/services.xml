@@ -280,4 +280,21 @@ under the License.
         <attribute name="isDefault" mode="IN" type="String" optional="true"/>
         <attribute name="contactMechPurposeTypeId" mode="IN" type="String" optional="true"/>
     </service>
+    <service name="createCustomerEmailAddress" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerEmailAddress">
+        <description>To create the telecom number</description>
+        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="emailAddress" mode="IN" type="String"/>
+        <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
+        <attribute name="contactMechPurposeTypeId" mode="IN" type="String" optional="true"/>
+    </service>
+    <service name="updateCustomerEmailAddress" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerEmailAddress">
+        <description>To update the email address</description>
+        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="contactMechId" mode="IN" type="String"/>
+        <attribute name="emailAddress" mode="IN" type="String" optional="true"/>
+        <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
+        <attribute name="contactMechPurposeTypeId" mode="IN" type="String" optional="true"/>
+    </service>
 </services>

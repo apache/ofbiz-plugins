@@ -985,4 +985,68 @@ public class CustomerServices {
         }
         return ServiceUtil.returnSuccess();
     }
+    public static Map<String, Object> createUpdateCustomerEmailAddress(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Locale locale = (Locale) context.get("locale");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String customerPartyId = (String) context.get("customerPartyId");
+        String contactMechPurposeTypeId = (String) context.get("contactMechPurposeTypeId");
+        String contactMechId = (String) context.get("contactMechId");
+        String emailAddress = (String) context.get("emailAddress");
+        Map <String, Object> serviceCtx = new HashMap<>();
+        Map <String, Object> result = new HashMap<>();
+
+
+        try {
+            if (!CommonUtil.isValidCutomer(delegator, userLogin, customerPartyId)) {
+                String errorMessage = UtilProperties.getMessage("HeadlessCommerceUiLabels", "HCAccessDeniedInvalidUser", locale);
+                Debug.logError(errorMessage, MODULE);
+                return ServiceUtil.returnError(errorMessage);
+            }
+
+            if (UtilValidate.isNotEmpty(contactMechId)) {
+                //update email address
+                if (UtilValidate.isNotEmpty(emailAddress)) {
+                    serviceCtx = dctx.getModelService("updatePartyEmailAddress").makeValid(context, ModelService.IN_PARAM);
+                    serviceCtx.put("partyId", customerPartyId);
+                    result = dispatcher.runSync("updatePartyEmailAddress", serviceCtx);
+                    if (!ServiceUtil.isSuccess(result)) {
+                        Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
+                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                    }
+                }
+                if (UtilValidate.isNotEmpty(contactMechPurposeTypeId)) {
+                    GenericValue partyContactMechPurpose = EntityQuery.use(delegator).from("PartyContactMechPurpose").where("partyId", customerPartyId,
+                            "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId).filterByDate().queryFirst();
+                    if (partyContactMechPurpose == null) {
+                        serviceCtx.clear();
+                        result.clear();
+                        serviceCtx.put("partyId", customerPartyId);
+                        serviceCtx.put("contactMechId", contactMechId);
+                        serviceCtx.put("contactMechPurposeTypeId", contactMechPurposeTypeId);
+                        serviceCtx.put("userLogin", userLogin);
+                        result = dispatcher.runSync("createPartyContactMechPurpose", serviceCtx);
+                        if (!ServiceUtil.isSuccess(result)) {
+                            Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
+                            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                        }
+                    }
+                }
+            } else {
+                //create email address
+                serviceCtx = dctx.getModelService("createPartyEmailAddress").makeValid(context, ModelService.IN_PARAM);
+                serviceCtx.put("partyId", customerPartyId);
+                result = dispatcher.runSync("createPartyEmailAddress", serviceCtx);
+                if (!ServiceUtil.isSuccess(result)) {
+                    Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+                }
+            }
+        } catch (GenericEntityException | GenericServiceException e) {
+            Debug.logError(e, MODULE);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        return ServiceUtil.returnSuccess();
+    }
 }
