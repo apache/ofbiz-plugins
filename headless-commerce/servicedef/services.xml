@@ -314,4 +314,101 @@ under the License.
         <attribute name="infoString" mode="IN" type="String" optional="true"/>
         <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
     </service>
+    <service name="createCustomerCreditCard" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerPaymentMethod">
+        <description>creates credit card</description>
+        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="address" mode="IN" type="Map" optional="true">
+            <attribute name="contactMechId" mode="IN" type="String" optional="true"/>
+            <attribute name="address1" mode="IN" type="String" optional="true"/>
+            <attribute name="address2" mode="IN" type="String" optional="true"/>
+            <attribute name="city" mode="IN" type="String" optional="true"/>
+            <attribute name="postalCode" mode="IN" type="String" optional="true"/>
+            <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
+            <attribute name="stateCode" mode="IN" type="String" optional="true"/>
+            <attribute name="countryCode" mode="IN" type="String" optional="true"/>
+        </attribute>
+        <attribute name="creditCard" mode="IN" type="Map" optional="true">
+            <attribute name="companyNameOnCard" mode="IN" type="String" optional="true"/>
+            <attribute name="titleOnCard" mode="IN" type="String" optional="false"/>
+            <attribute name="firstNameOnCard" mode="IN" type="String"/>
+            <attribute name="middleNameOnCard" mode="IN" type="String" optional="true"/>
+            <attribute name="lastNameOnCard" mode="IN" type="String"/>
+            <attribute name="suffixOnCard" mode="IN" type="String" optional="true"/>
+            <attribute name="cardNumber" mode="IN" type="String"/>
+            <attribute name="expireDate" mode="IN" type="String"/>
+        </attribute>
+    </service>
+    <service name="updateCustomerCreditCard" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerPaymentMethod">
+        <description>updates credit card</description>
+        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="paymentMethodId" mode="IN" type="String"/>
+        <attribute name="address" mode="IN" type="Map" optional="false">
+            <attribute name="contactMechId" mode="IN" type="String" optional="true"/>
+            <attribute name="address1" mode="IN" type="String" optional="true"/>
+            <attribute name="address2" mode="IN" type="String" optional="true"/>
+            <attribute name="city" mode="IN" type="String" optional="true"/>
+            <attribute name="postalCode" mode="IN" type="String" optional="true"/>
+            <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
+            <attribute name="stateCode" mode="IN" type="String" optional="true"/>
+            <attribute name="countryCode" mode="IN" type="String" optional="true"/>
+        </attribute>
+        <attribute name="creditCard" mode="IN" type="Map" optional="true">
+            <attribute name="companyNameOnCard" mode="IN" type="String" optional="true"/>
+            <attribute name="titleOnCard" mode="IN" type="String" optional="false"/>
+            <attribute name="firstNameOnCard" mode="IN" type="String"/>
+            <attribute name="middleNameOnCard" mode="IN" type="String" optional="true"/>
+            <attribute name="lastNameOnCard" mode="IN" type="String"/>
+            <attribute name="suffixOnCard" mode="IN" type="String" optional="true"/>
+            <attribute name="cardNumber" mode="IN" type="String"/>
+            <attribute name="expireDate" mode="IN" type="String"/>
+        </attribute>
+    </service>
+    <service name="createCustomerGiftCard" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerPaymentMethod">
+        <description>creates gift card</description>
+        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="giftCard" mode="IN" type="Map" optional="true">
+            <attribute name="cardNumber" mode="IN" type="String"/>
+            <attribute name="expireDate" mode="IN" type="String"/>
+        </attribute>
+    </service>
+    <service name="updateCustomerGiftCard" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerPaymentMethod">
+        <description>updates gift card</description>
+        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="paymentMethodId" mode="IN" type="String"/>
+        <attribute name="giftCard" mode="IN" type="Map" optional="true">
+            <attribute name="cardNumber" mode="IN" type="String"/>
+            <attribute name="expireDate" mode="IN" type="String"/>
+        </attribute>
+    </service>
+    <service name="createCustomerEftAccount" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerPaymentMethod">
+        <description>creates EFT account</description>
+        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="eftAccount" mode="IN" type="Map" optional="true">
+            <attribute name="bankName" mode="IN" type="String"/>
+            <attribute name="routingNumber" mode="IN" type="String"/>
+            <attribute name="accountType" mode="IN" type="String"/>
+            <attribute name="accountNumber" mode="IN" type="String"/>
+            <attribute name="nameOnAccount" mode="IN" type="String"/>
+            <attribute name="companyNameOnAccount" mode="IN" type="String"/>
+        </attribute>
+    </service>
+    <service name="updateCustomerEftAccount" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerPaymentMethod">
+        <description>updates EFT account</description>
+        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="paymentMethodId" mode="IN" type="String"/>
+        <attribute name="eftAccount" mode="IN" type="Map" optional="true">
+            <attribute name="bankName" mode="IN" type="String"/>
+            <attribute name="routingNumber" mode="IN" type="String"/>
+            <attribute name="accountType" mode="IN" type="String"/>
+            <attribute name="accountNumber" mode="IN" type="String"/>
+            <attribute name="nameOnAccount" mode="IN" type="String"/>
+            <attribute name="companyNameOnAccount" mode="IN" type="String"/>
+        </attribute>
+    </service>
 </services>

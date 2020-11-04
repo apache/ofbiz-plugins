@@ -48,5 +48,23 @@
     <operation verb="delete" path="/{customerPartyId}/contact-info/{contactMechId}/purposes/{contactMechPurposeTypeId}" description="Expires contact information purpose">
       <service name="removeCustomerContactMechPurpose"/>
     </operation>
+    <operation verb="post" path="/{customerPartyId}/credit-cards" description="Creates credit card">
+      <service name="createCustomerCreditCard"/>
+    </operation>
+    <operation verb="put" path="/{customerPartyId}/credit-cards/{paymentMethodId}" description="Updates credit cards">
+      <service name="updateCustomerCreditCard"/>
+    </operation>
+    <operation verb="post" path="/{customerPartyId}/gift-cards" description="Creates gift card">
+      <service name="createCustomerGiftCard"/>
+    </operation>
+    <operation verb="put" path="/{customerPartyId}/gift-cards/{paymentMethodId}" description="Updates gift cards">
+      <service name="updateCustomerGiftCard"/>
+    </operation>
+    <operation verb="post" path="/{customerPartyId}/eft-accounts" description="Creates EFT account">
+      <service name="createCustomerEftAccount"/>
+    </operation>
+    <operation verb="put" path="/{customerPartyId}/eft-accounts/{paymentMethodId}" description="Updates EFT account">
+      <service name="updateCustomerEftAccount"/>
+    </operation>
   </resource>
 </api>
