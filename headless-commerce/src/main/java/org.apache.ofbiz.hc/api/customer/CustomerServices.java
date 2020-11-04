@@ -169,11 +169,6 @@ public class CustomerServices {
         String customerPartyId = (String) context.get("customerPartyId");
 
         try {
-            if (!CommonUtil.isValidCutomer(delegator, userLogin, customerPartyId)) {
-                String errorMessage = UtilProperties.getMessage("HeadlessCommerceUiLabels", "HCAccessDeniedInvalidUser", locale);
-                Debug.logError(errorMessage, MODULE);
-                return ServiceUtil.returnError(errorMessage);
-            }
             Map<String, Object> serviceContext = dctx.getModelService("updatePassword").makeValid(context, ModelService.IN_PARAM);
             serviceContext.put("userLoginId", userLogin.getString("userLoginId"));
             serviceContext.put("userLogin", userLogin);
@@ -182,7 +177,7 @@ public class CustomerServices {
                 Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
             }
-        } catch (GenericEntityException | GenericServiceException e) {
+        } catch (GenericServiceException e) {
             Debug.logError(e, MODULE);
             return ServiceUtil.returnError(e.getMessage());
         }
@@ -612,11 +607,6 @@ public class CustomerServices {
                 filters = UtilMisc.toMap("showPersonalInformation", "Y", "showLoyaltyPoints", "Y", "showContactMechs", "N", "showPaymentMethods", "N", "showContactLists", "N", "showCommunications", "N");
             }
             response.put("filters", filters);
-            if (!CommonUtil.isValidCutomer(delegator, userLogin, customerPartyId)) {
-                String errorMessage = UtilProperties.getMessage("HeadlessCommerceUiLabels", "HCAccessDeniedInvalidUser", locale);
-                Debug.logError(errorMessage, MODULE);
-                return ServiceUtil.returnError(errorMessage);
-            }
             boolean showOld = "true".equals(showOldStr);
             GenericValue person = EntityQuery.use(delegator).from("Person").where("partyId", customerPartyId).queryFirst();
             if (person != null) {
@@ -739,11 +729,6 @@ public class CustomerServices {
         List<Map<String, Object>> paymentMethods = new ArrayList<>();
 
         try {
-            if (!CommonUtil.isValidCutomer(delegator, userLogin, customerPartyId)) {
-                String errorMessage = UtilProperties.getMessage("HeadlessCommerceUiLabels", "HCAccessDeniedInvalidUser", locale);
-                Debug.logError(errorMessage, MODULE);
-                return ServiceUtil.returnError(errorMessage);
-            }
             boolean showOld = "true".equals(showOldStr);
             List<Map<String, GenericValue>> paymentMethodValueMaps = PaymentWorker.getPartyPaymentMethodValueMaps(delegator, customerPartyId, showOld);
             for (Map<String, GenericValue> paymentMethodValueMap : paymentMethodValueMaps) {
@@ -809,12 +794,6 @@ public class CustomerServices {
         Map <String, Object> result = new HashMap<>();
 
         try {
-            if (!CommonUtil.isValidCutomer(delegator, userLogin, customerPartyId)) {
-                String errorMessage = UtilProperties.getMessage("HeadlessCommerceUiLabels", "HCAccessDeniedInvalidUser", locale);
-                Debug.logError(errorMessage, MODULE);
-                return ServiceUtil.returnError(errorMessage);
-            }
-
             String countryGeoId = CustomerHelper.getGeoId(delegator, countryCode, "COUNTRY");
             String stateProvinceGeoId = null;
             if (UtilValidate.isNotEmpty(stateCode)) {
@@ -886,11 +865,6 @@ public class CustomerServices {
         String contactMechId = (String) context.get("contactMechId");
 
         try {
-            if (!CommonUtil.isValidCutomer(delegator, userLogin, customerPartyId)) {
-                String errorMessage = UtilProperties.getMessage("HeadlessCommerceUiLabels", "HCAccessDeniedInvalidUser", locale);
-                Debug.logError(errorMessage, MODULE);
-                return ServiceUtil.returnError(errorMessage);
-            }
             if (UtilValidate.isNotEmpty(contactMechPurposeTypeId)) {
                 //expiring party contact mech purpose only
                 GenericValue partyContactMech = EntityQuery.use(delegator).from("PartyContactMechPurpose").where("partyId", customerPartyId, "contactMechId", contactMechId,
@@ -935,12 +909,6 @@ public class CustomerServices {
 
 
         try {
-            if (!CommonUtil.isValidCutomer(delegator, userLogin, customerPartyId)) {
-                String errorMessage = UtilProperties.getMessage("HeadlessCommerceUiLabels", "HCAccessDeniedInvalidUser", locale);
-                Debug.logError(errorMessage, MODULE);
-                return ServiceUtil.returnError(errorMessage);
-            }
-
             if (UtilValidate.isNotEmpty(contactMechId)) {
                 //upate telecom number and purpose
                 if (UtilValidate.isNotEmpty(contactNumber)) {
@@ -999,12 +967,6 @@ public class CustomerServices {
 
 
         try {
-            if (!CommonUtil.isValidCutomer(delegator, userLogin, customerPartyId)) {
-                String errorMessage = UtilProperties.getMessage("HeadlessCommerceUiLabels", "HCAccessDeniedInvalidUser", locale);
-                Debug.logError(errorMessage, MODULE);
-                return ServiceUtil.returnError(errorMessage);
-            }
-
             if (UtilValidate.isNotEmpty(contactMechId)) {
                 //update email address
                 if (UtilValidate.isNotEmpty(emailAddress)) {
@@ -1062,12 +1024,6 @@ public class CustomerServices {
 
 
         try {
-            if (!CommonUtil.isValidCutomer(delegator, userLogin, customerPartyId)) {
-                String errorMessage = UtilProperties.getMessage("HeadlessCommerceUiLabels", "HCAccessDeniedInvalidUser", locale);
-                Debug.logError(errorMessage, MODULE);
-                return ServiceUtil.returnError(errorMessage);
-            }
-
             if (UtilValidate.isNotEmpty(contactMechId)) {
                 //update contact mech
                 if (UtilValidate.isNotEmpty(infoString)) {
@@ -1089,7 +1045,7 @@ public class CustomerServices {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
                 }
             }
-        } catch (GenericEntityException | GenericServiceException e) {
+        } catch (GenericServiceException e) {
             Debug.logError(e, MODULE);
             return ServiceUtil.returnError(e.getMessage());
         }
@@ -1111,12 +1067,6 @@ public class CustomerServices {
 
 
         try {
-            if (!CommonUtil.isValidCutomer(delegator, userLogin, customerPartyId)) {
-                String errorMessage = UtilProperties.getMessage("HeadlessCommerceUiLabels", "HCAccessDeniedInvalidUser", locale);
-                Debug.logError(errorMessage, MODULE);
-                return ServiceUtil.returnError(errorMessage);
-            }
-
             if (UtilValidate.isNotEmpty(creditCard)) {
                 paymentMethodId = (String) creditCard.get("paymentMethodId");
                 if (UtilValidate.isNotEmpty(paymentMethodId)) {
@@ -1196,12 +1146,34 @@ public class CustomerServices {
                     }
                 }
             }
-        } catch (GenericEntityException | GenericServiceException e) {
+        } catch (GenericServiceException e) {
             Debug.logError(e, MODULE);
             return ServiceUtil.returnError(e.getMessage());
         }
         return ServiceUtil.returnSuccess();
     }
+    public static Map<String, Object> validateCustomer(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Locale locale = (Locale) context.get("locale");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String customerPartyId = (String) context.get("customerPartyId");
+        String errorMessage = "";
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        try {
+            if (!CommonUtil.isValidCutomer(delegator, userLogin, customerPartyId)) {
+                errorMessage = UtilProperties.getMessage("HeadlessCommerceUiLabels", "HCAccessDeniedInvalidUser", locale);
+                result = ServiceUtil.returnError(errorMessage);
+                result.put("hasPermission", false);
+                Debug.logError(errorMessage, MODULE);
+                return result;
+            }
+        } catch (GenericEntityException e)  {
+            Debug.logError(e, MODULE);
+            return ServiceUtil.returnError(e.getMessage());
+        }
 
-
+        result.put("hasPermission", true);
+        return result;
+    }
 }

@@ -24,6 +24,13 @@ under the License.
     <vendor></vendor>
     <version>1.0</version>
 
+    <service name="validateCustomer" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="validateCustomer">
+        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="hasPermission" type="Boolean" mode="OUT" optional="false">
+            <description>Contains true if the if the requesting user is valid.</description>
+        </attribute>
+    </service>
     <service name="getPasswordHint" engine="java"
             location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="getPasswordHint">
         <attribute name="username" mode="IN" type="String"/>
@@ -36,6 +43,7 @@ under the License.
     </service>
     <service name="changePassword" engine="java"
             location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="changePassword">
+        <permission-service service-name="validateCustomer"/>
         <attribute name="customerPartyId" mode="IN" type="String"/>
         <attribute name="currentPassword" mode="IN" type="String"/>
         <attribute name="newPassword" mode="IN" type="String"/>
@@ -99,6 +107,7 @@ under the License.
     </service>
     <service name="getCustomerProfile" engine="java"
             location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="getCustomerProfile">
+        <permission-service service-name="validateCustomer"/>
         <attribute name="customerPartyId" mode="INOUT" type="String"/>
         <attribute name="showOld" mode="IN" type="String" optional="true"/>
         <attribute name="filters" mode="INOUT" type="Map" optional="true"/>
@@ -207,6 +216,7 @@ under the License.
     </service>
     <service name="getPartyPaymentMethods" engine="java"
             location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="getPartyPaymentMethods">
+        <permission-service service-name="validateCustomer"/>
         <attribute name="customerPartyId" mode="IN" type="String"/>
         <attribute name="showOld" mode="IN" type="String" optional="true"/>
         <attribute name="paymentMethods" mode="OUT" type="List" optional="true"/>
@@ -214,6 +224,7 @@ under the License.
     <service name="createCustomerPostalAddress" engine="java"
             location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerPostalAddress">
         <description>To create the postal address with purpose</description>
+        <permission-service service-name="validateCustomer"/>
         <attribute name="customerPartyId" mode="IN" type="String"/>
         <attribute name="toName" mode="IN" type="String" optional="true"/>
         <attribute name="address1" mode="IN" type="String"/>
@@ -229,6 +240,7 @@ under the License.
     <service name="updateCustomerPostalAddress" engine="java"
             location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerPostalAddress">
         <description>To update the postal address and to add a purpose</description>
+        <permission-service service-name="validateCustomer"/>
         <attribute name="customerPartyId" mode="IN" type="String"/>
         <attribute name="contactMechId" mode="IN" type="String"/>
         <attribute name="toName" mode="IN" type="String" optional="true"/>
@@ -245,12 +257,14 @@ under the License.
     <service name="removeCustomerContactMech" engine="java"
             location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="removeCustomerContactMechAndPurpose">
         <description>To remove the the party contact mech</description>
+        <permission-service service-name="validateCustomer"/>
         <attribute name="customerPartyId" mode="IN" type="String"/>
         <attribute name="contactMechId" mode="IN" type="String"/>
     </service>
     <service name="removeCustomerContactMechPurpose" engine="java"
             location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="removeCustomerContactMechAndPurpose">
         <description>To remove the the party contact mech purpose</description>
+        <permission-service service-name="validateCustomer"/>
         <attribute name="customerPartyId" mode="IN" type="String"/>
         <attribute name="contactMechId" mode="IN" type="String"/>
         <attribute name="contactMechPurposeTypeId" mode="IN" type="String"/>
@@ -258,6 +272,7 @@ under the License.
     <service name="createCustomerTelecomNumber" engine="java"
             location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerTelecomNumber">
         <description>To create the telecom number with purpose</description>
+        <permission-service service-name="validateCustomer"/>
         <attribute name="customerPartyId" mode="IN" type="String"/>
         <attribute name="countryCode" mode="IN" type="String" optional="true"/>
         <attribute name="areaCode" mode="IN" type="String" optional="true"/>
@@ -270,6 +285,7 @@ under the License.
     <service name="updateCustomerTelecomNumber" engine="java"
             location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerTelecomNumber">
         <description>To update the telecom number and to add a purpose</description>
+        <permission-service service-name="validateCustomer"/>
         <attribute name="customerPartyId" mode="IN" type="String"/>
         <attribute name="contactMechId" mode="IN" type="String"/>
         <attribute name="countryCode" mode="IN" type="String" optional="true"/>
@@ -283,6 +299,7 @@ under the License.
     <service name="createCustomerEmailAddress" engine="java"
             location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerEmailAddress">
         <description>To create the telecom number</description>
+        <permission-service service-name="validateCustomer"/>
         <attribute name="customerPartyId" mode="IN" type="String"/>
         <attribute name="emailAddress" mode="IN" type="String"/>
         <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
@@ -291,6 +308,7 @@ under the License.
     <service name="updateCustomerEmailAddress" engine="java"
             location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerEmailAddress">
         <description>To update the email address</description>
+        <permission-service service-name="validateCustomer"/>
         <attribute name="customerPartyId" mode="IN" type="String"/>
         <attribute name="contactMechId" mode="IN" type="String"/>
         <attribute name="emailAddress" mode="IN" type="String" optional="true"/>
@@ -300,6 +318,7 @@ under the License.
     <service name="createCustomerContactMech" engine="java"
             location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerContactMech">
         <description>To create contact mech</description>
+        <permission-service service-name="validateCustomer"/>
         <attribute name="customerPartyId" mode="IN" type="String"/>
         <attribute name="contactMechTypeId" mode="IN" type="String"/>
         <attribute name="infoString" mode="IN" type="String"/>
@@ -308,6 +327,7 @@ under the License.
     <service name="updateCustomerContactMech" engine="java"
             location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerContactMech">
         <description>To update contact mech</description>
+        <permission-service service-name="validateCustomer"/>
         <attribute name="customerPartyId" mode="IN" type="String"/>
         <attribute name="contactMechTypeId" mode="IN" type="String"/>
         <attribute name="contactMechId" mode="IN" type="String"/>
@@ -317,6 +337,7 @@ under the License.
     <service name="createCustomerCreditCard" engine="java"
             location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerPaymentMethod">
         <description>creates credit card</description>
+        <permission-service service-name="validateCustomer"/>
         <attribute name="customerPartyId" mode="IN" type="String"/>
         <attribute name="address" mode="IN" type="Map" optional="true">
             <attribute name="contactMechId" mode="IN" type="String" optional="true"/>
@@ -342,6 +363,7 @@ under the License.
     <service name="updateCustomerCreditCard" engine="java"
             location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerPaymentMethod">
         <description>updates credit card</description>
+        <permission-service service-name="validateCustomer"/>
         <attribute name="customerPartyId" mode="IN" type="String"/>
         <attribute name="paymentMethodId" mode="IN" type="String"/>
         <attribute name="address" mode="IN" type="Map" optional="false">
@@ -368,6 +390,7 @@ under the License.
     <service name="createCustomerGiftCard" engine="java"
             location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerPaymentMethod">
         <description>creates gift card</description>
+        <permission-service service-name="validateCustomer"/>
         <attribute name="customerPartyId" mode="IN" type="String"/>
         <attribute name="giftCard" mode="IN" type="Map" optional="true">
             <attribute name="cardNumber" mode="IN" type="String"/>
@@ -377,6 +400,7 @@ under the License.
     <service name="updateCustomerGiftCard" engine="java"
             location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerPaymentMethod">
         <description>updates gift card</description>
+        <permission-service service-name="validateCustomer"/>
         <attribute name="customerPartyId" mode="IN" type="String"/>
         <attribute name="paymentMethodId" mode="IN" type="String"/>
         <attribute name="giftCard" mode="IN" type="Map" optional="true">
@@ -387,6 +411,7 @@ under the License.
     <service name="createCustomerEftAccount" engine="java"
             location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerPaymentMethod">
         <description>creates EFT account</description>
+        <permission-service service-name="validateCustomer"/>
         <attribute name="customerPartyId" mode="IN" type="String"/>
         <attribute name="eftAccount" mode="IN" type="Map" optional="true">
             <attribute name="bankName" mode="IN" type="String"/>
@@ -400,6 +425,7 @@ under the License.
     <service name="updateCustomerEftAccount" engine="java"
             location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerPaymentMethod">
         <description>updates EFT account</description>
+        <permission-service service-name="validateCustomer"/>
         <attribute name="customerPartyId" mode="IN" type="String"/>
         <attribute name="paymentMethodId" mode="IN" type="String"/>
         <attribute name="eftAccount" mode="IN" type="Map" optional="true">
