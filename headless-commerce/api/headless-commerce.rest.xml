@@ -54,17 +54,26 @@
     <operation verb="put" path="/{customerPartyId}/credit-cards/{paymentMethodId}" description="Updates credit cards">
       <service name="updateCustomerCreditCard"/>
     </operation>
+    <operation verb="delete" path="/{customerPartyId}/credit-cards/{paymentMethodId}" description="Deletes credit cards">
+      <service name="deleteCustomerPaymentMethod"/>
+    </operation>
     <operation verb="post" path="/{customerPartyId}/gift-cards" description="Creates gift card">
       <service name="createCustomerGiftCard"/>
     </operation>
     <operation verb="put" path="/{customerPartyId}/gift-cards/{paymentMethodId}" description="Updates gift cards">
       <service name="updateCustomerGiftCard"/>
     </operation>
+    <operation verb="delete" path="/{customerPartyId}/gift-cards/{paymentMethodId}" description="Deletes gift cards">
+      <service name="deleteCustomerPaymentMethod"/>
+    </operation>
     <operation verb="post" path="/{customerPartyId}/eft-accounts" description="Creates EFT account">
       <service name="createCustomerEftAccount"/>
     </operation>
     <operation verb="put" path="/{customerPartyId}/eft-accounts/{paymentMethodId}" description="Updates EFT account">
       <service name="updateCustomerEftAccount"/>
+    </operation>
+    <operation verb="delete" path="/{customerPartyId}/eft-accounts/{paymentMethodId}" description="Deletes EFT account">
+      <service name="deleteCustomerPaymentMethod"/>
     </operation>
   </resource>
 </api>

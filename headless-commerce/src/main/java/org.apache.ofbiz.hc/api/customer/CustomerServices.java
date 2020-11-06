@@ -1101,6 +1101,27 @@ public class CustomerServices {
         }
         return ServiceUtil.returnSuccess();
     }
+    public static Map<String, Object> deleteCustomerPaymentMethod(DispatchContext dctx, Map<String, ? extends Object> context) {
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String customerPartyId = (String) context.get("customerPartyId");
+        String paymentMethodId = (String) context.get("paymentMethodId");
+
+        try {
+            Map <String, Object> serviceCtx = dctx.getModelService("deletePaymentMethod").makeValid(context, ModelService.IN_PARAM);
+            serviceCtx.put("partyId", customerPartyId);
+            serviceCtx.put("userLogin", userLogin);
+            Map <String, Object> result = dispatcher.runSync("deletePaymentMethod", serviceCtx);
+            if (!ServiceUtil.isSuccess(result)) {
+                Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+            }
+        } catch (GenericServiceException e) {
+            Debug.logError(e, MODULE);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        return ServiceUtil.returnSuccess();
+    }
     public static Map<String, Object> validateCustomer(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         Locale locale = (Locale) context.get("locale");

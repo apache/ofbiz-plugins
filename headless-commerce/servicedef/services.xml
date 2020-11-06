@@ -437,4 +437,12 @@ under the License.
             <attribute name="companyNameOnAccount" mode="IN" type="String"/>
         </attribute>
     </service>
+    <service name="deleteCustomerPaymentMethod" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="deleteCustomerPaymentMethod">
+        <description>delete payment method(credit card, giftt card, EFT account)</description>
+        <permission-service service-name="validateCustomer"/>
+        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="paymentMethodId" mode="IN" type="String"/>
+    </service>
+
 </services>
