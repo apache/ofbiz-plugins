@@ -162,11 +162,8 @@ public class CustomerServices {
         return ServiceUtil.returnSuccess(UtilProperties.getMessage(SECRESOURCE, "loginevents.new_password_sent_check_email", locale));
     }
     public static Map<String, Object> changePassword(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        String customerPartyId = (String) context.get("customerPartyId");
 
         try {
             Map<String, Object> serviceContext = dctx.getModelService("updatePassword").makeValid(context, ModelService.IN_PARAM);
@@ -595,7 +592,6 @@ public class CustomerServices {
     public static Map<String, Object> getCustomerProfile(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String customerPartyId = (String) context.get("customerPartyId");
         String showOldStr = (String) context.get("showOld");
@@ -721,8 +717,6 @@ public class CustomerServices {
     }
     public static Map<String, Object> getPartyPaymentMethods(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
-        Locale locale = (Locale) context.get("locale");
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
         String customerPartyId = (String) context.get("customerPartyId");
         String showOldStr = (String) context.get("showOld");
         Map <String, Object> result = ServiceUtil.returnSuccess();
@@ -858,7 +852,6 @@ public class CustomerServices {
     public static Map<String, Object> removeCustomerContactMechAndPurpose(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String customerPartyId = (String) context.get("customerPartyId");
         String contactMechPurposeTypeId = (String) context.get("contactMechPurposeTypeId");
@@ -898,7 +891,6 @@ public class CustomerServices {
     public static Map<String, Object> createUpdateCustomerTelecomNumber(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String customerPartyId = (String) context.get("customerPartyId");
         String contactMechPurposeTypeId = (String) context.get("contactMechPurposeTypeId");
@@ -956,7 +948,6 @@ public class CustomerServices {
     public static Map<String, Object> createUpdateCustomerEmailAddress(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String customerPartyId = (String) context.get("customerPartyId");
         String contactMechPurposeTypeId = (String) context.get("contactMechPurposeTypeId");
@@ -1012,24 +1003,18 @@ public class CustomerServices {
         return ServiceUtil.returnSuccess();
     }
     public static Map<String, Object> createUpdateCustomerContactMech(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        Locale locale = (Locale) context.get("locale");
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
         String customerPartyId = (String) context.get("customerPartyId");
         String contactMechId = (String) context.get("contactMechId");
         String infoString = (String) context.get("infoString");
-        Map <String, Object> serviceCtx = new HashMap<>();
-        Map <String, Object> result = new HashMap<>();
-
 
         try {
             if (UtilValidate.isNotEmpty(contactMechId)) {
                 //update contact mech
                 if (UtilValidate.isNotEmpty(infoString)) {
-                    serviceCtx = dctx.getModelService("updatePartyContactMech").makeValid(context, ModelService.IN_PARAM);
+                    Map <String, Object> serviceCtx = dctx.getModelService("updatePartyContactMech").makeValid(context, ModelService.IN_PARAM);
                     serviceCtx.put("partyId", customerPartyId);
-                    result = dispatcher.runSync("updatePartyContactMech", serviceCtx);
+                    Map <String, Object> result = dispatcher.runSync("updatePartyContactMech", serviceCtx);
                     if (!ServiceUtil.isSuccess(result)) {
                         Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
                         return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
@@ -1037,9 +1022,9 @@ public class CustomerServices {
                 }
             } else {
                 //create email address
-                serviceCtx = dctx.getModelService("createPartyContactMech").makeValid(context, ModelService.IN_PARAM);
+                Map <String, Object> serviceCtx = dctx.getModelService("createPartyContactMech").makeValid(context, ModelService.IN_PARAM);
                 serviceCtx.put("partyId", customerPartyId);
-                result = dispatcher.runSync("createPartyContactMech", serviceCtx);
+                Map <String, Object> result = dispatcher.runSync("createPartyContactMech", serviceCtx);
                 if (!ServiceUtil.isSuccess(result)) {
                     Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
@@ -1052,9 +1037,7 @@ public class CustomerServices {
         return ServiceUtil.returnSuccess();
     }
     public static Map<String, Object> createUpdateCustomerPaymentMethod(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String customerPartyId = (String) context.get("customerPartyId");
         Map<String, Object> creditCard = UtilGenerics.cast(context.get("creditCard"));
@@ -1154,15 +1137,13 @@ public class CustomerServices {
     }
     public static Map<String, Object> validateCustomer(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
-        LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String customerPartyId = (String) context.get("customerPartyId");
-        String errorMessage = "";
         Map<String, Object> result = ServiceUtil.returnSuccess();
         try {
             if (!CommonUtil.isValidCutomer(delegator, userLogin, customerPartyId)) {
-                errorMessage = UtilProperties.getMessage("HeadlessCommerceUiLabels", "HCAccessDeniedInvalidUser", locale);
+                String errorMessage = UtilProperties.getMessage("HeadlessCommerceUiLabels", "HCAccessDeniedInvalidUser", locale);
                 result = ServiceUtil.returnError(errorMessage);
                 result.put("hasPermission", false);
                 Debug.logError(errorMessage, MODULE);
