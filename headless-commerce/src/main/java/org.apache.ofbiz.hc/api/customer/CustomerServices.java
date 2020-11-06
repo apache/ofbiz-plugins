@@ -1044,34 +1044,20 @@ public class CustomerServices {
         Map<String, Object> giftCard = UtilGenerics.cast(context.get("giftCard"));
         Map<String, Object> eftAccount = UtilGenerics.cast(context.get("eftAccount"));
         Map<String, Object> address = UtilGenerics.cast(context.get("address"));
-        Map <String, Object> serviceCtx = new HashMap<>();
-        Map <String, Object> result = new HashMap<>();
-        String paymentMethodId = null;
-
 
         try {
             if (UtilValidate.isNotEmpty(creditCard)) {
-                paymentMethodId = (String) creditCard.get("paymentMethodId");
-                if (UtilValidate.isNotEmpty(paymentMethodId)) {
-                    serviceCtx = dctx.getModelService("updateCreditCard").makeValid(creditCard, ModelService.IN_PARAM);
-                    serviceCtx.put("partyId", customerPartyId);
-                    serviceCtx.put("userLogin", userLogin);
-                    result = dispatcher.runSync("updateCreditCard", serviceCtx);
-                    if (!ServiceUtil.isSuccess(result)) {
-                        Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
-                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
-                    }
-                } else {
-                    serviceCtx = dctx.getModelService("createCreditCard").makeValid(creditCard, ModelService.IN_PARAM);
-                    serviceCtx.put("partyId", customerPartyId);
-                    serviceCtx.put("userLogin", userLogin);
-                    result = dispatcher.runSync("createCreditCard", serviceCtx);
-                    if (!ServiceUtil.isSuccess(result)) {
-                        Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
-                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
-                    }
-                    paymentMethodId = (String) result.get("paymentMethodId");
+               String paymentMethodId = (String) creditCard.get("paymentMethodId");
+                String serviceName = UtilValidate.isNotEmpty(paymentMethodId) ? "updateCreditCard" : "createCreditCard";
+                Map <String, Object> serviceCtx = dctx.getModelService(serviceName).makeValid(creditCard, ModelService.IN_PARAM);
+                serviceCtx.put("partyId", customerPartyId);
+                serviceCtx.put("userLogin", userLogin);
+                Map <String, Object> result = dispatcher.runSync(serviceName, serviceCtx);
+                if (!ServiceUtil.isSuccess(result)) {
+                    Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
                 }
+                paymentMethodId = (String) result.get("paymentMethodId");
                 if (UtilValidate.isNotEmpty(address) && UtilValidate.isEmpty(address.get("contactMechId"))) {
                     serviceCtx.clear();
                     result.clear();
@@ -1087,46 +1073,26 @@ public class CustomerServices {
                     }
                 }
             } else if (UtilValidate.isNotEmpty(giftCard)) {
-                paymentMethodId = (String) giftCard.get("paymentMethodId");
-                if (UtilValidate.isNotEmpty(paymentMethodId)) {
-                    serviceCtx = dctx.getModelService("updateGiftCard").makeValid(giftCard, ModelService.IN_PARAM);
-                    serviceCtx.put("partyId", customerPartyId);
-                    serviceCtx.put("userLogin", userLogin);
-                    result = dispatcher.runSync("updateGiftCard", serviceCtx);
-                    if (!ServiceUtil.isSuccess(result)) {
-                        Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
-                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
-                    }
-                } else {
-                    serviceCtx = dctx.getModelService("createGiftCard").makeValid(giftCard, ModelService.IN_PARAM);
-                    serviceCtx.put("partyId", customerPartyId);
-                    serviceCtx.put("userLogin", userLogin);
-                    result = dispatcher.runSync("createGiftCard", serviceCtx);
-                    if (!ServiceUtil.isSuccess(result)) {
-                        Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
-                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
-                    }
+                String paymentMethodId = (String) giftCard.get("paymentMethodId");
+                String serviceName = UtilValidate.isNotEmpty(paymentMethodId) ? "updateGiftCard" : "createGiftCard";
+                Map <String, Object> serviceCtx = dctx.getModelService(serviceName).makeValid(giftCard, ModelService.IN_PARAM);
+                serviceCtx.put("partyId", customerPartyId);
+                serviceCtx.put("userLogin", userLogin);
+                Map <String, Object> result = dispatcher.runSync(serviceName, serviceCtx);
+                if (!ServiceUtil.isSuccess(result)) {
+                    Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
                 }
             } else if (UtilValidate.isNotEmpty(eftAccount)) {
-                paymentMethodId = (String) eftAccount.get("paymentMethodId");
-                if (UtilValidate.isNotEmpty(paymentMethodId)) {
-                    serviceCtx = dctx.getModelService("updateEftAccount").makeValid(eftAccount, ModelService.IN_PARAM);
-                    serviceCtx.put("partyId", customerPartyId);
-                    serviceCtx.put("userLogin", userLogin);
-                    result = dispatcher.runSync("updateEftAccount", serviceCtx);
-                    if (!ServiceUtil.isSuccess(result)) {
-                        Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
-                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
-                    }
-                } else {
-                    serviceCtx = dctx.getModelService("createEftAccount").makeValid(eftAccount, ModelService.IN_PARAM);
-                    serviceCtx.put("partyId", customerPartyId);
-                    serviceCtx.put("userLogin", userLogin);
-                    result = dispatcher.runSync("createEftAccount", serviceCtx);
-                    if (!ServiceUtil.isSuccess(result)) {
-                        Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
-                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
-                    }
+                String paymentMethodId = (String) eftAccount.get("paymentMethodId");
+                String serviceName = UtilValidate.isNotEmpty(paymentMethodId) ? "updateEftAccount" : "createEftAccount";
+                Map <String, Object> serviceCtx = dctx.getModelService(serviceName).makeValid(eftAccount, ModelService.IN_PARAM);
+                serviceCtx.put("partyId", customerPartyId);
+                serviceCtx.put("userLogin", userLogin);
+                Map <String, Object> result = dispatcher.runSync(serviceName, serviceCtx);
+                if (!ServiceUtil.isSuccess(result)) {
+                    Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
                 }
             }
         } catch (GenericServiceException e) {
