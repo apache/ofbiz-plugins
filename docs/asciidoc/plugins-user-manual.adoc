@@ -27,6 +27,8 @@ endif::[]
 :toc:
 :sectnums:
 
+include::../../assetmaint/src/docs/asciidoc/assetm.adoc[leveloffset=+1]
+
 include::../../birt/src/docs/asciidoc/birt.adoc[leveloffset=+1]
 
 include::../../ebay/src/docs/asciidoc/ebay.adoc[leveloffset=+1]
