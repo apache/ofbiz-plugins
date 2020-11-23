@@ -15,8 +15,8 @@
     <operation verb="post" path="/{customerPartyId}/change-password" description="Changes customer's account password">
       <service name="changePassword"/>
     </operation>
-    <operation verb="post" path="/{customerPartyId}/profile" description="Retrieves customer profile">
-      <service name="getCustomerProfile"/>
+    <operation verb="get" path="/{customerPartyId}/" description="Retrieves customer profile">
+      <service name="getCustomer"/>
     </operation>
     <operation verb="post" path="/{customerPartyId}/addresses" description="Creates postal address">
       <service name="createCustomerPostalAddress"/>

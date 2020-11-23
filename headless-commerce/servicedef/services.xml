@@ -85,12 +85,10 @@ under the License.
             location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="validateCreateCustomer">
         <implements service="createCustomer"/>
     </service>
-    <service name="getCustomerProfile" engine="java"
-            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="getCustomerProfile">
+    <service name="getCustomer" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="getCustomer">
         <permission-service service-name="validateCustomer"/>
         <attribute name="customerPartyId" mode="INOUT" type="String"/>
-        <attribute name="showOld" mode="IN" type="String" optional="true"/>
-        <attribute name="filters" mode="INOUT" type="Map" optional="true"/>
         <attribute name="personalInformation" mode="OUT" type="Map" optional="false">
             <attribute name="personalTitle" mode="OUT" type="String" optional="true"/>
             <attribute name="firstName" mode="OUT" type="String"/>

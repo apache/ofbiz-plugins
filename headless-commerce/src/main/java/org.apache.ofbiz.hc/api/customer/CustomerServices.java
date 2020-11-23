@@ -483,7 +483,7 @@ public class CustomerServices {
         }
         return ServiceUtil.returnSuccess();
     }
-    public static Map<String, Object> getCustomerProfile(DispatchContext dctx, Map<String, ? extends Object> context) {
+    public static Map<String, Object> getCustomer(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -493,15 +493,10 @@ public class CustomerServices {
         Map <String, Object> response = ServiceUtil.returnSuccess();
 
         try {
-            if (UtilValidate.isEmpty(filters)) {
-                filters = UtilMisc.toMap("showPersonalInformation", "Y", "showLoyaltyPoints", "Y", "showContactMechs", "N", "showPaymentMethods", "N", "showContactLists", "N", "showCommunications", "N");
-            }
-            response.put("filters", filters);
             boolean showOld = "true".equals(showOldStr);
             GenericValue person = EntityQuery.use(delegator).from("Person").where("partyId", customerPartyId).queryFirst();
             if (person != null) {
                 response.put("customerPartyId", customerPartyId);
-                if ("Y".equals(filters.get("showPersonalInformation"))) {
                     Map<String, String> personalInformationMap = new HashMap<>();
                     personalInformationMap.put("personalTitle", person.getString("personalTitle"));
                     personalInformationMap.put("firstName", person.getString("firstName"));
@@ -510,11 +505,8 @@ public class CustomerServices {
                     personalInformationMap.put("suffix", person.getString("suffix"));
                     personalInformationMap.put("userName", userLogin.getString("userLoginId"));
                     response.put("personalInformation", personalInformationMap);
-                }
-                if ("Y".equals(filters.get("showLoyaltyPoints"))) {
                     response.put("loyaltyPoints", CustomerHelper.getLoyaltyPoints(dispatcher, customerPartyId, userLogin));
-                }
-                if ("Y".equals(filters.get("showContactMechs"))) {
+
                     List<Map<String, Object>> contactMechs = new ArrayList<>();
                     List<Map<String, Object>> partyContactMechValueMaps = ContactMechWorker.getPartyContactMechValueMaps(delegator, customerPartyId, showOld);
                     for (Map<String, Object> partyContactMechValueMap : partyContactMechValueMaps) {
@@ -582,9 +574,7 @@ public class CustomerServices {
                         contactMechs.add(infoMap);
                     }
                     response.put("contactMechs", contactMechs);
-                }
 
-                if ("Y".equals(filters.get("showPaymentMethods"))) {
                     //payment information
                     Map<String, Object> serviceContext = new HashMap<>();
                     serviceContext.put("customerPartyId", customerPartyId);
@@ -595,13 +585,8 @@ public class CustomerServices {
                         Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
                     }
                     response.put("paymentMethods", UtilGenerics.cast(result.get("paymentMethods")));
-                }
-                if ("Y".equals(filters.get("showContactLists"))) {
                     response.put("contactLists", CustomerHelper.getPartyContactLists(delegator, customerPartyId));
-                }
-                if ("Y".equals(filters.get("showCommunications"))) {
                     response.put("communications", CustomerHelper.getPartyCommunications(delegator, customerPartyId, true, false));
-                }
             }
         } catch (GenericEntityException | GenericServiceException e) {
             Debug.logError(e, MODULE);
