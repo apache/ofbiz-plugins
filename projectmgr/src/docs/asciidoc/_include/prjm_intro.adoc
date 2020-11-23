@@ -24,6 +24,7 @@ A task always has a single parentPhase. +
 Time registration is only done on a task level.
 
 Estimated and actual dates are only maintained at the task level. +
+Assign tasks to team members; report project activities with timesheets and calendars. +
 For reporting they are calculated to the higher levels. +
 Project views are created to support this.
 
