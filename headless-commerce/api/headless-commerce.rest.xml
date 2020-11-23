@@ -1,78 +1,42 @@
 <api description="Customers API" displayName="Customers API" name="CustomersAPI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="rest-api.xsd">
   <resource description="" displayName="" enabled="true" name="Customers Resource" path="/hcv1/customers">
-    <operation verb="get" path="/password-hint" description="Retrieves password hint">
-      <service name="getPasswordHint"/>
-    </operation>
-    <operation verb="post" path="/reset-password" description="Sends reset password mail">
-      <service name="sendResetPasswordEmail"/>
-    </operation>
     <operation verb="post" description="Creates Customer">
       <service name="createCustomer"/>
-    </operation>
-    <operation verb="put" path="/{customerPartyId}" description="Updates customer's personal information">
-      <service name="updatePerson"/>
-    </operation>
-    <operation verb="post" path="/{customerPartyId}/change-password" description="Changes customer's account password">
-      <service name="changePassword"/>
     </operation>
     <operation verb="get" path="/{customerPartyId}/" description="Retrieves customer profile">
       <service name="getCustomer"/>
     </operation>
-    <operation verb="post" path="/{customerPartyId}/addresses" description="Creates postal address">
+    <operation verb="put" path="/{customerPartyId}" description="Updates customer's personal information">
+      <service name="updatePerson"/>
+    </operation>
+    <operation verb="get" path="/{customerPartyId}/shipping-addresses" description="Retrieves shipping addresses">
       <service name="createCustomerPostalAddress"/>
     </operation>
-    <operation verb="put" path="/{customerPartyId}/addresses/{contactMechId}" description="Updates postal address">
+    <operation verb="post" path="/{customerPartyId}/shipping-addresses" description="Creates shipping address">
+      <service name="createCustomerPostalAddress"/>
+    </operation>
+    <operation verb="put" path="/{customerPartyId}/shipping-addresses/{contactMechId}" description="Updates shipping address">
       <service name="updateCustomerPostalAddress"/>
     </operation>
-    <operation verb="post" path="/{customerPartyId}/phones" description="Creates telecom number">
-      <service name="createCustomerTelecomNumber"/>
+    <operation verb="post" path="/{customerPartyId}/change-password" description="Changes customer's account password">
+      <service name="changePassword"/>
     </operation>
-    <operation verb="put" path="/{customerPartyId}/phones/{contactMechId}" description="Updates telecom number">
-      <service name="updateCustomerTelecomNumber"/>
+    <operation verb="post" path="/reset-password" description="Sends reset password mail">
+      <service name="sendResetPasswordEmail"/>
     </operation>
-    <operation verb="post" path="/{customerPartyId}/emails" description="Creates email address">
-      <service name="createCustomerEmailAddress"/>
-    </operation>
-    <operation verb="put" path="/{customerPartyId}/emails/{contactMechId}" description="Updates email address">
-      <service name="updateCustomerEmailAddress"/>
-    </operation>
-    <operation verb="post" path="/{customerPartyId}/contact-info" description="Creates contact information">
-      <service name="createCustomerContactMech"/>
-    </operation>
-    <operation verb="put" path="/{customerPartyId}/contact-info/{contactMechId}" description="Updates contact information">
-      <service name="updateCustomerContactMech"/>
-    </operation>
-    <operation verb="delete" path="/{customerPartyId}/contact-info/{contactMechId}" description="Expires contact information">
+    <operation verb="delete" path="/{customerPartyId}/shipping-addresses/{contactMechId}" description="Expires shipping address">
       <service name="removeCustomerContactMech"/>
     </operation>
-    <operation verb="delete" path="/{customerPartyId}/contact-info/{contactMechId}/purposes/{contactMechPurposeTypeId}" description="Expires contact information purpose">
-      <service name="removeCustomerContactMechPurpose"/>
+    <operation verb="get" path="/{customerPartyId}/payment-methods" description="Get payment methods(credit card, gift card, eft account)">
+      <service name="getPartyPaymentMethods"/>
     </operation>
-    <operation verb="post" path="/{customerPartyId}/credit-cards" description="Creates credit card">
-      <service name="createCustomerCreditCard"/>
+    <operation verb="post" path="/{customerPartyId}/payment-methods" description="Creates payment method(credit card, gift card, eft account)">
+      <service name="createCustomerPaymentMethod"/>
     </operation>
-    <operation verb="put" path="/{customerPartyId}/credit-cards/{paymentMethodId}" description="Updates credit cards">
-      <service name="updateCustomerCreditCard"/>
+    <operation verb="put" path="/{customerPartyId}/payment-methods/{paymentMethodId}" description="Updates payment method(credit card, gift card, eft account)">
+      <service name="updateCustomerPaymentMethod"/>
     </operation>
-    <operation verb="delete" path="/{customerPartyId}/credit-cards/{paymentMethodId}" description="Deletes credit cards">
-      <service name="deleteCustomerPaymentMethod"/>
-    </operation>
-    <operation verb="post" path="/{customerPartyId}/gift-cards" description="Creates gift card">
-      <service name="createCustomerGiftCard"/>
-    </operation>
-    <operation verb="put" path="/{customerPartyId}/gift-cards/{paymentMethodId}" description="Updates gift cards">
-      <service name="updateCustomerGiftCard"/>
-    </operation>
-    <operation verb="delete" path="/{customerPartyId}/gift-cards/{paymentMethodId}" description="Deletes gift cards">
-      <service name="deleteCustomerPaymentMethod"/>
-    </operation>
-    <operation verb="post" path="/{customerPartyId}/eft-accounts" description="Creates EFT account">
-      <service name="createCustomerEftAccount"/>
-    </operation>
-    <operation verb="put" path="/{customerPartyId}/eft-accounts/{paymentMethodId}" description="Updates EFT account">
-      <service name="updateCustomerEftAccount"/>
-    </operation>
-    <operation verb="delete" path="/{customerPartyId}/eft-accounts/{paymentMethodId}" description="Deletes EFT account">
+    <operation verb="delete" path="/{customerPartyId}/payment-methods/{paymentMethodId}" description="Deletes payment method(credit card, gift card, eft account)">
       <service name="deleteCustomerPaymentMethod"/>
     </operation>
   </resource>
