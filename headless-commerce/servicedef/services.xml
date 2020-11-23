@@ -74,26 +74,6 @@ under the License.
             <attribute name="country" mode="IN" type="String"/>
             <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
         </attribute>
-        <attribute name="homePhone" mode="IN" type="Map" optional="true">
-            <attribute name="countryCode" mode="IN" type="String" optional="true"/>
-            <attribute name="areaCode" mode="IN" type="String" optional="true"/>
-            <attribute name="contactNumber" mode="IN" type="String"/>
-            <attribute name="extension" mode="IN" type="String" optional="true"/>
-            <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
-        </attribute>
-        <attribute name="workPhone" mode="IN" type="Map" optional="true">
-            <attribute name="countryCode" mode="IN" type="String" optional="true"/>
-            <attribute name="areaCode" mode="IN" type="String" optional="true"/>
-            <attribute name="contactNumber" mode="IN" type="String"/>
-            <attribute name="extension" mode="IN" type="String" optional="true"/>
-            <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
-        </attribute>
-        <attribute name="faxNumber" mode="IN" type="Map" optional="true">
-            <attribute name="countryCode" mode="IN" type="String" optional="true"/>
-            <attribute name="areaCode" mode="IN" type="String" optional="true"/>
-            <attribute name="contactNumber" mode="IN" type="String"/>
-            <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
-        </attribute>
         <attribute name="mobilePhone" mode="IN" type="Map" optional="true">
             <attribute name="countryCode" mode="IN" type="String" optional="true"/>
             <attribute name="areaCode" mode="IN" type="String" optional="true"/>

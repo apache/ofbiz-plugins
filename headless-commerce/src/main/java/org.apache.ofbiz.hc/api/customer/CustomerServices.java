@@ -196,9 +196,6 @@ public class CustomerServices {
         String confirmPassword = (String) context.get("confirmPassword");
         String passwordHint = (String) context.get("passwordHint");
         Map<String, String> shippingAddress = UtilGenerics.cast(context.get("shippingAddress"));
-        Map<String, String> homePhone = UtilGenerics.cast(context.get("homePhone"));
-        Map<String, String> workPhone = UtilGenerics.cast(context.get("workPhone"));
-        Map<String, String> faxNumber = UtilGenerics.cast(context.get("faxNumber"));
         Map<String, String> mobilePhone = UtilGenerics.cast(context.get("mobilePhone"));
         List<String> errorList;
         GenericValue productStore = null;
@@ -300,88 +297,6 @@ public class CustomerServices {
                 }
             }
 
-            //home phone
-            if (UtilValidate.isNotEmpty(homePhone)) {
-                serviceCtx.clear();
-                serviceCtx = dctx.getModelService("createPartyTelecomNumber").makeValid(homePhone, ModelService.IN_PARAM);
-                serviceCtx.put("partyId", userPartyId);
-                serviceCtx.put("userLogin", createdUserLogin);
-                result = dispatcher.runSync("createPartyTelecomNumber", serviceCtx);
-                if (!ServiceUtil.isSuccess(result)) {
-                    Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
-                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
-                }
-                String contactMechId = (String) result.get("contactMechId");
-
-                serviceCtx.clear();
-                serviceCtx.put("partyId", userPartyId);
-                serviceCtx.put("contactMechId", contactMechId);
-                serviceCtx.put("contactMechPurposeTypeId", "PHONE_HOME");
-                serviceCtx.put("userLogin", createdUserLogin);
-                result = dispatcher.runSync("createPartyContactMechPurpose", serviceCtx);
-                if (!ServiceUtil.isSuccess(result)) {
-                    Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
-                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
-                }
-                //also consider as primary phone
-                serviceCtx.put("contactMechPurposeTypeId", "PRIMARY_PHONE");
-                serviceCtx.put("userLogin", createdUserLogin);
-                result = dispatcher.runSync("createPartyContactMechPurpose", serviceCtx);
-                if (!ServiceUtil.isSuccess(result)) {
-                    Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
-                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
-                }
-            }
-
-            //work phone
-            if (UtilValidate.isNotEmpty(workPhone)) {
-                serviceCtx.clear();
-                serviceCtx = dctx.getModelService("createPartyTelecomNumber").makeValid(workPhone, ModelService.IN_PARAM);
-                serviceCtx.put("partyId", userPartyId);
-                serviceCtx.put("userLogin", createdUserLogin);
-                result = dispatcher.runSync("createPartyTelecomNumber", serviceCtx);
-                if (!ServiceUtil.isSuccess(result)) {
-                    Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
-                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
-                }
-                String contactMechId = (String) result.get("contactMechId");
-
-                serviceCtx.clear();
-                serviceCtx.put("partyId", userPartyId);
-                serviceCtx.put("contactMechId", contactMechId);
-                serviceCtx.put("contactMechPurposeTypeId", "PHONE_WORK");
-                serviceCtx.put("userLogin", createdUserLogin);
-                result = dispatcher.runSync("createPartyContactMechPurpose", serviceCtx);
-                if (!ServiceUtil.isSuccess(result)) {
-                    Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
-                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
-                }
-            }
-
-            //fax number
-            if (UtilValidate.isNotEmpty(faxNumber)) {
-                serviceCtx.clear();
-                serviceCtx = dctx.getModelService("createPartyTelecomNumber").makeValid(faxNumber, ModelService.IN_PARAM);
-                serviceCtx.put("partyId", userPartyId);
-                serviceCtx.put("userLogin", createdUserLogin);
-                result = dispatcher.runSync("createPartyTelecomNumber", serviceCtx);
-                if (!ServiceUtil.isSuccess(result)) {
-                    Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
-                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
-                }
-                String contactMechId = (String) result.get("contactMechId");
-                serviceCtx.clear();
-                serviceCtx.put("partyId", userPartyId);
-                serviceCtx.put("contactMechId", contactMechId);
-                serviceCtx.put("contactMechPurposeTypeId", "FAX_NUMBER");
-                serviceCtx.put("userLogin", createdUserLogin);
-                result = dispatcher.runSync("createPartyContactMechPurpose", serviceCtx);
-                if (!ServiceUtil.isSuccess(result)) {
-                    Debug.logError(ServiceUtil.getErrorMessage(result), MODULE);
-                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
-                }
-            }
-
 
             //mobile phone
             if (UtilValidate.isNotEmpty(mobilePhone)) {
@@ -431,16 +346,7 @@ public class CustomerServices {
                 }
             }
 
-            //club number
             GenericValue person = EntityQuery.use(delegator).from("Person").where("partyId", userPartyId).queryOne();
-            if (UtilValidate.isNotEmpty(context.get("requireClub"))) {
-                if (person != null && UtilValidate.isEmpty(context.get("clubNumber")) ) {
-                    String clubId = org.apache.ofbiz.party.party.PartyWorker.createClubId(delegator, "999", 13);
-                    person.set("memberId", clubId);
-                    person.store();
-                }
-            }
-
             if (productStore != null) {
                 //Associate to Product Store
                 String productStoreId = productStore.getString("productStoreId");
@@ -505,9 +411,6 @@ public class CustomerServices {
         String passwordHint = (String) context.get("passwordHint");
         String confirmPassword = (String) context.get("confirmPassword");
         Map<String, String> shippingAddress = UtilGenerics.cast(context.get("shippingAddress"));
-        Map<String, String> homePhone = UtilGenerics.cast(context.get("homePhone"));
-        Map<String, String> workPhone = UtilGenerics.cast(context.get("workPhone"));
-        Map<String, String> faxNumber = UtilGenerics.cast(context.get("faxNumber"));
         Map<String, String> mobilePhone = UtilGenerics.cast(context.get("mobilePhone"));
         List<String> errorList = new ArrayList<>();
 
@@ -551,15 +454,6 @@ public class CustomerServices {
                     }
                 }
                 
-            }
-            if (UtilValidate.isNotEmpty(homePhone) && UtilValidate.isEmpty(homePhone.get("contactNumber"))) {
-                errorList.add(UtilProperties.getMessage("PartyUiLabels", "PartyContactNumberMissing", locale));
-            }
-            if (UtilValidate.isNotEmpty(workPhone) && UtilValidate.isEmpty(workPhone.get("contactNumber"))) {
-                errorList.add(UtilProperties.getMessage("PartyUiLabels", "PartyContactNumberMissing", locale));
-            }
-            if (UtilValidate.isNotEmpty(faxNumber) && UtilValidate.isEmpty(faxNumber.get("contactNumber"))) {
-                errorList.add(UtilProperties.getMessage("PartyUiLabels", "PartyContactNumberMissing", locale));
             }
             if (UtilValidate.isNotEmpty(mobilePhone) && UtilValidate.isEmpty(mobilePhone.get("contactNumber"))) {
                 errorList.add(UtilProperties.getMessage("PartyUiLabels", "PartyContactNumberMissing", locale));
