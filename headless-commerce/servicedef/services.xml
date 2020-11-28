@@ -97,99 +97,10 @@ under the License.
             <attribute name="suffix" mode="OUT" type="String" optional="true"/>
             <attribute name="userName" mode="OUT" type="String" optional="true"/>
         </attribute>
-        <attribute name="contactMechs" mode="OUT" type="List" optional="true">
-            <attribute name="contactMech" mode="OUT" type="Map" optional="true">
-                <attribute name="contactMechId" mode="OUT" type="String"/>
-                <attribute name="address1" mode="OUT" type="String"/>
-                <attribute name="address2" mode="OUT" type="String" optional="true"/>
-                <attribute name="city" mode="OUT" type="String"/>
-                <attribute name="postalCode" mode="OUT" type="String"/>
-                <attribute name="countryCode" mode="OUT" type="String" optional="true"/>
-                <attribute name="areaCode" mode="OUT" type="String" optional="true"/>
-                <attribute name="contactNumber" mode="OUT" type="String"/>
-                <attribute name="extension" mode="OUT" type="String" optional="true"/>
-                <attribute name="infoString" mode="OUT" type="String" optional="true"/>
-                <attribute name="allowSolicitation" mode="OUT" type="String" optional="true"/>
-                <attribute name="isDefault" mode="OUT" type="String" optional="true"/>
-                <attribute name="state" mode="OUT" type="Map" optional="true">
-                    <attribute name="geoId" mode="OUT" type="String" optional="true"/>
-                    <attribute name="geoCode" mode="OUT" type="String" optional="true"/>
-                    <attribute name="geoName" mode="OUT" type="String" optional="true"/>
-                </attribute>
-                <attribute name="country" mode="OUT" type="Map">
-                    <attribute name="geoId" mode="OUT" type="String" optional="true"/>
-                    <attribute name="geoCode" mode="OUT" type="String" optional="true"/>
-                    <attribute name="geoName" mode="OUT" type="String" optional="true"/>
-                </attribute>
-                <attribute name="contactMechType" mode="OUT" type="Map" optional="true">
-                    <attribute name="contactMechTypeId" mode="OUT" type="String" optional="true"/>
-                    <attribute name="description" mode="OUT" type="String" optional="true"/>
-                </attribute>
-                <attribute name="contactMechPurposes" mode="OUT" type="List">
-                    <attribute name="contactMechPurpose" mode="OUT" type="Map" optional="true">
-                        <attribute name="contactMechPurposeTypeId" mode="OUT" type="String" optional="true"/>
-                        <attribute name="description" mode="OUT" type="String" optional="true"/>
-                    </attribute>
-                </attribute>
-             </attribute>
-        </attribute>
         <attribute name="loyaltyPoints" mode="OUT" type="Map" optional="true">
             <attribute name="points" mode="OUT" type="Integer" optional="true"/>
             <attribute name="totalOrders" mode="OUT" type="Integer" optional="true"/>
             <attribute name="monthsToInclude" mode="OUT" type="Integer" optional="true"/>
-        </attribute>
-        <attribute name="paymentMethods" mode="OUT" type="List" optional="true">
-            <attribute name="paymentMethod" mode="OUT" type="Map" optional="true">
-                <attribute name="paymentMethodId" mode="OUT" type="String" optional="true"/>
-                <attribute name="description" mode="OUT" type="String" optional="true"/>
-                <attribute name="fromDate" mode="OUT" type="String" optional="true"/>
-                <attribute name="thruDate" mode="OUT" type="String" optional="true"/>
-                <!--credit card and gift card fields-->
-                <attribute name="companyNameOnCard" mode="OUT" type="String" optional="true"/>
-                <attribute name="titleOnCard" mode="OUT" type="String" optional="true"/>
-                <attribute name="firstNameOnCard" mode="OUT" type="String" optional="true"/>
-                <attribute name="middleNameOnCard" mode="OUT" type="String" optional="true"/>
-                <attribute name="lastNameOnCard" mode="OUT" type="String" optional="true"/>
-                <attribute name="suffixOnCard" mode="OUT" type="String" optional="true"/>
-                <attribute name="cardNumber" mode="OUT" type="String" optional="true"/>
-                <attribute name="expireDate" mode="OUT" type="String" optional="true"/>
-                <!--EFT account field-->
-                <attribute name="bankName" mode="OUT" type="String" optional="true"/>
-                <attribute name="routingNumber" mode="OUT" type="String" optional="true"/>
-                <attribute name="accountType" mode="OUT" type="String" optional="true"/>
-                <attribute name="accountNumber" mode="OUT" type="String" optional="true"/>
-                <attribute name="nameOnAccount" mode="OUT" type="String" optional="true"/>
-                <attribute name="companyNameOnAccount" mode="OUT" type="String" optional="true"/>
-                <attribute name="paymentMethodType" mode="OUT" type="Map" optional="true">
-                    <attribute name="paymentMethodTypeId" mode="OUT" type="String" optional="true"/>
-                    <attribute name="description" mode="OUT" type="String" optional="true"/>
-                </attribute>
-            </attribute>
-        </attribute>
-        <attribute name="contactLists" mode="OUT" type="List" optional="true">
-            <attribute name="contactList" mode="OUT" type="Map" optional="true">
-                <attribute name="contactListId" mode="OUT" type="String" optional="true"/>
-                <attribute name="contactListName" mode="OUT" type="String" optional="true"/>
-                <attribute name="description" mode="OUT" type="String" optional="true"/>
-                <attribute name="fromDate" mode="OUT" type="String" optional="true"/>
-                <attribute name="thruDate" mode="OUT" type="String" optional="true"/>
-                <attribute name="email" mode="OUT" type="String" optional="true"/>
-                <attribute name="status" mode="OUT" type="Map" optional="true">
-                    <attribute name="statusId" mode="OUT" type="String" optional="true"/>
-                    <attribute name="statusCode" mode="OUT" type="String" optional="true"/>
-                    <attribute name="description" mode="OUT" type="String" optional="true"/>
-                </attribute>
-            </attribute>
-        </attribute>
-        <attribute name="communications" mode="OUT" type="List" optional="true">
-            <attribute name="communication" mode="OUT" type="Map" optional="true">
-                <attribute name="communicationEventId" mode="OUT" type="String" optional="true"/>
-                <attribute name="fromPartyName" mode="OUT" type="String" optional="true"/>
-                <attribute name="toPartyName" mode="OUT" type="String" optional="true"/>
-                <attribute name="subject" mode="OUT" type="String" optional="true"/>
-                <attribute name="entryDate" mode="OUT" type="String" optional="true"/>
-                <attribute name="content" mode="OUT" type="String" optional="true"/>
-            </attribute>
         </attribute>
     </service>
     <service name="getPartyPaymentMethods" engine="java"
