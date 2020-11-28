@@ -110,6 +110,33 @@ under the License.
         <attribute name="showOld" mode="IN" type="String" optional="true"/>
         <attribute name="paymentMethods" mode="OUT" type="List" optional="true"/>
     </service>
+    <service name="getCustomerPostalAddress" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="getCustomerPostalAddress">
+        <description>To get the customer's shipping addresses</description>
+        <permission-service service-name="validateCustomer"/>
+        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="addresses" mode="OUT" type="List">
+            <attribute name="address" mode="OUT" type="Map">
+                <attribute name="contactMechId" mode="IN" type="String" optional="true"/>
+                <attribute name="toName" mode="IN" type="String" optional="true"/>
+                <attribute name="address1" mode="IN" type="String" optional="true"/>
+                <attribute name="address2" mode="IN" type="String" optional="true"/>
+                <attribute name="city" mode="IN" type="String" optional="true"/>
+                <attribute name="postalCode" mode="IN" type="String" optional="true"/>
+                <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
+                <attribute name="state" mode="IN" type="String">
+                    <attribute name="stateProvinceGeoId" mode="IN" type="String"/>
+                    <attribute name="stateName" mode="IN" type="String"/>
+                    <attribute name="stateCode" mode="IN" type="String"/>
+                </attribute>
+                <attribute name="country" mode="IN" type="String">
+                    <attribute name="countryGeoId" mode="IN" type="String"/>
+                    <attribute name="countryName" mode="IN" type="String"/>
+                    <attribute name="countryCode" mode="IN" type="String"/>
+                </attribute>
+            </attribute>
+        </attribute>
+    </service>
     <service name="createCustomerPostalAddress" engine="java"
             location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerPostalAddress">
         <description>To create the postal address with purpose</description>
@@ -123,8 +150,6 @@ under the License.
         <attribute name="stateCode" mode="IN" type="String" optional="true"/>
         <attribute name="countryCode" mode="IN" type="String"/>
         <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
-        <attribute name="isDefault" mode="IN" type="String" optional="true"/>
-        <attribute name="contactMechPurposeTypeId" mode="IN" type="String" optional="true"/>
     </service>
     <service name="updateCustomerPostalAddress" engine="java"
             location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerPostalAddress">
@@ -140,8 +165,6 @@ under the License.
         <attribute name="stateCode" mode="IN" type="String" optional="true"/>
         <attribute name="countryCode" mode="IN" type="String" optional="true"/>
         <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
-        <attribute name="isDefault" mode="IN" type="String" optional="true"/>
-        <attribute name="contactMechPurposeTypeId" mode="IN" type="String" optional="true"/>
     </service>
     <service name="removeCustomerContactMech" engine="java"
             location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="removeCustomerContactMechAndPurpose">

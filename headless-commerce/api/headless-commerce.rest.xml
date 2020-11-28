@@ -10,7 +10,7 @@
       <service name="updatePerson"/>
     </operation>
     <operation verb="get" path="/{customerPartyId}/shipping-addresses" description="Retrieves shipping addresses">
-      <service name="createCustomerPostalAddress"/>
+      <service name="getCustomerPostalAddress"/>
     </operation>
     <operation verb="post" path="/{customerPartyId}/shipping-addresses" description="Creates shipping address">
       <service name="createCustomerPostalAddress"/>

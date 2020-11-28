@@ -11,7 +11,6 @@ import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.entity.util.EntityUtilProperties;
 import org.apache.ofbiz.hc.api.common.CommonUtil;
 import org.apache.ofbiz.party.contact.ContactHelper;
-import org.apache.ofbiz.party.contact.ContactMechWorker;
 import org.apache.ofbiz.security.SecurityUtil;
 import org.apache.ofbiz.service.*;
 
@@ -568,6 +567,49 @@ public class CustomerServices {
         result.put("paymentMethods", paymentMethods);
         return result;
     }
+    public static Map<String, Object> getCustomerPostalAddress(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        String customerPartyId = (String) context.get("customerPartyId");
+        List<Map<String, Object>> addresses = new ArrayList<>();
+
+        try {
+            List<GenericValue> partyContactDetails = EntityQuery.use(delegator).from("PartyContactDetailByPurpose")
+                    .where("partyId", customerPartyId, "contactMechTypeId", "POSTAL_ADDRESS", "contactMechPurposeTypeId", "SHIPPING_LOCATION")
+                    .filterByDate()
+                    .queryList();
+            for (GenericValue partyContactDetail : partyContactDetails) {
+                Map<String, Object> addressMap = new HashMap<>();
+                addressMap.put("address1", partyContactDetail.getString("address1"));
+                addressMap.put("address2", partyContactDetail.getString("address2"));
+                addressMap.put("city", partyContactDetail.getString("city"));
+                addressMap.put("postalCode", partyContactDetail.getString("postalCode"));
+                Map<String, String> stateInfoMap = new HashMap<>();
+                Map<String, String> countryInfoMap = new HashMap<>();
+                GenericValue state = EntityQuery.use(delegator).from("Geo").where("geoId", partyContactDetail.getString("stateProvinceGeoId")).queryOne();
+                if (state != null) {
+                    stateInfoMap.put("stateProvinceGeoId", state.getString("geoId"));
+                    stateInfoMap.put("stateName", state.getString("geoName"));
+                    stateInfoMap.put("stateCode", state.getString("abbreviation"));
+                    addressMap.put("state", stateInfoMap);
+                }
+                GenericValue country = EntityQuery.use(delegator).from("Geo").where("geoId", partyContactDetail.getString("countryGeoId")).queryOne();
+                if (country != null) {
+                    countryInfoMap.put("countryGeoId", country.getString("geoId"));
+                    countryInfoMap.put("countryName", country.getString("geoName"));
+                    countryInfoMap.put("countryCode", country.getString("abbreviation"));
+                    addressMap.put("country", countryInfoMap);
+                }
+                addresses.add(addressMap);
+            }
+
+        } catch (GenericEntityException e) {
+            Debug.logError(e, MODULE);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        Map<String, Object> result  = ServiceUtil.returnSuccess();
+        result.put("addresses", addresses);
+        return result;
+    }
     public static Map<String, Object> createUpdateCustomerPostalAddress(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -576,7 +618,7 @@ public class CustomerServices {
         String customerPartyId = (String) context.get("customerPartyId");
         String stateCode = (String) context.get("stateCode");
         String countryCode = (String) context.get("countryCode");
-        String contactMechPurposeTypeId = (String) context.get("contactMechPurposeTypeId");
+        String contactMechPurposeTypeId = "SHIPPING_LOCATION";
         String contactMechId = (String) context.get("contactMechId");
         String address1 = (String) context.get("address1");
         Map <String, Object> serviceCtx = new HashMap<>();
@@ -631,6 +673,7 @@ public class CustomerServices {
                 serviceCtx.put("partyId", customerPartyId);
                 serviceCtx.put("stateProvinceGeoId", stateProvinceGeoId);
                 serviceCtx.put("countryGeoId", countryGeoId);
+                serviceCtx.put("contactMechPurposeTypeId", contactMechPurposeTypeId);
                 serviceCtx.put("userLogin", userLogin);
                 result = dispatcher.runSync("createPartyPostalAddress", serviceCtx);
                 if (!ServiceUtil.isSuccess(result)) {
@@ -900,7 +943,6 @@ public class CustomerServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String customerPartyId = (String) context.get("customerPartyId");
-        String paymentMethodId = (String) context.get("paymentMethodId");
 
         try {
             Map <String, Object> serviceCtx = dctx.getModelService("deletePaymentMethod").makeValid(context, ModelService.IN_PARAM);
