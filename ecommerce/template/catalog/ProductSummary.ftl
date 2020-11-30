@@ -74,7 +74,7 @@ ${variantInfoJavaScript!}
               <#assign productDetailId = "productDetailId"/>
               <#assign productDetailId = productDetailId + product.productId/>
 
-              <div class="col-md-3 products-card">
+              <div class="col-md-4 products-card card-deck">
                 <div class="card text-center">
                   <a href="${productUrl}">
                     <img class="card-img-top" src="<@ofbizContentUrl>${contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl>" alt="Small Image">
