@@ -772,7 +772,7 @@ public class BirtServices {
             // user file is deleted straight away to prevent the use of the report as script entry (security)
             Path path = Paths.get(nameTempRpt);
             Files.deleteIfExists(path);
-        } catch (Exception e) {
+        } catch (DesignFileException | IOException e) {
             Debug.logError(e, MODULE);
             return ServiceUtil.returnError(UtilProperties.getMessage(RES_ERROR, "BirtErrorInuploadRptDesignNoFile", locale));
         }
