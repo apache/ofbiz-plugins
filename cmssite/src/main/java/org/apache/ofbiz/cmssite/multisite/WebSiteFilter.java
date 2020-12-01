@@ -51,7 +51,7 @@ import org.apache.ofbiz.webapp.stats.VisitHandler;
 // Used to filter website on the basis of hosted pathAlias.
 public class WebSiteFilter implements Filter {
 
-    public static final String MODULE = WebSiteFilter.class.getName();
+    public static final String module = WebSiteFilter.class.getName();
 
     protected FilterConfig m_config = null;
 
@@ -85,7 +85,7 @@ public class WebSiteFilter implements Filter {
                 webSite = EntityQuery.use(delegator).from("WebSite").where("isDefault", "Y").cache().queryFirst();
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e, MODULE);
+            Debug.logError(e, module);
         }
         if (webSite != null) {
             webSiteId = webSite.getString("webSiteId");
@@ -93,7 +93,7 @@ public class WebSiteFilter implements Filter {
             try {
                 productStore = webSite.getRelatedOne("ProductStore", false);
             } catch (GenericEntityException e) {
-                Debug.logError(e, MODULE);
+                Debug.logError(e, module);
             }
 
             String newLocale = request.getParameter("newLocale");
@@ -120,7 +120,7 @@ public class WebSiteFilter implements Filter {
                     try {
                         cart.setCurrency(dispatcher, productStore.getString("defaultCurrencyUomId"));
                     } catch (CartItemModifyException e) {
-                        Debug.logError(e, MODULE);
+                        Debug.logError(e, module);
                     }
                 }
                 session.removeAttribute("webSiteId");
@@ -149,7 +149,7 @@ public class WebSiteFilter implements Filter {
         try {
             security = SecurityFactory.getInstance(delegator);
         } catch (SecurityConfigurationException e) {
-            Debug.logError(e, MODULE);
+            Debug.logError(e, module);
         }
         request.setAttribute("delegator", delegator);
         request.setAttribute("dispatcher", dispatcher);
