@@ -94,7 +94,7 @@ if (searchFeature1 || searchFeature2 || searchFeature3 || !featureIdByType.isEmp
     }
 }
 if (searcher) {
-    TopScoreDocCollector collector = TopScoreDocCollector.create(100) //defaulting to 100 results
+    TopScoreDocCollector collector = TopScoreDocCollector.create(100, 100) //defaulting to 100 results
     searcher.search(combQuery.build(), collector)
     ScoreDoc[] hits = collector.topDocs().scoreDocs
 
