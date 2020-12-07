@@ -86,7 +86,7 @@ if (featureIdByType) {
 
 if (searcher) {
     Debug.logInfo("in search searchFeature3, combQuery:" + combQuery.toString(), "")
-    TopScoreDocCollector collector = TopScoreDocCollector.create(100) //defaulting to 100 results
+    TopScoreDocCollector collector = TopScoreDocCollector.create(100, 100) //defaulting to 100 results
     searcher.search(combQuery.build(), collector)
     ScoreDoc[] hits = collector.topDocs().scoreDocs
     Debug.logInfo("in search, hits:" + collector.getTotalHits(), "")
