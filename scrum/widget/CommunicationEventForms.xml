@@ -102,7 +102,7 @@ under the License.
         <field name="partyIdTo"><hidden/></field>
         <field name="datetimeStarted"><hidden/></field>
         <field name="my"><hidden value="${my}"/></field>
-        <field name="uploadedFile"><file/></field>
+        <field name="uploadedFile" title="${uiLabelMap.ContentFile}"><file/></field>
         <field name="send" title=" " widget-style="buttontext">
             <hyperlink also-hidden="true"
                 target-type="plain" description="${uiLabelMap.CommonUpload}"
