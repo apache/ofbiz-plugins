@@ -23,7 +23,7 @@ under the License.
     <form name="ListRequests" type="list" extends="ListRequestList" extends-resource="component://order/widget/ordermgr/CustRequestForms.xml"
             paginate-target="requestlist" >
         <field name="createTaskFromRequest" title="${uiLabelMap.ProjectMgrCreateTaskFromRequest}" widget-style="buttontext">
-            <hyperlink description="${uiLabelMap.ProjectMgrCreateTaskFromRequest}" target="/projectmgr/control/EditTaskFromRequest" target-type="inter-app">
+            <hyperlink description="${uiLabelMap.ProjectMgrCreateTaskFromRequest}" target="/projectmgr/control/EditTaskFromRequest" url-mode="inter-app">
                 <parameter param-name="custRequestId"/>
             </hyperlink>
         </field>

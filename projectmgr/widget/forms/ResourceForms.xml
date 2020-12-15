@@ -37,7 +37,7 @@
         </field>
         <field name="roleTypeId"><hidden/></field>
         <field name="emailAddress" title="${uiLabelMap.PartyEmailAddress}">
-            <hyperlink description="${emailResult.emailAddress}" target="/partymgr/control/EditCommunicationEvent" target-type="inter-app">
+            <hyperlink description="${emailResult.emailAddress}" target="/partymgr/control/EditCommunicationEvent" url-mode="inter-app">
                 <parameter param-name="partyIdFrom" from-field="userLogin.partyId"/>
                 <parameter param-name="partyIdTo" from-field="partyId"/>
                 <parameter param-name="communicationEventTypeId" value="EMAIL_COMMUNICATION"/>

@@ -46,7 +46,7 @@ under the License.
         </field>
         <field name="searchButton"><submit/></field>
         <field name="exportButton" position="2" widget-style="smallSubmit" title=" ">
-            <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.CommonExport}"
+            <hyperlink also-hidden="false" url-mode="plain" description="${uiLabelMap.CommonExport}"
                        target="javascript: document.FindExamples.action='ListExampleExport'; document.FindExamples.submit();"/>
         </field>
     </form>

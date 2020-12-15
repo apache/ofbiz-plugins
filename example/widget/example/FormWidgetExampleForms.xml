@@ -445,7 +445,7 @@ under the License.
             <hyperlink description="${uiLabelMap.CommonDelete}" target="FormWidgetExamples" also-hidden="false" confirmation-message="Are you sure you want to perform this action?"/>
         </field>
         <field name="targetUrlButton" title="${uiLabelMap.SignedInAuthToAnotherDomain}" widget-style="buttontext" tooltip="${uiLabelMap.SignedInAuthToAnotherDomainTooltip}">
-            <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.TargetURL}" target="${targetUrl}"/>
+            <hyperlink also-hidden="false" url-mode="plain" description="${uiLabelMap.TargetURL}" target="${targetUrl}"/>
         </field>
      </form>
  

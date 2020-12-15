@@ -832,7 +832,7 @@
             <property-to-field resource="revision" property="revision.url" field="url"/>
         </row-actions>
         <field name="contentName" title="${uiLabelMap.ScrumRevision}" widget-style="buttontext">
-                <hyperlink description="${contentName}" target="RevisionInfo?repository=${url}${drObjectInfo}" link-type="anchor" target-window="_BLANK" target-type="plain"/>
+                <hyperlink description="${contentName}" target="RevisionInfo?repository=${url}${drObjectInfo}" link-type="anchor" target-window="_BLANK" url-mode="plain"/>
         </field>
         <field name="description" title="${uiLabelMap.CommonMessage}"><display description="${groovy:description.toString().substring(0,Math.min(description.toString().length(),100))}"/></field>
         <field name="partyId" title="${uiLabelMap.ScrumCommitter}">

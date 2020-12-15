@@ -105,7 +105,7 @@ under the License.
         <field name="uploadedFile" title="${uiLabelMap.ContentFile}"><file/></field>
         <field name="send" title=" " widget-style="buttontext">
             <hyperlink also-hidden="true"
-                target-type="plain" description="${uiLabelMap.CommonUpload}"
+                url-mode="plain" description="${uiLabelMap.CommonUpload}"
                 target="javascript:
                     (document.uploadContent.datetimeStarted.value=document.EditEmail.datetimeStarted.value),
                     (document.uploadContent.partyId.value=document.EditEmail.partyIdFrom.value),
@@ -181,7 +181,7 @@ under the License.
         <field name="subject" tooltip="Do not remove the &quot;PD#${product.productId}&quot; number"><text size="74"  maxlength="255" default-value="PD#${product.productId} - ${product.internalName}"/></field>
         <field name="send" title=" " position="1" widget-style="buttontext" 
             use-when="&quot;${communicationEvent.statusId}&quot;!=&quot;COM_COMPLETE&quot;&amp;&amp;&quot;${communicationEvent.statusId}&quot;!=&quot;COM_IN_PROGRESS&quot;">
-            <hyperlink description="${uiLabelMap.CommonSend}" target="javascript:(document.EditEmailForProduct.form.value='list'),(document.EditEmailForProduct.statusId.value='COM_IN_PROGRESS'),(document.EditEmailForProduct.submit())" also-hidden="false" target-type="plain"/>
+            <hyperlink description="${uiLabelMap.CommonSend}" target="javascript:(document.EditEmailForProduct.form.value='list'),(document.EditEmailForProduct.statusId.value='COM_IN_PROGRESS'),(document.EditEmailForProduct.submit())" also-hidden="false" url-mode="plain"/>
         </field>
     </form>
     <form name="ViewEmailForProduct" type="single" extends="EditEmail" target="${target}" default-map-name="communicationEvent" id="updateEmailForProduct">
@@ -207,7 +207,7 @@ under the License.
         <field name="partyId"><hidden value="${userLogin.partyId}"/> </field>
         <field name="send" title=" " widget-style="buttontext">
             <hyperlink also-hidden="true"
-                target-type="plain" description="${uiLabelMap.CommonUpload}"
+                url-mode="plain" description="${uiLabelMap.CommonUpload}"
                 target="javascript:
                     (document.UploadContentForProduct.datetimeStarted.value=document.EditEmailForProduct.datetimeStarted.value),
                     (document.UploadContentForProduct.partyIdTo.value=document.EditEmailForProduct.partyIdTo.value),
