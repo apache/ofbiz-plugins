@@ -2764,7 +2764,7 @@ under the License.
             <set field="taskName" from-field="resultTask.workEffortName"/>
         </row-actions>
         <field name="taskId" title="${uiLabelMap.ScrumTask}" parameter-name="workEffortId">
-            <hyperlink description="${taskName} [${taskId}]" target="taskView" link-type="hidden-form" target-window="_BLANK" url-mode="intra-app">
+            <hyperlink description="${taskName} [${taskId}]" target="taskView" link-type="hidden-form" target-window="_BLANK" target-type="intra-app">
                 <parameter param-name="taskId" from-field="taskId"/>
             </hyperlink>
         </field>

@@ -162,7 +162,7 @@ under the License.
         </actions>
         <!--<auto-fields-entity entity-name="ExampleFeature" default-field-type="display"/>-->
         <field name="exampleFeatureId" title="${uiLabelMap.ExampleExampleFeatureId}" widget-style="buttontext">
-            <hyperlink description="${exampleFeatureId}" target="javascript:set_value('${exampleFeatureId}')" also-hidden="false" url-mode="plain"/>
+            <hyperlink description="${exampleFeatureId}" target="javascript:set_value('${exampleFeatureId}')" also-hidden="false" target-type="plain"/>
         </field>
         <field name="featureSourceEnumId" title="${uiLabelMap.ExampleFeatureSource}">
             <display-entity entity-name="Enumeration" key-field-name="enumId" description="${description} [${enumCode}]" also-hidden="false"/>
