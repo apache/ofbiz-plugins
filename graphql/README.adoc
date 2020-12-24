@@ -1,0 +1,108 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+= Apache OFBiz® GraphQL plug-in
+
+
+:imagesdir: ./webapp/graphql/images
+image::OFBiz-Logo.svg[100,100][float="left"]
+image::graphql-logo.svg[100,100][float="right"]
+
+This plug-in a GraphQL plugin that lets OFBiz to define GraphQL API.
+
+== What's included
+* GraphiQL (https://github.com/graphql/graphiql)
+* Playground (https://github.com/prisma-labs/graphql-playground)
+* OFBiz GraphQL endpoint
+
+== OFBiz GraphQL API based on graphql-java suite of libraries
+.The plug-in uses the following dependencies
+* com.graphql-java:graphql-java:13.0
+* com.graphql-java-kickstart:graphql-java-servlet:9.0.1
+* com.graphql-java-kickstart:graphql-java-tools:5.7.1
+* io.github.graphql-java:graphql-java-annotations:7.2.1
+
+The endpoint is configured by subclassing SimpleGraphQLHttpServlet from graphql-java-servlet dependency.
+----
+public class GraphQLEndpointServletImpl extends SimpleGraphQLHttpServlet {
+----
+
+== Important URLs
+* GraphQL endpint (https://localhost:8443/graphql/graphql)
+* GraphQL schema (https://localhost:8443/graphql/graphql/schema.json)
+* GraphiQL (https://localhost:8443/graphql/graphiql/index.html)
+* GraphQL Playground (https://localhost:8443/graphql/playground/index.html)
+
+== Usage
+It comes with a demo query operation outlined below. The schema part is something that needs to be refined further. Both ways of creating the schema viz. GraphQL SDL and Programmatically using Java API, are demonstrated. This part will be further enhanced to include other operations that can be defined easily.
+
+Queries can be executed like below:
+----
+'/graphql/?query={graphQLQueryString}' or '/graphql/?query={graphQLQueryString}&&variables={graphQLVariables}&&operationName={operationName}'
+----
+The bundled up schema does not define any mutation, but executing mutations is supported via POST only as per GraphQL specifications.
+
+=== Demo Query operation
+The schema defines a single Query type operation to fetch product details with product id passed as parameter:
+Input:
+----
+{
+  product(id : "WG-9943-B3")
+  {
+    productId
+    productName
+    isVirtual
+    primaryProductCategoryId
+    productTypeId
+  }
+}
+----
+Output:
+----
+{
+  "data": {
+    "product": {
+      "productId": "WG-9943-B3",
+      "productName": "Giant Widget B3",
+      "isVirtual": "N",
+      "primaryProductCategoryId": "202",
+      "productTypeId": "FINISHED_GOOD"
+    }
+  }
+}
+----
+
+
+== Authentication
+The GraphQL endpoint is secured. Authentication scheme is "Bearer <JWT>". Every query/muation/subscription operation must have an Authorization header associated with it.
+Example Request:
+
+----
+GET /graphql/graphql/?query={
+  product(id : "WG-9943-B3")
+  {
+    productId
+    productName
+    isVirtual
+    primaryProductCategoryId
+    productTypeId
+    ddd
+  }
+} HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJBcGFjaGVPRkJpeiIsImlhdCI6MTU0NzczOTM0OCwiZXhwIjoxNjc5Mjc1MzQ4LCJhdWQiOiJ3d3cuZXhhbXBsZS5jb20iLCJzdWIiOiJqcm9ja2V0QGV4YW1wbGUuY29tIiwiR2l2ZW5OYW1lIjoiSm9obm55IiwiU3VybmFtZSI6IlJvY2tldCIsIkVtYWlsIjoianJvY2tldEBleGFtcGxlLmNvbSIsInVzZXJMb2dpbklkIjoiYWRtaW4iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.fwafgrgpodBJcXxNTQdZknKeWKb3sDOsQrcR2vcRw97FznD6mkE79p10Tu7cqpUx7LiXuROUAnXEgqDice-BSg
+----
