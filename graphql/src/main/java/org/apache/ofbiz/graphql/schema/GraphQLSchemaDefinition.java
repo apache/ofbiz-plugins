@@ -2341,30 +2341,34 @@ public class GraphQLSchemaDefinition {
     private static GraphQLInputType getGraphQLInputType(GraphQLInputType rawType, boolean nonNull, boolean isList,
             boolean listItemNonNull) {
         String inputTypeKey = rawType.getName();
-        if (nonNull)
+        if (nonNull) {
             inputTypeKey = inputTypeKey + NON_NULL_SUFFIX;
+        }
         if (isList) {
             inputTypeKey = inputTypeKey + IS_LIST_SUFFIX;
-            if (listItemNonNull)
+            if (listItemNonNull) {
                 inputTypeKey = inputTypeKey + LIST_ITEM_NON_NULL_SUFFIX;
+            }
+
         }
 
         GraphQLInputType wrappedType = GRAPH_QL_INPUT_TYPE_MAP.get(inputTypeKey);
-        if (wrappedType != null)
+        if (wrappedType != null) {
             return wrappedType;
-
+        }
         wrappedType = rawType;
         if (isList) {
-            if (listItemNonNull)
+            if (listItemNonNull) {
                 wrappedType = new GraphQLNonNull(wrappedType);
+            }
             wrappedType = new GraphQLList(wrappedType);
         }
-        if (nonNull)
+        if (nonNull) {
             wrappedType = new GraphQLNonNull(wrappedType);
-
-        if (!inputTypeKey.equals(rawType.getName()))
+        }
+        if (!inputTypeKey.equals(rawType.getName())) {
             GRAPH_QL_INPUT_TYPE_MAP.put(inputTypeKey, wrappedType);
-
+        }
         return wrappedType;
     }
 
