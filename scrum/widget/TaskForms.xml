@@ -93,7 +93,7 @@
         <!--<field name="actualHours" use-when="task==null" title="Actual Hours"><text size="3"/></field>-->
         <field name="currentStatusId" use-when="task==null"><hidden value="STS_CREATED"/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}" tooltip="${uiLabelMap.CommonMax250Chars}"><textarea/></field>
-        <field name="uploadedFile"><file/></field>
+        <field name="uploadedFile" title="${uiLabelMap.ContentFile}"><file/></field>
         <field name="contentTypeId"><hidden value="DOCUMENT"/></field>
         <field name="resourceStatusId"><hidden value="CTNT_PUBLISHED"/></field>
         <field name="workEffortContentTypeId"><hidden value="CREATED_MEDIA"/></field>
