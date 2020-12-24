@@ -14,19 +14,21 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.aaaab	
+ * under the License.
  *******************************************************************************/
 package org.apache.ofbiz.graphql.schema;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@SuppressWarnings("serial")
+@SuppressWarnings({"unused"})
 class OperationInputType extends LinkedHashMap<String, String> {
-    public String value;
-    public String op;
-    public String not;
-    public String ic;
+
+    private static final long serialVersionUID = 1L;
+    private String value;
+    private String op;
+    private String not;
+    private String ic;
 
     OperationInputType(String value, String op, String not, String ic) {
         this.value = value;
@@ -47,7 +49,7 @@ class OperationInputType extends LinkedHashMap<String, String> {
         }
     }
 
-    public OperationInputType(Map map) {
-        this((String) map.get("value"), (String) map.get("op"), (String) map.get("not"), (String) map.get("ic"));
+    OperationInputType(Map<String, String> map) {
+        this(map.get("value"), map.get("op"), map.get("not"), map.get("ic"));
     }
 }

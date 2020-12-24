@@ -31,6 +31,10 @@ public class AppServletContextListener implements ServletContextListener {
 
     public static final String MODULE = AppServletContextListener.class.getName();
 
+    /**
+     *
+     * @param sce
+     */
     public void contextInitialized(ServletContextEvent sce) {
         ServletContext servletContext = sce.getServletContext();
         Delegator delegator = WebAppUtil.getDelegator(servletContext);
@@ -40,6 +44,10 @@ public class AppServletContextListener implements ServletContextListener {
         servletContext.setAttribute("dispatcher", dispatcher);
     }
 
+    /**
+     *
+     * @param sce
+     */
     public void contextDestroyed(ServletContextEvent sce) {
         ServletContext context = sce.getServletContext();
         Debug.logInfo("GraphQL Context destroyed, removing delegator and dispatcher ", MODULE);

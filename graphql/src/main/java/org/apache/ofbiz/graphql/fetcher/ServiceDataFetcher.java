@@ -18,7 +18,6 @@
  *******************************************************************************/
 package org.apache.ofbiz.graphql.fetcher;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,20 +35,18 @@ import org.apache.ofbiz.graphql.schema.GraphQLSchemaUtil;
 import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ModelService;
-import org.apache.ofbiz.service.ServiceUtil;
 import org.w3c.dom.Element;
 
 import graphql.schema.DataFetchingEnvironment;
 import graphql.servlet.context.DefaultGraphQLServletContext;
 
-public class ServiceDataFetcher extends BaseDataFetcher {
+@SuppressWarnings({ "unchecked", "rawtypes" })
+public final class ServiceDataFetcher extends BaseDataFetcher {
 
     private String serviceName;
-    private String requireAuthentication;
     private String invoke;
     private String defaultEntity;
-    boolean isEntityAutoService;
-    boolean resultPrimitive = false;
+    private boolean isEntityAutoService;
 
     public Map<String, String> getRelKeyMap() {
         return relKeyMap;
@@ -63,14 +60,10 @@ public class ServiceDataFetcher extends BaseDataFetcher {
         return isEntityAutoService;
     }
 
-
-    Map<String, String> relKeyMap = new HashMap<>();
+    private Map<String, String> relKeyMap = new HashMap<>();
 
     public ServiceDataFetcher(Element node, FieldDefinition fieldDef, Delegator delegator, LocalDispatcher dispatcher) {
         super(fieldDef, delegator);
-        this.requireAuthentication = node.getAttribute("require-authentication") != null
-                ? node.getAttribute("require-authentication")
-                : "true";
         this.serviceName = node.getAttribute("service");
         List<? extends Element> elements = UtilXml.childElementList(node, "key-map");
         for (Element keyMapNode : elements) {
@@ -95,12 +88,7 @@ public class ServiceDataFetcher extends BaseDataFetcher {
                 if (!fieldDef.isMutation()) {
                     throw new IllegalArgumentException("Query should not use entity auto service ${serviceName}");
                 }
-            } else {
-                if (service.getParam("_graphql_result_primitive") != null) {
-                    resultPrimitive = true;
-                }
             }
-
         } catch (GenericServiceException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -127,7 +115,7 @@ public class ServiceDataFetcher extends BaseDataFetcher {
         Map<String, Object> inputFieldsMap = new HashMap<>();
         Map<String, Object> operationMap = new HashMap<>();
         inputFieldsMap.put("userLogin", userLogin);
-        if (fieldDef.isMutation()) {
+        if (getFieldDef().isMutation()) {
             GraphQLSchemaUtil.transformArguments(environment.getArguments(), inputFieldsMap, operationMap);
         } else {
             GraphQLSchemaUtil.transformQueryServiceArguments(service, environment.getArguments(), inputFieldsMap);
@@ -138,7 +126,7 @@ public class ServiceDataFetcher extends BaseDataFetcher {
         Map<String, Object> result = null;
 
         try {
-            if (fieldDef.isMutation()) {
+            if (getFieldDef().isMutation()) {
                 result = dispatcher.runSync(serviceName, inputFieldsMap);
                 String verb = GraphQLSchemaUtil.getVerbFromName(serviceName, dispatcher);
                 if (this.isEntityAutoService || isCRUDService()) {
@@ -148,7 +136,7 @@ public class ServiceDataFetcher extends BaseDataFetcher {
                     } else {
                         GenericValue entity = null;
                         try {
-                            entity = EntityQuery.use(delegator).from(defaultEntity).where(result).cache().queryOne();
+                            entity = EntityQuery.use(getDelegator()).from(defaultEntity).where(result).cache().queryOne();
                             result.put("_graphql_result_", entity);
                         } catch (GenericEntityException e) {
                             // TODO Auto-generated catch block
@@ -167,7 +155,8 @@ public class ServiceDataFetcher extends BaseDataFetcher {
     }
 
     private boolean isCRUDService() {
-        if ((invoke.startsWith("create") || invoke.startsWith("update") || invoke.startsWith("delete")) && invoke.endsWith(defaultEntity)) {
+        if ((invoke.startsWith("create") || invoke.startsWith("update") || invoke.startsWith("delete"))
+                && invoke.endsWith(defaultEntity)) {
             return true;
         }
         return false;

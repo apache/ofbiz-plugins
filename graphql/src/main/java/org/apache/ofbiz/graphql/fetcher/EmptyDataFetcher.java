@@ -24,6 +24,7 @@ import java.util.HashMap;
 import org.apache.ofbiz.graphql.schema.GraphQLSchemaDefinition.FieldDefinition;
 import org.apache.ofbiz.graphql.schema.GraphQLSchemaUtil;
 import org.w3c.dom.Element;
+
 import graphql.schema.DataFetchingEnvironment;
 
 public class EmptyDataFetcher extends BaseDataFetcher {
@@ -37,8 +38,8 @@ public class EmptyDataFetcher extends BaseDataFetcher {
 
     @Override
     Object fetch(DataFetchingEnvironment environment) {
-        if (!GraphQLSchemaUtil.graphQLScalarTypes.containsKey(fieldDef.getType())) {
-            if ("true".equals(fieldDef.getIsList())) {
+        if (!GraphQLSchemaUtil.GRAPH_QL_SCALAR_TYPE_MAP.containsKey(getFieldDef().getType())) {
+            if ("true".equals(getFieldDef().getIsList())) {
                 return new ArrayList<Object>();
             }
             return new HashMap<String, Object>();
@@ -46,3 +47,4 @@ public class EmptyDataFetcher extends BaseDataFetcher {
         return null;
     }
 }
+

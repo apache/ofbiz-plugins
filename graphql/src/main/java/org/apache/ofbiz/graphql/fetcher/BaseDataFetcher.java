@@ -24,12 +24,26 @@ import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
 
 public abstract class BaseDataFetcher implements DataFetcher<Object> {
-    protected final FieldDefinition fieldDef;
-    protected final Delegator delegator;
+    private final FieldDefinition fieldDef;
+    private final Delegator delegator;
 
     BaseDataFetcher(FieldDefinition fieldDef, Delegator delegator) {
         this.fieldDef = fieldDef;
         this.delegator = delegator;
+    }
+
+    /**
+     * @return the fieldDef
+     */
+    protected FieldDefinition getFieldDef() {
+        return fieldDef;
+    }
+
+    /**
+     * @return the delegator
+     */
+    protected Delegator getDelegator() {
+        return delegator;
     }
 
     @Override
@@ -38,9 +52,12 @@ public abstract class BaseDataFetcher implements DataFetcher<Object> {
         return result;
     }
 
+    /**
+     *
+     * @param environment
+     * @return
+     */
     Object fetch(DataFetchingEnvironment environment) {
         return null;
     }
-
-    ;
 }

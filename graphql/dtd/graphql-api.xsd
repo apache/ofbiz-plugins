@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+ <xs:element name="graphql-type" abstract="true"/>
+    <xs:element name="graphql-api">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:element ref="graphql-type"/>
+                        <xs:element ref="extend-object"/>
+                    </xs:choice>
+                    <xs:element ref="input-type"/>
+                </xs:choice>
+            </xs:sequence>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="query" type="xs:string">
+                <xs:annotation><xs:documentation>Define query type of GraphQL Schema</xs:documentation></xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="mutation" type="xs:string">
+                <xs:annotation><xs:documentation>Define mutation type of GraphQL Schema</xs:documentation></xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="expose" type="xs:boolean" default="true"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:simpleType name="graphql-scalar-type">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="Int"/>
+            <xs:enumeration value="Long"/>
+            <xs:enumeration value="Float"/>
+            <xs:enumeration value="String"/>
+            <xs:enumeration value="Boolean"/>
+            <xs:enumeration value="ID"/>
+            <xs:enumeration value="BigInteger"/>
+            <xs:enumeration value="BigDecimal"/>
+            <xs:enumeration value="Byte"/>
+            <xs:enumeration value="Short"/>
+            <xs:enumeration value="Char"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="input-type">
+        <xs:complexType>
+            <xs:attribute name="name" use="required">
+                <xs:simpleType>
+                    <xs:union memberTypes="graphql-scalar-type"/>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="scalar-type" substitutionGroup="graphql-type">
+        <xs:complexType>
+            <xs:attribute name="name" type="graphql-scalar-type"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="localize-field">
+        <xs:complexType>
+            <xs:attribute name="name" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="object" substitutionGroup="graphql-type">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="1" name="description" type="xs:string"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="interface">
+                    <xs:complexType>
+                        <xs:attribute name="name" type="xs:string" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="field"/>
+            </xs:sequence>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="resolver-map">
+        <xs:annotation><xs:documentation>
+            Map value of extend-object@resolver-field to an GraphQLObjectType.
+        </xs:documentation></xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="resolver-value" type="xs:string" use="required"/>
+            <xs:attribute name="resolver-type" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="convert-to-interface">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="resolver-map"/>
+            </xs:sequence>
+            <xs:attribute name="resolver-field" type="xs:string" use="required">
+                <xs:annotation>
+                    <xs:documentation>This field value determines actual type. The typical case in moqui
+                        is Person, Organization is a concrete of Party, the Party@partyTypeEnumId tells the Party is
+                        Person or Organization. So in this case, resolver-field is partyTypeEnumId, then there should be
+                        resolver-map element to map the value of partyTypeEnumId to GraphQLObjectType
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="extend-object">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:choice minOccurs="1" maxOccurs="1">
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="interface">
+                        <xs:complexType>
+                            <xs:attribute name="name" type="xs:string" use="required"/>
+                            <xs:attribute name="resolver-value" type="xs:string" use="required"/>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element minOccurs="0" maxOccurs="1" ref="convert-to-interface"/>
+                </xs:choice>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="exclude-field">
+                    <xs:complexType>
+                        <xs:attribute name="name" type="xs:string"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="field"/>
+            </xs:sequence>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="interface" substitutionGroup="graphql-type">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="1" name="description" type="xs:string"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="field"/>
+            </xs:sequence>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="type-resolver" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="service">
+        <xs:complexType>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="list-name" type="xs:string">
+                <xs:annotation><xs:documentation>If the field is a list, set this attribute to get variable
+                    in service call result map.</xs:documentation></xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="key-map">
+        <xs:complexType>
+            <xs:attribute name="field-name" type="xs:string"/>
+            <xs:attribute name="related" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="empty-fetcher"/>
+    <xs:element name="entity-fetcher">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="key-map"/>
+            </xs:sequence>
+            <xs:attribute name="entity-name" type="xs:string" use="required"/>
+            <xs:attribute name="cache" type="xs:boolean" default="false"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="service-fetcher">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="key-map"/>
+            </xs:sequence>
+            <xs:attribute name="service" type="xs:string" use="required"/>
+            <xs:attribute name="require-authentication" type="xs:string" default="true"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="field">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="1" name="description" type="xs:string"/>
+                <xs:element minOccurs="0" maxOccurs="1" name="depreciation-reason" type="xs:string"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="auto-arguments"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="argument"/>
+                <xs:choice minOccurs="0" maxOccurs="1">
+                    <xs:element ref="empty-fetcher"/>
+                    <xs:element ref="entity-fetcher"/>
+                    <xs:element ref="service-fetcher"/>
+                </xs:choice>
+            </xs:sequence>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="type" use="required">
+                <xs:simpleType>
+                    <xs:union memberTypes="graphql-scalar-type xs:string"/>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="non-null" type="xs:boolean" default="false"/>
+            <xs:attribute name="is-list" type="xs:boolean" default="false"/>
+            <xs:attribute name="list-item-non-null" type="xs:boolean" default="false"/>
+            <xs:attribute name="require-authentication" type="xs:boolean" default="true"/>
+            <xs:attribute name="for" default="query">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="query"/>
+                        <xs:enumeration value="mutation">
+                            <xs:annotation><xs:documentation>When for mutation, the data-fetcher should be only
+                                service-fetcher</xs:documentation></xs:annotation>
+                        </xs:enumeration>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="exclude">
+        <xs:complexType>
+            <xs:attribute name="field-name" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="auto-arguments">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="exclude"/>
+            </xs:sequence>
+            <xs:attribute name="entity-name" type="xs:string"/>
+            <xs:attribute name="include" default="all">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="pk"/>
+                        <xs:enumeration value="nonpk"/>
+                        <xs:enumeration value="all"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="required" default="false">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true"/>
+                        <xs:enumeration value="false"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="argument">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="1" name="description" type="xs:string"/>
+            </xs:sequence>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="type" type="xs:string" use="required"/>
+            <xs:attribute name="required" type="xs:boolean" default="false">
+                <xs:annotation><xs:documentation>It seems GraphQL-Java does not support required on GraphQLArgument</xs:documentation></xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="default-value" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

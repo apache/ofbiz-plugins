@@ -18,27 +18,17 @@
  *******************************************************************************/
 package org.apache.ofbiz.graphql.schema;
 
-import graphql.language.Field;
-import graphql.schema.DataFetchingEnvironment;
-import graphql.schema.GraphQLScalarType;
-import org.apache.ofbiz.base.util.UtilValidate;
-import org.apache.ofbiz.base.util.UtilXml;
-import org.apache.ofbiz.entity.Delegator;
-import org.apache.ofbiz.entity.GenericEntityException;
-import org.apache.ofbiz.entity.model.ModelEntity;
-import org.apache.ofbiz.entity.model.ModelField;
-import org.apache.ofbiz.entity.model.ModelReader;
-import org.apache.ofbiz.graphql.fetcher.EntityDataFetcher;
-import org.apache.ofbiz.graphql.fetcher.ServiceDataFetcher;
-import org.apache.ofbiz.graphql.schema.GraphQLSchemaDefinition.ArgumentDefinition;
-import org.apache.ofbiz.graphql.schema.GraphQLSchemaDefinition.FieldDefinition;
-import org.apache.ofbiz.graphql.schema.GraphQLSchemaDefinition.GraphQLTypeDefinition;
-import org.apache.ofbiz.graphql.schema.GraphQLSchemaDefinition.ObjectTypeDefinition;
-import org.apache.ofbiz.service.GenericServiceException;
-import org.apache.ofbiz.service.LocalDispatcher;
-import org.apache.ofbiz.service.ModelParam;
-import org.apache.ofbiz.service.ModelService;
-import org.w3c.dom.Element;
+import static graphql.Scalars.GraphQLBigDecimal;
+import static graphql.Scalars.GraphQLBigInteger;
+import static graphql.Scalars.GraphQLBoolean;
+import static graphql.Scalars.GraphQLByte;
+import static graphql.Scalars.GraphQLChar;
+import static graphql.Scalars.GraphQLFloat;
+import static graphql.Scalars.GraphQLID;
+import static graphql.Scalars.GraphQLInt;
+import static graphql.Scalars.GraphQLLong;
+import static graphql.Scalars.GraphQLShort;
+import static graphql.Scalars.GraphQLString;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -51,98 +41,109 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
-import static graphql.Scalars.GraphQLBigDecimal;
-import static graphql.Scalars.GraphQLBigInteger;
-import static graphql.Scalars.GraphQLBoolean;
-import static graphql.Scalars.GraphQLByte;
-import static graphql.Scalars.GraphQLChar;
-import static graphql.Scalars.GraphQLFloat;
-import static graphql.Scalars.GraphQLID;
-import static graphql.Scalars.GraphQLInt;
-import static graphql.Scalars.GraphQLLong;
-import static graphql.Scalars.GraphQLShort;
-import static graphql.Scalars.GraphQLString;
-import static org.apache.ofbiz.graphql.Scalars.GraphQLDateTime;
+import org.apache.ofbiz.base.util.UtilValidate;
+import org.apache.ofbiz.base.util.UtilXml;
+import org.apache.ofbiz.entity.Delegator;
+import org.apache.ofbiz.entity.GenericEntityException;
+import org.apache.ofbiz.entity.model.ModelEntity;
+import org.apache.ofbiz.entity.model.ModelField;
+import org.apache.ofbiz.entity.model.ModelReader;
+import org.apache.ofbiz.graphql.Scalars;
+import org.apache.ofbiz.graphql.fetcher.EntityDataFetcher;
+import org.apache.ofbiz.graphql.fetcher.ServiceDataFetcher;
+import org.apache.ofbiz.graphql.schema.GraphQLSchemaDefinition.ArgumentDefinition;
+import org.apache.ofbiz.graphql.schema.GraphQLSchemaDefinition.FieldDefinition;
+import org.apache.ofbiz.graphql.schema.GraphQLSchemaDefinition.GraphQLTypeDefinition;
+import org.apache.ofbiz.graphql.schema.GraphQLSchemaDefinition.ObjectTypeDefinition;
+import org.apache.ofbiz.service.GenericServiceException;
+import org.apache.ofbiz.service.LocalDispatcher;
+import org.apache.ofbiz.service.ModelParam;
+import org.apache.ofbiz.service.ModelService;
+import org.w3c.dom.Element;
 
-@SuppressWarnings(value = "all")
+import graphql.language.Field;
+import graphql.schema.DataFetchingEnvironment;
+import graphql.schema.GraphQLScalarType;
+
+@SuppressWarnings({"unchecked", "rawtypes", "cast", "deprecation"})
 public class GraphQLSchemaUtil {
 
-    public static final Map<String, GraphQLScalarType> graphQLScalarTypes = new HashMap<String, GraphQLScalarType>();
-    public static final Map<String, String> fieldTypeGraphQLMap = new HashMap<String, String>();
-    public static final Map<String, String> javaTypeGraphQLMap = new HashMap<String, String>();
+    public static final Map<String, GraphQLScalarType> GRAPH_QL_SCALAR_TYPE_MAP = new HashMap<String, GraphQLScalarType>();
+    public static final Map<String, String> FIELD_TYPE_GRAPH_QL_MAP = new HashMap<String, String>();
+    public static final Map<String, String> JAVA_TYPE_GRAPH_QL_MAP = new HashMap<String, String>();
 
-    public static final List<String> graphQLStringTypes = Arrays.asList("String", "ID", "Char");
-    public static final List<String> graphQLDateTypes = Arrays.asList("Timestamp");
-    public static final List<String> graphQLNumericTypes = Arrays.asList("Int", "Long", "Float", "BigInteger", "BigDecimal", "Short");
-    public static final List<String> graphQLBoolTypes = Arrays.asList("Boolean");
+    public static final List<String> GRAPH_QL_STRING_TYPES = Arrays.asList("String", "ID", "Char");
+    public static final List<String> GRAPHS_QL_DATE_TYPES = Arrays.asList("Timestamp");
+    public static final List<String> GRAPHS_QL_NUMERIC_TYPES = Arrays.asList("Int", "Long", "Float", "BigInteger", "BigDecimal", "Short");
+    public static final List<String> GRAPHS_QL_BOOL_TYPES = Arrays.asList("Boolean");
 
     static {
-        graphQLScalarTypes.put("Int", GraphQLInt);
-        graphQLScalarTypes.put("Float", GraphQLFloat);
-        graphQLScalarTypes.put("Boolean", GraphQLBoolean);
-        graphQLScalarTypes.put("BigInteger", GraphQLBigInteger);
-        graphQLScalarTypes.put("Byte", GraphQLByte);
-        graphQLScalarTypes.put("Char", GraphQLChar);
-        graphQLScalarTypes.put("String", GraphQLString);
-        graphQLScalarTypes.put("ID", GraphQLID);
-        graphQLScalarTypes.put("BigDecimal", GraphQLBigDecimal);
-        graphQLScalarTypes.put("Short", GraphQLShort);
-        graphQLScalarTypes.put("Long", GraphQLLong);
-        graphQLScalarTypes.put("Timestamp", GraphQLDateTime);
-        graphQLScalarTypes.put("DateTime", GraphQLDateTime);
+        GRAPH_QL_SCALAR_TYPE_MAP.put("Int", GraphQLInt);
+        GRAPH_QL_SCALAR_TYPE_MAP.put("Float", GraphQLFloat);
+        GRAPH_QL_SCALAR_TYPE_MAP.put("Boolean", GraphQLBoolean);
+        GRAPH_QL_SCALAR_TYPE_MAP.put("BigInteger", GraphQLBigInteger);
+        GRAPH_QL_SCALAR_TYPE_MAP.put("Byte", GraphQLByte);
+        GRAPH_QL_SCALAR_TYPE_MAP.put("Char", GraphQLChar);
+        GRAPH_QL_SCALAR_TYPE_MAP.put("String", GraphQLString);
+        GRAPH_QL_SCALAR_TYPE_MAP.put("ID", GraphQLID);
+        GRAPH_QL_SCALAR_TYPE_MAP.put("BigDecimal", GraphQLBigDecimal);
+        GRAPH_QL_SCALAR_TYPE_MAP.put("Short", GraphQLShort);
+        GRAPH_QL_SCALAR_TYPE_MAP.put("Long", GraphQLLong);
+        GRAPH_QL_SCALAR_TYPE_MAP.put("Timestamp", Scalars.getGraphQLDateTime());
+        GRAPH_QL_SCALAR_TYPE_MAP.put("DateTime", Scalars.getGraphQLDateTime());
 
-        fieldTypeGraphQLMap.put("id", "ID");
-        fieldTypeGraphQLMap.put("indicator", "String");
-        fieldTypeGraphQLMap.put("date", "String");
-        fieldTypeGraphQLMap.put("id-vlong", "String");
-        fieldTypeGraphQLMap.put("description", "String");
-        fieldTypeGraphQLMap.put("numeric", "Int"); //
-        fieldTypeGraphQLMap.put("long-varchar", "String");
-        fieldTypeGraphQLMap.put("id-long", "String");
-        fieldTypeGraphQLMap.put("currency-amount", "BigDecimal");
-        fieldTypeGraphQLMap.put("value", "value");
-        fieldTypeGraphQLMap.put("email", "String");
-        fieldTypeGraphQLMap.put("currency-precise", "BigDecimal");
-        fieldTypeGraphQLMap.put("very-short", "String");
-        fieldTypeGraphQLMap.put("date-time", "Timestamp");
-        fieldTypeGraphQLMap.put("credit-card-date", "String");
-        fieldTypeGraphQLMap.put("url", "String");
-        fieldTypeGraphQLMap.put("credit-card-number", "String");
-        fieldTypeGraphQLMap.put("fixed-point", "BigDecimal");
-        fieldTypeGraphQLMap.put("name", "String");
-        fieldTypeGraphQLMap.put("short-varchar", "String");
-        fieldTypeGraphQLMap.put("comment", "String");
-        fieldTypeGraphQLMap.put("time", "String");
-        fieldTypeGraphQLMap.put("very-long", "String");
-        fieldTypeGraphQLMap.put("floating-point", "Float");
-        fieldTypeGraphQLMap.put("object", "Byte");
-        fieldTypeGraphQLMap.put("byte-array", "Byte");
-        fieldTypeGraphQLMap.put("blob", "Byte");
+        FIELD_TYPE_GRAPH_QL_MAP.put("id", "ID");
+        FIELD_TYPE_GRAPH_QL_MAP.put("indicator", "String");
+        FIELD_TYPE_GRAPH_QL_MAP.put("date", "String");
+        FIELD_TYPE_GRAPH_QL_MAP.put("id-vlong", "String");
+        FIELD_TYPE_GRAPH_QL_MAP.put("description", "String");
+        FIELD_TYPE_GRAPH_QL_MAP.put("numeric", "Int"); //
+        FIELD_TYPE_GRAPH_QL_MAP.put("long-varchar", "String");
+        FIELD_TYPE_GRAPH_QL_MAP.put("id-long", "String");
+        FIELD_TYPE_GRAPH_QL_MAP.put("currency-amount", "BigDecimal");
+        FIELD_TYPE_GRAPH_QL_MAP.put("value", "value");
+        FIELD_TYPE_GRAPH_QL_MAP.put("email", "String");
+        FIELD_TYPE_GRAPH_QL_MAP.put("currency-precise", "BigDecimal");
+        FIELD_TYPE_GRAPH_QL_MAP.put("very-short", "String");
+        FIELD_TYPE_GRAPH_QL_MAP.put("date-time", "Timestamp");
+        FIELD_TYPE_GRAPH_QL_MAP.put("credit-card-date", "String");
+        FIELD_TYPE_GRAPH_QL_MAP.put("url", "String");
+        FIELD_TYPE_GRAPH_QL_MAP.put("credit-card-number", "String");
+        FIELD_TYPE_GRAPH_QL_MAP.put("fixed-point", "BigDecimal");
+        FIELD_TYPE_GRAPH_QL_MAP.put("name", "String");
+        FIELD_TYPE_GRAPH_QL_MAP.put("short-varchar", "String");
+        FIELD_TYPE_GRAPH_QL_MAP.put("comment", "String");
+        FIELD_TYPE_GRAPH_QL_MAP.put("time", "String");
+        FIELD_TYPE_GRAPH_QL_MAP.put("very-long", "String");
+        FIELD_TYPE_GRAPH_QL_MAP.put("floating-point", "Float");
+        FIELD_TYPE_GRAPH_QL_MAP.put("object", "Byte");
+        FIELD_TYPE_GRAPH_QL_MAP.put("byte-array", "Byte");
+        FIELD_TYPE_GRAPH_QL_MAP.put("blob", "Byte");
 
-        javaTypeGraphQLMap.put("String", "String");
-        javaTypeGraphQLMap.put("java.lang.String", "String");
-        javaTypeGraphQLMap.put("CharSequence", "String");
-        javaTypeGraphQLMap.put("java.lang.CharSequence", "String");
-        javaTypeGraphQLMap.put("Date", "String");
-        javaTypeGraphQLMap.put("java.sql.Date", "String");
-        javaTypeGraphQLMap.put("Time", "String");
-        javaTypeGraphQLMap.put("java.sql.Time", "String");
-        javaTypeGraphQLMap.put("Timestamp", "Timestamp");
-        javaTypeGraphQLMap.put("java.sql.Timestamp", "Timestamp");
-        javaTypeGraphQLMap.put("Integer", "Int");
-        javaTypeGraphQLMap.put("java.lang.Integer", "Int");
-        javaTypeGraphQLMap.put("Long", "Long");
-        javaTypeGraphQLMap.put("java.lang.Long", "Long");
-        javaTypeGraphQLMap.put("BigInteger", "BigInteger");
-        javaTypeGraphQLMap.put("java.math.BigInteger", "BigInteger");
-        javaTypeGraphQLMap.put("Float", "Float");
-        javaTypeGraphQLMap.put("java.lang.Float", "Float");
-        javaTypeGraphQLMap.put("Double", "Float");
-        javaTypeGraphQLMap.put("java.lang.Double", "Float");
-        javaTypeGraphQLMap.put("BigDecimal", "BigDecimal");
-        javaTypeGraphQLMap.put("java.math.BigDecimal", "BigDecimal");
-        javaTypeGraphQLMap.put("Boolean", "Boolean");
-        javaTypeGraphQLMap.put("java.lang.Boolean", "Boolean");
+        JAVA_TYPE_GRAPH_QL_MAP.put("String", "String");
+        JAVA_TYPE_GRAPH_QL_MAP.put("java.lang.String", "String");
+        JAVA_TYPE_GRAPH_QL_MAP.put("CharSequence", "String");
+        JAVA_TYPE_GRAPH_QL_MAP.put("java.lang.CharSequence", "String");
+        JAVA_TYPE_GRAPH_QL_MAP.put("Date", "String");
+        JAVA_TYPE_GRAPH_QL_MAP.put("java.sql.Date", "String");
+        JAVA_TYPE_GRAPH_QL_MAP.put("Time", "String");
+        JAVA_TYPE_GRAPH_QL_MAP.put("java.sql.Time", "String");
+        JAVA_TYPE_GRAPH_QL_MAP.put("Timestamp", "Timestamp");
+        JAVA_TYPE_GRAPH_QL_MAP.put("java.sql.Timestamp", "Timestamp");
+        JAVA_TYPE_GRAPH_QL_MAP.put("Integer", "Int");
+        JAVA_TYPE_GRAPH_QL_MAP.put("java.lang.Integer", "Int");
+        JAVA_TYPE_GRAPH_QL_MAP.put("Long", "Long");
+        JAVA_TYPE_GRAPH_QL_MAP.put("java.lang.Long", "Long");
+        JAVA_TYPE_GRAPH_QL_MAP.put("BigInteger", "BigInteger");
+        JAVA_TYPE_GRAPH_QL_MAP.put("java.math.BigInteger", "BigInteger");
+        JAVA_TYPE_GRAPH_QL_MAP.put("Float", "Float");
+        JAVA_TYPE_GRAPH_QL_MAP.put("java.lang.Float", "Float");
+        JAVA_TYPE_GRAPH_QL_MAP.put("Double", "Float");
+        JAVA_TYPE_GRAPH_QL_MAP.put("java.lang.Double", "Float");
+        JAVA_TYPE_GRAPH_QL_MAP.put("BigDecimal", "BigDecimal");
+        JAVA_TYPE_GRAPH_QL_MAP.put("java.math.BigDecimal", "BigDecimal");
+        JAVA_TYPE_GRAPH_QL_MAP.put("Boolean", "Boolean");
+        JAVA_TYPE_GRAPH_QL_MAP.put("java.lang.Boolean", "Boolean");
 
     }
 
@@ -185,7 +186,7 @@ public class GraphQLSchemaUtil {
 
         for (String fieldName : allFields) {
             ModelField field = ed.getField(fieldName);
-            String fieldScalarType = fieldTypeGraphQLMap.get(field.getType());
+            String fieldScalarType = FIELD_TYPE_GRAPH_QL_MAP.get(field.getType());
             Map<String, String> fieldPropertyMap = new HashMap<>();
             if (field.getIsPk() || field.getIsNotNull()) {
                 fieldPropertyMap.put("nonNull", "true");
@@ -195,7 +196,6 @@ public class GraphQLSchemaUtil {
             FieldDefinition fieldDef = GraphQLSchemaDefinition.getCachedFieldDefinition(fieldName, fieldScalarType,
                     fieldPropertyMap.get("nonNull"), "false", "false");
             if (fieldDef == null) {
-                //System.out.println("fieldName "+fieldName+", fieldScalarType "+fieldScalarType);
                 fieldDef = new FieldDefinition(objectTypeName, delegator, dispatcher, fieldName, fieldScalarType, fieldPropertyMap);
                 GraphQLSchemaDefinition.putCachedFieldDefinition(fieldDef);
             }
@@ -203,7 +203,6 @@ public class GraphQLSchemaUtil {
 
         }
 
-        //System.out.println("objectTypeName "+objectTypeName);
         ObjectTypeDefinition objectTypeDef = new ObjectTypeDefinition(delegator, dispatcher, objectTypeName,
                 ed.getDescription(), new ArrayList<String>(), fieldDefMap);
         allTypeDefMap.put(objectTypeName, objectTypeDef);
@@ -342,7 +341,7 @@ public class GraphQLSchemaUtil {
     }
 
     public static boolean requirePagination(DataFetchingEnvironment environment) {
-        Map<String, Object> arguments = (Map) environment.getArguments();
+        Map<String, Object> arguments = environment.getArguments();
         List<Field> fields = (List) environment.getFields();
         Map paginationArg = (Map) arguments.get("pagination");
         if (paginationArg != null && (Boolean) paginationArg.get("pageNoLimit")) {
@@ -398,46 +397,42 @@ public class GraphQLSchemaUtil {
     public static void mergeFieldDefinition(Element fieldNode, Map<String, FieldDefinition> fieldDefMap,
                                             Delegator delegator, LocalDispatcher dispatcher) {
         FieldDefinition fieldDef = fieldDefMap.get(fieldNode.getAttribute("name"));
-        System.out.println("Trying to merge here: " + fieldNode.getAttribute("name") + ", fieldDef is null ? " + (fieldDef == null));
-        System.out.println("fieldDef " + fieldDef);
         if (fieldDef != null) {
             if (UtilValidate.isNotEmpty(fieldNode.getAttribute("type"))) {
-                fieldDef.type = fieldNode.getAttribute("type");
+                fieldDef.setType(fieldNode.getAttribute("type"));
             }
             if (UtilValidate.isNotEmpty(fieldNode.getAttribute("non-null"))) {
-                fieldDef.nonNull = fieldNode.getAttribute("non-null");
+                fieldDef.setNonNull(fieldNode.getAttribute("non-null"));
             }
             if (UtilValidate.isNotEmpty(fieldNode.getAttribute("is-list"))) {
-                fieldDef.isList = fieldNode.getAttribute("is-list");
+                fieldDef.setIsList(fieldNode.getAttribute("is-list"));
             }
             if (UtilValidate.isNotEmpty(fieldNode.getAttribute("list-item-non-null"))) {
-                fieldDef.listItemNonNull = fieldNode.getAttribute("list-item-non-null");
+                fieldDef.setListItemNonNull(fieldNode.getAttribute("list-item-non-null"));
             }
             if (UtilValidate.isNotEmpty(fieldNode.getAttribute("require-authentication"))) {
-                fieldDef.requireAuthentication = fieldNode.getAttribute("require-authentication");
+                fieldDef.setRequireAuthentication(fieldNode.getAttribute("require-authentication"));
             }
             List<? extends Element> elements = UtilXml.childElementList(fieldNode);
             for (Element childNode : elements) {
                 switch (childNode.getNodeName()) {
                 case "description":
-                    fieldDef.description = childNode.getTextContent();
+                    fieldDef.setDescription(childNode.getTextContent());
                     break;
                 case "depreciation-reason":
-                    fieldDef.depreciationReason = childNode.getTextContent();
+                    fieldDef.setDepreciationReason(childNode.getTextContent());
                     break;
                 case "auto-arguments":
                     //fieldDef.mergeArgument(new AutoArgumentsDefinition(childNode));
                     break;
                 case "argument":
-                    String argTypeName = GraphQLSchemaDefinition.getArgumentTypeName(childNode.getAttribute("type"),
-                            fieldDef.isList);
+                    String argTypeName = GraphQLSchemaDefinition.getArgumentTypeName(childNode.getAttribute("type"), fieldDef.getIsList());
                     ArgumentDefinition argDef = GraphQLSchemaDefinition.getCachedArgumentDefinition(
                             childNode.getAttribute("name"), argTypeName, childNode.getAttribute("required"));
                     if (argDef == null) {
                         argDef = new ArgumentDefinition(childNode, fieldDef);
                         GraphQLSchemaDefinition.putCachedArgumentDefinition(argDef);
                     }
-
                     fieldDef.mergeArgument(argDef);
                     break;
                 case "entity-fetcher":
@@ -450,9 +445,8 @@ public class GraphQLSchemaUtil {
         } else {
             Element parentEle = (Element) fieldNode.getParentNode();
             String parent = parentEle.getAttribute("name");
-            System.out.println("YAYYY!! " + parent);
             fieldDef = new FieldDefinition(parent, delegator, dispatcher, fieldNode);
-            fieldDefMap.put(fieldDef.name, fieldDef);
+            fieldDefMap.put(fieldDef.getName(), fieldDef);
         }
     }
 
@@ -478,10 +472,6 @@ public class GraphQLSchemaUtil {
             // TODO Auto-generated catch block
             //e.printStackTrace();
         }
-//		if (entity == null) {
-//			throw new IllegalArgumentException("Entity Definition " + entityName + " not found");
-//		}
-
         return entity;
     }
 
@@ -522,12 +512,12 @@ public class GraphQLSchemaUtil {
 
     public static String getGraphQLTypeNameByJava(String javaType) {
         if (javaType == null) return "String";
-        return javaTypeGraphQLMap.get(getShortJavaType(javaType));
+        return JAVA_TYPE_GRAPH_QL_MAP.get(getShortJavaType(javaType));
     }
 
     public static String getGraphQLTypeNameBySQLType(String sqlType) {
         if (sqlType == null) return null;
-        return fieldTypeGraphQLMap.get(sqlType);
+        return FIELD_TYPE_GRAPH_QL_MAP.get(sqlType);
     }
 
 

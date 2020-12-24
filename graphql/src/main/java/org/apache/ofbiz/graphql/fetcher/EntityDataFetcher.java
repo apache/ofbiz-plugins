@@ -40,7 +40,8 @@ import org.w3c.dom.Element;
 
 import graphql.schema.DataFetchingEnvironment;
 
-public class EntityDataFetcher extends BaseEntityDataFetcher {
+@SuppressWarnings({ "unchecked" })
+public final class EntityDataFetcher extends BaseEntityDataFetcher {
 
     public EntityDataFetcher() {
         super(null, null, null);
@@ -55,7 +56,7 @@ public class EntityDataFetcher extends BaseEntityDataFetcher {
     }
 
     EntityDataFetcher(Delegator delegator, FieldDefinition fieldDef, String entityName, String interfaceEntityName,
-                      Map<String, String> relKeyMap) {
+            Map<String, String> relKeyMap) {
         super(delegator, fieldDef, entityName, interfaceEntityName, relKeyMap);
     }
 
@@ -64,23 +65,24 @@ public class EntityDataFetcher extends BaseEntityDataFetcher {
         Map<String, Object> operationMap = new HashMap<>();
         Map<String, Object> resultMap = new HashMap<>();
         GraphQLSchemaUtil.transformArguments(environment.getArguments(), inputFieldsMap, operationMap);
-        if (operation.equals("one")) {
+        if (getOperation().equals("one")) {
             try {
                 GenericValue entity = null;
-                EntityQuery entityQuery = EntityQuery.use(delegator).from(entityName).where(inputFieldsMap);
-                for (Map.Entry<String, String> entry : relKeyMap.entrySet()) {
-                    entityQuery.where(EntityCondition
-                            .makeCondition(entry.getValue(), EntityOperator.EQUALS, ((Map<?, ?>) environment.getSource()).get(entry.getKey())));
+                EntityQuery entityQuery = EntityQuery.use(getDelegator()).from(getEntityName()).where(inputFieldsMap);
+                for (Map.Entry<String, String> entry : getRelKeyMap().entrySet()) {
+                    entityQuery.where(EntityCondition.makeCondition(entry.getValue(), EntityOperator.EQUALS, (
+                            (Map<?, ?>) environment.getSource()).get(entry.getKey())));
                 }
                 entity = entityQuery.queryOne();
                 if (UtilValidate.isEmpty(entity)) {
                     return null;
                 }
-                if (interfaceEntityName == null || interfaceEntityName.isEmpty() || entityName.equals(interfaceEntityName)) {
+                if (getInterfaceEntityName() == null || getInterfaceEntityName().isEmpty()
+                        || getEntityName().equals(getInterfaceEntityName())) {
                     return entity;
                 } else {
                     GenericValue interfaceEntity = null;
-                    entityQuery = EntityQuery.use(delegator).from(interfaceEntityName)
+                    entityQuery = EntityQuery.use(getDelegator()).from(getInterfaceEntityName())
                             .where(EntityCondition.makeCondition(entity.getPrimaryKey().getAllFields()));
                     interfaceEntity = entityQuery.queryOne();
                     Map<String, Object> jointOneMap = new HashMap<>();
@@ -95,7 +97,7 @@ public class EntityDataFetcher extends BaseEntityDataFetcher {
                 e.printStackTrace();
                 return null;
             }
-        } else if (operation.equals("list")) {
+        } else if (getOperation().equals("list")) {
             EntityFindOptions options = null;
             List<GenericValue> result = null;
             Map<String, Object> edgesData;
@@ -103,11 +105,12 @@ public class EntityDataFetcher extends BaseEntityDataFetcher {
             if (inputFieldsMap.size() != 0) {
                 entityConditions.add(EntityCondition.makeCondition(inputFieldsMap));
             } else {
-                DataFetcherUtils.addEntityConditions(entityConditions, operationMap, GraphQLSchemaUtil.getEntityDefinition(entityName, delegator));
+                DataFetcherUtils.addEntityConditions(entityConditions, operationMap,
+                        GraphQLSchemaUtil.getEntityDefinition(getEntityName(), getDelegator()));
             }
-            for (Map.Entry<String, String> entry : relKeyMap.entrySet()) {
-                entityConditions.add(EntityCondition
-                        .makeCondition(entry.getValue(), EntityOperator.EQUALS, ((Map<?, ?>) environment.getSource()).get(entry.getKey())));
+            for (Map.Entry<String, String> entry : getRelKeyMap().entrySet()) {
+                entityConditions.add(EntityCondition.makeCondition(entry.getValue(), EntityOperator.EQUALS, (
+                        (Map<?, ?>) environment.getSource()).get(entry.getKey())));
             }
             List<Map<String, Object>> edgesDataList = null;
             if (GraphQLSchemaUtil.requirePagination(environment)) {
@@ -133,14 +136,17 @@ public class EntityDataFetcher extends BaseEntityDataFetcher {
                 pageInfo.put("hasPreviousPage", hasPreviousPage);
                 int count = 0;
                 try {
-                    count = (int) delegator.findCountByCondition(entityName, EntityCondition.makeCondition(entityConditions), null, options);
-                    result = delegator.findList(entityName, EntityCondition.makeCondition(entityConditions), null,
-                            UtilValidate.isNotEmpty(orderBy) ? Arrays.asList(orderBy.split(",")) : null, options, false);
+                    count = (int) getDelegator().findCountByCondition(getEntityName(),
+                            EntityCondition.makeCondition(entityConditions), null, options);
+                    result = getDelegator().findList(getEntityName(), EntityCondition.makeCondition(entityConditions), null,
+                            UtilValidate.isNotEmpty(orderBy) ? Arrays.asList(orderBy.split(",")) : null, options,
+                            false);
                 } catch (GenericEntityException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-                int pageMaxIndex = new BigDecimal(count - 1).divide(new BigDecimal(pageSize), 0, BigDecimal.ROUND_DOWN).intValue();
+                int pageMaxIndex = new BigDecimal(count - 1).divide(new BigDecimal(pageSize), 0, BigDecimal.ROUND_DOWN)
+                        .intValue();
                 pageInfo.put("pageMaxIndex", pageMaxIndex);
                 if (pageRangeHigh > count) {
                     pageRangeHigh = count;
@@ -151,13 +157,15 @@ public class EntityDataFetcher extends BaseEntityDataFetcher {
                 edgesDataList = new ArrayList<Map<String, Object>>(result.size());
                 if (UtilValidate.isNotEmpty(result)) {
                     String cursor = null;
-                    if (interfaceEntityName == null || interfaceEntityName.isEmpty() || entityName.equals(interfaceEntityName)) {
-                        pageInfo.put("startCursor", GraphQLSchemaUtil.encodeRelayCursor(result.get(0), pkFieldNames)); //TODO
-                        pageInfo.put("endCursor", GraphQLSchemaUtil.encodeRelayCursor(result.get(result.size() - 1), pkFieldNames)); //TODO
+                    if (getInterfaceEntityName() == null || getInterfaceEntityName().isEmpty()
+                            || getEntityName().equals(getInterfaceEntityName())) {
+                        pageInfo.put("startCursor", GraphQLSchemaUtil.encodeRelayCursor(result.get(0), getPkFieldNames())); // TODO
+                        pageInfo.put("endCursor",
+                                GraphQLSchemaUtil.encodeRelayCursor(result.get(result.size() - 1), getPkFieldNames())); // TODO
                         for (GenericValue gv : result) {
                             edgesData = new HashMap<>(2);
-                            cursor = GraphQLSchemaUtil.encodeRelayCursor(gv, pkFieldNames);
-                            edgesData.put("cursor", cursor); //TODO
+                            cursor = GraphQLSchemaUtil.encodeRelayCursor(gv, getPkFieldNames());
+                            edgesData.put("cursor", cursor); // TODO
                             edgesData.put("node", gv);
                             edgesDataList.add(edgesData);
                         }
@@ -167,16 +175,18 @@ public class EntityDataFetcher extends BaseEntityDataFetcher {
 
             } else {
                 try {
-                    result = delegator.findList(entityName, EntityCondition.makeCondition(entityConditions), null, null, options, false);
+                    result = getDelegator().findList(getEntityName(), EntityCondition.makeCondition(entityConditions), null, null,
+                            options, false);
                 } catch (GenericEntityException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
                 edgesDataList = new ArrayList<Map<String, Object>>(result != null ? result.size() : 0);
-                if (interfaceEntityName == null || interfaceEntityName.isEmpty() || entityName.equals(interfaceEntityName)) {
+                if (getInterfaceEntityName() == null || getInterfaceEntityName().isEmpty()
+                        || getEntityName().equals(getInterfaceEntityName())) {
                     for (GenericValue gv : result) {
                         edgesData = new HashMap<>(2);
-                        edgesData.put("cursor", "2"); //TODO
+                        edgesData.put("cursor", "2"); // TODO
                         edgesData.put("node", gv);
                         edgesDataList.add(edgesData);
                     }

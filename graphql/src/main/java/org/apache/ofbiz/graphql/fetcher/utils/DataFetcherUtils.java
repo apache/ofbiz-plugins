@@ -28,12 +28,13 @@ import org.apache.ofbiz.entity.condition.EntityCondition;
 import org.apache.ofbiz.entity.condition.EntityFunction;
 import org.apache.ofbiz.entity.condition.EntityOperator;
 import org.apache.ofbiz.entity.model.ModelEntity;
+
 import graphql.language.Field;
-import graphql.language.FragmentSpread;
 import graphql.language.InlineFragment;
 import graphql.language.Selection;
 import graphql.language.SelectionSet;
 
+@SuppressWarnings({"rawtypes"})
 public class DataFetcherUtils {
     static Selection getGraphQLSelection(SelectionSet selectionSet, String name) {
         if (selectionSet == null) {
@@ -44,8 +45,6 @@ public class DataFetcherUtils {
                 if (((Field) (selection)).getName().equals(name)) {
                     return selection;
                 }
-            } else if (selection instanceof FragmentSpread) {
-                // Do nothing since FragmentSpread has no way to find selectionSet
             } else if (selection instanceof InlineFragment) {
                 getGraphQLSelection(((InlineFragment) (selection)).getSelectionSet(), name);
             }
@@ -82,7 +81,7 @@ public class DataFetcherUtils {
     }
 
     static boolean matchParentByRelKeyMap(Map<String, Object> sourceItem, Map<String, Object> self,
-                                          Map<String, String> relKeyMap) {
+            Map<String, String> relKeyMap) {
         int found = -1;
         for (Map.Entry<String, String> entry : relKeyMap.entrySet()) {
             found = (found == -1) ? (sourceItem.get(entry.getKey()) == self.get(entry.getValue()) ? 1 : 0)
@@ -92,7 +91,7 @@ public class DataFetcherUtils {
     }
 
     public static List<EntityCondition> addEntityConditions(List<EntityCondition> entityConditions,
-                                                            Map<String, Object> inputFieldsMap, ModelEntity entity) {
+            Map<String, Object> inputFieldsMap, ModelEntity entity) {
         if (inputFieldsMap == null || inputFieldsMap.size() == 0) {
             return entityConditions;
         }
@@ -111,60 +110,60 @@ public class DataFetcherUtils {
                 switch (op) {
                 case "equals":
                     if (!isValEmpty) {
-                        EntityComparisonOperator<?, ?> eq_operator = not ? EntityOperator.NOT_EQUAL
+                        EntityComparisonOperator<?, ?> eqOperator = not ? EntityOperator.NOT_EQUAL
                                 : EntityOperator.EQUALS;
                         if (ic) {
                             entityConditions.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD(fieldName),
-                                    eq_operator, EntityFunction.UPPER(value.trim())));
+                                    eqOperator, EntityFunction.UPPER(value.trim())));
                         } else {
-                            entityConditions.add(EntityCondition.makeCondition(fieldName, eq_operator, value.trim()));
+                            entityConditions.add(EntityCondition.makeCondition(fieldName, eqOperator, value.trim()));
                         }
 
                     }
                     break;
                 case "like":
                     if (!isValEmpty) {
-                        EntityComparisonOperator<?, ?> eq_operator = not ? EntityOperator.NOT_LIKE
+                        EntityComparisonOperator<?, ?> eqOperator = not ? EntityOperator.NOT_LIKE
                                 : EntityOperator.LIKE;
                         if (ic) {
                             entityConditions.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD(fieldName),
-                                    eq_operator, EntityFunction.UPPER(value)));
+                                    eqOperator, EntityFunction.UPPER(value)));
                         } else {
-                            entityConditions.add(EntityCondition.makeCondition(fieldName, eq_operator, value));
+                            entityConditions.add(EntityCondition.makeCondition(fieldName, eqOperator, value));
                         }
 
                     }
                     break;
                 case "contains":
                     if (!isValEmpty) {
-                        EntityComparisonOperator<?, ?> eq_operator = not ? EntityOperator.NOT_LIKE
+                        EntityComparisonOperator<?, ?> eqOperator = not ? EntityOperator.NOT_LIKE
                                 : EntityOperator.LIKE;
                         if (ic) {
                             entityConditions.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD(fieldName),
-                                    eq_operator, EntityFunction.UPPER("%" + value + "%")));
+                                    eqOperator, EntityFunction.UPPER("%" + value + "%")));
                         } else {
                             entityConditions
-                                    .add(EntityCondition.makeCondition(fieldName, eq_operator, "%" + value + "%"));
+                                    .add(EntityCondition.makeCondition(fieldName, eqOperator, "%" + value + "%"));
                         }
                     }
                     break;
                 case "begins":
                     if (!isValEmpty) {
-                        EntityComparisonOperator<?, ?> eq_operator = not ? EntityOperator.NOT_LIKE
+                        EntityComparisonOperator<?, ?> eqOperator = not ? EntityOperator.NOT_LIKE
                                 : EntityOperator.LIKE;
                         if (ic) {
                             entityConditions.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD(fieldName),
-                                    eq_operator, EntityFunction.UPPER(value + "%")));
+                                    eqOperator, EntityFunction.UPPER(value + "%")));
                         } else {
-                            entityConditions.add(EntityCondition.makeCondition(fieldName, eq_operator, value + "%"));
+                            entityConditions.add(EntityCondition.makeCondition(fieldName, eqOperator, value + "%"));
                         }
                     }
                     break;
                 case "in":
                     if (!isValEmpty) {
                         List<String> valueList = Arrays.asList(value.split(","));
-                        EntityComparisonOperator<?, ?> eq_operator = not ? EntityOperator.NOT_IN : EntityOperator.IN;
-                        entityConditions.add(EntityCondition.makeCondition(fieldName, eq_operator, valueList));
+                        EntityComparisonOperator<?, ?> eqOperator = not ? EntityOperator.NOT_IN : EntityOperator.IN;
+                        entityConditions.add(EntityCondition.makeCondition(fieldName, eqOperator, valueList));
                     }
                     break;
                 }

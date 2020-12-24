@@ -32,14 +32,86 @@ import org.apache.ofbiz.graphql.schema.GraphQLSchemaDefinition.FieldDefinition;
 import org.w3c.dom.Element;
 
 class BaseEntityDataFetcher extends BaseDataFetcher {
-    String entityName, interfaceEntityName, operation;
-    String requireAuthentication;
-    String interfaceEntityPkField;
-    List<String> pkFieldNames = new ArrayList<>(1);
-    String fieldRawType;
-    Map<String, String> relKeyMap = new HashMap<>();
-    List<String> localizeFields = new ArrayList<>();
-    boolean useCache = false;
+    private String entityName;
+    private String interfaceEntityName;
+    private String operation;
+    private String requireAuthentication;
+    private String interfaceEntityPkField;
+    private List<String> pkFieldNames = new ArrayList<>(1);
+    private String fieldRawType;
+    private Map<String, String> relKeyMap = new HashMap<>();
+    private List<String> localizeFields = new ArrayList<>();
+    private boolean useCache = false;
+
+    /**
+     * @return the entityName
+     */
+    protected String getEntityName() {
+        return entityName;
+    }
+
+    /**
+     * @return the interfaceEntityName
+     */
+    protected String getInterfaceEntityName() {
+        return interfaceEntityName;
+    }
+
+    /**
+     * @return the operation
+     */
+    protected String getOperation() {
+        return operation;
+    }
+
+    /**
+     * @return the requireAuthentication
+     */
+    protected String getRequireAuthentication() {
+        return requireAuthentication;
+    }
+
+    /**
+     * @return the interfaceEntityPkField
+     */
+    protected String getInterfaceEntityPkField() {
+        return interfaceEntityPkField;
+    }
+
+    /**
+     * @return the pkFieldNames
+     */
+    protected List<String> getPkFieldNames() {
+        return pkFieldNames;
+    }
+
+    /**
+     * @return the fieldRawType
+     */
+    protected String getFieldRawType() {
+        return fieldRawType;
+    }
+
+    /**
+     * @return the relKeyMap
+     */
+    protected Map<String, String> getRelKeyMap() {
+        return relKeyMap;
+    }
+
+    /**
+     * @return the localizeFields
+     */
+    protected List<String> getLocalizeFields() {
+        return localizeFields;
+    }
+
+    /**
+     * @return the useCache
+     */
+    protected boolean isUseCache() {
+        return useCache;
+    }
 
     BaseEntityDataFetcher(Delegator delegator, Element element, FieldDefinition fieldDef) {
         super(fieldDef, delegator);
@@ -72,7 +144,8 @@ class BaseEntityDataFetcher extends BaseDataFetcher {
                 }
             }
             if (relFn == null) {
-                throw new IllegalArgumentException("The key-map.@related of Entity " + entityName + " should be specified");
+                throw new IllegalArgumentException(
+                        "The key-map.@related of Entity " + entityName + " should be specified");
             }
 
             keyMap.put(fieldName, relFn);
@@ -88,12 +161,13 @@ class BaseEntityDataFetcher extends BaseDataFetcher {
         initializeFields(entityName, element.getAttribute("interface-entity-name"), keyMap);
     }
 
-    BaseEntityDataFetcher(Delegator delegator, FieldDefinition fieldDef, String entityName, Map<String, String> relKeyMap) {
+    BaseEntityDataFetcher(Delegator delegator, FieldDefinition fieldDef, String entityName,
+            Map<String, String> relKeyMap) {
         this(delegator, fieldDef, entityName, null, relKeyMap);
     }
 
     BaseEntityDataFetcher(Delegator delegator, FieldDefinition fieldDef, String entityName, String interfaceEntityName,
-                          Map<String, String> relKeyMap) {
+            Map<String, String> relKeyMap) {
         super(fieldDef, delegator);
         ModelEntity entity = null;
         try {
@@ -107,12 +181,14 @@ class BaseEntityDataFetcher extends BaseDataFetcher {
     }
 
     private void initializeFields(String entityName, String interfaceEntityName, Map<String, String> relKeyMap) {
-        this.requireAuthentication = fieldDef.getRequireAuthentication() != null ? fieldDef.getRequireAuthentication() : "true";
+        this.requireAuthentication = getFieldDef().getRequireAuthentication() != null
+                ? getFieldDef().getRequireAuthentication()
+                : "true";
         this.entityName = entityName;
         this.interfaceEntityName = interfaceEntityName;
-        this.fieldRawType = fieldDef.getType();
+        this.fieldRawType = getFieldDef().getType();
         this.relKeyMap.putAll(relKeyMap);
-        if ("true".equals(fieldDef.getIsList())) {
+        if ("true".equals(getFieldDef().getIsList())) {
             this.operation = "list";
         } else {
             this.operation = "one";
@@ -120,7 +196,7 @@ class BaseEntityDataFetcher extends BaseDataFetcher {
         if (UtilValidate.isNotEmpty(interfaceEntityName)) {
             ModelEntity entity = null;
             try {
-                entity = delegator.getModelReader().getModelEntity(entityName);
+                entity = getDelegator().getModelReader().getModelEntity(entityName);
             } catch (GenericEntityException e) {
                 e.printStackTrace();
             }
@@ -128,14 +204,15 @@ class BaseEntityDataFetcher extends BaseDataFetcher {
                 throw new IllegalArgumentException("Interface entity " + interfaceEntityName + " not found");
             }
             if (entity.getPkFieldNames().size() != 1) {
-                throw new IllegalArgumentException("Entity " + interfaceEntityName + " for interface should have one primary key");
+                throw new IllegalArgumentException(
+                        "Entity " + interfaceEntityName + " for interface should have one primary key");
             }
             interfaceEntityPkField = entity.getFirstPkFieldName();
         }
 
         ModelEntity entity = null;
         try {
-            entity = delegator.getModelReader().getModelEntity(entityName);
+            entity = getDelegator().getModelReader().getModelEntity(entityName);
         } catch (GenericEntityException e) {
             e.printStackTrace();
         }

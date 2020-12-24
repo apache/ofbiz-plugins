@@ -14,19 +14,20 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.aaaab	
+ * under the License.aaaab
  *******************************************************************************/
 package org.apache.ofbiz.graphql.schema;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@SuppressWarnings("serial")
 public class DateRangeInputType extends LinkedHashMap<String, String> {
-    public String period;
-    public String poffset;
-    public String from;
-    public String thru;
+
+    private static final long serialVersionUID = 1L;
+    private String period;
+    private String poffset;
+    private String from;
+    private String thru;
 
     DateRangeInputType(String period, String poffset, String from, String thru) {
         this.period = period;
@@ -47,7 +48,7 @@ public class DateRangeInputType extends LinkedHashMap<String, String> {
         }
     }
 
-    public DateRangeInputType(Map map) {
-        this((String) map.get("period"), (String) map.get("poffset"), (String) map.get("from"), (String) map.get("thru"));
+    public DateRangeInputType(Map<String, String> map) {
+        this(map.get("period"), map.get("poffset"), map.get("from"), map.get("thru"));
     }
 }

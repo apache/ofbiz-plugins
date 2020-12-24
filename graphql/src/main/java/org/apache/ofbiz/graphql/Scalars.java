@@ -36,7 +36,7 @@ public class Scalars {
     private static final BigInteger LONG_MAX = BigInteger.valueOf(Long.MAX_VALUE);
     private static final BigInteger LONG_MIN = BigInteger.valueOf(Long.MIN_VALUE);
 
-    public static GraphQLScalarType GraphQLDateTime = GraphQLScalarType.newScalar().name("DateTime")
+    private static GraphQLScalarType graphQLDateTime = GraphQLScalarType.newScalar().name("DateTime")
             .description("An ISO-8601 encoded UTC date time string. Example value: \"2019-07-03T20:47:55Z\".")
             .coercing(new Coercing<Object, Object>() {
 
@@ -90,4 +90,11 @@ public class Scalars {
                 }
 
             }).build();
+
+    /**
+     * @return the graphQLDateTime
+     */
+    public static GraphQLScalarType getGraphQLDateTime() {
+        return graphQLDateTime;
+    }
 }

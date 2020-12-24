@@ -33,6 +33,7 @@ import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ModelService;
 import org.apache.ofbiz.service.ServiceUtil;
 
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class GraphQLServices {
 
     /**
@@ -81,7 +82,12 @@ public class GraphQLServices {
         return sucess;
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     *
+     * @param dctx
+     * @param context
+     * @return
+     */
     public Map<String, Object> buildConnection(DispatchContext dctx, Map<String, Object> context) {
 
         List<GenericValue> el = (List<GenericValue>) context.get("el");
@@ -165,10 +171,15 @@ public class GraphQLServices {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     *
+     * @param dctx
+     * @param context
+     * @return
+     */
     public Map<String, Object> buildConnectionByList(DispatchContext dctx, Map<String, Object> context) {
 
-        LocalDispatcher dispatcher = (LocalDispatcher) dctx.getDispatcher();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
         Map<String, Object> edgesData;
         Map<String, Object> node;
         List<String> pkFieldNames = (List<String>) context.get("pkFieldNames");
