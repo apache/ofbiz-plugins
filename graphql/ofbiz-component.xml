@@ -43,5 +43,7 @@ under the License.
         server="default-server"
         location="webapp/graphql"
         base-permission="OFBTOOLS,GRAPHQL"
-        mount-point="/graphql"/>
+        menu-name="secondary"
+        mount-point="/graphql"
+        app-bar-display="true"/>
 </ofbiz-component>
