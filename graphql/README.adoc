@@ -43,10 +43,10 @@ public class GraphQLEndpointServletImpl extends SimpleGraphQLHttpServlet {
 ----
 
 == Important URLs
-* GraphQL endpint (https://localhost:8443/graphql/graphql)
-* GraphQL schema (https://localhost:8443/graphql/graphql/schema.json)
-* GraphiQL (https://localhost:8443/graphql/graphiql/index.html)
-* GraphQL Playground (https://localhost:8443/graphql/playground/index.html)
+* GraphQL endpint (https://localhost:8443/graphql/api)
+* GraphQL schema (https://localhost:8443/graphql/api/schema.json)
+* GraphiQL (https://localhost:8443/graphql/control/graphiql)
+* GraphQL Playground (https://localhost:8443/graphql/control/playground)
 
 == Usage
 It comes with a demo query operation outlined below. The schema part is something that needs to be refined further. Both ways of creating the schema viz. GraphQL SDL and Programmatically using Java API, are demonstrated. This part will be further enhanced to include other operations that can be defined easily.
