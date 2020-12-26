@@ -22,6 +22,7 @@ under the License.
 :imagesdir: ./webapp/graphql/images
 image::OFBiz-Logo.svg[100,100][float="left"]
 image::graphql-logo.svg[100,100][float="right"]
+:uri-demo: https://github.com/girishvasmatkar/graphql-product-api
 
 This plug-in a GraphQL plugin that lets OFBiz to define GraphQL API.
 
@@ -43,10 +44,10 @@ public class GraphQLEndpointServletImpl extends SimpleGraphQLHttpServlet {
 ----
 
 == Important URLs
-* GraphQL endpint (https://localhost:8443/graphql/graphql)
-* GraphQL schema (https://localhost:8443/graphql/graphql/schema.json)
-* GraphiQL (https://localhost:8443/graphql/graphiql/index.html)
-* GraphQL Playground (https://localhost:8443/graphql/playground/index.html)
+* GraphQL endpint (https://localhost:8443/graphql/api)
+* GraphQL schema (https://localhost:8443/graphql/api/schema.json)
+* GraphiQL (https://localhost:8443/graphql/control/graphiql)
+* GraphQL Playground (https://localhost:8443/graphql/control/playground)
 
 == Usage
 It comes with a demo query operation outlined below. The schema part is something that needs to be refined further. Both ways of creating the schema viz. GraphQL SDL and Programmatically using Java API, are demonstrated. This part will be further enhanced to include other operations that can be defined easily.
@@ -58,17 +59,16 @@ Queries can be executed like below:
 The bundled up schema does not define any mutation, but executing mutations is supported via POST only as per GraphQL specifications.
 
 === Demo Query operation
-The schema defines a single Query type operation to fetch product details with product id passed as parameter:
+In order to test this plug-in, you need to have a demo plug-in that defines a {uri-demo}[demo] schema with some graphql queries. After deploying the demo, go to https://localhost:8443/graphql/control/graphiql (after authentication) and type in the following in the left papel of graphiql
 Input:
 ----
-{
-  product(id : "WG-9943-B3")
-  {
-    productId
-    productName
-    isVirtual
-    primaryProductCategoryId
-    productTypeId
+query {
+  productApi{
+    product(productId:"WG-9943-B3"){
+      productId
+      productName
+      createdStamp
+    }
   }
 }
 ----
@@ -76,12 +76,12 @@ Output:
 ----
 {
   "data": {
-    "product": {
-      "productId": "WG-9943-B3",
-      "productName": "Giant Widget B3",
-      "isVirtual": "N",
-      "primaryProductCategoryId": "202",
-      "productTypeId": "FINISHED_GOOD"
+    "productApi": {
+      "product": {
+        "productId": "WG-9943-B3",
+        "productName": "Giant Widget B3",
+        "createdStamp": "2020-08-27T11:10:23Z"
+      }
     }
   }
 }
@@ -93,15 +93,13 @@ The GraphQL endpoint is secured. Authentication scheme is "Bearer <JWT>". Every 
 Example Request:
 
 ----
-GET /graphql/graphql/?query={
-  product(id : "WG-9943-B3")
-  {
-    productId
-    productName
-    isVirtual
-    primaryProductCategoryId
-    productTypeId
-    ddd
+GET /graphql/api/?query={
+  productApi{
+    product(productId:"WG-9943-B3"){
+      productId
+      productName
+      createdStamp
+    }
   }
 } HTTP/1.1
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJBcGFjaGVPRkJpeiIsImlhdCI6MTU0NzczOTM0OCwiZXhwIjoxNjc5Mjc1MzQ4LCJhdWQiOiJ3d3cuZXhhbXBsZS5jb20iLCJzdWIiOiJqcm9ja2V0QGV4YW1wbGUuY29tIiwiR2l2ZW5OYW1lIjoiSm9obm55IiwiU3VybmFtZSI6IlJvY2tldCIsIkVtYWlsIjoianJvY2tldEBleGFtcGxlLmNvbSIsInVzZXJMb2dpbklkIjoiYWRtaW4iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.fwafgrgpodBJcXxNTQdZknKeWKb3sDOsQrcR2vcRw97FznD6mkE79p10Tu7cqpUx7LiXuROUAnXEgqDice-BSg
