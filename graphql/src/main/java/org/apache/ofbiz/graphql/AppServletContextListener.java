@@ -18,34 +18,45 @@
  *******************************************************************************/
 package org.apache.ofbiz.graphql;
 
+import org.apache.ofbiz.base.util.Debug;
+import org.apache.ofbiz.base.util.UtilGenerics;
+import org.apache.ofbiz.webapp.WebAppUtil;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-
-import org.apache.ofbiz.base.util.Debug;
-import org.apache.ofbiz.entity.Delegator;
-import org.apache.ofbiz.service.LocalDispatcher;
-import org.apache.ofbiz.webapp.WebAppUtil;
+import java.util.Enumeration;
 
 public class AppServletContextListener implements ServletContextListener {
 
     public static final String MODULE = AppServletContextListener.class.getName();
 
     /**
-     *
      * @param sce
      */
     public void contextInitialized(ServletContextEvent sce) {
         ServletContext servletContext = sce.getServletContext();
-        Delegator delegator = WebAppUtil.getDelegator(servletContext);
-        LocalDispatcher dispatcher = WebAppUtil.getDispatcher(servletContext);
-        Debug.logInfo("GraphQL Context initialized, delegator " + delegator + ", dispatcher", MODULE);
-        servletContext.setAttribute("delegator", delegator);
-        servletContext.setAttribute("dispatcher", dispatcher);
+        // initialize the delegator
+        WebAppUtil.getDelegator(servletContext);
+        // initialize security
+        WebAppUtil.getSecurity(servletContext);
+        // initialize the services dispatcher
+        WebAppUtil.getDispatcher(servletContext);
+
+        Enumeration<String> initParamEnum = UtilGenerics.cast(sce.getServletContext().getInitParameterNames());
+        while (initParamEnum.hasMoreElements()) {
+            String initParamName = initParamEnum.nextElement();
+            String initParamValue = sce.getServletContext().getInitParameter(initParamName);
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("Adding web.xml context-param to application attribute with name [" + initParamName + "] and value ["
+                        + initParamValue + "]", MODULE);
+            }
+            sce.getServletContext().setAttribute(initParamName, initParamValue);
+        }
+
     }
 
     /**
-     *
      * @param sce
      */
     public void contextDestroyed(ServletContextEvent sce) {
@@ -54,5 +65,6 @@ public class AppServletContextListener implements ServletContextListener {
         context.removeAttribute("delegator");
         context.removeAttribute("dispatcher");
     }
+
 
 }
