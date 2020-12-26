@@ -22,6 +22,7 @@ under the License.
 :imagesdir: ./webapp/graphql/images
 image::OFBiz-Logo.svg[100,100][float="left"]
 image::graphql-logo.svg[100,100][float="right"]
+:uri-demo: https://github.com/girishvasmatkar/graphql-product-api
 
 This plug-in a GraphQL plugin that lets OFBiz to define GraphQL API.
 
@@ -58,7 +59,7 @@ Queries can be executed like below:
 The bundled up schema does not define any mutation, but executing mutations is supported via POST only as per GraphQL specifications.
 
 === Demo Query operation
-In order to test this plug-in, you need to have a demo plug-in that defines a [demo](https://github.com/girishvasmatkar/graphql-product-api) schema with some graphql queries. After deploying the demo, go to https://localhost:8443/graphql/control/graphiql (after authentication) and type in the following in the left papel of graphiql
+In order to test this plug-in, you need to have a demo plug-in that defines a {uri-demo}[demo] schema with some graphql queries. After deploying the demo, go to https://localhost:8443/graphql/control/graphiql (after authentication) and type in the following in the left papel of graphiql
 Input:
 ----
 query {
