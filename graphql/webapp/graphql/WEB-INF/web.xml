@@ -57,11 +57,6 @@ under the License.
         <init-param><param-name>redirectPath</param-name><param-value>/control/main</param-value></init-param>
     </filter>
     <filter>
-        <display-name>ContextFilter</display-name>
-        <filter-name>ContextFilter</filter-name>
-        <filter-class>org.apache.ofbiz.webapp.control.ContextFilter</filter-class>
-    </filter>
-    <filter>
         <display-name>SameSiteFilter</display-name>
         <filter-name>SameSiteFilter</filter-name>
         <filter-class>org.apache.ofbiz.webapp.control.SameSiteFilter</filter-class>
