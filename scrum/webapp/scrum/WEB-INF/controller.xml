@@ -645,7 +645,9 @@ under the License.
     <request-map uri="createProductAndRole">
         <security https="true" auth="true"/>
         <event type="simple" invoke="createProductAndRole" path="component://scrum/minilang/ScrumEvents.xml"/>
-        <response name="success" type="request-redirect-noparam" value="ViewProduct"/>
+        <response name="success" type="request-redirect" value="ViewProduct">
+            <redirect-parameter name="productId"/>
+        </response>
         <response name="error" type="request-redirect" value="EditProduct"/>
     </request-map>
     <request-map uri="createProductRole">
