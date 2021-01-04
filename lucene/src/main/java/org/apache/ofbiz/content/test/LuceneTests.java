@@ -99,7 +99,7 @@ public class LuceneTests extends OFBizTestCase {
         combQueryBuilder.add(query, BooleanClause.Occur.MUST);
         BooleanQuery combQuery = combQueryBuilder.build();
 
-        TopScoreDocCollector collector = TopScoreDocCollector.create(10);
+        TopScoreDocCollector collector = TopScoreDocCollector.create(10, 10);
         searcher.search(combQuery, collector);
 
         assertEquals("Only 1 result expected from the testdata", 1, collector.getTotalHits());

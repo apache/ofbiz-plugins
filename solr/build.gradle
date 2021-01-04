@@ -17,14 +17,16 @@
  * under the License.
  */
 dependencies {
-    pluginLibsCompile 'org.apache.solr:solr-core:7.5.0' // Remember to change the version number in SearchWorker class when upgrading. Also Solr et Lucene should use the same version
-    pluginLibsCompile 'com.google.guava:guava:20.0'
+    // Remember to change the version number in SearchWorker class when upgrading.
+    // Also Solr et Lucene should use the same version, luceneMatchVersion should be updated in solrconfig.xml
+    pluginLibsCompile 'org.apache.solr:solr-core:8.5.2'
+    pluginLibsCompile 'com.google.guava:guava:28.0-jre'
 }
 
 configurations.all {
     resolutionStrategy {
       dependencySubstitution {
-          substitute module('com.google.guava:guava') with module('com.google.guava:guava:20.0')
+          substitute module('com.google.guava:guava') with module('com.google.guava:guava:28.0-jre')
       }
     }
 }
