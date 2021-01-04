@@ -57,7 +57,7 @@ if (parameters.luceneQuery) {
     }
     combQuery.add(query, BooleanClause.Occur.MUST)
 
-    TopScoreDocCollector collector = TopScoreDocCollector.create(100) // defaulting to 100 results
+    TopScoreDocCollector collector = TopScoreDocCollector.create(100, 100) // defaulting to 100 results
     searcher.search(combQuery, collector)
     ScoreDoc[] hits = collector.topDocs().scoreDocs
     productList = []
