@@ -106,9 +106,9 @@ public class FrontJsScreenViewHandler extends AbstractViewHandler {
             ScreenRenderer screens = new ScreenRenderer(writer, context, screenStringRenderer);
             context.put("screens", screens);
             context.put("simpleEncoder", UtilCodec.getEncoder(visualTheme.getModelTheme().getEncoder(getName())));
-            screenStringRenderer.renderScreenBegin(writer, context);
+            screenStringRenderer.renderBegin(writer, context);
             screens.render(page);
-            screenStringRenderer.renderScreenEnd(writer, context);
+            screenStringRenderer.renderEnd(writer, context);
 
             JSON json = JSON.from(frontJsOutput.output());
             String jsonStr = json.toString();

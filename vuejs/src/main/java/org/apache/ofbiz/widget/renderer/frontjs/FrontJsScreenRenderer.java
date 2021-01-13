@@ -72,11 +72,19 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         return rendererName;
     }
 
-    public void renderScreenBegin(Appendable writer, Map<String, Object> context) throws IOException {
+    public void renderBegin(Appendable writer, Map<String, Object> context) throws IOException {
         // nothing to do, it's only a human logic readable element
     }
 
-    public void renderScreenEnd(Appendable writer, Map<String, Object> context) throws IOException {
+    public void renderEnd(Appendable writer, Map<String, Object> context) throws IOException {
+        // nothing to do, it's only a human logic readable element
+    }
+
+    public void renderScreenBegin(Appendable writer, Map<String, Object> context, ModelScreen modelScreen) throws IOException {
+        // nothing to do, it's only a human logic readable element
+    }
+
+    public void renderScreenEnd(Appendable writer, Map<String, Object> context, ModelScreen modelScreen) throws IOException {
         // nothing to do, it's only a human logic readable element
     }
 
