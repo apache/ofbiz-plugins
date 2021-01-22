@@ -19,7 +19,6 @@
 import org.apache.ofbiz.entity.condition.EntityCondition
 import org.apache.ofbiz.entity.condition.EntityJoinOperator
 import org.apache.ofbiz.entity.condition.EntityOperator
-import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.UtilValidate
 
 roleTypeId = null
@@ -198,7 +197,7 @@ if (userLogin) {
                 products.add(product)
     }
 } else {
-    Debug.logError("Party ID missing =========>>> : null ", "")
+    logError("Party ID missing =========>>> : null ")
 }
 
 if (products){

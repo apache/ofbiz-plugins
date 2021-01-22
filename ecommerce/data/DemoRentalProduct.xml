@@ -118,11 +118,11 @@ headerLogo="/images/opentravelsystem_logo.jpg"
 
     <!-- products and relation to fixed asset -->
     <Product productId="RoomStd" productTypeId="ASSET_USAGE" primaryProductCategoryId="Rooms" productName="Standard Room" internalName="StdRoom" description="The standard business room" longDescription="This is the standard room mostly for business" reservMaxPersons="3" reserv2ndPPPerc="20" reservNthPPPerc="5" taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2004-03-04 18:48:34.612" createdByUserLogin="admin" lastModifiedDate="2004-03-04 18:48:34.612" lastModifiedByUserLogin="admin"/>
-    <FixedAsset fixedAssetId="RoomStd" fixedAssetTypeId="PROPERTY" productionCapacity="10"/>
+    <FixedAsset fixedAssetId="RoomStd" fixedAssetName="Standard Room" fixedAssetTypeId="PROPERTY" productionCapacity="10"/>
     <FixedAssetProduct productId="RoomStd" fixedAssetId="RoomStd" fixedAssetProductTypeId="FAPT_USE" fromDate="2001-05-13 12:00:00.0"/>
 
     <Product productId="RoomLux" productTypeId="ASSET_USAGE" primaryProductCategoryId="Rooms" productName="Luxury Room" internalName="LuxRoom" description="The luxery business room" longDescription="This is the luxery room mostly for business"  reservMaxPersons="4" reserv2ndPPPerc="20" reservNthPPPerc="" taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2004-03-04 18:48:34.612" createdByUserLogin="admin" lastModifiedDate="2004-03-04 18:48:34.612" lastModifiedByUserLogin="admin"/>
-    <FixedAsset fixedAssetId="RoomLux" fixedAssetTypeId="PROPERTY" productionCapacity="10"/>
+    <FixedAsset fixedAssetId="RoomLux" fixedAssetName="Luxury Room" fixedAssetTypeId="PROPERTY" productionCapacity="10"/>
     <FixedAssetProduct productId="RoomLux" fixedAssetId="RoomLux" fixedAssetProductTypeId="FAPT_USE" fromDate="2001-05-13 12:00:00.0"/>
 
     <Product productId="RoomLarge" productTypeId="ASSET_USAGE" primaryProductCategoryId="Rooms" productName="Large Room" internalName="LargeRoom" description="The large room for families" longDescription="This is the large room mostly for large families"  reservMaxPersons="8" reserv2ndPPPerc="20" reservNthPPPerc="3" taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2004-03-04 18:48:34.612" createdByUserLogin="admin" lastModifiedDate="2004-03-04 18:48:34.612" lastModifiedByUserLogin="admin"/>

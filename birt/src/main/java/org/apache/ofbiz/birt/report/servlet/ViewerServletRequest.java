@@ -30,16 +30,13 @@ import org.apache.ofbiz.base.location.FlexibleLocation;
 import org.apache.ofbiz.base.util.Debug;
 
 public class ViewerServletRequest extends HttpServletRequestWrapper {
-    
-    public final static String module = ViewerServletRequest.class.getName();
-
-    protected String originalReportParam = null;
+    private static final String MODULE = ViewerServletRequest.class.getName();
+    private String originalReportParam = null;
 
     public ViewerServletRequest(String originalReportParam, HttpServletRequest request) {
         super(request);
         this.originalReportParam = originalReportParam;
     }
-    
     @Override
     public String getParameter(String name) {
         if (ParameterAccessor.PARAM_REPORT.equals(name)) {
@@ -53,7 +50,7 @@ public class ViewerServletRequest extends HttpServletRequestWrapper {
                 try {
                     reportFileUrl = FlexibleLocation.resolveLocation(reportParam, loader);
                 } catch (MalformedURLException e) {
-                    Debug.logError(e, module);
+                    Debug.logError(e, MODULE);
                 }
                 if (reportFileUrl == null) {
                     throw new IllegalArgumentException("Could not resolve location to URL: " + reportParam);

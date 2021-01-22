@@ -18,7 +18,6 @@
  */
 package org.apache.ofbiz.ebaystore;
 
-import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.UtilDateTime;
 import org.apache.ofbiz.base.util.UtilProperties;
 import org.apache.ofbiz.base.util.UtilValidate;
@@ -52,10 +51,10 @@ import com.ebay.soap.eBLBaseComponents.TransactionType;
 
 public class EbayFeedback {
 
-    public static final String resource = "EbayUiLabels";
+    private static final String RESOURCE = "EbayUiLabels";
 
     public static Map<String, Object> loadFeedback(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Delegator delegator = dctx.getDelegator();
@@ -64,17 +63,17 @@ public class EbayFeedback {
 
         ApiContext apiContext = EbayStoreHelper.getApiContext(productStoreId, locale, delegator);
         try {
-            Map<String, Object> inMap = new HashMap<String, Object>();
+            Map<String, Object> inMap = new HashMap<>();
             inMap.put("productStoreId", productStoreId);
             inMap.put("userLogin", userLogin);
             Map<String, Object> resultUser = dispatcher.runSync("getEbayStoreUser", inMap);
             if (ServiceUtil.isError(resultUser)) {
                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resultUser));
             }
-            String userID = (String)resultUser.get("userLoginId");
+            String userID = (String) resultUser.get("userLoginId");
             GetFeedbackCall feedbackCall = new GetFeedbackCall();
             feedbackCall.setApiContext(apiContext);
-            SiteCodeType siteCodeType = EbayStoreHelper.getSiteCodeType(productStoreId,locale, delegator);
+            SiteCodeType siteCodeType = EbayStoreHelper.getSiteCodeType(productStoreId, locale, delegator);
             feedbackCall.setSite(siteCodeType);
             feedbackCall.setUserID(userID);
             DetailLevelCodeType[] detailLevelCodeType = {DetailLevelCodeType.RETURN_ALL};
@@ -85,13 +84,13 @@ public class EbayFeedback {
                 GenericValue userLoginEx = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", userID).queryOne();
                 if (userLoginEx == null) {
                     //Party
-                    GenericValue party =  delegator.makeValue("Party");
+                    GenericValue party = delegator.makeValue("Party");
                     partyId = delegator.getNextSeqId("Party");
                     party.put("partyId", partyId);
                     party.put("partyTypeId", "PERSON");
                     party.create();
                     //UserLogin
-                    userLoginEx =  delegator.makeValue("UserLogin");
+                    userLoginEx = delegator.makeValue("UserLogin");
                     userLoginEx.put("userLoginId", userID);
                     userLoginEx.put("partyId", partyId);
                     userLoginEx.create();
@@ -103,35 +102,35 @@ public class EbayFeedback {
                                                     .where("partyId", partyId, "roleTypeId", "OWNER")
                                                     .queryOne();
                 if (UtilValidate.isEmpty(ownerPartyRole)) {
-                    GenericValue partyRole =  delegator.makeValue("PartyRole");
+                    GenericValue partyRole = delegator.makeValue("PartyRole");
                     partyRole.put("partyId", partyId);
                     partyRole.put("roleTypeId", "OWNER");
                     partyRole.create();
                 }
                 int feedbackLength = feedback.length;
-                for (int i = 0; i < feedbackLength; i++) {
+                for (FeedbackDetailType feedbackDetailType : feedback) {
                     //convert to ofbiz
-                    String contentId = feedback[i].getFeedbackID();
-                    Date eBayDateTime = feedback[i].getCommentTime().getTime();
+                    String contentId = feedbackDetailType.getFeedbackID();
+                    Date eBayDateTime = feedbackDetailType.getCommentTime().getTime();
                     GenericValue contentCheck = EntityQuery.use(delegator).from("Content").where("contentId", contentId).queryOne();
                     if (contentCheck != null) {
                         continue;
                     }
-                    String textData = feedback[i].getCommentText();
-                    String commentingUserId= feedback[i].getCommentingUser();
+                    String textData = feedbackDetailType.getCommentText();
+                    String commentingUserId = feedbackDetailType.getCommentingUser();
                     String commentingPartyId = null;
                     GenericValue CommentingUserLogin = EntityQuery.use(delegator).from("UserLogin")
-                                                                  .where("userLoginId", commentingUserId)
-                                                                  .queryOne();
+                            .where("userLoginId", commentingUserId)
+                            .queryOne();
                     if (UtilValidate.isEmpty(CommentingUserLogin)) {
                         //Party
-                        GenericValue party =  delegator.makeValue("Party");
+                        GenericValue party = delegator.makeValue("Party");
                         commentingPartyId = delegator.getNextSeqId("Party");
                         party.put("partyId", commentingPartyId);
                         party.put("partyTypeId", "PERSON");
                         party.create();
                         //UserLogin
-                        userLoginEx =  delegator.makeValue("UserLogin");
+                        userLoginEx = delegator.makeValue("UserLogin");
                         userLoginEx.put("userLoginId", commentingUserId);
                         userLoginEx.put("partyId", commentingPartyId);
                         userLoginEx.create();
@@ -139,45 +138,45 @@ public class EbayFeedback {
                         commentingPartyId = CommentingUserLogin.getString("partyId");
                     }
                     //DataResource
-                    GenericValue dataResource =  delegator.makeValue("DataResource");
+                    GenericValue dataResource = delegator.makeValue("DataResource");
                     String dataResourceId = delegator.getNextSeqId("DataResource");
                     dataResource.put("dataResourceId", dataResourceId);
                     dataResource.put("dataResourceTypeId", "ELECTRONIC_TEXT");
                     dataResource.put("mimeTypeId", "text/html");
                     dataResource.create();
                     //ElectronicText
-                    GenericValue electronicText =  delegator.makeValue("ElectronicText");
+                    GenericValue electronicText = delegator.makeValue("ElectronicText");
                     electronicText.put("dataResourceId", dataResourceId);
                     electronicText.put("textData", textData);
                     electronicText.create();
                     //Content
-                    GenericValue content =  delegator.makeValue("Content");
+                    GenericValue content = delegator.makeValue("Content");
                     content.put("contentId", contentId);
                     content.put("contentTypeId", "DOCUMENT");
                     content.put("dataResourceId", dataResourceId);
                     content.put("createdDate", UtilDateTime.toTimestamp(eBayDateTime));
                     content.create();
                     //ContentPurpose
-                    GenericValue contentPurpose =  delegator.makeValue("ContentPurpose");
+                    GenericValue contentPurpose = delegator.makeValue("ContentPurpose");
                     contentPurpose.put("contentId", contentId);
                     contentPurpose.put("contentPurposeTypeId", "FEEDBACK");
                     contentPurpose.create();
                     //PartyRole For eBay Commentator
                     GenericValue commentingPartyRole = EntityQuery.use(delegator).from("PartyRole")
-                                                           .where("partyId", commentingPartyId, "roleTypeId", "COMMENTATOR")
-                                                           .queryOne();
+                            .where("partyId", commentingPartyId, "roleTypeId", "COMMENTATOR")
+                            .queryOne();
                     if (UtilValidate.isEmpty(commentingPartyRole)) {
-                        GenericValue partyRole =  delegator.makeValue("PartyRole");
+                        GenericValue partyRole = delegator.makeValue("PartyRole");
                         partyRole.put("partyId", commentingPartyId);
                         partyRole.put("roleTypeId", "COMMENTATOR");
                         partyRole.create();
                     }
                     //ContentRole for eBay User
                     GenericValue ownerContentRole = EntityQuery.use(delegator).from("ContentRole")
-                                                   .where("partyId", partyId, "roleTypeId", "OWNER", "contentId", contentId)
-                                                   .queryFirst();
+                            .where("partyId", partyId, "roleTypeId", "OWNER", "contentId", contentId)
+                            .queryFirst();
                     if (UtilValidate.isEmpty(ownerContentRole)) {
-                        GenericValue contentRole =  delegator.makeValue("ContentRole");
+                        GenericValue contentRole = delegator.makeValue("ContentRole");
                         contentRole.put("contentId", contentId);
                         contentRole.put("partyId", partyId);
                         contentRole.put("roleTypeId", "OWNER");
@@ -186,10 +185,10 @@ public class EbayFeedback {
                     }
                     //ContentRole for Commentator
                     GenericValue commentingContentRole = EntityQuery.use(delegator).from("ContentRole")
-                                                             .where("partyId", commentingPartyId, "roleTypeId", "COMMENTATOR", "contentId", contentId)
-                                                             .queryFirst();
+                            .where("partyId", commentingPartyId, "roleTypeId", "COMMENTATOR", "contentId", contentId)
+                            .queryFirst();
                     if (UtilValidate.isEmpty(commentingContentRole)) {
-                        GenericValue contentRole =  delegator.makeValue("ContentRole");
+                        GenericValue contentRole = delegator.makeValue("ContentRole");
                         contentRole.put("contentId", contentId);
                         contentRole.put("partyId", commentingPartyId);
                         contentRole.put("roleTypeId", "COMMENTATOR");
@@ -205,18 +204,18 @@ public class EbayFeedback {
         } catch (Exception e) {
             result = ServiceUtil.returnError("Exception ".concat(e.getMessage()));
         }
-        String successMsg = UtilProperties.getMessage(resource, "EbayLoadEbayFeedbackSuccessful", locale);
+        String successMsg = UtilProperties.getMessage(RESOURCE, "EbayLoadEbayFeedbackSuccessful", locale);
         result = ServiceUtil.returnSuccess(successMsg);
         return result;
     }
 
     public static Map<String, Object> getItemsAwaitingFeedback(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         Delegator delegator = dctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
         String productStoreId = (String) context.get("productStoreId");
         ApiContext apiContext = EbayStoreHelper.getApiContext(productStoreId, locale, delegator);
-        List<Map<String, Object>> itemsResult = new LinkedList<Map<String,Object>>();
+        List<Map<String, Object>> itemsResult = new LinkedList<>();
         try {
             GetItemsAwaitingFeedbackCall awaitingFeedbackCall = new GetItemsAwaitingFeedbackCall();
             awaitingFeedbackCall.setApiContext(apiContext);
@@ -226,7 +225,7 @@ public class EbayFeedback {
             GetUserCall getUserCall = new GetUserCall(apiContext);
             String commentingUser = getUserCall.getUser().getUserID();
             for (int i = 0;i < items.getTransactionLength(); i++) {
-                Map<String, Object> entry = new HashMap<String, Object>();
+                Map<String, Object> entry = new HashMap<>();
                 TransactionType transection = items.getTransaction(i);
                 entry.put("itemID", transection.getItem().getItemID());
                 entry.put("commentingUser", commentingUser);
@@ -241,7 +240,7 @@ public class EbayFeedback {
                     entry.put("userID", transection.getItem().getSeller().getUserID());
                     entry.put("role", "seller");
                 }
-                if (transection.getShippingDetails()!=null) {
+                if (transection.getShippingDetails() != null) {
                     entry.put("shippingCost", transection.getShippingDetails().getDefaultShippingCost().getValue());
                     entry.put("shippingCurrency", transection.getShippingDetails().getDefaultShippingCost().getCurrencyID().name());
                 }
@@ -263,7 +262,7 @@ public class EbayFeedback {
     }
 
     public static Map<String, Object> leaveFeedback(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object>result = new HashMap<String, Object>();
+        Map<String, Object>result = new HashMap<>();
         Delegator delegator = dctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
         String productStoreId = (String) context.get("productStoreId");

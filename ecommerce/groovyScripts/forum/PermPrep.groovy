@@ -39,7 +39,7 @@ import javax.servlet.*
 import javax.servlet.http.*
 
 paramMap = UtilHttp.getParameterMap(request)
-//Debug.logInfo("in permprep, userLogin(0):" + userLogin, null)
+//logInfo("in permprep, userLogin(0):" + userLogin)
 
 // Get permission from pagedef config file
 permission = context.permission
@@ -48,18 +48,18 @@ permissionType = context.permissionType ?: "simple"
 entityName = context.entityName
 entityOperation = context.entityOperation
 targetOperation = context.targetOperation
-//Debug.logInfo("in permprep, targetOperation(0):" + targetOperation, null)
+//logInfo("in permprep, targetOperation(0):" + targetOperation)
 
 mode = paramMap.mode
-//Debug.logInfo("in permprep, contentId(0):" + request.getAttribute("contentId"),"")
+//logInfo("in permprep, contentId(0):" + request.getAttribute("contentId"))
 currentValue = request.getAttribute("currentValue")
-//Debug.logInfo("in permprep, paramMap(1):" + paramMap, null)
-//Debug.logInfo("in permprep, currentValue(1):" + currentValue, null)
+//logInfo("in permprep, paramMap(1):" + paramMap)
+//logInfo("in permprep, currentValue(1):" + currentValue)
 
 if ("add".equals(mode)) {
     entityOperation = context.addEntityOperation ?: context.entityOperation ?: "_CREATE"
     targetOperation = context.addTargetOperation ?: context.get("targetOperation") ?: "CONTENT_CREATE"
-    //org.apache.ofbiz.base.util.Debug.logInfo("in permprep, targetOperation:" + targetOperation, null)
+    //logInfo("in permprep, targetOperation:" + targetOperation)
 } else {
     if (!entityOperation) {
         entityOperation = "_UPDATE"
@@ -76,13 +76,13 @@ if ("complex".equals(permissionType)) {
     mapIn.targetOperationList = targetOperationList
     thisContentId = null
 
-    //Debug.logInfo("in permprep, userLogin(1):" + userLogin, null)
+    //logInfo("in permprep, userLogin(1):" + userLogin)
     //if (userLogin != null) {
-        //Debug.logInfo("in permprep, userLoginId(1):" + userLogin.get("userLoginId"), null)
+        //logInfo("in permprep, userLoginId(1):" + userLogin.get("userLoginId"))
     //}
     if (!currentValue || !"Content".equals(entityName)) {
         permissionIdName = context.permissionIdName
-        //org.apache.ofbiz.base.util.Debug.logInfo("in permprep, permissionIdName(1):" + permissionIdName, null)
+        //logInfo("in permprep, permissionIdName(1):" + permissionIdName)
         if (!permissionIdName) {
             thisContentId = ContentManagementWorker.getFromSomewhere(permissionIdName, paramMap, request, context)
         } else if (!thisContentId) {
@@ -92,11 +92,11 @@ if ("complex".equals(permissionType)) {
         } else if (!thisContentId) {
             thisContentId = ContentManagementWorker.getFromSomewhere("contentId", paramMap, request, context)
         }
-        //org.apache.ofbiz.base.util.Debug.logInfo("in permprep, thisContentId(2):" + thisContentId, null)
+        //logInfo("in permprep, thisContentId(2):" + thisContentId)
     } else {
         thisContentId = currentValue.contentId
     }
-    //org.apache.ofbiz.base.util.Debug.logInfo("in permprep, thisContentId(3):" + thisContentId, null)
+    //logInfo("in permprep, thisContentId(3):" + thisContentId)
 
     if (!currentValue || !"Content".equals(entityName)) {
         if (thisContentId) {
@@ -114,7 +114,7 @@ if ("complex".equals(permissionType)) {
             entityOperation = editEntityOperation
         }
     }
-    //org.apache.ofbiz.base.util.Debug.logInfo("in permprep, currentValue(2):" + currentValue, null)
+    //logInfo("in permprep, currentValue(2):" + currentValue)
     if ("Content".equals(currentValue?.getEntityName())) {
         mapIn.currentContent = currentValue
     }
@@ -125,10 +125,10 @@ if ("complex".equals(permissionType)) {
         mapIncontentPurposeList = StringUtil.split(contentPurposeTypeId, "|")
     }
 
-    //org.apache.ofbiz.base.util.Debug.logInfo("in permprep, mapIn:" + mapIn, null)
+    //logInfo("in permprep, mapIn:" + mapIn)
     result = runService('checkContentPermission', mapIn)
     permissionStatus = result.permissionStatus
-    //org.apache.ofbiz.base.util.Debug.logInfo("in permprep, permissionStatus:" + permissionStatus, null)
+    //logInfo("in permprep, permissionStatus:" + permissionStatus)
     if ("granted".equals(permissionStatus)) {
         context.hasPermission = true
         request.setAttribute("hasPermission", true)
@@ -139,25 +139,25 @@ if ("complex".equals(permissionType)) {
         request.setAttribute("permissionStatus", "")
         errorMessage = "Permission to display:" + page.getPageName() + " is denied."
         recorder = result.permissionRecorder
-        //Debug.logInfo("recorder(0):" + recorder, "")
+        //logInfo("recorder(0):" + recorder)
         if (recorder) {
             permissionMessage = recorder.toHtml()
-            //Debug.logInfo("permissionMessage(0):" + permissionMessage, "")
+            //logInfo("permissionMessage(0):" + permissionMessage)
             errorMessage += " \n " + permissionMessage
         }
         request.setAttribute("errorMsgReq", errorMessage)
     }
-    //Debug.logInfo("in permprep, contentId(1):" + request.getAttribute("contentId"),"")
+    //logInfo("in permprep, contentId(1):" + request.getAttribute("contentId"))
 } else {
-    //org.apache.ofbiz.base.util.Debug.logInfo("permission:" + permission , null)
-    //org.apache.ofbiz.base.util.Debug.logInfo("entityOperation:" + entityOperation , null)
+    //logInfo("permission:" + permission )
+    //logInfo("entityOperation:" + entityOperation )
     if (security.hasEntityPermission(permission, entityOperation, session)) {
-        //org.apache.ofbiz.base.util.Debug.logInfo("hasEntityPermission is true:" , null)
+        //logInfo("hasEntityPermission is true:" )
         context.hasPermission = true
         request.setAttribute("hasPermission", true)
         request.setAttribute("permissionStatus", "granted")
     } else {
-        //org.apache.ofbiz.base.util.Debug.logInfo("hasEntityPermission is false:" , null)
+        //logInfo("hasEntityPermission is false:" )
         context.hasPermission = false
         request.setAttribute("hasPermission", false)
         request.setAttribute("permissionStatus", "")

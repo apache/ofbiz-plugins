@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entitymodel.xsd">
+    <!-- ========================================================= -->
+    <!-- ======================== Defaults ======================= -->
+    <!-- ========================================================= -->
+    <title>Entity of FirstData Component</title>
+    <description>None</description>
+    <copyright></copyright>
+    <version></version>
+
+    <entity entity-name="PaymentGatewayFirstData"
+            package-name="org.apache.ofbiz.accounting.payment"
+            title="First Data Payment Gateway Config">
+        <field name="paymentGatewayConfigId" type="id"></field>
+        <field name="appName" type="value"><description>App Name</description></field>
+        <field name="apiKey" type="value" encrypt="true"><description>API Key</description></field>
+        <field name="apiSecret" type="value" encrypt="true"><description>API Secret</description></field>
+        <field name="transactionUrl" type="value"><description>Transaction URL Test or Live</description></field>
+        <field name="enableDataVault" type="indicator"><description>Enable Data Vault</description></field>
+        <prim-key field="paymentGatewayConfigId"/>
+        <relation type="one" fk-name="PGFD_PGC" rel-entity-name="PaymentGatewayConfig">
+            <key-map field-name="paymentGatewayConfigId"/>
+        </relation>
+    </entity>
+
+</entitymodel>

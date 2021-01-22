@@ -21,11 +21,9 @@ import org.apache.ofbiz.entity.GenericEntityException
 import org.apache.ofbiz.entity.condition.EntityCondition
 import org.apache.ofbiz.entity.util.EntityFindOptions
 import org.apache.ofbiz.entity.condition.EntityOperator
-import org.apache.ofbiz.base.util.Debug
 import org.apache.ofbiz.base.util.UtilDateTime
 
 // get all timesheets of all user, including the planned hours
-module ="ListTimeSheets.groovy"
 timesheets = []
 inputFields = [:]
 
@@ -38,13 +36,13 @@ if (performFindResults.listSize > 0) {
     try {
         timesheetsDb = performFindResults.listIt.getCompleteList()
     } catch (GenericEntityException e) {
-        Debug.logError(e, "Failure in " + module)
+        logError(e, "Failure in " + module)
     } finally {
         if (performFindResults.listIt != null) {
             try {
                 performFindResults.listIt.close()
                 } catch (GenericEntityException e) {
-                    Debug.logError(e, module);
+                    logError(e)
                 }
         }
     }

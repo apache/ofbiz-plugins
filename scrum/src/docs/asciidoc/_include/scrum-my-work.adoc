@@ -1,0 +1,41 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+= My Work
+This perform to work's information and update timesheet
+
+. Current Timesheet
+. Open task assigned to me
+. Assign an exist Task to me
+. Add a new weekly Timesheet
+. Timesheet list of
+
+== Current Timesheet
+To update a member's Timesheet and the set the task's status to complete when the task has been done.
+
+== Open task assigned to me
+To show all tasks belong to the member and the tasks have not set to complete.
+
+== Assign an exist Task to me
+To select the task in the drop down list named "Task name" for assignment the the ownself.
+
+== Add a new weekly Timesheet
+To create a new Timesheet for user who login to the system.
+
+==  list of Timesheet
+To show all Timesheet for user who login to the system.

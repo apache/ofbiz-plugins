@@ -143,7 +143,7 @@ under the License.
                 <script location="component://order/groovyScripts/entry/catalog/ProductSummary.groovy"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/template/catalog/ProductSummary.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template multi-block="true" location="component://ecommerce/template/catalog/ProductSummary.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -226,7 +226,7 @@ under the License.
                 <set field="paginateEcommerceStyle" value="Y"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/template/catalog/CategoryDetail.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template multi-block="true" location="component://ecommerce/template/catalog/CategoryDetail.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -299,7 +299,7 @@ under the License.
             </actions>
             <widgets>
                 <include-screen name="breadcrumbs"/>
-                <platform-specific><html><html-template location="component://ecommerce/template/catalog/ProductDetail.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template multi-block="true" location="component://ecommerce/template/catalog/ProductDetail.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -325,7 +325,7 @@ under the License.
             </actions>
             <widgets>
                 <include-screen name="breadcrumbs"/>
-                <platform-specific><html><html-template location="component://ecommerce/template/catalog/ConfigProductDetail.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template multi-block="true" location="component://ecommerce/template/catalog/ConfigProductDetail.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -379,7 +379,7 @@ under the License.
     <screen name="detailImage">
         <section>
             <widgets>
-               <platform-specific><html><html-template location="component://ecommerce/template/catalog/DetailImage.ftl"/></html></platform-specific>
+               <platform-specific><html><html-template multi-block="true" location="component://ecommerce/template/catalog/DetailImage.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -564,7 +564,7 @@ under the License.
                 <script location="component://ecommerce/groovyScripts/catalog/ProductCategories.groovy"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/template/catalog/ProductCategories.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template multi-block="true" location="component://ecommerce/template/catalog/ProductCategories.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>

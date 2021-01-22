@@ -45,6 +45,7 @@ under the License.
                 <set field="applicationMenuName" value="ProjectMgrAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://projectmgr/widget/ProjectMenus.xml" global="true"/>
                 <set field="applicationTitle" from-field="uiLabelMap.ProjectMgrApplication" global="true"/>
+                <set field="helpAnchor" from-field="helpAnchor" default-value="_project_manager"/>
                 <set field="my" value="My" global="true"/>
             </actions>
             <widgets>
@@ -165,6 +166,7 @@ under the License.
         <section>
             <actions>
                 <set field="headerItem" value="mytasks"/>
+                <set field="helpAnchor" value="_my_tasks"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -216,6 +218,7 @@ under the License.
             <actions>
                 <set field="headerItem" value="timesheet"/>
                 <set field="timesheetId" from-field="parameters.timesheetId"/>
+                <set field="helpAnchor" value="_my_timesheets"/>
                 <entity-one entity-name="Timesheet" value-field="timesheet"/>
                 <entity-one entity-name="PartyNameView" value-field="partyName">
                     <field-map field-name="partyId" from-field="timesheet.partyId"/>
@@ -282,6 +285,7 @@ under the License.
             <actions>
                 <set field="parameters.currentStatus" value="_NA_"/>
                 <set field="headerItem" value="main"/>
+                <set field="helpAnchor" value="_projectmgr_in_ui"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

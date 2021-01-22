@@ -22,8 +22,6 @@ import org.apache.ofbiz.entity.condition.EntityCondition
 import org.apache.ofbiz.entity.condition.EntityOperator
 import org.apache.ofbiz.entity.GenericEntityException
 
-def module = "AddProductBacklogItem.groovy"
-
 // find cust request and items
 def inputFields = [:]
 def custRequestAndItems = []
@@ -39,13 +37,13 @@ def performFindResults = runService('performFind', ["entityName": "CustRequestAn
 try {
     custRequestAndItems = performFindResults.listIt.getCompleteList()
 } catch (GenericEntityException e) {
-    Debug.logError(e, "Failure in " + module)
+    logError(e, "Failure in " + module)
 } finally {
     if (performFindResults.listIt != null) {
         try {
             performFindResults.listIt.close()
             } catch (GenericEntityException e) {
-                Debug.logError(e, module);
+                logError(e)
             }
     }
 }

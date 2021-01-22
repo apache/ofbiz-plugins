@@ -18,7 +18,6 @@
     -->
   ${virtualJavaScript!}
   <script type="application/javascript">
-<!--
     function displayProductVirtualId(variantId, virtualProductId, pForm) {
         if(variantId){
             pForm.product_id.value = variantId;
@@ -49,8 +48,9 @@
             priceElem.appendChild(priceTxt);
         }
     }
-//-->
 </script>
+${screens.render("component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#productvariantjs")}
+${variantInfoJavaScript!}
   <#if product??>
     <#-- variable setup -->
       <#if "Y" == backendPath?default("N")>
@@ -72,19 +72,22 @@
               <#assign productDetailId = "productDetailId"/>
               <#assign productDetailId = productDetailId + product.productId/>
 
-              <div class="col-md-4 products-card">
+              <div class="col-md-4 products-card card-deck">
                 <div class="card text-center">
                   <a href="${productUrl}" class="mt-2">
                     <img class="card-img-top" src="<@ofbizContentUrl>${contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl>" alt="Small Image">
                   </a>
                   <div class="card-body">
                     <h4 class="card-title"><a href="${productUrl}" class="btn btn-link">${productContentWrapper.get("PRODUCT_NAME", "html")!}</a></h4>
-                    <div class="cart-text">
+                    <div class="card-text">
                       ${productContentWrapper.get("DESCRIPTION", "html")!}<#if daysToShip??>&nbsp;-&nbsp;${uiLabelMap.ProductUsuallyShipsIn} <b>${daysToShip}</b> ${uiLabelMap.CommonDays}!</#if>
 
                       <#-- Display category-specific product comments -->
                         <#if prodCatMem?? && prodCatMem.comments?has_content>
                           <p>${prodCatMem.comments}</p>
+                        </#if>
+                        <#if request.getAttribute("highlightLabel")??>
+                          <p><strong>${request.getAttribute("highlightLabel")}</strong></p>
                         </#if>
 
                         <#-- example of showing a certain type of feature with the product -->
@@ -196,15 +199,16 @@
                                         </div>
                                         <#if mainProducts?has_content>
                                           <input type="hidden" name="product_id" value=""/>
-                                          <select name="productVariantId" onchange="javascript:displayProductVirtualId(this.value, '${product.productId}', this.form);">
-                                            <option value="">Select Unit Of Measure</option>
+                                          <select name="productVariantId" onchange="javascript:variantUomSelection(this);" style="width: 100%;">
+                                            <option value="">${uiLabelMap.CommonSelect} ${uiLabelMap.ProductUnitOfMeasure}</option>
                                             <#list mainProducts as mainProduct>
                                               <option value="${mainProduct.productId}">${mainProduct.uomDesc} : ${mainProduct.piecesIncluded}</option>
                                             </#list>
                                           </select>
-                                          <div style="display: inline-block;">
-                                            <strong><span id="product_id_display"> </span></strong>
-                                            <strong><span id="variant_price_display"> </span></strong>
+                                          <div class="variant-price" style="display: inline-block;">
+                                            <input type="hidden" name="product_id_bak" value="${product.productId}"/>
+                                            <strong><span class="product_id_display"> </span></strong>
+                                            <strong><span class="variant_price_display"> </span></strong>
                                           </div>
                                         </#if>
                                       </div>

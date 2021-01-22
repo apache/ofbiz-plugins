@@ -21,7 +21,8 @@ under the License.
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="http://ofbiz.apache.org/Site-Conf" xsi:schemaLocation="http://ofbiz.apache.org/Site-Conf http://ofbiz.apache.org/dtds/site-conf.xsd">
     <description>OFBiz: eCommerce Controller Configuration File</description>
-    <errorpage>/error/error.jsp</errorpage>
+    
+    <errorpage>component://common/webcommon/error/Error.ftl</errorpage>
 
     <handler name="java" type="request" class="org.apache.ofbiz.webapp.event.JavaEventHandler"/>
     <handler name="groovy" type="request" class="org.apache.ofbiz.webapp.event.GroovyEventHandler"/>
@@ -36,6 +37,7 @@ under the License.
     <handler name="screen" type="view" class="org.apache.ofbiz.widget.renderer.macro.MacroScreenViewHandler"/>
     <handler name="simplecontent" type="view" class="org.apache.ofbiz.content.view.SimpleContentViewHandler"/>
     <handler name="screenfop" type="view" class="org.apache.ofbiz.widget.renderer.fo.ScreenFopViewHandler"/>
+    <handler name="ftl" type="view" class="org.apache.ofbiz.webapp.ftl.FreeMarkerViewHandler"/>
 
     <!-- Events run from here for the first hit in a visit -->
     <firstvisit>
@@ -165,6 +167,27 @@ under the License.
         <security direct-request="false"/>
         <event type="java" path="org.apache.ofbiz.common.CommonEvents" invoke="jsonResponseFromRequestAttributes"/>
         <response name="success" type="none"/>
+    </request-map>
+
+    <!-- Support multi-block="true" in html-template tag -->
+    <request-map uri="getJs" method="get" track-serverhit="false">
+        <security https="false" auth="false"/>
+        <response name="success" type="request" value="js"/>
+        <response name="error" type="request" value="js"/>
+    </request-map>
+
+    <request-map uri="js">
+        <security direct-request="false"/>
+        <event type="java" path="org.apache.ofbiz.common.CommonEvents" invoke="jsResponseFromRequest"/>
+        <response name="success" type="none"/>
+    </request-map>
+
+    <!-- open the corresponding FTL file with IDE when the named border is clicked from browser -->
+    <request-map uri="openSourceFile">
+        <security https="false" auth="false"/>
+        <event type="java" path="org.apache.ofbiz.common.CommonEvents" invoke="openSourceFile"/>
+        <response name="success" type="none" />
+        <response name="error" type="none" />
     </request-map>
 
     <!-- ShoppingList Requests -->
@@ -1605,7 +1628,7 @@ under the License.
     </request-map>
 
     <request-map uri="getAssociatedStateList">
-        <security https="true" auth="false"/>
+        <security https="true" auth="false" csrf-token="false"/>
         <event type="service" invoke="getAssociatedStateList"/>
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
@@ -1866,7 +1889,7 @@ under the License.
     <!-- End of Request Mappings -->
 
     <!-- View Mappings -->
-    <view-map name="error" page="/error/error.jsp"/>
+    <view-map name="error" type="ftl" page="component://common/webcommon/error/Error.ftl"/>
     <view-map name="main" type="screen" page="component://ecommerce/widget/CommonScreens.xml#main"/>
     <view-map name="policies" type="screen" page="component://ecommerce/widget/CommonScreens.xml#policies"/>
     <view-map name="CookiePolicy" type="screen" page="component://ecommerce/widget/CommonScreens.xml#CookiePolicy"/>

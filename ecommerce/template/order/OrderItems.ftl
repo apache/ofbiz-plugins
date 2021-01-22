@@ -21,6 +21,14 @@ under the License.
 <#-- the "urlPrefix" value will be prepended to URLs by the ofbizUrl transform if/when there is no "request" object in the context -->
 <#if baseEcommerceSecureUrl??><#assign urlPrefix = baseEcommerceSecureUrl/></#if>
 <div class="card">
+    <#if "Y" == maySelectItems?default("N") && "PLACING_CUSTOMER" == roleTypeId!>
+      <form method="post" id="sendMeThisEveryMonthForm" name="sendMeThisEveryMonthForm" action="<@ofbizUrl fullPath='true'>createShoppingListFromOrder</@ofbizUrl>">
+        <input type="hidden" name="orderId" value="${orderHeader.orderId}"/>
+        <input type="hidden" name="frequency" value="6"/>
+        <input type="hidden" name="intervalNumber" value="1"/>
+        <input type="hidden" name="shoppingListTypeId" value="SLT_AUTO_REODR"/>
+      </form>
+    </#if>
     <#if "Y" == maySelectItems?default("N")>
           <form name="addCommonToCartForm" action="<@ofbizUrl>addordertocart/orderstatus</@ofbizUrl>" method="post">
         <input type="hidden" name="add_all" value="false" />    
@@ -36,8 +44,7 @@ under the License.
           class="btn btn-sm float-right">${uiLabelMap.OrderAddAllToCart}</a>
       <a href="javascript:document.addCommonToCartForm.add_all.value='false';document.addCommonToCartForm.submit()"
           class="btn btn-sm float-right">${uiLabelMap.OrderAddCheckedToCart}</a>
-      <a href="<@ofbizUrl fullPath="true">createShoppingListFromOrder?orderId=${orderHeader.orderId}&amp;frequency=6&amp;intervalNumber=1&amp;shoppingListTypeId=SLT_AUTO_REODR</@ofbizUrl>"
-          class="btn btn-sm float-right">${uiLabelMap.OrderSendMeThisEveryMonth}</a>
+      <button form="sendMeThisEveryMonthForm" class="btn btn-sm float-right" type="submit">${uiLabelMap.OrderSendMeThisEveryMonth}</button>
     </#if>
     </strong>
   </div>
@@ -145,7 +152,7 @@ under the License.
           <#else>
             <#assign product = orderItem.getRelatedOne("Product", true)!/> <#-- should always exist because of FK constraint, but just in case -->
             <td>
-              <a href="<@ofbizCatalogAltUrl fullPath="true" secure="false" productId=orderItem.productId/>"
+              <a href="<@ofbizCatalogAltUrl secure="false" productId=orderItem.productId/>"
                   class="linktext">${orderItem.productId} - ${orderItem.itemDescription?default("")}</a>
               <#assign orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)/>
               <#if orderItemAttributes?has_content>

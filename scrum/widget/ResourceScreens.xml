@@ -24,6 +24,7 @@ under the License.
         <section>
             <actions>
                 <set field="headerItem" value="admin"/>
+                <set field="helpAnchor" value="_scrum_members"/>
                 <set field="titleProperty" value="PageTitleScrumMember"/>
                 <set field="labelTitleProperty" value="scrumResourceName"/>
                 <set field="workEffortId" from-field="parameters.projectId"/>
@@ -76,7 +77,7 @@ under the License.
                                         </screenlet>
                                     </fail-widgets>
                                 </section>
-                                
+
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -319,7 +320,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="QuickAddParty">
         <section>
             <condition>

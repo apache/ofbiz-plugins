@@ -35,7 +35,6 @@ under the License.
         <property name="VT_HDR_JAVASCRIPT['add']" value="/common/js/jquery/plugins/validate/additional-methods.min.js"/>
         <property name="VT_HDR_JAVASCRIPT['add']" value="/common/js/jquery/plugins/Readmore.js-master/readmore.js"/>
         <property name="VT_HDR_JAVASCRIPT['add']" value="/common/js/jquery/plugins/jquery-jgrowl/jquery.jgrowl-1.4.6.min.js"/>
-        <property name="VT_HDR_JAVASCRIPT['add']" value="/ecommerce/js/bootstrap/js/bootstrap-4.3.1.min.js"/>
         <property name="VT_HDR_JAVASCRIPT['add']" value="/ecommerce/js/bootstrap/js/bootstrap.bundle-4.3.1.min.js"/>
         <property name="VT_HDR_JAVASCRIPT['add']" value="/ecommerce/js/bsgdprcookies/jquery.bs.gdpr.cookies.min.js"/>
 

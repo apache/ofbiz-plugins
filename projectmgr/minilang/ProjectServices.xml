@@ -1403,7 +1403,7 @@
                 <check-errors/>
             </if-empty>
 
-            <call-simple-method method-name="InvoiceStatusInProgress" xml-resource="component://accounting/minilang/invoice/InvoiceServices.xml"/>
+            <call-simple-method method-name="checkInvoiceStatusInProgress" xml-resource="component://accounting/minilang/invoice/InvoiceServices.xml"/>
 
             <entity-and entity-name="TimeEntry" list="entries">
                 <field-map field-name="invoiceId" from-field="parameters.invoiceId"/>
@@ -1478,7 +1478,7 @@
             <check-errors/>
         </if-empty>
 
-        <call-simple-method method-name="InvoiceStatusInProgress" xml-resource="component://accounting/minilang/invoice/InvoiceServices.xml"/>
+        <call-simple-method method-name="checkInvoiceStatusInProgress" xml-resource="component://accounting/minilang/invoice/InvoiceServices.xml"/>
 
         <entity-condition entity-name="ProjectPhaseTaskAndTimeEntryTimeSheet" list="tasks">
             <condition-list combine="and">

@@ -17,8 +17,6 @@
 * under the License.
 */
 
-import org.apache.ofbiz.base.util.Debug
-
 try{
     // for sprint dropdown
     workEffortList = []
@@ -31,7 +29,7 @@ try{
                projectList = from("WorkEffortAndProduct").where("workEffortId", workEffortParentId).queryList()
                projectMap = projectList[0]
                // make sure that project dose not closed
-               if (projectMap.currentStatusId != "SPJ_CLOSED") {
+               if ("SPJ_CLOSED" != projectMap.currentStatusId) {
                    productMap = from("Product").where("productId", projectMap.productId).queryOne()
                    workEffortMap.productId = productMap.productId
                    workEffortMap.internalName = returnNameAsString(productMap.internalName,30)
@@ -79,7 +77,7 @@ try{
         context.categoryList = categoryList
     }
 }catch(e){
-    Debug.logInfo("catch e ================" + e,"")
+    logInfo("catch e ================" + e)
 }
 
 //subString function

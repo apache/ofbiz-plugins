@@ -18,7 +18,7 @@ under the License.
 -->
 
 <#if productIds?has_content>
-<div class="card">
+<div class="card promotion-products">
     <div class="card-header">
         ${uiLabelMap.OrderProductsForPromotion}
     </div>

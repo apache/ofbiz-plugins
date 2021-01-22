@@ -1,0 +1,37 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+= Import Single Transactions
+This screen allows the user to find orders transactions on ebay by specify begin/end time, and then select orders to import data
+into ofbiz system.
+
+== Section 'Search Single Transactions From eBay'
+(use for select conditions to search results)
+
+. select product store ex: use 'OFBiz E-Commerce Store' because example ebay catalog link with this store.
+. enter begin time in field 'From Date Time'
+. enter end time in field 'Thru Date Time'
+. Press 'Search Single Transactions From eBay' button then  system will show results from ebay site.
+
+== Section 'Import Orders From eBay'.
+This section show search results, it has many detail get from ebay site,  +
+At the last filed on the screen left you will see checkbox for select the transaction rows and then import it into ofbiz.
+
+== How to import single transactions from eBay?
+. Click checkbox at rows you want to import transaction  in the  'Import Orders From eBay' section
+. Press 'Import Single Transactions' button then system will return the message on the screen.

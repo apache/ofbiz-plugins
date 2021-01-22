@@ -23,7 +23,6 @@ import java.util.Iterator;
 
 /**
  * Provides String utility functions.<p>
- * 
  */
 public final class ReportStringUtil {
 
@@ -54,8 +53,8 @@ public final class ReportStringUtil {
     /** Second constant. */
     private static final long SECONDS = 1000;
 
-    /** 
-     * Default constructor (empty), private because this class has only 
+    /**
+     * Default constructor (empty), private because this class has only
      * static methods.<p>
      */
     private ReportStringUtil() {
@@ -63,11 +62,9 @@ public final class ReportStringUtil {
     }
 
     /**
-     * Changes the filename suffix. 
-     * 
+     * Changes the filename suffix.
      * @param filename the filename to be changed
      * @param suffix the new suffix of the file
-     * 
      * @return the filename with the replaced suffix
      */
     public static String changeFileNameSuffixTo(String filename, String suffix) {
@@ -83,10 +80,8 @@ public final class ReportStringUtil {
 
     /**
      * Returns a string representation for the given collection using the given separator.<p>
-     * 
      * @param collection the collection to print
      * @param separator the item separator
-     * 
      * @return the string representation for the given collection
      */
     public static String collectionAsString(Collection<String> collection, String separator) {
@@ -103,14 +98,11 @@ public final class ReportStringUtil {
     }
 
     /**
-     * Replaces occurrences of special control characters in the given input with 
+     * Replaces occurrences of special control characters in the given input with
      * a HTML representation.<p>
-     * 
-     * This method currently replaces line breaks to <code>&lt;br/&gt;</code> and special HTML chars 
+     * This method currently replaces line breaks to <code>&lt;br/&gt;</code> and special HTML chars
      * like <code>&lt; &gt; &amp; &quot;</code> with their HTML entity representation.<p>
-     * 
      * @param source the String to escape
-     * 
      * @return the escaped String
      */
     public static String escapeHtml(String source) {
@@ -126,11 +118,8 @@ public final class ReportStringUtil {
 
     /**
      * Escapes a String so it may be used in JavaScript String definitions.<p>
-     * 
      * This method replaces line breaks, quotation marks and \ characters.<p>
-     * 
      * @param source the String to escape
-     * 
      * @return the escaped String
      */
     public static String escapeJavaScript(String source) {
@@ -145,12 +134,9 @@ public final class ReportStringUtil {
 
     /**
      * Escapes a String so it may be used as a Perl5 regular expression.<p>
-     * 
      * This method replaces the following characters in a String:<br>
      * <code>{}[]()\$^.*+/</code><p>
-     * 
      * @param source the string to escape
-     * 
      * @return the escaped string
      */
     public static String escapePattern(String source) {
@@ -162,53 +148,53 @@ public final class ReportStringUtil {
         for (int i = 0; i < source.length(); ++i) {
             char ch = source.charAt(i);
             switch (ch) {
-                case '\\':
-                    result.append("\\\\");
-                    break;
-                case '/':
-                    result.append("\\/");
-                    break;
-                case '$':
-                    result.append("\\$");
-                    break;
-                case '^':
-                    result.append("\\^");
-                    break;
-                case '.':
-                    result.append("\\.");
-                    break;
-                case '*':
-                    result.append("\\*");
-                    break;
-                case '+':
-                    result.append("\\+");
-                    break;
-                case '|':
-                    result.append("\\|");
-                    break;
-                case '?':
-                    result.append("\\?");
-                    break;
-                case '{':
-                    result.append("\\{");
-                    break;
-                case '}':
-                    result.append("\\}");
-                    break;
-                case '[':
-                    result.append("\\[");
-                    break;
-                case ']':
-                    result.append("\\]");
-                    break;
-                case '(':
-                    result.append("\\(");
-                    break;
-                case ')':
-                    result.append("\\)");
-                    break;
-                default:
-                    result.append(ch);
+            case '\\':
+                result.append("\\\\");
+                break;
+            case '/':
+                result.append("\\/");
+                break;
+            case '$':
+                result.append("\\$");
+                break;
+            case '^':
+                result.append("\\^");
+                break;
+            case '.':
+                result.append("\\.");
+                break;
+            case '*':
+                result.append("\\*");
+                break;
+            case '+':
+                result.append("\\+");
+                break;
+            case '|':
+                result.append("\\|");
+                break;
+            case '?':
+                result.append("\\?");
+                break;
+            case '{':
+                result.append("\\{");
+                break;
+            case '}':
+                result.append("\\}");
+                break;
+            case '[':
+                result.append("\\[");
+                break;
+            case ']':
+                result.append("\\]");
+                break;
+            case '(':
+                result.append("\\(");
+                break;
+            case ')':
+                result.append("\\)");
+                break;
+            default:
+                result.append(ch);
             }
         }
         return new String(result);
@@ -216,11 +202,8 @@ public final class ReportStringUtil {
 
     /**
      * Formats a runtime in the format hh:mm:ss, to be used e.g. in reports.<p>
-     * 
-     * If the runtime is greater then 24 hours, the format dd:hh:mm:ss is used.<p> 
-     * 
+     * If the runtime is greater then 24 hours, the format dd:hh:mm:ss is used.<p>
      * @param runtime the time to format
-     * 
      * @return the formatted runtime
      */
     public static String formatRuntime(long runtime) {
@@ -261,39 +244,33 @@ public final class ReportStringUtil {
 
     /**
      * Returns <code>true</code> if the provided String is either <code>null</code>
-     * or the empty String <code>""</code>.<p> 
-     * 
+     * or the empty String <code>""</code>.<p>
      * @param value the value to check
-     * 
      * @return true, if the provided value is null or the empty String, false otherwise
      */
     public static boolean isEmpty(String value) {
 
-        return (value == null) || (value.length() == 0);
+        return (value == null) || (value.isEmpty());
     }
 
     /**
      * Returns <code>true</code> if the provided String is either <code>null</code>
-     * or contains only white spaces.<p> 
-     * 
+     * or contains only white spaces.<p>
      * @param value the value to check
-     * 
      * @return true, if the provided value is null or contains only white spaces, false otherwise
      */
     public static boolean isEmptyOrWhitespaceOnly(String value) {
 
-        return isEmpty(value) || (value.trim().length() == 0);
+        return isEmpty(value) || (value.trim().isEmpty());
     }
 
     /**
-     * Returns <code>true</code> if the provided Objects are either both <code>null</code> 
+     * Returns <code>true</code> if the provided Objects are either both <code>null</code>
      * or equal according to {@link Object#equals(Object)}.<p>
-     * 
      * @param value1 the first object to compare
      * @param value2 the second object to compare
-     * 
-     * @return <code>true</code> if the provided Objects are either both <code>null</code> 
-     *              or equal according to {@link Object#equals(Object)} 
+     * @return <code>true</code> if the provided Objects are either both <code>null</code>
+     *              or equal according to {@link Object#equals(Object)}
      */
     public static boolean isEqual(Object value1, Object value2) {
 
@@ -305,39 +282,32 @@ public final class ReportStringUtil {
 
     /**
      * Returns <code>true</code> if the provided String is neither <code>null</code>
-     * nor the empty String <code>""</code>.<p> 
-     * 
+     * nor the empty String <code>""</code>.<p>
      * @param value the value to check
-     * 
      * @return true, if the provided value is not null and not the empty String, false otherwise
      */
     public static boolean isNotEmpty(String value) {
 
-        return (value != null) && (value.length() != 0);
+        return (value != null) && (!value.isEmpty());
     }
 
     /**
      * Returns <code>true</code> if the provided String is neither <code>null</code>
-     * nor contains only white spaces.<p> 
-     * 
+     * nor contains only white spaces.<p>
      * @param value the value to check
-     * 
-     * @return <code>true</code>, if the provided value is <code>null</code> 
+     * @return <code>true</code>, if the provided value is <code>null</code>
      *          or contains only white spaces, <code>false</code> otherwise
      */
     public static boolean isNotEmptyOrWhitespaceOnly(String value) {
 
-        return (value != null) && (value.trim().length() > 0);
+        return (value != null) && (!value.trim().isEmpty());
     }
 
     /**
-     * Returns the last index of any of the given chars in the given source.<p> 
-     * 
+     * Returns the last index of any of the given chars in the given source.<p>
      * If no char is found, -1 is returned.<p>
-     * 
      * @param source the source to check
      * @param chars the chars to find
-     * 
      * @return the last index of any of the given chars in the given source, or -1
      */
     public static int lastIndexOf(String source, char[] chars) {
@@ -355,12 +325,9 @@ public final class ReportStringUtil {
     }
 
     /**
-     * Returns the last index a whitespace char the given source.<p> 
-     * 
+     * Returns the last index a whitespace char the given source.<p>
      * If no whitespace char is found, -1 is returned.<p>
-     * 
      * @param source the source to check
-     * 
      * @return the last index a whitespace char the given source, or -1
      */
     public static int lastWhitespaceIn(String source) {
@@ -380,15 +347,12 @@ public final class ReportStringUtil {
 
     /**
      * Substitutes <code>searchString</code> in the given source String with <code>replaceString</code>.<p>
-     * 
-     * This is a high-performance implementation which should be used as a replacement for 
+     * This is a high-performance implementation which should be used as a replacement for
      * <code>{@link String#replaceAll(java.lang.String, java.lang.String)}</code> in case no
      * regular expression evaluation is required.<p>
-     * 
      * @param source the content which is scanned
      * @param searchString the String which is searched in content
      * @param replaceString the String which replaces <code>searchString</code>
-     * 
      * @return the substituted String
      */
     public static String substitute(String source, String searchString, String replaceString) {
@@ -443,14 +407,10 @@ public final class ReportStringUtil {
 
     /**
      * Returns the java String literal for the given String. <p>
-     *  
-     * This is the form of the String that had to be written into source code 
-     * using the unicode escape sequence for special characters. <p> 
-     * 
+     * This is the form of the String that had to be written into source code
+     * using the unicode escape sequence for special characters. <p>
      * Example: "�" would be transformed to "\\u00C4".<p>
-     * 
-     * @param s a string that may contain non-ascii characters 
-     * 
+     * @param s a string that may contain non-ascii characters
      * @return the java unicode escaped string Literal of the given input string
      */
     public static String toUnicodeLiteral(String s) {
@@ -473,13 +433,10 @@ public final class ReportStringUtil {
 
     /**
      * Returns a substring of the source, which is at most length characters long.<p>
-     * 
-     * This is the same as calling {@link #trimToSize(String, int, String)} with the 
+     * This is the same as calling {@link #trimToSize(String, int, String)} with the
      * parameters <code>(source, length, " ...")</code>.<p>
-     * 
      * @param source the string to trim
      * @param length the maximum length of the string to be returned
-     * 
      * @return a substring of the source, which is at most length characters long
      */
     public static String trimToSize(String source, int length) {
@@ -489,18 +446,14 @@ public final class ReportStringUtil {
 
     /**
      * Returns a substring of the source, which is at most length characters long.<p>
-     * 
      * If a char is cut, the given <code>suffix</code> is appended to the result.<p>
-     * 
-     * This is almost the same as calling {@link #trimToSize(String, int, int, String)} with the 
+     * This is almost the same as calling {@link #trimToSize(String, int, int, String)} with the
      * parameters <code>(source, length, length*, suffix)</code>. If <code>length</code>
      * if larger then 100, then <code>length* = length / 2</code>,
      * otherwise <code>length* = length</code>.<p>
-     * 
      * @param source the string to trim
      * @param length the maximum length of the string to be returned
      * @param suffix the suffix to append in case the String was trimmed
-     * 
      * @return a substring of the source, which is at most length characters long
      */
     public static String trimToSize(String source, int length, String suffix) {
@@ -510,16 +463,13 @@ public final class ReportStringUtil {
     }
 
     /**
-     * Returns a substring of the source, which is at most length characters long, cut 
+     * Returns a substring of the source, which is at most length characters long, cut
      * in the last <code>area</code> chars in the source at a sentence ending char or whitespace.<p>
-     * 
      * If a char is cut, the given <code>suffix</code> is appended to the result.<p>
-     * 
      * @param source the string to trim
      * @param length the maximum length of the string to be returned
      * @param area the area at the end of the string in which to find a sentence ender or whitespace
      * @param suffix the suffix to append in case the String was trimmed
-     * 
      * @return a substring of the source, which is at most length characters long
      */
     public static String trimToSize(String source, int length, int area, String suffix) {

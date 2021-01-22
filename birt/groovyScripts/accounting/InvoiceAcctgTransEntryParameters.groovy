@@ -17,14 +17,12 @@
  * under the License.
  */
 
-def module = "InvoiceAcctgTransEntryParameters.groovy"
-
 try {
     birtParameters = [:]
     birtParameters.invoiceId = parameters.invoiceId
     birtParameters.userLoginId = userLogin.userLoginId
     request.setAttribute("birtParameters", birtParameters)
 } catch (e) {
-    Debug.logError(e, module)
+    logError(e)
 }
 return "success";

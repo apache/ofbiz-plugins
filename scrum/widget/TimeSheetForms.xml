@@ -81,7 +81,7 @@
             </hyperlink>
         </field>
         <field name="inProcessLink" title="${uiLabelMap.StatusToInProcess}" widget-style="buttontext">
-            <hyperlink description="${groovy:statusId.equals(&quot;TIMESHEET_COMPLETED&quot;)?inProcess:&quot;&quot;}" target="updateTimesheetToInProcess" >
+            <hyperlink description="${groovy:statusId.equals(&quot;TIMESHEET_COMPLETED&quot;)?inProcess:&quot;&quot;}" target="processTimesheet" >
                 <parameter param-name="timesheetId"/>
                 <parameter param-name="statusId" value="TIMESHEET_IN_PROCESS"/>
             </hyperlink>

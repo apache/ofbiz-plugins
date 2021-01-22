@@ -51,14 +51,14 @@ import org.apache.ofbiz.webapp.stats.VisitHandler;
 // Used to filter website on the basis of hosted pathAlias.
 public class WebSiteFilter implements Filter {
 
-    public static final String MODULE = WebSiteFilter.class.getName();
+    private static final String MODULE = WebSiteFilter.class.getName();
 
-    protected FilterConfig m_config = null;
+    private FilterConfig mConfig = null;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        m_config = filterConfig;
-        m_config.getServletContext().setAttribute("MULTI_SITE_ENABLED", true);
+        mConfig = filterConfig;
+        mConfig.getServletContext().setAttribute("MULTI_SITE_ENABLED", true);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class WebSiteFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         HttpSession session = httpRequest.getSession();
 
-        String webSiteId = (String) m_config.getServletContext().getAttribute("webSiteId");
+        String webSiteId = (String) mConfig.getServletContext().getAttribute("webSiteId");
         String pathInfo = httpRequest.getPathInfo();
         // get the WebSite id segment, cheat here and use existing logic
         String webSiteAlias = RequestHandler.getRequestUri(pathInfo);
@@ -103,13 +103,14 @@ public class WebSiteFilter implements Filter {
                 newLocale = session.getAttribute("locale").toString();
             }
 
-            if (newLocale == null)
+            if (newLocale == null) {
                 newLocale = UtilHttp.getLocale(httpRequest).toString();
+            }
             // If the webSiteId has changed then invalidate the existing session
             if (!webSiteId.equals(session.getAttribute("webSiteId"))) {
                 ShoppingCart cart = (ShoppingCart) session.getAttribute("shoppingCart");
-                if (cart != null && !(webSite.getString("productStoreId").equals(cart.getProductStoreId())) ) {
-                    // clearing cart items from previous store 
+                if (cart != null && !(webSite.getString("productStoreId").equals(cart.getProductStoreId()))) {
+                    // clearing cart items from previous store
                     cart.clear();
                     // Put product Store for this webSite in cart
                     cart.setProductStoreId(webSite.getString("productStoreId"));
@@ -129,7 +130,7 @@ public class WebSiteFilter implements Filter {
             }
             request.setAttribute("webSiteId", webSiteId);
             session.setAttribute("displayMaintenancePage", webSite.getString("displayMaintenancePage"));
-            if(UtilValidate.isEmpty(webSite.getString("hostedPathAlias"))) {
+            if (UtilValidate.isEmpty(webSite.getString("hostedPathAlias"))) {
                 request.setAttribute("removePathAlias", false);
             } else {
                 request.setAttribute("removePathAlias", true);
@@ -143,7 +144,8 @@ public class WebSiteFilter implements Filter {
         chain.doFilter(httpRequest, response);
     }
 
-    private static void setWebContextObjects(HttpServletRequest request, HttpServletResponse response, Delegator delegator, LocalDispatcher dispatcher) {
+    private static void setWebContextObjects(HttpServletRequest request, HttpServletResponse response, Delegator delegator,
+                                             LocalDispatcher dispatcher) {
         HttpSession session = request.getSession();
         Security security = null;
         try {
@@ -160,7 +162,6 @@ public class WebSiteFilter implements Filter {
         session.setAttribute("dispatcher", dispatcher);
         session.setAttribute("security", security);
         session.setAttribute("_WEBAPP_NAME_", UtilHttp.getApplicationName(request));
-        
         // get rid of the visit info since it was pointing to the previous database, and get a new one
         session.removeAttribute("visitor");
         session.removeAttribute("visit");

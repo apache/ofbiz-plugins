@@ -48,13 +48,13 @@ userPreferenceList = []
 userPreferenceOutList = []
 if (scrumUserLoginSecurityGroupList) {
     scrumUserLoginSecurityGroupList.each { scrumUserLoginSecurityGroupMap ->
-        if (scrumUserLoginSecurityGroupMap.groupId == "SCRUM_PRODUCT_OWNER") {
+        if ("SCRUM_PRODUCT_OWNER" == scrumUserLoginSecurityGroupMap.groupId) {
             ownerCond = []
             ownerCond.add(EntityCondition.makeCondition("enumTypeId", EntityOperator.EQUALS, "SCRUM_PREFERENCE"))
             ownerCond.add(EntityCondition.makeCondition("enumId", EntityOperator.NOT_EQUAL, "MASTER_NOTIFY"))
             ownerConds = EntityCondition.makeCondition(ownerCond, EntityOperator.AND)
             userPreferenceList = from("Enumeration").where(ownerConds).queryList()
-        } else if (scrumUserLoginSecurityGroupMap.groupId == "SCRUM_MASTER") {
+        } else if ("SCRUM_MASTER" == scrumUserLoginSecurityGroupMap.groupId) {
             masterCond = []
             masterCond.add(EntityCondition.makeCondition("enumTypeId", EntityOperator.EQUALS, "SCRUM_PREFERENCE"))
             masterCond.add(EntityCondition.makeCondition("enumId", EntityOperator.EQUALS, "MASTER_NOTIFY"))

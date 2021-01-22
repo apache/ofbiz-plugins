@@ -27,26 +27,22 @@ import org.apache.ofbiz.htmlreport.InterfaceReportThread;
 import org.apache.ofbiz.htmlreport.util.ReportStringUtil;
 
 /**
- * Provides a html report for running parse a PriCat file.<p> 
- * 
+ * Provides a html report for running parse a PriCat file.<p>
  */
 public class PricatParseExcelHtmlReport extends AbstractHtmlReport {
-    
+
     public static final String PRICAT_REPORT_CLASS = "PRICAT_HTML_REPORT";
-    
+
     /**
      * Public constructor with report variables.<p>
-     * 
      * @param request the HttpServletRequest request
      * @param response the HttpServletResponse response
      */
     public PricatParseExcelHtmlReport(HttpServletRequest request, HttpServletResponse response) {
-
         super(request, response, true, true);
     }
-    
+
     public static PricatParseExcelHtmlReport getReport(HttpServletRequest request, HttpServletResponse response) {
-        
         PricatParseExcelHtmlReport wp = (PricatParseExcelHtmlReport) request.getAttribute(PRICAT_REPORT_CLASS);
         if (wp == null) {
             wp = new PricatParseExcelHtmlReport(request, response);
@@ -54,10 +50,8 @@ public class PricatParseExcelHtmlReport extends AbstractHtmlReport {
         }
         return wp;
     }
-    
     @Override
     public InterfaceReportThread initializeThread(HttpServletRequest request, HttpServletResponse response, String name) {
-
         if (name == null) {
             name = "";
         }
@@ -66,7 +60,7 @@ public class PricatParseExcelHtmlReport extends AbstractHtmlReport {
         Thread[] threads = new Thread[i];
         threadGroup.enumerate(threads, true);
         InterfaceReportThread thread = null;
-        for (int j=0; j<threads.length; j++) {
+        for (int j = 0; j < threads.length; j++) {
             Thread threadInstance = threads[j];
             if (threadInstance instanceof PricatParseExcelHtmlThread) {
                 thread = (PricatParseExcelHtmlThread) threadInstance;
@@ -76,7 +70,6 @@ public class PricatParseExcelHtmlReport extends AbstractHtmlReport {
         if (thread == null) {
             thread = new PricatParseExcelHtmlThread(request, response, name);
         }
-
         return thread;
     }
 
@@ -109,14 +102,12 @@ public class PricatParseExcelHtmlReport extends AbstractHtmlReport {
                 return "cancel";
             }
         }
-        
         return "success";
     }
 
     /**
      * Performs the dialog actions depending on the initialized action.<p>
-     * 
-     * @throws IOException 
+     * @throws IOException
      */
     @Override
     public void prepareDisplayReport(HttpServletRequest request, HttpServletResponse response, String name, String dialogUri) throws IOException {
@@ -124,7 +115,6 @@ public class PricatParseExcelHtmlReport extends AbstractHtmlReport {
         if (ReportStringUtil.isNotEmpty(dialogUri)) {
             setDialogRealUri(request, dialogUri);
         }
-        
         String action = getParamAction(request);
         if (action == null) action = "";
         if ("reportend".equals(action) || "cancel".equals(action)) {

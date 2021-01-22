@@ -452,4 +452,33 @@ under the License.
     <form name="MaskFieldExampleForm" type="single">
         <field name="maskField" title="${uiLabelMap.ExampleField}"><text mask='a*-999-a999'/></field>
     </form>
+
+    <form name="DisabledFieldExampleForm" type="single">
+        <field name="textField" title="Text Field" disabled="true"><text/></field>
+        <field name="checkField" title="Check Field" disabled="true">
+            <check>
+                <entity-options key-field-name="exampleTypeId" entity-name="ExampleType"/>
+            </check>
+        </field>
+        <field name="dropdownField" title="Dropdown Field" disabled="true">
+            <drop-down allow-empty="true">
+                <option key="Y" description="${uiLabelMap.CommonY}"/>
+                <option key="N" description="${uiLabelMap.CommonN}"/>
+            </drop-down>
+        </field>
+        <field name="radioField" title="Radio Field" disabled="true">
+            <radio>
+                <option key="N" description="${uiLabelMap.CommonNone}"/>
+                <option key="P" description="${uiLabelMap.PartyPostal}"/>
+                <option key="T" description="${uiLabelMap.PartyTelecom}"/>
+                <option key="O" description="${uiLabelMap.CommonOther}"/>
+            </radio>
+        </field>
+        <field name="dateTimeField" title="Datetime Field" disabled="true">
+            <date-time default-value="${nowTimestamp}"/>
+        </field>
+        <field name="textAreaField" title="Textarea Field" disabled="true">
+            <textarea rows="10" default-value="This is a disabled text area field"/>
+        </field>
+    </form>
 </forms>

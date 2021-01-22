@@ -28,14 +28,6 @@ under the License.
         <set-current-user-login value-field="userLogin"/>
         <set field="inMap.timesheetId" value="DEMO-TIMESHEET1"/>
         <set field="inMap.statusId" value="TIMESHEET_COMPLETED"/>
-        <call-service service-name="updateTimesheet" in-map-name="inMap"></call-service>
-    </simple-method>
-    <simple-method method-name="testTimesheetToInProcess" short-description="Test set timesheet status to In Process" login-required="false">
-        <entity-one entity-name="UserLogin" value-field="userLogin">
-            <field-map field-name="userLoginId" value="scrumteam2"/>
-        </entity-one>
-        <set-current-user-login value-field="userLogin"/>
-        <set field="inMap.timesheetId" value="DEMO-TIMESHEET1"/>
-        <call-service service-name="updateTimesheetToInProcess" in-map-name="inMap"></call-service>
+        <call-service service-name="updateTimesheet" in-map-name="inMap"/>
     </simple-method>
 </simple-methods>

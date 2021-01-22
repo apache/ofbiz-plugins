@@ -33,88 +33,66 @@ import org.apache.ofbiz.entity.transaction.GenericTransactionException;
 
 /**
  * Interface of pricat parser.
- * 
  */
 public interface InterfacePricatParser {
-    
-    public static final String PARSE_EXCEL = "parse_excel";
-    
-    public static final String CONFIRM = "confirm_action";
-    
-    public static final String[] messageLabels = new String[] {"FORMAT_DEFAULT", "FORMAT_WARNING", "FORMAT_HEADLINE", "FORMAT_NOTE", "FORMAT_OK", "FORMAT_ERROR", "FORMAT_THROWABLE"};
-    
-    public static final List<String> messages = Collections.unmodifiableList(Arrays.asList(messageLabels));
-    
-    public static final String tempFilesFolder = "runtime/pricat/";
-    
-    public static final String FileDateTimePattern = "yyyyMMddHHmmss";
-    
-    public static final String defaultColorName = "DefaultColor";
-    
-    public static final String defaultDimensionName = "DefaultDimension";
-    
-    public static final String defaultCategoryName = "DefaultCategory";
-    
-    public static final String EXCEL_TEMPLATE_TYPE = "excelTemplateType";
-    
-    public static final String FACILITY_ID = "facilityId";
-    
-    public static final String resource = "PricatUiLabels";
-    
-    public static final String PRICAT_FILE = "__PRICAT_FILE__";
+    String PARSE_EXCEL = "parse_excel";
+    String CONFIRM = "confirm_action";
+    String[] MESSAGE_LABELS = new String[] {"FORMAT_DEFAULT", "FORMAT_WARNING", "FORMAT_HEADLINE", "FORMAT_NOTE", "FORMAT_OK",
+            "FORMAT_ERROR", "FORMAT_THROWABLE"};
+    List<String> MESSAGES = Collections.unmodifiableList(Arrays.asList(MESSAGE_LABELS));
+    String TEMP_FILES_FOLDER = "runtime/pricat/";
+    String FILE_DATETIME_PATTERN = "yyyyMMddHHmmss";
+    String DEFAULT_COL_NAME = "DefaultColor";
+    String DEFAULT_DIM_NAME = "DefaultDimension";
+    String DEFAULT_CAT_NAME = "DefaultCategory";
+    String EXCEL_TEMPLATE_TYPE = "excelTemplateType";
+    String FACILITY_ID = "facilityId";
+    String RESOURCE = "PricatUiLabels";
+    String PRICAT_FILE = "__PRICAT_FILE__";
+    String DEFAULT_PRICAT_TYPE = "ApacheOFBiz";
+    Map<String, String> PRICAT_TYPE_LABELS = UtilMisc.toMap(DEFAULT_PRICAT_TYPE, "ApacheOFBizPricatTemplate", "SamplePricat", "SamplePricatTemplate");
+    int HISTORY_MAX_FILENUMBER = UtilProperties.getPropertyAsInteger("pricat.properties", "pricat.history.max.filenumber", 20);
+    void parsePricatExcel();
+    void writeCommentsToFile(XSSFWorkbook workbook, XSSFSheet sheet);
+    void initBasicConds(List<String> orgPartyIds);
+    boolean existsCurrencyId(XSSFSheet sheet);
+    void parseRowByRow(XSSFSheet sheet);
+    boolean parseCellContentsAndStore(XSSFRow row, List<Object> cellContents) throws GenericTransactionException;
+    Map<String, Object> updateSkuPrice(String skuId, String ownerPartyId, BigDecimal memberPrice);
 
-    public static final String DEFAULT_PRICAT_TYPE = "ApacheOFBiz";
-    
-    public static final Map<String, String> PricatTypeLabels = UtilMisc.toMap(DEFAULT_PRICAT_TYPE, "ApacheOFBizPricatTemplate", "SamplePricat", "SamplePricatTemplate");
-    
-    public static final int HISTORY_MAX_FILENUMBER = UtilProperties.getPropertyAsInteger("pricat.properties", "pricat.history.max.filenumber", 20);
-    
-    abstract void parsePricatExcel();
-    
-    public void writeCommentsToFile(XSSFWorkbook workbook, XSSFSheet sheet);
-
-    public void initBasicConds(List<String> orgPartyIds);
-
-    public boolean existsCurrencyId(XSSFSheet sheet);
-
-    abstract void parseRowByRow(XSSFSheet sheet);
-
-    abstract boolean parseCellContentsAndStore(XSSFRow row, List<Object> cellContents) throws GenericTransactionException;
-    
-    public Map<String, Object> updateSkuPrice(String skuId, String ownerPartyId, BigDecimal memberPrice);
-
-    abstract String updateSku(XSSFRow row, String productId, String ownerPartyId, String facilityId, String barcode, BigDecimal inventory,
+    String updateSku(XSSFRow row, String productId, String ownerPartyId, String facilityId, String barcode, BigDecimal inventory,
             String colorId, String color, String dimensionId, String dimension, BigDecimal listPrice, BigDecimal averageCost);
 
-    public Map<String, Object> updateColorAndDimension(String productId, String ownerPartyId, String color, String dimension);
-    
-    public Map<String, Object> getDimensionIds(String productId, String ownerPartyId, String dimension);
-    
-    public Map<String, Object> getColorIds(String productId, String ownerPartyId, String color);
+    Map<String, Object> updateColorAndDimension(String productId, String ownerPartyId, String color, String dimension);
 
-    abstract String getProductId(XSSFRow row, String brandId, String modelName, String productName, String productCategoryId, String ownerPartyId, BigDecimal listPrice);
+    Map<String, Object> getDimensionIds(String productId, String ownerPartyId, String dimension);
 
-    public String getBrandId(String brandName, String ownerPartyId);
+    Map<String, Object> getColorIds(String productId, String ownerPartyId, String color);
 
-    abstract Object getCellContent(List<Object> cellContents, String colName);
+    String getProductId(XSSFRow row, String brandId, String modelName, String productName, String productCategoryId,
+                        String ownerPartyId, BigDecimal listPrice);
 
-    abstract String getProductCategoryId(List<Object> cellContents, String ownerPartyId);
+    String getBrandId(String brandName, String ownerPartyId);
 
-    abstract boolean isFacilityOk(XSSFRow row, String facilityName, String facilityId);
+    Object getCellContent(List<Object> cellContents, String colName);
 
-    abstract List<Object> getCellContents(XSSFRow row, List<Object[]> colNames, int size);
+    String getProductCategoryId(List<Object> cellContents, String ownerPartyId);
 
-    abstract boolean isTableHeaderMatched(XSSFSheet sheet);
+    boolean isFacilityOk(XSSFRow row, String facilityName, String facilityId);
 
-    abstract boolean isVersionSupported(XSSFSheet sheet);
+    List<Object> getCellContents(XSSFRow row, List<Object[]> colNames, int size);
 
-    abstract boolean containsDataRows(XSSFSheet sheet);
+    boolean isTableHeaderMatched(XSSFSheet sheet);
 
-    public boolean isNumOfSheetsOK(XSSFWorkbook workbook);
+    boolean isVersionSupported(XSSFSheet sheet);
 
-    abstract void setFacilityId(String selectedFacilityId);
+    boolean containsDataRows(XSSFSheet sheet);
 
-    public void endExcelImportHistory(String logFileName, String thruReasonId);
-    
-    public boolean hasErrorMessages();
+    boolean isNumOfSheetsOK(XSSFWorkbook workbook);
+
+    void setFacilityId(String selectedFacilityId);
+
+    void endExcelImportHistory(String logFileName, String thruReasonId);
+
+    boolean hasErrorMessages();
 }

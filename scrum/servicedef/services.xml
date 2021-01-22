@@ -245,12 +245,6 @@ under the License.
         <attribute name="custRequestStatusId" mode="IN" type="String" optional="true"/>
         <attribute name="webSiteId" mode="IN" type="String" optional="true"/><!-- for notification services -->
     </service>
-    <service name="updateTimesheetToInProcess" default-entity-name="Timesheet" engine="simple" auth="true"
-        location="component://scrum/minilang/ScrumServices.xml" invoke="updateTimesheetToInProcess">
-        <description>Updates the Timesheet status back to in process to be able to correct errors</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
-    </service>
-    
     <service name="updateScrumRevision" engine="soap" export="true"
         location="http://www.example.com/webtools/control/SOAPService" invoke="updateScrumRevisionChange">
         <implements service="updateScrumRevisionChange"/>

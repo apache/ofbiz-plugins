@@ -22,7 +22,6 @@ package org.apache.ofbiz.ldap.cas;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -126,7 +125,7 @@ public final class OFBizCasAuthenticationHandler extends AbstractOFBizAuthentica
         int n = rand(lo, hi);
         byte b[] = new byte[n];
         for (int i = 0; i < n; i++) {
-            b[i] = (byte)rand('a', 'z');
+            b[i] = (byte) rand('a', 'z');
         }
         return new String(b);
     }
@@ -135,8 +134,9 @@ public final class OFBizCasAuthenticationHandler extends AbstractOFBizAuthentica
         java.util.Random rn = new SecureRandom();
         int n = hi - lo + 1;
         int i = rn.nextInt() % n;
-        if (i < 0)
-                i = -i;
+        if (i < 0) {
+            i = -i;
+        }
         return lo + i;
     }
 
@@ -150,7 +150,6 @@ public final class OFBizCasAuthenticationHandler extends AbstractOFBizAuthentica
         String logoutUri = UtilXml.childElementValue(rootElement, "CasLogoutUri", "/logout");
         try {
             response.sendRedirect(casUrl + logoutUri);
-        } catch (UnsupportedEncodingException e) {
         } catch (IOException e) {
         }
         return "success";
@@ -163,7 +162,8 @@ public final class OFBizCasAuthenticationHandler extends AbstractOFBizAuthentica
         String className = UtilXml.childElementValue(rootElement, "CasLdapHandler", "org.apache.ofbiz.ldap.openldap.OFBizLdapAuthenticationHandler");
         try {
             Class<?> handlerClass = Class.forName(className);
-            InterfaceOFBizAuthenticationHandler casLdapHandler = (InterfaceOFBizAuthenticationHandler) handlerClass.getDeclaredConstructor().newInstance();
+            InterfaceOFBizAuthenticationHandler casLdapHandler = (InterfaceOFBizAuthenticationHandler) handlerClass
+                    .getDeclaredConstructor().newInstance();
             return casLdapHandler.getLdapSearchResult(username, password, rootElement, bindRequired);
         } catch (ReflectiveOperationException e) {
             throw new NamingException(e.getLocalizedMessage());
@@ -173,7 +173,6 @@ public final class OFBizCasAuthenticationHandler extends AbstractOFBizAuthentica
     /**
      * An HTTP WebEvent handler that checks to see is a userLogin is logged out.
      * If yes, the user is forwarded to the login page.
-     *
      * @param request The HTTP request object for the current JSP or Servlet request.
      * @param response The HTTP response object for the current JSP or Servlet request.
      * @param rootElement Element root element of ldap config file
@@ -185,7 +184,7 @@ public final class OFBizCasAuthenticationHandler extends AbstractOFBizAuthentica
         String casUrl = UtilXml.childElementValue(rootElement, "CasUrl", "https://localhost:8443/cas");
         Cookie[] cookies = request.getCookies();
         if (cookies == null) return true;
-        for (int i=0; i < cookies.length; i++) {
+        for (int i = 0; i < cookies.length; i++) {
             Cookie cookie = cookies[i];
             if (cookie.getName().equals(casTGC) && casUrl.indexOf(cookie.getDomain()) > -1) {
                 return false;

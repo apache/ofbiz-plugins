@@ -57,17 +57,17 @@ if ("SUMMARY".equals(mapKey)) {
 
 singleWrapper.putInContext("dataResourceTypeId", "ELECTRONIC_TEXT")
 singleWrapper.putInContext("contentAssocTypeId", "SUB_CONTENT")
-//Debug.logInfo("in editaddprep, contentIdTo:" + contentIdTo,"")
-//Debug.logInfo("in editaddprep, mapKey:" + mapKey,"")
+//logInfo("in editaddprep, contentIdTo:" + contentIdTo)
+//logInfo("in editaddprep, mapKey:" + mapKey)
 //currentValue = request.getAttribute("currentValue")
 //currentValue = request.getAttribute("currentValue")
 
 currentValue = ContentWorker.getSubContentCache(delegator, contentIdTo, mapKey, null, userLogin, null, null, false, null)
-//Debug.logInfo("in editaddprep, currentValue:" + currentValue,"")
+//logInfo("in editaddprep, currentValue:" + currentValue)
 
 if (!currentValue) {
     parentValue = from("Content").where("contentId", contentIdTo).cache(true).queryOne()
-    currentValue = delegator.makeValue("Content")
+    currentValue = makeValue("Content")
     subject =  parentValue.contentName
     if ("SUMMARY".equals(mapKey)) {
         subject = "Short " + subject
@@ -77,7 +77,7 @@ if (!currentValue) {
     singleWrapper.putInContext("contentTypeId", "DOCUMENT")
 } else {
     singleWrapper.putInContext("contentTypeId", null)
-    //Debug.logInfo("in editaddprep, currentValue:" + currentValue,"")
+    //logInfo("in editaddprep, currentValue:" + currentValue)
 }
 singleWrapper.putInContext("currentValue", currentValue)
 context.currentValue = currentValue
@@ -85,4 +85,4 @@ request.setAttribute("currentValue", currentValue)
 persistAction = parameters.persistAction ?: "persistContent"
 
 singleWrapper.putInContext("persistAction", persistAction)
-//Debug.logInfo("in editaddprep, currentValue:" + currentValue,"")
+//logInfo("in editaddprep, currentValue:" + currentValue)

@@ -26,7 +26,7 @@ under the License.
             <widgets>
                 <screenlet title="${uiLabelMap.ProductProductSearch}">
                     <container id="SearchProducts">
-                        <platform-specific><html><html-template location="component://webpos/template/search/SearchProducts.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template multi-block="true" location="component://webpos/template/search/SearchProducts.ftl"/></html></platform-specific>
                     </container>
                 </screenlet>
             </widgets>
@@ -65,7 +65,7 @@ under the License.
             </actions>
             <widgets>
                 <container>
-                    <platform-specific><html><html-template location="component://webpos/template/search/CustomerAddress.ftl"/></html></platform-specific>
+                    <platform-specific><html><html-template multi-block="true" location="component://webpos/template/search/CustomerAddress.ftl"/></html></platform-specific>
                 </container>
             </widgets>
         </section>

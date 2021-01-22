@@ -25,7 +25,14 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleFindTimeSheet"/>
                 <set field="headerItem" value="timesheet"/>
+                <set field="helpAnchor" value="_timesheets"/>
                 <set field="labelTitleProperty" value="ProjectMgrFindTimeSheet"/>
+                <set field="asm_multipleSelectForm" value="FindTimeSheet"/>
+                <set field="asm_asmListItemPercentOfForm" value="110"/>
+                <set field="statusId.asm_multipleSelect" value="FindTimeSheet_statusId"/>
+                <set field="statusId.asm_sortable" value="true"/>
+                <set field="statusId.asm_title" value=" "/>
+                <set field="asm_listField[]" from-field="statusId"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonTimesheetDecorator" location="${parameters.mainDecoratorLocation}">
@@ -33,6 +40,11 @@ under the License.
                         <section>
                             <widgets>
                                 <screenlet title="${uiLabelMap.PageTitleFindTimeSheet}">
+                                    <platform-specific>
+                                        <html>
+                                            <html-template multi-block="true" location="component://common-theme/template/includes/SetMultipleSelectJsList.ftl"/>
+                                        </html>
+                                    </platform-specific>
                                     <include-form name="FindTimeSheet" location="component://projectmgr/widget/forms/TimeSheetForms.xml"/>
                                 </screenlet>
                                 <screenlet title="${uiLabelMap.PageTitleTimesheets}" navigation-form-name="ListFindTimeSheet">

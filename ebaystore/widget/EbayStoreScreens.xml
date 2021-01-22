@@ -24,6 +24,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" from-field="uiLabelMap.EbayStore"/>
+                <set field="helpAnchor" value="_ebay_store_main_screen"/>
                 <set field="headerItem" value="ebayStore"/>
             </actions>
             <widgets>
@@ -42,6 +43,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" from-field="uiLabelMap.EbayStoreSetting"/>
+                <set field="helpAnchor" value="_ebay_store_detail_screen"/>
                 <set field="headerItem" value="ebayStore"/>
                 <set field="tabButtonItem" value="ebayStoreSetting"/>
                 <script  location="component://ebaystore/groovyScripts/store/RetrieveStoreOptions.groovy"/>
@@ -51,7 +53,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.EbayStoreSetting}">
                             <platform-specific>
-                                <html><html-template location="component://ebaystore/template/store/StoreSetting.ftl"/></html>
+                                <html><html-template multi-block="true" location="component://ebaystore/template/store/StoreSetting.ftl"/></html>
                             </platform-specific>
                         </screenlet>
                     </decorator-section>
@@ -63,6 +65,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="EbayExportAllCategoryToEbayStore"/>
+                <set field="helpAnchor" value="_export_categories_to_ebay_store_screen"/>
                 <set field="headerItem" value="ebayStore"/>
                 <set field="tabButtonItem" value="ebayExportAllCategoryToEbayStore"/>
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
@@ -146,6 +149,7 @@ under the License.
     <screen name="NewEbayAccount">
         <section>
             <actions>
+                <set field="helpAnchor" value="_new_ebay_account"/>
                 <set field="headerItem" value="ebayStore"/>
                 <set field="tabButtonItem" value="NewEbayAccount"/>
             </actions>
@@ -238,7 +242,7 @@ under the License.
                             <html><html-template location="component://ebay/template/find/EbayKeywordSearch.ftl"/></html>
                         </platform-specific>
                         <platform-specific>
-                            <html><html-template location="component://ebay/template/find/ebayExportLink.ftl"/></html>
+                            <html><html-template multi-block="true" location="component://ebay/template/find/ebayExportLink.ftl"/></html>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>
@@ -268,7 +272,7 @@ under the License.
                 <decorator-screen name="permission-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                             <platform-specific>
-                            <html><html-template location="component://ebaystore/template/store/ProductSearchExport.ftl"/></html>
+                            <html><html-template multi-block="true" location="component://ebaystore/template/store/ProductSearchExport.ftl"/></html>
                             </platform-specific>
                     </decorator-section>
                 </decorator-screen>

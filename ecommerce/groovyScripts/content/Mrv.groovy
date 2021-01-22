@@ -64,7 +64,7 @@ lifoSet.each { pk0 ->
     } else {
         // should handle errors in some other way; this does not provide any tracing; impossible to locat
         // where the error actually occurred
-        //Debug.logError("findOne on " + pk + " returned null")
+        //logError("findOne on " + pk + " returned null")
     }
 }
 context.put("mrvList", mrvList)

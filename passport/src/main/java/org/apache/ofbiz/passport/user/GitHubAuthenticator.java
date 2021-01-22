@@ -18,29 +18,15 @@
  *******************************************************************************/
 package org.apache.ofbiz.passport.user;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.transaction.Transaction;
 
-import org.apache.ofbiz.passport.event.GitHubEvents;
-import org.apache.ofbiz.passport.user.GitHubUserGroupMapper;
-import org.apache.ofbiz.passport.util.PassportUtil;
-import org.apache.ofbiz.common.authentication.api.Authenticator;
-import org.apache.ofbiz.common.authentication.api.AuthenticatorException;
-import org.apache.ofbiz.service.LocalDispatcher;
-import org.apache.ofbiz.service.GenericServiceException;
-import org.apache.ofbiz.service.ServiceUtil;
-import org.apache.ofbiz.entity.Delegator;
-import org.apache.ofbiz.entity.GenericValue;
-import org.apache.ofbiz.entity.GenericEntityException;
-import org.apache.ofbiz.entity.transaction.TransactionUtil;
-import org.apache.ofbiz.entity.transaction.GenericTransactionException;
-import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -51,31 +37,43 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.ofbiz.base.conversion.ConversionException;
 import org.apache.ofbiz.base.conversion.JSONConverters.JSONToMap;
 import org.apache.ofbiz.base.lang.JSON;
-import org.apache.ofbiz.base.util.UtilProperties;
 import org.apache.ofbiz.base.util.Debug;
-import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.base.util.UtilDateTime;
+import org.apache.ofbiz.base.util.UtilMisc;
+import org.apache.ofbiz.base.util.UtilProperties;
 import org.apache.ofbiz.base.util.UtilValidate;
+import org.apache.ofbiz.common.authentication.api.Authenticator;
+import org.apache.ofbiz.common.authentication.api.AuthenticatorException;
+import org.apache.ofbiz.entity.Delegator;
+import org.apache.ofbiz.entity.GenericEntityException;
+import org.apache.ofbiz.entity.GenericValue;
+import org.apache.ofbiz.entity.transaction.GenericTransactionException;
+import org.apache.ofbiz.entity.transaction.TransactionUtil;
+import org.apache.ofbiz.entity.util.EntityQuery;
+import org.apache.ofbiz.passport.event.GitHubEvents;
+import org.apache.ofbiz.passport.util.PassportUtil;
+import org.apache.ofbiz.service.GenericServiceException;
+import org.apache.ofbiz.service.LocalDispatcher;
+import org.apache.ofbiz.service.ServiceUtil;
 
 /**
  * GitHub OFBiz Authenticator
  */
 public class GitHubAuthenticator implements Authenticator {
 
-    private static final String module = GitHubAuthenticator.class.getName();
+    private static final String MODULE = GitHubAuthenticator.class.getName();
 
-    public static final String props = "gitHubAuth.properties";
+    public static final String PROPS = "gitHubAuth.properties";
 
-    public static final String resource = "PassportUiLabels";
+    private static final String RESOURCE = "PassportUiLabels";
 
-    protected LocalDispatcher dispatcher;
+    private LocalDispatcher dispatcher;
 
-    protected Delegator delegator;
+    private Delegator delegator;
 
     /**
      * Method called when authenticator is first initialized (the delegator
      * object can be obtained from the LocalDispatcher)
-     *
      * @param dispatcher The ServiceDispatcher to use for this Authenticator
      */
     @Override
@@ -86,11 +84,9 @@ public class GitHubAuthenticator implements Authenticator {
 
     /**
      * Method to authenticate a user.
-     * 
-     * For GitHub users, we only check if the username(userLoginId) exists an 
-     * externalAuthId, and the externalAuthId has a valid accessToken in 
+     * For GitHub users, we only check if the username(userLoginId) exists an
+     * externalAuthId, and the externalAuthId has a valid accessToken in
      * GitHubUser entity.
-     *
      * @param userLoginId   User's login id
      * @param password      User's password
      * @param isServiceAuth true if authentication is for a service call
@@ -110,13 +106,11 @@ public class GitHubAuthenticator implements Authenticator {
                 String accessToken = gitHubUser.getString("accessToken");
                 String tokenType = gitHubUser.getString("tokenType");
                 if (UtilValidate.isNotEmpty(accessToken)) {
-                    getMethod = new HttpGet(GitHubEvents.ApiEndpoint + GitHubEvents.UserApiUri);
+                    getMethod = new HttpGet(GitHubEvents.getApiEndPoint() + GitHubEvents.getUserApiUri());
                     user = GitHubAuthenticator.getUserInfo(getMethod, accessToken, tokenType, Locale.getDefault());
                 }
             }
-        } catch (GenericEntityException e) {
-            throw new AuthenticatorException(e.getMessage(), e);
-        } catch (AuthenticatorException e) {
+        } catch (GenericEntityException | AuthenticatorException e) {
             throw new AuthenticatorException(e.getMessage(), e);
         } finally {
             if (getMethod != null) {
@@ -124,13 +118,12 @@ public class GitHubAuthenticator implements Authenticator {
             }
         }
 
-        Debug.logInfo("GitHub auth called; returned user info: " + user, module);
+        Debug.logInfo("GitHub auth called; returned user info: " + user, MODULE);
         return user != null;
     }
 
     /**
      * Logs a user out
-     *
      * @param username User's username
      * @throws org.apache.ofbiz.common.authentication.api.AuthenticatorException
      *          when logout fails
@@ -141,7 +134,6 @@ public class GitHubAuthenticator implements Authenticator {
 
     /**
      * Reads user information and syncs it to OFBiz (i.e. UserLogin, Person, etc)
-     *
      * @param userLoginId
      * @throws org.apache.ofbiz.common.authentication.api.AuthenticatorException
      *          user synchronization fails
@@ -171,7 +163,7 @@ public class GitHubAuthenticator implements Authenticator {
             try {
                 parentTx = TransactionUtil.suspend();
             } catch (GenericTransactionException e) {
-                Debug.logError(e, "Could not suspend transaction: " + e.getMessage(), module);
+                Debug.logError(e, "Could not suspend transaction: " + e.getMessage(), MODULE);
             }
 
             try {
@@ -186,12 +178,12 @@ public class GitHubAuthenticator implements Authenticator {
                 }
 
             } catch (GenericTransactionException e) {
-                Debug.logError(e, "Could not suspend transaction: " + e.getMessage(), module);
+                Debug.logError(e, "Could not suspend transaction: " + e.getMessage(), MODULE);
             } finally {
                 try {
                     TransactionUtil.commit(beganTransaction);
                 } catch (GenericTransactionException e) {
-                    Debug.logError(e, "Could not commit nested transaction: " + e.getMessage(), module);
+                    Debug.logError(e, "Could not commit nested transaction: " + e.getMessage(), MODULE);
                 }
             }
         } finally {
@@ -199,9 +191,11 @@ public class GitHubAuthenticator implements Authenticator {
             if (parentTx != null) {
                 try {
                     TransactionUtil.resume(parentTx);
-                    if (Debug.verboseOn()) Debug.logVerbose("Resumed the parent transaction.", module);
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("Resumed the parent transaction.", MODULE);
+                    }
                 } catch (GenericTransactionException e) {
-                    Debug.logError(e, "Could not resume parent nested transaction: " + e.getMessage(), module);
+                    Debug.logError(e, "Could not resume parent nested transaction: " + e.getMessage(), MODULE);
                 }
             }
         }
@@ -218,18 +212,22 @@ public class GitHubAuthenticator implements Authenticator {
                 String accessToken = gitHubUser.getString("accessToken");
                 String tokenType = gitHubUser.getString("tokenType");
                 if (UtilValidate.isNotEmpty(accessToken)) {
-                    getMethod = new HttpGet(GitHubEvents.ApiEndpoint + GitHubEvents.UserApiUri);
+                    getMethod = new HttpGet(GitHubEvents.getApiEndPoint() + GitHubEvents.getUserApiUri());
                     user = getUserInfo(getMethod, accessToken, tokenType, Locale.getDefault());
                 }
             }
-        } catch (GenericEntityException e) {
-            throw new AuthenticatorException(e.getMessage(), e);
-        } catch (AuthenticatorException e) {
+        } catch (GenericEntityException | AuthenticatorException e) {
             throw new AuthenticatorException(e.getMessage(), e);
         }
         return user;
     }
 
+    /**
+     * Create user string.
+     * @param userMap the user map
+     * @return the string
+     * @throws AuthenticatorException the authenticator exception
+     */
     public String createUser(Map<String, Object> userMap) throws AuthenticatorException {
         GenericValue system;
         try {
@@ -239,7 +237,7 @@ public class GitHubAuthenticator implements Authenticator {
         }
         return createUser(userMap, system);
     }
-    
+
     private String createUser(Map<String, Object> userMap, GenericValue system) throws AuthenticatorException {
         // create person + userLogin
         Map<String, Serializable> createPersonUlMap = new HashMap<>();
@@ -272,7 +270,7 @@ public class GitHubAuthenticator implements Authenticator {
         try {
             delegator.create(partyRole);
         } catch (GenericEntityException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
             throw new AuthenticatorException(e.getMessage(), e);
         }
 
@@ -302,7 +300,7 @@ public class GitHubAuthenticator implements Authenticator {
             try {
                 secGroup = EntityQuery.use(delegator).from("SecurityGroup").where("groupId", securityGroup).cache().queryOne();
             } catch (GenericEntityException e) {
-                Debug.logError(e, e.getMessage(), module);
+                Debug.logError(e, e.getMessage(), MODULE);
             }
 
             // add it to the user if it exists
@@ -333,7 +331,6 @@ public class GitHubAuthenticator implements Authenticator {
 
     /**
      * Updates a user's password.
-     *
      * @param username    User's username
      * @param password    User's current password
      * @param newPassword User's new password
@@ -342,12 +339,11 @@ public class GitHubAuthenticator implements Authenticator {
      */
     @Override
     public void updatePassword(String username, String password, String newPassword) throws AuthenticatorException {
-        Debug.logInfo("Calling GitHub:updatePassword() - ignored!!!", module);
+        Debug.logInfo("Calling GitHub:updatePassword() - ignored!!!", MODULE);
     }
 
     /**
      * Weight of this authenticator (lower weights are run first)
-     *
      * @return the weight of this Authenicator
      */
     @Override
@@ -357,7 +353,6 @@ public class GitHubAuthenticator implements Authenticator {
 
     /**
      * Is the user synchronzied back to OFBiz
-     *
      * @return true if the user record is copied to the OFB database
      */
     @Override
@@ -367,7 +362,6 @@ public class GitHubAuthenticator implements Authenticator {
 
     /**
      * Is this expected to be the only authenticator, if so errors will be thrown when users cannot be found
-     *
      * @return true if this is expected to be the only Authenticator
      */
     @Override
@@ -377,44 +371,44 @@ public class GitHubAuthenticator implements Authenticator {
 
     /**
      * Flag to test if this Authenticator is enabled
-     *
      * @return true if the Authenticator is enabled
      */
     @Override
     public boolean isEnabled() {
-        return "true".equalsIgnoreCase(UtilProperties.getPropertyValue(props, "github.authenticator.enabled", "true"));
+        return "true".equalsIgnoreCase(UtilProperties.getPropertyValue(PROPS, "github.authenticator.enabled", "true"));
     }
 
-    public static Map<String, Object> getUserInfo(HttpGet httpGet, String accessToken, String tokenType, Locale locale) throws AuthenticatorException {
+    public static Map<String, Object> getUserInfo(HttpGet httpGet, String accessToken, String tokenType, Locale locale)
+            throws AuthenticatorException {
         JSON userInfo = null;
-        httpGet.setConfig(PassportUtil.StandardRequestConfig);
+        httpGet.setConfig(PassportUtil.STANDARD_REQ_CONFIG);
         CloseableHttpClient jsonClient = HttpClients.custom().build();
         httpGet.setHeader(PassportUtil.AUTHORIZATION_HEADER, tokenType + " " + accessToken);
         httpGet.setHeader(PassportUtil.ACCEPT_HEADER, "application/json");
         CloseableHttpResponse getResponse = null;
-		try {
-			getResponse = jsonClient.execute(httpGet);
+        try {
+            getResponse = jsonClient.execute(httpGet);
             String responseString = new BasicResponseHandler().handleResponse(getResponse);
-	        if (getResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-	            // Debug.logInfo("Json Response from GitHub: " + responseString, module);
-	            userInfo = JSON.from(responseString);
-	        } else {
-	            String errMsg = UtilProperties.getMessage(resource, "GetOAuth2AccessTokenError", UtilMisc.toMap("error", responseString), locale);
-	            throw new AuthenticatorException(errMsg);
-	        }
-		} catch (ClientProtocolException e) {
+            if (getResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                // Debug.logInfo("Json Response from GitHub: " + responseString, MODULE);
+                userInfo = JSON.from(responseString);
+            } else {
+                String errMsg = UtilProperties.getMessage(RESOURCE, "GetOAuth2AccessTokenError", UtilMisc.toMap("error", responseString), locale);
+                throw new AuthenticatorException(errMsg);
+            }
+        } catch (ClientProtocolException e) {
             throw new AuthenticatorException(e.getMessage());
-		} catch (IOException e) {
+        } catch (IOException e) {
             throw new AuthenticatorException(e.getMessage());
-		} finally {
-			if (getResponse != null) {
-	            try {
-					getResponse.close();
-				} catch (IOException e) {
-					// do nothing
-				}
-			}
-		}
+        } finally {
+            if (getResponse != null) {
+                try {
+                    getResponse.close();
+                } catch (IOException e) {
+                    Debug.logError(e, MODULE);
+                }
+            }
+        }
         JSONToMap jsonMap = new JSONToMap();
         Map<String, Object> userMap;
         try {

@@ -39,20 +39,22 @@ import org.apache.ofbiz.service.LocalDispatcher;
  */
 public final class SearchWorker {
 
-    public static final String module = SearchWorker.class.getName();
+    private static final String MODULE = SearchWorker.class.getName();
 
-    private static final Version LUCENE_VERSION = Version.LUCENE_8_2_0;
+    private static final Version LUCENE_VERSION = Version.LUCENE_8_5_2;
 
-    private SearchWorker() {}
+    private SearchWorker() { }
 
     public static void indexContentTree(LocalDispatcher dispatcher, Delegator delegator, String siteId) throws Exception {
         GenericValue content = delegator.makeValue("Content", UtilMisc.toMap("contentId", siteId));
-        List<GenericValue> siteList = ContentWorker.getAssociatedContent(content, "To", UtilMisc.toList("SUBSITE", "PUBLISH_LINK", "SUB_CONTENT"), null, UtilDateTime.nowTimestamp().toString(), null);
+        List<GenericValue> siteList = ContentWorker.getAssociatedContent(content, "To", UtilMisc.toList("SUBSITE",
+                "PUBLISH_LINK", "SUB_CONTENT"), null, UtilDateTime.nowTimestamp().toString(), null);
 
         if (siteList != null) {
             for (GenericValue siteContent : siteList) {
                 String siteContentId = siteContent.getString("contentId");
-                List<GenericValue> subContentList = ContentWorker.getAssociatedContent(siteContent, "To", UtilMisc.toList("SUBSITE", "PUBLISH_LINK", "SUB_CONTENT"), null, UtilDateTime.nowTimestamp().toString(), null);
+                List<GenericValue> subContentList = ContentWorker.getAssociatedContent(siteContent, "To",
+                        UtilMisc.toList("SUBSITE", "PUBLISH_LINK", "SUB_CONTENT"), null, UtilDateTime.nowTimestamp().toString(), null);
 
                 if (subContentList != null) {
                     List<String> contentIdList = new ArrayList<>();
@@ -68,7 +70,7 @@ public final class SearchWorker {
 
     public static String getIndexPath(String path) {
         String basePath = UtilProperties.getPropertyValue("lucene", "defaultIndex", "index");
-        return (UtilValidate.isNotEmpty(path)? basePath + "/" + path + "/index" : basePath);
+        return (UtilValidate.isNotEmpty(path) ? basePath + "/" + path + "/index" : basePath);
     }
 
     public static void indexContentList(LocalDispatcher dispatcher, Delegator delegator, List<String> idList) throws Exception {
@@ -81,7 +83,7 @@ public final class SearchWorker {
                     contentList.add(content);
                 }
             } catch (GenericEntityException e) {
-                Debug.logError(e, module);
+                Debug.logError(e, MODULE);
                 return;
             }
         }

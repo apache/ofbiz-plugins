@@ -24,7 +24,6 @@ import java.util.Locale;
 
 /**
  * Base report class.
- * 
  */
 public abstract class AbstractReport implements InterfaceReport {
 
@@ -51,24 +50,20 @@ public abstract class AbstractReport implements InterfaceReport {
 
     /** Second constant. */
     private static final long SECONDS = 1000;
-    
     public static final String SESSION_REPORT_CLASS = "OFBIZ_HTML_REPORT";
 
     @Override
     public void addError(Object obj) {
-
         errors.add(obj);
     }
 
     @Override
     public void addWarning(Object obj) {
-
         warnings.add(obj);
     }
 
     @Override
     public String formatRuntime() {
-
         long runtime = getRuntime();
         long seconds = (runtime / SECONDS) % 60;
         long minutes = (runtime / MINUTES) % 60;
@@ -126,12 +121,12 @@ public abstract class AbstractReport implements InterfaceReport {
 
     @Override
     public boolean hasError() {
-        return (errors.size() > 0);
+        return (!errors.isEmpty());
     }
-    
+
     @Override
     public boolean hasWarning() {
-        return (warnings.size() > 0);
+        return (!warnings.isEmpty());
     }
 
     @Override
@@ -141,7 +136,6 @@ public abstract class AbstractReport implements InterfaceReport {
 
     /**
      * Initializes some member variables for this report.<p>
-     * 
      * @param locale the locale for this report
      */
     protected void init(Locale locale) {
@@ -152,7 +146,6 @@ public abstract class AbstractReport implements InterfaceReport {
 
     /**
      * Prints a String to the report.<p>
-     *
      * @param value the String to add
      */
     @Override
@@ -162,10 +155,8 @@ public abstract class AbstractReport implements InterfaceReport {
 
     /**
      * Prints a String to the report, using the indicated formatting.<p>
-     * 
      * Use the contants starting with <code>FORMAT</code> from this interface
      * to indicate which formatting to use.<p>
-     *
      * @param value the message container to add
      * @param format the formatting to use for the output
      */
@@ -174,7 +165,6 @@ public abstract class AbstractReport implements InterfaceReport {
 
     /**
      * Prints a String with line break to the report.<p>
-     * 
      * @param value the message container to add
      */
     @Override
@@ -185,10 +175,8 @@ public abstract class AbstractReport implements InterfaceReport {
 
     /**
      * Prints a String with line break to the report, using the indicated formatting.<p>
-     * 
      * Use the contants starting with <code>FORMAT</code> from this interface
      * to indicate which formatting to use.<p>
-     *
      * @param value the String to add
      * @param format the formatting to use for the output
      */

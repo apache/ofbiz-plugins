@@ -1,0 +1,37 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+= Filter result after search Products in category screen.
+This screen allows the user to see the results of products the find it from  conditions. +
+The user can select products they want export to ebay categories in this screen.
+
+== How to remove the conditions to find products?
+In the section 'Search Products, you searched for:' you will see list of conditions show on the top in the section,
+  So you can click 'X' to remove the condition you don't want and then the results of products will have changes.
+
+== What is a 'refine search' button?
+The 'Refine search' button use for go back to page to put the conditions again.
+
+== How to select products?
+In the results section you can select products which you want to export by use checkbox in front of name of products.
+  You can select one or many products if you want.
+
+== What is 'Export To eBay' button?
+After you select products then you want to export it you can click 'Export To eBay' button.
+  It will take you to go to the screen for setup ebay categories, start price for auction and payment method before
+  you export the products.

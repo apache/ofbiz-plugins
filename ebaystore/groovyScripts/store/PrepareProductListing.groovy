@@ -53,7 +53,7 @@
          content.product = product
          contents.add(content)
 
-         if (addItemMap.isVerify == "Y") {
+         if ("Y" == addItemMap.isVerify) {
              isExportValid = "true"
          } else {
              isExportValid = "false"

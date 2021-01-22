@@ -25,6 +25,11 @@ under the License.
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <#assign csrfDefenseStrategy = Static["org.apache.ofbiz.entity.util.EntityUtilProperties"].getPropertyValue("security", "csrf.defense.strategy", "org.apache.ofbiz.security.NoCsrfDefenseStrategy", delegator)>
+  <#if csrfDefenseStrategy != "org.apache.ofbiz.security.NoCsrfDefenseStrategy">
+    <meta name="csrf-token" content="<@csrfTokenAjax/>"/>
+  </#if>
+  
   <title><#if title?has_content>${title}<#elseif titleProperty?has_content>${uiLabelMap.get(titleProperty)}</#if>
     : ${(productStore.storeName)!}
   </title>
@@ -44,27 +49,23 @@ under the License.
   <#--layoutSettings.styleSheets is a list of style sheets. So, you can have a user-specified "main" style sheet,
       AND a component style sheet.-->
     <#list layoutSettings.styleSheets as styleSheet>
-      <link rel="stylesheet" href="<@ofbizContentUrl>${StringUtil.wrapString(styleSheet)}</@ofbizContentUrl>"
-          type="text/css"/>
+      <link rel="stylesheet" href="<@ofbizContentUrl>${StringUtil.wrapString(styleSheet)}</@ofbizContentUrl>" type="text/css"/>
     </#list>
   </#if>
   <#if layoutSettings.VT_STYLESHEET?has_content>
     <#list layoutSettings.VT_STYLESHEET as styleSheet>
-      <link rel="stylesheet" href="<@ofbizContentUrl>${StringUtil.wrapString(styleSheet)}</@ofbizContentUrl>"
-          type="text/css"/>
+      <link rel="stylesheet" href="<@ofbizContentUrl>${StringUtil.wrapString(styleSheet)}</@ofbizContentUrl>" type="text/css"/>
     </#list>
   </#if>
   <#if layoutSettings.rtlStyleSheets?has_content && "rtl" == langDir>
   <#--layoutSettings.rtlStyleSheets is a list of rtl style sheets.-->
     <#list layoutSettings.rtlStyleSheets as styleSheet>
-      <link rel="stylesheet" href="<@ofbizContentUrl>${StringUtil.wrapString(styleSheet)}</@ofbizContentUrl>"
-          type="text/css"/>
+      <link rel="stylesheet" href="<@ofbizContentUrl>${StringUtil.wrapString(styleSheet)}</@ofbizContentUrl>" type="text/css"/>
     </#list>
   </#if>
   <#if layoutSettings.VT_RTL_STYLESHEET?has_content && "rtl" == langDir>
     <#list layoutSettings.VT_RTL_STYLESHEET as styleSheet>
-      <link rel="stylesheet" href="<@ofbizContentUrl>${StringUtil.wrapString(styleSheet)}</@ofbizContentUrl>"
-          type="text/css"/>
+      <link rel="stylesheet" href="<@ofbizContentUrl>${StringUtil.wrapString(styleSheet)}</@ofbizContentUrl>" type="text/css"/>
     </#list>
   </#if>
   <#-- Append CSS for catalog -->

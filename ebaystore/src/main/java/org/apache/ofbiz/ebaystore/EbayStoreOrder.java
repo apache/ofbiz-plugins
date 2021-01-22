@@ -53,11 +53,11 @@ import org.apache.ofbiz.service.ServiceUtil;
 
 public class EbayStoreOrder {
 
-    private static final String resource = "EbayUiLabels";
-    private static final String module = EbayStoreOrder.class.getName();
+    private static final String RESOURCE = "EbayUiLabels";
+    private static final String MODULE = EbayStoreOrder.class.getName();
 
     public static Map<String, Object> EbayStoreImportTransaction(DispatchContext dctx, Map<String, Object> context) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         try {
             if ("Complete".equals(context.get("checkoutStatus").toString()) && "NOT_IMPORT".equals(context.get("importStatus").toString())) {
@@ -78,7 +78,7 @@ public class EbayStoreOrder {
     }
     public static Map<String, Object> EbayStoreImportOrder(DispatchContext dctx, Map<String, Object> context) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         if (UtilValidate.isEmpty(context.get("orderId"))) {
             try {
                 result = dispatcher.runSync("EbayStoreCreateOrderShoppingCart", context);
@@ -93,22 +93,22 @@ public class EbayStoreOrder {
         result.put("formSelect", "order");
         return result;
     }
-    
+
     public static Map<String, Object> EbayStoreCreateTransactionShoppingCart(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        Map<String, Object> result = new HashMap<String, Object>();
-        
+        Map<String, Object> result = new HashMap<>();
+
         String productStoreId = context.get("productStoreId").toString();
         String defaultCurrencyUomId = "";
         String payToPartyId = "";
         String facilityId = "";
-        
+
         try {
             if (UtilValidate.isEmpty(productStoreId)) {
-                return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "ordersImportFromEbay.productStoreIdIsMandatory", locale));
+                return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.productStoreIdIsMandatory", locale));
             } else {
                 GenericValue productStore = EntityQuery.use(delegator).from("ProductStore").where("productStoreId", productStoreId).queryOne();
                 if (productStore != null) {
@@ -116,16 +116,16 @@ public class EbayStoreOrder {
                     payToPartyId = productStore.getString("payToPartyId");
                     facilityId = productStore.getString("inventoryFacilityId");
                 } else {
-                    return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "ordersImportFromEbay.productStoreIdIsMandatory", locale));
+                    return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.productStoreIdIsMandatory", locale));
                 }
             }
-            
+
             ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale, defaultCurrencyUomId);
             String externalId = context.get("externalId").toString();
             if (UtilValidate.isNotEmpty(externalId)) {
                 cart.setExternalId(externalId);
             } else {
-                return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "EbayStoreOrder.externalIdNotAvailable", locale));
+                return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "EbayStoreOrder.externalIdNotAvailable", locale));
             }
 
             cart.setOrderType("SALES_ORDER");
@@ -154,16 +154,16 @@ public class EbayStoreOrder {
 
             String productId = context.get("productId").toString();
             if (UtilValidate.isEmpty(productId)) {
-                return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "ordersImportFromEbay.productIdNotAvailable", locale));
+                return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.productIdNotAvailable", locale));
             } else {
                 GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne();
                 if (UtilValidate.isEmpty(product)) {
-                    return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "ordersImportFromEbay.productIdDoesNotExist", locale));
+                    return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.productIdDoesNotExist", locale));
                 }
             }
 
             if (UtilValidate.isEmpty(context.get("paidTime"))) {
-                return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "ordersImportFromEbay.paymentIsStillNotReceived", locale));
+                return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.paymentIsStillNotReceived", locale));
             }
 
             BigDecimal unitPrice = new BigDecimal(context.get("transactionPrice").toString());
@@ -211,8 +211,8 @@ public class EbayStoreOrder {
                     }
                 }
             }
-            
-                Debug.logInfo("Importing new order from eBay", module);
+
+                Debug.logInfo("Importing new order from eBay", MODULE);
                 // set partyId to
                 String partyId = null;
                 String contactMechId = "";
@@ -224,12 +224,12 @@ public class EbayStoreOrder {
                 // if we get a party, check its contact information.
                 if (partyAttribute != null) {
                     partyId = (String) partyAttribute.get("partyId");
-                    Debug.logInfo("Found existing party associated to the eBay buyer: " + partyId, module);
+                    Debug.logInfo("Found existing party associated to the eBay buyer: " + partyId, MODULE);
                     GenericValue party = EntityQuery.use(delegator).from("Party").where("partyId", partyId).queryOne();
 
                     contactMechId = EbayHelper.setShippingAddressContactMech(dispatcher, delegator, party, userLogin, context);
                     String emailBuyer = context.get("emailBuyer").toString();
-                    if (!(emailBuyer.equals("") || "Invalid Request".equalsIgnoreCase(emailBuyer))) {
+                    if (!("".equals(emailBuyer) || "Invalid Request".equalsIgnoreCase(emailBuyer))) {
                         EbayHelper.setEmailContactMech(dispatcher, delegator, party, userLogin, context);
                     }
                     EbayHelper.setPhoneContactMech(dispatcher, delegator, party, userLogin, context);
@@ -237,68 +237,68 @@ public class EbayStoreOrder {
 
                 // create party if none exists already
                 if (UtilValidate.isEmpty(partyId)) {
-                    Debug.logInfo("Creating new party for the eBay buyer.", module);
+                    Debug.logInfo("Creating new party for the eBay buyer.", MODULE);
                     partyId = EbayHelper.createCustomerParty(dispatcher, context.get("buyerName").toString(), userLogin);
                     if (UtilValidate.isEmpty(partyId)) {
-                        Debug.logWarning("Using admin party for the eBay buyer.", module);
+                        Debug.logWarning("Using admin party for the eBay buyer.", MODULE);
                         partyId = "admin";
                     }
                 }
 
                 // create new party's contact information
                 if (UtilValidate.isEmpty(contactMechId)) {
-                    Debug.logInfo("Creating new postal address for party: " + partyId, module);
+                    Debug.logInfo("Creating new postal address for party: " + partyId, MODULE);
                     contactMechId = EbayHelper.createAddress(dispatcher, partyId, userLogin, "SHIPPING_LOCATION", context);
                     if (UtilValidate.isEmpty(contactMechId)) {
-                        return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "EbayStoreUnableToCreatePostalAddress", locale) + context);
+                        return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "EbayStoreUnableToCreatePostalAddress", locale) + context);
                     }
-                    Debug.logInfo("Created postal address: " + contactMechId, module);
-                    Debug.logInfo("Creating new phone number for party: " + partyId, module);
+                    Debug.logInfo("Created postal address: " + contactMechId, MODULE);
+                    Debug.logInfo("Creating new phone number for party: " + partyId, MODULE);
                     EbayHelper.createPartyPhone(dispatcher, partyId, context.get("shippingAddressPhone").toString(), userLogin);
-                    Debug.logInfo("Creating association to eBay buyer for party: " + partyId, module);
+                    Debug.logInfo("Creating association to eBay buyer for party: " + partyId, MODULE);
                     EbayHelper.createEbayCustomer(dispatcher, partyId, context.get("ebayUserIdBuyer").toString(), context.get("eiasTokenBuyer").toString(), userLogin);
                     String emailBuyer = context.get("emailBuyer").toString();
                     if (UtilValidate.isNotEmpty(emailBuyer) && !"Invalid Request".equalsIgnoreCase(emailBuyer)) {
-                        Debug.logInfo("Creating new email for party: " + partyId, module);
+                        Debug.logInfo("Creating new email for party: " + partyId, MODULE);
                         EbayHelper.createPartyEmail(dispatcher, partyId, emailBuyer, userLogin);
                     }
                 }
 
-                Debug.logInfo("Setting cart roles for party: " + partyId, module);
+                Debug.logInfo("Setting cart roles for party: " + partyId, MODULE);
                 cart.setBillToCustomerPartyId(partyId);
                 cart.setPlacingCustomerPartyId(partyId);
                 cart.setShipToCustomerPartyId(partyId);
                 cart.setEndUserCustomerPartyId(partyId);
 
-                Debug.logInfo("Setting contact mech in cart: " + contactMechId, module);
+                Debug.logInfo("Setting contact mech in cart: " + contactMechId, MODULE);
                 cart.setAllShippingContactMechId(contactMechId);
                 cart.setAllMaySplit(Boolean.FALSE);
 
-                Debug.logInfo("Setting shipment method: " + context.get("shippingService").toString(), module);
+                Debug.logInfo("Setting shipment method: " + context.get("shippingService").toString(), MODULE);
                 EbayHelper.setShipmentMethodType(cart, context.get("shippingService").toString(), productStoreId, delegator);
 
                 cart.makeAllShipGroupInfos(dispatcher);
 
                 // create the order
-                Debug.logInfo("Creating CheckOutHelper.", module);
+                Debug.logInfo("Creating CheckOutHelper.", MODULE);
                 CheckOutHelper checkout = new CheckOutHelper(dispatcher, delegator, cart);
-                Debug.logInfo("Creating order.", module);
+                Debug.logInfo("Creating order.", MODULE);
                 Map<String, Object> orderCreate = checkout.createOrder(userLogin);
 
                 String orderId = orderCreate.get("orderId").toString();
-                Debug.logInfo("Created order with id: " + orderId, module);
+                Debug.logInfo("Created order with id: " + orderId, MODULE);
 
                 // approve the order
                 if (UtilValidate.isNotEmpty(orderId)) {
-                    Debug.logInfo("Approving order with id: " + orderId, module);
+                    Debug.logInfo("Approving order with id: " + orderId, MODULE);
                     boolean approved = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
-                    Debug.logInfo("Order approved with result: " + approved, module);
+                    Debug.logInfo("Order approved with result: " + approved, MODULE);
 
                     // create the payment from the preference
                     if (approved) {
-                        Debug.logInfo("Creating payment for approved order.", module);
+                        Debug.logInfo("Creating payment for approved order.", MODULE);
                         EbayHelper.createPaymentFromPaymentPreferences(delegator, dispatcher, userLogin, orderId, externalId, cart.getOrderDate(), amountPaid, partyId);
-                        Debug.logInfo("Payment created.", module);
+                        Debug.logInfo("Payment created.", MODULE);
                     }
                 }
         } catch (Exception e) {
@@ -311,7 +311,7 @@ public class EbayStoreOrder {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        Map <String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
 
         String productStoreId = context.get("productStoreId").toString();
         String defaultCurrencyUomId = null;
@@ -319,7 +319,7 @@ public class EbayStoreOrder {
         String facilityId = null;
         try {
             if (productStoreId == null) {
-                return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "ordersImportFromEbay.productStoreIdIsMandatory", locale));
+                return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.productStoreIdIsMandatory", locale));
             } else {
                 GenericValue productStore = EntityQuery.use(delegator).from("ProductStore").where("productStoreId", productStoreId).queryOne();
                 if (productStore != null) {
@@ -327,7 +327,7 @@ public class EbayStoreOrder {
                     payToPartyId = productStore.getString("payToPartyId");
                     facilityId = productStore.getString("inventoryFacilityId");
                 } else {
-                    return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "ordersImportFromEbay.productStoreIdIsMandatory", locale));
+                    return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.productStoreIdIsMandatory", locale));
                 }
             }
             ShoppingCart cart = new ShoppingCart(delegator, productStoreId, locale, defaultCurrencyUomId);
@@ -360,7 +360,7 @@ public class EbayStoreOrder {
             // Before import the order from eBay to OFBiz is mandatory that the payment has be received
             String paidTime = (String) context.get("paidTime");
             if (UtilValidate.isEmpty(paidTime)) {
-                return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "ordersImportFromEbay.paymentIsStillNotReceived", locale));
+                return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "ordersImportFromEbay.paymentIsStillNotReceived", locale));
             }
 
             List<Map<String, Object>> orderItemList = UtilGenerics.checkList(context.get("orderItemList"));
@@ -375,7 +375,7 @@ public class EbayStoreOrder {
                 cart.setBillFromVendorPartyId(payToPartyId);
             }
 
-            Map<String, Object> shippingServiceSelectedCtx =  UtilGenerics.checkMap(context.get("shippingServiceSelectedCtx"));
+            Map<String, Object> shippingServiceSelectedCtx = UtilGenerics.checkMap(context.get("shippingServiceSelectedCtx"));
             if (UtilValidate.isNotEmpty(shippingServiceSelectedCtx.get("shippingServiceCost"))) {
                 BigDecimal shippingAmount = new BigDecimal(shippingServiceSelectedCtx.get("shippingServiceCost").toString());
                 if (shippingAmount.doubleValue() > 0) {
@@ -413,7 +413,7 @@ public class EbayStoreOrder {
                 }
             }
 
-            Debug.logInfo("Importing new order from eBay", module);
+            Debug.logInfo("Importing new order from eBay", MODULE);
             // set partyId to
             String partyId = null;
             String contactMechId = null;
@@ -422,7 +422,7 @@ public class EbayStoreOrder {
             if (UtilValidate.isNotEmpty(shippingAddressCtx)) {
                 String buyerName = (String) shippingAddressCtx.get("buyerName");
                 String firstName = buyerName.substring(0, buyerName.indexOf(" "));
-                String lastName = buyerName.substring(buyerName.indexOf(" ")+1);
+                String lastName = buyerName.substring(buyerName.indexOf(" ") + 1);
 
                 String country = (String) shippingAddressCtx.get("shippingAddressCountry");
                 String state = (String) shippingAddressCtx.get("shippingAddressStateOrProvince");
@@ -442,7 +442,7 @@ public class EbayStoreOrder {
                 if (UtilValidate.isNotEmpty(shipInfo)) {
                     GenericValue first = EntityUtil.getFirst(shipInfo);
                     partyId = first.getString("partyId");
-                    Debug.logInfo("Existing shipping address found for : (party: " + partyId + ")", module);
+                    Debug.logInfo("Existing shipping address found for : (party: " + partyId + ")", MODULE);
                 }
             }
 
@@ -457,12 +457,12 @@ public class EbayStoreOrder {
 
             // if we get a party, check its contact information.
             if (UtilValidate.isNotEmpty(partyId)) {
-                Debug.logInfo("Found existing party associated to the eBay buyer: " + partyId, module);
+                Debug.logInfo("Found existing party associated to the eBay buyer: " + partyId, MODULE);
                 GenericValue party = EntityQuery.use(delegator).from("Party").where("partyId", partyId).queryOne();
 
                 contactMechId = EbayHelper.setShippingAddressContactMech(dispatcher, delegator, party, userLogin, shippingAddressCtx);
                 String emailBuyer = (String) context.get("emailBuyer");
-                if (!(emailBuyer.equals("") || "Invalid Request".equalsIgnoreCase(emailBuyer))) {
+                if (!("".equals(emailBuyer) || "Invalid Request".equalsIgnoreCase(emailBuyer))) {
                     EbayHelper.setEmailContactMech(dispatcher, delegator, party, userLogin, context);
                 }
                 EbayHelper.setPhoneContactMech(dispatcher, delegator, party, userLogin, shippingAddressCtx);
@@ -470,10 +470,10 @@ public class EbayStoreOrder {
 
             // create party if none exists already
             if (UtilValidate.isEmpty(partyId)) {
-                Debug.logInfo("Creating new party for the eBay buyer.", module);
+                Debug.logInfo("Creating new party for the eBay buyer.", MODULE);
                 partyId = EbayHelper.createCustomerParty(dispatcher, (String) shippingAddressCtx.get("buyerName"), userLogin);
                 if (UtilValidate.isEmpty(partyId)) {
-                    Debug.logWarning("Using admin party for the eBay buyer.", module);
+                    Debug.logWarning("Using admin party for the eBay buyer.", MODULE);
                     partyId = "admin";
                 }
             }
@@ -481,41 +481,41 @@ public class EbayStoreOrder {
             // create new party's contact information
             if (UtilValidate.isEmpty(contactMechId)) {
 
-                Debug.logInfo("Creating new postal address for party: " + partyId, module);
+                Debug.logInfo("Creating new postal address for party: " + partyId, MODULE);
                 contactMechId = EbayHelper.createAddress(dispatcher, partyId, userLogin, "SHIPPING_LOCATION", shippingAddressCtx);
                 if (UtilValidate.isEmpty(contactMechId)) {
-                    return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "EbayStoreUnableToCreatePostalAddress", locale) + shippingAddressCtx);
+                    return ServiceUtil.returnFailure(UtilProperties.getMessage(RESOURCE, "EbayStoreUnableToCreatePostalAddress", locale) + shippingAddressCtx);
                 }
-                Debug.logInfo("Created postal address: " + contactMechId, module);
-                Debug.logInfo("Creating new phone number for party: " + partyId, module);
+                Debug.logInfo("Created postal address: " + contactMechId, MODULE);
+                Debug.logInfo("Creating new phone number for party: " + partyId, MODULE);
                 EbayHelper.createPartyPhone(dispatcher, partyId, (String) shippingAddressCtx.get("shippingAddressPhone"), userLogin);
-                Debug.logInfo("Creating association to eBay buyer for party: " + partyId, module);
+                Debug.logInfo("Creating association to eBay buyer for party: " + partyId, MODULE);
                 EbayHelper.createEbayCustomer(dispatcher, partyId, (String) context.get("ebayUserIdBuyer"), null, userLogin);
                 String emailBuyer = (String) context.get("emailBuyer");
                 if (UtilValidate.isNotEmpty(emailBuyer) && !"Invalid Request".equalsIgnoreCase(emailBuyer)) {
-                    Debug.logInfo("Creating new email for party: " + partyId, module);
+                    Debug.logInfo("Creating new email for party: " + partyId, MODULE);
                     EbayHelper.createPartyEmail(dispatcher, partyId, emailBuyer, userLogin);
                 }
             }
 
-            Debug.logInfo("Setting cart roles for party: " + partyId, module);
+            Debug.logInfo("Setting cart roles for party: " + partyId, MODULE);
             cart.setBillToCustomerPartyId(partyId);
             cart.setPlacingCustomerPartyId(partyId);
             cart.setShipToCustomerPartyId(partyId);
             cart.setEndUserCustomerPartyId(partyId);
 
-            Debug.logInfo("Setting contact mech in cart: " + contactMechId, module);
+            Debug.logInfo("Setting contact mech in cart: " + contactMechId, MODULE);
             cart.setAllShippingContactMechId(contactMechId);
             cart.setAllMaySplit(Boolean.FALSE);
 
-            Debug.logInfo("Setting shipment method: " + (String) shippingServiceSelectedCtx.get("shippingService"), module);
+            Debug.logInfo("Setting shipment method: " + (String) shippingServiceSelectedCtx.get("shippingService"), MODULE);
             EbayHelper.setShipmentMethodType(cart, (String) shippingServiceSelectedCtx.get("shippingService"), productStoreId, delegator);
             cart.makeAllShipGroupInfos(dispatcher);
 
             // create the order
-            Debug.logInfo("Creating CheckOutHelper.", module);
+            Debug.logInfo("Creating CheckOutHelper.", MODULE);
             CheckOutHelper checkout = new CheckOutHelper(dispatcher, delegator, cart);
-            Debug.logInfo("Creating order.", module);
+            Debug.logInfo("Creating order.", MODULE);
             Map<?, ?> orderCreate = checkout.createOrder(userLogin);
 
             if ("error".equals(orderCreate.get("responseMessage"))) {
@@ -523,19 +523,19 @@ public class EbayStoreOrder {
                 return ServiceUtil.returnError(errorMessageList);
             }
             String orderId = (String) orderCreate.get("orderId");
-            Debug.logInfo("Created order with id: " + orderId, module);
+            Debug.logInfo("Created order with id: " + orderId, MODULE);
 
             // approve the order
             if (UtilValidate.isNotEmpty(orderId)) {
-                Debug.logInfo("Approving order with id: " + orderId, module);
+                Debug.logInfo("Approving order with id: " + orderId, MODULE);
                 boolean approved = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
-                Debug.logInfo("Order approved with result: " + approved, module);
+                Debug.logInfo("Order approved with result: " + approved, MODULE);
 
                 // create the payment from the preference
                 if (approved) {
-                    Debug.logInfo("Creating payment for approved order.", module);
+                    Debug.logInfo("Creating payment for approved order.", MODULE);
                     EbayHelper.createPaymentFromPaymentPreferences(delegator, dispatcher, userLogin, orderId, externalId, cart.getOrderDate(), amountPaid, partyId);
-                    Debug.logInfo("Payment created.", module);
+                    Debug.logInfo("Payment created.", MODULE);
                 }
                 result = ServiceUtil.returnFailure(UtilProperties.getMessage("EbayStoreUiLabels", "EbayOrderCreatedSuccessfully", UtilMisc.toMap("orderId", orderId, "externalId", externalId), locale));
             }
@@ -549,7 +549,7 @@ public class EbayStoreOrder {
         String productId = orderItem.get("productId").toString();
         GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne();
         if (UtilValidate.isEmpty(product)) {
-            Debug.logError("The product having ID (" + productId + ") is misssing in the system.", module);
+            Debug.logError("The product having ID (" + productId + ") is misssing in the system.", MODULE);
         }
         BigDecimal qty = new BigDecimal(orderItem.get("quantity").toString());
         String itemPrice = orderItem.get("transactionPrice").toString();
@@ -559,7 +559,7 @@ public class EbayStoreOrder {
         BigDecimal price = new BigDecimal(itemPrice);
         price = price.setScale(ShoppingCart.scale, ShoppingCart.rounding);
 
-        Map<String, Object> attrs = new HashMap<String, Object>();
+        Map<String, Object> attrs = new HashMap<>();
         attrs.put("shipGroup", groupIdx);
 
         int idx = cart.addItemToEnd(productId, null, qty, null, null, attrs, null, null, dispatcher, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE);

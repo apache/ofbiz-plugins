@@ -1,0 +1,73 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+= Project Manager Introduction
+The project manager allows you to manage a project which in its simplest form consists out of phases and tasks.
+
+A project consists out of one or more phases of which each phase can have one or more tasks. +
+A task always has a single parentPhase. +
+Time registration is only done on a task level.
+
+Estimated and actual dates are only maintained at the task level. +
+Assign tasks to team members; report project activities with timesheets and calendars. +
+For reporting they are calculated to the higher levels. +
+Project views are created to support this.
+
+== Status management
+Status is managed at task level, Project and Phase statuses shown on screen are tasks status compilation. +
+Task statuses are :
+
+|===
+| StatusId        | Status      |  Description
+| PTS_CREATED,    | Created     | after task creation
+| PTS_CREATED_UA  | Unassigned  | currently not used by an automatic process
+| PTS_CREATED_AS  | Assigned    | after a resource is assigned
+| PTS_CREATED_IP  | In Progress | after a time entry is created on the task
+| PTS_COMPLETED  .| Completed   |Manually changed by button
+| PTS_ON_HOLD     | On Hold     |
+| PTS_CANCELLED   |Cancelled    |
+|===
+
+Project or Phase is completed if all included tasks are completed (or cancelled)
+
+== Resources
+You can describe a customer (company and contact) and who provides the task (named provider) in the resource portlet.
+
+To be able to associate someone to a project he should have,  two (or more) project roleType, first PROJECT_TEAM to appear
+in Party drop-down, and at least one of the PROJECT_TEAM sub-roles for the second drop-down.
+
+Look at parameters section to have the complete project roletypes list.
+And go to the party profile to associate a role type to a party.
+
+== Parameters :
+* RoleType with PROJECT_TEAM as parentTypeId, used in a lot of screens; default proposed roleTypes are :
+** CLIENT% : used to select parties which appears in Projects Parties info, client side
+** CLIENT_MANAGER : user login associated to a project with this roleType view it in ListCustomerProjects
+** CLIENT_ANALYST : same as CLIENT_MANAGER for ListCustomerProjects
+** CLIENT_BILLING : partyId which will be invoiced; same as CLIENT_MANAGER for ListCustomerProjects; appears in Company part
+   of Project Parties info, other CLIENT% role appears in contact part
+** PROVIDER% : all parties which provide the project. In Projects Parties info, provider part, all roleType not equals to CLIENT%
+   will appear
+** PROVIDER_MANAGER : currently no process or specific selection
+** PROVIDER_ACCOUNTING : currently no process or specific selection
+** PROVIDER_ANALYST : currently no process or specific selection
+** PROVIDER_FUNCTIONAL : currently no process or specific selection
+** PROVIDER_VALIDATOR or PROVIDER_TESTER: used to define at project level who will validate a task,  used when assigning a party
+   to a task with status not equals to "PAS_COMPLETED", if the party has not this role, all parties with this role at the project
+   level will be added to this task. +
+   (this action is done by ECA, commented in default configuration, if you want it un-comment it)

@@ -61,69 +61,107 @@ import org.xml.sax.SAXException;
  */
 public class JanrainHelper {
 
-    public static final String module = JanrainHelper.class.getName();
+    private static final String MODULE = JanrainHelper.class.getName();
     private static String apiKey = UtilProperties.getPropertyValue("ecommerce", "janrain.apiKey");
     private static String baseUrl = UtilProperties.getPropertyValue("ecommerce", "janrain.baseUrl");
     public JanrainHelper(String apiKey, String baseUrl) {
-        while (baseUrl.endsWith("/"))
+        while (baseUrl.endsWith("/")) {
             baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
+        }
         JanrainHelper.apiKey = apiKey;
         JanrainHelper.baseUrl = baseUrl;
     }
-    public String getApiKey() { return apiKey; }
-    public String getBaseUrl() { return baseUrl; }
+
+    /**
+     * Gets api key.
+     * @return the api key
+     */
+    public String getApiKey() {
+        return apiKey;
+    }
+
+    /**
+     * Gets base url.
+     * @return the base url
+     */
+    public String getBaseUrl() {
+        return baseUrl;
+    }
     public static Element authInfo(String token) {
         Map<String, Object> query = new HashMap<>();
         query.put("token", token);
         return apiCall("auth_info", query);
     }
+
+    /**
+     * All mappings hash map.
+     * @return the hash map
+     */
     public HashMap<String, List<String>> allMappings() {
         Element rsp = apiCall("all_mappings", null);
         rsp.getFirstChild();
         HashMap<String, List<String>> result = new HashMap<>();
         NodeList mappings = getNodeList("/rsp/mappings/mapping", rsp);
         for (int i = 0; i < mappings.getLength(); i++) {
-            Element mapping = (Element)mappings.item(i);
+            Element mapping = (Element) mappings.item(i);
             List<String> identifiers = new ArrayList<>();
-            NodeList rk_list = getNodeList("primaryKey", mapping);
-            NodeList id_list = getNodeList("identifiers/identifier", mapping);
-            String remote_key = ((Element)rk_list.item(0)).getTextContent();
-            for (int j = 0; j < id_list.getLength(); j++) {
-                Element ident = (Element) id_list.item(j);
+            NodeList rkList = getNodeList("primaryKey", mapping);
+            NodeList idList = getNodeList("identifiers/identifier", mapping);
+            String remoteKey = ((Element) rkList.item(0)).getTextContent();
+            for (int j = 0; j < idList.getLength(); j++) {
+                Element ident = (Element) idList.item(j);
                 identifiers.add(ident.getTextContent());
             }
-            result.put(remote_key, identifiers);
+            result.put(remoteKey, identifiers);
         }
         return result;
     }
-    private static NodeList getNodeList(String xpath_expr, Element root) {
+    private static NodeList getNodeList(String xpathExpr, Element root) {
         XPathFactory factory = XPathFactory.newInstance();
         XPath xpath = factory.newXPath();
         try {
-            return (NodeList) xpath.evaluate(xpath_expr, root, XPathConstants.NODESET);
+            return (NodeList) xpath.evaluate(xpathExpr, root, XPathConstants.NODESET);
         } catch (XPathExpressionException e) {
             return null;
         }
     }
+
+    /**
+     * Mappings list.
+     * @param primaryKey the primary key
+     * @return the list
+     */
     public List<String> mappings(Object primaryKey) {
         Map<String, Object> query = new HashMap<>();
         query.put("primaryKey", primaryKey);
         Element rsp = apiCall("mappings", query);
-        Element oids = (Element)rsp.getFirstChild();
+        Element oids = (Element) rsp.getFirstChild();
         List<String> result = new ArrayList<>();
         NodeList nl = oids.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
-            Element e = (Element)nl.item(i);
+            Element e = (Element) nl.item(i);
             result.add(e.getTextContent());
         }
         return result;
     }
+
+    /**
+     * Map.
+     * @param identifier the identifier
+     * @param primaryKey the primary key
+     */
     public void map(String identifier, Object primaryKey) {
         Map<String, Object> query = new HashMap<>();
         query.put("identifier", identifier);
         query.put("primaryKey", primaryKey);
         apiCall("map", query);
     }
+
+    /**
+     * Unmap.
+     * @param identifier the identifier
+     * @param primaryKey the primary key
+     */
     public void unmap(String identifier, Object primaryKey) {
         Map<String, Object> query = new HashMap<>();
         query.put("identifier", identifier);
@@ -141,8 +179,9 @@ public class JanrainHelper {
         query.put("apiKey", apiKey);
         StringBuffer sb = new StringBuffer();
         for (Iterator<Map.Entry<String, Object>> it = query.entrySet().iterator(); it.hasNext();) {
-            if (sb.length() > 0)
+            if (sb.length() > 0) {
                 sb.append('&');
+            }
             try {
                 Map.Entry<String, Object> e = it.next();
                 sb.append(URLEncoder.encode(e.getKey().toString(), "UTF-8"));
@@ -155,20 +194,20 @@ public class JanrainHelper {
         String data = sb.toString();
         try {
             URL url = new URL(baseUrl + "/api/v2/" + methodName);
-            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
             conn.connect();
             OutputStreamWriter osw = new OutputStreamWriter(
-                conn.getOutputStream(), "UTF-8");
+                    conn.getOutputStream(), "UTF-8");
             osw.write(data);
             osw.close();
-            
+
             BufferedReader post = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String line = "";
             StringBuilder buf = new StringBuilder();
             while ((line = post.readLine()) != null) {
-                 buf.append(line);
+                buf.append(line);
             }
             post.close();
             Document tagXml = UtilXml.readXmlDocument(buf.toString());
@@ -181,22 +220,20 @@ public class JanrainHelper {
             throw new RuntimeException("Unexpected URL error", e);
         } catch (IOException e) {
             throw new RuntimeException("Unexpected IO error", e);
-        } catch (ParserConfigurationException e) {
-            throw new RuntimeException("Unexpected XML error", e);
-        } catch (SAXException e) {
+        } catch (ParserConfigurationException | SAXException e) {
             throw new RuntimeException("Unexpected XML error", e);
         }
     }
 
-    public static String janrainCheckLogin(HttpServletRequest request, HttpServletResponse response){
+    public static String janrainCheckLogin(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        String token =  request.getParameter("token");
+        String token = request.getParameter("token");
         String errMsg = "";
         if (UtilValidate.isNotEmpty(token)) {
             Element authInfo = JanrainHelper.authInfo(token);
             Element profileElement = UtilXml.firstChildElement(authInfo, "profile");
             Element nameElement = UtilXml.firstChildElement(profileElement, "name");
-            
+
             // profile element
             String displayName = UtilXml.elementValue(UtilXml.firstChildElement(profileElement, "displayName"));
             String email = UtilXml.elementValue(UtilXml.firstChildElement(profileElement, "email"));
@@ -204,18 +241,18 @@ public class JanrainHelper {
             String preferredUsername = UtilXml.elementValue(UtilXml.firstChildElement(profileElement, "preferredUsername"));
             String providerName = UtilXml.elementValue(UtilXml.firstChildElement(profileElement, "providerName"));
             String url = UtilXml.elementValue(UtilXml.firstChildElement(profileElement, "url"));
-            
+
             // name element
             String givenName = UtilXml.elementValue(UtilXml.firstChildElement(nameElement, "givenName"));
             String familyName = UtilXml.elementValue(UtilXml.firstChildElement(nameElement, "familyName"));
             String formatted = UtilXml.elementValue(UtilXml.firstChildElement(nameElement, "formatted"));
-            
+
             if (UtilValidate.isEmpty("preferredUsername")) {
                 errMsg = UtilProperties.getMessage("SecurityextUiLabels", "loginevents.username_not_found_reenter", UtilHttp.getLocale(request));
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
-            
+
             Map<String, String> result = new HashMap<>();
             result.put("displayName", displayName);
             result.put("email", email);
@@ -227,7 +264,6 @@ public class JanrainHelper {
             result.put("familyName", familyName);
             result.put("formatted", formatted);
             request.setAttribute("userInfoMap", result);
-            
             try {
                 GenericValue userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", preferredUsername).cache().queryOne();
                 if (userLogin != null) {
@@ -239,7 +275,7 @@ public class JanrainHelper {
                     return "userLoginMissing";
                 }
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Error finding the userLogin for distributed cache clear", module);
+                Debug.logError(e, "Error finding the userLogin for distributed cache clear", MODULE);
             }
         }
         return "success";

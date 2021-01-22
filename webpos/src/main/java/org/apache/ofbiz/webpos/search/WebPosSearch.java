@@ -41,8 +41,8 @@ import org.apache.ofbiz.service.ServiceUtil;
 
 public class WebPosSearch {
 
-    public static final String module = WebPosSearch.class.getName();
-    
+    private static final String MODULE = WebPosSearch.class.getName();
+
     public static Map<String, Object> findProducts(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         String searchByProductIdValue = (String) context.get("searchByProductIdValue");
@@ -50,20 +50,21 @@ public class WebPosSearch {
         String searchByProductDescription = (String) context.get("searchByProductDescription");
         String goodIdentificationTypeId = (String) context.get("goodIdentificationTypeId");
         Map<String, Object> result = ServiceUtil.returnSuccess();
-        
+
         List<EntityCondition> andExprs = new LinkedList<>();
         EntityCondition mainCond = null;
         String entityName = "Product";
-        
         // search by product name
         if (UtilValidate.isNotEmpty(searchByProductName)) {
             searchByProductName = searchByProductName.toUpperCase().trim();
-            andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("productName"), EntityOperator.LIKE, EntityFunction.UPPER("%" + searchByProductName + "%")));
+            andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("productName"), EntityOperator.LIKE,
+                    EntityFunction.UPPER("%" + searchByProductName + "%")));
         }
         // search by description
         if (UtilValidate.isNotEmpty(searchByProductDescription)) {
             searchByProductDescription = searchByProductDescription.toUpperCase().trim();
-            andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("description"), EntityOperator.LIKE, EntityFunction.UPPER("%" + searchByProductDescription + "%")));
+            andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("description"), EntityOperator.LIKE,
+                    EntityFunction.UPPER("%" + searchByProductDescription + "%")));
         }
         // search by good identification
         if (UtilValidate.isNotEmpty(searchByProductIdValue)) {
@@ -79,12 +80,11 @@ public class WebPosSearch {
         try {
             products = EntityQuery.use(delegator).from(entityName).where(mainCond).orderBy("productName", "description").queryList();
         } catch (GenericEntityException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
         }
         result.put("productsList", products);
         return result;
     }
-    
     public static Map<String, Object> findParties(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         String searchByPartyLastName = (String) context.get("searchByPartyLastName");
@@ -94,12 +94,12 @@ public class WebPosSearch {
         String billingLocation = (String) context.get("billingLocation");
         String shippingLocation = (String) context.get("shippingLocation");
         Map<String, Object> result = ServiceUtil.returnSuccess();
-        
+
         List<EntityCondition> andExprs = new LinkedList<>();
         List<EntityCondition> orExprs = new LinkedList<>();
         EntityCondition mainCond = null;
         List<String> orderBy = new LinkedList<>();
-        
+
         // default view settings
         DynamicViewEntity dynamicView = new DynamicViewEntity();
         dynamicView.addMemberEntity("PT", "Party");
@@ -132,38 +132,36 @@ public class WebPosSearch {
         dynamicView.addAlias("PA", "countryGeoId");
         dynamicView.addAlias("PA", "stateProvinceGeoId");
         dynamicView.addViewLink("CM", "PA", Boolean.TRUE, ModelKeyMap.makeKeyMapList("contactMechId"));
-        
         if (UtilValidate.isNotEmpty(billingLocation) && "Y".equalsIgnoreCase(billingLocation)) {
             orExprs.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "BILLING_LOCATION"));
         }
-        
         if (UtilValidate.isNotEmpty(shippingLocation) && "Y".equalsIgnoreCase(shippingLocation)) {
             orExprs.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "SHIPPING_LOCATION"));
         }
-        
-        if (orExprs.size() > 0) {
+        if (!orExprs.isEmpty()) {
             andExprs.add(EntityCondition.makeCondition(orExprs, EntityOperator.OR));
         }
         andExprs.add(EntityCondition.makeCondition("partyTypeId", EntityOperator.EQUALS, "PERSON"));
         andExprs.add(EntityCondition.makeCondition("contactMechTypeId", EntityOperator.EQUALS, "POSTAL_ADDRESS"));
-        
-        if (UtilValidate.isNotEmpty(shippingLocation) && "N".equalsIgnoreCase(shippingLocation) && UtilValidate.isNotEmpty(billingLocation) && "N".equalsIgnoreCase(billingLocation)) {
-           andExprs.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.IN, UtilMisc.toList("SHIPPING_LOCATION", "BILLING_LOCATION")));
+        if (UtilValidate.isNotEmpty(shippingLocation) && "N".equalsIgnoreCase(shippingLocation) && UtilValidate.isNotEmpty(billingLocation)
+                && "N".equalsIgnoreCase(billingLocation)) {
+            andExprs.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.IN, UtilMisc.toList("SHIPPING_LOCATION",
+                    "BILLING_LOCATION")));
         }
         mainCond = EntityCondition.makeCondition(andExprs, EntityOperator.AND);
-        
         orderBy.add("lastName");
         orderBy.add("firstName");
-        
         // search by last name
         if (UtilValidate.isNotEmpty(searchByPartyLastName)) {
             searchByPartyLastName = searchByPartyLastName.toUpperCase().trim();
-            andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("lastName"), EntityOperator.LIKE, EntityFunction.UPPER("%" + searchByPartyLastName + "%")));
+            andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("lastName"), EntityOperator.LIKE,
+                    EntityFunction.UPPER("%" + searchByPartyLastName + "%")));
         }
         // search by first name
         if (UtilValidate.isNotEmpty(searchByPartyFirstName)) {
             searchByPartyFirstName = searchByPartyFirstName.toUpperCase().trim();
-            andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("firstName"), EntityOperator.LIKE, EntityFunction.UPPER("%" + searchByPartyFirstName + "%")));
+            andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("firstName"), EntityOperator.LIKE,
+                    EntityFunction.UPPER("%" + searchByPartyFirstName + "%")));
         }
         // search by party identification
         if (UtilValidate.isNotEmpty(searchByPartyIdValue)) {
@@ -178,7 +176,7 @@ public class WebPosSearch {
         try (EntityListIterator pli = delegator.findListIteratorByCondition(dynamicView, mainCond, null, null, orderBy, null)) {
             parties = EntityUtil.filterByDate(pli.getCompleteList(), true);
         } catch (GenericEntityException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
         }
         result.put("partiesList", parties);
         return result;

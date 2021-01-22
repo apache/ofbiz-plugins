@@ -26,9 +26,10 @@ under the License.
         <section>
             <actions>
                 <set field="headerItem" value="ExampleMenuItem"/>
+                <set field="helpAnchor" value="_the_example_main_page"/>
                 <set field="titleProperty" value="PageTitleFindExample"/>
                 <set field="exampleCtx" from-field="parameters"/>
-                <set field="formExampleListName" value="${groovy: 
+                <set field="formExampleListName" value="${groovy:
                     if (parameters.listOtherElements == 'items') return 'ListExamplesWithItems';
                     else if (parameters.listOtherElements == 'features') return 'ListExamplesWithFeatures';
                     else if (parameters.listOtherElements == 'status') return 'ListExamplesWithStatus';

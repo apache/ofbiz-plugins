@@ -1249,7 +1249,7 @@
         </iterate>
         <if-empty field="partyIdAllInCompany">
             <add-error>
-                <fail-message message="There is no party in this company" />
+                <fail-property resource="scrumUiLabels" property="ScrumServiceNoParty"/>
             </add-error>
             <check-errors />
         </if-empty>
@@ -1300,7 +1300,7 @@
         <set field="isAddAll" value="${groovy:tasks.addAll(unplannedTasks)}"/>
         <if-empty field="tasks">
             <add-error>
-                <fail-message message="No timeentry items found" />
+                <fail-property resource="scrumUiLabels" property="ScrumServiceNoTimeEntryItem"/>
             </add-error>
             <check-errors />
         </if-empty>
@@ -2496,12 +2496,6 @@
         <if-not-empty field="productBacklogs">
             <set field="sprintId" from-field="productBacklogs[0].workEffortId"/>
         </if-not-empty>
-    </simple-method>
-    <simple-method method-name="updateTimesheetToInProcess"
-        short-description="Updates the Timesheet status back to in process to be able to correct errors">
-        <entity-one entity-name="Timesheet" value-field="timesheet" />
-        <set field="timesheet.statusId" value="TIMESHEET_IN_PROCESS" />
-        <store-value value-field="timesheet" />
     </simple-method>
     <simple-method method-name="updateScrumRevisionChange" short-description="Update Scrum Revision Change" login-required="false">
         <log level="info" message="==========>>> Auto store Revision# [${parameters.revisionNumber}],committer# ${parameters.user},taskId# ${parameters.taskId},hours# ${parameters.hours}"/>

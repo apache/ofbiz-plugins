@@ -18,9 +18,6 @@
  */
 
 import java.sql.Timestamp
-import org.apache.ofbiz.base.util.Debug
-
-def module = "BalanceSheetParameters.groovy"
 
 try {
     def birtParameters = [:]
@@ -36,6 +33,6 @@ try {
     birtParameters.locale = locale
     request.setAttribute("birtParameters", birtParameters)
 } catch (e) {
-    Debug.logError(e, module)
+    logError(e)
 }
 return "success";

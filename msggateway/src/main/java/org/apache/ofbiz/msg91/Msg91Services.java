@@ -35,12 +35,11 @@ import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.ServiceUtil;
 
 public class Msg91Services {
-    public final static String module = Msg91Services.class.getName();
+    private static final String MODULE = Msg91Services.class.getName();
 
     public static Map<String, Object> sendMsg91Sms(DispatchContext ctx, Map<String, ? extends Object> context) {
         Delegator delegator = ctx.getDelegator();
         Map<String, Object> result = ServiceUtil.returnSuccess();
-        
         List<String> numbers = UtilGenerics.cast(context.get("numbers"));
         String message = (String) context.get("message");
 
@@ -60,11 +59,11 @@ public class Msg91Services {
                 String response = httpClient.get();
                 result.put("response", response);
             } else {
-                Debug.logError("Message not sent as the telecom gateway configuration settings are not found", module);
+                Debug.logError("Message not sent as the telecom gateway configuration settings are not found", MODULE);
                 return ServiceUtil.returnError("Message not sent as the telecom gateway configuration settings are not found");
             }
         } catch (GenericEntityException | HttpClientException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
             return ServiceUtil.returnError(e.getMessage());
         }
         return result;

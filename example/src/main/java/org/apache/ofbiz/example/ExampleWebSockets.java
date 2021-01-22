@@ -35,17 +35,23 @@ import org.apache.ofbiz.base.util.Debug;
 @ServerEndpoint("/ws/pushNotifications")
 public class ExampleWebSockets {
 
-    public static final String module = ExampleWebSockets.class.getName();
+    private static final String MODULE = ExampleWebSockets.class.getName();
     private static Set<Session> clients = Collections.synchronizedSet(new HashSet<Session>());
-    
 
+
+    /**
+     * On message.
+     * @param session the session
+     * @param msg the msg
+     * @param last the last
+     */
     @OnMessage
     public void onMessage(Session session, String msg, boolean last) {
         try {
             if (session.isOpen()) {
                 synchronized (clients) {
-                    for(Session client : clients){
-                        if (!client.equals(session)){
+                    for (Session client : clients) {
+                        if (!client.equals(session)) {
                             client.getBasicRemote().sendText(msg);
                         }
                     }
@@ -55,24 +61,32 @@ public class ExampleWebSockets {
             try {
                 session.close();
             } catch (IOException ioe) {
-                Debug.logError(ioe.getMessage(), module);
+                Debug.logError(ioe.getMessage(), MODULE);
             }
         }
     }
 
+    /**
+     * On open.
+     * @param session the session
+     */
     @OnOpen
-    public void onOpen (Session session) {
+    public void onOpen(Session session) {
         // Add session to the connected sessions clients set
         clients.add(session);
     }
 
+    /**
+     * On close.
+     * @param session the session
+     */
     @OnClose
-    public void onClose (Session session) {
+    public void onClose(Session session) {
         // Remove session from the connected sessions clients set
         clients.remove(session);
     }
 
-    public static Set<Session> getClients () {
+    public static Set<Session> getClients() {
         return clients;
     }
 }

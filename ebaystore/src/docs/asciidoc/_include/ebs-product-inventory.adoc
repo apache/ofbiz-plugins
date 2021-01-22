@@ -1,0 +1,70 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+= Handle Ebay Product Inventory.
+This screen allows the user to manage reserve products from ofbiz inventory to their ebay store and then user can use
+this screen to upload that products into ebay product inventory on ebay site following an ebay account.
+
+In this screen user can manage their ebay store inventory from ofbiz, the screen will show status of product on
+ebay product inventory (Product Avialabel to list, active, sold, unsold and scheduled
+
+== This function used for :
+. Handle ofbiz inventory and ebay product inventory follow an ebay account
+. Reserve product from ofbiz inventory
+. Upload product to  ebay product inventory
+. Show status of product(QTY, Avialable to listing, scheduled, sold, unsold and active listing)
+. Show Quantity of product
+
+== How to go to reserve product?
+. Go to inventory Details section.
+. Press on "Reserve product inventory" button
+. The system will show reserve product screen
+
+== How to update inventoy and status on ebay site?
+. Go to inventory Details section.
+. Press on "Update to ebay inventory" button
+. The system will update product and qty to ebay inventory on ebay site
+
+== Fields Description :
+. ProductId (productId in ofbiz catalog)
+. ProductName (Name of product)
+. Qty Reserved (Quantity of product that user reserved from ofbiz inventory)
+. Available To Promise Listing (Quantity of product that user can use create listing)
+. Ebay Product Id +
+  (this field used for keep productId from ebay inventory because Ebay site not allow user to create productId to their system)
+. Active Listing (Quantity of product that user can use create listing)
+. sold (Quantity of product that sold)
+. un Sold (Quantity of product that still un sold)
+. reserved date
+. Note: The user can not create ebay listing and sell product on ebay site greater than amount they made a reservation only.
+
+
+== Notes :
+. Please subscribed to Selling Manager Pro before you use this function because ebay product inventory will open when you start
+  selling manager pro on ebay site
+. http://pages.ebay.com/selling_manager_pro[To subscribe for production site ]
+. http://k2b-bulk.sandbox.ebay.com/ws/eBayISAPI.dll?MyeBaySellingPendingListings[To upgrade store level for sandbox site ]
+  (The normal level for sandbox store is basic, the user should upgrade to premium when you want to use inventory function
+   with ebay sandbox.)
+. How to upgrade sandbox store level?
+. Click on the link "To upgrade store level for sandbox site"
+. Go to "Selling Related links" section
+. Click on "Edit my eBay store"
+. Page Manage my eBay store will show up
+. Go to "Store Usage Information" section
+. Click upgrade at "Subscription level" then select "Premium Store" and "Selling Manager Pro" submit.

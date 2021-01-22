@@ -20,7 +20,7 @@ under the License.
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="http://ofbiz.apache.org/Widget-Screen" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Screen http://ofbiz.apache.org/dtds/widget-screen.xsd">
-    
+
     <screen name="main-decorator">
         <section>
             <actions>
@@ -32,7 +32,7 @@ under the License.
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <script location="component://webpos/groovyScripts/WebPosSetup.groovy"/>
-                
+
                 <set field="layoutSettings.styleSheets[+0]" value="/webpos/images/webpos.css" global="true"/>
                 <set field="layoutSettings.companyName" from-field="uiLabelMap.WebPosCompanyName" global="true"/>
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.WebPosCompanySubtitle" global="true"/>
@@ -40,6 +40,7 @@ under the License.
                 <set field="applicationMenuName" value="WebPosAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://webpos/widget/WebPosMenus.xml" global="true"/>
                 <set field="applicationTitle" from-field="uiLabelMap.WebPosMenuMain" global="true"/>
+                <set field="helpAnchor" from-field="helpAnchor" default-value="_apache_ofbiz_plugins"/>
                 <set field="layoutSettings.javaScripts[]" value="/webpos/images/js/jquery.hotkeys-0.7.9.min.js" global="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/webpos/images/js/WebPosHotkeys.js" global="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/webpos/images/js/Shortcuts.js" global="true"/>
@@ -71,7 +72,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="CommonWebPosMainDecorator">
         <section>
             <widgets>
@@ -112,7 +113,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="CommonWebPosManagerDecorator">
         <section>
             <widgets>
@@ -155,7 +156,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="TopBar">
         <section>
             <widgets>
@@ -171,7 +172,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="LeftBar">
         <section>
             <widgets>
@@ -181,7 +182,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="CenterBar">
         <section>
             <widgets>
@@ -203,7 +204,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="RightBar">
         <section>
             <widgets>
@@ -212,7 +213,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="SchortcutsBar">
         <section>
             <widgets>
@@ -220,7 +221,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="Header">
         <section>
             <widgets>
@@ -228,7 +229,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="Login">
         <section>
             <actions>
@@ -241,14 +242,14 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
-                            <html><html-template location="component://webpos/template/Login.ftl"/></html>
+                            <html><html-template multi-block="true" location="component://webpos/template/Login.ftl"/></html>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="RequirePasswordChange">
         <section>
             <actions>
@@ -260,7 +261,7 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
-                            <html><html-template location="component://webpos/template/RequirePasswordChange.ftl"/></html>
+                            <html><html-template multi-block="true" location="component://webpos/template/RequirePasswordChange.ftl"/></html>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>
@@ -284,13 +285,6 @@ under the License.
         <section>
             <actions>
                 <set field="userLoginId" from-field="parameters.USERNAME"/>
-                <entity-and entity-name="UserLoginSecurityQuestion" list="securityQuestions">
-                    <field-map field-name="userLoginId" />
-                </entity-and>
-                <set field="questionEnumId" from-field="securityQuestions[0].questionEnumId" />
-                <entity-one entity-name="Enumeration" value-field="securityQuestion">
-                    <field-map field-name="enumId" from-field="questionEnumId"/>
-                </entity-one>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

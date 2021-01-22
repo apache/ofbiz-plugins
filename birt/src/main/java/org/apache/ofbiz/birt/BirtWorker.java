@@ -61,29 +61,29 @@ import org.eclipse.birt.report.engine.api.RenderOption;
 
 public final class BirtWorker {
 
-    public final static String module = BirtWorker.class.getName();
+    private static final String MODULE = BirtWorker.class.getName();
 
-    private final static String BIRT_PARAMETERS = "birtParameters";
-    private final static String BIRT_LOCALE = "birtLocale";
-    private final static String BIRT_IMAGE_DIRECTORY = "birtImageDirectory";
-    private final static String BIRT_CONTENT_TYPE = "birtContentType";
-    private final static String BIRT_OUTPUT_FILE_NAME = "birtOutputFileName";
-    private static final String resourceError = "BirtErrorUiLabels";
+    private static final String BIRT_PARAMETERS = "birtParameters";
+    private static final String BIRT_LOCALE = "birtLocale";
+    private static final String BIRT_IMAGE_DIRECTORY = "birtImageDirectory";
+    private static final String BIRT_CONTENT_TYPE = "birtContentType";
+    private static final String BIRT_OUTPUT_FILE_NAME = "birtOutputFileName";
+    private static final String RES_ERROR = "BirtErrorUiLabels";
 
-    private final static HTMLServerImageHandler imageHandler = new HTMLServerImageHandler();
+    private static final HTMLServerImageHandler IMAGE_HANDLER = new HTMLServerImageHandler();
 
-    private BirtWorker() {}
+    private BirtWorker() { }
 
-    private static final Map<Integer, Level> levelIntMap = new HashMap<>();
+    private static final Map<Integer, Level> LEVEL_INT_MAP = new HashMap<>();
     static {
-        levelIntMap.put(Debug.ERROR, Level.SEVERE);
-        levelIntMap.put(Debug.TIMING, Level.FINE);
-        levelIntMap.put(Debug.INFO, Level.INFO);
-        levelIntMap.put(Debug.IMPORTANT, Level.INFO);
-        levelIntMap.put(Debug.WARNING, Level.WARNING);
-        levelIntMap.put(Debug.ERROR, Level.SEVERE);
-        levelIntMap.put(Debug.FATAL, Level.ALL);
-        levelIntMap.put(Debug.ALWAYS, Level.ALL);
+        LEVEL_INT_MAP.put(Debug.ERROR, Level.SEVERE);
+        LEVEL_INT_MAP.put(Debug.TIMING, Level.FINE);
+        LEVEL_INT_MAP.put(Debug.INFO, Level.INFO);
+        LEVEL_INT_MAP.put(Debug.IMPORTANT, Level.INFO);
+        LEVEL_INT_MAP.put(Debug.WARNING, Level.WARNING);
+        LEVEL_INT_MAP.put(Debug.ERROR, Level.SEVERE);
+        LEVEL_INT_MAP.put(Debug.FATAL, Level.ALL);
+        LEVEL_INT_MAP.put(Debug.ALWAYS, Level.ALL);
     }
 
     /**
@@ -110,19 +110,19 @@ public final class BirtWorker {
         if (birtImageDirectory == null) {
             birtImageDirectory = "/";
         }
-        Debug.logInfo("Get report engine", module);
+        Debug.logInfo("Get report engine", MODULE);
         IReportEngine engine = BirtFactory.getReportEngine();
 
         IRunAndRenderTask task = engine.createRunAndRenderTask(design);
         if (birtLocale != null) {
-            Debug.logInfo("Set BIRT locale:" + birtLocale, module);
+            Debug.logInfo("Set BIRT locale:" + birtLocale, MODULE);
             task.setLocale(birtLocale);
         }
 
         // set parameters if exists
         Map<String, Object> parameters = UtilGenerics.cast(context.get(BirtWorker.getBirtParameters()));
         if (parameters != null) {
-            //Debug.logInfo("Set BIRT parameters:" + parameters, module);
+            //Debug.logInfo("Set BIRT parameters:" + parameters, MODULE);
             task.setParameterValues(parameters);
         }
 
@@ -138,7 +138,7 @@ public final class BirtWorker {
             HTMLRenderOption htmlOptions = new HTMLRenderOption(options);
             htmlOptions.setImageDirectory(birtImageDirectory);
             htmlOptions.setBaseImageURL(birtImageDirectory);
-            options.setImageHandler(imageHandler);
+            options.setImageHandler(IMAGE_HANDLER);
         } else if ("application/pdf".equals(contentType)) { // PDF
             PDFRenderOption pdfOptions = new PDFRenderOption(options);
             pdfOptions.setOption(IPDFRenderOption.PAGE_OVERFLOW, Boolean.TRUE);
@@ -151,8 +151,8 @@ public final class BirtWorker {
 
         // run report
         if (Debug.infoOn()) {
-            Debug.logInfo("BIRT's locale is: " + task.getLocale(), module);
-            Debug.logInfo("Run report's task", module);
+            Debug.logInfo("BIRT's locale is: " + task.getLocale(), MODULE);
+            Debug.logInfo("Run report's task", MODULE);
         }
         task.run();
         task.close();
@@ -165,7 +165,7 @@ public final class BirtWorker {
      * @param response
      */
     public static void setWebContextObjects(Map<String, Object> appContext, HttpServletRequest request, HttpServletResponse response)
-    throws GeneralException {
+            throws GeneralException {
         HttpSession session = request.getSession();
         ServletContext servletContext = session.getServletContext();
 
@@ -181,23 +181,23 @@ public final class BirtWorker {
         appContext.put("dispatcher", WebAppUtil.getDispatcher(servletContext));
     }
 
-    public static String getBirtParameters () {
+    public static String getBirtParameters() {
         return BIRT_PARAMETERS;
     }
 
-    public static String getBirtLocale () {
+    public static String getBirtLocale() {
         return BIRT_LOCALE;
     }
 
-    public static String getBirtImageDirectory () {
+    public static String getBirtImageDirectory() {
         return BIRT_IMAGE_DIRECTORY;
     }
 
-    public static String getBirtContentType () {
+    public static String getBirtContentType() {
         return BIRT_CONTENT_TYPE;
     }
 
-    public static String getBirtOutputFileName () {
+    public static String getBirtOutputFileName() {
         return BIRT_OUTPUT_FILE_NAME;
     }
 
@@ -231,12 +231,12 @@ public final class BirtWorker {
         EntityCondition entityConditionRpt = EntityCondition.makeCondition("contentTypeId", "RPTDESIGN");
         String templatePathLocation = BirtUtil.resolveTemplatePathLocation();
         File templatePathLocationDir = new File(templatePathLocation);
-            if (!templatePathLocationDir.exists()) {
-                boolean created = templatePathLocationDir.mkdirs();
-                if (!created) {
-                    throw new GeneralException(UtilProperties.getMessage(resourceError, "BirtErrorCannotLocateReportFolder", locale));
-                }
+        if (!templatePathLocationDir.exists()) {
+            boolean created = templatePathLocationDir.mkdirs();
+            if (!created) {
+                throw new GeneralException(UtilProperties.getMessage(RES_ERROR, "BirtErrorCannotLocateReportFolder", locale));
             }
+        }
         int i = 0;
         String templateFileLocation = null;
         EntityCondition ecl = null;
@@ -252,14 +252,18 @@ public final class BirtWorker {
         } while (EntityQuery.use(delegator).from("ContentDataResourceView").where(ecl).queryCount() > 0);
 
         //resolve the initial form structure from master content
-        Map<String, Object> resultElectronicText = dispatcher.runSync("getElectronicText", UtilMisc.toMap("contentId", masterContentId, "locale", locale, "userLogin", userLogin));
+        Map<String, Object> resultElectronicText = dispatcher.runSync("getElectronicText", UtilMisc.toMap("contentId", masterContentId, "locale",
+                locale, "userLogin", userLogin));
         if (ServiceUtil.isError(resultElectronicText)) {
             throw new GeneralException(ServiceUtil.getErrorMessage(resultElectronicText));
         }
         String reportForm = (String) resultElectronicText.get("textData");
         if (!reportForm.startsWith("<?xml")) {
             StringBuffer xmlHeaderForm = new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-            xmlHeaderForm.append("<forms xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://ofbiz.apache.org/dtds/widget-form.xsd\">");
+            xmlHeaderForm.append("<forms xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+                    + "xmlns=\"http://ofbiz.apache.org/Widget-Form\" "
+                    + "xsi:schemaLocation=\"http://ofbiz.apache.org/Widget-Form "
+                    + "http://ofbiz.apache.org/dtds/widget-form.xsd\">");
             xmlHeaderForm.append(reportForm);
             xmlHeaderForm.append("</forms>");
             reportForm = xmlHeaderForm.toString();
@@ -269,15 +273,18 @@ public final class BirtWorker {
 
         //create content and dataressource strucutre
         Map<String, Object> result = null;
-        result = dispatcher.runSync("createDataResource", UtilMisc.toMap("dataResourceId", dataResourceId, "dataResourceTypeId", "ELECTRONIC_TEXT", "dataTemplateTypeId", "FORM_COMBINED", "userLogin", userLogin));
+        result = dispatcher.runSync("createDataResource", UtilMisc.toMap("dataResourceId", dataResourceId, "dataResourceTypeId", "ELECTRONIC_TEXT",
+                "dataTemplateTypeId", "FORM_COMBINED", "userLogin", userLogin));
         if (ServiceUtil.isError(result)) {
             throw new GeneralException(ServiceUtil.getErrorMessage(result));
         }
-        result = dispatcher.runSync("createElectronicTextForm", UtilMisc.toMap("dataResourceId", dataResourceId, "textData", reportForm, "userLogin", userLogin));
+        result = dispatcher.runSync("createElectronicTextForm", UtilMisc.toMap("dataResourceId", dataResourceId, "textData", reportForm, "userLogin",
+                userLogin));
         if (ServiceUtil.isError(result)) {
             throw new GeneralException(ServiceUtil.getErrorMessage(result));
         }
-        result = dispatcher.runSync("createContent", UtilMisc.toMap("contentId", contentId, "contentTypeId", "FLEXIBLE_REPORT", "dataResourceId", dataResourceId, "statusId", "CTNT_IN_PROGRESS", "contentName", reportName, "description", description, "userLogin", userLogin));
+        result = dispatcher.runSync("createContent", UtilMisc.toMap("contentId", contentId, "contentTypeId", "FLEXIBLE_REPORT", "dataResourceId",
+                dataResourceId, "statusId", "CTNT_IN_PROGRESS", "contentName", reportName, "description", description, "userLogin", userLogin));
         if (ServiceUtil.isError(result)) {
             throw new GeneralException(ServiceUtil.getErrorMessage(result));
         }
@@ -287,23 +294,29 @@ public final class BirtWorker {
         if (!rptDesignName.endsWith(".rptdesign")) {
             rptDesignName = rptDesignName.concat(".rptdesign");
         }
-        result = dispatcher.runSync("createDataResource", UtilMisc.toMap("dataResourceId", dataResourceIdRpt, "dataResourceTypeId", "LOCAL_FILE", "mimeTypeId", "text/rptdesign", "dataResourceName", rptDesignName, "objectInfo", templateFileLocation, "userLogin", userLogin));
+        result = dispatcher.runSync("createDataResource", UtilMisc.toMap("dataResourceId", dataResourceIdRpt, "dataResourceTypeId", "LOCAL_FILE",
+                "mimeTypeId", "text/rptdesign", "dataResourceName", rptDesignName, "objectInfo", templateFileLocation, "userLogin", userLogin));
         if (ServiceUtil.isError(result)) {
             throw new GeneralException(ServiceUtil.getErrorMessage(result));
         }
-        result = dispatcher.runSync("createContent", UtilMisc.toMap("contentId", contentIdRpt, "contentTypeId", "RPTDESIGN", "dataResourceId", dataResourceIdRpt, "statusId", "CTNT_PUBLISHED", "contentName", reportName, "description", description + " (.rptDesign file)", "userLogin", userLogin));
+        result = dispatcher.runSync("createContent", UtilMisc.toMap("contentId", contentIdRpt, "contentTypeId", "RPTDESIGN", "dataResourceId",
+                dataResourceIdRpt, "statusId", "CTNT_PUBLISHED", "contentName", reportName, "description", description + " (.rptDesign file)",
+                "userLogin", userLogin));
         if (ServiceUtil.isError(result)) {
             throw new GeneralException(ServiceUtil.getErrorMessage(result));
         }
-        result = dispatcher.runSync("createContentAssoc", UtilMisc.toMap("contentId", masterContentId, "contentIdTo", contentId, "contentAssocTypeId", "SUB_CONTENT", "userLogin", userLogin));
+        result = dispatcher.runSync("createContentAssoc", UtilMisc.toMap("contentId", masterContentId, "contentIdTo", contentId,
+                "contentAssocTypeId", "SUB_CONTENT", "userLogin", userLogin));
         if (ServiceUtil.isError(result)) {
             throw new GeneralException(ServiceUtil.getErrorMessage(result));
         }
-        result = dispatcher.runSync("createContentAssoc", UtilMisc.toMap("contentId", contentId, "contentIdTo", contentIdRpt, "contentAssocTypeId", "SUB_CONTENT", "userLogin", userLogin));
+        result = dispatcher.runSync("createContentAssoc", UtilMisc.toMap("contentId", contentId, "contentIdTo", contentIdRpt, "contentAssocTypeId",
+                "SUB_CONTENT", "userLogin", userLogin));
         if (ServiceUtil.isError(result)) {
             throw new GeneralException(ServiceUtil.getErrorMessage(result));
         }
-        result = dispatcher.runSync("createContentAttribute", UtilMisc.toMap("contentId", contentId, "attrName", workflowType, "attrValue", modelElementName, "userLogin", userLogin));
+        result = dispatcher.runSync("createContentAttribute", UtilMisc.toMap("contentId", contentId, "attrName", workflowType, "attrValue",
+                modelElementName, "userLogin", userLogin));
         if (ServiceUtil.isError(result)) {
             throw new GeneralException(ServiceUtil.getErrorMessage(result));
         }
@@ -324,6 +337,7 @@ public final class BirtWorker {
                 break;
             }
         }
-        config.setLogConfig(UtilProperties.getPropertyValue("debug", "log4j.appender.css.dir", ofbizHome + "/runtime/logs/"), levelIntMap.get(lowerLevel));
+        config.setLogConfig(UtilProperties.getPropertyValue("debug", "log4j.appender.css.dir", ofbizHome + "/runtime/logs/"),
+                LEVEL_INT_MAP.get(lowerLevel));
     }
 }

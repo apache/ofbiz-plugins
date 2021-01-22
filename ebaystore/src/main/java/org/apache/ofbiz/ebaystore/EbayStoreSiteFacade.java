@@ -52,13 +52,13 @@ import com.ebay.soap.eBLBaseComponents.StoreCustomCategoryType;
 import com.ebay.soap.eBLBaseComponents.StoreType;
 
 public class EbayStoreSiteFacade {
-    public static final String module = EbayStoreSiteFacade.class.getName();
+    private static final String MODULE = EbayStoreSiteFacade.class.getName();
     private ApiContext apiContext = null;
     private IAttributesMaster attrMaster = null;
     private static final int MAP_SIZE = 30000;
     private Map<SiteCodeType, Map<String, CategoryType>> siteCategoriesMap = new HashMap<SiteCodeType, Map<String, CategoryType>>();
     private Map<SiteCodeType, List<StoreCustomCategoryType>> siteStoreCategoriesMap = new HashMap<SiteCodeType, List<StoreCustomCategoryType>>();
-    private Map<SiteCodeType, List<CategoryType>> siteCategoriesCSMap = new HashMap<SiteCodeType,List<CategoryType>>();
+    private Map<SiteCodeType, List<CategoryType>> siteCategoriesCSMap = new HashMap<SiteCodeType, List<CategoryType>>();
     private Map<SiteCodeType, Map<String, CategoryFeatureType>> siteCategoriesFeaturesMap = new HashMap<SiteCodeType, Map<String, CategoryFeatureType>>();
     private Map<SiteCodeType, SiteDefaultsType> siteFeatureDefaultMap = new HashMap<SiteCodeType, SiteDefaultsType>();
     private Map<SiteCodeType, FeatureDefinitionsType> siteFeatureDefinitionsMap = new HashMap<SiteCodeType, FeatureDefinitionsType>();
@@ -100,7 +100,7 @@ public class EbayStoreSiteFacade {
 
     //sync and cache all categories features in memory
     private void syncAllCategoriesFeatures() throws Exception {
-        if (!siteCategoriesFeaturesMap.containsKey(this.apiContext.getSite())) { 
+        if (!siteCategoriesFeaturesMap.containsKey(this.apiContext.getSite())) {
             FeaturesDownloader fd = new FeaturesDownloader(this.apiContext);
             GetCategoryFeaturesResponseType cfrt = fd.getAllCategoryFeatures();
             CategoryFeatureType[] categoryFeatures = cfrt.getCategory();
@@ -117,7 +117,6 @@ public class EbayStoreSiteFacade {
     /**
      * Get categories using GetCategory2CS and GetCategories calls,
      * and merge the categories
-     * 
      */
     public List<CategoryType> getAllMergedCategories() throws ApiException, SdkException, Exception {
         //Get all categories that are mapped to characteristics sets
@@ -141,7 +140,7 @@ public class EbayStoreSiteFacade {
                     csCat.setCategoryName(cat.getCategoryName());
                     csCat.setLeafCategory(cat.isLeafCategory());
                 } else {
-                    //some category has no characteristic sets, 
+                    //some category has no characteristic sets,
                     //but it may has custom item specifics
                     csCatsMap.put(cat.getCategoryID(), cat);
                 }

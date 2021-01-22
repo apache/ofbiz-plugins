@@ -51,50 +51,53 @@ import org.apache.ofbiz.entity.GenericEntityException;
  * Solr utility class.
  */
 public final class SolrUtil {
-    
-    private SolrUtil() {}
-    public static final String module = SolrUtil.class.getName();
-    private static final String[] solrProdAttribute = { "productId", "internalName", "manu", "size", "smallImage", "mediumImage", "largeImage", "listPrice", "defaultPrice", "inStock", "isVirtual" };
 
-    private static final String solrConfigName = "solrconfig.properties";
-    private static final String solrUrl = makeSolrWebappUrl();
-    
-    private static final String socketTimeoutString = UtilProperties.getPropertyValue(solrConfigName, "solr.client.socket.timeout");
-    
-    private static final String connectionTimeoutString = UtilProperties.getPropertyValue(solrConfigName, "solr.client.connection.timeout");
-    
-    private static final String clientUsername = UtilProperties.getPropertyValue(solrConfigName, "solr.client.username");
-    
-    private static final String clientPassword = UtilProperties.getPropertyValue(solrConfigName, "solr.client.password");
+    private SolrUtil() { }
+    private static final String MODULE = SolrUtil.class.getName();
+    private static final String[] SOLR_PRODUCT_ATTRIBUTE = {"productId", "internalName", "manu", "size", "smallImage", "mediumImage", "largeImage",
+            "listPrice", "defaultPrice", "inStock", "isVirtual" };
 
-    private static final Integer socketTimeout = getSocketTimeout();
-    
-    private static final Integer connectionTimeout = getConnectionTimeout();
-    
-    private static final String trustSelfSignedCertString = UtilProperties.getPropertyValue(solrConfigName, "solr.client.trust.selfsigned.cert", "false");
-    
-    private static final boolean trustSelfSignedCert = getTrustSelfSignedCert();
-    
+    private static final String SOLR_CONFIG_NAME = "solrconfig.properties";
+    private static final String SOLR_URL = makeSolrWebappUrl();
+
+    private static final String SOCKET_TIMEOUT_STRING = UtilProperties.getPropertyValue(SOLR_CONFIG_NAME, "solr.client.socket.timeout");
+
+    private static final String CON_TIMEOUT_STRING = UtilProperties.getPropertyValue(SOLR_CONFIG_NAME, "solr.client.connection.timeout");
+
+    private static final String CLIENT_USER_NAME = UtilProperties.getPropertyValue(SOLR_CONFIG_NAME, "solr.client.username");
+
+    private static final String CLIENT_PASSWORD = UtilProperties.getPropertyValue(SOLR_CONFIG_NAME, "solr.client.password");
+
+    private static final Integer SOCKET_TIMEOUT = getSocketTimeout();
+
+    private static final Integer CON_TIMEOUT = getConnectionTimeout();
+
+    private static final String TRUST_SELF_SIGN_CERT_STRING = UtilProperties.getPropertyValue(SOLR_CONFIG_NAME,
+            "solr.client.trust.selfsigned.cert", "false");
+
+    private static final boolean TRUST_SELF_SIGNED_CERT = getTrustSelfSignedCert();
+
     public static String makeSolrWebappUrl() {
-        final String solrWebappProtocol = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.protocol");
-        final String solrWebappDomainName = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.domainName");
-        final String solrWebappPath = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.path");
-        final String solrWebappPortOverride = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.portOverride");
-        
+        final String solrWebappProtocol = UtilProperties.getPropertyValue(SOLR_CONFIG_NAME, "solr.webapp.protocol");
+        final String solrWebappDomainName = UtilProperties.getPropertyValue(SOLR_CONFIG_NAME, "solr.webapp.domainName");
+        final String solrWebappPath = UtilProperties.getPropertyValue(SOLR_CONFIG_NAME, "solr.webapp.path");
+        final String solrWebappPortOverride = UtilProperties.getPropertyValue(SOLR_CONFIG_NAME, "solr.webapp.portOverride");
+
         String solrPort;
         if (UtilValidate.isNotEmpty(solrWebappPortOverride)) {
             solrPort = solrWebappPortOverride;
         } else {
-            solrPort = UtilProperties.getPropertyValue("url", ("https".equals(solrWebappProtocol) ? "port.https" : "port.http"), ("https".equals(solrWebappProtocol) ? "8443" : "8080"));
+            solrPort = UtilProperties.getPropertyValue("url", ("https".equals(solrWebappProtocol)
+                    ? "port.https" : "port.http"), ("https".equals(solrWebappProtocol) ? "8443" : "8080"));
         }
-        
+
         return solrWebappProtocol + "://" + solrWebappDomainName + ":" + solrPort + solrWebappPath;
     }
-    
+
     private static Integer getSocketTimeout() {
-        if (UtilValidate.isNotEmpty(socketTimeoutString)) {
+        if (UtilValidate.isNotEmpty(SOCKET_TIMEOUT_STRING)) {
             try {
-                return Integer.parseInt(socketTimeoutString);
+                return Integer.parseInt(SOCKET_TIMEOUT_STRING);
             } catch (Exception e) {
                 return null;
             }
@@ -103,9 +106,9 @@ public final class SolrUtil {
     }
 
     private static Integer getConnectionTimeout() {
-        if (UtilValidate.isNotEmpty(connectionTimeoutString)) {
+        if (UtilValidate.isNotEmpty(CON_TIMEOUT_STRING)) {
             try {
-                return Integer.parseInt(connectionTimeoutString);
+                return Integer.parseInt(CON_TIMEOUT_STRING);
             } catch (Exception e) {
                 return null;
             }
@@ -114,56 +117,51 @@ public final class SolrUtil {
     }
 
     private static boolean getTrustSelfSignedCert() {
-        return "true".equals(trustSelfSignedCertString);
+        return "true".equals(TRUST_SELF_SIGN_CERT_STRING);
     }
 
     public static boolean isSolrEcaEnabled() {
         Boolean ecaEnabled = null;
         String sysProp = System.getProperty("ofbiz.solr.eca.enabled");
         if (UtilValidate.isNotEmpty(sysProp)) {
-            if ("true".equalsIgnoreCase(sysProp))  {
+            if ("true".equalsIgnoreCase(sysProp)) {
                 ecaEnabled = Boolean.TRUE;
-            }
-            else if ("false".equalsIgnoreCase(sysProp)) {
+            } else if ("false".equalsIgnoreCase(sysProp)) {
                 ecaEnabled = Boolean.FALSE;
             }
         }
         if (ecaEnabled == null) {
-            ecaEnabled = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.eca.enabled", false);
+            ecaEnabled = UtilProperties.getPropertyAsBoolean(SolrUtil.SOLR_CONFIG_NAME, "solr.eca.enabled", false);
         }
         return Boolean.TRUE.equals(ecaEnabled);
     }
-    
+
     public static WebappInfo getSolrWebappInfo() {
         WebappInfo solrApp = null;
         try {
             ComponentConfig cc = ComponentConfig.getComponentConfig("solr");
-            for(WebappInfo currApp : cc.getWebappInfos()) {
+            for (WebappInfo currApp : cc.getWebappInfos()) {
                 if ("solr".equals(currApp.getName())) {
                     solrApp = currApp;
                     break;
                 }
             }
-        }
-        catch(ComponentException e) {
+        } catch (ComponentException e) {
             throw new IllegalStateException(e);
         }
         return solrApp;
     }
-    
     public static boolean isEcaTreatConnectErrorNonFatal() {
-        Boolean treatConnectErrorNonFatal = UtilProperties.getPropertyAsBoolean(solrConfigName, "solr.eca.treatConnectErrorNonFatal", true);
+        Boolean treatConnectErrorNonFatal = UtilProperties.getPropertyAsBoolean(SOLR_CONFIG_NAME, "solr.eca.treatConnectErrorNonFatal", true);
         return Boolean.TRUE.equals(treatConnectErrorNonFatal);
     }
-    
-    
     public static SolrInputDocument generateSolrDocument(Map<String, Object> context) throws GenericEntityException {
         SolrInputDocument doc1 = new SolrInputDocument();
 
         // add defined attributes
-        for (int i = 0; i < solrProdAttribute.length; i++) {
-            if (context.get(solrProdAttribute[i]) != null) {
-                doc1.addField(solrProdAttribute[i], context.get(solrProdAttribute[i]).toString());
+        for (int i = 0; i < SOLR_PRODUCT_ATTRIBUTE.length; i++) {
+            if (context.get(SOLR_PRODUCT_ATTRIBUTE[i]) != null) {
+                doc1.addField(SOLR_PRODUCT_ATTRIBUTE[i], context.get(SOLR_PRODUCT_ATTRIBUTE[i]).toString());
             }
         }
 
@@ -231,12 +229,13 @@ public final class SolrUtil {
 
         return doc1;
     }
-    
-    public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId, boolean displayproducts, int viewIndex, int viewSize, String solrIndexName) {
+    public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId,
+                                                          boolean displayproducts, int viewIndex, int viewSize, String solrIndexName) {
         return categoriesAvailable(catalogId, categoryId, productId, null, displayproducts, viewIndex, viewSize, solrIndexName);
     }
 
-    public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId, String facetPrefix, boolean displayproducts, int viewIndex, int viewSize, String solrIndexName) {
+    public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId, String facetPrefix,
+                                                          boolean displayproducts, int viewIndex, int viewSize, String solrIndexName) {
         // create the data model
         Map<String, Object> result = new HashMap<>();
         HttpSolrClient client = null;
@@ -246,20 +245,23 @@ public final class SolrUtil {
             client = getHttpSolrClient(solrIndexName);
             // create Query Object
             String query = "inStock[1 TO *]";
-            if (categoryId != null)
-                query += " +cat:"+ categoryId;
-            else if (productId != null)
+            if (categoryId != null) {
+                query += " +cat:" + categoryId;
+            } else if (productId != null) {
                 query += " +productId:" + productId;
+            }
             SolrQuery solrQuery = new SolrQuery();
             solrQuery.setQuery(query);
 
-            if (catalogId != null)
+            if (catalogId != null) {
                 solrQuery.setFilterQueries("catalog:" + catalogId);
+            }
             if (displayproducts) {
                 if (viewSize > -1) {
                     solrQuery.setRows(viewSize);
-                } else
+                } else {
                     solrQuery.setRows(50000);
+                }
                 if (viewIndex > -1) {
                     solrQuery.setStart(viewIndex);
                 }
@@ -267,21 +269,23 @@ public final class SolrUtil {
                 solrQuery.setFields("cat");
                 solrQuery.setRows(0);
             }
-            
-            if(UtilValidate.isNotEmpty(facetPrefix)){
+
+            if (UtilValidate.isNotEmpty(facetPrefix)) {
                 solrQuery.setFacetPrefix(facetPrefix);
             }
-            
+
             solrQuery.setFacetMinCount(0);
             solrQuery.setFacet(true);
             solrQuery.addFacetField("cat");
             solrQuery.setFacetLimit(-1);
-            if (Debug.verboseOn()) Debug.logVerbose("solr: solrQuery: " + solrQuery, module);
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("solr: solrQuery: " + solrQuery, MODULE);
+            }
             returnMap = client.query(solrQuery, METHOD.POST);
             result.put("rows", returnMap);
             result.put("numFound", returnMap.getResults().getNumFound());
         } catch (Exception e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         }
         return result;
     }
@@ -292,29 +296,29 @@ public final class SolrUtil {
 
     public static HttpSolrClient getHttpSolrClient(String solrIndexName) throws ClientProtocolException, IOException {
         HttpClientContext httpContext = HttpClientContext.create();
-        
+
         CloseableHttpClient httpClient = null;
-        if (trustSelfSignedCert) {
+        if (TRUST_SELF_SIGNED_CERT) {
             httpClient = UtilHttp.getAllowAllHttpClient();
         } else {
             httpClient = HttpClients.createDefault();
         }
-        
+
         RequestConfig requestConfig = null;
-        if (UtilValidate.isNotEmpty(socketTimeout) && UtilValidate.isNotEmpty(connectionTimeout)) {
+        if (UtilValidate.isNotEmpty(SOCKET_TIMEOUT) && UtilValidate.isNotEmpty(CON_TIMEOUT)) {
             requestConfig = RequestConfig.custom()
-                  .setSocketTimeout(socketTimeout)
-                  .setConnectTimeout(connectionTimeout)
+                  .setSocketTimeout(SOCKET_TIMEOUT)
+                  .setConnectTimeout(CON_TIMEOUT)
                   .setRedirectsEnabled(true)
                   .build();
-        } else if (UtilValidate.isNotEmpty(socketTimeout)) {
+        } else if (UtilValidate.isNotEmpty(SOCKET_TIMEOUT)) {
             requestConfig = RequestConfig.custom()
-                    .setSocketTimeout(socketTimeout)
+                    .setSocketTimeout(SOCKET_TIMEOUT)
                     .setRedirectsEnabled(true)
                     .build();
-        } else if (UtilValidate.isNotEmpty(connectionTimeout)) {
+        } else if (UtilValidate.isNotEmpty(CON_TIMEOUT)) {
             requestConfig = RequestConfig.custom()
-                    .setConnectTimeout(connectionTimeout)
+                    .setConnectTimeout(CON_TIMEOUT)
                     .setRedirectsEnabled(true)
                     .build();
         } else {
@@ -323,11 +327,10 @@ public final class SolrUtil {
                     .build();
         }
 
-        HttpGet httpLogin = new HttpGet(solrUrl + "/control/login?USERNAME=" + clientUsername + "&PASSWORD=" + clientPassword);
+        HttpGet httpLogin = new HttpGet(SOLR_URL + "/control/login?USERNAME=" + CLIENT_USER_NAME + "&PASSWORD=" + CLIENT_PASSWORD);
         httpLogin.setConfig(requestConfig);
         CloseableHttpResponse loginResponse = httpClient.execute(httpLogin, httpContext);
         loginResponse.close();
-        return new HttpSolrClient.Builder(solrUrl + "/" + solrIndexName).withHttpClient(httpClient).build();
+        return new HttpSolrClient.Builder(SOLR_URL + "/" + solrIndexName).withHttpClient(httpClient).build();
     }
-
 }

@@ -18,7 +18,6 @@ under the License.
 -->
 
 <script type="application/javascript">
-//<![CDATA[
     <!-- function to add extra info for Timestamp format -->
     function TimestampSubmit(obj) {
        reservStartStr = jQuery(obj).find("input[name='reservStartStr']");
@@ -52,7 +51,6 @@ under the License.
             }
         });
      }
-//]]>
 </script>
 <#macro paginationControls>
   <#local viewIndexMax = Static["java.lang.Math"].ceil((listSize)?double / viewSize?double)>

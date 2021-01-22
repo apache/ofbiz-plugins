@@ -39,6 +39,7 @@ under the License.
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.PartyCompanySubtitle" global="true"/>
                 <set field="applicationMenuName" value="MyPortalAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://myportal/widget/MyPortalMenus.xml" global="true"/>
+                <set field="helpAnchor" from-field="helpAnchor" default-value="_my_portal_plugin"/>
                 <set field="parameters.parentPortalPageId" from-field="parameters.parentPortalPageId" default-value="MYPORTAL" global="true"/>
                 <script location="component://common/groovyScripts/GetParentPortalPageId.groovy"/>
                 <set field="applicationTitle" from-field="uiLabelMap.PageTitleMyPortalForNoLogin"/>
@@ -49,7 +50,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="AdminDecorator">
         <section>
             <actions>
@@ -69,7 +70,7 @@ under the License.
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.PartyCompanySubtitle" global="true"/>
                 <set field="applicationMenuName" value="MyPortalAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://myportal/widget/MyPortalMenus.xml" global="true"/>
-                <!-- 
+                <!--
                 <set field="parameters.parentPortalPageId" from-field="parameters.parentPortalPageId" default-value="MYPORTAL" global="true"/>
                 <script location="component://common/groovyScripts/GetParentPortalPageId.groovy"/>
                 <set field="applicationTitle" value="${uiLabelMap.PageTitleMyPortalForNoLogin}"/>
@@ -139,7 +140,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="CommonWorkEffortDecorator">
         <section>
             <widgets>
@@ -151,14 +152,14 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="login">
         <section>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
-                            <html><html-template location="component://myportal/template/Login.ftl"/></html>
+                            <html><html-template multi-block="true" location="component://myportal/template/Login.ftl"/></html>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>
@@ -190,8 +191,8 @@ under the License.
                                     <section>
                                         <widgets>
                                             <platform-specific>
-                                                <html><html-template location="component://myportal/template/RegisterPerson.ftl"/></html>
-                                            </platform-specific> 
+                                                <html><html-template multi-block="true" location="component://myportal/template/RegisterPerson.ftl"/></html>
+                                            </platform-specific>
                                         </widgets>
                                     </section>
                                 </screenlet>

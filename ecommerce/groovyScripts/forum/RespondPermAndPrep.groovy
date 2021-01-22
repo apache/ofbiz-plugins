@@ -55,7 +55,7 @@ if (!pubPt) {
 
 contentToValue = from("Content").where("contentId", contentIdTo).queryOne()
 contentToPurposeList = contentToValue.getRelated("ContentPurpose", null, null, true)
-currentValue = delegator.makeValue("Content", [contentTypeId : "DOCUMENT", statusId : "CTNT_PUBLISHED", privilegeEnumId : "_00_"])
+currentValue = makeValue("Content", [contentTypeId : "DOCUMENT", statusId : "CTNT_PUBLISHED", privilegeEnumId : "_00_"])
 
 if (contentToPurposeList.contains("RESPONSE")) {
     ownerContentId = contentToValue.ownerContentId
@@ -76,18 +76,18 @@ if (currentValue) {
 mapIn.entityOperation = "_CREATE"
 mapIn.contentPurposeList = ["RESPONSE"]
 
-//org.apache.ofbiz.base.util.Debug.logInfo("in permprep, mapIn:" + mapIn, null)
+//logInfo("in permprep, mapIn:" + mapIn)
 result = runService('checkContentPermission', mapIn)
 permissionStatus = result.permissionStatus
-//org.apache.ofbiz.base.util.Debug.logInfo("permissionStatus:" + permissionStatus, null)
+//logInfo("permissionStatus:" + permissionStatus)
 if (!"granted".equals(permissionStatus)) {
     request.setAttribute("errorMsgReq", "Permission to add response is denied (1)")
     errorMessage = "Permission to add response is denied (2)"
     recorder = result.permissionRecorder
-    //Debug.logInfo("recorder(0):" + recorder, "")
+    //logInfo("recorder(0):" + recorder)
     if (recorder) {
         permissionMessage = recorder.toHtml()
-        //Debug.logInfo("permissionMessage(0):" + permissionMessage, "")
+        //logInfo("permissionMessage(0):" + permissionMessage)
         errorMessage += " \n " + permissionMessage
     }
     request.setAttribute("permissionErrorMsg", errorMessage)
@@ -108,19 +108,19 @@ if (pubContentValue) {
     mapIn.currentContent = pubContentValue
     mapIn.statusId = "CTNT_PUBLISHED"
 }
-//org.apache.ofbiz.base.util.Debug.logInfo("in permprep(2), mapIn:" + mapIn, null)
+//logInfo("in permprep(2), mapIn:" + mapIn)
 result = dispatcher.runSync("checkContentPermission", mapIn)
 permissionStatus = result.permissionStatus
-//org.apache.ofbiz.base.util.Debug.logInfo("permissionStatus(2):" + permissionStatus, null)
+//logInfo("permissionStatus(2):" + permissionStatus)
 if (!"granted".equals(permissionStatus)) {
 
     request.setAttribute("errorMsgReq", "Permission to add response is denied (2)")
     errorMessage = "Permission to add response is denied (2)"
     recorder = result.permissionRecorder
-        //Debug.logInfo("recorder(0):" + recorder, "")
+        //logInfo("recorder(0):" + recorder)
     if (recorder) {
         permissionMessage = recorder.toHtml()
-        //Debug.logInfo("permissionMessage(0):" + permissionMessage, "")
+        //logInfo("permissionMessage(0):" + permissionMessage)
         errorMessage += " \n " + permissionMessage
     }
     request.setAttribute("permissionErrorMsg", errorMessage)

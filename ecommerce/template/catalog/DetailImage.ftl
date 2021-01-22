@@ -23,9 +23,7 @@ under the License.
       <img src="${requestParameters.detail}" alt=""/>
     <#else>
     <script type="application/javascript">
-        <!-- //
             window.close();
-        // -->
     </script>
     </#if>
   </body>

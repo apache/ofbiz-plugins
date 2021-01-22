@@ -30,7 +30,6 @@ import java.util.Map;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.entity.GenericDelegator;
-import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.condition.EntityCondition;
 import org.apache.ofbiz.product.config.ProductConfigWrapper;
@@ -45,9 +44,9 @@ import org.apache.ofbiz.service.ServiceUtil;
  * Product utility class for solr.
  */
 public final class ProductUtil {
-    public static final String module = ProductUtil.class.getName();
+    private static final String MODULE = ProductUtil.class.getName();
 
-    private ProductUtil () {}
+    private ProductUtil() { }
 
     public static Map<String, Object> getProductContent(GenericValue product, DispatchContext dctx, Map<String, Object> context) {
         GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
@@ -58,9 +57,8 @@ public final class ProductUtil {
         Locale locale = new Locale("de_DE");
 
         if (Debug.verboseOn()) {
-            Debug.logVerbose("Solr: Getting product content for productId '" + productId + "'", module);
+            Debug.logVerbose("Solr: Getting product content for productId '" + productId + "'", MODULE);
         }
-        
         try {
             // Generate special ProductContentWrapper for the supported languages (de/en/fr)
             ProductContentWrapper productContentEn = new ProductContentWrapper(dispatcher, product, new Locale("en"), null);
@@ -69,22 +67,26 @@ public final class ProductUtil {
             if (productId != null) {
                 dispatchContext.put("productId", productId);
                 // if (product.get("sku") != null) dispatchContext.put("sku", product.get("sku"));
-                if (product.get("internalName") != null)
+                if (product.get("internalName") != null) {
                     dispatchContext.put("internalName", product.get("internalName"));
+                }
                 String smallImage = (String) product.get("smallImageUrl");
-                if (smallImage != null)
+                if (smallImage != null) {
                     dispatchContext.put("smallImage", smallImage);
+                }
                 String mediumImage = (String) product.get("mediumImageUrl");
-                if (mediumImage != null)
+                if (mediumImage != null) {
                     dispatchContext.put("mediumImage", mediumImage);
+                }
                 String largeImage = (String) product.get("largeImageUrl");
-                if (largeImage != null)
-                    dispatchContext.put("largeImage", largeImage);                
-                
-                // if(product.get("productWeight") != null) dispatchContext.put("weight", "");
+                if (largeImage != null) {
+                    dispatchContext.put("largeImage", largeImage);
+                }
+                // if (product.get("productWeight") != null) dispatchContext.put("weight", "");
 
                 // Trying to set a correctand trail
-                List<GenericValue> category = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition(UtilMisc.toMap("productId", productId)), null, null, null, false);
+                List<GenericValue> category = delegator.findList("ProductCategoryMember",
+                        EntityCondition.makeCondition(UtilMisc.toMap("productId", productId)), null, null, null, false);
                 List<String> trails = new ArrayList<>();
                 for (Iterator<GenericValue> catIterator = category.iterator(); catIterator.hasNext();) {
                     GenericValue cat = catIterator.next();
@@ -95,22 +97,20 @@ public final class ProductUtil {
                         StringBuilder catMember = new StringBuilder();
                         int i = 0;
                         Iterator<String> trailIter = trailElement.iterator();
-                       
                         while (trailIter.hasNext()) {
                             String trailString = trailIter.next();
-                            if (catMember.length() > 0){
+                            if (catMember.length() > 0) {
                                 catMember.append("/");
                                 i++;
                             }
                             catMember.append(trailString);
-                            String cm = i +"/"+ catMember.toString();
+                            String cm = i + "/" + catMember.toString();
                             if (!trails.contains(cm)) {
-                                //Debug.logInfo("cm : "+cm, module);
+                                //Debug.logInfo("cm : "+cm, MODULE);
                                 trails.add(cm);
                                 // Debug.log("trail for product " + productId + " ====> " + catMember.toString());
                             }
                         }
-                        
                     }
                 }
                 dispatchContext.put("category", trails);
@@ -120,15 +120,17 @@ public final class ProductUtil {
                 for (String trail : trails) {
                     String productCategoryId = (trail.split("/").length > 0) ? trail.split("/")[1] : trail;
                     List<String> catalogMembers = CategoryUtil.getCatalogIdsByCategoryId(delegator, productCategoryId);
-                    for (String catalogMember : catalogMembers)
-                        if (!catalogs.contains(catalogMember))
+                    for (String catalogMember : catalogMembers) {
+                        if (!catalogs.contains(catalogMember)) {
                             catalogs.add(catalogMember);
+                        }
+                    }
                 }
                 dispatchContext.put("catalog", catalogs);
 
                 // Alternative
-                // if(category.size()>0) dispatchContext.put("category", category);
-                // if(product.get("popularity") != null) dispatchContext.put("popularity", "");
+                // if (category.size()>0) dispatchContext.put("category", category);
+                // if (product.get("popularity") != null) dispatchContext.put("popularity", "");
 
                 Map<String, Object> featureSet = dispatcher.runSync("getProductFeatureSet", UtilMisc.toMap("productId", productId));
                 if (ServiceUtil.isError(featureSet)) {
@@ -138,7 +140,8 @@ public final class ProductUtil {
                     dispatchContext.put("features", featureSet.get("featureSet"));
                 }
 
-                Map<String, Object> productInventoryAvailable = dispatcher.runSync("getProductInventoryAvailable", UtilMisc.toMap("productId", productId));
+                Map<String, Object> productInventoryAvailable = dispatcher.runSync("getProductInventoryAvailable",
+                        UtilMisc.toMap("productId", productId));
                 if (ServiceUtil.isError(productInventoryAvailable)) {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(productInventoryAvailable));
                 }
@@ -150,55 +153,67 @@ public final class ProductUtil {
                 dispatchContext.put("inStock", inStock);
 
                 Boolean isVirtual = ProductWorker.isVirtual(delegator, productId);
-                if (isVirtual)
+                if (isVirtual) {
                     dispatchContext.put("isVirtual", isVirtual);
+                }
                 Boolean isDigital = ProductWorker.isDigital(product);
-                if (isDigital)
+                if (isDigital) {
                     dispatchContext.put("isDigital", isDigital);
+                }
                 Boolean isPhysical = ProductWorker.isPhysical(product);
-                if (isPhysical)
+                if (isPhysical) {
                     dispatchContext.put("isPhysical", isPhysical);
+                }
 
                 Map<String, String> title = new HashMap<>();
                 String detitle = productContentDe.get("PRODUCT_NAME", "html").toString();
-                if (detitle != null)
+                if (detitle != null) {
                     title.put("de", detitle);
-                else if (product.get("productName") != null)
+                } else if (product.get("productName") != null) {
                     title.put("de", (String) product.get("productName"));
+                }
                 String entitle = productContentEn.get("PRODUCT_NAME", "html").toString();
-                if (entitle != null)
+                if (entitle != null) {
                     title.put("en", entitle);
-                else if (product.get("productName") != null)
+                } else if (product.get("productName") != null) {
                     title.put("en", (String) product.get("productName"));
+                }
                 String frtitle = productContentFr.get("PRODUCT_NAME", "html").toString();
-                if (frtitle != null)
+                if (frtitle != null) {
                     title.put("fr", frtitle);
-                else if (product.get("productName") != null)
+                } else if (product.get("productName") != null) {
                     title.put("fr", (String) product.get("productName"));
+                }
                 dispatchContext.put("title", title);
 
                 Map<String, String> description = new HashMap<>();
                 String dedescription = productContentDe.get("DESCRIPTION", "html").toString();
-                if (dedescription != null)
+                if (dedescription != null) {
                     description.put("de", dedescription);
+                }
                 String endescription = productContentEn.get("DESCRIPTION", "html").toString();
-                if (endescription != null)
+                if (endescription != null) {
                     description.put("en", endescription);
+                }
                 String frdescription = productContentFr.get("DESCRIPTION", "html").toString();
-                if (frdescription != null)
+                if (frdescription != null) {
                     description.put("fr", frdescription);
+                }
                 dispatchContext.put("description", description);
 
                 Map<String, String> longDescription = new HashMap<>();
                 String delongDescription = productContentDe.get("LONG_DESCRIPTION", "html").toString();
-                if (delongDescription != null)
+                if (delongDescription != null) {
                     longDescription.put("de", delongDescription);
+                }
                 String enlongDescription = productContentEn.get("LONG_DESCRIPTION", "html").toString();
-                if (enlongDescription != null)
+                if (enlongDescription != null) {
                     longDescription.put("en", enlongDescription);
+                }
                 String frlongDescription = productContentFr.get("LONG_DESCRIPTION", "html").toString();
-                if (frlongDescription != null)
+                if (frlongDescription != null) {
                     longDescription.put("fr", frlongDescription);
+                }
                 dispatchContext.put("longDescription", longDescription);
 
                 // dispatchContext.put("comments", "");
@@ -206,13 +221,16 @@ public final class ProductUtil {
                 // dispatchContext.put("last_modified", "");
 
                 if ("AGGREGATED".equals(product.getString("productTypeId"))) {
-                    ProductConfigWrapper configWrapper = new ProductConfigWrapper(delegator, dispatcher, productId, null, null, null, null, locale, userLogin);
+                    ProductConfigWrapper configWrapper = new ProductConfigWrapper(delegator, dispatcher, productId, null,
+                            null, null, null, locale, userLogin);
                     String listPrice = configWrapper.getTotalListPrice().setScale(2, RoundingMode.HALF_DOWN).toString();
-                    if (listPrice != null)
+                    if (listPrice != null) {
                         dispatchContext.put("listPrice", listPrice);
+                    }
                     String defaultPrice = configWrapper.getTotalListPrice().setScale(2, RoundingMode.HALF_DOWN).toString();
-                    if (defaultPrice != null)
+                    if (defaultPrice != null) {
                         dispatchContext.put("defaultPrice", defaultPrice);
+                    }
                 } else {
                     Map<String, GenericValue> priceContext = UtilMisc.toMap("product", product);
                     Map<String, Object> priceMap = dispatcher.runSync("calculateProductPrice", priceContext);
@@ -225,15 +243,14 @@ public final class ProductUtil {
                     }
                     if (priceMap.get("defaultPrice") != null) {
                         String defaultPrice = ((BigDecimal) priceMap.get("defaultPrice")).setScale(2, RoundingMode.HALF_DOWN).toString();
-                        if (defaultPrice != null)
+                        if (defaultPrice != null) {
                             dispatchContext.put("defaultPrice", defaultPrice);
+                        }
                     }
                 }
             }
-        } catch (GenericEntityException e) {
-            Debug.logError(e, e.getMessage(), module);
         } catch (Exception e) {
-            Debug.logError(e, e.getMessage(), module);
+            Debug.logError(e, e.getMessage(), MODULE);
         }
         return dispatchContext;
     }

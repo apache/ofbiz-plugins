@@ -31,7 +31,7 @@ import org.apache.ofbiz.entity.util.EntityQuery;
 
 public class Various {
 
-    public static final String module = Various.class.getName();
+    private static final String MODULE = Various.class.getName();
 
     public static void setDatesFollowingTasks(GenericValue task) {
 
@@ -42,7 +42,8 @@ public class Various {
                     GenericValue nextTask = assoc.getRelatedOne("ToWorkEffort", false);
                     Timestamp newStartDate = task.getTimestamp("estimatedCompletionDate"); // start of next task the next day
                     if (nextTask.get("estimatedStartDate") == null || nextTask.getTimestamp("estimatedStartDate").before(newStartDate)) {
-                        nextTask.put("estimatedStartDate", UtilDateTime.addDaysToTimestamp(task.getTimestamp("estimatedCompletionDate"), 1)); // start of next task the next day
+                        nextTask.put("estimatedStartDate", UtilDateTime.addDaysToTimestamp(task.getTimestamp("estimatedCompletionDate"), 1));
+                        // start of next task the next day
                         nextTask.put("estimatedCompletionDate", calculateCompletionDate(nextTask, task.getTimestamp("estimatedCompletionDate")));
                         nextTask.store();
                     }
@@ -51,7 +52,7 @@ public class Various {
             }
 
         } catch (GenericEntityException e) {
-            Debug.logError("Could not updte task: " + e.getMessage(), module);
+            Debug.logError("Could not updte task: " + e.getMessage(), MODULE);
         }
     }
 
@@ -70,7 +71,7 @@ public class Various {
             }
 
         } catch (GenericEntityException e) {
-            Debug.logError("Could not updte task: " + e.getMessage(), module);
+            Debug.logError("Could not updte task: " + e.getMessage(), MODULE);
         }
         if (plannedHours == 0.00) {
             plannedHours = Double.valueOf("24.00"); // default length of task is 3 days.
@@ -93,7 +94,7 @@ public class Various {
         if (timesheetId != null) {
             try {
                 List<GenericValue> actuals = EntityQuery.use(delegator).from("TimeEntry").where("timesheetId", timesheetId).queryList();
-                if (actuals.size() > 0) {
+                if (!actuals.isEmpty()) {
                     for (GenericValue actual : actuals) {
                         Double hour = (Double) actual.get("hours");
                         double hours = hour;
@@ -101,8 +102,7 @@ public class Various {
                     }
                 }
             } catch (GenericEntityException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                Debug.logError(e, MODULE);
             }
         }
         return actualHours;

@@ -19,7 +19,6 @@
 package org.apache.ofbiz.pricat.sample;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -36,18 +35,12 @@ import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.pricat.PricatEvents;
 
 public class SamplePricatEvents extends PricatEvents {
-    
-    public static final String module = SamplePricatEvents.class.getName();
-    
-    public static final String PricatLatestVersion = UtilProperties.getPropertyValue("pricat", "pricat.latest.version", "V1.1");
-    
-    public static final String DemoPricatFileName = "SamplePricatTemplate_" + PricatLatestVersion + ".xlsx";
-    
-    public static final String DemoPricatPath = "component://pricat/webapp/pricatdemo/downloads/";
-    
+    private static final String MODULE = SamplePricatEvents.class.getName();
+    public static final String PRICAT_LAT_VERSION = UtilProperties.getPropertyValue("pricat", "pricat.latest.version", "V1.1");
+    public static final String DEMO_PRICATE_FILE_NAME = "SamplePricatTemplate_" + PRICAT_LAT_VERSION + ".xlsx";
+    public static final String DEMO_PRICATE_PATH = "component://pricat/webapp/pricatdemo/downloads/";
     /**
      * Download excel template.
-     * 
      * @param request
      * @param response
      * @return
@@ -58,10 +51,10 @@ public class SamplePricatEvents extends PricatEvents {
             return "error";
         }
         try {
-            String path = ComponentLocationResolver.getBaseLocation(DemoPricatPath).toString();
+            String path = ComponentLocationResolver.getBaseLocation(DEMO_PRICATE_PATH).toString();
             String fileName = null;
             if ("pricatExcelTemplate".equals(templateType)) {
-                fileName = DemoPricatFileName;
+                fileName = DEMO_PRICATE_FILE_NAME;
             }
             if (UtilValidate.isEmpty(fileName)) {
                 return "error";
@@ -69,11 +62,8 @@ public class SamplePricatEvents extends PricatEvents {
             Path file = Paths.get(path + fileName);
             byte[] bytes = Files.readAllBytes(file);
             UtilHttp.streamContentToBrowser(response, bytes, "application/octet-stream", URLEncoder.encode(fileName, "UTF-8"));
-        } catch (MalformedURLException e) {
-            Debug.logError(e.getMessage(), module);
-            return "error";
         } catch (IOException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
             return "error";
         }
         return "success";

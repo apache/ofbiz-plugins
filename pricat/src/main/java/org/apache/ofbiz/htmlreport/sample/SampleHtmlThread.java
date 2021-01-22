@@ -34,25 +34,18 @@ import org.apache.ofbiz.htmlreport.InterfaceReport;
 
 /**
  * Thread for running sample html report.
- *  
  */
 public class SampleHtmlThread extends AbstractReportThread {
 
     public static final String COUNT_DOWN = "countdown";
-    
     public static final String COUNT_UP = "countup";
-    
     public static final String CONFIRM = "confirm_action";
-    
-    public static final String[] messageLables = new String[] {"FORMAT_DEFAULT", "FORMAT_WARNING", "FORMAT_HEADLINE", "FORMAT_NOTE", "FORMAT_OK", "FORMAT_ERROR", "FORMAT_THROWABLE"};
-    
-    public static final List<String> messages = Collections.unmodifiableList(Arrays.asList(messageLables));
-    
-    private static final String resource = "PricatUiLabels";
-    
+    public static final String[] MESSAGE_LABLES = new String[] {"FORMAT_DEFAULT", "FORMAT_WARNING", "FORMAT_HEADLINE", "FORMAT_NOTE",
+            "FORMAT_OK", "FORMAT_ERROR", "FORMAT_THROWABLE"};
+    public static final List<String> MESSAGES = Collections.unmodifiableList(Arrays.asList(MESSAGE_LABLES));
+    private static final String RESOURCE = "PricatUiLabels";
     /**
      * Constructor, creates a new HtmlImportThreat.
-     * 
      */
     public SampleHtmlThread(HttpServletRequest request, HttpServletResponse response, String name) {
         super(request, response, name);
@@ -68,33 +61,33 @@ public class SampleHtmlThread extends AbstractReportThread {
     public void run() {
         try {
             if (getName().startsWith(COUNT_DOWN)) {
-                getReport().println(UtilProperties.getMessage(resource, "START_COUNT_DOWN", getLocale()), InterfaceReport.FORMAT_HEADLINE);
+                getReport().println(UtilProperties.getMessage(RESOURCE, "START_COUNT_DOWN", getLocale()), InterfaceReport.FORMAT_HEADLINE);
                 Random random = new Random();
                 int j = 0;
-                for (int i=1000; i>0; i--) {
+                for (int i = 1000; i > 0; i--) {
                     sleep(20);
                     j = random.nextInt(7);
                     if (j == 6) {
-                        getReport().println(new Throwable(UtilProperties.getMessage(resource, messages.get(j), new Object[] {i}, getLocale())));
+                        getReport().println(new Throwable(UtilProperties.getMessage(RESOURCE, MESSAGES.get(j), new Object[] {i}, getLocale())));
                     } else {
-                        getReport().println(UtilProperties.getMessage(resource, messages.get(j), new Object[] {i}, getLocale()), j);
+                        getReport().println(UtilProperties.getMessage(RESOURCE, MESSAGES.get(j), new Object[] {i}, getLocale()), j);
                     }
                 }
-                getReport().println(UtilProperties.getMessage(resource, "COUNT_COMPLETED", getLocale()), InterfaceReport.FORMAT_HEADLINE);
+                getReport().println(UtilProperties.getMessage(RESOURCE, "COUNT_COMPLETED", getLocale()), InterfaceReport.FORMAT_HEADLINE);
             } else if (getName().startsWith(COUNT_UP)) {
-                getReport().println(UtilProperties.getMessage(resource, "START_COUNT_UP", getLocale()), InterfaceReport.FORMAT_HEADLINE);
+                getReport().println(UtilProperties.getMessage(RESOURCE, "START_COUNT_UP", getLocale()), InterfaceReport.FORMAT_HEADLINE);
                 Random random = new Random();
                 int j = 0;
-                for (int i=1; i<=1000; i++) {
+                for (int i = 1; i <= 1000; i++) {
                     sleep(20);
                     j = random.nextInt(7);
                     if (j == 6) {
-                        getReport().println(new Throwable(UtilProperties.getMessage(resource, messages.get(j), new Object[] {i}, getLocale())));
+                        getReport().println(new Throwable(UtilProperties.getMessage(RESOURCE, MESSAGES.get(j), new Object[] {i}, getLocale())));
                     } else {
-                        getReport().println(UtilProperties.getMessage(resource, messages.get(j), new Object[] {i}, getLocale()), j);
+                        getReport().println(UtilProperties.getMessage(RESOURCE, MESSAGES.get(j), new Object[] {i}, getLocale()), j);
                     }
                 }
-                getReport().println(UtilProperties.getMessage(resource, "COUNT_COMPLETED", getLocale()), InterfaceReport.FORMAT_HEADLINE);
+                getReport().println(UtilProperties.getMessage(RESOURCE, "COUNT_COMPLETED", getLocale()), InterfaceReport.FORMAT_HEADLINE);
             } else {
                 getReport().println(getName(), InterfaceReport.FORMAT_ERROR);
             }

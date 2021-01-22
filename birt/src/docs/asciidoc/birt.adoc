@@ -16,29 +16,36 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 ////
-= Birt Apache OFBiz® plugin
+= Birt OFBiz® plugin
 The Apache OFBiz Project
-Release 17.12
-:imagesdir: ./images
 ifdef::backend-pdf[]
-:title-logo-image: image::OFBiz-Logo.svg[Apache OFBiz Logo, pdfwidth=4.25in, align=center]
+:title-logo-image: image::images/OFBiz-Logo.svg[Apache OFBiz Logo, pdfwidth=4.25in, align=center]
 :source-highlighter: rouge
 endif::[]
+
+:imagesdir: ./images/birt
+
+image:https://img.shields.io/badge/License-Apache%202.0-blue.svg[link="http://www.apache.org/licenses/LICENSE-2.0"]
 
 The birt plugin is one of the OFBiz plugins.
 
 == OFBiz Flexible Reports
 One of the functionalities of the birt plugin are the "OFBiz Flexible Reports"
 
-NOTE: This feature will begin to be officially available with the R17.12 branch first release
+There is an announce with some history in the OFBiz blog:
+https://blogs.apache.org/ofbiz/entry/the-birt-flexible-reports-a[Reporting in Apache OFBiz® and the OFBiz Flexible Reports]
 
-There is an anounce with some history in the OFBiz blog:  
-https://blogs.apache.org/ofbiz/entry/the-birt-flexible-reports-a[Reporting in Apache OFBiz® and the OFBiz Flexible Reports]     
+== Technical Documentation
+include::_include/bt-creating reports.adoc[leveloffset=+0]
 
-=== Technical Documentation
-include::_include/bt-creating reports.adoc[leveloffset=+1]
-include::_include/bt-using the birt report designer.adoc[leveloffset=+1]
-include::_include/bt-report master creation.adoc[leveloffset=+1]
-=== User documentation
-include::_include/bt-how to use flexible reports.adoc[leveloffset=+1]
+include::_include/bt-using the birt report designer.adoc[leveloffset=+0]
+
+include::_include/bt-report master creation.adoc[leveloffset=+0]
+
+== User documentation
+include::_include/bt-how to use flexible reports.adoc[leveloffset=+0]
+
+
+include::_include/bt-help.adoc[leveloffset=+1]
+
 

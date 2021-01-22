@@ -38,22 +38,22 @@
                 <!-- Error Filtering -->
                  <if-compare operator="less-equals" value="0" field="parameters.maxNum">
                     <add-error error-list-name="_error_message_list_">
-                         <fail-message message="There is no product backlogs in the system. Please create the product backlogs before perform this action."/>
+                        <fail-property resource="scrumUiLabels" property="ScrumEventNoProductBacklog"/>
                      </add-error>
                  </if-compare>
                  <if-compare-field field="parameters.sprintBacklogs" operator="greater" to-field="parameters.maxNum" type="Integer">
                      <add-error error-list-name="_error_message_list_">
-                         <fail-message message="Number of sprint backlogs are too much. Please enter the number equal or less than ${parameters.maxNum}."/>
+                         <fail-property resource="scrumUiLabels" property="ScrumEventMoreSprintBacklogs"/>
                      </add-error>
                  </if-compare-field>
                  <if-compare operator="less-equals" value="0" field="parameters.sprintBacklogs" type="Integer">
                      <add-error error-list-name="_error_message_list_">
-                         <fail-message message="Number of sprint backlogs must greater than 0 (zero)"/>
+                         <fail-property resource="scrumUiLabels" property="ScrumEventSprintBacklogs"/>
                      </add-error>
                  </if-compare>
                  <if-empty field="parameters.sprintEstimatedStart">
                     <add-error error-list-name="_error_message_list_">
-                         <fail-message message="Start Date is missing"/>
+                         <fail-property resource="scrumUiLabels" property="ScrumEventMissingStartDate"/>
                      </add-error>
                  </if-empty>
                  
@@ -213,12 +213,12 @@
                <!-- Error Filltering -->
                 <if-empty field="parameters.workEffortName">
                     <add-error error-list-name="_error_message_list_">
-                        <fail-message message="Sprint Name is missing."/>
+                        <fail-property resource="scrumUiLabels" property="ScrumEventMissingStartName"/>
                     </add-error>
                 </if-empty>
                 <if-empty field="parameters.actualStartDate">
                     <add-error error-list-name="_error_message_list_">
-                        <fail-message message="Start Date is missing."/>
+                        <fail-property resource="scrumUiLabels" property="ScrumEventMissingStartDate"/>
                     </add-error>
                 </if-empty>
                 <if-not-empty field="_error_message_list_">
@@ -390,7 +390,7 @@
     </if>
     </simple-method>
     
-    <simple-method method-name="DeleteSprint" short-description="Delete Sprint">
+    <simple-method method-name="deleteSprint" short-description="Delete Sprint">
     <!-- Permission Check -->
     <if>
         <condition>
@@ -916,7 +916,7 @@
                 </if-compare>
                 <if-empty field="parameters.description">
                     <add-error >
-                        <fail-message message="There Product Backlog Item is missing, Please add."/>
+                        <fail-property resource="scrumUiLabels" property="ScrumEventMissingProductBacklogItem"/>
                     </add-error>
                     <check-errors/>
                 </if-empty>
@@ -1273,7 +1273,7 @@
                     <field-map field-name="roleTypeId" from-field="parameters.roleTypeId"/>
                 </entity-one>
                 <add-error>
-                    <fail-message message="There are partyId : ${parameters.partyId} , userLoginId : ${userLoginId} and roleTypeId : ${roleTypeMap.description} already exist."/>
+                    <fail-property resource="scrumUiLabels" property="ScrumEventAlreadyExistPartyIdAndRoleTypeIdAndUserLoginId"/>
                 </add-error>
                 <check-errors/>
             </else>
@@ -1325,7 +1325,7 @@
                     </condition>
                     <then>
                         <add-error>
-                            <fail-message message="Start Date isn't in Sprint Duration."/>
+                            <fail-property resource="scrumUiLabels" property="ScrumEventMissingStartDate"/>
                         </add-error>
                     </then>
                </if>
@@ -1334,7 +1334,7 @@
         <check-errors/>
         <if-empty field="formInput.formInput.workEffortName">
             <add-error >
-                <fail-message message="Task name is empty, please enter task name."/>
+                <fail-property resource="scrumUiLabels" property="ScrumEventMissingTaskName"/>
             </add-error>
         </if-empty>
         <check-errors/>
@@ -1443,7 +1443,7 @@
         </if-not-empty>
         <!-- for contents -->
         <if-not-empty field="formInput.imageFileName">
-            <add-error><fail-message message="Upload file is missing..."/></add-error> 
+            <add-error><fail-property resource="scrumUiLabels" property="ScrumEventMissingUploadFile"/></add-error>
             <set field="parameters.imageFileName" from-field="formInput.imageFileName"/>
             
             <!-- Create Data Resource -->
@@ -1638,7 +1638,7 @@
                 <set field="update.custRequestId" from-field="parameters.custRequestId"/>
                 <if-empty field="parameters.description">
                     <add-error >
-                        <fail-message message="There Product Backlog Item is missing, Please add."/>
+                        <fail-property resource="scrumUiLabels" property="ScrumEventMissingProductBacklogItem"/>
                     </add-error>
                     <check-errors/>
                 </if-empty>
@@ -2165,7 +2165,7 @@
         </if-empty>
         <if-empty field="parameters.noteInfo">
             <add-error>
-                <fail-message message="Can not empty noteInfo"/>
+                <fail-property resource="scrumUiLabels" property="ScrumEventEmptyNoteInfo"/>
             </add-error>
             <check-errors/>
             <else>
@@ -2188,7 +2188,7 @@
         <remove-value value-field="workNoteMap"/>
         <remove-related relation-name="NoteData" value-field="workNoteMap"/>
     </simple-method>
-    <simple-method method-name="DeleteTaskFromSprintOverview" short-description="Delete Task From Sprint Overview Screen">
+    <simple-method method-name="deleteTaskFromSprintOverview" short-description="Delete Task From Sprint Overview Screen">
         <entity-one entity-name="CustRequestWorkEffort" value-field="taskWorkEffort">
             <field-map field-name="workEffortId" from-field="parameters.workEffort"/>
             <field-map field-name="custRequestId" from-field="parameters.custRequestId"/>
@@ -2197,31 +2197,6 @@
     </simple-method>
     
     <simple-method method-name="deleteScrumResource" short-description="remove scrum resource">
-        <entity-one entity-name="UserLogin" value-field="sysUserLogin">
-            <field-map field-name="userLoginId" value="system"/>
-        </entity-one>
-        <if-compare operator="equals" value="SCRUM_PRODUCT_OWNER" field="parameters.groupId">
-            <set field="parameters.roleTypeId" value="PRODUCT_OWNER"/>
-        </if-compare>
-        <if-compare operator="equals" value="SCRUM_MASTER" field="parameters.groupId">
-            <set field="parameters.roleTypeId" value="SCRUM_MASTER"/>
-        </if-compare>
-        <if-compare operator="equals" value="SCRUM_TEAM" field="parameters.groupId">
-            <set field="parameters.roleTypeId" value="SCRUM_TEAM"/>
-        </if-compare>
-        <!-- For special role -->
-        <if-compare operator="equals" value="SCRUM_STAKEHOLDER" field="parameters.groupId">
-            <set field="parameters.roleTypeId" value="STAKEHOLDER"/>
-        </if-compare>
-        <entity-and entity-name="PartyRole" list="partyRoles">
-            <field-map field-name="partyId" from-field="parameters.partyId"/>
-            <field-map field-name="roleTypeId" from-field="parameters.roleTypeId"/>
-        </entity-and>
-        <if-not-empty field="partyRoles">
-            <set-service-fields service-name="deletePartyRole" map="parameters" to-map="deletePartyRoleMap"/>
-            <set field="deletePartyRoleMap.userLogin" from-field="sysUserLogin"/>
-            <call-service service-name="deletePartyRole" in-map-name="deletePartyRoleMap"/>
-        </if-not-empty>
         <now-timestamp field="nowTimestamp" />
         <entity-and entity-name="UserLoginSecurityGroup" list="userLoginSecurityGroups">
             <field-map field-name="userLoginId" from-field="parameters.userLoginId"/>
@@ -2229,7 +2204,8 @@
         </entity-and>
         <if-not-empty field="userLoginSecurityGroups">
             <iterate list="userLoginSecurityGroups" entry="userLoginSecurityGroup">
-                <remove-value value-field="userLoginSecurityGroup"/>
+                <set field="userLoginSecurityGroup.thruDate" from-field="nowTimestamp"/>
+                <store-value value-field="userLoginSecurityGroup"/>
             </iterate>
         </if-not-empty>
     </simple-method>
@@ -2309,13 +2285,13 @@
                 <field-to-request field="sprintId"/>
                 <field-to-request field="custRequestId"/>
                 <add-error>
-                    <fail-message message="Please insert the Task Name"/>
-                    </add-error>
+                    <fail-property resource="scrumUiLabels" property="ScrumEventMissingTaskName"/>
+                </add-error>
                 <check-errors/>
             </else>
         </if-not-empty>
         <if-not-empty field="formInput.imageFileName">
-            <add-error><fail-message message="Upload file is missing..."/></add-error> 
+            <add-error><fail-property resource="scrumUiLabels" property="ScrumEventMissingUploadFile"/></add-error>
             <set field="parameters.imageFileName" from-field="formInput.imageFileName"/>
             
             <!-- Create Data Resource -->
@@ -2576,10 +2552,10 @@
     
     <simple-method method-name="createProductBacklogCategory" short-description="Create a product backlog's category">
              <if-empty field="parameters.productId">
-                <add-error><fail-message message="You have to specify product's ID"/></add-error>
+                <add-error><fail-property resource="scrumUiLabels" property="ScrumEventSpecifyProductId"/></add-error>
             </if-empty>
             <if-empty field="parameters.custRequestName">
-                <add-error><fail-message message="You have to specify category's name"/></add-error>
+                <add-error><fail-property resource="scrumUiLabels" property="ScrumEventSpecifyCategoryName"/></add-error>
             </if-empty>
             <check-errors/>
             <if>
@@ -2608,24 +2584,24 @@
                     </call-service>
                 </then>
             <else>
-                <add-error><fail-message message="You don't have permission to create category"/></add-error>
+                <add-error><fail-property resource="scrumUiLabels" property="ScrumEventNoPermissionToCreateCategory"/></add-error>
                 <check-errors/>
             </else>
             </if>
         <add-error>
-            <fail-message message="Permission Error"/>
+            <fail-property resource="scrumUiLabels" property="ScrumEventPermissionError"/>
         </add-error>
     </simple-method>
     
     <simple-method method-name="updateProductBacklogCategory" short-description="Update a product backlog's category">
         <if-empty field="parameters.productId">
-            <add-error><fail-message message="You have to specify product's ID"/></add-error>
+            <add-error><fail-property resource="scrumUiLabels" property="ScrumEventSpecifyProductId"/></add-error>
         </if-empty>
         <if-empty field="parameters.custRequestName">
-            <add-error><fail-message message="You have to specify category's name"/></add-error>
+            <add-error><fail-property resource="scrumUiLabels" property="ScrumEventSpecifyCategoryName"/></add-error>
         </if-empty>
         <if-empty field="parameters.custRequestId">
-            <add-error><fail-message message="You have to specify category's ID"/></add-error>
+            <add-error><fail-property resource="scrumUiLabels" property="ScrumEventSpecifyCategoryId"/></add-error>
         </if-empty>
         <check-errors/>
         <!-- update cust request -->
@@ -2680,7 +2656,7 @@
                  </if>
                 <else>
                     <add-error>
-                        <fail-message message="Task name is missing,Please add."/>
+                        <fail-property resource="scrumUiLabels" property="ScrumEventMissingTaskName"/>
                     </add-error>
                     <check-errors/>
                 </else>
@@ -2688,7 +2664,7 @@
             </then>
             <else>
                 <add-error>
-                    <fail-message message="Permission Error"/>
+                    <fail-property resource="scrumUiLabels" property="ScrumEventPermissionError"/>
                 </add-error>
                 <check-errors/>
             </else>
@@ -2740,7 +2716,7 @@
                 </if-not-empty>
                 <else>
                     <add-error>
-                        <fail-message message="Task name is missing,Please add."/>
+                        <fail-property resource="scrumUiLabels" property="ScrumEventMissingTaskName"/>
                     </add-error>
                     <check-errors/>
                 </else>
@@ -2748,7 +2724,7 @@
             </then>
             <else>
                 <add-error>
-                    <fail-message message="Permission Error"/>
+                    <fail-property resource="scrumUiLabels" property="ScrumEventPermissionError"/>
                 </add-error>
                 <check-errors/>
             </else>
@@ -2790,7 +2766,7 @@
             </if-not-empty>
             <else>
                 <add-error>
-                    <fail-message message="Cannot insert the data."/>
+                    <fail-property resource="scrumUiLabels" property="ScrumEventCannotInsertData"/>
                 </add-error>
                 <check-errors/>
             </else>  
@@ -2900,7 +2876,7 @@
         </if-empty>
         <if-empty field="formInput.formInput.productId">
             <add-error>
-                <fail-message message="Can not empty productId"/>
+                <fail-property resource="scrumUiLabels" property="ScrumEventMissingProductId"/>
             </add-error>
             <check-errors/>
             <else>
@@ -2959,7 +2935,7 @@
         </if-empty>
         <if-empty field="parameters.noteInfo">
             <add-error>
-                <fail-message message="Can not empty noteInfo"/>
+                <fail-property resource="scrumUiLabels" property="ScrumEventEmptyNoteInfo"/>
             </add-error>
             <check-errors/>
             <else>
@@ -3003,7 +2979,7 @@
             </condition>
             <then>
                 <add-error>
-                    <fail-message message="Content Id or Upload file is missing."/>
+                    <fail-property resource="scrumUiLabels" property="ScrumEventMissingUploadFile"/>
                 </add-error>
             </then>
         </if>
@@ -3195,7 +3171,7 @@
                 </if-not-empty>
             </then>
             <else>
-                <add-error><fail-message message="You are has no permission to perform this action."/></add-error>
+                <add-error><fail-property resource="scrumUiLabels" property="ScrumEventPermissionError"/></add-error>
             </else>
         </if>
     </simple-method>
@@ -3235,7 +3211,7 @@
                 </entity-condition>
                 <if-empty field="sprintRoles">
                     <add-error>
-                       <fail-message message="Can not assign task to partyId : ${parameters.partyId} because this partyId dose not have the SCRUM_TEAM roleTypeId"/>
+                       <fail-property resource="scrumUiLabels" property="ScrumEventCannotAssignTask"/>
                     </add-error>
                     <check-errors/>
                 </if-empty>
@@ -3251,7 +3227,7 @@
                 <call-service service-name="assignPartyToWorkEffort" in-map-name="newAssign"/>
                 <else>
                     <add-error>
-                       <fail-message message="Party : ${parameters.partyId} is already assigned to work effort Id : ${parameters.workEffortId} , not adding again"/>
+                       <fail-property resource="scrumUiLabels" property="ScrumEventPartyAlreadyAssigned"/>
                     </add-error>
                     <check-errors/>
                 </else>
@@ -3278,7 +3254,7 @@
                     <set field="workEffortId" from-field="parameters.workEffortId"/>
                     <else>
                         <add-error>
-                            <fail-message message="Can not assign task to partyId : ${userLogin.partyId} because this partyId dose not have the SCRUM_TEAM roleTypeId"/>
+                            <fail-property resource="scrumUiLabels" property="ScrumEventCannotAssignTaskToParty"/>
                         </add-error>
                         <check-errors/>
                     </else>
@@ -3301,7 +3277,7 @@
                     </entity-condition>
                     <if-empty field="sprintRoles">
                         <add-error>
-                            <fail-message message="Can not assign task to partyId : ${parameters.partyId} because this partyId dose not have the SCRUM_TEAM roleTypeId"/>
+                            <fail-property resource="scrumUiLabels" property="ScrumEventCannotAssignTask"/>
                         </add-error>
                         <check-errors/>
                     </if-empty>
@@ -3328,7 +3304,7 @@
         </if-empty>
     </simple-method>
     
-    <simple-method method-name="CopyMemberLastSprint" short-description="">
+    <simple-method method-name="copyMemberLastSprint" short-description="">
         <entity-and entity-name="WorkEffort" list="sprintList">
             <field-map field-name="workEffortParentId" from-field="parameters.projectId"/>
             <field-map field-name="workEffortTypeId" value="SCRUM_SPRINT"/>
@@ -3370,7 +3346,7 @@
                     <field-to-request field="projectId"/>
                     <field-to-request field="sprintId"/>
                     <add-error>
-                        <fail-message message="Cannot assign member to this sprint because there is no member from last sprint"/>
+                        <fail-property resource="scrumUiLabels" property="ScrumEventCannotAssignMember"/>
                     </add-error>
                     <check-errors/>
                     
@@ -3491,7 +3467,7 @@
             </then>
             <else>
                 <add-error>
-                    <fail-message message="You are has no permission to perform this action."/>
+                    <fail-property resource="scrumUiLabels" property="ScrumEventPermissionError"/>
                 </add-error>
                 <check-errors/>
             </else>
@@ -3502,13 +3478,13 @@
         <call-simple-method method-name="getWebSiteId"/>
         <if-empty field="parameters.description">
             <add-error>
-                <fail-message message="There is no Product Backlog Item."/>
+                <fail-property resource="scrumUiLabels" property="ScrumEventMissingProductBacklogItem"/>
             </add-error>
             <check-errors/>
         </if-empty>
         <if-empty field="parameters.unplanned">
             <add-error>
-                <fail-message message="Please select backlog type."/>
+                <fail-property resource="scrumUiLabels" property="ScrumEventSelectBacklogItem"/>
             </add-error>
             <check-errors/>
         </if-empty>
@@ -4338,7 +4314,7 @@
             <create-value value-field="productRoleMap"/>
             <else>
                 <add-error>
-                    <fail-message message="There are partyId : ${parameters.partyId} and roleTypeId : ${parameters.roleTypeId} already exist."/>
+                    <fail-property resource="scrumUiLabels" property="ScrumEventAlreadyExistPartyIdAndRoleTypeId"/>
                 </add-error>
             <check-errors/>
             </else>

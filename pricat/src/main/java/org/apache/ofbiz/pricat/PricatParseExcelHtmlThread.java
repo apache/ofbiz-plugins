@@ -62,66 +62,40 @@ import org.apache.ofbiz.service.LocalDispatcher;
 
 /**
  * Thread for running pricat import excel html report.
- * 
  */
 public class PricatParseExcelHtmlThread extends AbstractReportThread {
-    
-    public static final String module = PricatParseExcelHtmlThread.class.getName();
 
     public static final String PARSE_EXCEL = "parse_excel";
-    
     public static final String CONFIRM = "confirm_action";
-    
-    public static final String[] messageLabels = new String[] {"FORMAT_DEFAULT", "FORMAT_WARNING", "FORMAT_HEADLINE", "FORMAT_NOTE", "FORMAT_OK", "FORMAT_ERROR", "FORMAT_THROWABLE"};
-    
-    public static final List<String> messages = Collections.unmodifiableList(Arrays.asList(messageLabels));
-    
-    public static final String FileDateTimePattern = "yyyyMMddHHmmss";
-    
-    public static final String defaultColorName = "DefaultColor";
-    
-    public static final String defaultDimensionName = "DefaultDimension";
-    
-    public static final String defaultCategoryName = "DefaultCategory";
-    
+    public static final String[] MESSAGE_LABELS = new String[]{"FORMAT_DEFAULT", "FORMAT_WARNING", "FORMAT_HEADLINE", "FORMAT_NOTE", "FORMAT_OK",
+            "FORMAT_ERROR", "FORMAT_THROWABLE"};
+    public static final List<String> MESSAGES = Collections.unmodifiableList(Arrays.asList(MESSAGE_LABELS));
+    public static final String FILE_DATE_TIME_PATTERN = "yyyyMMddHHmmss";
+    public static final String DEF_COLOR_NAME = "DefaultColor";
+    public static final String DEF_DIM_NAME = "DefaultDimension";
+    public static final String DEF_CAT_NAME = "DefaultCategory";
     public static final String EXCEL_TEMPLATE_TYPE = "excelTemplateType";
-    
     public static final String FACILITY_ID = "facilityId";
-    
-    private LocalDispatcher dispatcher;
-    
-    private Delegator delegator;
-    
-    private List<FileItem> fileItems;
-    
-    private File pricatFile;
-    
-    private String userLoginId;
-    
-    private GenericValue userLogin;
-    
-    private Map<String, String[]> facilities = new HashMap<>();
-    
-    public static final String resource = "PricatUiLabels";
-    
-    private HttpSession session;
-    
     public static final String PRICAT_FILE = "__PRICAT_FILE__";
-
     public static final String DEFAULT_PRICAT_TYPE = "sample_pricat";
-    
+    public static final Map<String, String> TYPE_LABELS = UtilMisc.toMap("sample_pricat", "SamplePricatTemplate",
+            "ofbiz_pricat", "OFBizPricatTemplate");
+    private static final String MODULE = PricatParseExcelHtmlThread.class.getName();
+    private static final String RESOURCE = "PricatUiLabels";
+    private LocalDispatcher dispatcher;
+    private Delegator delegator;
+    private List<FileItem> fileItems;
+    private File pricatFile;
+    private String userLoginId;
+    private GenericValue userLogin;
+    private Map<String, String[]> facilities = new HashMap<>();
+    private HttpSession session;
     private String selectedPricatType = DEFAULT_PRICAT_TYPE;
-    
-    public static final Map<String, String> PricatTypeLabels = UtilMisc.toMap("sample_pricat", "SamplePricatTemplate",
-                                                                              "ofbiz_pricat", "OFBizPricatTemplate");
-    
     private InterfacePricatParser pricatParser;
-    
     private String thruReasonId = "EXCEL_IMPORT_SUCCESS";
-    
+
     /**
      * Constructor, creates a new html thread.
-     * 
      * @param request
      * @param response
      * @param name
@@ -134,70 +108,68 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
         userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
         if (UtilValidate.isEmpty(userLogin)) {
             initHtmlReport(request, response, true, true);
-            getReport().println(UtilProperties.getMessage(resource, "PricatRequireUserLogin", getLocale()), InterfaceReport.FORMAT_ERROR);
+            getReport().println(UtilProperties.getMessage(RESOURCE, "PricatRequireUserLogin", getLocale()), InterfaceReport.FORMAT_ERROR);
             return;
         } else {
             userLoginId = userLogin.getString("userLoginId");
             session = request.getSession();
         }
-        
         long sequenceNum = addExcelImportHistory();
-        File userFolder = FileUtil.getFile(InterfacePricatParser.tempFilesFolder + userLoginId + "/");
+        File userFolder = FileUtil.getFile(InterfacePricatParser.TEMP_FILES_FOLDER + userLoginId + "/");
         if (!userFolder.exists()) {
             userFolder.mkdirs();
         }
-        String logFileName = InterfacePricatParser.tempFilesFolder + userLoginId + "/" + sequenceNum + ".log";
+        String logFileName = InterfacePricatParser.TEMP_FILES_FOLDER + userLoginId + "/" + sequenceNum + ".log";
         initHtmlReport(request, response, true, true, logFileName);
         if (sequenceNum > 0) {
             getReport().setSequenceNum(sequenceNum);
             getReport().addLogFile(logFileName);
         }
         try {
-            getReport().print(UtilProperties.getMessage(resource, "StartStoreExcel", getLocale()), InterfaceReport.FORMAT_HEADLINE);
+            getReport().print(UtilProperties.getMessage(RESOURCE, "StartStoreExcel", getLocale()), InterfaceReport.FORMAT_HEADLINE);
             ServletFileUpload dfu = new ServletFileUpload(new DiskFileItemFactory(10240, userFolder));
             fileItems = UtilGenerics.cast(dfu.parseRequest(request));
         } catch (FileUploadException e) {
             getReport().addError(e);
         }
         if (UtilValidate.isEmpty(fileItems)) {
-            getReport().println(UtilProperties.getMessage(resource, "NoFileUploaded", getLocale()), InterfaceReport.FORMAT_ERROR);
+            getReport().println(UtilProperties.getMessage(RESOURCE, "NoFileUploaded", getLocale()), InterfaceReport.FORMAT_ERROR);
         } else {
-            getReport().println(UtilProperties.getMessage(resource, "ok", getLocale()), InterfaceReport.FORMAT_OK);
+            getReport().println(UtilProperties.getMessage(RESOURCE, "ok", getLocale()), InterfaceReport.FORMAT_OK);
         }
     }
 
     @Override
     public String getReportUpdate() {
-
         return getReport().getReportUpdate();
     }
 
     @Override
     public void run() {
-
         try {
             if (getName().startsWith(PARSE_EXCEL) && UtilValidate.isNotEmpty(fileItems)) {
                 getReport().println();
-                getReport().println(UtilProperties.getMessage(resource, "StartParsePricat", getLocale()), InterfaceReport.FORMAT_HEADLINE);
+                getReport().println(UtilProperties.getMessage(RESOURCE, "StartParsePricat", getLocale()), InterfaceReport.FORMAT_HEADLINE);
                 if (prepareParse()) {
                     if (selectedPricatType.equals(DEFAULT_PRICAT_TYPE)) {
                         pricatParser = new SamplePricatParser(dispatcher, delegator, getLocale(), getReport(), facilities, pricatFile, userLogin);
                     }
                     if (UtilValidate.isEmpty(pricatParser)) {
-                        getReport().println(UtilProperties.getMessage(resource, "NoPricatParserFor", getLocale()), InterfaceReport.FORMAT_ERROR);
+                        getReport().println(UtilProperties.getMessage(RESOURCE, "NoPricatParserFor", getLocale()), InterfaceReport.FORMAT_ERROR);
                     } else {
                         pricatParser.parsePricatExcel();
-                        getReport().println(UtilProperties.getMessage(resource, "PricatParseCompleted", getLocale()), InterfaceReport.FORMAT_HEADLINE);
+                        getReport().println(UtilProperties.getMessage(RESOURCE, "PricatParseCompleted", getLocale()),
+                                InterfaceReport.FORMAT_HEADLINE);
                     }
                 }
             } else {
                 getReport().println(getName(), InterfaceReport.FORMAT_ERROR);
-                Debug.logError(getName(), module);
+                Debug.logError(getName(), MODULE);
                 thruReasonId = "EXCEL_IMPORT_ERROR";
             }
         } catch (Exception e) {
             getReport().println(e);
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
             thruReasonId = "EXCEL_IMPORT_ERROR";
         } finally {
             // wait 5 seconds to wait page output
@@ -221,13 +193,13 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
         // 1 get facilities belong to current userLogin
         facilities = getCurrentUserLoginFacilities();
         if (UtilValidate.isEmpty(facilities)) {
-            getReport().println(UtilProperties.getMessage(resource, "CurrentUserLoginNoFacility", new Object[]{userLoginId}, getLocale()), InterfaceReport.FORMAT_ERROR);
+            getReport().println(UtilProperties.getMessage(RESOURCE, "CurrentUserLoginNoFacility", new Object[]{userLoginId}, getLocale()),
+                    InterfaceReport.FORMAT_ERROR);
             return false;
         } else {
-            getReport().println(" ... " + UtilProperties.getMessage(resource, "ok", getLocale()), InterfaceReport.FORMAT_OK);
+            getReport().println(" ... " + UtilProperties.getMessage(RESOURCE, "ok", getLocale()), InterfaceReport.FORMAT_OK);
             getReport().println();
         }
-        
         // 2. store the pricat excel file
         if (!storePricatFile()) {
             return false;
@@ -249,12 +221,12 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
                 }
             }
         }
-        getReport().print(UtilProperties.getMessage(resource, "ExcelTemplateTypeSelected", getLocale()), InterfaceReport.FORMAT_DEFAULT);
-        if (PricatTypeLabels.containsKey(selectedPricatType)) {
-            getReport().print(UtilProperties.getMessage(resource, PricatTypeLabels.get(selectedPricatType), getLocale()), InterfaceReport.FORMAT_DEFAULT);
-            getReport().println(" ... " + UtilProperties.getMessage(resource, "ok", getLocale()), InterfaceReport.FORMAT_OK);
+        getReport().print(UtilProperties.getMessage(RESOURCE, "ExcelTemplateTypeSelected", getLocale()), InterfaceReport.FORMAT_DEFAULT);
+        if (TYPE_LABELS.containsKey(selectedPricatType)) {
+            getReport().print(UtilProperties.getMessage(RESOURCE, TYPE_LABELS.get(selectedPricatType), getLocale()), InterfaceReport.FORMAT_DEFAULT);
+            getReport().println(" ... " + UtilProperties.getMessage(RESOURCE, "ok", getLocale()), InterfaceReport.FORMAT_OK);
         } else {
-            getReport().println(UtilProperties.getMessage(resource, PricatTypeLabels.get(selectedPricatType), getLocale()), InterfaceReport.FORMAT_ERROR);
+            getReport().println(UtilProperties.getMessage(RESOURCE, TYPE_LABELS.get(selectedPricatType), getLocale()), InterfaceReport.FORMAT_ERROR);
             return false;
         }
 
@@ -266,7 +238,7 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
                 pricatFi = fi;
                 pricatBytes = pricatFi.get();
                 Path path = Paths.get(fi.getName());
-                pricatFile = new File(InterfacePricatParser.tempFilesFolder + userLoginId + "/" + path.getFileName().toString());
+                pricatFile = new File(InterfacePricatParser.TEMP_FILES_FOLDER + userLoginId + "/" + path.getFileName().toString());
                 FileOutputStream fos = new FileOutputStream(pricatFile);
                 fos.write(pricatBytes);
                 fos.flush();
@@ -279,7 +251,7 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
 
     private Map<String, String[]> getCurrentUserLoginFacilities() {
         getReport().println();
-        getReport().println(UtilProperties.getMessage(resource, "GetCurrentUserLoginFacility", getLocale()), InterfaceReport.FORMAT_DEFAULT);
+        getReport().println(UtilProperties.getMessage(RESOURCE, "GetCurrentUserLoginFacility", getLocale()), InterfaceReport.FORMAT_DEFAULT);
         Map<String, Object> context = new HashMap<>();
         context.put("userLogin", userLogin);
         context.put("locale", getLocale());
@@ -289,11 +261,11 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
             orgConditions.add(EntityCondition.makeCondition("twoRoleTypeIdFrom", EntityOperator.EQUALS, "INTERNAL_ORGANIZATIO"));
             orgConditions.add(EntityCondition.makeCondition("twoRoleTypeIdTo", EntityOperator.EQUALS, "EMPLOYEE"));
             orgConditions.add(EntityCondition.makeCondition("twoRoleTypeIdTo", EntityOperator.EQUALS, "EMPLOYEE"));
-            List<GenericValue> organizations = delegator.findList("PartyRelationshipToFrom", EntityCondition.makeCondition(orgConditions), null, null, null, false);
+            List<GenericValue> organizations = delegator.findList("PartyRelationshipToFrom", EntityCondition.makeCondition(orgConditions), null,
+                    null, null, false);
             Timestamp now = UtilDateTime.nowTimestamp();
             organizations = EntityUtil.filterByDate(organizations, now, "twoFromDate", "twoThruDate", true);
             organizations = EntityUtil.filterByDate(organizations, now, "oneFromDate", "oneThruDate", true);
-            
             List<EntityCondition> ownerPartyConditions = new LinkedList<>();
             Set<String> orgPartyIds = new HashSet<>();
             for (GenericValue organization : organizations) {
@@ -306,8 +278,8 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
             if (UtilValidate.isEmpty(ownerPartyConditions)) {
                 return facilities;
             }
-            
-            List<GenericValue> facilityValues = delegator.findList("Facility", EntityCondition.makeCondition(ownerPartyConditions, EntityOperator.OR), null, null, null, false);
+            List<GenericValue> facilityValues = delegator.findList("Facility", EntityCondition.makeCondition(ownerPartyConditions,
+                    EntityOperator.OR), null, null, null, false);
             if (UtilValidate.isNotEmpty(facilityValues)) {
                 int i = 1;
                 for (GenericValue facilityValue : facilityValues) {
@@ -315,40 +287,44 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
                         String facilityId = facilityValue.getString("facilityId");
                         if (!facilities.containsKey(facilityId)) {
                             String facilityName = facilityValue.getString("facilityName");
-                            facilities.put(facilityId, new String[] {facilityName, facilityValue.getString("ownerPartyId")});
-                            getReport().println(UtilProperties.getMessage(resource, "FacilityFoundForCurrentUserLogin", new Object[]{String.valueOf(i), facilityName, facilityId}, getLocale()), InterfaceReport.FORMAT_NOTE);
+                            facilities.put(facilityId, new String[]{facilityName, facilityValue.getString("ownerPartyId")});
+                            getReport().println(UtilProperties.getMessage(RESOURCE, "FacilityFoundForCurrentUserLogin",
+                                    new Object[]{String.valueOf(i), facilityName, facilityId}, getLocale()), InterfaceReport.FORMAT_NOTE);
                             i++;
                         }
                     }
                 }
             }
-        }catch (GenericEntityException e) {
-            Debug.logError(e.getMessage(), module);
+        } catch (GenericEntityException e) {
+            Debug.logError(e.getMessage(), MODULE);
         }
         return facilities;
     }
-
+    /** getDelegator */
     public Delegator getDelegator() {
         return delegator;
     }
-
+    /** setDelegator */
     public void setDelegator(Delegator delegator) {
         this.delegator = delegator;
     }
-
+    /** addExcelImportHistory */
     public synchronized long addExcelImportHistory() {
         long latestId = 1;
         try {
-            GenericValue latestHistoryValue = EntityQuery.use(delegator).from("ExcelImportHistory").where("userLoginId", userLoginId).orderBy("sequenceNum DESC").queryFirst();
+            GenericValue latestHistoryValue = EntityQuery.use(delegator).from("ExcelImportHistory").where("userLoginId", userLoginId).orderBy(
+                    "sequenceNum DESC").queryFirst();
             if (UtilValidate.isNotEmpty(latestHistoryValue)) {
                 latestId = latestHistoryValue.getLong("sequenceNum") + 1;
             }
-            GenericValue newHistoryValue = delegator.makeValue("ExcelImportHistory", UtilMisc.toMap("sequenceNum", latestId, "userLoginId", userLoginId,
-                                                                "fileName", pricatFile == null ? "" : pricatFile.getName(), "statusId", isAlive() ? "EXCEL_IMPORTING" : "EXCEL_IMPORTED", 
-                                                                "fromDate", UtilDateTime.nowTimestamp(), "threadName", getName(), "logFileName", InterfacePricatParser.tempFilesFolder + userLoginId + "/" + latestId + ".log"));
+            GenericValue newHistoryValue = delegator.makeValue("ExcelImportHistory", UtilMisc.toMap("sequenceNum", latestId, "userLoginId",
+                    userLoginId,
+                    "fileName", pricatFile == null ? "" : pricatFile.getName(), "statusId", isAlive() ? "EXCEL_IMPORTING" : "EXCEL_IMPORTED",
+                    "fromDate", UtilDateTime.nowTimestamp(), "threadName", getName(), "logFileName",
+                    InterfacePricatParser.TEMP_FILES_FOLDER + userLoginId + "/" + latestId + ".log"));
             newHistoryValue.create();
         } catch (GenericEntityException e) {
-            Debug.logError(e, module);
+            Debug.logError(e, MODULE);
             return -1;
         }
         return latestId;

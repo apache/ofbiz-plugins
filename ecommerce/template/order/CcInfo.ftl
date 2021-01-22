@@ -25,6 +25,12 @@ under the License.
     <hr/>
   </td>
 </tr>
-
-${screens.render("component://accounting/widget/CommonScreens.xml#creditCardFields")}
+<tr>
+  <td width="26%" align="right" valign="top">
+      <div class="tableheadtext">${uiLabelMap.AccountingCreditCardInformation}</div>
+    </td>
+  <td width="5">&nbsp;</td>
+  <td width="74%">&nbsp;</td>
+</tr>
+${screens.render("component://ecommerce/widget/CustomerScreens.xml#creditCardFields")}
 

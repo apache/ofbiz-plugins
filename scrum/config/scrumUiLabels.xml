@@ -1007,6 +1007,75 @@ under the License.
         <value xml:lang="zh">预计小时数</value>
         <value xml:lang="zh-TW">預計小時數</value>
     </property>
+    <property key="ScrumEventAlreadyExistPartyIdAndRoleTypeId">
+        <value xml:lang="en">There are partyId : ${parameters.partyId} and roleTypeId : ${parameters.roleTypeId} already exist.</value>
+    </property>
+    <property key="ScrumEventAlreadyExistPartyIdAndRoleTypeIdAndUserLoginId">
+        <value xml:lang="en">There are partyId : ${parameters.partyId} , userLoginId : ${userLoginId} and roleTypeId : ${roleTypeMap.description} already exist.</value>
+    </property>
+    <property key="ScrumEventCannotAssignMember">
+        <value xml:lang="en">Cannot assign member to this sprint because there is no member from last sprint</value>
+    </property>
+    <property key="ScrumEventCannotAssignTask">
+        <value xml:lang="en">Can not assign task to partyId : ${parameters.partyId} because this partyId dose not have the SCRUM_TEAM roleTypeId</value>
+    </property>
+    <property key="ScrumEventCannotAssignTaskToParty">
+        <value xml:lang="en">Can not assign task to partyId : ${userLogin.partyId} because this partyId dose not have the SCRUM_TEAM roleTypeId</value>
+    </property>
+    <property key="ScrumEventCannotInsertData">
+        <value xml:lang="en">Cannot insert the data.</value>
+    </property>
+    <property key="ScrumEventEmptyNoteInfo">
+        <value xml:lang="en">Can not empty noteInfo</value>
+    </property>
+    <property key="ScrumEventMissingProductBacklogItem">
+        <value xml:lang="en">There Product Backlog Item is missing, Please add.</value>
+    </property>
+    <property key="ScrumEventMissingProductId">
+        <value xml:lang="en">Can not empty productId</value>
+    </property>
+    <property key="ScrumEventMissingStartDate">
+        <value xml:lang="en">Start Date is missing</value>
+    </property>
+    <property key="ScrumEventMissingStartName">
+        <value xml:lang="en">Sprint Name is missing.</value>
+    </property>
+    <property key="ScrumEventMissingTaskName">
+        <value xml:lang="en">Task name is empty, please enter task name.</value>
+    </property>
+    <property key="ScrumEventMissingUploadFile">
+        <value xml:lang="en">Upload file is missing...</value>
+    </property>
+    <property key="ScrumEventMoreSprintBacklogs">
+        <value xml:lang="en">Number of sprint backlogs are too much. Please enter the number equal or less than ${parameters.maxNum}.</value>
+    </property>
+    <property key="ScrumEventNoPermissionToCreateCategory">
+        <value xml:lang="en">You don't have permission to create category.</value>
+    </property>
+    <property key="ScrumEventNoProductBacklog">
+        <value xml:lang="en">There is no product backlogs in the system. Please create the product backlogs before perform this action.</value>
+    </property>
+    <property key="ScrumEventPartyAlreadyAssigned">
+        <value xml:lang="en">Party : ${parameters.partyId} is already assigned to work effort Id : ${parameters.workEffortId} , not adding again</value>
+    </property>
+    <property key="ScrumEventPermissionError">
+        <value xml:lang="en">Permission Error</value>
+    </property>
+    <property key="ScrumEventSelectBacklogItem">
+        <value xml:lang="en">Please select backlog type.</value>
+    </property>
+    <property key="ScrumEventSpecifyCategoryId">
+        <value xml:lang="en">You have to specify category's ID</value>
+    </property>
+    <property key="ScrumEventSpecifyCategoryName">
+        <value xml:lang="en">You have to specify category's name</value>
+    </property>
+    <property key="ScrumEventSpecifyProductId">
+        <value xml:lang="en">You have to specify product's ID</value>
+    </property>
+    <property key="ScrumEventSprintBacklogs">
+        <value xml:lang="en">Number of sprint backlogs must greater than 0 (zero)</value>
+    </property>
     <property key="ScrumFindByPrimaryKeyError">
         <value xml:lang="en">Find by primary key error:</value>
     </property>
@@ -1772,6 +1841,12 @@ under the License.
         <value xml:lang="nl">Datum kiezen</value>
         <value xml:lang="zh">选择日期</value>
         <value xml:lang="zh-TW">選擇日期</value>
+    </property>
+    <property key="ScrumServiceNoParty">
+        <value xml:lang="en">There is no party in this company</value>
+    </property>
+    <property key="ScrumServiceNoTimeEntryItem">
+        <value xml:lang="en">No timeentry items found</value>
     </property>
     <property key="ScrumSeq">
         <value xml:lang="en">Seq</value>

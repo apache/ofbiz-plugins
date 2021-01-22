@@ -66,22 +66,27 @@ import com.ibm.icu.util.ULocale;
 
 public class ReportDesignGenerator {
 
-    private static final String module = ReportDesignGenerator.class.getName();
+    private static final String MODULE = ReportDesignGenerator.class.getName();
+    private static final String RES_ERROR = "BirtErrorUiLabels";
     private Locale locale;
     private ElementFactory factory;
-    /** The generated design */
+    /**
+     * The generated design
+     */
     private ReportDesignHandle design;
     private Map<String, String> dataMap;
-    /** Map of all filter supported by the report design */
+    /**
+     * Map of all filter supported by the report design
+     */
     private Map<String, String> filterMap;
-    /** Service name to populate dataset of the report design*/
+    /**
+     * Service name to populate dataset of the report design
+     */
     private String serviceName;
     private Map<String, String> fieldDisplayLabels;
     private Map<String, String> filterDisplayLabels;
     private String rptDesignName;
     private boolean generateFilters = false;
-
-    public static final String resource_error = "BirtErrorUiLabels";
 
     public ReportDesignGenerator(Map<String, Object> context, DispatchContext dctx) throws GeneralException, SemanticException {
         locale = (Locale) context.get("locale");
@@ -104,13 +109,14 @@ public class ReportDesignGenerator {
      * Generate report design (rtdesign file).
      * @throws IOException
      * @throws GeneralException
-     * @throws BirtException 
+     * @throws BirtException
      */
     public void buildReport() throws IOException, GeneralException, BirtException {
         DesignConfig config = new DesignConfig();
         Platform.startup();
-        IDesignEngine engine = ((IDesignEngineFactory) Platform.createFactoryObject(IDesignEngineFactory.EXTENSION_DESIGN_ENGINE_FACTORY)).createDesignEngine(config);
-        
+        IDesignEngine engine = ((IDesignEngineFactory) Platform.createFactoryObject(
+                IDesignEngineFactory.EXTENSION_DESIGN_ENGINE_FACTORY)).createDesignEngine(config);
+
         // creating main design elements
         SessionHandle session = engine.newSessionHandle(ULocale.forLocale(locale));
         design = session.createDesign();
@@ -146,7 +152,7 @@ public class ReportDesignGenerator {
             for (String filter : filterMap.keySet()) {
                 String birtType = BirtUtil.convertFieldTypeToBirtParameterType(filterMap.get(filter));
                 if (birtType == null) {
-                    throw new GeneralException(UtilProperties.getMessage(resource_error, "BirtErrorConversionFieldToBirtFailed", locale));
+                    throw new GeneralException(UtilProperties.getMessage(RES_ERROR, "BirtErrorConversionFieldToBirtFailed", locale));
                 }
                 // get label
                 String displayFilterName;
@@ -156,10 +162,13 @@ public class ReportDesignGenerator {
                     displayFilterName = filter;
                 }
                 ScalarParameterHandle scalParam = factory.newScalarParameter(filter);
-                // scalParam.setDisplayName(displayFilterName); // TODO has no incidence at all right now, is only displayed when using birt's report parameter system. Not our case. I leave it here if any idea arise of how to translate these.
+                // scalParam.setDisplayName(displayFilterName); // TODO has no incidence at all right now, is only displayed when using birt's
+                // report parameter system. Not our case. I leave it here if any idea arise of how to translate these.
                 scalParam.setPromptText(displayFilterName);
-                if ("javaObject".equals(birtType)) { //Fields of type='blob' are rejected by Birt: org.eclipse.birt.report.model.api.metadata.PropertyValueException: The choice value "javaObject" is not allowed. 
-                    throw new GeneralException("Fields of type='blob' are rejected by Birt. Create a view entity, based on the requested entity, where you exclude the field of type='blob'");
+                if ("javaObject".equals(birtType)) { //Fields of type='blob' are rejected by Birt: org.eclipse.birt.report.model.api.metadata
+                    // .PropertyValueException: The choice value "javaObject" is not allowed.
+                    throw new GeneralException("Fields of type='blob' are rejected by Birt. Create a view entity, based on the requested entity, "
+                            + "where you exclude the field of type='blob'");
                 } else {
                     scalParam.setDataType(birtType);
                 }
@@ -213,16 +222,18 @@ public class ReportDesignGenerator {
         ImageHandle image = factory.newImage(null);
         CellHandle cell = (CellHandle) row.getCells().get(0);
         cell.getContent().add(image);
-        image.setURL("http://ofbiz.apache.org/images/ofbiz_logo.png");
+        image.setURL("https://ofbiz.apache.org/images/ofbiz_logo.png");
         LabelHandle label = factory.newLabel(null);
         cell = (CellHandle) row.getCells().get(1);
         cell.getContent().add(label);
         label.setText("Dat is dat test !");
         // ################ CODE HERE IF YOU WANT TO ADD GENERATED DESIGN / MAY BE WORTH USING RPTTEMPLATE AND-OR RPTLIBRARY ################### */
-        
+
         design.saveAs(rptDesignName);
         design.close();
-        if (Debug.infoOn())Debug.logInfo("####### Design generated: " + rptDesignName, module);
+        if (Debug.infoOn()) {
+            Debug.logInfo("####### Design generated: " + rptDesignName, MODULE);
+        }
         session.closeAll(false);
         Platform.shutdown();
     }
@@ -232,7 +243,7 @@ public class ReportDesignGenerator {
      * <p>This script is used to populate Birt design parameters from input</p>
      */
     private void createScriptedBeforeFactory() {
-        StringBuffer beforeFactoryScript = new StringBuffer("Debug.logInfo(\"###### In beforeFactory\", module);\n");
+        StringBuffer beforeFactoryScript = new StringBuffer("Debug.logInfo(\"###### In beforeFactory\", MODULE);\n");
         beforeFactoryScript.append("var inputFields = reportContext.getParameterValue(\"parameters\");\n");
         beforeFactoryScript.append("//get a list of all report parameters\n");
         beforeFactoryScript.append("var parameters = reportContext.getDesignHandle().getAllParameters();\n");
@@ -262,20 +273,22 @@ public class ReportDesignGenerator {
         dataSetInitializeScript.append("importPackage(Packages.org.apache.ofbiz.service);\n");
         dataSetInitializeScript.append("importPackage(Packages.org.apache.ofbiz.base.util);\n");
         dataSetInitializeScript.append("importPackage(java.util);\n");
-        dataSetInitializeScript.append("module = \"" + rptDesignName + "\";");
-        dataSetInitializeScript.append("Debug.logInfo(\"###### In initialize \", module);");
+        dataSetInitializeScript.append("MODULE = \"" + rptDesignName + "\";");
+        dataSetInitializeScript.append("Debug.logInfo(\"###### In initialize \", MODULE);");
         design.setInitialize(dataSetInitializeScript.toString());
 
         // set open Birt script
         StringBuffer dataSetOpenScript = new StringBuffer("importPackage(Packages.org.apache.ofbiz.birt);\n");
-        dataSetOpenScript.append("Debug.logInfo(\"#### In open\", module)\n");
+        dataSetOpenScript.append("Debug.logInfo(\"#### In open\", MODULE)\n");
         dataSetOpenScript.append("try {\n");
-        dataSetOpenScript.append("    listRes = dispatcher.runSync(\"" + serviceName + "\", UtilMisc.toMap(\"userLogin\", reportContext.getParameterValue(\"userLogin\"), \"locale\", reportContext.getParameterValue(\"locale\"), \"reportContext\", reportContext));\n");
+        dataSetOpenScript.append("    listRes = dispatcher.runSync(\"" + serviceName + "\", UtilMisc.toMap(\"userLogin\", reportContext"
+                + ".getParameterValue(\"userLogin\"), \"locale\", reportContext.getParameterValue(\"locale\"), "
+                + "\"reportContext\", reportContext));\n");
         dataSetOpenScript.append("    if (ServiceUtil.isError(listRes)) {\n");
         dataSetOpenScript.append("         Debug.logError(ServiceUtil.getErrorMessage(listRes));\n");
         dataSetOpenScript.append("    }\n");
         dataSetOpenScript.append("}\n");
-        dataSetOpenScript.append("catch (e) { Debug.logError(e, module); }\n");
+        dataSetOpenScript.append("catch (e) { Debug.logError(e, MODULE); }\n");
         dataSetOpenScript.append("records = listRes.get(\"records\");\n");
         dataSetOpenScript.append("countOfRow = 0;\n");
         dataSetOpenScript.append("totalRow = records.size();\n");
@@ -310,7 +323,7 @@ public class ReportDesignGenerator {
             resultSetCol.setColumnName(field);
             String birtType = BirtUtil.convertFieldTypeToBirtType(dataMap.get(field));
             if (birtType == null) {
-                 throw new GeneralException(UtilProperties.getMessage(resource_error, "BirtErrorConversionFieldToBirtFailed", locale));
+                throw new GeneralException(UtilProperties.getMessage(RES_ERROR, "BirtErrorConversionFieldToBirtFailed", locale));
             }
             resultSetCol.setPosition(i);
             resultSetCol.setDataType(birtType);
@@ -334,7 +347,9 @@ public class ReportDesignGenerator {
         design.getDataSets().add(dataSetHandle);
     }
 
-    /** Create new dataSource named OFBiz */
+    /**
+     * Create new dataSource named OFBiz
+     */
     private void createScriptedDataSource() throws SemanticException {
         ScriptDataSourceHandle dataSource = factory.newScriptDataSource("OFBiz");
         design.getDataSources().add(dataSource);

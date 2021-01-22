@@ -18,7 +18,6 @@ under the License.
 -->
 
 <script type="application/javascript">
-    //<![CDATA[
         function selectChange(formId, elementId) {
             if (elementId.id == 'searchProductStoreId') {
                 document.getElementById('searchCatalogId')[document.getElementById('searchCatalogId')
@@ -54,7 +53,6 @@ under the License.
                 }
             }
         }
-    //]]>
 </script>
 <div class="screenlet">
   <div class="screenlet-title-bar">

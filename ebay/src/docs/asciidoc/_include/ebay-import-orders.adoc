@@ -1,0 +1,36 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+= Ebay Orders Import screen.
+This screen allows the user to find and import orders data from ebay site. +
+you can search an order by specify begin/end time  then select orders to import
+
+== Section 'Search Options'.
+. select product store ex: use 'OFBiz E-Commerce Store' because example ebay catalog link with this store.
+. enter begin time in field 'From Date Time'
+. enter end time in field 'Thru Date Time'
+. Press 'Find' button then  system will show results from ebay site.
+
+== Section 'Search Results'.
+This section show search results, it has many detail get from ebay site, +
+At  the last filed on the  screen left you will see checkbox for select the order rows and then import it into ofbiz.
+
+== How to import order from eBay?
+. Click checkbox at rows you want to import orders  in the  'Search Result' section
+. Press 'Import Orders From ebay' button then system will return the message on the screen
+  and you can check orders list in the 'Order' module.

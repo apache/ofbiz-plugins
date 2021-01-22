@@ -27,13 +27,13 @@ import org.apache.ofbiz.webapp.control.LoginWorker;
 /**
  * OFBiz Solr Login Workers
  */
-public class OFBizSolrLoginWorker extends LoginWorker {
+public final class OFBizSolrLoginWorker {
 
-    public final static String module = OFBizSolrLoginWorker.class.getName();
+    private static final String MODULE = OFBizSolrLoginWorker.class.getName();
+    protected OFBizSolrLoginWorker() { }
 
     /**
      * An HTTP WebEvent handler that logs in a userLogin. This should run before the security check.
-     *
      * @param request The HTTP request object for the current JSP or Servlet request.
      * @param response The HTTP response object for the current JSP or Servlet request.
      * @return Return a boolean which specifies whether or not the calling Servlet or
@@ -42,32 +42,26 @@ public class OFBizSolrLoginWorker extends LoginWorker {
     public static String login(HttpServletRequest request, HttpServletResponse response) {
         String result = LoginWorker.login(request, response);
         if ("success".equals(result)) {
-            // send the redirect
-            try {            
-                response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
-                response.setHeader("Location", request.getContextPath());
-                response.setHeader("Connection", "close");
-            } catch (IllegalStateException ise) {
-                Debug.logError(ise.getMessage(), module);
-                return "error";
-            }
+            result = setResponse(request, response);
         }
         return result;
     }
-
     public static String extensionCheckLogin(HttpServletRequest request, HttpServletResponse response) {
         String result = LoginWorker.extensionCheckLogin(request, response);
         if ("success".equals(result)) {
-            // send the redirect
-            try {            
-                response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
-                response.setHeader("Location", request.getContextPath());
-                response.setHeader("Connection", "close");
-            } catch (IllegalStateException ise) {
-                Debug.logError(ise.getMessage(), module);
-                return "error";
-            }
+            result = setResponse(request, response);
         }
         return result;
+    }
+    private static String setResponse(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
+            response.setHeader("Location", request.getContextPath());
+            response.setHeader("Connection", "close");
+        } catch (IllegalStateException ise) {
+            Debug.logError(ise.getMessage(), MODULE);
+            return "error";
+        }
+        return "success";
     }
 }

@@ -29,23 +29,20 @@ import org.safehaus.uuid.EthernetAddress;
 import org.safehaus.uuid.UUID;
 import org.safehaus.uuid.UUIDGenerator;
 
-/** 
+/**
  * Provides a common Thread class for the reports.
- * 
  */
 public abstract class AbstractReportThread extends Thread implements InterfaceReportThread {
 
     /** Indicates if the thread was already checked by the grim reaper. */
     private boolean doomed;
-    
+
     /** The report that belongs to the thread. */
     private InterfaceReport report;
 
     /** The time this report is running. */
     private long startTime;
-    
     private UUID uuid;
-
     private Locale locale;
 
     /**
@@ -59,7 +56,6 @@ public abstract class AbstractReportThread extends Thread implements InterfaceRe
         // the session must not be updated when it is used in a report
         EthernetAddress ethernetAddress = UUIDGenerator.getInstance().getDummyAddress();
         uuid = UUIDGenerator.getInstance().generateTimeBasedUUID(ethernetAddress);
-
         setName(name + " [" + uuid.toString() + "]");
         // new Threads are not doomed
         doomed = false;
@@ -67,8 +63,6 @@ public abstract class AbstractReportThread extends Thread implements InterfaceRe
         startTime = System.currentTimeMillis();
         locale = UtilHttp.getLocale(request);
     }
-    
-    
     @Override
     public UUID getUUID() {
         return uuid;
@@ -76,7 +70,6 @@ public abstract class AbstractReportThread extends Thread implements InterfaceRe
 
     /**
      * Adds an error object to the list of errors that occured during the report.
-     * 
      * @param obj the error object
      */
     public void addError(Object obj) {
@@ -89,21 +82,17 @@ public abstract class AbstractReportThread extends Thread implements InterfaceRe
     /**
      * Returns the error exception in case there was an error during the execution of
      * this Thread, null otherwise.
-     * 
      * @return the error exception in case there was an error, null otherwise
      */
     public Throwable getError() {
-
         return null;
     }
 
     /**
      * Returns a list of all errors that occured during the report.
-     * 
      * @return an error list that occured during the report
      */
     public List<?> getErrors() {
-
         if (getReport() != null) {
             return getReport().getErrors();
         } else {
@@ -113,18 +102,15 @@ public abstract class AbstractReportThread extends Thread implements InterfaceRe
 
     /**
      * Returns the part of the report that is ready for output.
-     * 
      * @return the part of the report that is ready for output
      */
     public abstract String getReportUpdate();
 
-    /** 
+    /**
      * Returns the time this report has been running.
-     * 
      * @return the time this report has been running
      */
     public synchronized long getRuntime() {
-
         if (doomed) {
             return startTime;
         } else {
@@ -134,11 +120,9 @@ public abstract class AbstractReportThread extends Thread implements InterfaceRe
 
     /**
      * Returns if the report generated an error output.
-     * 
      * @return true if the report generated an error, otherwise false
      */
     public boolean hasError() {
-
         if (getReport() != null) {
             return (getReport().getErrors().size() > 0);
         } else {
@@ -148,15 +132,12 @@ public abstract class AbstractReportThread extends Thread implements InterfaceRe
 
     /**
      * Returns true if this thread is already "doomed" to be deleted.
-     * 
-     * A OFBiz deamon Thread (the "Grim Reaper") will collect all 
+     * A OFBiz deamon Thread (the "Grim Reaper") will collect all
      * doomed Threads, i.e. threads that are not longer active for some
      * time.
-     * 
      * @return true if this thread is already "doomed" to be deleted
      */
     public synchronized boolean isDoomed() {
-
         if (isAlive()) {
             // as long as the Thread is still active it is never doomed
             return false;
@@ -165,7 +146,7 @@ public abstract class AbstractReportThread extends Thread implements InterfaceRe
             // not longer active, and already doomed, so rest in peace...
             return true;
         }
-        // condemn the Thread to be collected by the grim reaper next time  
+        // condemn the Thread to be collected by the grim reaper next time
         startTime = getRuntime();
         doomed = true;
         return false;
@@ -173,7 +154,6 @@ public abstract class AbstractReportThread extends Thread implements InterfaceRe
 
     /**
      * Returns the report where the output of this Thread is written to.
-     * 
      * @return the report where the output of this Thread is written to
      */
     protected InterfaceReport getReport() {
@@ -183,32 +163,41 @@ public abstract class AbstractReportThread extends Thread implements InterfaceRe
 
     /**
      * Initialize a HTML report for this Thread.
-     * 
      */
     protected void initHtmlReport(HttpServletRequest request, HttpServletResponse response) {
 
         report = HtmlReport.getInstance(request, response);
         ((HtmlReport) report).setParamThread(getUUID().toString());
     }
-    
+
     /**
      * Initialize a HTML report for this Thread.
-     * 
      */
     protected void initHtmlReport(HttpServletRequest request, HttpServletResponse response, boolean writeHtml, boolean isTransient) {
 
         report = HtmlReport.getInstance(request, response, writeHtml, isTransient);
         ((HtmlReport) report).setParamThread(getUUID().toString());
     }
-    
-    protected void initHtmlReport(HttpServletRequest request, HttpServletResponse response, boolean writeHtml, boolean isTransient, String logFileName) {
 
+    /**
+     * Init html report.
+     * @param request the request
+     * @param response the response
+     * @param writeHtml the write html
+     * @param isTransient the is transient
+     * @param logFileName the log file name
+     */
+    protected void initHtmlReport(HttpServletRequest request, HttpServletResponse response, boolean writeHtml, boolean isTransient,
+                                  String logFileName) {
         report = HtmlReport.getInstance(request, response, writeHtml, isTransient, logFileName);
         ((HtmlReport) report).setParamThread(getUUID().toString());
     }
-    
+
+    /**
+     * Gets locale.
+     * @return the locale
+     */
     protected Locale getLocale() {
         return locale;
     }
-
 }

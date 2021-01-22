@@ -32,11 +32,10 @@ import org.apache.ofbiz.service.testtools.OFBizTestCase;
 
 public class SolrTests extends OFBizTestCase {
 
-    protected GenericValue userLogin = null;
     private Map<String, Object> context;
     private Map<String, Object> response;
     private String validTestProductId = "GZ-1006";
-    private String validTestProductId_2 = "GZ-1005";
+    private String validTestProductId2 = "GZ-1005";
     private String invalidTestProductId = validTestProductId + validTestProductId;
 
     public SolrTests(String name) {
@@ -44,22 +43,21 @@ public class SolrTests extends OFBizTestCase {
     }
 
     @Override
-    protected void setUp() throws Exception {
-        userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "system").queryOne();
-    }
-
-    @Override
     protected void tearDown() throws Exception {
     }
 
+    /**
+     * Test add product to index.
+     * @throws Exception the exception
+     */
     public void testAddProductToIndex() throws Exception {
 
-        GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", validTestProductId).queryOne();
+        GenericValue product = EntityQuery.use(getDelegator()).from("Product").where("productId", validTestProductId).queryOne();
 
         Map<String, Object> ctx = new HashMap<>();
         ctx.put("instance", product);
 
-        Map<String, Object> resp = dispatcher.runSync("addToSolr", ctx);
+        Map<String, Object> resp = getDispatcher().runSync("addToSolr", ctx);
         if (ServiceUtil.isError(resp)) {
             String errorMessage = ServiceUtil.getErrorMessage(resp);
             throw new Exception(errorMessage);
@@ -69,7 +67,7 @@ public class SolrTests extends OFBizTestCase {
         Map<String, Object> sctx = new HashMap<>();
         sctx.put("productCategoryId", "102");
 
-        Map<String, Object> sresp = dispatcher.runSync("solrProductsSearch", sctx);
+        Map<String, Object> sresp = getDispatcher().runSync("solrProductsSearch", sctx);
         if (ServiceUtil.isError(sresp)) {
             String errorMessage = ServiceUtil.getErrorMessage(sresp);
             throw new Exception(errorMessage);
@@ -79,10 +77,14 @@ public class SolrTests extends OFBizTestCase {
 
     }
 
-    public void testAddToSolrIndex() throws Exception{
+    /**
+     * Test add to solr index.
+     * @throws Exception the exception
+     */
+    public void testAddToSolrIndex() throws Exception {
         context = new HashMap<>();
         context.put("productId", validTestProductId);
-        response = dispatcher.runSync("addToSolrIndex", context);
+        response = getDispatcher().runSync("addToSolrIndex", context);
         if (ServiceUtil.isError(response)) {
             String errorMessage = ServiceUtil.getErrorMessage(response);
             throw new Exception(errorMessage);
@@ -91,10 +93,14 @@ public class SolrTests extends OFBizTestCase {
                 response));
     }
 
-    public void testAddToSolrIndex_invalidProduct() throws Exception {
+    /**
+     * Test add to solr index invalid product.
+     * @throws Exception the exception
+     */
+    public void testAddToSolrIndexInvalidProduct() throws Exception {
         context = new HashMap<>();
         context.put("productId", invalidTestProductId);
-        response = dispatcher.runSync("addToSolrIndex", context);
+        response = getDispatcher().runSync("addToSolrIndex", context);
         if (ServiceUtil.isError(response)) {
             String errorMessage = ServiceUtil.getErrorMessage(response);
             throw new Exception(errorMessage);
@@ -103,22 +109,26 @@ public class SolrTests extends OFBizTestCase {
                 response));
     }
 
+    /**
+     * Test add list to solr index.
+     * @throws Exception the exception
+     */
     public void testAddListToSolrIndex() throws Exception {
         List<Map<String, Object>> products = new ArrayList<>();
-        Map<String, Object> product_1 = new HashMap<>();
-        Map<String, Object> product_2 = new HashMap<>();
-        GenericValue validTestProduct = EntityQuery.use(delegator).from("Product").where("productId", validTestProductId).queryOne();
-        GenericValue validTestProduct_2 = EntityQuery.use(delegator).from("Product").where("productId", validTestProductId_2).queryOne();
+        Map<String, Object> product1 = new HashMap<>();
+        Map<String, Object> product2 = new HashMap<>();
+        GenericValue validTestProduct = EntityQuery.use(getDelegator()).from("Product").where("productId", validTestProductId).queryOne();
+        GenericValue validTestProduct2 = EntityQuery.use(getDelegator()).from("Product").where("productId", validTestProductId2).queryOne();
 
-        product_1.put("productId", validTestProduct);
-        product_2.put("productId", validTestProduct_2);
+        product1.put("productId", validTestProduct);
+        product2.put("productId", validTestProduct2);
 
-        products.add(product_1);
-        products.add(product_2);
-        context  = new HashMap<>();
+        products.add(product1);
+        products.add(product2);
+        context = new HashMap<>();
         context.put("fieldList", products);
 
-        response = dispatcher.runSync("addListToSolrIndex", context);
+        response = getDispatcher().runSync("addListToSolrIndex", context);
         if (ServiceUtil.isError(response)) {
             String errorMessage = ServiceUtil.getErrorMessage(response);
             throw new Exception(errorMessage);
@@ -127,25 +137,29 @@ public class SolrTests extends OFBizTestCase {
 
     }
 
-    public void testAddListToSolrIndex_invalidProducts() throws Exception {
+    /**
+     * Test add list to solr index invalid products.
+     * @throws Exception the exception
+     */
+    public void testAddListToSolrIndexInvalidProducts() throws Exception {
         List<Map<String, Object>> products = new ArrayList<>();
-        Map<String, Object> product_1 = new HashMap<>();
-        Map<String, Object> product_2 = new HashMap<>();
-        GenericValue testProduct = EntityQuery.use(delegator).from("Product").where("productId", validTestProductId).queryOne();
-        GenericValue testProduct_2 = EntityQuery.use(delegator).from("Product").where("productId", validTestProductId_2).queryOne();
+        Map<String, Object> product1 = new HashMap<>();
+        Map<String, Object> product2 = new HashMap<>();
+        GenericValue testProduct = EntityQuery.use(getDelegator()).from("Product").where("productId", validTestProductId).queryOne();
+        GenericValue testProduct2 = EntityQuery.use(getDelegator()).from("Product").where("productId", validTestProductId2).queryOne();
 
         testProduct.replace("productId", invalidTestProductId);
         testProduct.replace("productId", invalidTestProductId);
 
-        product_1.put("productId", testProduct);
-        product_2.put("productId", testProduct_2);
+        product1.put("productId", testProduct);
+        product2.put("productId", testProduct2);
 
-        products.add(product_1);
-        products.add(product_2);
-        context  = new HashMap<>();
+        products.add(product1);
+        products.add(product2);
+        context = new HashMap<>();
         context.put("fieldList", products);
 
-        response = dispatcher.runSync("addListToSolrIndex", context);
+        response = getDispatcher().runSync("addListToSolrIndex", context);
         if (ServiceUtil.isError(response)) {
             String errorMessage = ServiceUtil.getErrorMessage(response);
             throw new Exception(errorMessage);

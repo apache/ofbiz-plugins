@@ -504,7 +504,7 @@
     </request-map>
     <request-map uri="TimeSheetStatustoProgress">
         <security https="true" auth="true"/>
-        <event type="service" invoke="updateTimesheetToInProcess"/>
+        <event type="service" invoke="updateTimesheet"/>
         <response name="success" type="view" value="Timesheet"/>
         <response name="error" type="view" value="Timesheet"/>
     </request-map>
@@ -534,7 +534,7 @@
     </request-map>
     <request-map uri="createrequest">
         <security https="true" auth="true"/>
-        <event type="simple" invoke="CreateCustRequestAndAssignTaskToPerson" path="component://projectmgr/minilang/ProjectSimpleEvents.xml"/>
+        <event type="simple" invoke="createCustRequestAndAssignTaskToPerson" path="component://projectmgr/minilang/ProjectSimpleEvents.xml"/>
         <response name="success" type="view-last-noparam" value="RequestList"/>
         <response name="error" type="view" value="EditRequest"/>
     </request-map>

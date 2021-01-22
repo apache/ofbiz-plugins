@@ -66,7 +66,7 @@
         <field name="sprintId"><hidden value="${parameters.sprintId}"/></field>
         <field name="workEffortId" use-when="task!=null"><hidden value="${parameters.taskId}"/></field>
         <field name="taskId" use-when="task!=null"><hidden value="${parameters.taskId}"/></field>
-        <field name="id" use-when="task!=null" title="Task Id"><text default-value="${parameters.taskId}" disabled="true"/></field>
+        <field name="id" use-when="task!=null" title="Task Id" disabled="true"><text default-value="${parameters.taskId}"/></field>
         <field name="workEffortName" title="${uiLabelMap.ScrumTaskName}" required-field="true" tooltip="${uiLabelMap.ScrumToolTip100CharsMaximun}"><text/></field>
         <field name="workEffortTypeId" title="${uiLabelMap.ScrumTaskType}" required-field="true">
             <drop-down>
@@ -89,11 +89,11 @@
             </display-entity>
         </field>
         <field name="planHours" title="${uiLabelMap.ScrumPlannedHours}"><text size="3" default-value="${resultMap.planHours}"/></field>
-        <field name="actualHours" use-when="task!=null" title="${uiLabelMap.ScrumActualHours}"><text default-value="${results.actualHours}" size="3" disabled="true"/></field>
+        <field name="actualHours" use-when="task!=null" title="${uiLabelMap.ScrumActualHours}" disabled="true"><text default-value="${results.actualHours}" size="3"/></field>
         <!--<field name="actualHours" use-when="task==null" title="Actual Hours"><text size="3"/></field>-->
         <field name="currentStatusId" use-when="task==null"><hidden value="STS_CREATED"/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}" tooltip="${uiLabelMap.CommonMax250Chars}"><textarea/></field>
-        <field name="uploadedFile"><file/></field>
+        <field name="uploadedFile" title="${uiLabelMap.ContentFile}"><file/></field>
         <field name="contentTypeId"><hidden value="DOCUMENT"/></field>
         <field name="resourceStatusId"><hidden value="CTNT_PUBLISHED"/></field>
         <field name="workEffortContentTypeId"><hidden value="CREATED_MEDIA"/></field>
@@ -448,7 +448,7 @@
         <alt-target use-when="task==null" target="createTask"/>
         <field name="projectId" use-when="task!=null&amp;&amp;project!=null"><display description="${project.workEffortName}"/></field>
         <field name="taskId"><hidden value="${parameters.taskId}"/></field>
-        <field name="id" use-when="task!=null" title="Task Id"><text default-value="${parameters.taskId}" disabled="true"/></field>
+        <field name="id" use-when="task!=null" title="Task Id" disabled="true"><text default-value="${parameters.taskId}"/></field>
         <field name="workEffortName" title="${uiLabelMap.ScrumTaskName}" required-field="true"><text size="60"/></field>
         <field name="workEffortId"><hidden value="${parameters.taskId}"/></field>
         <field name="workEffortTypeId" title="${uiLabelMap.ScrumTaskType}" required-field="true">
@@ -495,7 +495,7 @@
             </display-entity>
         </field>
         <field name="planHours" title="${uiLabelMap.ScrumPlanHours}"><text size="3" default-value="${resultMap.planHours}"/></field>
-        <field name="actualHours" use-when="task!=null" title="${uiLabelMap.ScrumActualHours}"><text default-value="${results.actualHours}" size="3" disabled="true"/></field>
+        <field name="actualHours" use-when="task!=null" title="${uiLabelMap.ScrumActualHours}" disabled="true"><text default-value="${results.actualHours}" size="3"/></field>
         <field name="currentStatusId"  use-when="task==null"><hidden value="STS_CREATED"/></field>
         <field name="uploadedFile" use-when="task==null"><file/></field>
         <field name="contentTypeId" use-when="task==null"><hidden value="DOCUMENT"/></field>

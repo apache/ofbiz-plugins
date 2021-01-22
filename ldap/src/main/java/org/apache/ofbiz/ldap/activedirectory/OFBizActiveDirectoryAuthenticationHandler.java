@@ -60,9 +60,9 @@ public final class OFBizActiveDirectoryAuthenticationHandler extends AbstractOFB
         String searchType = UtilXml.childElementValue(rootElement, "SearchType", "");
         String baseDN = UtilXml.childElementValue(rootElement, "BaseDN");
         Hashtable<String, String> env = new Hashtable<>();
-        env.put(Context.INITIAL_CONTEXT_FACTORY,"com.sun.jndi.ldap.LdapCtxFactory");
+        env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         env.put(Context.PROVIDER_URL, ldapURL);
-        if (searchType == null || searchType.trim().equals("")) {
+        if (searchType == null || "".equals(searchType.trim())) {
             env.put(Context.SECURITY_AUTHENTICATION, "none");
         } else if ("login".equals(searchType.trim())) {
             env.put(Context.SECURITY_AUTHENTICATION, authenType);
@@ -94,7 +94,7 @@ public final class OFBizActiveDirectoryAuthenticationHandler extends AbstractOFB
             attribute = LdapUtils.getFilterWithValues(attribute, username);
             NamingEnumeration<SearchResult> answer = ctx.search(baseDN,
                     // Filter expression
-                    "(&(" + filter + ") (" + attribute +"))",
+                    "(&(" + filter + ") (" + attribute + "))",
                     controls);
             if (answer.hasMoreElements()) {
                 result = answer.next();

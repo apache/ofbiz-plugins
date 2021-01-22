@@ -18,7 +18,6 @@ under the License.
 -->
 
 <script type="application/javascript">
-//<![CDATA[
 function submitForm(form, mode, value) {
     if ("DN" == mode) {
         // done action; checkout
@@ -51,7 +50,6 @@ function toggleBillingAccount(box) {
     }
 }
 
-//]]>
 </script>
 <#assign cart = shoppingCart!/>
 <form method="post" name="checkoutInfoForm" style="margin:0;">

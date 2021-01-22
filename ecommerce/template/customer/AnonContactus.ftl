@@ -17,19 +17,21 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+<div class="breadcrumbs">
+    <a href="<@ofbizUrl>main</@ofbizUrl>" class="linktext">${uiLabelMap.CommonMain}</a> &gt;
+    ${uiLabelMap.CommonContactUs}
+</div>
 <div class="card m-3">
   <div class="card-header">
     <strong>${uiLabelMap.CommonContactUs}</strong>
   </div>
   <script type="application/javascript">
-    <!--
     function reloadCaptcha(fieldName) {
       var captchaUri = "<@ofbizUrl>captcha.jpg?captchaCodeId=" + fieldName + "&amp;unique=_PLACEHOLDER_</@ofbizUrl>";
       var unique = Date.now();
       captchaUri = captchaUri.replace("_PLACEHOLDER_", unique);
       document.getElementById(fieldName).src = captchaUri;
     }
-    //-->
   </script>
   <div class="card-body">
     <form id="contactForm" method="post" action="<@ofbizUrl>submitAnonContact</@ofbizUrl>">

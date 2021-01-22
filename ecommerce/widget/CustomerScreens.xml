@@ -638,7 +638,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/template/customer/profile/ManageAddress.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template multi-block="true" location="component://ecommerce/template/customer/profile/ManageAddress.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -659,7 +659,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/template/customer/AnonContactus.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template multi-block="true" location="component://ecommerce/template/customer/AnonContactus.ftl"/></html></platform-specific>
                     </decorator-section>
                     <decorator-section name="right-column">
                         <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>

@@ -18,7 +18,6 @@ under the License.
 -->
 
 <script type="application/javascript">
-//<![CDATA[
 function submitForm(form, mode, value) {
     if ("DN" == mode) {
         // done action; checkout
@@ -70,7 +69,6 @@ function submitForm(form, mode, value) {
         form.submit();
     }
 }
-//]]>
 </script>
 
 <#assign shipping = !shoppingCart.containAllWorkEffortCartItems()> <#-- contains items which need shipping? -->
@@ -214,7 +212,7 @@ function submitForm(form, mode, value) {
         <#-- Payment Method Selection -->
         <div class="card" >
             <h4 class="card-header">
-              3.&nbsp${uiLabelMap.OrderHowShallYouPay}?
+              3.&nbsp;${uiLabelMap.OrderHowShallYouPay}?
             </h4>
             <div class="card-body" >
                   <h5>${uiLabelMap.CommonAdd}:</h5>

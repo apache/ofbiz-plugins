@@ -43,25 +43,25 @@ custRequestList.each { custRequestListMap ->
             taskId = taskBacklogMap.workEffortId
             
             task = from("WorkEffort").where("workEffortId", taskId).queryOne()
-            if (task.workEffortTypeId == "SCRUM_TASK_IMPL") {
+            if ("SCRUM_TASK_IMPL" == task.workEffortTypeId) {
                 countImplTask+=1
-                if ( task.currentStatusId == "STS_COMPLETED" || task.currentStatusId == "STS_CANCELLED") {
+                if ( "STS_COMPLETED" == task.currentStatusId || "STS_CANCELLED" == task.currentStatusId) {
                     countImplTaskComplete+=1
                 }
             }
-            else if (task.workEffortTypeId == "SCRUM_TASK_INST") {
+            else if ("SCRUM_TASK_INST" == task.workEffortTypeId) {
                 countInstallTask+=1
-                if ( task.currentStatusId == "STS_COMPLETED" || task.currentStatusId == "STS_CANCELLED") {
+                if ( "STS_COMPLETED" == task.currentStatusId || "STS_CANCELLED" == task.currentStatusId) {
                     countInstallTaskComplete+=1
                 }
             }
-            else if (task.workEffortTypeId == "SCRUM_TASK_ERROR") {
+            else if ("SCRUM_TASK_ERROR" == task.workEffortTypeId) {
                 countErrTask+=1
-                if ( task.currentStatusId == "STS_COMPLETED" || task.currentStatusId == "STS_CANCELLED") {
+                if ( "STS_COMPLETED" == task.currentStatusId || "STS_CANCELLED" == task.currentStatusId) {
                     countErrTaskComplete+=1
                 }
             }
-            else if (task.workEffortTypeId == "SCRUM_TASK_TEST" || task.currentStatusId == "STS_CANCELLED") {
+            else if ("SCRUM_TASK_TEST" == task.workEffortTypeId || "STS_CANCELLED" == task.currentStatusId) {
                 countTestTask+=1
             }
         }

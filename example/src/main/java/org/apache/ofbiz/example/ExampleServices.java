@@ -29,7 +29,7 @@ import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.ServiceUtil;
 
 public class ExampleServices {
-    public static final String module = ExampleServices.class.getName();
+    private static final String MODULE = ExampleServices.class.getName();
 
     public static Map<String, Object> sendExamplePushNotifications(DispatchContext dctx, Map<String, ? extends Object> context) {
         String exampleId = (String) context.get("exampleId");
@@ -42,7 +42,7 @@ public class ExampleServices {
                 }
             }
         } catch (IOException e) {
-            Debug.logError(e.getMessage(), module);
+            Debug.logError(e.getMessage(), MODULE);
         }
         return ServiceUtil.returnSuccess();
     }

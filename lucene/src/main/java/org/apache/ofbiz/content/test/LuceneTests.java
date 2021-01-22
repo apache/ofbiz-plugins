@@ -36,48 +36,44 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.content.search.SearchWorker;
-import org.apache.ofbiz.entity.GenericValue;
-import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.service.ServiceUtil;
 import org.apache.ofbiz.service.testtools.OFBizTestCase;
 
 public class LuceneTests extends OFBizTestCase {
 
-    protected GenericValue userLogin = null;
-    public final static String module = LuceneTests.class.getName();
+    private static final String MODULE = LuceneTests.class.getName();
 
     public LuceneTests(String name) {
         super(name);
     }
 
     @Override
-    protected void setUp() throws Exception {
-        userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "system").queryOne();
-    }
-
-    @Override
     protected void tearDown() throws Exception {
     }
 
+    /**
+     * Test search term hand.
+     * @throws Exception the exception
+     */
     public void testSearchTermHand() throws Exception {
         Map<String, Object> ctx = new HashMap<>();
         ctx.put("contentId", "LuceneCONTENT");
-        ctx.put("userLogin", userLogin);
-        Map<String, Object> resp = dispatcher.runSync("indexContentTree", ctx);
+        ctx.put("userLogin", getUserLogin("system"));
+        Map<String, Object> resp = getDispatcher().runSync("indexContentTree", ctx);
         if (ServiceUtil.isError(resp)) {
             String errorMessage = ServiceUtil.getErrorMessage(resp);
             throw new Exception(errorMessage);
         }
         assertTrue("Could not init search index", ServiceUtil.isSuccess(resp));
-        
+
         try {
             Thread.sleep(3000); // sleep 3 seconds to give enough time to the indexer to process the entries
         } catch (InterruptedException e) {
-            Debug.logError("Thread interrupted :" + e, module);
+            Debug.logError("Thread interrupted :" + e, MODULE);
         }
-        
+
         Directory directory = FSDirectory.open(new File(SearchWorker.getIndexPath("content")).toPath());
-        
+
         DirectoryReader r = null;
         try {
             r = DirectoryReader.open(directory);

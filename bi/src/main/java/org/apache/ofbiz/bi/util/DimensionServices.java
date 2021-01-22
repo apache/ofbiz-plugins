@@ -18,8 +18,6 @@ under the License.
 */
 package org.apache.ofbiz.bi.util;
 
-import java.lang.Object;
-import java.lang.String;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -41,8 +39,8 @@ import org.apache.ofbiz.service.ServiceUtil;
 
 public class DimensionServices {
 
-    public static final String module = DimensionServices.class.getName();
-    public static final String resource = "BiUiLabels";
+    private static final String MODULE = DimensionServices.class.getName();
+    private static final String RESOURCE = "BiUiLabels";
 
     public static Map<String, Object> getDimensionIdFromNaturalKey(DispatchContext ctx, Map<String, ? extends Object> context) {
         Map<String, Object> resultMap = ServiceUtil.returnSuccess();
@@ -75,7 +73,8 @@ public class DimensionServices {
                 andCondition.put(naturalKeyField, dimensionValue.get(naturalKeyField));
             }
             if (andCondition.isEmpty()) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "BusinessIntelligenceNaturalKeyWithourDimension", UtilMisc.toMap("naturalKeyFields", naturalKeyFields, "dimensionValue", dimensionValue), locale));
+                return ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE, "BusinessIntelligenceNaturalKeyWithourDimension",
+                        UtilMisc.toMap("naturalKeyFields", naturalKeyFields, "dimensionValue", dimensionValue), locale));
             }
             List<GenericValue> existingDimensionValues = null;
             try {
@@ -99,7 +98,8 @@ public class DimensionServices {
                     dimensionValue.set("dimensionId", delegator.getNextSeqId(dimensionValue.getEntityName()));
                     dimensionValue.create();
                 } else {
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, "BusinessIntelligenceUpdateModeStillNotSupported", UtilMisc.toMap("updateMode", updateMode), locale));
+                    return ServiceUtil.returnError(UtilProperties.getMessage(RESOURCE, "BusinessIntelligenceUpdateModeStillNotSupported",
+                            UtilMisc.toMap("updateMode", updateMode), locale));
                 }
             }
         } catch (GenericEntityException gee) {
@@ -157,7 +157,7 @@ public class DimensionServices {
             dateValue.set("yearName", Long.valueOf(calendar.get(Calendar.YEAR)));
             dateValue.set("weekOfMonth", Long.valueOf(calendar.get(Calendar.WEEK_OF_MONTH)));
             dateValue.set("weekOfYear", Long.valueOf(calendar.get(Calendar.WEEK_OF_YEAR)));
-            dateValue.set("weekdayType", (dayOfWeek == 1 || dayOfWeek == 7? "Weekend": "Weekday"));
+            dateValue.set("weekdayType", (dayOfWeek == 1 || dayOfWeek == 7 ? "Weekend" : "Weekday"));
             dateValue.set("yearMonthDay", yearMonthDayFormat.format(currentDate));
             dateValue.set("yearAndMonth", yearMonthFormat.format(currentDate));
 

@@ -38,15 +38,15 @@ import org.apache.ofbiz.service.DispatchContext;
  * Product category util class for solr.
  */
 public final class CategoryUtil {
-    
-    public static final String module = CategoryUtil.class.getName();
 
-    private CategoryUtil () {}
+    private static final String MODULE = CategoryUtil.class.getName();
+
+    private CategoryUtil() { }
 
     /**
      * Gets catalog IDs for specified product category.
      * <p>
-     * This method is a supplement to CatalogWorker methods. 
+     * This method is a supplement to CatalogWorker methods.
      */
     public static List<String> getCatalogIdsByCategoryId(Delegator delegator, String productCategoryId) {
         List<String> catalogIds = new ArrayList<>();
@@ -56,7 +56,7 @@ public final class CategoryUtil {
             // catalogs = delegator.findList("ProdCatalog", null, null, UtilMisc.toList("catalogName"), null, false);
             catalogs = delegator.findList("ProdCatalogCategory", condition, null, null, null, false);
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error looking up all catalogs", module);
+            Debug.logError(e, "Error looking up all catalogs", MODULE);
         }
         if (catalogs != null) {
             for (GenericValue c : catalogs) {
@@ -64,10 +64,9 @@ public final class CategoryUtil {
             }
         }
         return catalogIds;
-    }    
-    
+    }
     public static List<List<String>> getCategoryTrail(String productCategoryId, DispatchContext dctx) {
-       GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+        GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
         List<List<String>> trailElements = new ArrayList<>();
         String parentProductCategoryId = productCategoryId;
         while (UtilValidate.isNotEmpty(parentProductCategoryId)) {
@@ -76,7 +75,8 @@ public final class CategoryUtil {
                 List<EntityCondition> rolllupConds = new ArrayList<>();
                 rolllupConds.add(EntityCondition.makeCondition("productCategoryId", parentProductCategoryId));
                 rolllupConds.add(EntityUtil.getFilterByDateExpr());
-                List<GenericValue> productCategoryRollups = delegator.findList("ProductCategoryRollup", EntityCondition.makeCondition(rolllupConds), null, UtilMisc.toList("-fromDate"), null, true);
+                List<GenericValue> productCategoryRollups = delegator.findList("ProductCategoryRollup",
+                        EntityCondition.makeCondition(rolllupConds), null, UtilMisc.toList("-fromDate"), null, true);
                 if (UtilValidate.isNotEmpty(productCategoryRollups)) {
                     List<List<String>> trailElementsAux = new ArrayList<>();
                     trailElementsAux.addAll(trailElements);
@@ -103,60 +103,58 @@ public final class CategoryUtil {
                 }
 
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Cannot generate trail from product category", module);
+                Debug.logError(e, "Cannot generate trail from product category", MODULE);
             }
         }
-        if (trailElements.size() == 0) {
+        if (trailElements.isEmpty()) {
             List<String> trailElement = new ArrayList<>();
             trailElement.add(productCategoryId);
             trailElements.add(trailElement);
         }
         return trailElements;
     }
-    
+
     /**
      * Returns categoryName with trail
      */
     public static String getCategoryNameWithTrail(String productCategoryId, DispatchContext dctx) {
-        return getCategoryNameWithTrail(productCategoryId, true,  dctx);
+        return getCategoryNameWithTrail(productCategoryId, true, dctx);
     }
 
     public static String getCategoryNameWithTrail(String productCategoryId, Boolean showDepth, DispatchContext dctx) {
         List<List<String>> trailElements = CategoryUtil.getCategoryTrail(productCategoryId, dctx);
         //Debug.log("trailElements ======> " + trailElements.toString());
         StringBuilder catMember = new StringBuilder();
-        String cm ="";
+        String cm = "";
         int i = 0;
         for (List<String> trailElement : trailElements) {
             for (Iterator<String> trailIter = trailElement.iterator(); trailIter.hasNext();) {
                 String trailString = trailIter.next();
-                if (catMember.length() > 0){
+                if (catMember.length() > 0) {
                     catMember.append("/");
                     i++;
                 }
-                
+
                 catMember.append(trailString);
             }
         }
-        
-        if (catMember.length() == 0){catMember.append(productCategoryId);}
-        
-        if(showDepth) {
-            cm = i +"/"+ catMember.toString();
+
+        if (catMember.length() == 0) {
+            catMember.append(productCategoryId);
+        }
+        if (showDepth) {
+            cm = i + "/" + catMember.toString();
         } else {
             cm = catMember.toString();
         }
-        //Debug.logInfo("catMember "+cm,module);
         return cm;
     }
-    
-    /**    
-     * Returns nextLevel from trailed category.
+    /**Returns nextLevel from trailed category.
      * <p>
      * Ie for "1/SYRACUS2_CATEGORY/FICTION_C/" the returned value would be 2.
      */
     public static int getNextLevelFromCategoryId(String productCategoryId, DispatchContext dctx) {
-        try{
+        try {
             if (productCategoryId.contains("/")) {
                 String[] productCategories = productCategoryId.split("/");
                 int level = Integer.parseInt(productCategories[0]);
@@ -164,27 +162,25 @@ public final class CategoryUtil {
             } else {
                 return 0;
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             return 0;
         }
     }
-    
-    /**    
-     * Returns proper FacetFilter from trailed category.
+
+    /** Returns proper FacetFilter from trailed category.
      * <p>
      * Ie for "1/SYRACUS2_CATEGORY/FICTION_C/" the returned value would be
      * "2/SYRACUS2_CATEGORY/FICTION_C/".
      */
     public static String getFacetFilterForCategory(String productCategoryId, DispatchContext dctx) {
-        try{
+        try {
             String[] productCategories = productCategoryId.split("/");
             int level = Integer.parseInt(productCategories[0]);
-            int nextLevel = level+1;
-            productCategories[0] = ""+nextLevel;
-            return StringUtils.join(productCategories,"/");
-        } catch(Exception e) {
+            int nextLevel = level + 1;
+            productCategories[0] = "" + nextLevel;
+            return StringUtils.join(productCategories, "/");
+        } catch (Exception e) {
             return productCategoryId;
         }
     }
-    
 }

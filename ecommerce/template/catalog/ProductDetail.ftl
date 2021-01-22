@@ -25,51 +25,23 @@ under the License.
 ${virtualJavaScript!}
 ${virtualVariantJavaScript!}
 <script type="application/javascript">
-//<![CDATA[
     var detailImageUrl = null;
-    function setAddProductId(name) {
-        document.addform.add_product_id.value = name;
-        if (document.addform.quantity == null) return;
-        if (name == '' || name == 'NULL' || isVirtual(name) == true) {
-            document.addform.quantity.disabled = true;
-            var elem = document.getElementById('product_id_display');
-            var txt = document.createTextNode('');
-            if(elem.hasChildNodes()) {
-                elem.replaceChild(txt, elem.firstChild);
-            } else {
-                elem.appendChild(txt);
-            }
-        } else {
-            document.addform.quantity.disabled = false;
-            var elem = document.getElementById('product_id_display');
-            var txt = document.createTextNode(name);
-            if(elem.hasChildNodes()) {
-                elem.replaceChild(txt, elem.firstChild);
-            } else {
-                elem.appendChild(txt);
-            }
+    function setAddProductId2(sku, with_bak) {
+        document.addform.add_product_id.value = sku;
+        var disable = (sku == '' || sku == 'NULL' || isVirtual(sku) == true);
+        if (document.addform.quantity != null) {
+            document.addform.quantity.disabled = disable;
+        }
+        var txt = disable ? '' : sku;
+        $('#product_id_display').text(txt);
+        if (with_bak) {
+            document.addform.product_id_bak.value = txt;
         }
     }
-    function setVariantPrice(sku) {
-        if (sku == '' || sku == 'NULL' || isVirtual(sku) == true) {
-            var elem = document.getElementById('variant_price_display');
-            var txt = document.createTextNode('');
-            if(elem.hasChildNodes()) {
-                elem.replaceChild(txt, elem.firstChild);
-            } else {
-                elem.appendChild(txt);
-            }
-        }
-        else {
-            var elem = document.getElementById('variant_price_display');
-            var price = getVariantPrice(sku);
-            var txt = document.createTextNode(price);
-            if(elem.hasChildNodes()) {
-                elem.replaceChild(txt, elem.firstChild);
-            } else {
-                elem.appendChild(txt);
-            }
-        }
+    function setVariantPrice2(sku) {
+        var disable = (sku == '' || sku == 'NULL' || isVirtual(sku) == true);
+        var txt = disable ? '' : getVariantPrice2(sku);
+        $('#variant_price_display').text(txt || '');
     }
     function isVirtual(product) {
         var isVirtual = false;
@@ -168,29 +140,33 @@ ${virtualVariantJavaScript!}
             } else {
                 var Variable1 = eval("list" + OPT[(currentFeatureIndex+1)] + selectedValue + "()");
             }
+
+            // reset uom select
+            $('#product_uom').text('');
+
             // set the product ID to NULL to trigger the alerts
-            setAddProductId('NULL');
+            setAddProductId2('NULL');
 
             // set the variant price to NULL
-            setVariantPrice('NULL');
+            setVariantPrice2('NULL');
         } else {
             // this is the final selection -- locate the selected index of the last selection
             var indexSelected = document.forms["addform"].elements[name].selectedIndex;
 
             // using the selected index locate the sku
             var sku = document.forms["addform"].elements[name].options[indexSelected].value;
-            
+
             // display alternative packaging dropdown
             ajaxUpdateArea("product_uom", "<@ofbizUrl>ProductUomDropDownOnly</@ofbizUrl>", "productId=" + sku);
 
             // set the product ID
-            setAddProductId(sku);
+            setAddProductId2(sku, true);
 
             // set the variant price
-            setVariantPrice(sku);
+            setVariantPrice2(sku);
 
             // check for amount box
-            toggleAmt(checkAmtReq(sku));
+            toggleAmt(checkAmtReq2(sku));
         }
     }
 
@@ -216,7 +192,7 @@ ${virtualVariantJavaScript!}
         return (y[0]+"-"+y[1]+"-"+y[2]);
     }
 
-    function showAlert(msg){
+    function showAlert(msg) {
         showErrorAlert("${uiLabelMap.CommonErrorMessage2}", msg);
     }
 
@@ -276,37 +252,6 @@ ${virtualVariantJavaScript!}
         }
     </#if>
     
-    function displayProductVirtualVariantId(variantId) {
-        if(variantId){
-            document.addform.product_id.value = variantId;
-        }else{
-            document.addform.product_id.value = '';
-            variantId = '';
-        }
-        
-        var elem = document.getElementById('product_id_display');
-        var txt = document.createTextNode(variantId);
-        if(elem.hasChildNodes()) {
-            elem.replaceChild(txt, elem.firstChild);
-        } else {
-            elem.appendChild(txt);
-        }
-        
-        var priceElem = document.getElementById('variant_price_display');
-        var price = getVariantPrice(variantId);
-        var priceTxt = null;
-        if(price){
-            priceTxt = document.createTextNode(price);
-        }else{
-            priceTxt = document.createTextNode('');
-        }
-        if(priceElem.hasChildNodes()) {
-            priceElem.replaceChild(priceTxt, priceElem.firstChild);
-        } else {
-            priceElem.appendChild(priceTxt);
-        }
-    }
-//]]>
 $(function(){
     $('a[id^=productTag_]').click(function(){
         var id = $(this).attr('id');
@@ -336,11 +281,13 @@ $(function(){
   </#if>
 </#macro>
 
+${screens.render("component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#productvariantjs")}
+${variantInfoJavaScript!}
 <div id="product-detail" class="card">
-  <#assign productAdditionalImage1 = productContentWrapper.get("ADDITIONAL_IMAGE_1", "url")! />
-  <#assign productAdditionalImage2 = productContentWrapper.get("ADDITIONAL_IMAGE_2", "url")! />
-  <#assign productAdditionalImage3 = productContentWrapper.get("ADDITIONAL_IMAGE_3", "url")! />
-  <#assign productAdditionalImage4 = productContentWrapper.get("ADDITIONAL_IMAGE_4", "url")! />
+  <#assign productAdditionalImage1 = productContentWrapper.get("XTRA_IMG_1_MEDIUM", "url")! />
+  <#assign productAdditionalImage2 = productContentWrapper.get("XTRA_IMG_2_MEDIUM", "url")! />
+  <#assign productAdditionalImage3 = productContentWrapper.get("XTRA_IMG_3_MEDIUM", "url")! />
+  <#assign productAdditionalImage4 = productContentWrapper.get("XTRA_IMG_4_MEDIUM", "url")! />
 
   <#-- Category next/previous -->
 
@@ -705,7 +652,7 @@ $(function(){
             <div id="addCart2" style="display:block;">
               <span style="white-space: nowrap;"><strong>${uiLabelMap.CommonQuantity}:</strong></span>&nbsp;
               <input type="text" class="form-control" size="5" value="1" disabled="disabled"/>
-              <a href="javascript:showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonPleaseSelectAllFeaturesFirst}");"
+              <a href="javascript:showErrorAlert('${uiLabelMap.CommonErrorMessage2}','${uiLabelMap.CommonPleaseSelectAllFeaturesFirst}');"
               class="btn btn-outline-secondary"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
               &nbsp;
             </div>
@@ -719,15 +666,14 @@ $(function(){
                   </select>
                 </div>
               </#list>
-              <span id="product_uom"></span>
+              <span id="product_uom"></span><br/>
+              <input type="hidden" name="product_id_bak" value=""/>
+              <div class="variant-price" style="display: inline-block;">
+                <strong><span id="product_id_display" class="product_id_display"> </span></strong>
+                <strong><span id="variant_price_display" class="variant_price_display"> </span></strong>
+              </div>
               <input type="hidden" name="product_id" value="${product.productId}"/>
               <input type="hidden" name="add_product_id" value="NULL"/>
-              <div>
-                <strong><span id="product_id_display"> </span></strong>
-                <strong>
-                  <div id="variant_price_display"></div>
-                </strong>
-              </div>
             <#else>
               <input type="hidden" name="add_product_id" value="NULL"/>
               <#assign inStock = false />
@@ -737,17 +683,16 @@ $(function(){
           <input type="hidden" name="add_product_id" value="${product.productId}"/>
           <#if mainProducts?has_content>
             <input type="hidden" name="product_id" value=""/>
-            <select name="productVariantId" class="form-control" onchange="javascript:displayProductVirtualVariantId(this.value);">
-              <option value="">Select Unit Of Measure</option>
+            <select name="productVariantId" class="form-control" onchange="javascript:variantUomSelection(this);">
+              <option value="">${uiLabelMap.CommonSelect} ${uiLabelMap.ProductUnitOfMeasure}</option>
               <#list mainProducts as mainProduct>
                 <option value="${mainProduct.productId}">${mainProduct.uomDesc} : ${mainProduct.piecesIncluded}</option>
               </#list>
             </select><br/>
-            <div>
-              <strong><span id="product_id_display"> </span></strong>
-              <strong>
-                <div id="variant_price_display"></div>
-              </strong>
+            <input type="hidden" name="product_id_bak" value="${product.productId}"/>
+            <div class="variant-price" style="display: inline-block;">
+                <strong><span class="product_id_display"> </span></strong>
+                <strong><span class="variant_price_display"> </span></strong>
             </div>
           </#if>
           <#if (availableInventory??) && (availableInventory <= 0) && "N" == product.requireAmount?default("N")>
@@ -1006,21 +951,16 @@ $(function(){
         </h2>
 
         <div class="productsummary-container">
+          <div class="row">
           <#list assocProducts as productAssoc>
             <#if productAssoc.productId == product.productId>
               <#local assocProductId = productAssoc.productIdTo />
             <#else>
               <#local assocProductId = productAssoc.productId />
             </#if>
-            <div>
-              <a href="<@ofbizUrl>${targetRequest}/<#if categoryId??>~category_id=${categoryId}/</#if>~product_id=${assocProductId}</@ofbizUrl>"
-                 class="buttontext">
-              ${assocProductId}
-              </a>
-              <#if productAssoc.reason?has_content>
-                - <strong>${productAssoc.reason}</strong>
-              </#if>
-            </div>
+            <#if productAssoc.reason?has_content>
+              ${setRequestAttribute("highlightLabel", productAssoc.reason)}
+            </#if>
           ${setRequestAttribute("optProductId", assocProductId)}
           ${setRequestAttribute("listIndex", listIndex)}
           ${setRequestAttribute("formNamePrefix", formNamePrefix)}
@@ -1031,6 +971,7 @@ $(function(){
             <#local product = pageProduct />
             <#local listIndex = listIndex + 1 />
           </#list>
+          </div>
         </div>
 
       ${setRequestAttribute("optProductId", "")}
@@ -1065,6 +1006,7 @@ $(function(){
     <h2>${uiLabelMap.ProductSimilarProducts}</h2>
 
     <div class="productsummary-container">
+      <div class="row">
       <#list commonFeatureResultIds as commonFeatureResultId>
         ${setRequestAttribute("optProductId", commonFeatureResultId)}
         ${setRequestAttribute("listIndex", commonFeatureResultId_index)}
@@ -1072,6 +1014,7 @@ $(function(){
         <#-- ${setRequestAttribute("targetRequestName", targetRequestName)} -->
         ${screens.render(productsummaryScreen)}
       </#list>
+      </div>
     </div>
   </#if>
   <hr>
