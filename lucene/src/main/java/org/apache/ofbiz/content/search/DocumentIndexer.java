@@ -37,7 +37,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.LockObtainFailedException;
 
-public class DocumentIndexer extends Thread {
+public final class DocumentIndexer extends Thread {
 
     private static final String MODULE = DocumentIndexer.class.getName();
 
