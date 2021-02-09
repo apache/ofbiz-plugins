@@ -739,16 +739,16 @@ under the License.
         <response name="error" type="request" value="checkouterror"/>
     </request-map>
 
-    <request-map uri="checkBlacklist">
+    <request-map uri="checkDenylist">
         <security direct-request="false"/>
-        <event type="java" path="org.apache.ofbiz.order.shoppingcart.CheckOutEvents" invoke="checkOrderBlacklist"/>
+        <event type="java" path="org.apache.ofbiz.order.shoppingcart.CheckOutEvents" invoke="checkOrderDenylist"/>
         <response name="success" type="request" value="processpayment"/>
-        <response name="failed" type="request" value="failedBlacklist"/>
+        <response name="failed" type="request" value="failedDenylist"/>
         <response name="error" type="view" value="checkoutreview"/>
     </request-map>
-    <request-map uri="failedBlacklist">
+    <request-map uri="failedDenylist">
         <security direct-request="false"/>
-        <event type="java" path="org.apache.ofbiz.order.shoppingcart.CheckOutEvents" invoke="failedBlacklistCheck"/>
+        <event type="java" path="org.apache.ofbiz.order.shoppingcart.CheckOutEvents" invoke="failedDenylistCheck"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
     </request-map>
@@ -756,8 +756,8 @@ under the License.
     <request-map uri="processorder">
         <security https="true" auth="false"/>
         <event type="java" path="org.apache.ofbiz.order.shoppingcart.CheckOutEvents" invoke="createOrder"/>
-        <response name="sales_order" type="request" value="checkBlacklist"/>
-        <response name="work_order" type="request" value="checkBlacklist"/>
+        <response name="sales_order" type="request" value="checkDenylist"/>
+        <response name="work_order" type="request" value="checkDenylist"/>
         <response name="error" type="view" value="checkoutreview"/>
     </request-map>
     <request-map uri="processpayment">
@@ -1689,16 +1689,16 @@ under the License.
     <request-map uri="onePageProcessOrder">
         <security https="true" auth="false"/>
         <event type="java" path="org.apache.ofbiz.order.shoppingcart.CheckOutEvents" invoke="createOrder"/>
-        <response name="sales_order" type="request" value="onePageCheckBlacklist"/>
-        <response name="work_order" type="request" value="onePageCheckBlacklist"/>
+        <response name="sales_order" type="request" value="onePageCheckDenylist"/>
+        <response name="work_order" type="request" value="onePageCheckDenylist"/>
         <response name="error" type="view" value="OnePageCheckout"/>
     </request-map>
 
-    <request-map uri="onePageCheckBlacklist">
+    <request-map uri="onePageCheckDenylist">
         <security direct-request="false"/>
-        <event type="java" path="org.apache.ofbiz.order.shoppingcart.CheckOutEvents" invoke="checkOrderBlacklist"/>
+        <event type="java" path="org.apache.ofbiz.order.shoppingcart.CheckOutEvents" invoke="checkOrderDenylist"/>
         <response name="success" type="request" value="onePageProcessPayment"/>
-        <response name="failed" type="request" value="failedBlacklist"/>
+        <response name="failed" type="request" value="failedDenylist"/>
         <response name="error" type="view" value="OnePageCheckout"/>
     </request-map>
 
