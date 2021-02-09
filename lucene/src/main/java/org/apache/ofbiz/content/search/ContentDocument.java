@@ -86,11 +86,13 @@ public class ContentDocument implements LuceneDocument {
             doc.add(new StringField("modified", modDate.toString(), Store.YES));
         }
         String contentName = content.getString("contentName");
-        if (UtilValidate.isNotEmpty(contentName))
+        if (UtilValidate.isNotEmpty(contentName)) {
             doc.add(new TextField("title", contentName, Store.YES));
+        }
         String description = content.getString("description");
-        if (UtilValidate.isNotEmpty(description))
+        if (UtilValidate.isNotEmpty(description)) {
             doc.add(new TextField("description", description, Store.YES));
+        }
         List<String> ancestorList = new ArrayList<>();
         ContentWorker.getContentAncestryAll(content.getDelegator(), contentId, "WEB_SITE_PUB_PT", "TO", ancestorList);
         String ancestorString = StringUtil.join(ancestorList, " ");
