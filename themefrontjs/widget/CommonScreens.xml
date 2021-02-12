@@ -22,13 +22,30 @@ under the License.
         xmlns="http://ofbiz.apache.org/Widget-Screen" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Screen http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
 
+    <screen name="main-decorator">
+        <section>
+            <actions>
+                <!-- base/top/specific map first, then more common map added for shared labels -->
+                <property-map resource="SecurityUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="layoutSettings.companyName" from-field="uiLabelMap.PartyCompanyName" global="true"/>
+                <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.PartyCompanySubtitle" global="true"/>
+                <set field="layoutSettings.javaScripts[+0]" value="${groovy: org.apache.ofbiz.common.JsLanguageFilesMapping.Validation.getFilePath(initialLocaleComplete)}" global="true" />
+                <set field="layoutSettings.javaScripts[+0]" value="/common/js/plugins/selenium.js" global="true"/>
+            </actions>
+            <widgets>
+                <include-screen name="GlobalDecorator" location="${groovy:commonScreenLocations.GlobalDecorator?commonScreenLocations.GlobalDecorator:commonDecoratorLocation}"/>
+            </widgets>
+        </section>
+    </screen>
     <screen name="login">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleLogin" />
             </actions>
-            <widgets>                                            <!-- WorkArround to have a "standard" CommonScreen -->
-                <decorator-screen name="main-decorator" location="component://party/widget/partymgr/CommonScreens.xml">
+            <widgets>
+                <decorator-screen name="main-decorator">
                     <decorator-section name="body">
                         <section>
                             <actions>
