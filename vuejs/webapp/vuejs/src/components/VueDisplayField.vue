@@ -1,8 +1,7 @@
 // TODO compare size and description.size and tronque
 <template>
   <div id="vue-display-field">
-    <table v-if="fieldTitle">
-      <th></th>
+    <table v-if="fieldTitle" role="none">
       <tr>
         <td>
           <v-tooltip top>

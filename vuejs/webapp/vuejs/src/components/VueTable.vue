@@ -1,5 +1,5 @@
 <template>
-  <table id="vue-table">
+  <table id="vue-table" role="none">
     <tr
       v-for="(component, key) in children"
       :key="key"

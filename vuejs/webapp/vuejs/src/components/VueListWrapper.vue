@@ -1,5 +1,5 @@
 <template>
-  <table :id='formName' vue-component="vue-list-wrapper" v-if="show">
+  <table :id='formName' vue-component="vue-list-wrapper" v-if="show" role="none">
     <tbody
         v-for="(component, key) in children"
         :key="key"
