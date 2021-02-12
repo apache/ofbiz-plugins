@@ -54,5 +54,5 @@ if (userInfoMap) {
     request.getSession().setAttribute("userInfoMap", userInfoMap)
 }
 
-donePage = "main;" + parameters.visit.sessionId
+donePage = "main;" + UtilHttp.getSessionId(request)
 context.donePage = donePage
