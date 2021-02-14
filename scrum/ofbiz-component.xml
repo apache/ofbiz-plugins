@@ -47,6 +47,7 @@ under the License.
     <webapp name="scrum"
         title="Scrum"
         server="default-server"
+        position="21"
         location="webapp/scrum"
         app-bar-display="true"
         base-permission="SCRUM"

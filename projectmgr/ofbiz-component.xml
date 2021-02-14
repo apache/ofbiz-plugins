@@ -42,6 +42,7 @@ under the License.
 
     <webapp name="projectmgr"
         title="Project"
+        position="17"
         server="default-server"
         location="webapp/projectmgr"
         base-permission="PROJECTMGR"

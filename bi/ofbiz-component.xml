@@ -43,6 +43,7 @@ under the License.
 
     <webapp name="bi"
         title="Business Intelligence"
+        position="16"
         menu-name="secondary"
         server="default-server"
         location="webapp/bi"

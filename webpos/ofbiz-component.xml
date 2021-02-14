@@ -46,6 +46,7 @@ under the License.
 
     <webapp name="webpos"
         title="Web Pos"
+        position="15"
         server="default-server"
         menu-name="secondary"
         location="webapp/webpos"

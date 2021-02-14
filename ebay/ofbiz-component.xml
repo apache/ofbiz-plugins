@@ -36,6 +36,7 @@ under the License.
 
     <webapp name="ebay"
         title="Ebay"
+        position="23"
         menu-name="secondary"
         server="default-server"
         location="webapp/ebay"

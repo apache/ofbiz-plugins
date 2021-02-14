@@ -50,6 +50,7 @@ under the License.
     <!-- web applications; will be mounted when using the embedded container -->
     <webapp name="example"
         title="Example"
+        position="26"
         menu-name="secondary"
         server="default-server"
         location="webapp/example"
