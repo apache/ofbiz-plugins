@@ -41,6 +41,7 @@
 
     <webapp name="assetmaint"
         title="AssetMaint"
+        position="19"
         server="default-server"
         location="webapp/assetmaint"
         base-permission="ASSETMAINT"
@@ -49,6 +50,7 @@
 
     <webapp name="ismgr"
         title="IS Mgr"
+        position="20"
         server="default-server"
         app-bar-display="false"
         location="webapp/ismgr"
