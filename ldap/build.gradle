@@ -18,5 +18,5 @@
  */
 
 dependencies {
-    pluginLibsCompile 'org.apereo.cas:cas-server-support-ldap-core:5.0.10' // So far we did not update from 3.3.5 because of a compile issue. You may try w/ a newer version than  4.2.7
+    pluginLibsCompile 'org.apereo.cas:cas-server-support-ldap-core:5.0.10'
 }
