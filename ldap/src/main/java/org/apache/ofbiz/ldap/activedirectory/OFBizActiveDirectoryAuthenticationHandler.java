@@ -29,7 +29,8 @@ import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
-import org.jasig.cas.util.LdapUtils;
+import org.apereo.cas.util.LdapUtils;
+import org.ldaptive.LdapEntry;
 import org.apache.ofbiz.base.util.UtilXml;
 import org.apache.ofbiz.ldap.commons.AbstractOFBizAuthenticationHandler;
 import org.w3c.dom.Element;
@@ -91,7 +92,8 @@ public final class OFBizActiveDirectoryAuthenticationHandler extends AbstractOFB
             }
             String filter = UtilXml.childElementValue(rootElement, "Filter", "(objectclass=*)");
             String attribute = UtilXml.childElementValue(rootElement, "Attribute", "uid=%u");
-            attribute = LdapUtils.getFilterWithValues(attribute, username);
+            LdapEntry entry = new LdapEntry(username);
+            attribute = LdapUtils.getString(entry, attribute);
             NamingEnumeration<SearchResult> answer = ctx.search(baseDN,
                     // Filter expression
                     "(&(" + filter + ") (" + attribute +"))",
