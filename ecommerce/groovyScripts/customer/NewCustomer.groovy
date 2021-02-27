@@ -18,6 +18,7 @@
  */
 
 import org.apache.ofbiz.base.util.UtilProperties
+import org.apache.ofbiz.base.util.UtilHttp
 import org.apache.ofbiz.base.util.UtilMisc
 import org.apache.ofbiz.product.store.ProductStoreWorker
 
