@@ -25,7 +25,7 @@ under the License.
          elements found in the common-controller.xml file. -->
     <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
 
-    <description>Ofbiz-rest-jersey Component Site Configuration File</description>
+    <description>OFBiz-rest-jersey Component Site Configuration File</description>
 
     <!-- Events to run on every request before security (chains exempt) -->
     <!--

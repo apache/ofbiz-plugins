@@ -19,15 +19,15 @@ under the License.
 -->
 
 <entity-engine-xml>
-    <SecurityPermission description="View operations in the Ofbiz-rest-jersey Component."
+    <SecurityPermission description="View operations in the OFBiz-rest-jersey Component."
                         permissionId="OFBIZ-REST-JERSEY_VIEW"/>
-    <SecurityPermission description="Create operations in the Ofbiz-rest-jersey Component."
+    <SecurityPermission description="Create operations in the OFBiz-rest-jersey Component."
                         permissionId="OFBIZ-REST-JERSEY_CREATE"/>
-    <SecurityPermission description="Update operations in the Ofbiz-rest-jersey Component."
+    <SecurityPermission description="Update operations in the OFBiz-rest-jersey Component."
                         permissionId="OFBIZ-REST-JERSEY_UPDATE"/>
-    <SecurityPermission description="Delete operations in the Ofbiz-rest-jersey Component."
+    <SecurityPermission description="Delete operations in the OFBiz-rest-jersey Component."
                         permissionId="OFBIZ-REST-JERSEY_DELETE"/>
-    <SecurityPermission description="ALL operations in the Ofbiz-rest-jersey Component."
+    <SecurityPermission description="ALL operations in the OFBiz-rest-jersey Component."
                         permissionId="OFBIZ-REST-JERSEY_ADMIN"/>
 
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SUPER" permissionId="OFBIZ-REST-JERSEY_ADMIN"/>

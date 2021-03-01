@@ -47,7 +47,7 @@ under the License.
 
     <!-- web applications; will be mounted when using the embedded container -->
     <webapp name="ofbiz-rest-jersey"
-            title="Ofbiz-rest-jersey"
+            title="Rest-jersey"
             server="default-server"
             location="webapp/ofbiz-rest-jersey"
             base-permission="OFBTOOLS,OFBIZ-REST-JERSEY"
