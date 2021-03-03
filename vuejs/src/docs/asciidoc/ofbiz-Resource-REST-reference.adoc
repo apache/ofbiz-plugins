@@ -24,6 +24,12 @@ ifdef::backend-pdf[]
 :title-logo-image: image::OFBiz-Logo.svg[Apache OFBiz Logo, pdfwidth=4.25in, align=center]
 :source-highlighter: rouge
 endif::[]
+:toc:
+:sectnums:
+:toclevels: 3
+:jbake-type: page
+:jbake-tags: ofbizextra, documentation, fr
+:jbake-status: published
 
 == Introduction to OFBiz
 Welcome to _Apache OFBiz_! A powerful top level Apache software project.
@@ -77,7 +83,7 @@ Classic cover are:
 In this documentation, for each ResourceName, the webapp mentioned is the one for which
 the REST interface has been created for the first time.
 
-=== Core Business Applications
+== Core Business Applications
 Most businesses share universal needs. They require accounting functionality,
 managing customers, placing orders, book-keeping, invoicing and so on.
 
@@ -91,7 +97,7 @@ to find and understand which one do what
 
 All ResourceName are organize by Category, so there is one chapter by category.
 
-include::../../plugins/partymgrfjs/src/docs/asciidoc/screenlet-party.adoc[leveloffset=+1]
+include::../../../../partyfjs/src/docs/asciidoc/screenlet-party.adoc[leveloffset=+2]
 
-include::../../plugins/examplefjs/src/docs/asciidoc/screenlet-example.adoc[leveloffset=+1]
+include::../../../../examplefjs/src/docs/asciidoc/screenlet-example.adoc[leveloffset=+2]
 
