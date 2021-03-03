@@ -45,7 +45,7 @@ The two main goal of using a javascript framework for user interface is
 1. to have a "modern" look and feel
   * using recent GUI library
   * usable in multiple context (PC, tablet, smartphone)
-1. to increase interactive elements in screen, even if theses screens are based on standard modules :
+2. to increase interactive elements in screen, even if theses screens are based on standard modules :
   * update some part of the screen by action or by data update;
   * modify forms field as function of other field values;
   * simpler screen configuration without having to worry about screenlet interaction.

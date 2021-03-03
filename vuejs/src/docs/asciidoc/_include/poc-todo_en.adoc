@@ -37,20 +37,20 @@ Most of time, each new use case (or portlet) give new task (ex: new field type n
 == PortletWidget migration
 Start of documentation for all portletwidget migration
 
-1. create/copy the screen in {component}PortletScreen and remove <portalPortlet properties 
+. create/copy the screen in {component}PortletScreen and remove <portalPortlet properties
   ** portletTypeId
   ** component, subComponent, useScreen
     ... add screenName and screenLocation
   ** useScript, useMenu
-1. copy the forms (and update screen if necessary)
-1. update screen with portletUiLabelDecorator
-1. update screen with screenlet and container if menu need it (id for setArea)
-1. update screen with script, if necessary
-1. update screen with menu, if necessary
-1. copy from controller for uri edit and action
-1. in Menu, replace 
+. copy the forms (and update screen if necessary)
+. update screen with portletUiLabelDecorator
+. update screen with screenlet and container if menu need it (id for setArea)
+. update screen with script, if necessary
+. update screen with menu, if necessary
+. copy from controller for uri edit and action
+. in Menu, replace
 [source,XML]
-          <show-portlet portlet-id="${portalPortletId}" target="EditPersonPt" area-id="${subAreaDivId}" 
+          <show-portlet portlet-id="${portalPortletId}" target="EditPersonPt" area-id="${subAreaDivId}"
                          image-location="${iconsPurpose.Edit}" image-title="${uiLabelMap.IconsTooltips_Edit}">
               <parameter param-name="partyId" from-field="parameters.partyId"/>
           </show-portlet>
