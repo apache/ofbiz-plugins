@@ -92,8 +92,6 @@ Set trust store's file to Java Virtual Machine (JVM) before start OFBiz.
 
 == LDAP Component
 OFBiz uses the LDAP component in the plugins to check the security in a web application. +
-OFBiz disabled LDAP component as default, you can enable this component by take the comment out from
-plugins/component-load.xml file.
 
 === LDAP Properties
 LDAP properties file is plugins/ldap/config/ldap.xml. +
