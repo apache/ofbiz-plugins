@@ -25,7 +25,7 @@ under the License.
 
     <handler name="java" type="request" class="org.apache.ofbiz.webapp.event.JavaEventHandler"/>
     <handler name="groovy" type="request" class="org.apache.ofbiz.webapp.event.GroovyEventHandler"/>
-    <handler name="soap" type="request" class="org.apache.ofbiz.webapp.event.SOAPEventHandler"/>
+    <!-- <handler name="soap" type="request" class="org.apache.ofbiz.webapp.event.SOAPEventHandler"/> -->
     <handler name="service" type="request" class="org.apache.ofbiz.webapp.event.ServiceEventHandler"/>
     <handler name="service-multi" type="request" class="org.apache.ofbiz.webapp.event.ServiceMultiEventHandler"/>
     <handler name="simple" type="request" class="org.apache.ofbiz.webapp.event.SimpleEventHandler"/>
@@ -134,7 +134,7 @@ under the License.
     <request-map uri="setSessionLocale">
         <security https="false" auth="false"/>
         <event type="java" path="org.apache.ofbiz.common.CommonEvents" invoke="setSessionLocale"/>
-        <response name="success" type="request-redirect" value="fromSetSessionLocale"/>        
+        <response name="success" type="request-redirect" value="fromSetSessionLocale"/>
         <response name="error" type="view" value="main"/>
     </request-map>
 
