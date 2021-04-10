@@ -659,7 +659,7 @@ under the License.
                     </condition>
                     <widgets>
                         <platform-specific>
-                            <html><html-template location="component://order/template/entry/catalog/ProductUomDropDownOnly.ftl"/></html>
+                            <html><html-template location="component://ecommerce/template/catalog/ProductUomDropDownOnly.ftl"/></html>
                         </platform-specific>
                     </widgets>
                 </section>
