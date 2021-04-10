@@ -89,7 +89,7 @@ public class PricatEvents {
                     try {
                         sequenceNum = Long.valueOf(sequenceNumString);
                     } catch (NumberFormatException e) {
-                        // do nothing
+                        Debug.logError(e, MODULE);
                     }
                 }
                 String originalPricatFileName = (String) request.getSession().getAttribute(PricatParseExcelHtmlThread.PRICAT_FILE);

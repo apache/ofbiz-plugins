@@ -767,7 +767,7 @@ public class ImportOrdersFromEbay {
 
                     contactMechId = EbayHelper.setShippingAddressContactMech(dispatcher, delegator, party, userLogin, parameters);
                     String emailBuyer = (String) parameters.get("emailBuyer");
-                    if (!(emailBuyer.equals("") || "Invalid Request".equalsIgnoreCase(emailBuyer))) {
+                    if (!("".equals(emailBuyer) || "Invalid Request".equalsIgnoreCase(emailBuyer))) {
                         EbayHelper.setEmailContactMech(dispatcher, delegator, party, userLogin, parameters);
                     }
                     EbayHelper.setPhoneContactMech(dispatcher, delegator, party, userLogin, parameters);

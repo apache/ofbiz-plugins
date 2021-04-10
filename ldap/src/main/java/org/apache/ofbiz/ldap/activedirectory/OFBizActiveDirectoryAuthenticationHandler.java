@@ -29,7 +29,8 @@ import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
-import org.jasig.cas.util.LdapUtils;
+import org.apereo.cas.util.LdapUtils;
+import org.ldaptive.LdapEntry;
 import org.apache.ofbiz.base.util.UtilXml;
 import org.apache.ofbiz.ldap.commons.AbstractOFBizAuthenticationHandler;
 import org.w3c.dom.Element;
@@ -62,7 +63,7 @@ public final class OFBizActiveDirectoryAuthenticationHandler extends AbstractOFB
         Hashtable<String, String> env = new Hashtable<>();
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         env.put(Context.PROVIDER_URL, ldapURL);
-        if (searchType == null || searchType.trim().equals("")) {
+        if (searchType == null || "".equals(searchType.trim())) {
             env.put(Context.SECURITY_AUTHENTICATION, "none");
         } else if ("login".equals(searchType.trim())) {
             env.put(Context.SECURITY_AUTHENTICATION, authenType);
@@ -91,10 +92,11 @@ public final class OFBizActiveDirectoryAuthenticationHandler extends AbstractOFB
             }
             String filter = UtilXml.childElementValue(rootElement, "Filter", "(objectclass=*)");
             String attribute = UtilXml.childElementValue(rootElement, "Attribute", "uid=%u");
-            attribute = LdapUtils.getFilterWithValues(attribute, username);
+            LdapEntry entry = new LdapEntry(username);
+            attribute = LdapUtils.getString(entry, attribute);
             NamingEnumeration<SearchResult> answer = ctx.search(baseDN,
                     // Filter expression
-                    "(&(" + filter + ") (" + attribute +"))",
+                    "(&(" + filter + ") (" + attribute + "))",
                     controls);
             if (answer.hasMoreElements()) {
                 result = answer.next();

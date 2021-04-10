@@ -37,7 +37,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.LockObtainFailedException;
 
-public class DocumentIndexer extends Thread {
+public final class DocumentIndexer extends Thread {
 
     private static final String MODULE = DocumentIndexer.class.getName();
 
@@ -53,9 +53,9 @@ public class DocumentIndexer extends Thread {
         try {
             this.indexDirectory = FSDirectory.open(new File(SearchWorker.getIndexPath(indexName)).toPath());
         } catch (CorruptIndexException e) {
-            Debug.logError("Corrupted lucene index: "  + e.getMessage(), MODULE);
+            Debug.logError("Corrupted lucene index: " + e.getMessage(), MODULE);
         } catch (LockObtainFailedException e) {
-            Debug.logError("Could not obtain Lock on lucene index "  + e.getMessage(), MODULE);
+            Debug.logError("Could not obtain Lock on lucene index " + e.getMessage(), MODULE);
         } catch (IOException e) {
             Debug.logError(e.getMessage(), MODULE);
         }
@@ -98,14 +98,14 @@ public class DocumentIndexer extends Thread {
             Document document = ofbizDocument.prepareDocument(this.delegator);
             if (indexWriter == null) {
                 try {
-                	StandardAnalyzer analyzer = new StandardAnalyzer();
-                	analyzer.setVersion(SearchWorker.getLuceneVersion());
+                    StandardAnalyzer analyzer = new StandardAnalyzer();
+                    analyzer.setVersion(SearchWorker.getLuceneVersion());
                     indexWriter = new IndexWriter(this.indexDirectory, new IndexWriterConfig(analyzer));
                 } catch (CorruptIndexException e) {
-                    Debug.logError("Corrupted lucene index: "  + e.getMessage(), MODULE);
+                    Debug.logError("Corrupted lucene index: " + e.getMessage(), MODULE);
                     break;
                 } catch (LockObtainFailedException e) {
-                    Debug.logError("Could not obtain Lock on lucene index "  + e.getMessage(), MODULE);
+                    Debug.logError("Could not obtain Lock on lucene index " + e.getMessage(), MODULE);
                     // TODO: put the thread to sleep waiting for the locked to be released
                     break;
                 } catch (IOException e) {

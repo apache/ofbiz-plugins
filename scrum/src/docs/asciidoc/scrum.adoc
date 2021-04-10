@@ -1,0 +1,93 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+
+= The Scrum Component.
+:doctype: book
+:sectnums:
+:toc: left
+:icons: font
+:experimental:
+:sourcedir: .
+
+== Introduction
+
+The purpose of this component is to have a web based and ERP integrated access and recording for all information related to
+your Scrum project development. +
+The Scrum development methodology itself is described in any of the following documents:
+
+. http://www.scrum.org/scrumguides/[Scrum guide] (various languages)
+. http://www.scrumalliance.org/pages/what_is_scrum[Scrum in 30 seconds.]
+. http://www.softhouse.se/Uploades/Scrum_eng_webb.pdf[Scrum in 5 minutes]
+
+Below follows a list how the system should be used and at what time you have to update the information within the Scrum component.
+
+
+== Administration
+
+include::_include/scrum-timeSheet.adoc[leveloffset=+2]
+
+include::_include/scrum-default-tasks.adoc[leveloffset=+2]
+
+include::_include/scrum-members.adoc[leveloffset=+2]
+
+== Product Backlog.
+Before anything can start a product backlog is required which will need a product to be created first.
+So create a product assign the it to a product owner which was created in the Scrum member section.
+Then go to the backlog and create the backlog items.
+
+include::_include/scrum-product.adoc[leveloffset=+2]
+
+include::_include/scrum-product-backlog-item.adoc[leveloffset=+2]
+
+include::_include/scrum-product-categories.adoc[leveloffset=+2]
+
+include::_include/scrum-project-sprint.adoc[]
+
+include::_include/scrum-my-work.adoc[leveloffset=+1]
+
+== Task
+The view task show Task description.
+
+=== View Task
+. New Task button : To create new task.
+. Task information.
+. Sprint Backlog Item Note.
+. Task Attachements.
+
+include::_include/scrum-open-test.adoc[leveloffset=+1]
+
+
+== Sprint Demonstration and Evaluation meeting
+At the end of a sprint demonstrate the system to the product owner and interested parties.
+The product owner will incorporate comments into the current backlog list.
+The team and Scrum master will evaluate the sprint so lessons can be learned for the next sprint.
+
+Determine also which tasks were not completed and return them to the product backlog to be included in a next sprint.
+
+The sprint will be repeated until the project is complete.
+
+== Security
+In the Scrum component there are security roles to access in the Scrum component.
+
+1. Product Owner can create product, project, and assign member in project.
+2. Scrum Master can do anything on the project.
+3. Scrum admin can do anything on Scrum component
+4. Scrum team can assign task to yourself and view project.
+
+

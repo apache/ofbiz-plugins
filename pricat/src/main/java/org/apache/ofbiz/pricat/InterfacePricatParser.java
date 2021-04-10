@@ -37,7 +37,8 @@ import org.apache.ofbiz.entity.transaction.GenericTransactionException;
 public interface InterfacePricatParser {
     String PARSE_EXCEL = "parse_excel";
     String CONFIRM = "confirm_action";
-    String[] MESSAGE_LABELS = new String[] {"FORMAT_DEFAULT", "FORMAT_WARNING", "FORMAT_HEADLINE", "FORMAT_NOTE", "FORMAT_OK", "FORMAT_ERROR", "FORMAT_THROWABLE"};
+    String[] MESSAGE_LABELS = new String[] {"FORMAT_DEFAULT", "FORMAT_WARNING", "FORMAT_HEADLINE", "FORMAT_NOTE", "FORMAT_OK",
+            "FORMAT_ERROR", "FORMAT_THROWABLE"};
     List<String> MESSAGES = Collections.unmodifiableList(Arrays.asList(MESSAGE_LABELS));
     String TEMP_FILES_FOLDER = "runtime/pricat/";
     String FILE_DATETIME_PATTERN = "yyyyMMddHHmmss";
@@ -68,7 +69,8 @@ public interface InterfacePricatParser {
 
     Map<String, Object> getColorIds(String productId, String ownerPartyId, String color);
 
-    String getProductId(XSSFRow row, String brandId, String modelName, String productName, String productCategoryId, String ownerPartyId, BigDecimal listPrice);
+    String getProductId(XSSFRow row, String brandId, String modelName, String productName, String productCategoryId,
+                        String ownerPartyId, BigDecimal listPrice);
 
     String getBrandId(String brandName, String ownerPartyId);
 

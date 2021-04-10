@@ -182,8 +182,9 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
         }
         // NOTE: there's a chain.doFilter in SolrDispatchFilter's doFilter
         super.doFilter(request, response, chain);
-        if (Debug.timingOn() && rname != null)
+        if (Debug.timingOn() && rname != null) {
             timer.timerString("[" + rname + "(Domain:" + request.getScheme() + "://" + request.getServerName() + ")] Request Done", MODULE);
+        }
     }
     /** Destroy */
     @Override

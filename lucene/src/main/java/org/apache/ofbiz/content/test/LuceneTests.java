@@ -51,6 +51,10 @@ public class LuceneTests extends OFBizTestCase {
     protected void tearDown() throws Exception {
     }
 
+    /**
+     * Test search term hand.
+     * @throws Exception the exception
+     */
     public void testSearchTermHand() throws Exception {
         Map<String, Object> ctx = new HashMap<>();
         ctx.put("contentId", "LuceneCONTENT");

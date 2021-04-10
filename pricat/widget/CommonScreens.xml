@@ -32,6 +32,7 @@ under the License.
                 <set field="applicationMenuName" value="PriCatAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://pricat/widget/PriCatMenus.xml" global="true"/>
                 <set field="applicationTitle" from-field="uiLabelMap.PriCatApplication" global="true"/>
+                <set field="helpAnchor" from-field="helpAnchor" default-value="_apache_ofbiz_plugins"/>
                 <set field="layoutSettings.styleSheets[]" value="/pricat/includes/pricat.css" global="true"/>
             </actions>
             <widgets>

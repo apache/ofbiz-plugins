@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
@@ -1260,7 +1261,7 @@ public class EbayStore {
                     storeTheme.setThemeID(Integer.parseInt((String) context.get("storeAdvancedTheme")));
                 } else if ("Basic".equals(context.get("themeType"))) {
                     storeColorScheme = new StoreColorSchemeType();
-                    if (context.get("storeBasicTheme")!=null) {
+                    if (context.get("storeBasicTheme") != null) {
                         String storeBasicTheme = (String) context.get("storeBasicTheme");
                         String storeThemeId = null;
                         String storeColorSchemeId = null;
@@ -1390,7 +1391,6 @@ public class EbayStore {
             }
             result.put("activeItems", activeItems);
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             return ServiceUtil.returnError(e.getMessage());
         }
         return result;
@@ -2258,12 +2258,20 @@ public class EbayStore {
 
                 // Upload image to ofbiz path /runtime/tmp .
                 ByteBuffer byteWrap = (ByteBuffer) context.get("imageData");
-                File file = new File(System.getProperty("ofbiz.home"), "runtime" + File.separator + "tmp" + File.separator + imageFileName);
+                String fileToCheck = System.getProperty("ofbiz.home"), "runtime" + File.separator + "tmp" + File.separator + imageFileName;
+                File file = new File(fileToCheck);
                 FileOutputStream fileOutputStream = new FileOutputStream(file, false);
                 FileChannel wChannel = fileOutputStream.getChannel();
                 wChannel.write(byteWrap);
                 wChannel.close();
                 fileOutputStream.close();
+                String fileToCheck = imageServerPath + "/" + newFileLocation + "." + imgExtension;
+                ImageIO.write(bufNewImg, imgExtension, new File(fileToCheck));
+                if (!org.apache.ofbiz.security.SecuredUpload.isValidFile(fileToCheck, "Image")) {
+                    String errorMessage = UtilProperties.getMessage("SecurityUiLabels", "SupportedImageFormats", locale);
+                    return ServiceUtil.returnError(errorMessage);
+                }
+                
 
                 // Set path file picture to api and set picture details.
                 String[] pictureFiles = {System.getProperty("ofbiz.home") + File.separator + "runtime" + File.separator + "tmp" + File.separator + imageFileName};

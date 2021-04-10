@@ -18,7 +18,7 @@ under the License.
 ////
 = Apache OFBiz Plugins for Developer
 The Apache OFBiz Project
-Release trunk
+
 :imagesdir: ./images
 ifdef::backend-pdf[]
 :title-logo-image: image::OFBiz-Logo.svg[Apache OFBiz Logo, pdfwidth=4.25in, align=center]

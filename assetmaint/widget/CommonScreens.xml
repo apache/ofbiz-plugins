@@ -39,6 +39,7 @@ under the License.
                 <set field="applicationMenuName" value="AssetMaintAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://assetmaint/widget/AssetmaintMenus.xml" global="true"/>
                 <set field="applicationTitle" from-field="uiLabelMap.AssetMaintApplication"/>
+                <set field="helpAnchor" from-field="helpAnchor" default-value="_asset_maintenance_plugin"/>
             </actions>
             <widgets>
                 <include-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml"/>
@@ -138,6 +139,6 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+
 </screens>
 

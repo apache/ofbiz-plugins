@@ -36,7 +36,6 @@ under the License.
     <entity-resource type="data" reader-name="demo" loader="main" location="data/ExampleSecurityGroupDemoData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/ExamplePortletData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/ExamplePortalSeedData.xml"/>
-    <entity-resource type="data" reader-name="seed" loader="main" location="data/ExampleHelpData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/ExampleDemoData.xml"/>
 
     <!-- service resources: model(s), eca(s) and group definitions -->
@@ -51,6 +50,7 @@ under the License.
     <!-- web applications; will be mounted when using the embedded container -->
     <webapp name="example"
         title="Example"
+        position="26"
         menu-name="secondary"
         server="default-server"
         location="webapp/example"

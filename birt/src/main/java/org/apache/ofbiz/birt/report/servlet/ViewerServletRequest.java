@@ -31,8 +31,7 @@ import org.apache.ofbiz.base.util.Debug;
 
 public class ViewerServletRequest extends HttpServletRequestWrapper {
     private static final String MODULE = ViewerServletRequest.class.getName();
-
-    protected String originalReportParam = null;
+    private String originalReportParam = null;
 
     public ViewerServletRequest(String originalReportParam, HttpServletRequest request) {
         super(request);

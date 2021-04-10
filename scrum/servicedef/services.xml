@@ -221,14 +221,14 @@ under the License.
     <service name="checkSprintStatus" engine="simple" auth="true"
         location="component://scrum/minilang/ScrumServices.xml" invoke="checkSprintStatus">
     </service>
-    <service name="checkScrumPlanHour" engine="simple" auth="true" 
+    <service name="checkScrumPlanHour" engine="simple" auth="true"
         location="component://scrum/minilang/ScrumServices.xml" invoke="checkScrumPlanHour">
         <attribute name="workEffortId" type="String" mode="IN" optional="true"/>
         <attribute name="custRequestId" type="String" mode="IN" optional="true"/>
         <attribute name="planHours" type="Double" mode="IN" optional="true"/>
         <attribute name="allow" type="Boolean" mode="OUT" optional="false"/>
     </service>
-    <service name="reOrderProductBacklogItemSequenceNumber" engine="simple" auth="true" 
+    <service name="reOrderProductBacklogItemSequenceNumber" engine="simple" auth="true"
         location="component://scrum/minilang/ScrumServices.xml" invoke="reOrderProductBacklogItemSequenceNumber">
         <attribute name="productId" type="String" mode="IN" optional="false"/>
     </service>
@@ -245,10 +245,11 @@ under the License.
         <attribute name="custRequestStatusId" mode="IN" type="String" optional="true"/>
         <attribute name="webSiteId" mode="IN" type="String" optional="true"/><!-- for notification services -->
     </service>
-    <service name="updateScrumRevision" engine="soap" export="true"
+    <!-- The service below has been commented out for security reason, see OFBIZ-12212 -->
+    <!-- <service name="updateScrumRevision" engine="soap" export="true"
         location="http://www.example.com/webtools/control/SOAPService" invoke="updateScrumRevisionChange">
         <implements service="updateScrumRevisionChange"/>
-    </service>
+    </service> -->
     <service name="updateScrumRevisionChange" engine="simple" export="true" validate="false" require-new-transaction="true"
             location="component://scrum/minilang/ScrumServices.xml" invoke="updateScrumRevisionChange">
         <description>Update Scrum Revision Change</description>
@@ -281,7 +282,7 @@ under the License.
     
     <service name="linkToProduct" engine="java" auth="true"
         location="org.apache.ofbiz.scrum.ScrumServices" invoke="linkToProduct">
-        <description>check when a comunication event is created if the subject contains the PD# string, if so 
+        <description>check when a comunication event is created if the subject contains the PD# string, if so
                 try to find the customer request and link it to the communication event..
         </description>
         <attribute name="communicationEventId" type="String" mode="IN" optional="false"/>

@@ -1,0 +1,74 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+= Product Backlog Item.
+These screens includes details that need for creating new product BacklogItem and display product BacklogItem list.
+
+
+== Product Backlog Items List
+This part use to display product backlog items
+
+. Click at product backlog item name when user need to update it and click back button to back to previous page. +
+  Clicking on BacklogItem open the screen for BacklogItem Detail, so you can:
+  * see an overview
+  * update it
+  * associate note, content, communication
+. Click delete button when user need to delete some product backlog items.
+
+
+== Product Backlog Item Overview
+On the product overview there are 8 sub menus -Overview,Update,Backlog,Billing,Default Tasks,Categories, Content,and Communications
+
+The product overview consist of:
+
+. Product Backlog Item Information
+. Product Backlog Email messages
+. Revisions List
+. Product Backlog Item Status List: Show the Product Backlog Item Status since the Product Backlog Item have created.
+. Tasks: List of task in the Product Backlog.
+. E-mail: List of the E-mails that belong to Product Backlog Item.
+. Backlog Item Content List: List of the E-mails that belong to Product Backlog Item.
+
+
+== Update Product BacklogItem
+This part use to update product backlog or back to previous page.
+
+. Enter product backlog name that user need to update.
+. Select open and closed date time that user need to update for calculating work hours of product backlog.
+. Click update button when insert all above fields.
+. Click back button when user need to back to previous page.
+
+
+== Add New Product Backlog Item
+This part use to add new product backlog item
+
+. Enter product backlog item name.
+. Enter priority of this product backlog item.
+. Click submit button when insert all above fields.
+
+include::scrum-backlogItem-content.adoc[leveloffset=+1]
+
+
+== Communication
+This screen use for communication e-mails.
+The screen consists of :
+
+. New Email Button: To create a new email.
+. Product Backlog Email: To show the sending e-mail that is sent to product owner include with Subject,Status Id,Form,To and
+   Created.
+

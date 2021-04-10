@@ -102,8 +102,7 @@ public class Various {
                     }
                 }
             } catch (GenericEntityException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                Debug.logError(e, MODULE);
             }
         }
         return actualHours;

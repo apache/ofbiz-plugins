@@ -316,6 +316,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="ScrumTaskSummary"/>
                 <set field="tabButtonItem" value="taskView"/>
+                <set field="helpAnchor" value="_task_2"/>
                 <set field="workEffortId" from-field="parameters.taskId"/>
                 <entity-and entity-name="CustRequestWorkEffort" list="custRequestWorkEffort">
                     <field-map field-name="workEffortId" from-field="workEffortId"/>
@@ -418,8 +419,8 @@ under the License.
         </section>
     </screen>
     <screen name="InfoTestTaskNote">
-        <section>        
-        <actions>       
+        <section>
+        <actions>
                 <entity-one entity-name="WorkEffort" value-field="task"/>
                 <set field="taskId" from-field="task.workEffortId"/>
             </actions>

@@ -43,6 +43,7 @@ under the License.
                 <set field="applicationMenuName" value="ExampleAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://example/widget/example/ExampleMenus.xml" global="true"/>
                 <set field="applicationTitle" from-field="uiLabelMap.ExampleApplication" global="true"/>
+                <set field="helpAnchor" from-field="helpAnchor" default-value="_example"/>
             </actions>
             <widgets>
                 <section>

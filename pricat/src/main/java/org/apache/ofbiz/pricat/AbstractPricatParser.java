@@ -28,9 +28,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.ofbiz.base.util.Debug;
+import org.apache.ofbiz.base.util.FileUtil;
+import org.apache.ofbiz.base.util.UtilDateTime;
+import org.apache.ofbiz.base.util.UtilMisc;
+import org.apache.ofbiz.base.util.UtilProperties;
+import org.apache.ofbiz.base.util.UtilValidate;
+import org.apache.ofbiz.entity.Delegator;
+import org.apache.ofbiz.entity.GenericEntityException;
+import org.apache.ofbiz.entity.GenericValue;
+import org.apache.ofbiz.entity.condition.EntityCondition;
+import org.apache.ofbiz.entity.condition.EntityOperator;
+import org.apache.ofbiz.entity.util.EntityQuery;
+import org.apache.ofbiz.htmlreport.InterfaceReport;
+import org.apache.ofbiz.order.finaccount.FinAccountHelper;
+import org.apache.ofbiz.pricat.util.OFBizPricatUtil;
+import org.apache.ofbiz.service.LocalDispatcher;
+import org.apache.ofbiz.service.ServiceUtil;
 import org.apache.poi.hssf.usermodel.HSSFDataFormatter;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.ClientAnchor.AnchorType;
@@ -52,25 +71,6 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFShape;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.commons.fileupload.FileItem;
-
-import org.apache.ofbiz.htmlreport.InterfaceReport;
-import org.apache.ofbiz.order.finaccount.FinAccountHelper;
-import org.apache.ofbiz.pricat.util.OFBizPricatUtil;
-import org.apache.ofbiz.base.util.Debug;
-import org.apache.ofbiz.base.util.FileUtil;
-import org.apache.ofbiz.base.util.UtilDateTime;
-import org.apache.ofbiz.base.util.UtilMisc;
-import org.apache.ofbiz.base.util.UtilProperties;
-import org.apache.ofbiz.base.util.UtilValidate;
-import org.apache.ofbiz.entity.Delegator;
-import org.apache.ofbiz.entity.GenericEntityException;
-import org.apache.ofbiz.entity.GenericValue;
-import org.apache.ofbiz.entity.condition.EntityCondition;
-import org.apache.ofbiz.entity.condition.EntityOperator;
-import org.apache.ofbiz.entity.util.EntityQuery;
-import org.apache.ofbiz.service.LocalDispatcher;
-import org.apache.ofbiz.service.ServiceUtil;
 
 /**
  * Abstract class of pricat parser.
@@ -685,6 +685,13 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
         this.selectedFacilityId = selectedFacilityId;
     }
 
+    /**
+     * Is empty row boolean.
+     * @param row the row
+     * @param size the size
+     * @param display the display
+     * @return the boolean
+     */
     protected boolean isEmptyRow(XSSFRow row, int size, boolean display) {
         // check whether this row is empty
         if (UtilValidate.isEmpty(row)) {
@@ -755,7 +762,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
             }
             delegator.createOrStore(historyValue);
         } catch (GenericEntityException e) {
-            // do nothing
+            Debug.logError(e, MODULE);
         }
     }
 
@@ -764,6 +771,9 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
         return !errorMessages.keySet().isEmpty();
     }
 
+    /**
+     * Cleanup log and commented excel.
+     */
     protected void cleanupLogAndCommentedExcel() {
         try {
             report.print(UtilProperties.getMessage(RESOURCE, "CLEANUP_LOGANDEXCEL_BEGIN", locale), InterfaceReport.FORMAT_DEFAULT);

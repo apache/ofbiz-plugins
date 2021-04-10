@@ -33,7 +33,6 @@ under the License.
     <entity-resource type="data" reader-name="seed" loader="main" location="data/scrumTypeData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/scrumSecurityPermissionSeedData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/scrumSecurityGroupDemoData.xml"/>
-    <entity-resource type="data" reader-name="seed" loader="main" location="data/scrumHelpData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/scrumDemoData.xml"/>
 
     <!-- service resources: model(s), eca(s) and group definitions -->
@@ -48,6 +47,7 @@ under the License.
     <webapp name="scrum"
         title="Scrum"
         server="default-server"
+        position="21"
         location="webapp/scrum"
         app-bar-display="true"
         base-permission="SCRUM"

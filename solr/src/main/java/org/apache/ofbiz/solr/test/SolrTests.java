@@ -52,7 +52,7 @@ public class SolrTests extends OFBizTestCase {
      */
     public void testAddProductToIndex() throws Exception {
 
-        GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", validTestProductId).queryOne();
+        GenericValue product = EntityQuery.use(getDelegator()).from("Product").where("productId", validTestProductId).queryOne();
 
         Map<String, Object> ctx = new HashMap<>();
         ctx.put("instance", product);
@@ -117,8 +117,8 @@ public class SolrTests extends OFBizTestCase {
         List<Map<String, Object>> products = new ArrayList<>();
         Map<String, Object> product1 = new HashMap<>();
         Map<String, Object> product2 = new HashMap<>();
-        GenericValue validTestProduct = EntityQuery.use(delegator).from("Product").where("productId", validTestProductId).queryOne();
-        GenericValue validTestProduct2 = EntityQuery.use(delegator).from("Product").where("productId", validTestProductId2).queryOne();
+        GenericValue validTestProduct = EntityQuery.use(getDelegator()).from("Product").where("productId", validTestProductId).queryOne();
+        GenericValue validTestProduct2 = EntityQuery.use(getDelegator()).from("Product").where("productId", validTestProductId2).queryOne();
 
         product1.put("productId", validTestProduct);
         product2.put("productId", validTestProduct2);
@@ -145,8 +145,8 @@ public class SolrTests extends OFBizTestCase {
         List<Map<String, Object>> products = new ArrayList<>();
         Map<String, Object> product1 = new HashMap<>();
         Map<String, Object> product2 = new HashMap<>();
-        GenericValue testProduct = EntityQuery.use(delegator).from("Product").where("productId", validTestProductId).queryOne();
-        GenericValue testProduct2 = EntityQuery.use(delegator).from("Product").where("productId", validTestProductId2).queryOne();
+        GenericValue testProduct = EntityQuery.use(getDelegator()).from("Product").where("productId", validTestProductId).queryOne();
+        GenericValue testProduct2 = EntityQuery.use(getDelegator()).from("Product").where("productId", validTestProductId2).queryOne();
 
         testProduct.replace("productId", invalidTestProductId);
         testProduct.replace("productId", invalidTestProductId);
