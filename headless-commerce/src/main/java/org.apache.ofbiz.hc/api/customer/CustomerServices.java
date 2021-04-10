@@ -22,7 +22,6 @@ import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ModelService;
 import org.apache.ofbiz.service.ServiceUtil;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +30,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class CustomerServices {
-
     public static final String MODULE = CustomerServices.class.getName();
     public static final String RESOURCE = "PartyUiLabels";
     public static final String SECRESOURCE  = "SecurityextUiLabels";
@@ -86,20 +84,23 @@ public class CustomerServices {
             if (userLogin == null || "N".equals(userLogin.getString("enabled"))) {
                 Debug.logError("userlogin unknown or disabled " + userLogin, SECRESOURCE);
                 //giving a "sent email to associated email-address" response, to suppress feedback on in-/valid usernames
-                return ServiceUtil.returnError(UtilProperties.getMessage(SECRESOURCE, "loginevents.new_password_sent_check_email", locale));
+                return ServiceUtil.returnError(UtilProperties.getMessage(SECRESOURCE,
+                        "loginevents.new_password_sent_check_email", locale));
             }
 
             // check login is associated to a party
             GenericValue userParty = userLogin.getRelatedOne("Party", false);
             if (userParty == null) {
-                return ServiceUtil.returnError(UtilProperties.getMessage(SECRESOURCE, "loginevents.username_not_found_reenter", locale));
+                return ServiceUtil.returnError(UtilProperties.getMessage(SECRESOURCE,
+                        "loginevents.username_not_found_reenter", locale));
             }
 
             // check there is an email to send to
-            List<GenericValue> contactMechs = (List<GenericValue>) ContactHelper.getContactMechByPurpose(userParty, "PRIMARY_EMAIL", false);
+            List<GenericValue> contactMechs = UtilGenerics.cast(ContactHelper.getContactMechByPurpose(userParty, "PRIMARY_EMAIL", false));
             if (UtilValidate.isEmpty(contactMechs)) {
                 // the email was not found
-                return ServiceUtil.returnError(UtilProperties.getMessage(SECRESOURCE, "loginevents.no_primary_email_address_set_contact_customer_service", locale));
+                return ServiceUtil.returnError(UtilProperties.getMessage(SECRESOURCE,
+                        "loginevents.no_primary_email_address_set_contact_customer_service", locale));
             }
             String emails = contactMechs.stream()
                     .map(email -> email.getString("infoString"))
@@ -153,7 +154,8 @@ public class CustomerServices {
                 } else {
                     serviceContext.put("subject", UtilProperties.getMessage(SECRESOURCE, "loginservices.password_reminder_subject",
                             UtilMisc.toMap("userLoginId", userLoginId), locale));
-                    serviceContext.put("sendFrom", EntityUtilProperties.getPropertyValue("general", "defaultFromEmailAddress", delegator));
+                    serviceContext.put("sendFrom", EntityUtilProperties.getPropertyValue("general",
+                            "defaultFromEmailAddress", delegator));
                 }
             }
             serviceContext.put("sendTo", emails);
@@ -164,14 +166,17 @@ public class CustomerServices {
                 String errorMessage = ServiceUtil.getErrorMessage(result);
                 Map<String, Object> messageMap = UtilMisc.toMap("errorMessage", errorMessage);
                 Debug.logError(errorMessage, MODULE);
-                return ServiceUtil.returnError(UtilProperties.getMessage(SECRESOURCE, "loginevents.error_unable_email_password_contact_customer_service_errorwas",
+                return ServiceUtil.returnError(UtilProperties.getMessage(SECRESOURCE,
+                        "loginevents.error_unable_email_password_contact_customer_service_errorwas",
                         messageMap, locale));
             }
         } catch (GeneralException e) {
             Debug.logWarning(e, "", MODULE);
-            return ServiceUtil.returnError(UtilProperties.getMessage(SECRESOURCE, "loginevents.error_unable_email_password_contact_customer_service", locale));
+            return ServiceUtil.returnError(UtilProperties.getMessage(SECRESOURCE,
+                    "loginevents.error_unable_email_password_contact_customer_service", locale));
         }
-        return ServiceUtil.returnSuccess(UtilProperties.getMessage(SECRESOURCE, "loginevents.new_password_sent_check_email", locale));
+        return ServiceUtil.returnSuccess(UtilProperties.getMessage(SECRESOURCE,
+                "loginevents.new_password_sent_check_email", locale));
     }
     public static Map<String, Object> changePassword(DispatchContext dctx, Map<String, ? extends Object> context) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
