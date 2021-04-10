@@ -18,7 +18,9 @@
  */
 
 import org.apache.ofbiz.base.util.UtilProperties
+import org.apache.ofbiz.base.util.UtilHttp
 import org.apache.ofbiz.base.util.UtilMisc
+import org.apache.ofbiz.base.util.UtilHttp
 import org.apache.ofbiz.product.store.ProductStoreWorker
 
 productStore = ProductStoreWorker.getProductStore(request)
@@ -54,5 +56,5 @@ if (userInfoMap) {
     request.getSession().setAttribute("userInfoMap", userInfoMap)
 }
 
-donePage = "main;" + parameters.visit.sessionId
+donePage = "main;" + UtilHttp.getSessionId(request)
 context.donePage = donePage

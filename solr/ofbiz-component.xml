@@ -35,6 +35,7 @@ under the License.
 
     <webapp name="solr"
         title="Apache Solr Integration"
+        position="22"
         server="default-server"
         location="webapp/solr"
         mount-point="/solr"

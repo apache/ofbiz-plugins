@@ -25,7 +25,6 @@ under the License.
 
 
     <classpath type="dir" location="config"/>
-    <entity-resource type="data" reader-name="seed" loader="main" location="data/BirtHelpData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/BirtTypeData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/OrderPortletData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/BirtSecurityGroupDemoData.xml"/>
@@ -36,7 +35,6 @@ under the License.
     <entity-resource type="data" reader-name="demo" loader="main" location="data/example/ExampleSecurityGroupDemoData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/example/ExamplePortletData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/example/ExamplePortalSeedData.xml"/>
-    <entity-resource type="data" reader-name="seed" loader="main" location="data/example/ExampleHelpData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/example/ExampleDemoData.xml"/>
 
     <entity-resource type="model" reader-name="main" loader="main" location="entitydef/ServiceReportsView.xml"/>
@@ -47,11 +45,13 @@ under the License.
     <webapp name="accounting"
         title="Accounting"
         server="default-server"
+        position="5"
         location="webapp/accounting"
         base-permission="OFBTOOLS,ACCOUNTING"
         mount-point="/accounting"/>
     <webapp name="facility"
         title="Facility"
+        position="3"
         description="FacilityComponentDescription"
         server="default-server"
         location="webapp/facility"
@@ -59,6 +59,7 @@ under the License.
         mount-point="/facility"/>
     <webapp name="order"
         title="Order"
+        position="4"
         description="OrderComponentDescription"
         server="default-server"
         location="webapp/ordermgr"
@@ -67,6 +68,7 @@ under the License.
 
     <webapp name="birt"
         title="BIRT"
+        position="17"
         server="default-server"
         location="webapp/birt"
         base-permission="OFBTOOLS,WEBTOOLS"
