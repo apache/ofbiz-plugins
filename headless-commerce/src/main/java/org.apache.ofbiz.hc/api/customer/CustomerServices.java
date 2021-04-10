@@ -1,7 +1,12 @@
 package org.apache.ofbiz.hc.api.customer;
 
 import org.apache.ofbiz.accounting.payment.PaymentWorker;
-import org.apache.ofbiz.base.util.*;
+import org.apache.ofbiz.base.util.Debug;
+import org.apache.ofbiz.base.util.GeneralException;
+import org.apache.ofbiz.base.util.UtilGenerics;
+import org.apache.ofbiz.base.util.UtilMisc;
+import org.apache.ofbiz.base.util.UtilProperties;
+import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.base.util.string.FlexibleStringExpander;
 import org.apache.ofbiz.common.login.LoginServices;
 import org.apache.ofbiz.entity.Delegator;
@@ -12,9 +17,17 @@ import org.apache.ofbiz.entity.util.EntityUtilProperties;
 import org.apache.ofbiz.hc.api.common.CommonUtil;
 import org.apache.ofbiz.party.contact.ContactHelper;
 import org.apache.ofbiz.security.SecurityUtil;
-import org.apache.ofbiz.service.*;
+import org.apache.ofbiz.service.DispatchContext;
+import org.apache.ofbiz.service.GenericServiceException;
+import org.apache.ofbiz.service.LocalDispatcher;
+import org.apache.ofbiz.service.ModelService;
+import org.apache.ofbiz.service.ServiceUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class CustomerServices {
