@@ -166,8 +166,8 @@ public abstract class AbstractReportThread extends Thread implements InterfaceRe
      */
     protected void initHtmlReport(HttpServletRequest request, HttpServletResponse response) {
 
-        report = HtmlReport.getInstance(request, response);
-        ((HtmlReport) report).setParamThread(getUUID().toString());
+        HtmlReport report = HtmlReport.getInstance(request, response);
+        report.setParamThread(getUUID().toString());
     }
 
     /**
@@ -175,8 +175,8 @@ public abstract class AbstractReportThread extends Thread implements InterfaceRe
      */
     protected void initHtmlReport(HttpServletRequest request, HttpServletResponse response, boolean writeHtml, boolean isTransient) {
 
-        report = HtmlReport.getInstance(request, response, writeHtml, isTransient);
-        ((HtmlReport) report).setParamThread(getUUID().toString());
+        HtmlReport report = HtmlReport.getInstance(request, response, writeHtml, isTransient);
+        report.setParamThread(getUUID().toString());
     }
 
     /**
@@ -189,8 +189,8 @@ public abstract class AbstractReportThread extends Thread implements InterfaceRe
      */
     protected void initHtmlReport(HttpServletRequest request, HttpServletResponse response, boolean writeHtml, boolean isTransient,
                                   String logFileName) {
-        report = HtmlReport.getInstance(request, response, writeHtml, isTransient, logFileName);
-        ((HtmlReport) report).setParamThread(getUUID().toString());
+        HtmlReport report = HtmlReport.getInstance(request, response, writeHtml, isTransient, logFileName);
+        report.setParamThread(getUUID().toString());
     }
 
     /**

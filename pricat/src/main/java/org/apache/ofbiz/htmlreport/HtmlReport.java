@@ -96,16 +96,13 @@ public class HtmlReport extends AbstractReport {
     /** The thread to display in this report. */
     private String paramThread;
 
-    /** The next thread to display after this report. */
-    private String paramThreadHasNext;
-
     private String paramAction;
 
     private String paramTitle;
 
     private String paramResource;
 
-    /** Flag for refreching workplace .*/
+    /** Flag for refreshing workplace. */
     private String paramRefreshWorkplace;
 
     /** Constant for the "OK" button in the build button methods. */
