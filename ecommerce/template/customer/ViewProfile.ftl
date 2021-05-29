@@ -510,7 +510,7 @@ under the License.
         <th>${uiLabelMap.CommonThruDate}</th>
         <th>${uiLabelMap.CommonStatus}</th>
         <th>${uiLabelMap.CommonEmail}</th>
-        <th></th>
+        <th>${uiLabelMap.MarketingContactListOptInVerifyCode}</th>
         <th></th>
       </tr>
       <#list contactListPartyList as contactListParty>
