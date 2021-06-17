@@ -209,11 +209,6 @@ webpos/webapp/webpos/images/js/WebPosHotkeys.js
 
 =========================================================================
 
-This product bundles files from the "Birt" technology platform (www.eclipse.org/birt/)
-which are available under the "Eclipse Public License - v 1.0".
-For details, see birt/webapp/birt/webcontent/birt/
-=========================================================================
-
 This product bundles "Webhelp for DocBook", which is available
 under the "MIT" License. For details, see cmssite/template/docbook/webhelp/
 
