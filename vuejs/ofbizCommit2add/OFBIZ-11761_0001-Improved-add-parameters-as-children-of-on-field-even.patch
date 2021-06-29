@@ -1,0 +1,29 @@
+From 91acd64255fb8681f43f40150ed687525dba723f Mon Sep 17 00:00:00 2001
+From: holivier <holivier@apache.org>
+Date: Wed, 27 May 2020 14:48:32 +0200
+Subject: [PATCH 10/22] Improved: add parameters as children of
+ on-field-event-update-area, same as for on-event-update-area (OFBIZ-11761)
+
+Not necessary to modify model*.java because it's manage by update-area
+object in the two case
+---
+ framework/widget/dtd/widget-form.xsd | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/framework/widget/dtd/widget-form.xsd b/framework/widget/dtd/widget-form.xsd
+index 4b068d2284..a1aba90f14 100644
+--- a/framework/widget/dtd/widget-form.xsd
++++ b/framework/widget/dtd/widget-form.xsd
+@@ -1526,6 +1526,9 @@ under the License.
+             <xs:documentation>Area to be updated when a field event occurs.</xs:documentation>
+         </xs:annotation>
+         <xs:complexType>
++            <xs:sequence>
++                <xs:element minOccurs="0" maxOccurs="unbounded" ref="parameter" />
++            </xs:sequence>
+             <xs:attribute name="event-type" use="required">
+                 <xs:simpleType>
+                     <xs:restriction base="xs:token">
+-- 
+2.11.0
+

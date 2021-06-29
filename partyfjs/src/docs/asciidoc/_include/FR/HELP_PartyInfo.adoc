@@ -1,0 +1,19 @@
+
+= Portlet Les information d'un acteur.
+
+Cette portlet affiche un résumé des informations de l'acteur (différent selon le type de l'acteur Personne ou Groupe d'acteur).
+
+Le Bouton édition permet de voir l'ensemble des informations et au besoin de les modifier.
+
+&nbsp;
+
+== Les paramètre de la Portlet
+
+* Le show screenlet menu Standard, il permet de cacher le menu de la portlet (refresh et édition)
+* Le show edit menu Standard: s'il est positionné à N alors le boutton "édition" n'apparait pas
+
+
+
+== Règles de Securité
+
+* aucune au niveau de la portlet, uniquement celle au niveau du service de mise à jours de l'acteur (et celles du composant)

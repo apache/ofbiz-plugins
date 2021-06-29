@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entitymodel.xsd">
+  <!-- ========================================================= -->
+  <!-- ======================== Defaults ======================= -->
+  <!-- ========================================================= -->
+    <title>Entity of an Apache OFBiz Component</title>
+    <description>Extend for PartyFjs</description>
+    <version>1.0</version>
+
+  <!-- ========================================================= -->
+  <!-- org.apache.ofbiz.party.party -->
+  <!-- ========================================================= -->
+
+    <view-entity entity-name="PartyIdentificationAndType"
+                package-name="org.apache.ofbiz.party.party"
+                title="PartyIdentification and PartyIdentificationType View Entity">
+      <member-entity entity-alias="PI" entity-name="PartyIdentification"/>
+      <member-entity entity-alias="PIT" entity-name="PartyIdentificationType"/>
+      <alias-all entity-alias="PI" />
+      <alias-all entity-alias="PIT">
+           <exclude field="partyId"/>
+      </alias-all>
+      <view-link entity-alias="PI" rel-entity-alias="PIT">
+        <key-map field-name="partyIdentificationTypeId"/>
+      </view-link>
+    </view-entity>
+
+    <extend-entity entity-name="PartyAttribute" default-resource-name="PartyEntityLabels">
+    </extend-entity>
+
+    <view-entity entity-name="PartyAndRoleTypeView"
+            package-name="org.apache.ofbiz.party.party"
+            title="Party Role View Entity">
+      <member-entity entity-alias="PNV" entity-name="PartyNameView"/>
+      <member-entity entity-alias="PR" entity-name="PartyRole"/>
+      <member-entity entity-alias="RT" entity-name="RoleType"/>
+      <alias-all entity-alias="PNV">
+        <exclude field="description"/>
+      </alias-all>
+      <alias entity-alias="PNV" name="partyNameViewDescription" field="description"/>
+      <alias entity-alias="RT" name="roleTypeId"/>
+      <alias entity-alias="RT" name="parentTypeId"/>
+      <alias entity-alias="RT" name="description"/>
+      <view-link entity-alias="PNV" rel-entity-alias="PR">
+            <key-map field-name="partyId"/>
+        </view-link>
+      <view-link entity-alias="PR" rel-entity-alias="RT">
+        <key-map field-name="roleTypeId"/>
+      </view-link>
+    </view-entity>
+
+</entitymodel>

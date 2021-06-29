@@ -1,0 +1,468 @@
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://ofbiz.apache.org/Widget-Form" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Form http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+    <form name="LookupPartyFjs" extends="LookupParty" extends-resource="component://party/widget/partymgr/PartyForms.xml">
+        <field name="onlyList"><hidden value="Y"/><!-- used by FindScreenDecorator to only send list result --></field>
+        <field name="extInfo"><ignored/></field>
+        <field name="extInfo2" title="${uiLabelMap.PartyContactInformation}">
+            <radio>
+                <option key="N" description="${uiLabelMap.CommonNone}"/>
+                <option key="P" description="${uiLabelMap.PartyPostal}"/>
+                <option key="T" description="${uiLabelMap.PartyTelecom}"/>
+                <option key="O" description="${uiLabelMap.CommonOther}"/>
+            </radio>
+            <on-field-event-update-area area-target="collapse" event-type="collapse" area-id="ListPartyP"/>
+            <on-field-event-update-area area-target="collapse" event-type="collapse" area-id="ListPartyT"/>
+            <on-field-event-update-area area-target="collapse" event-type="collapse" area-id="ListPartyO"/>
+            <on-field-event-update-area area-target="expand"   event-type="collapse" area-id="ListParty{extInfo}"/>
+        </field>
+        <field name="partyClassificationGroupId" title="${uiLabelMap.PartyClassificationGroup}" use-when="parentTypeId == null">
+            <drop-down ><!-- TODO manage allow-multiple="true" size="5" allow-empty="false" -->
+                <entity-options entity-name="PartyClassificationGroupAndType" description="${typeDescription}" key-field-name="partyClassificationGroupId">
+                    <entity-order-by field-name="partyClassificationGroupId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <on-event-update-area area-target="findparty" event-type="set-area" area-id="searchResults_Party"/>
+        <on-event-update-area event-type="collapse" area-id="findScreenlet_Party" area-target="collapse"/>
+        <sort-order>
+            <sort-field name="extInfo2"/>
+            <sort-field name="partyId"/>
+            <sort-field name="userLoginId"/>
+            <sort-field name="externalId"/>
+            <sort-field name="lastName"/>
+            <sort-field name="firstName"/>
+            <sort-field name="groupName"/>
+            <sort-field name="roleTypeId"/>
+            <sort-field name="partyTypeId"/>
+            <sort-field name="partyClassificationGroupId"/>
+            <field-group title="${uiLabelMap.PartyPartyIdentification}" initially-collapsed="true">
+                <sort-field name="idValue"/>
+                <sort-field name="partyIdentificationTypeId"/>
+            </field-group>
+            <field-group title="${uiLabelMap.PartyPostal}" initially-collapsed="true" id="ListPartyP">
+                <sort-field name="address1"/>
+                <sort-field name="address2"/>
+                <sort-field name="city"/>
+                <sort-field name="stateProvinceGeoId"/>
+                <sort-field name="postalCode"/>
+            </field-group>
+            <field-group title="${uiLabelMap.PartyTelecom}" initially-collapsed="true" id="ListPartyT">
+                <sort-field name="countryCode"/>
+                <sort-field name="areaCode"/>
+                <sort-field name="contactNumber"/>
+            </field-group>
+            <field-group title="${uiLabelMap.PartyContactInformationOther}" initially-collapsed="true" id="ListPartyO">
+                <sort-field name="infoString"/>
+            </field-group>
+            <field-group title="${uiLabelMap.ProductProduct}" initially-collapsed="true">
+                <sort-field name="inventoryItemId"/>
+                <sort-field name="serialNumber"/>
+                <sort-field name="softIdentifier"/>
+            </field-group>
+            <sort-field name="searchButton"/>
+        </sort-order>
+    </form>
+
+    <grid name="ListParties" list-name="listIt"
+          odd-row-style="alternate-row" default-table-style="basic-table hover-bar" default-entity-name="Party">
+        <actions>
+            <set field="recapPageId" from-field="recapPageId" default-value="PartyRecapFrontJs" /><!--  TODO default value should be set as attribute for _NA_ portalPage -->
+            <set field="usePartyClassification" from-field="parameters.usePartyClassification" default-value="${usePartyClassification}"/>
+            <set field="partyClassificationGroupId" from-field="parameters.partyClassificationGroupId" type="List"/>
+            <set field="parameters.sortField" from-field="parameters.sortField" default-value="partyId"/>
+            <service service-name="performFindParty" auto-field-map="parameters" result-map-list="listIt">
+<!--                 <field-map field-name="statusId"                   from-field="parameters.statusId"/> -->
+<!--                 <field-map field-name="partyId"                    from-field="parameters.partyId"/> -->
+<!--                 <field-map field-name="firstName"                  from-field="parameters.firstName"/> -->
+<!--                 <field-map field-name="lastName"                   from-field="parameters.lastName"/> -->
+<!--                 <field-map field-name="groupName"                  from-field="parameters.groupName"/> -->
+<!--                 <field-map field-name="roleTypeGroupId"            from-field="parameters.roleTypeGroupId"/> -->
+<!--                 <field-map field-name="roleTypeId"                 from-field="parameters.roleTypeId"/> -->
+<!--                 <field-map field-name="facilityId"                 from-field="parameters.facilityId"/> -->
+<!--                 <field-map field-name="partyTypeId"                from-field="parameters.partyTypeId"/> -->
+<!--                 <field-map field-name="contactName"                from-field="parameters.contactName"/> -->
+<!--                 <field-map field-name="address1"                   from-field="parameters.address1"/> -->
+<!--                 <field-map field-name="address2"                   from-field="parameters.address2"/> -->
+<!--                 <field-map field-name="postalCode"                 from-field="parameters.postalCode"/> -->
+<!--                 <field-map field-name="city"                       from-field="parameters.city"/> -->
+<!--                 <field-map field-name="countryGeoId"               from-field="parameters.countryGeoId"/> -->
+<!--                 <field-map field-name="countryCode"                from-field="parameters.countryCode"/> -->
+<!--                 <field-map field-name="areaCode"                   from-field="parameters.areaCode"/> -->
+<!--                 <field-map field-name="contactNumber"              from-field="parameters.contactNumber"/> -->
+<!--                 <field-map field-name="infoString"                 from-field="parameters.infoString"/> -->
+<!--                 <field-map field-name="comments"                   from-field="parameters.comments"/> -->
+<!--                 <field-map field-name="lookupFlag"                 from-field="parameters.lookupFlag"/> -->
+<!--                 <field-map field-name="orderBy"                    from-field="parameters.sortField"/> -->
+                <field-map field-name="partyClassificationGroupId" from-field="partyClassificationGroupId"/>
+            </service>
+        </actions>
+        <row-actions>
+            <service service-name="getPartyEmail" result-map="partyEmail"/>
+            <service service-name="getPartyTelephone" result-map="phone">
+                <field-map field-name="contactMechPurposeTypeId" value="PHONE_WORK"/>
+            </service>
+            <service service-name="getPartyPostalAddress" result-map="address"/>
+        </row-actions>
+        <field name="partyId" sort-field="true">
+            <hyperlink description="${partyId}" target="showExample" also-hidden="false" >
+                <parameter param-name="partyId"/>
+            </hyperlink>
+            <on-field-event-update-area event-type="set-watcher" area-id="showParty" area-target="">
+                <parameter param-name="partyId"/>
+            </on-field-event-update-area>
+            <on-field-event-update-area event-type="collapse" area-target="collapse" area-id="ListParties"/>
+        </field>
+        <field name="recap" title=" ">
+            <hyperlink target="showPortalPage" image-location="${iconsPurpose.Overview}" image-title="${uiLabelMap.IconsTooltips_Overview}">
+                <parameter param-name="portalPageId" from-field="recapPageId"/>
+                <parameter param-name="partyId"/>
+            </hyperlink>
+        </field>
+        <field name="partyName" sort-field="true">
+            <display description="${groovy: return org.apache.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}"/>
+        </field>
+        <field name="partyTypeId" title="${uiLabelMap.CommonType}" sort-field="true">
+            <display-entity entity-name="PartyType"/>
+        </field>
+        <field name="phone" title="${uiLabelMap.PartyPhoneNumber}"><display description="${phone.countryCode}${phone.areaCode} ${phone.contactNumber}"/></field>
+        <field name="countryGeoId" title="${uiLabelMap.CommonCountry}" map-name="address">
+            <display-entity entity-name="Geo" description="${geoName}" key-field-name="geoId"/>
+        </field>
+        <field name="city" title="${uiLabelMap.CommonCity}" map-name="address"><display/></field>
+        <field name="partyEmailAddress" title="${uiLabelMap.PartyEmailAddress}"><hyperlink image-title="${partyEmail.emailAddress}"  target="mailto:${partyEmail.emailAddress}" target-type="plain" image-location="${iconsPurpose.Email}" alternate="${uiLabelMap.PartyEmailAddress}"/></field>
+        <field name="partyClassificationGroupId" use-when="${usePartyClassification == 'Y'}"  sort-field="true">
+            <display-entity entity-name="PartyClassificationGroup"/>
+        </field>
+    </grid>
+
+    <form name="EditParam_ListParties" extends="CommonPortletEdit" extends-resource="component://common/widget/PortletEditForms.xml" default-entity-name="PartyAttribute">
+        <field name="usePartyClassification"><radio no-current-selected-key="N"><option key="Y"/><option key="N"/></radio></field>
+        <field name="recapPageId"><text default-value="PartyRecap"/></field>
+        <field name="windowName"><text default-value="${uiLabelMap.CommonSearchResults}"/></field>
+        <field name="defaultDetailPortlet"><text/></field>
+        <field name="updateButton">
+            <submit />
+        </field>
+    </form>
+
+
+    <form name="FindParties" type="single" target="showPortalPage" focus-field-name="firstName"> <!-- validate-link-id="submitlink" validate-link-on-enter="true" -->
+        <actions>
+            <set field="partyTypeId"     from-field="partyTypeId"/>
+            <set field="usePartyId"    value="${usePartyId=='Y'?true:false}" default-value="true" type="Boolean"/>
+            <set field="useFirstName"  value="${useFirstName=='Y'?true:false}" default-value="true" type="Boolean"/>
+            <set field="useLastName"   value="${useLastName=='Y'?true:false}" default-value="true" type="Boolean"/>
+            <set field="useGroupName"  value="${useGroupName=='Y'?true:false}" default-value="true" type="Boolean"/>
+            <set field="useRoleTypeGroupId" value="${useRoleTypeGroupId=='Y'?true:false}" default-value="true" type="Boolean"/>
+            <set field="useRoleTypeId"  value="${useRoleTypeId=='Y'?true:false}" default-value="true" type="Boolean"/>
+            <set field="usePartyTypeId" value="${usePartyTypeId=='Y'?true:false}" default-value="true" type="Boolean"/>
+            <set field="useContactName" value="${useContactName=='Y'?true:false}" default-value="true" type="Boolean"/>
+            <set field="useAddress1"   value="${useAddress1=='Y'?true:false}" default-value="true" type="Boolean"/>
+            <set field="useAddress2"   value="${useAddress2=='Y'?true:false}" default-value="true" type="Boolean"/>
+            <set field="useCity"       value="${useCity=='Y'?true:false}" default-value="true" type="Boolean"/>
+            <set field="usePostalCode" value="${usePostalCode=='Y'?true:false}" default-value="true" type="Boolean"/>
+            <set field="useCountryGeoId" value="${useCountryGeoId=='Y'?true:false}" default-value="true" type="Boolean"/>
+            <set field="useCountryCode" value="${useCountryCode=='Y'?true:false}" default-value="true" type="Boolean"/>
+            <set field="useAreaCode"    value="${useAreaCode=='Y'?true:false}" default-value="true" type="Boolean"/>
+            <set field="useContactNumber" value="${useContactNumber=='Y'?true:false}" default-value="true" type="Boolean"/>
+            <set field="useInfoString"   value="${useInfoString=='Y'?true:false}" default-value="true" type="Boolean"/>
+            <set field="usePartyClassification"   value="${usePartyClassification=='Y'?true:false}" default-value="true" type="Boolean"/>
+            <set field="useFacilityId" value="${useFacilityId=='Y'?true:false}" default-value="true" type="Boolean"/>
+            <set field="useComments"     value="${useComments=='Y'?true:false}" default-value="true" type="Boolean"/>
+            <set field="roleTypeGroupId" from-field="roleTypeGroupId"/>
+            <set field="useEnumPartyType" from-field="useEnumPartyType"/>
+            <set field="roleTypeId"      from-field="roleTypeId"/>
+            <set field="parentPartyClassificationTypeId" from-field="parentPartyClassificationTypeId"/>
+        </actions>
+        <field name="lookupFlag"><hidden value="Y"/></field>
+        <field name="noConditionFind"><hidden value="Y"/></field>
+        <field name="partyId" title="${uiLabelMap.CommonId}" use-when="usePartyId"><text size="15" /></field>
+        <field name="firstName" use-when="useFirstName"><text size="15"/></field>
+        <field name="lastName" use-when="useLastName"><text size="15"/></field>
+        <field name="groupName" use-when="useGroupName"><text size="15"/></field>
+        <field name="roleTypeGroupId" use-when="useRoleTypeGroupId @and roleTypeGroupId != null"><hidden/></field>
+        <field name="roleTypeGroupId" use-when="useRoleTypeGroupId @and roleTypeGroupId == null">
+          <drop-down><option key="ANY" description=" "/>
+<!--               <entity-options description="${description}" entity-name="RoleTypeGroup" key-field-name="roleTypeGroupId"><entity-order-by field-name="sequenceId"/></entity-options> -->
+              <entity-options description="${description}" entity-name="RoleType" key-field-name="roleTypeId"><entity-order-by field-name="description"/></entity-options>
+          </drop-down>
+        </field>
+        <field name="roleTypeId" use-when="useRoleTypeId @and roleTypeGroupId != null">
+            <drop-down>
+                <option key="ANY" description=" "/>
+                <entity-options description="${description}" entity-name="RoleTypeGroupView" key-field-name="roleTypeId">
+                    <entity-constraint name="roleTypeGroupId" operator="equals" value="${roleTypeGroupId}" ignore-if-empty="true" ignore-if-null="true"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="roleTypeId" use-when="useRoleTypeId @and roleTypeGroupId == null">
+            <drop-down>
+                <option key="ANY" description=" "/>
+                <entity-options description="${description}" entity-name="RoleType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="roleTypeId" use-when=" ! useRoleTypeId @and roleTypeId != null"><hidden value="${roleTypeId}"/></field>
+        <field name="facilityId" use-when="useFacilityId">
+            <lookup target-form-name="LookupFacility" size="15"/>
+        </field>
+        <field name="partyTypeId" use-when="(useEnumPartyType == null @and !usePartyTypeId) || partyTypeId != null"><hidden/></field>
+        <field name="partyTypeId" title="${uiLabelMap.CommonType}" use-when="useEnumPartyType==null @and usePartyTypeId @and partyTypeId == null">
+             <drop-down allow-empty="true" no-current-selected-key="${partyTypeId}">
+                <entity-options description="${description}" entity-name="PartyType"/>
+            </drop-down>
+        </field>
+         <field name="partyTypeId" title="${uiLabelMap.CommonType}" use-when="useEnumPartyType!=null">
+             <drop-down allow-empty="true" no-current-selected-key="${partyTypeId}">
+                <entity-options description="${description}" entity-name="Enumeration" key-field-name="enumCode">
+                    <entity-constraint name="enumTypeId" env-name="useEnumPartyType"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="contactName" use-when="useContactName"><text size="15"/></field>
+        <field name="address1" title="${uiLabelMap.CommonAddress1}" use-when="useAddress1"><text size="15"/></field>
+        <field name="address2" title="${uiLabelMap.CommonAddress2}" use-when="useAddress2"><text size="15"/></field>
+        <field name="city" use-when="useCity"><text size="15"/></field>
+        <field name="postalCode" position="2" use-when="usePostalCode"><text size="6"/></field>
+        <field name="countryGeoId" use-when="useCountryGeoId">
+            <drop-down allow-empty="true">
+                <entity-options description="${geoName}" entity-name="Geo" key-field-name="geoId">
+                    <entity-constraint name="geoTypeId" value="COUNTRY"/>
+                    <entity-order-by field-name="geoName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="countryCode" title="${uiLabelMap.CommonCountryCode}" use-when="useCountryCode"><text size="15"/></field>
+        <field name="areaCode" title="${uiLabelMap.PartyAreaCode}" use-when="useAreaCode"><text size="15"/></field>
+        <field name="contactNumber" title="${uiLabelMap.PartyContactNumber}" use-when="useContactNumber"><text size="15"/></field>
+        <field name="infoString" title="${uiLabelMap.PartyContactInformation}" use-when="useInfoString">
+            <text size="15"/>
+        </field>
+        <field name="partyClassificationGroupId" title="${parentPartyClassificationTypeId}" use-when="usePartyClassification @and parentPartyClassificationTypeId == null">
+            <drop-down allow-empty="true"><!-- TODO  allow-multiple="true" size="5" -->
+                 <entity-options description="[${typeDescription}] ${description}" entity-name="PartyClassificationGroupAndType">
+                     <entity-order-by field-name="partyClassificationTypeId"/>
+                     <entity-order-by field-name="description"/>
+                 </entity-options>
+            </drop-down>
+        </field>
+        <field name="partyClassificationGroupId" title="${parentPartyClassificationTypeId}" use-when="usePartyClassification @and parentPartyClassificationTypeId != null">
+            <drop-down allow-empty="true"><!-- allow-multiple="true" size="5"  -->
+                 <entity-options description="[${typeDescription}] ${description}" entity-name="PartyClassificationGroupAndType">
+                     <entity-constraint name="parentTypeId" env-name="parentPartyClassificationTypeId"/>
+                     <entity-order-by field-name="partyClassificationTypeId"/>
+                     <entity-order-by field-name="description"/>
+                 </entity-options>
+            </drop-down>
+        </field>
+        <field name="comments" use-when="useComments"><text size="15"/></field>
+        <field name="find" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit" position="1" id-name="submitlink">
+          <submit/>
+        </field>
+        <on-event-update-area area-target="" event-type="set-watcher" area-id="listParties"/>
+        <on-event-update-area area-target="collapse" event-type="collapse" area-id="FindParties"/>
+        <sort-order>
+            <sort-field name="partyId"/>
+            <sort-field name="firstName"/>
+            <sort-field name="lastName"/>
+            <sort-field name="groupName"/>
+            <sort-field name="roleTypeGroupId"/>
+            <sort-field name="roleTypeId"/>
+            <sort-field name="facilityId"/>
+            <sort-field name="partyTypeId"/>
+            <sort-field name="contactName"/>
+            <field-group title="${uiLabelMap.PartyPostal}" collapsible="true" initially-collapsed="true">
+                <sort-field name="address1"/>
+                <sort-field name="address2"/>
+                <sort-field name="city"/>
+                <sort-field name="postalCode"/>
+                <sort-field name="countryGeoId"/>
+            </field-group>
+            <field-group title="${uiLabelMap.PartyTelecom}" collapsible="true" initially-collapsed="true">
+                <sort-field name="countryCode"/>
+                <sort-field name="areaCode"/>
+                <sort-field name="contactNumber"/>
+            </field-group>
+            <field-group title="${uiLabelMap.CommonOther}" collapsible="true" initially-collapsed="true">
+                <sort-field name="infoString"/>
+            </field-group>
+            <field-group title="${uiLabelMap.PartyClassificationGroup}" collapsible="true" initially-collapsed="true">
+                <sort-field name="partyClassificationGroupId"/>
+            </field-group>
+            <sort-field name="comments"/>
+            <sort-field name="find"/>
+        </sort-order>
+    </form>
+
+    <form name="EditParam_FindParties" extends="CommonPortletEdit" extends-resource="component://common/widget/PortletEditForms.xml" default-entity-name="PartyAttribute">
+        <field name="resultPortalPortletId">
+            <text default-value="ListParties"/>
+        </field>
+        <field name="roleTypeGroupId">
+            <drop-down allow-empty="true">
+                <entity-options description="[${roleTypeGroupId}] ${description}" entity-name="RoleTypeGroup" >
+                  <entity-constraint name="parentGroupId" env-name="nullField" />
+                  <entity-order-by field-name="roleTypeGroupId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="roleTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="[${roleTypeId}] ${description}" entity-name="RoleType" key-field-name="roleTypeId">
+                  <entity-order-by field-name="roleTypeId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="partyTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="PartyType" />
+            </drop-down>
+        </field>
+        <field name="usePartyId" position="1"><radio no-current-selected-key="N"><option key="Y"/><option key="N"/></radio></field>
+        <field name="useFirstName" position="2"><radio no-current-selected-key="N"><option key="Y"/><option key="N"/></radio></field>
+        <field name="useLastName" position="1"><radio no-current-selected-key="N"><option key="Y"/><option key="N"/></radio></field>
+        <field name="usegroupName" position="2"><radio no-current-selected-key="N"><option key="Y"/><option key="N"/></radio></field>
+        <field name="useRoleTypeGroupId" position="1"><radio no-current-selected-key="N"><option key="Y"/><option key="N"/></radio></field>
+        <field name="useRoleTypeId" position="2"><radio no-current-selected-key="N"><option key="Y"/><option key="N"/></radio></field>
+        <field name="usePartyTypeId" position="1"><radio no-current-selected-key="N"><option key="Y"/><option key="N"/></radio></field>
+        <field name="useContactName" position="2"><radio no-current-selected-key="N"><option key="Y"/><option key="N"/></radio></field>
+        <field name="useAddress1" position="1"><radio no-current-selected-key="N"><option key="Y"/><option key="N"/></radio></field>
+        <field name="useAddress2" position="2"><radio no-current-selected-key="N"><option key="Y"/><option key="N"/></radio></field>
+        <field name="useCity" position="1"><radio no-current-selected-key="N"><option key="Y"/><option key="N"/></radio></field>
+        <field name="usePostalCode" position="2"><radio no-current-selected-key="N"><option key="Y"/><option key="N"/></radio></field>
+        <field name="useCountryGeoId" position="1"><radio no-current-selected-key="N"><option key="Y"/><option key="N"/></radio></field>
+        <field name="useCountryCode" position="2"><radio no-current-selected-key="N"><option key="Y"/><option key="N"/></radio></field>
+        <field name="useAreaCode" position="1"><radio no-current-selected-key="N"><option key="Y"/><option key="N"/></radio></field>
+        <field name="useContactNumber" position="2"><radio no-current-selected-key="N"><option key="Y"/><option key="N"/></radio></field>
+        <field name="useInfoString" position="1"><radio no-current-selected-key="N"><option key="Y"/><option key="N"/></radio></field>
+        <field name="usePartyClassification" position="2"><radio no-current-selected-key="N"><option key="Y"/><option key="N"/></radio></field>
+        <field name="useFacilityId"><radio no-current-selected-key="N"><option key="Y"/><option key="N"/></radio></field>
+        <field name="useComments" position="1"><radio no-current-selected-key="N"><option key="Y"/><option key="N"/></radio></field>
+        <field name="parentPartyClassificationTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="PartyClassificationType" key-field-name="partyClassificationTypeId">
+                    <entity-constraint name="parentTypeId" operator="equals" value="" />
+                </entity-options>
+            </drop-down>
+        </field>
+         <field name="useEnumPartyType">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="EnumerationType" key-field-name="enumTypeId">
+                    <entity-constraint name="parentTypeId" operator="equals" value="" />
+                </entity-options>
+            </drop-down>
+         </field>
+        <field name="updateButton">
+            <submit />
+        </field>
+    </form>
+
+    <form name="LookupPartyName" target="LookupPartyName" type="single"
+          extends="LookupPartyName" extends-resource="component://party/widget/partymgr/LookupForms.xml" >
+        <field name="lookupResult"><hidden value="Y"/></field>
+        <field name="lookupFieldForm"><hidden value="${parameters.lookupFieldForm}"/></field>
+        <field name="lookupField"><hidden value="${parameters.lookupField}"/></field>
+        <on-event-update-area event-type="set-area" area-id="lookup-results" area-target="LookupPartyName"/>
+        <on-event-update-area event-type="collapse" area-id="LookupFindScreenlet" area-target="collapse"/>
+    </form>
+    <form name="ListLookupPartyName" type="list" list-name="listIt" paginate-target="LookupPartyName"
+          extends="ListLookupPartyName" extends-resource="component://party/widget/partymgr/LookupForms.xml" default-entity-name="PartyNameView">
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}"  widget-style="smallSubmit">
+            <hyperlink description="${partyId}" also-hidden="false"/>
+            <on-field-event-update-area event-type="set-field-in-form" area-id="${parameters.lookupFieldForm}" area-target="${parameters.lookupField}"/>
+            <on-field-event-update-area event-type="close-modal" area-id="" area-target="" />
+        </field>
+        <sort-order>
+            <sort-field name="partyId"/>
+            <sort-field name="partyTypeId"/>
+            <sort-field name="firstName"/>
+            <sort-field name="lastName"/>
+            <sort-field name="groupName"/>
+        </sort-order>
+    </form>
+
+    <form name="LookupPartyRoleType" target="LookupPartyRoleType" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="lookupResult"><hidden value="Y"/></field>
+        <field name="lookupFieldForm"><hidden value="${parameters.lookupFieldForm}"/></field>
+        <field name="lookupField"><hidden value="${parameters.lookupField}"/></field>
+        <!--<auto-fields-entity entity-name="PartyNameView" default-field-type="find"/>-->
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="roleTypeId"><hidden value="${roleTypeId}"/></field>
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}"><text-find/></field>
+        <field name="firstName" title="${uiLabelMap.PartyFirstName}"><text-find/></field>
+        <field name="lastName"  title="${uiLabelMap.PartyLastName}"><text-find/></field>
+        <field name="groupName" title="${uiLabelMap.PartyGroupName}"><text-find/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
+        <on-event-update-area event-type="set-area" area-id="lookup-results" area-target="LookupPartyRoleType"/>
+    </form>
+    <form name="listLookupPartyRoleGroup" type="list" list-name="listIt"
+                default-entity-name="PartyAndRoleTypeView" >
+        <actions>
+            <set field="inputFields" from-field="parameters"/>
+            <set field="orderBy" value="partyId"/>
+            <set field="entityName" value="PartyAndRoleTypeView"/>
+            <script location="component://party/groovyScripts/party/FindLookUp.groovy"/>
+        </actions>
+        <!--<auto-fields-entity entity-name="PartyNameView" default-field-type="display"/>-->
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}"  widget-style="smallSubmit">
+            <hyperlink also-hidden="false" description="${partyId}"/>
+            <on-field-event-update-area event-type="set-field-in-form" area-id="${parameters.lookupFieldForm}" area-target="${parameters.lookupField}"/>
+            <on-field-event-update-area event-type="close-modal" area-id="" area-target="" />
+        </field>
+        <field name="partyTypeId" title="${uiLabelMap.PartyTypeId}">
+            <display-entity also-hidden="false" entity-name="PartyType" description="${description}"/>
+        </field>
+        <field name="roleTypeId" title="${uiLabelMap.PartyRoleTypeId}">
+            <display-entity also-hidden="false" entity-name="RoleType" description="${description}"/>
+        </field>
+        <field name="firstName" title="${uiLabelMap.PartyFirstName}"><display/></field>
+        <field name="lastName"  title="${uiLabelMap.PartyLastName}"><display/></field>
+        <field name="groupName" title="${uiLabelMap.PartyGroupName}"><display/></field>
+    </form>
+
+    <form name="LookupUserLoginAndPartyDetails" target="LookupUserLogin" type="single"
+          extends="LookupUserLoginAndPartyDetails" extends-resource="component://party/widget/partymgr/LookupForms.xml" >
+        <field name="lookupResult"><hidden value="Y"/></field>
+        <field name="lookupFieldForm"><hidden value="${parameters.lookupFieldForm}"/></field>
+        <field name="lookupField"><hidden value="${parameters.lookupField}"/></field>
+        <on-event-update-area event-type="set-area" area-id="lookup-results" area-target="LookupUserLogin"/>
+        <on-event-update-area event-type="collapse" area-id="LookupFindScreenlet" area-target="collapse"/>
+    </form>
+    <form name="ListLookupUserLoginAndPartyDetails" type="list" list-name="listIt" paginate-target="LookupPartyNamUserLogin"
+          extends="ListLookupUserLoginAndPartyDetails" extends-resource="component://party/widget/partymgr/LookupForms.xml" default-entity-name="PartyNameView">
+        <field name="userLoginId" title="${uiLabelMap.CommonUserLoginId}" widget-style="smallSubmit">
+            <hyperlink description="${userLoginId}" also-hidden="false"/>
+            <on-field-event-update-area event-type="set-field-in-form" area-id="${parameters.lookupFieldForm}" area-target="${parameters.lookupField}"/>
+            <on-field-event-update-area event-type="close-modal" area-id="" area-target="" />
+        </field>
+        <sort-order>
+            <sort-field name="userLoginId"/>
+            <sort-field name="partyId"/>
+            <sort-field name="lastName"/>
+            <sort-field name="groupName"/>
+        </sort-order>
+    </form>
+</forms>

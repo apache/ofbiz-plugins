@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<!-- This document serves as an example for Compound Screen Widget feature -->
+<compound-widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:sc="http://ofbiz.apache.org/Site-Conf"
+        xmlns:sm="http://ofbiz.apache.org/Simple-Method"
+        xmlns:wf="http://ofbiz.apache.org/Widget-Form"
+        xmlns:wt="http://ofbiz.apache.org/Widget-Tree"
+        xmlns:wm="http://ofbiz.apache.org/Widget-Menu"
+        xmlns:ws="http://ofbiz.apache.org/Widget-Screen"
+        xsi:noNamespaceSchemaLocation="../../../framework/widget/dtd/compound-widgets.xsd">
+
+  <sc:site-conf>
+    <sc:request-map uri="ExampleFeature/mgmtPg"                    method="get"><sc:security https="true" auth="true"/><sc:response name="success"
+                                               type="view" value="ExampleFeatureMgmt"/></sc:request-map>
+    <sc:request-map uri="ExampleFeature/find"                      method="get"><sc:security https="true" auth="true"/><sc:response name="success"
+                                               type="view" value="FindExampleFeatures"/></sc:request-map>
+    <sc:request-map uri="ExampleFeature/list"                      method="post"><sc:security https="true" auth="true"/><sc:response name="success"
+                                               type="view" value="ListExampleFeatures"/></sc:request-map>
+    <sc:request-map uri="ExampleFeature/create/{exampleFeatureId}" method="get"><sc:security https="true" auth="true"/><sc:response name="success"
+                                               type="view" value="EditExampleFeature"/></sc:request-map>
+    <sc:request-map uri="ExampleFeature/edit/{exampleFeatureId}"   method="get"><sc:security https="true" auth="true"/><sc:response name="success"
+                                               type="view" value="EditExampleFeature"/></sc:request-map>
+    <sc:request-map uri="ExampleFeature/change"                    method="post"><sc:security https="true" auth="true"/>
+        <sc:event type="service" invoke="createExampleFeature"/>
+        <sc:response name="success" type="request" value="json"/>
+        <sc:response name="error" type="request" value="json"/>
+        <sc:response name="fail" type="request" value="json"/>
+    </sc:request-map>
+    <sc:request-map uri="ExampleFeature/change/{exampleFeatureId}" method="put"><sc:security https="true" auth="true"/>
+        <sc:event type="service" invoke="updateExampleFeature"/>
+        <sc:response name="success" type="request" value="json"/>
+        <sc:response name="error" type="request" value="json"/>
+    </sc:request-map>
+    <sc:request-map uri="ExampleFeature/change/{exampleFeatureId}" method="delete"><sc:security https="true" auth="true"/>
+        <sc:event type="service" invoke="deleteExampleFeature"/>
+        <sc:response name="success" type="request" value="json"/>
+        <sc:response name="error" type="request" value="json"/>
+    </sc:request-map>
+
+    <sc:view-map name="ExampleFeatureMgmt"   type="screenfrontjs" page="component://examplefjs/widget/ExampleFeatureWidgets.xml#ExampleFeatureMgmt"/>
+    <sc:view-map name="FindExampleFeatures"  type="screenfrontjs" page="component://examplefjs/widget/ExampleFeatureWidgets.xml#FindExampleFeatures"/>
+    <sc:view-map name="ListExampleFeatures"  type="screenfrontjs" page="component://examplefjs/widget/ExampleFeatureWidgets.xml#ListExampleFeatures"/>
+    <sc:view-map name="EditExampleFeature"   type="screenfrontjs" page="component://examplefjs/widget/ExampleFeatureWidgets.xml#EditExampleFeature"/>
+    <sc:view-map name="CreateExampleFeature" type="screenfrontjs" page="component://examplefjs/widget/ExampleFeatureWidgets.xml#CreateExampleFeature"/>
+  </sc:site-conf>
+
+
+
+
+  <wm:menus>
+    <wm:menu name="ExampleFeatureExternalMenu" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!-- Add title in order to have both icon and text -->
+        <wm:menu-item name="newExampleFeature" title="${uiLabelMap.ExampleNewExampleFeature}">
+            <wm:link target="ExampleFeature/create" link-type="layered-modal">
+                <wm:image src="${iconsPurpose.Add}" title="${uiLabelMap.ExampleNewExampleFeature}"/>
+            </wm:link>
+        </wm:menu-item>
+    </wm:menu>
+  </wm:menus>
+
+
+
+
+  <ws:screens>
+    <ws:screen name="ExampleFeatureMgmt">
+        <ws:section>
+          <ws:condition>
+              <ws:if-has-permission permission="EXAMPLE" action="_VIEW"/>
+          </ws:condition>
+          <ws:widgets>
+            <ws:decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+              <ws:decorator-section name="body">
+                <ws:column-container>
+                   <ws:column style="md-4">
+                    <ws:container style="button-bar"><ws:link target="EditExampleFeature" text="${uiLabelMap.ExampleNewExampleFeature}"/></ws:container><!-- TODO OHE a revoir -->
+                    <ws:include-menu name="ExampleFeatureExternalMenu" location="component://examplefjs/widget/ExampleFeatureWidgets.xml"/>
+                    <ws:include-screen name="FindExampleFeatures"/>
+                    <ws:container  id="edit" watcher-name="showExampleFeature" auto-update-target="ExampleFeature/edit/{exampleFeatureId}">
+                      <ws:include-screen name="EditExampleFeature"/>
+                    </ws:container>
+                  </ws:column>
+                  <ws:column>
+                    <ws:container id="listExampleFeature" watcher-name="listExampleFeature" auto-update-target="ExampleFeature/list">
+                      <ws:include-screen name="ListExampleFeatures"/>
+                    </ws:container>
+                    <ws:container id="listExampleFeatureAppl_show" watcher-name="showExampleFeature"
+                                                         auto-update-target="ExampleFeatureAppl/bList/{exampleFeatureId}">
+                          <ws:include-screen name="ExampleFeatureApplsB" location="component://examplefjs/widget/ExampleFeatureApplWidgets.xml"/>
+                    </ws:container>
+                  </ws:column>
+                </ws:column-container>
+              </ws:decorator-section>
+            </ws:decorator-screen>
+          </ws:widgets>
+        </ws:section>
+    </ws:screen>
+    <ws:screen name="FindExampleFeatures">
+      <ws:section>
+        <ws:widgets>
+          <ws:screenlet title="${uiLabelMap.PageTitleFindExampleFeature}" >
+              <ws:include-form name="FindExampleFeatures" location="component://examplefjs/widget/ExampleFeatureWidgets.xml"/>
+          </ws:screenlet>
+        </ws:widgets>
+      </ws:section>
+    </ws:screen>
+
+    <ws:screen name="ListExampleFeatures">
+      <ws:section>
+          <ws:actions>
+            <ws:set field="exampleFeatureCtx" from-field="parameters"/>
+            <ws:set field="exampleFeatureCtx.noConditionFind" value="Y"/>
+          </ws:actions>
+          <ws:widgets>
+            <ws:decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+              <ws:decorator-section name="body">
+                <ws:screenlet title="${uiLabelMap.PageTitleListExampleFeatures}" id="ListExampleFeatureLayer" collapsible="true" >
+                  <ws:include-grid name="ListExampleFeatures" location="component://examplefjs/widget/ExampleFeatureWidgets.xml"/>
+                </ws:screenlet>
+              </ws:decorator-section>
+            </ws:decorator-screen>
+          </ws:widgets>
+      </ws:section>
+    </ws:screen>
+
+    <ws:screen name="EditExampleFeature">
+      <ws:section>
+        <ws:condition>
+          <ws:not><ws:if-empty field="parameters.exampleFeatureId"/> </ws:not>
+        </ws:condition>
+        <ws:actions>
+          <ws:set field="exampleFeatureId" from-field="parameters.exampleFeatureId"/>
+          <ws:entity-one value-field="exampleFeature" entity-name="ExampleFeature"/>
+        </ws:actions>
+        <ws:widgets>
+          <ws:decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+            <ws:decorator-section name="body">
+              <ws:screenlet title="${uiLabelMap.PageTitleEditExampleFeature}"><!-- TODO create title -->
+                <ws:include-form name="EditExampleFeature" location="component://examplefjs/widget/ExampleFeatureWidgets.xml"/>
+              </ws:screenlet>
+            </ws:decorator-section>
+          </ws:decorator-screen>
+        </ws:widgets>
+      </ws:section>
+    </ws:screen>
+
+  </ws:screens>
+
+
+
+
+  <wf:forms>
+   <wf:form name="FindExampleFeatures" type="single" extends="FindExampleFeatures"
+                           extends-resource="component://example/widget/example/ExampleFeatureForms.xml">
+          <wf:on-event-update-area area-target="" event-type="set-watcher" area-id="listExampleFeature"/>
+    </wf:form>
+
+    <wf:grid name="ListExampleFeatures" list-name="listIt" default-entity-name="ExampleFeature" extends="ListExampleFeatures"
+                          extends-resource="component://example/widget/example/ExampleFeatureForms.xml">
+        <wf:field name="exampleFeatureId" title="${uiLabelMap.ExampleExampleFeatureId}" widget-style="buttontext">
+            <wf:hyperlink description="${exampleFeatureId}" target="EditExampleFeature" also-hidden="false">
+                <wf:parameter param-name="exampleFeatureId"/>
+            </wf:hyperlink>
+            <wf:on-field-event-update-area event-type="set-watcher" area-id="showExampleFeature" area-target="">
+               <wf:parameter param-name="exampleFeatureId"/>
+            </wf:on-field-event-update-area>
+        </wf:field>
+        <wf:field name="featureSourceEnumId" title="${uiLabelMap.ExampleFeatureSource}">
+            <wf:display-entity entity-name="Enumeration" key-field-name="enumId" description="${description} [${enumCode}]"/>
+       </wf:field>
+    </wf:grid>
+
+    <wf:form name="EditExampleFeature" type="single" default-entity-name="ExampleFeature" extends="EditExampleFeature"
+                           extends-resource="component://example/widget/example/ExampleFeatureForms.xml"
+                          target="ExampleFeature/change/${exampleFeatureId}" title="" default-map-name="exampleFeature">
+        <wf:actions>
+            <wf:entity-one entity-name="StatusItem" value-field="currentStatus" auto-field-map="false">
+                <wf:field-map field-name="statusId" from-field="example.statusId"/>
+            </wf:entity-one>
+        </wf:actions>
+        <wf:alt-target use-when="exampleFeature==null" target="ExampleFeature/change"/>
+        <wf:field name="_method" use-when="exampleFeature!=null"><wf:hidden value="PUT"/></wf:field>
+        <wf:on-event-update-area area-target="" event-type="submit" area-id="form"/><!-- area-id not empty otherwise this event is overload by the next one without area-id -->
+        <wf:on-event-update-area area-target="" event-type="close-modal" area-id=""/>
+        <wf:on-event-update-area area-target="" event-type="set-watcher" area-id="showExampleFeature"><!-- for container about edit and ExampleFeatureAppls -->
+            <wf:parameter param-name="exampleFeatureId"/>
+            <wf:parameter param-name="redirect" value="exampleFeatureId"/>
+        </wf:on-event-update-area>
+    </wf:form>
+  </wf:forms>
+
+
+
+</compound-widgets>
