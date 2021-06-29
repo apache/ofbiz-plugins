@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>HeadlessCommerce Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+
+    <service name="validateCustomer" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="validateCustomer">
+        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="hasPermission" type="Boolean" mode="OUT" optional="false">
+            <description>Contains true if the if the requesting user is valid.</description>
+        </attribute>
+    </service>
+    <service name="getPasswordHint" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="getPasswordHint">
+        <attribute name="username" mode="IN" type="String"/>
+        <attribute name="passwordHint" mode="OUT" type="String" optional="true"/>
+    </service>
+    <service name="sendResetPasswordEmail" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="sendResetPasswordEmail">
+        <attribute name="username" mode="IN" type="String"/>
+        <attribute name="webSiteId" mode="IN" type="String"/>
+    </service>
+    <service name="changePassword" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="changePassword">
+        <permission-service service-name="validateCustomer"/>
+        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="currentPassword" mode="IN" type="String"/>
+        <attribute name="newPassword" mode="IN" type="String"/>
+        <attribute name="newPasswordVerify" mode="IN" type="String"/>
+        <attribute name="passwordHint" mode="IN" type="String" optional="true"/>
+        <attribute name="requirePasswordChange" mode="IN" type="String" optional="true" default="N"/>
+    </service>
+    <service name="createCustomer" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createCustomer">
+        <attribute name="webSiteId" mode="IN" type="String"/>
+        <attribute name="personalTitle" mode="IN" type="String" optional="true"/>
+        <attribute name="firstName" mode="IN" type="String"/>
+        <attribute name="middleName" mode="IN" type="String" optional="true"/>
+        <attribute name="lastName" mode="IN" type="String"/>
+        <attribute name="suffix" mode="IN" type="String" optional="true"/>
+        <attribute name="emailAddress" mode="IN" type="String"/>
+        <attribute name="emailSolicitation" mode="IN" type="String" optional="true"/>
+        <attribute name="username" mode="IN" type="String"/>
+        <attribute name="password" mode="IN" type="String"/>
+        <attribute name="confirmPassword" mode="IN" type="String"/>
+        <attribute name="passwordHint" mode="IN" type="String" optional="true"/>
+        <attribute name="shippingAddress" mode="IN" type="Map" optional="true">
+            <attribute name="address1" mode="IN" type="String"/>
+            <attribute name="address2" mode="IN" type="String" optional="true"/>
+            <attribute name="city" mode="IN" type="String"/>
+            <attribute name="postalCode" mode="IN" type="String"/>
+            <attribute name="state" mode="IN" type="String" optional="true"/>
+            <attribute name="country" mode="IN" type="String"/>
+            <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
+        </attribute>
+        <attribute name="mobilePhone" mode="IN" type="Map" optional="true">
+            <attribute name="countryCode" mode="IN" type="String" optional="true"/>
+            <attribute name="areaCode" mode="IN" type="String" optional="true"/>
+            <attribute name="contactNumber" mode="IN" type="String"/>
+            <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
+        </attribute>
+    </service>
+    <service name="validateCreateCustomer" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="validateCreateCustomer">
+        <implements service="createCustomer"/>
+    </service>
+    <service name="getCustomer" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="getCustomer">
+        <permission-service service-name="validateCustomer"/>
+        <attribute name="customerPartyId" mode="INOUT" type="String"/>
+        <attribute name="personalInformation" mode="OUT" type="Map" optional="false">
+            <attribute name="personalTitle" mode="OUT" type="String" optional="true"/>
+            <attribute name="firstName" mode="OUT" type="String"/>
+            <attribute name="middleName" mode="OUT" type="String" optional="true"/>
+            <attribute name="lastName" mode="OUT" type="String"/>
+            <attribute name="suffix" mode="OUT" type="String" optional="true"/>
+            <attribute name="userName" mode="OUT" type="String" optional="true"/>
+        </attribute>
+        <attribute name="loyaltyPoints" mode="OUT" type="Map" optional="true">
+            <attribute name="points" mode="OUT" type="Integer" optional="true"/>
+            <attribute name="totalOrders" mode="OUT" type="Integer" optional="true"/>
+            <attribute name="monthsToInclude" mode="OUT" type="Integer" optional="true"/>
+        </attribute>
+    </service>
+    <service name="getPartyPaymentMethods" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="getPartyPaymentMethods">
+        <permission-service service-name="validateCustomer"/>
+        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="showOld" mode="IN" type="String" optional="true"/>
+        <attribute name="paymentMethods" mode="OUT" type="List" optional="true"/>
+    </service>
+    <service name="getCustomerPostalAddress" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="getCustomerPostalAddress">
+        <description>To get the customer's shipping addresses</description>
+        <permission-service service-name="validateCustomer"/>
+        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="addresses" mode="OUT" type="List">
+            <attribute name="address" mode="OUT" type="Map">
+                <attribute name="contactMechId" mode="IN" type="String" optional="true"/>
+                <attribute name="toName" mode="IN" type="String" optional="true"/>
+                <attribute name="address1" mode="IN" type="String" optional="true"/>
+                <attribute name="address2" mode="IN" type="String" optional="true"/>
+                <attribute name="city" mode="IN" type="String" optional="true"/>
+                <attribute name="postalCode" mode="IN" type="String" optional="true"/>
+                <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
+                <attribute name="state" mode="IN" type="String">
+                    <attribute name="stateProvinceGeoId" mode="IN" type="String"/>
+                    <attribute name="stateName" mode="IN" type="String"/>
+                    <attribute name="stateCode" mode="IN" type="String"/>
+                </attribute>
+                <attribute name="country" mode="IN" type="String">
+                    <attribute name="countryGeoId" mode="IN" type="String"/>
+                    <attribute name="countryName" mode="IN" type="String"/>
+                    <attribute name="countryCode" mode="IN" type="String"/>
+                </attribute>
+            </attribute>
+        </attribute>
+    </service>
+    <service name="createCustomerPostalAddress" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerPostalAddress">
+        <description>To create the postal address with purpose</description>
+        <permission-service service-name="validateCustomer"/>
+        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="toName" mode="IN" type="String" optional="true"/>
+        <attribute name="address1" mode="IN" type="String"/>
+        <attribute name="address2" mode="IN" type="String" optional="true"/>
+        <attribute name="city" mode="IN" type="String"/>
+        <attribute name="postalCode" mode="IN" type="String"/>
+        <attribute name="stateCode" mode="IN" type="String" optional="true"/>
+        <attribute name="countryCode" mode="IN" type="String"/>
+        <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
+    </service>
+    <service name="updateCustomerPostalAddress" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerPostalAddress">
+        <description>To update the postal address and to add a purpose</description>
+        <permission-service service-name="validateCustomer"/>
+        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="contactMechId" mode="IN" type="String"/>
+        <attribute name="toName" mode="IN" type="String" optional="true"/>
+        <attribute name="address1" mode="IN" type="String" optional="true"/>
+        <attribute name="address2" mode="IN" type="String" optional="true"/>
+        <attribute name="city" mode="IN" type="String" optional="true"/>
+        <attribute name="postalCode" mode="IN" type="String" optional="true"/>
+        <attribute name="stateCode" mode="IN" type="String" optional="true"/>
+        <attribute name="countryCode" mode="IN" type="String" optional="true"/>
+        <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
+    </service>
+    <service name="removeCustomerContactMech" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="removeCustomerContactMechAndPurpose">
+        <description>To remove the the party contact mech</description>
+        <permission-service service-name="validateCustomer"/>
+        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="contactMechId" mode="IN" type="String"/>
+    </service>
+    <service name="createCustomerPaymentMethod" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerPaymentMethod">
+        <description>creates credit card, gift card, eft account</description>
+        <permission-service service-name="validateCustomer"/>
+        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="address" mode="IN" type="Map" optional="true">
+            <attribute name="contactMechId" mode="IN" type="String" optional="true"/>
+            <attribute name="address1" mode="IN" type="String" optional="true"/>
+            <attribute name="address2" mode="IN" type="String" optional="true"/>
+            <attribute name="city" mode="IN" type="String" optional="true"/>
+            <attribute name="postalCode" mode="IN" type="String" optional="true"/>
+            <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
+            <attribute name="stateCode" mode="IN" type="String" optional="true"/>
+            <attribute name="countryCode" mode="IN" type="String" optional="true"/>
+        </attribute>
+        <attribute name="creditCard" mode="IN" type="Map" optional="true">
+            <attribute name="companyNameOnCard" mode="IN" type="String" optional="true"/>
+            <attribute name="titleOnCard" mode="IN" type="String" optional="false"/>
+            <attribute name="firstNameOnCard" mode="IN" type="String"/>
+            <attribute name="middleNameOnCard" mode="IN" type="String" optional="true"/>
+            <attribute name="lastNameOnCard" mode="IN" type="String"/>
+            <attribute name="suffixOnCard" mode="IN" type="String" optional="true"/>
+            <attribute name="cardNumber" mode="IN" type="String"/>
+            <attribute name="expireDate" mode="IN" type="String"/>
+        </attribute>
+    </service>
+    <service name="updateCustomerPaymentMethod" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="createUpdateCustomerPaymentMethod">
+        <description>updates credit card, gift card, eft account</description>
+        <permission-service service-name="validateCustomer"/>
+        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="paymentMethodId" mode="IN" type="String"/>
+        <attribute name="address" mode="IN" type="Map" optional="false">
+            <attribute name="contactMechId" mode="IN" type="String" optional="true"/>
+            <attribute name="address1" mode="IN" type="String" optional="true"/>
+            <attribute name="address2" mode="IN" type="String" optional="true"/>
+            <attribute name="city" mode="IN" type="String" optional="true"/>
+            <attribute name="postalCode" mode="IN" type="String" optional="true"/>
+            <attribute name="allowSolicitation" mode="IN" type="String" optional="true"/>
+            <attribute name="stateCode" mode="IN" type="String" optional="true"/>
+            <attribute name="countryCode" mode="IN" type="String" optional="true"/>
+        </attribute>
+        <attribute name="creditCard" mode="IN" type="Map" optional="true">
+            <attribute name="companyNameOnCard" mode="IN" type="String" optional="true"/>
+            <attribute name="titleOnCard" mode="IN" type="String" optional="false"/>
+            <attribute name="firstNameOnCard" mode="IN" type="String"/>
+            <attribute name="middleNameOnCard" mode="IN" type="String" optional="true"/>
+            <attribute name="lastNameOnCard" mode="IN" type="String"/>
+            <attribute name="suffixOnCard" mode="IN" type="String" optional="true"/>
+            <attribute name="cardNumber" mode="IN" type="String"/>
+            <attribute name="expireDate" mode="IN" type="String"/>
+        </attribute>
+        <attribute name="giftCard" mode="IN" type="Map" optional="true">
+            <attribute name="cardNumber" mode="IN" type="String"/>
+            <attribute name="expireDate" mode="IN" type="String"/>
+        </attribute>
+        <attribute name="eftAccount" mode="IN" type="Map" optional="true">
+            <attribute name="bankName" mode="IN" type="String"/>
+            <attribute name="routingNumber" mode="IN" type="String"/>
+            <attribute name="accountType" mode="IN" type="String"/>
+            <attribute name="accountNumber" mode="IN" type="String"/>
+            <attribute name="nameOnAccount" mode="IN" type="String"/>
+            <attribute name="companyNameOnAccount" mode="IN" type="String"/>
+        </attribute>
+    </service>
+    <service name="deleteCustomerPaymentMethod" engine="java"
+            location="org.apache.ofbiz.hc.api.customer.CustomerServices" invoke="deleteCustomerPaymentMethod">
+        <description>delete payment method(credit card, giftt card, EFT account)</description>
+        <permission-service service-name="validateCustomer"/>
+        <attribute name="customerPartyId" mode="IN" type="String"/>
+        <attribute name="paymentMethodId" mode="IN" type="String"/>
+    </service>
+
+</services>
