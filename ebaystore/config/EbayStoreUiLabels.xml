@@ -18,7 +18,7 @@
     specific language governing permissions and limitations
     under the License.
 -->
-<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="EbayAcceptTheBestOffer1">
         <value xml:lang="en">use this percent value to accept the Best Offer if it is greater or equal</value>
         <value xml:lang="zh">如果大于或等于这个百分比，使用它作为最佳报价</value>
