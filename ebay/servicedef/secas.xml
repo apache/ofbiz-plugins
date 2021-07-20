@@ -19,7 +19,7 @@ under the License.
 -->
 
 <service-eca xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/service-eca.xsd">
+        xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/service-eca.xsd">
     <!-- if the order has been imported from eBay, set the order status in eBay to completed -->
     <eca service="changeOrderStatus" event="commit" run-on-error="false">
         <condition field-name="orderTypeId" operator="equals" value="SALES_ORDER"/>

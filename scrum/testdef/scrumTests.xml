@@ -18,7 +18,7 @@ under the License.
 -->
 <test-suite suite-name="scrumtests"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/test-suite.xsd">
+        xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/test-suite.xsd">
 
         <test-case case-name="scrum-tests">
             <simple-method-test location="component://scrum/minilang/test/ScrumTests.xml"/>
