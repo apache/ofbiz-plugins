@@ -137,7 +137,7 @@ if REPOS and REV:
         doc = Document()
         soapenv = doc.createElement("soapenv:Envelope")
         doc.appendChild(soapenv)
-        soapenv.setAttribute("xmlns:soapenv", "http://schemas.xmlsoap.org/soap/envelope/")
+        soapenv.setAttribute("xmlns:soapenv", "https://schemas.xmlsoap.org/soap/envelope/")
         soapenv.setAttribute("xmlns:ser", OFBIZ_WEBSERVICE_URL)
         
         header = doc.createElement("soapenv:Header")
