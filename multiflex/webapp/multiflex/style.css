@@ -516,7 +516,7 @@ footer {
 }
 
 .nocolumns {
-    w_idth: 900px;
+    width: 900px;
     width: 870px;
     padding: 0 1em 0 1em;
     background: #FFFFFF url(/images/bg_head_breadcrumbs.jpg) repeat-y;
@@ -1010,7 +1010,7 @@ p:after {
 .nocolumns .screenlet-title-bar,
 .rightonly .screenlet-title-bar,
 .leftonly .screenlet-title-bar {
-    c_lear: both;
+    clear: both;
     margin: 0px;
     padding: 4px 20px 3px 20px;
     background-color: rgb(190, 190, 190);
