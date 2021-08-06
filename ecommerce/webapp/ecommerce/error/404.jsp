@@ -27,7 +27,8 @@ ServletContext context = pageContext.getServletContext();
 String webSiteId = WebSiteWorker.getWebSiteId(request);
 List<GenericValue> webAnalytics = delegator.findByAnd("WebAnalyticsConfig", UtilMisc.toMap("webSiteId", webSiteId), null, false);
 %>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <title>Error 404</title>
 <%if (webAnalytics != null) {%>
@@ -40,7 +41,7 @@ List<GenericValue> webAnalytics = delegator.findByAnd("WebAnalyticsConfig", Util
 </head>
 <body>
 <p>
-<b>404.</b>
+<strong>404.</strong>
 <ins>That&#39;s an error.</ins>
 </p>
 <p>

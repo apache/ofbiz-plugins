@@ -407,14 +407,13 @@ footer {
     position: absolute;
     z-index: 999;
     top: 3.1em;
-    t\op: 3.0em;
     left: 0;
-    marg\in-top: 0.1em;
+    margin-top: 0.1em;
 }
 
 .nav2 ul li a:hover ul li a {
     display: block;
-    w\idth: 10.0em;
+    width: 10.0em;
     height: 1px;
     line-height: 1.3em;
     padding: 4px 16px 4px 16px;
