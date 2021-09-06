@@ -18,6 +18,7 @@
  */
 dependencies {
     pluginLibsCompile 'org.safehaus.jug:jug:2.0.0:asl'
+    // poi-ooxml-schemas-5.0.0.pom'. Received status code 401 from server
     pluginLibsCompile 'org.apache.poi:poi-ooxml:4.1.2'
     pluginLibsCompile 'org.apache.poi:poi-ooxml-schemas:4.1.2'
     pluginLibsCompile 'org.apache.poi:poi-excelant:4.1.2'
