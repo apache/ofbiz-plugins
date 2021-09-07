@@ -460,7 +460,7 @@ under the License.
           <tfoot>
             <tr class="thead-light">
               <th colspan="8">
-                Summary:
+                ${uiLabelMap.CommonSummary}:
               </th>
             </tr>
             <#if shoppingCart.getAdjustments()?has_content>
