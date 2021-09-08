@@ -120,7 +120,7 @@ $(document).ready(function() {
           <a class="nav-link" href="<@ofbizUrl>orderhistory</@ofbizUrl>">${uiLabelMap.EcommerceOrderHistory}</a>
         </li>
       </#if>
-      <#if catalogQuickaddUse>
+      <#if catalogQuickaddUse??>
         <li class="nav-item"><a class="nav-link" href="<@ofbizUrl>quickadd</@ofbizUrl>">${uiLabelMap.CommonQuickAdd}</a></li>
       </#if>
     </ul>
