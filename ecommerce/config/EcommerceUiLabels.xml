@@ -350,6 +350,10 @@
         <value xml:lang="zh">分配明细</value>
         <value xml:lang="zh-TW">分配細項</value>
     </property>
+    <property key="EcommerceBestSelling">
+        <value xml:lang="en">Popular Categories</value>
+        <value xml:lang="fr">Meilleures ventes</value>
+    </property>
     <property key="EcommerceBeSureToIncludeYourOrderNb">
         <value xml:lang="da">Husk at inkludere din ordre</value>
         <value xml:lang="en">Be sure to include your order #</value>
