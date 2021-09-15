@@ -143,13 +143,8 @@
        the resource named in 'managedSchemaResourceName', rather than from schema.xml.
        Note that the managed schema resource CANNOT be named schema.xml.  If the managed
        schema does not exist, Solr will create it after reading schema.xml, then rename
-<<<<<<< HEAD
        'schema.xml' to 'schema.xml.bak'.
 
-=======
-       'schema.xml' to 'schema.xml.bak'.
-
->>>>>>> ff03ec24 (Fixed: The Solr version included in OFBiz has an SSRF vulnerability (CVE-2021-27905) (OFBIZ-12316))
        Do NOT hand edit the managed schema - external modifications will be ignored and
        overwritten as a result of schema modification REST API calls.
 
@@ -448,13 +443,8 @@
 
 
     <!-- Slow Query Threshold (in millis)
-<<<<<<< HEAD
 
          At high request rates, logging all requests can become a bottleneck
-=======
-
-         At high request rates, logging all requests can become a bottleneck
->>>>>>> ff03ec24 (Fixed: The Solr version included in OFBiz has an SSRF vulnerability (CVE-2021-27905) (OFBIZ-12316))
          and therefore INFO logging is often turned off. However, it is still
          useful to be able to set a latency threshold above which a request
          is considered "slow" and log that request at WARN level so we can
@@ -522,13 +512,8 @@
                    size="512"
                    initialSize="512"
                    autowarmCount="0"/>
-<<<<<<< HEAD
 
     <!-- custom cache currently used by block join -->
-=======
-
-    <!-- custom cache currently used by block join -->
->>>>>>> ff03ec24 (Fixed: The Solr version included in OFBiz has an SSRF vulnerability (CVE-2021-27905) (OFBIZ-12316))
     <cache name="perSegFilter"
       class="solr.search.LRUCache"
       size="10"
@@ -662,8 +647,8 @@
          background concurrently.  An error is returned if this limit
          is exceeded.
 
-         Recommend values of 1-2 for read-only slaves, higher for
-         masters w/o cache warming.
+         Recommend values of 1-2 for read-only replicas, higher for
+         mains w/o cache warming.
       -->
     <maxWarmingSearchers>2</maxWarmingSearchers>
 
@@ -931,13 +916,8 @@
 
 
 
-<<<<<<< HEAD
   <!-- A Robust Example
 
-=======
-  <!-- A Robust Example
-
->>>>>>> ff03ec24 (Fixed: The Solr version included in OFBiz has an SSRF vulnerability (CVE-2021-27905) (OFBIZ-12316))
        This example SearchHandler declaration shows off usage of the
        SearchHandler with many defaults declared
 
@@ -1190,13 +1170,8 @@
        </arr>
 
        NOTE: The component registered with the name "debug" will
-<<<<<<< HEAD
        always be executed after the "last-components"
 
-=======
-       always be executed after the "last-components"
-
->>>>>>> ff03ec24 (Fixed: The Solr version included in OFBiz has an SSRF vulnerability (CVE-2021-27905) (OFBIZ-12316))
      -->
 
    <!-- Spell Check
@@ -1286,13 +1261,8 @@
        </lst>
       -->
   </searchComponent>
-<<<<<<< HEAD
 
   <!-- A request handler for demonstrating the spellcheck component.
-=======
-
-  <!-- A request handler for demonstrating the spellcheck component.
->>>>>>> ff03ec24 (Fixed: The Solr version included in OFBiz has an SSRF vulnerability (CVE-2021-27905) (OFBIZ-12316))
 
        NOTE: This is purely as an example.  The whole purpose of the
        SpellCheckComponent is to hook it into the request handler that
@@ -1331,13 +1301,8 @@
   <!-- The SuggestComponent in Solr provides users with automatic suggestions for query terms.
        You can use this to implement a powerful auto-suggest feature in your search application.
        As with the rest of this solrconfig.xml file, the configuration of this component is purely
-<<<<<<< HEAD
        an example that applies specifically to this configset and example documents.
 
-=======
-       an example that applies specifically to this configset and example documents.
-
->>>>>>> ff03ec24 (Fixed: The Solr version included in OFBiz has an SSRF vulnerability (CVE-2021-27905) (OFBIZ-12316))
        More information about this component and other configuration options are described in the
        "Suggester" section of the reference guide available at
        http://archive.apache.org/dist/lucene/solr/ref-guide
@@ -1614,13 +1579,8 @@
           <str name="hl.tag.post"><![CDATA[</b>]]></str>
         </lst>
       </fragmentsBuilder>
-<<<<<<< HEAD
 
       <boundaryScanner name="default"
-=======
-
-      <boundaryScanner name="default"
->>>>>>> ff03ec24 (Fixed: The Solr version included in OFBiz has an SSRF vulnerability (CVE-2021-27905) (OFBIZ-12316))
                        default="true"
                        class="solr.highlight.SimpleBoundaryScanner">
         <lst name="defaults">
@@ -1628,13 +1588,8 @@
           <str name="hl.bs.chars">.,!? &#9;&#10;&#13;</str>
         </lst>
       </boundaryScanner>
-<<<<<<< HEAD
 
       <boundaryScanner name="breakIterator"
-=======
-
-      <boundaryScanner name="breakIterator"
->>>>>>> ff03ec24 (Fixed: The Solr version included in OFBiz has an SSRF vulnerability (CVE-2021-27905) (OFBIZ-12316))
                        class="solr.highlight.BreakIteratorBoundaryScanner">
         <lst name="defaults">
           <!-- type should be one of CHARACTER, WORD(default), LINE and SENTENCE -->
@@ -1663,13 +1618,8 @@
        on the fly based on the hash code of some other fields.  This
        example has overwriteDupes set to false since we are using the
        id field as the signatureField and Solr will maintain
-<<<<<<< HEAD
        uniqueness based on that anyway.
 
-=======
-       uniqueness based on that anyway.
-
->>>>>>> ff03ec24 (Fixed: The Solr version included in OFBiz has an SSRF vulnerability (CVE-2021-27905) (OFBIZ-12316))
     -->
   <!--
      <updateRequestProcessorChain name="dedupe">
