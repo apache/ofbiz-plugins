@@ -202,11 +202,42 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
         try {
             nodeConfig = loadNodeConfig(solrHome, extraProperties);
         } catch (SolrException e) {
-            //            nodeConfig = loadNodeConfig("plugins/solr/home", extraProperties);
             Path path = Paths.get("plugins/solr/home");
             nodeConfig = loadNodeConfig(path, extraProperties);
         }
-        cores = new CoreContainer(nodeConfig, extraProperties, true);
+        // Following is a (justified) rant!
+        // The API at
+        // https://solr.apache.org/docs/8_9_0/solr-core/org/apache/solr/core/CoreContainer.html#CoreContainer-org.apache.solr.core.NodeConfig-
+        // is not up to date (ie wrong!).
+        //
+        // For instance the methods
+        // CoreContainer(Path solrHome, Properties properties)
+        // CoreContainer(NodeConfig config, boolean asyncSolrCoreLoad)
+        // no longer exist.
+        //
+        // So you would thought
+        // "Better refer to the real CoreContainer class using your IDE"
+        //
+        // Wrong, try
+        // cores = new CoreContainer(nodeConfig, extraProperties);
+        // for instance.
+        // You get error: incompatible types: Properties cannot be converted to CoresLocator
+        // You may also try
+        // cores = new CoreContainer(nodeConfig, extraProperties, true);
+        // Then you get a bit more information:
+        // error: no suitable constructor found for CoreContainer(NodeConfig,Properties)
+        // cores = new CoreContainer(nodeConfig, extraProperties);
+        // ^
+        // constructor CoreContainer.CoreContainer(Path,Properties) is not applicable
+        // (argument mismatch; NodeConfig cannot be converted to Path)
+        // constructor CoreContainer.CoreContainer(NodeConfig,boolean) is not applicable
+        // (argument mismatch; Properties cannot be converted to boolean)
+        // constructor CoreContainer.CoreContainer(NodeConfig,CoresLocator) is not applicable
+        // (argument mismatch; Properties cannot be converted to CoresLocator)
+        //
+        // As I'm not a Solr developer I did not dig deeper (was already deep enough)
+        // And this keeps it as simple as possible. Solr works in OFBiz so hopefully it's the right thing!
+        cores = new CoreContainer(nodeConfig);
         cores.load();
         return cores;
     }

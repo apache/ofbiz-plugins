@@ -35,8 +35,7 @@
        that you fully re-index after changing this setting as it can
        affect both how text is indexed and queried.
   -->
-  <luceneMatchVersion>8.5.2</luceneMatchVersion> <!--  I tried to update to 8.7.0 but crossed issues -->
-  
+  <luceneMatchVersion>8.9.0</luceneMatchVersion>
 
   <!-- <lib/> directives can be used to instruct Solr to load any Jars
        identified and use them to resolve any "plugins" specified in
@@ -55,7 +54,7 @@
        If a "./lib" directory exists in your instanceDir, all files
        found in it are included as if you had used the following
        syntax...
-       
+
               <lib dir="./lib" />
     -->
 
@@ -94,7 +93,7 @@
   <!--
      <lib path="../a-jar-that-does-not-exist.jar" />
   -->
-  
+
   <!-- Data Directory
 
        Used to specify an alternate directory to hold all index data
@@ -106,7 +105,7 @@
 
 
   <!-- The DirectoryFactory to use for indexes.
-       
+
        solr.StandardDirectoryFactory is filesystem
        based and tries to pick the best implementation for the current
        JVM and platform.  solr.NRTCachingDirectoryFactory, the default,
@@ -134,18 +133,18 @@
   <codecFactory class="solr.SchemaCodecFactory"/>
 
   <!-- To enable dynamic schema REST APIs, use the following for <schemaFactory>:
-  
+
        <schemaFactory class="ManagedIndexSchemaFactory">
          <bool name="mutable">true</bool>
          <str name="managedSchemaResourceName">managed-schema</str>
        </schemaFactory>
-       
+
        When ManagedIndexSchemaFactory is specified, Solr will load the schema from
        the resource named in 'managedSchemaResourceName', rather than from schema.xml.
        Note that the managed schema resource CANNOT be named schema.xml.  If the managed
        schema does not exist, Solr will create it after reading schema.xml, then rename
        'schema.xml' to 'schema.xml.bak'.
-       
+
        Do NOT hand edit the managed schema - external modifications will be ignored and
        overwritten as a result of schema modification REST API calls.
 
@@ -159,7 +158,7 @@
        Index Config - These settings control low-level behavior of indexing
        Most example settings here show the default value, but are commented
        out, to more easily see where customizations have been made.
-       
+
        Note: This replaces <indexDefaults> and <mainIndex> from older versions
        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <indexConfig>
@@ -199,7 +198,7 @@
           <double name="noCFSRatio">0.1</double>
         </mergePolicy>
       -->
-       
+
     <!-- Merge Factor
          The merge factor controls how many segments will get merged at a time.
          For TieredMergePolicy, mergeFactor is a convenience parameter which
@@ -226,7 +225,7 @@
 
          This option specifies which Lucene LockFactory implementation
          to use.
-      
+
          single = SingleInstanceLockFactory - suggested for a
                   read-only index or when there is no possibility of
                   another process trying to modify the index.
@@ -250,7 +249,7 @@
          The default Solr IndexDeletionPolicy implementation supports
          deleting index commit points on number of commits, age of
          commit point and optimized status.
-         
+
          The latest commit point should always be preserved regardless
          of the criteria.
     -->
@@ -274,7 +273,7 @@
     -->
 
     <!-- Lucene Infostream
-       
+
          To aid in advanced debugging, Lucene provides an "InfoStream"
          of detailed information when indexing.
 
@@ -287,7 +286,7 @@
 
 
   <!-- JMX
-       
+
        This example enables JMX if and only if an existing MBeanServer
        is found, use this if you want to configure JMX through JVM
        parameters. Remove this to disable exposing Solr configuration
@@ -324,7 +323,7 @@
       <str name="dir">${solr.ulog.dir:}</str>
       <int name="numVersionBuckets">${solr.ulog.numVersionBuckets:65536}</int>
     </updateLog>
- 
+
     <!-- AutoCommit
 
          Perform a hard commit automatically under certain conditions.
@@ -362,7 +361,7 @@
      </autoSoftCommit>
 
     <!-- Update Related Event Listeners
-         
+
          Various IndexWriter related events can trigger Listeners to
          take actions.
 
@@ -371,7 +370,7 @@
       -->
     <!-- The RunExecutableListener executes an external command from a
          hook such as postCommit or postOptimize.
-         
+
          exe - the name of the executable to run
          dir - dir to use as the current working directory. (default=".")
          wait - the calling thread waits until the executable returns.
@@ -394,7 +393,7 @@
       -->
 
   </updateHandler>
-  
+
   <!-- IndexReaderFactory
 
        Use the following format to specify a custom IndexReaderFactory,
@@ -433,18 +432,18 @@
          is thrown if exceeded.
 
          ** WARNING **
-         
+
          This option actually modifies a global Lucene property that
          will affect all SolrCores.  If multiple solrconfig.xml files
          disagree on this property, the value at any given moment will
          be based on the last SolrCore to be initialized.
-         
+
       -->
     <maxBooleanClauses>1024</maxBooleanClauses>
 
- 
+
     <!-- Slow Query Threshold (in millis)
-    
+
          At high request rates, logging all requests can become a bottleneck
          and therefore INFO logging is often turned off. However, it is still
          useful to be able to set a latency threshold above which a request
@@ -502,7 +501,7 @@
                      size="512"
                      initialSize="512"
                      autowarmCount="0"/>
-   
+
     <!-- Document Cache
 
          Caches Lucene Document objects (the stored fields for each
@@ -513,7 +512,7 @@
                    size="512"
                    initialSize="512"
                    autowarmCount="0"/>
-    
+
     <!-- custom cache currently used by block join -->
     <cache name="perSegFilter"
       class="solr.search.LRUCache"
@@ -523,7 +522,7 @@
       regenerator="solr.NoOpRegenerator" />
 
     <!-- Field Value Cache
-         
+
          Cache used to hold field values that are quickly accessible
          by document id.  The fieldValueCache is created by default
          even if not configured here.
@@ -612,7 +611,7 @@
         prepared but there is no current registered searcher to handle
         requests or to gain autowarming data from.
 
-        
+
      -->
     <!-- QuerySenderListener takes an array of NamedList and executes a
          local query request for each NamedList in sequence.
@@ -643,7 +642,7 @@
     <useColdSearcher>false</useColdSearcher>
 
     <!-- Max Warming Searchers
-         
+
          Maximum number of searchers that may be warming in the
          background concurrently.  An error is returned if this limit
          is exceeded.
@@ -687,19 +686,19 @@
 
          multipartUploadLimitInKB - specifies the max size (in KiB) of
          Multipart File Uploads that Solr will allow in a Request.
-         
+
          formdataUploadLimitInKB - specifies the max size (in KiB) of
          form data (application/x-www-form-urlencoded) sent via
          POST. You can use POST to pass request parameters not
          fitting into the URL.
-         
+
          addHttpRequestToContext - if set to true, it will instruct
          the requestParsers to include the original HttpServletRequest
          object in the context map of the SolrQueryRequest under the
          key "httpRequest". It will not be used by any of the existing
          Solr components, but may be useful when developing custom
          plugins.
-         
+
          *** WARNING ***
          The settings below authorize Solr to fetch remote files, You
          should make sure your system has some authentication before
@@ -722,9 +721,9 @@
     <!-- If you include a <cacheControl> directive, it will be used to
          generate a Cache-Control header (as well as an Expires header
          if the value contains "max-age=")
-         
+
          By default, no Cache-Control header is generated.
-         
+
          You can use the <cacheControl> option even if you have set
          never304="true"
       -->
@@ -736,7 +735,7 @@
     <!-- To enable Solr to respond with automatically generated HTTP
          Caching headers, and to response to Cache Validation requests
          correctly, set the value of never304="false"
-         
+
          This will cause Solr to generate Last-Modified and ETag
          headers based on the properties of the Index.
 
@@ -918,7 +917,7 @@
 
 
   <!-- A Robust Example
-       
+
        This example SearchHandler declaration shows off usage of the
        SearchHandler with many defaults declared
 
@@ -1131,21 +1130,21 @@
      <str name="echoHandler">true</str>
     </lst>
   </requestHandler>
-  
+
   <!-- Search Components
 
        Search components are registered to SolrCore and used by
        instances of SearchHandler (which can access them by name)
-       
+
        By default, the following components are available:
-       
+
        <searchComponent name="query"     class="solr.QueryComponent" />
        <searchComponent name="facet"     class="solr.FacetComponent" />
        <searchComponent name="mlt"       class="solr.MoreLikeThisComponent" />
        <searchComponent name="highlight" class="solr.HighlightComponent" />
        <searchComponent name="stats"     class="solr.StatsComponent" />
        <searchComponent name="debug"     class="solr.DebugComponent" />
-   
+
        Default configuration in a requestHandler would look like:
 
        <arr name="components">
@@ -1161,20 +1160,20 @@
        that will be used instead of the default.
 
        To insert components before or after the 'standard' components, use:
-    
+
        <arr name="first-components">
          <str>myFirstComponentName</str>
        </arr>
-    
+
        <arr name="last-components">
          <str>myLastComponentName</str>
        </arr>
 
        NOTE: The component registered with the name "debug" will
        always be executed after the "last-components"
-       
+
      -->
-  
+
    <!-- Spell Check
 
         The spell check component can return a list of alternative spelling
@@ -1213,7 +1212,7 @@
         <float name="thresholdTokenFrequency">.01</float>
       -->
     </lst>
-    
+
     <!-- a spellchecker that can break or combine words.  See "/spell" handler below for usage -->
     <lst name="spellchecker">
       <str name="name">wordbreak</str>
@@ -1262,7 +1261,7 @@
        </lst>
       -->
   </searchComponent>
-  
+
   <!-- A request handler for demonstrating the spellcheck component.
 
        NOTE: This is purely as an example.  The whole purpose of the
@@ -1272,7 +1271,7 @@
 
        IN OTHER WORDS, THERE IS REALLY GOOD CHANCE THE SETUP BELOW IS
        NOT WHAT YOU WANT FOR YOUR PRODUCTION SYSTEM!
-       
+
        See http://wiki.apache.org/solr/SpellCheckComponent for details
        on the request parameters.
     -->
@@ -1303,7 +1302,7 @@
        You can use this to implement a powerful auto-suggest feature in your search application.
        As with the rest of this solrconfig.xml file, the configuration of this component is purely
        an example that applies specifically to this configset and example documents.
-       
+
        More information about this component and other configuration options are described in the
        "Suggester" section of the reference guide available at
        http://archive.apache.org/dist/lucene/solr/ref-guide
@@ -1452,7 +1451,7 @@
       <str>clustering</str>
     </arr>
   </requestHandler>
-  
+
   <!-- Terms Component
 
        http://wiki.apache.org/solr/TermsComponent
@@ -1546,16 +1545,16 @@
       <!-- Configure the standard fragListBuilder -->
       <fragListBuilder name="simple"
                        class="solr.highlight.SimpleFragListBuilder"/>
-      
+
       <!-- Configure the single fragListBuilder -->
       <fragListBuilder name="single"
                        class="solr.highlight.SingleFragListBuilder"/>
-      
+
       <!-- Configure the weighted fragListBuilder -->
       <fragListBuilder name="weighted"
                        default="true"
                        class="solr.highlight.WeightedFragListBuilder"/>
-      
+
       <!-- default tag FragmentsBuilder -->
       <fragmentsBuilder name="default"
                         default="true"
@@ -1580,7 +1579,7 @@
           <str name="hl.tag.post"><![CDATA[</b>]]></str>
         </lst>
       </fragmentsBuilder>
-      
+
       <boundaryScanner name="default"
                        default="true"
                        class="solr.highlight.SimpleBoundaryScanner">
@@ -1589,7 +1588,7 @@
           <str name="hl.bs.chars">.,!? &#9;&#10;&#13;</str>
         </lst>
       </boundaryScanner>
-      
+
       <boundaryScanner name="breakIterator"
                        class="solr.highlight.BreakIteratorBoundaryScanner">
         <lst name="defaults">
@@ -1620,7 +1619,7 @@
        example has overwriteDupes set to false since we are using the
        id field as the signatureField and Solr will maintain
        uniqueness based on that anyway.
-       
+
     -->
   <!--
      <updateRequestProcessorChain name="dedupe">
@@ -1635,7 +1634,7 @@
        <processor class="solr.RunUpdateProcessorFactory" />
      </updateRequestProcessorChain>
     -->
-  
+
   <!-- Language identification
 
        This example update chain identifies the language of the incoming
@@ -1675,7 +1674,7 @@
       <processor class="solr.RunUpdateProcessorFactory" />
     </updateRequestProcessorChain>
   -->
- 
+
   <!-- Response Writers
 
        http://wiki.apache.org/solr/QueryResponseWriter
@@ -1710,14 +1709,14 @@
      -->
     <str name="content-type">text/plain; charset=UTF-8</str>
   </queryResponseWriter>
-  
+
   <!--
      Custom response writers can be declared as needed...
     -->
     <queryResponseWriter name="velocity" class="solr.VelocityResponseWriter" startup="lazy">
       <str name="template.base.dir">${velocity.template.base.dir:}</str>
     </queryResponseWriter>
-  
+
 
   <!-- XSLT response writer transforms the XML output by any xslt file found
        in Solr's conf/xslt directory.  Changes to xslt files are checked for
@@ -1752,8 +1751,8 @@
      <valueSourceParser name="myfunc"
                         class="com.mycompany.MyValueSourceParser" />
     -->
-    
-  
+
+
   <!-- Document Transformers
        http://wiki.apache.org/solr/DocTransformers
     -->
@@ -1762,12 +1761,12 @@
      <transformer name="db" class="com.mycompany.LoadFromDatabaseTransformer" >
        <int name="connection">jdbc://....</int>
      </transformer>
-     
+
      To add a constant value to all docs, use:
      <transformer name="mytrans2" class="org.apache.solr.response.transform.ValueAugmenterFactory" >
        <int name="value">5</int>
      </transformer>
-     
+
      If you want the user to still be able to change it with _value:something_ use this:
      <transformer name="mytrans3" class="org.apache.solr.response.transform.ValueAugmenterFactory" >
        <double name="defaultValue">5</double>
@@ -1777,7 +1776,7 @@
       EditorialMarkerFactory will do exactly that:
      <transformer name="qecBooster" class="org.apache.solr.response.transform.EditorialMarkerFactory" />
     -->
-    
+
 
   <!-- Legacy config for the admin interface -->
   <admin>
