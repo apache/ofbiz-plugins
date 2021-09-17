@@ -351,7 +351,7 @@
         <value xml:lang="zh-TW">分配細項</value>
     </property>
     <property key="EcommerceBestSelling">
-        <value xml:lang="en">Popular Categories</value>
+        <value xml:lang="en">Best Selling</value>
         <value xml:lang="fr">Meilleures ventes</value>
     </property>
     <property key="EcommerceBeSureToIncludeYourOrderNb">
