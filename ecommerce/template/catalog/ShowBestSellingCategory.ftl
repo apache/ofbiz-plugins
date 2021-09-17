@@ -79,11 +79,14 @@ under the License.
                             <#assign product = delegator.findOne("Product",
                                     Static["org.apache.ofbiz.base.util.UtilMisc"].toMap("productId",
                                     productCategoryMember.productId), false)>
+                            <#assign productName =
+                                    Static["org.apache.ofbiz.product.product.ProductContentWrapper"]
+                                    .getProductContentAsText(product, "PRODUCT_NAME", locale, dispatcher, "html")! />
                               <li>
                                 <a class="linktext"
                                    href="<@ofbizCatalogAltUrl productCategoryId="PROMOTIONS"
                                 productId="${product.productId}"/>">
-                                ${product.productName!product.productId}
+                                ${productName!product.productId}
                                 </a>
                               </li>
                           </#if>
