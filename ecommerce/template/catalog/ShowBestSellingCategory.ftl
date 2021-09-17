@@ -34,14 +34,14 @@ under the License.
             <#assign cateCount = 0/>
             </#if>
             <#assign productCategoryId = productCategory.productCategoryId/>
-            <#assign categoryImageUrl = "/images/defaultImage.jpg"/>
+            <#assign categoryContentWrapper = Static["org.apache.ofbiz.product.category.CategoryContentWrapper"].makeCategoryContentWrapper(productCategory, request)!>
+            <#assign categoryName = categoryContentWrapper.get("CATEGORY_NAME", "html")!/>
+            <#assign categoryImageUrl = categoryContentWrapper.get("CATEGORY_IMAGE_URL", "url")!/>
             <#assign productCategoryMembers = delegator
                     .findByAnd("ProductCategoryAndMember", Static["org.apache.ofbiz.base.util.UtilMisc"]
                     .toMap("productCategoryId", productCategoryId),
                     Static["org.apache.ofbiz.base.util.UtilMisc"].toList("-quantity"), false)/>
-            <#if productCategory.categoryImageUrl?has_content>
-              <#assign categoryImageUrl = productCategory.categoryImageUrl/>
-              <#elseif productCategoryMembers?has_content>
+            <#if !categoryImageUrl?string?has_content && productCategoryMembers?has_content>
                 <#assign productCategoryMember =
                         Static["org.apache.ofbiz.entity.util.EntityUtil"].getFirst(productCategoryMembers)/>
                 <#assign product = delegator.findOne("Product",
@@ -59,7 +59,7 @@ under the License.
                 <div class="card-body">
                   <h4 class="card-title">
                     <a style="font-size:12px" href="<@ofbizCatalogAltUrl productCategoryId=productCategoryId/>">
-                      ${productCategory.categoryName!productCategoryId}
+                      ${categoryName!productCategoryId}
                     </a>
                   </h4>
                   <p class="card-text">
