@@ -135,7 +135,14 @@ under the License.
                 <set field="permissionType" value="simple"/>
                 <set field="queryFormName" value="searchQuery"/>
                 <set field="listFormName" value="searchList"/>
-                <set field="defaultSiteId" value="WebStoreCONTENT"/>
+                <!-- retrieve configured content root for web site -->
+                <entity-and entity-name="WebSiteContent" list="contentRoots" filter-by-date="true">
+                    <field-map field-name="webSiteId" from-field="webSiteId"/>
+                    <field-map field-name="webSiteContentTypeId" value="PUBLISH_POINT"/>
+                </entity-and>
+                <!-- get first valid forum root content -->
+                <set field="defaultSiteId" from-field="contentRoots[0].contentId" default-value="WebStoreCONTENT"/>
+
                 <script location="component://ecommerce/groovyScripts/content/AdvancedSearchPrep.groovy"/>
                 <script location="component://ecommerce/groovyScripts/content/Search.groovy"/>
             </actions>
