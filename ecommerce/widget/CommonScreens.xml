@@ -436,10 +436,18 @@ under the License.
 
     <screen name="CookiePolicy">
         <section>
+            <actions>
+                <!-- retrieve configured content root for web site -->
+                <entity-and entity-name="WebSiteContent" list="contentRoots" filter-by-date="true">
+                    <field-map field-name="webSiteId" from-field="webSiteId"/>
+                    <field-map field-name="webSiteContentTypeId" value="PUBLISH_POINT"/>
+                </entity-and>
+                <set field="contentRootId" from-field="contentRoots[0].contentId" default-value="WebStoreCONTENT"/>
+            </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <sub-content content-id="WebStoreCONTENT" map-key="cookiePolicy"/>
+                        <sub-content content-id="${contentRootId}" map-key="cookiePolicy"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
