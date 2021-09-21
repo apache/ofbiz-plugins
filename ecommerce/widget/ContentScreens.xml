@@ -54,6 +54,15 @@ under the License.
 
     <screen name="factoids">
         <section>
+            <actions>
+                <!-- retrieve configured factoids root for web site -->
+                <entity-and entity-name="WebSiteContent" list="factoidRoots" filter-by-date="true">
+                    <field-map field-name="webSiteId" from-field="webSiteId"/>
+                    <field-map field-name="webSiteContentTypeId" value="FACTOIDS_ROOT"/>
+                </entity-and>
+                <!-- get first valid forum root content -->
+                <set field="factoidRootId" from-field="factoidRoots[0].contentId" default-value="WebStoreFACTOIDS"/>
+            </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://ecommerce/template/content/Factoids.ftl"/></html></platform-specific>
             </widgets>

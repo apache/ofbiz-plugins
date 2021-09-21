@@ -30,4 +30,9 @@ under the License.
     <VisualThemeResource visualThemeId="EC_DEFAULT" resourceTypeEnumId="VT_FTR_TMPLT_LOC" resourceValue="component://ecommerce/template/includes/Footer.ftl" sequenceId="07"/>
     <VisualThemeResource visualThemeId="EC_DEFAULT" resourceTypeEnumId="VT_SCREENSHOT" resourceValue="/images/ecdefaulttheme.jpg" sequenceId="08"/>
     </delete>
+
+    <!-- Ecommerce Factoids Content Type -->
+    <ContentType contentTypeId="FACTOIDS_ROOT" parentTypeId="PLACEHOLDER" hasTable="N" description="Factoids Root"/>
+    <WebSiteContentType webSiteContentTypeId="FACTOIDS_ROOT" description="Factoids Root" hasTable="N"/>
+
 </entity-engine-xml>
