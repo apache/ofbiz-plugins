@@ -30,8 +30,8 @@ under the License.
     <meta name="csrf-token" content="<@csrfTokenAjax/>"/>
   </#if>
   
-  <title><#if title?has_content>${title}<#elseif titleProperty?has_content>${uiLabelMap.get(titleProperty)}</#if>
-    : ${(productStore.storeName)!}
+  <title><#if title?has_content>${title}: <#elseif titleProperty?has_content>${uiLabelMap.get(titleProperty)}: </#if>
+    ${(productStore.storeName)!}
   </title>
   <#if layoutSettings.VT_SHORTCUT_ICON?has_content>
     <#assign shortcutIcon = layoutSettings.VT_SHORTCUT_ICON/>
