@@ -673,9 +673,17 @@
     <screen name="blogs">
         <section>
             <actions>
+                <!-- retrieve configured BLOG root for web site -->
+                <entity-and entity-name="WebSiteContent" list="blogRoots" filter-by-date="true">
+                    <field-map field-name="webSiteId" from-field="webSiteId"/>
+                    <field-map field-name="webSiteContentTypeId" value="BLOG_ROOT"/>
+                </entity-and>
+                <!-- get first valid forum root content -->
+                <set field="blogRootId" from-field="blogRoots[0].contentId" default-value="BLOGROOT"/>
+
                 <entity-condition entity-name="ContentAssocViewTo" list="blogs" use-cache="true">
                     <condition-list combine="and">
-                        <condition-expr field-name="contentIdStart" operator="equals" value="BLOGROOT"/>
+                        <condition-expr field-name="contentIdStart" operator="equals" from-field="blogRootId"/>
                         <condition-expr field-name="caContentAssocTypeId" operator="equals" value="SUB_CONTENT"/>
                         <condition-list combine="or">
                             <condition-expr field-name="caFromDate" operator="equals" from-field="null"/>
