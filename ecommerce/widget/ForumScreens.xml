@@ -25,9 +25,17 @@ under the License.
     <screen name="forums">
         <section>
             <actions>
+                <!-- retrieve configured forum root for web site -->
+                <entity-and entity-name="WebSiteContent" list="forumRoots" filter-by-date="true">
+                    <field-map field-name="webSiteId" from-field="webSiteId"/>
+                    <field-map field-name="webSiteContentTypeId" value="FORUM_ROOT"/>
+                </entity-and>
+                <!-- get first valid forum root content -->
+                <set field="forumRootId" from-field="forumRoots[0].contentId" default-value="WebStoreFORUM"/>
+
                 <entity-condition entity-name="ContentAssocViewTo" list="forums" use-cache="true">
                     <condition-list combine="and">
-                        <condition-expr field-name="contentIdStart" operator="equals" value="WebStoreFORUM"/>
+                        <condition-expr field-name="contentIdStart" operator="equals" from-field="forumRootId"/>
                         <condition-list combine="or">
                             <condition-expr field-name="caFromDate" operator="equals" from-field="null"/>
                             <condition-expr field-name="caFromDate" operator="less-equals" from-field="nowTimestamp"/>
