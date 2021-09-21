@@ -470,7 +470,7 @@ under the License.
           <label class="custom-file-label" for="customFile">Choose file</label>
           <div class="invalid-feedback">Example invalid custom file feedback</div>
         </div>
-        <script>
+        <script> <#-- This is to replace the "Choose a file" label by the real file name -->
             $('#customFile').on('change',function(){
                 //get the file name
                 var fileName = $(this).val();

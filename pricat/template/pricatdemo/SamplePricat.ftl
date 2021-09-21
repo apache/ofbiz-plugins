@@ -26,7 +26,7 @@ under the License.
   <div class="screenlet-body">
   <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>pricatUpload</@ofbizUrl>">
     <input type="hidden" name="action" value="store_excel" />
-    <input type="file" size="60" name="filename"/><br />
+    <input type="file" size="60" name="filename" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
     ${uiLabelMap.ExcelTemplateType}:
     <select name="excelTemplateType" id="excelTemplateType">
       <option value="sample_pricat" checked>${uiLabelMap.SamplePricatType}</option>
