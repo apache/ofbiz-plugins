@@ -16,7 +16,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#assign contentRootId = "WebStoreCONTENT"/>
 
 <#-- variable setup and worker calls -->
 <#assign curCategoryId = requestAttributes.curCategoryId!>

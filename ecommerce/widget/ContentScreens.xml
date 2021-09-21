@@ -37,6 +37,15 @@ under the License.
 
     <screen name="content_categories">
         <section>
+            <actions>
+                <!-- retrieve configured content root for web site -->
+                <entity-and entity-name="WebSiteContent" list="contentRoots" filter-by-date="true">
+                    <field-map field-name="webSiteId" from-field="webSiteId"/>
+                    <field-map field-name="webSiteContentTypeId" value="PUBLISH_POINT"/>
+                </entity-and>
+                <!-- get first valid forum root content -->
+                <set field="contentRootId" from-field="contentRoots[0].contentId" default-value="WebStoreCONTENT"/>
+            </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://ecommerce/template/content/ContentCategories.ftl"/></html></platform-specific>
             </widgets>
