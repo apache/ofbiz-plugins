@@ -34,7 +34,7 @@ under the License.
             </span>
         <#else>
           <span class="<#if priceResult.isSale>salePrice<#else>normalPrice</#if>">
-          <@ofbizCurrency amount=priceResult.price isoCode=priceResult.currencyUsed/></span>
+          <@ofbizCurrency amount=price isoCode=priceResult.currencyUsed/></span>
         </#if>
       </#if>
     </li>
