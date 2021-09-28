@@ -1789,7 +1789,7 @@ under the License.
     
     <request-map uri="ProductUomDropDownOnly">
         <security auth="false" https="false"/>
-        <response name="success" type="view" value="ProductUomDropDownOnly" save-current-view="false" />
+        <response name="success" type="view" value="ProductUomDropDownOnly" save-current-view="false" save-last-view="true"/>
     </request-map>
     
     <!-- Captcha: Image request, the captcha code is stored in the session using _CAPTCHA_CODE_ as the key -->
@@ -1993,7 +1993,7 @@ under the License.
     <view-map name="compareProducts" type="screen" page="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#compareProducts"/>
     
     <!-- Product in the different UOM -->
-    <view-map name="ProductUomDropDownOnly" type="screen" page="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#ProductUomDropDownOnly"/>
+    <view-map name="ProductUomDropDownOnly" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#ProductUomDropDownOnly"/>
     
     <!-- Contact List -->
     <view-map name="ContactListOptOut" type="screen" page="component://marketing/widget/ContactListScreens.xml#OptOutResponse"/>

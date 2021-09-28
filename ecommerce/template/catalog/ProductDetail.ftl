@@ -618,10 +618,10 @@ ${variantInfoJavaScript!}
           </div>
         </#if>
         <#-- Variant Selection -->
-        <div class="form-group">
         <#if "Y" == product.isVirtual!?upper_case>
           <#if "VV_FEATURETREE" == product.virtualVariantMethodEnum! && featureLists?has_content>
             <#list featureLists as featureList>
+              <div class="form-group">
               <#list featureList as feature>
                 <#if feature_index == 0>
                     ${feature.description}:
@@ -661,7 +661,7 @@ ${variantInfoJavaScript!}
           <#if !product.virtualVariantMethodEnum?? || "VV_VARIANTTREE" == product.virtualVariantMethodEnum>
             <#if variantTree?? && (variantTree.size() &gt; 0)>
               <#list featureSet as currentType>
-                <div>
+                <div class="form-group">
                   <select name="FT${currentType}" class="form-control" onchange="javascript:getList(this.name, (this.selectedIndex-1), 1);">
                     <option>${featureTypes.get(currentType)}</option>
                   </select>
