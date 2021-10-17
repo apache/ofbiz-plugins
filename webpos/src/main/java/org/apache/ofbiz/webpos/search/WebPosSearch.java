@@ -57,20 +57,20 @@ public class WebPosSearch {
         // search by product name
         if (UtilValidate.isNotEmpty(searchByProductName)) {
             searchByProductName = searchByProductName.toUpperCase().trim();
-            andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("productName"), EntityOperator.LIKE,
-                    EntityFunction.UPPER("%" + searchByProductName + "%")));
+            andExprs.add(EntityCondition.makeCondition(EntityFunction.upperField("productName"), EntityOperator.LIKE,
+                    EntityFunction.upper("%" + searchByProductName + "%")));
         }
         // search by description
         if (UtilValidate.isNotEmpty(searchByProductDescription)) {
             searchByProductDescription = searchByProductDescription.toUpperCase().trim();
-            andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("description"), EntityOperator.LIKE,
-                    EntityFunction.UPPER("%" + searchByProductDescription + "%")));
+            andExprs.add(EntityCondition.makeCondition(EntityFunction.upperField("description"), EntityOperator.LIKE,
+                    EntityFunction.upper("%" + searchByProductDescription + "%")));
         }
         // search by good identification
         if (UtilValidate.isNotEmpty(searchByProductIdValue)) {
             entityName = "GoodIdentificationAndProduct";
             searchByProductIdValue = searchByProductIdValue.toUpperCase().trim();
-            andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("idValue"), EntityOperator.EQUALS, searchByProductIdValue));
+            andExprs.add(EntityCondition.makeCondition(EntityFunction.upperField("idValue"), EntityOperator.EQUALS, searchByProductIdValue));
             if (UtilValidate.isNotEmpty(goodIdentificationTypeId)) {
                 andExprs.add(EntityCondition.makeCondition("goodIdentificationTypeId", EntityOperator.EQUALS, goodIdentificationTypeId));
             }
@@ -154,19 +154,19 @@ public class WebPosSearch {
         // search by last name
         if (UtilValidate.isNotEmpty(searchByPartyLastName)) {
             searchByPartyLastName = searchByPartyLastName.toUpperCase().trim();
-            andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("lastName"), EntityOperator.LIKE,
-                    EntityFunction.UPPER("%" + searchByPartyLastName + "%")));
+            andExprs.add(EntityCondition.makeCondition(EntityFunction.upperField("lastName"), EntityOperator.LIKE,
+                    EntityFunction.upper("%" + searchByPartyLastName + "%")));
         }
         // search by first name
         if (UtilValidate.isNotEmpty(searchByPartyFirstName)) {
             searchByPartyFirstName = searchByPartyFirstName.toUpperCase().trim();
-            andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("firstName"), EntityOperator.LIKE,
-                    EntityFunction.UPPER("%" + searchByPartyFirstName + "%")));
+            andExprs.add(EntityCondition.makeCondition(EntityFunction.upperField("firstName"), EntityOperator.LIKE,
+                    EntityFunction.upper("%" + searchByPartyFirstName + "%")));
         }
         // search by party identification
         if (UtilValidate.isNotEmpty(searchByPartyIdValue)) {
             searchByPartyIdValue = searchByPartyIdValue.toUpperCase().trim();
-            andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER_FIELD("idValue"), EntityOperator.EQUALS, searchByPartyIdValue));
+            andExprs.add(EntityCondition.makeCondition(EntityFunction.upperField("idValue"), EntityOperator.EQUALS, searchByPartyIdValue));
             if (UtilValidate.isNotEmpty(partyIdentificationTypeId)) {
                 andExprs.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, partyIdentificationTypeId));
             }

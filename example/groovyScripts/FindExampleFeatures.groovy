@@ -27,7 +27,7 @@ delegator = request.getAttribute("delegator")
 andExprs = []
 fieldValue = request.getParameter("exampleFeatureId")
 if (fieldValue) {
-    andExprs.add(EntityCondition.makeCondition(EntityFunction.UPPER(EntityFieldValue.makeFieldValue("exampleFeatureId")),
+    andExprs.add(EntityCondition.makeCondition(EntityFunction.upper(EntityFieldValue.makeFieldValue("exampleFeatureId")),
             EntityOperator.LIKE, "%" + fieldValue.toUpperCase() + "%"))
 }
 
