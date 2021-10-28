@@ -23,7 +23,7 @@ under the License.
     <!-- suppliers -->
     <Party partyId="BigSupplier" partyTypeId="PARTY_GROUP" />
     <PartyGroup partyId="BigSupplier" groupName="Big Supplier" />
-    <PartyRole partyId="BigSupplier" roleTypeId="SUPPLIER" />
+    <PartyRole partyId="BigSupplier" roleTypeId="SUPPLIER" fromDate="2000-01-01 00:00:00.000"/>
     <ContactMech contactMechId="9002" contactMechTypeId="POSTAL_ADDRESS"/>
     <PartyContactMech partyId="BigSupplier" contactMechId="9002" fromDate="2000-01-01 00:00:00.000" allowSolicitation="Y"/>
     <PostalAddress contactMechId="9002" toName="Big Supplier Company" address1="2005 Industrial Park Blvd" city="New York" postalCode="10000" countryGeoId="USA" stateProvinceGeoId="NY"/>
@@ -34,7 +34,7 @@ under the License.
 
     <Party partyId="EuroSupplier" partyTypeId="PARTY_GROUP" />
     <PartyGroup partyId="EuroSupplier" groupName="European Supplier"/>
-    <PartyRole partyId="EuroSupplier" roleTypeId="SUPPLIER"/>
+    <PartyRole partyId="EuroSupplier" roleTypeId="SUPPLIER" fromDate="2000-01-01 00:00:00.000"/>
     <ContactMech contactMechId="9003" contactMechTypeId="POSTAL_ADDRESS"/>
     <PartyContactMech partyId="EuroSupplier" contactMechId="9003" fromDate="2000-01-01 00:00:00.000" allowSolicitation="Y"/>
     <PostalAddress contactMechId="9003" toName="Euro Supplier Company" address1="2005 Boulevard Industrie" city="Roissy" postalCode="95700" countryGeoId="FRA"/>

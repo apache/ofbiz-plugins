@@ -27,8 +27,8 @@ under the License.
     <Party partyId="UPS" partyTypeId="PARTY_GROUP"/>
     <PartyGroup partyId="USPS" groupName="USPS"/>
     <PartyGroup partyId="UPS" groupName="UPS"/>
-    <PartyRole partyId="USPS" roleTypeId="CARRIER"/>
-    <PartyRole partyId="UPS" roleTypeId="CARRIER"/>
+    <PartyRole partyId="USPS" roleTypeId="CARRIER" fromDate="2000-01-01 00:00:00.000"/>
+    <PartyRole partyId="UPS" roleTypeId="CARRIER" fromDate="2000-01-01 00:00:00.000"/>
 
     <ShipmentMethodType description="Standard" shipmentMethodTypeId="STANDARD"/>
     <ShipmentMethodType description="Ground" shipmentMethodTypeId="GROUND"/>
