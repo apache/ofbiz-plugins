@@ -38,13 +38,14 @@ import org.apache.ofbiz.entity.condition.EntityCondition;
 import org.apache.ofbiz.entity.util.EntityUtil;
 import org.apache.ofbiz.order.shoppingcart.CheckOutHelper;
 import org.apache.ofbiz.order.shoppingcart.ShoppingCart;
-import org.apache.ofbiz.order.shoppingcart.ShoppingCartItem;
 import org.apache.ofbiz.order.shoppingcart.ShoppingCart.CartPaymentInfo;
+import org.apache.ofbiz.order.shoppingcart.ShoppingCartItem;
 import org.apache.ofbiz.product.store.ProductStoreWorker;
 import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceUtil;
-import org.apache.ofbiz.webpos.session.WebPosSession;
+
+import webpos.src.main.java.org.apache.ofbiz.webpos.session.WebPosSession;
 
 public class WebPosTransaction {
 
