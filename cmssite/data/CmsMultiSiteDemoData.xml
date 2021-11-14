@@ -44,6 +44,7 @@ under the License.
                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
                 <title>${(decoratedContent.subcontent.title.render)!"WebSite 1 Generic Title (Set subcontent 'title' on your content!)"}</title>
                 <link rel="shortcut icon" href="/images/ofbiz.ico" />
+                <script src="/common/js/util/dompurify/dist/purify.min.js" type="application/javascript"></script>
                 <script src="/common/js/util/fieldlookup.js" type="application/javascript"></script>
                 <script src="/common/js/util/OfbizUtil.js" type="application/javascript"></script>
                 <link rel="stylesheet" href="/ecommerce/images/ecommain.css" type="text/css"/>
@@ -125,6 +126,7 @@ under the License.
                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
                 <title>${(decoratedContent.subcontent.title.render)!"WebSite 2 Generic Title (Set subcontent 'title' on your content!)"}</title>
                 <link rel="shortcut icon" href="/images/ofbiz.ico" />
+                <script src="/common/js/util/dompurify/dist/purify.min.js" type="application/javascript"></script>
                 <script src="/common/js/util/fieldlookup.js" type="application/javascript"></script>
                 <script src="/common/js/util/OfbizUtil.js" type="application/javascript"></script>
                 <link rel="stylesheet" href="/ecommerce/images/ecommain.css" type="text/css"/>
