@@ -158,7 +158,7 @@ public final class CategoryUtil {
             if (productCategoryId.contains("/")) {
                 String[] productCategories = productCategoryId.split("/");
                 int level = Integer.parseInt(productCategories[0]);
-                return level++;
+                return ++level;
             } else {
                 return 0;
             }
