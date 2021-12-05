@@ -24,19 +24,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.ofbiz.base.util.GeneralException;
+import org.apache.ofbiz.base.util.UtilGenerics;
+import org.apache.ofbiz.birt.BirtWorker;
 import org.eclipse.birt.core.exception.BirtException;
 import org.eclipse.birt.report.context.BirtContext;
 import org.eclipse.birt.report.context.IContext;
 import org.eclipse.birt.report.service.BirtReportServiceFactory;
 import org.eclipse.birt.report.service.ReportEngineService;
 import org.eclipse.birt.report.utility.ParameterAccessor;
-import org.apache.ofbiz.base.util.UtilGenerics;
-import org.apache.ofbiz.birt.BirtWorker;
 
 @SuppressWarnings("serial")
-public class BirtEngineServlet extends org.eclipse.birt.report.servlet.BirtEngineServlet {
-
-    private static final String MODULE = BirtEngineServlet.class.getName();
+public class OfbizBirtEngineServlet extends org.eclipse.birt.report.servlet.BirtEngineServlet {
 
     @Override
     protected IContext __getContext(HttpServletRequest request, HttpServletResponse response) throws BirtException {
