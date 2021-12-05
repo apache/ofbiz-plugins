@@ -395,25 +395,27 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
                 }
             }
             // set comments in the new error sheet
-            XSSFDrawing errorPatriarch = errorSheet.getDrawingPatriarch();
-            int newRowNum = getHeaderRowNo() + 1;
-            Map<Integer, Integer> rowMapping = new HashMap<>();
-            for (CellReference cell : errorMessages.keySet()) {
-                if (cell != null && errorMessages.get(cell) != null) {
-                    XSSFRow row = sheet.getRow(cell.getRow());
-                    Integer rowNum = row.getRowNum();
-                    int errorRow = newRowNum;
-                    if (rowMapping.containsKey(rowNum)) {
-                        errorRow = rowMapping.get(rowNum);
-                    } else {
-                        XSSFRow newRow = errorSheet.getRow(errorRow);
-                        if (newRow == null) {
-                            newRow = errorSheet.createRow(errorRow);
+            if (errorSheet != null) {
+                XSSFDrawing errorPatriarch = errorSheet.getDrawingPatriarch();
+                int newRowNum = getHeaderRowNo() + 1;
+                Map<Integer, Integer> rowMapping = new HashMap<>();
+                for (CellReference cell : errorMessages.keySet()) {
+                    if (cell != null && errorMessages.get(cell) != null) {
+                        XSSFRow row = sheet.getRow(cell.getRow());
+                        Integer rowNum = row.getRowNum();
+                        int errorRow = newRowNum;
+                        if (rowMapping.containsKey(rowNum)) {
+                            errorRow = rowMapping.get(rowNum);
+                        } else {
+                            XSSFRow newRow = errorSheet.getRow(errorRow);
+                            if (newRow == null) {
+                                newRow = errorSheet.createRow(errorRow);
+                            }
+                            rowMapping.put(rowNum, errorRow);
+                            newRow.setHeight(row.getHeight());
+                            copyRow(row, newRow, factory, errorPatriarch);
+                            newRowNum++;
                         }
-                        rowMapping.put(rowNum, errorRow);
-                        newRow.setHeight(row.getHeight());
-                        copyRow(row, newRow, factory, errorPatriarch);
-                        newRowNum++;
                     }
                 }
             }

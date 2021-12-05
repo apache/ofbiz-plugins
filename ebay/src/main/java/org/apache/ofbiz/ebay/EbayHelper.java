@@ -264,7 +264,9 @@ public class EbayHelper {
             }
 
             if ((results == null) || (results.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR))) {
-                Debug.logError((String) results.get(ModelService.ERROR_MESSAGE), MODULE);
+                if ((results != null)) {
+                    Debug.logError((String) results.get(ModelService.ERROR_MESSAGE), MODULE);
+                }
                 return false;
             }
             return true;

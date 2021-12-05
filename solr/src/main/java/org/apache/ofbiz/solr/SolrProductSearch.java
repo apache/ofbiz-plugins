@@ -584,52 +584,57 @@ public abstract class SolrProductSearch {
                     ? CategoryUtil.getCategoryNameWithTrail((String) context.get("productCategoryId"), dctx) : null;
             result = ServiceUtil.returnSuccess();
             Map<String, List<Map<String, Object>>> catLevel = new HashMap<>();
-            Debug.logInfo("productCategoryId: " + productCategoryId, MODULE);
-
-            //Add toplevel categories
-            String[] trailElements = productCategoryId.split("/");
+            String[] trailElements = null;
+            if (productCategoryId != null) {
+                Debug.logInfo("productCategoryId: " + productCategoryId, MODULE);
+                // Add toplevel categories
+                trailElements = productCategoryId.split("/");
+            }
 
             //iterate over actual results
-            for (String elements : trailElements) {
-                //catIds must be greater than 3 chars
-                if (elements.length() > 3) {
-                    Debug.logInfo("elements: " + elements, MODULE);
-                    String categoryPath = CategoryUtil.getCategoryNameWithTrail(elements, dctx);
-                    String[] categoryPathArray = categoryPath.split("/");
-                    int level = Integer.parseInt(categoryPathArray[0]);
-                    String facetQuery = CategoryUtil.getFacetFilterForCategory(categoryPath, dctx);
-                    Map<String, Object> query = SolrUtil.categoriesAvailable(catalogId, categoryPath, null, facetQuery, false, 0, 0, solrIndexName);
-                    QueryResponse cat = (QueryResponse) query.get("rows");
-                    List<Map<String, Object>> categories = new ArrayList<>();
+            if (trailElements != null) {
+                for (String elements : trailElements) {
+                    // catIds must be greater than 3 chars
+                    if (elements.length() > 3) {
+                        Debug.logInfo("elements: " + elements, MODULE);
+                        String categoryPath = CategoryUtil.getCategoryNameWithTrail(elements, dctx);
+                        String[] categoryPathArray = categoryPath.split("/");
+                        int level = Integer.parseInt(categoryPathArray[0]);
+                        String facetQuery = CategoryUtil.getFacetFilterForCategory(categoryPath, dctx);
+                        Map<String, Object> query = SolrUtil.categoriesAvailable(catalogId, categoryPath, null, facetQuery, false, 0, 0,
+                                solrIndexName);
+                        QueryResponse cat = (QueryResponse) query.get("rows");
+                        List<Map<String, Object>> categories = new ArrayList<>();
 
-                    List<FacetField> catList = cat.getFacetFields();
-                    for (Iterator<FacetField> catIterator = catList.iterator(); catIterator.hasNext();) {
-                        FacetField field = catIterator.next();
-                        List<Count> catL = field.getValues();
-                        if (catL != null) {
-                            for (Iterator<Count> catIter = catL.iterator(); catIter.hasNext();) {
-                                FacetField.Count f = catIter.next();
-                                if (f.getCount() > 0) {
-                                    Map<String, Object> catMap = new HashMap<>();
-                                    LinkedList<String> iName = new LinkedList<>();
-                                    iName.addAll(Arrays.asList(f.getName().split("/")));
-                                    catMap.put("catId", iName.getLast());
-                                    iName.removeFirst();
-                                    String path = f.getName();
-                                    catMap.put("path", path);
-                                    if (level > 0) {
-                                        iName.removeLast();
-                                        catMap.put("parentCategory", StringUtils.join(iName, "/"));
-                                    } else {
-                                        catMap.put("parentCategory", null);
+                        List<FacetField> catList = cat.getFacetFields();
+                        for (Iterator<FacetField> catIterator = catList.iterator(); catIterator.hasNext();) {
+                            FacetField field = catIterator.next();
+                            List<Count> catL = field.getValues();
+                            if (catL != null) {
+                                for (Iterator<Count> catIter = catL.iterator(); catIter.hasNext();) {
+                                    FacetField.Count f = catIter.next();
+                                    if (f.getCount() > 0) {
+                                        Map<String, Object> catMap = new HashMap<>();
+                                        LinkedList<String> iName = new LinkedList<>();
+                                        iName.addAll(Arrays.asList(f.getName().split("/")));
+                                        catMap.put("catId", iName.getLast());
+                                        iName.removeFirst();
+                                        String path = f.getName();
+                                        catMap.put("path", path);
+                                        if (level > 0) {
+                                            iName.removeLast();
+                                            catMap.put("parentCategory", StringUtils.join(iName, "/"));
+                                        } else {
+                                            catMap.put("parentCategory", null);
+                                        }
+                                        catMap.put("count", Long.toString(f.getCount()));
+                                        categories.add(catMap);
                                     }
-                                    catMap.put("count", Long.toString(f.getCount()));
-                                    categories.add(catMap);
                                 }
                             }
                         }
+                        catLevel.put("menu-" + level, categories);
                     }
-                    catLevel.put("menu-" + level, categories);
                 }
             }
             result.put("categories", catLevel);

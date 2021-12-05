@@ -46,8 +46,8 @@ import org.apache.ofbiz.product.store.ProductStoreWorker;
 import org.apache.ofbiz.securityext.login.LoginEvents;
 import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.LocalDispatcher;
-import org.apache.ofbiz.webpos.session.WebPosSession;
 import org.apache.ofbiz.service.ServiceUtil;
+import org.apache.ofbiz.webpos.session.WebPosSession;
 
 public class WebPosEvents {
 
@@ -201,12 +201,13 @@ public class WebPosEvents {
                                             List<String> featureOrder = new LinkedList<>(featureSet);
                                             for (int i = 0; i < featureOrder.size(); i++) {
                                                 String featureKey = featureOrder.get(i);
-                                                GenericValue featureValue = EntityQuery.use(delegator).from("ProductFeatureType").where(
-                                                        "productFeatureTypeId", featureOrder.get(i)).cache().queryOne();
+                                                GenericValue featureValue = EntityQuery.use(delegator)
+                                                        .from("ProductFeatureType")
+                                                        .where("productFeatureTypeId", featureOrder.get(i))
+                                                        .cache().queryOne();
                                                 if (featureValue != null
                                                         && UtilValidate.isNotEmpty(featureValue.get("description"))) {
                                                     featureTypes.put(featureKey, featureValue.get("description"));
-                                                } else {
                                                     featureTypes.put(featureKey, featureValue.get("productFeatureTypeId"));
                                                 }
                                             }
