@@ -18,17 +18,16 @@
  *******************************************************************************/
 package org.apache.ofbiz.htmlreport.sample;
 
+import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.UtilProperties;
-
 import org.apache.ofbiz.htmlreport.AbstractReportThread;
 import org.apache.ofbiz.htmlreport.InterfaceReport;
 
@@ -62,7 +61,7 @@ public class SampleHtmlThread extends AbstractReportThread {
         try {
             if (getName().startsWith(COUNT_DOWN)) {
                 getReport().println(UtilProperties.getMessage(RESOURCE, "START_COUNT_DOWN", getLocale()), InterfaceReport.FORMAT_HEADLINE);
-                Random random = new Random();
+                SecureRandom random = new SecureRandom();
                 int j = 0;
                 for (int i = 1000; i > 0; i--) {
                     sleep(20);
@@ -76,7 +75,7 @@ public class SampleHtmlThread extends AbstractReportThread {
                 getReport().println(UtilProperties.getMessage(RESOURCE, "COUNT_COMPLETED", getLocale()), InterfaceReport.FORMAT_HEADLINE);
             } else if (getName().startsWith(COUNT_UP)) {
                 getReport().println(UtilProperties.getMessage(RESOURCE, "START_COUNT_UP", getLocale()), InterfaceReport.FORMAT_HEADLINE);
-                Random random = new Random();
+                SecureRandom random = new SecureRandom();
                 int j = 0;
                 for (int i = 1; i <= 1000; i++) {
                     sleep(20);

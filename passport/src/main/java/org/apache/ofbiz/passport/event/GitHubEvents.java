@@ -24,8 +24,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.security.SecureRandom;
 import java.util.Map;
-import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,8 +39,6 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.ofbiz.passport.user.GitHubAuthenticator;
-import org.apache.ofbiz.passport.util.PassportUtil;
 import org.apache.ofbiz.base.conversion.ConversionException;
 import org.apache.ofbiz.base.conversion.JSONConverters.JSONToMap;
 import org.apache.ofbiz.base.crypto.HashCrypt;
@@ -57,6 +55,8 @@ import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.entity.util.EntityUtilProperties;
+import org.apache.ofbiz.passport.user.GitHubAuthenticator;
+import org.apache.ofbiz.passport.util.PassportUtil;
 import org.apache.ofbiz.product.store.ProductStoreWorker;
 import org.apache.ofbiz.service.LocalDispatcher;
 
@@ -88,7 +88,7 @@ public class GitHubEvents {
 
     /**
      * Redirect to GitHub login page.
-     * @return
+     * @return string "success" or "error"
      */
     public static String gitHubRedirect(HttpServletRequest request, HttpServletResponse response) {
         GenericValue oauth2GitHub = getOAuth2GitHubConfig(request);
@@ -97,10 +97,11 @@ public class GitHubEvents {
         }
         String clientId = oauth2GitHub.getString(PassportUtil.COMMON_CLIENT_ID);
         String returnURI = oauth2GitHub.getString(PassportUtil.COMMON_RETURN_RUL);
+        SecureRandom secureRandom = new SecureRandom();
 
         // Get user authorization code
         try {
-            String state = System.currentTimeMillis() + String.valueOf((new Random(10)).nextLong());
+            String state = System.currentTimeMillis() + String.valueOf((secureRandom.nextLong()));
             request.getSession().setAttribute(SESSION_GITHUB_STATE, state);
             String redirectUrl = TOKEN_END_POINT + AUTHORIZE_URI
                     + "?client_id=" + clientId
@@ -125,7 +126,7 @@ public class GitHubEvents {
 
     /**
      * Parse GitHub login response and login the user if possible.
-     * @return
+     * @return string "success" or "error"
      */
     public static String parseGitHubResponse(HttpServletRequest request, HttpServletResponse response) {
         String authorizationCode = request.getParameter(PassportUtil.COMMON_CODE);
