@@ -41,9 +41,6 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.ofbiz.htmlreport.AbstractReportThread;
-import org.apache.ofbiz.htmlreport.InterfaceReport;
-import org.apache.ofbiz.pricat.sample.SamplePricatParser;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.FileUtil;
 import org.apache.ofbiz.base.util.UtilDateTime;
@@ -56,8 +53,11 @@ import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.condition.EntityCondition;
 import org.apache.ofbiz.entity.condition.EntityOperator;
-import org.apache.ofbiz.entity.util.EntityUtil;
 import org.apache.ofbiz.entity.util.EntityQuery;
+import org.apache.ofbiz.entity.util.EntityUtil;
+import org.apache.ofbiz.htmlreport.AbstractReportThread;
+import org.apache.ofbiz.htmlreport.InterfaceReport;
+import org.apache.ofbiz.pricat.sample.SamplePricatParser;
 import org.apache.ofbiz.service.LocalDispatcher;
 
 /**
@@ -238,12 +238,14 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
                 pricatFi = fi;
                 pricatBytes = pricatFi.get();
                 Path path = Paths.get(fi.getName());
-                pricatFile = new File(InterfacePricatParser.TEMP_FILES_FOLDER + userLoginId + "/" + path.getFileName().toString());
-                FileOutputStream fos = new FileOutputStream(pricatFile);
-                fos.write(pricatBytes);
-                fos.flush();
-                fos.close();
-                session.setAttribute(PRICAT_FILE, pricatFile.getAbsolutePath());
+                if (path != null && path.getFileName() != null) {
+                    pricatFile = new File(InterfacePricatParser.TEMP_FILES_FOLDER + userLoginId + "/" + path.getFileName().toString());
+                    FileOutputStream fos = new FileOutputStream(pricatFile);
+                    fos.write(pricatBytes);
+                    fos.flush();
+                    fos.close();
+                    session.setAttribute(PRICAT_FILE, pricatFile.getAbsolutePath());
+                }
             }
         }
         return true;
