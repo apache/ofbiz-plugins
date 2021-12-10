@@ -580,6 +580,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
         List<Object> results = new ArrayList<>();
         boolean foundError = false;
         if (isEmptyRow(row, size, true)) {
+            Debug.logError("There are no cells to get content from!", MODULE);
             return null;
         }
         for (int i = 0; i < size; i++) {
