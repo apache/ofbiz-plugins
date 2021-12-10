@@ -274,7 +274,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
      * Check whether a commented file exists.
      * @param request
      * @param sequenceNum
-     * @return
+     * @return boolean
      */
     public static boolean isCommentedExcelExists(HttpServletRequest request, Long sequenceNum) {
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
@@ -573,7 +573,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
      * @param row
      * @param colNames
      * @param size
-     * @return
+     * @return list
      */
     @Override
     public List<Object> getCellContents(XSSFRow row, List<Object[]> colNames, int size) {
