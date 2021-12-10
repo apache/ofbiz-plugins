@@ -303,6 +303,10 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
 
     @Override
     public void writeCommentsToFile(XSSFWorkbook workbook, XSSFSheet sheet) {
+        if (workbook == null) {
+            Debug.logError("workbook war is null; Nothing can be done", MODULE);
+        }
+
         report.println();
         report.print(UtilProperties.getMessage(RESOURCE, "WriteCommentsBackToExcel", locale), InterfaceReport.FORMAT_NOTE);
         FileOutputStream fos = null;
@@ -443,12 +447,10 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
                     Debug.logError(e, MODULE);
                 }
             }
-            if (workbook != null) {
-                try {
-                    workbook.close();
-                } catch (IOException e) {
-                    Debug.logError(e, MODULE);
-                }
+            try {
+                workbook.close();
+            } catch (IOException e) {
+                Debug.logError(e, MODULE);
             }
         }
         report.println(UtilProperties.getMessage(RESOURCE, "ok", locale), InterfaceReport.FORMAT_OK);
