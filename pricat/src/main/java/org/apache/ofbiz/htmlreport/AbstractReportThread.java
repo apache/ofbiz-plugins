@@ -80,8 +80,7 @@ public abstract class AbstractReportThread extends Thread implements InterfaceRe
     }
 
     /**
-     * Returns the error exception in case there was an error during the execution of
-     * this Thread, null otherwise.
+     * Returns the error exception in case there was an error during the execution of this Thread, null otherwise.
      * @return the error exception in case there was an error, null otherwise
      */
     public Throwable getError() {
@@ -89,8 +88,8 @@ public abstract class AbstractReportThread extends Thread implements InterfaceRe
     }
 
     /**
-     * Returns a list of all errors that occured during the report.
-     * @return an error list that occured during the report
+     * Returns a list of all errors that occurred during the report.
+     * @return an error list that occurred during the report
      */
     public List<?> getErrors() {
         if (getReport() != null) {
