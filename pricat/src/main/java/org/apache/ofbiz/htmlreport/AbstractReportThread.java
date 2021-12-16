@@ -69,7 +69,7 @@ public abstract class AbstractReportThread extends Thread implements InterfaceRe
     }
 
     /**
-     * Adds an error object to the list of errors that occured during the report.
+     * Adds an error object to the list of errors that occurred during the report.
      * @param obj the error object
      */
     public void addError(Object obj) {
@@ -130,10 +130,8 @@ public abstract class AbstractReportThread extends Thread implements InterfaceRe
     }
 
     /**
-     * Returns true if this thread is already "doomed" to be deleted.
-     * A OFBiz deamon Thread (the "Grim Reaper") will collect all
-     * doomed Threads, i.e. threads that are not longer active for some
-     * time.
+     * Returns true if this thread is already "doomed" to be deleted. A OFBiz daemon Thread (the "Grim Reaper") will collect all doomed Threads, i.e.
+     * threads that are not longer active for some time.
      * @return true if this thread is already "doomed" to be deleted
      */
     public synchronized boolean isDoomed() {

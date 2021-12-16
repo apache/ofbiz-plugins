@@ -29,10 +29,10 @@ import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
-import org.apereo.cas.util.LdapUtils;
-import org.ldaptive.LdapEntry;
 import org.apache.ofbiz.base.util.UtilXml;
 import org.apache.ofbiz.ldap.commons.AbstractOFBizAuthenticationHandler;
+import org.apereo.cas.util.LdapUtils;
+import org.ldaptive.LdapEntry;
 import org.w3c.dom.Element;
 
 
@@ -107,7 +107,6 @@ public final class OFBizActiveDirectoryAuthenticationHandler extends AbstractOFB
                     env.put(Context.SECURITY_PRINCIPAL, userDN);
                     // specify the password
                     env.put(Context.SECURITY_CREDENTIALS, password);
-                    ctx = new InitialDirContext(env);
                 }
             }
         } catch (NamingException e) {
