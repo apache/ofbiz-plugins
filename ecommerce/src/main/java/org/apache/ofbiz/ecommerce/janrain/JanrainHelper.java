@@ -73,16 +73,16 @@ public class JanrainHelper {
     }
 
     /**
-     * Gets api key.
-     * @return the api key
+     * Gets API key.
+     * @return the API key
      */
     public String getApiKey() {
         return apiKey;
     }
 
     /**
-     * Gets base url.
-     * @return the base url
+     * Gets base URL.
+     * @return the base URL
      */
     public String getBaseUrl() {
         return baseUrl;
