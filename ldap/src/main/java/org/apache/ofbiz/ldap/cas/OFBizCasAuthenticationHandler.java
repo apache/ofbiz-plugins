@@ -80,8 +80,8 @@ public final class OFBizCasAuthenticationHandler extends AbstractOFBizAuthentica
             // there's a ticket, we should validate the ticket
             URL validateURL = new URL(casUrl + validateUri + "?" + PARAM_TICKET + "=" + ticket + "&" + PARAM_SERVICE + "=" + url);
             URLConnection conn = validateURL.openConnection();
-            try (InputStreamReader result = new InputStreamReader(conn.getInputStream(), "UTF-8");                
-                BufferedReader reader = new BufferedReader(result)) {
+            try (InputStreamReader result = new InputStreamReader(conn.getInputStream(), "UTF-8");
+                     BufferedReader reader = new BufferedReader(result)) {
                 String oneline = reader.readLine();
                 if (oneline != null && "yes".equals(oneline)) {
                     // the ticket is true
