@@ -43,6 +43,9 @@ public class SampleHtmlThread extends AbstractReportThread {
             "FORMAT_OK", "FORMAT_ERROR", "FORMAT_THROWABLE"};
     public static final List<String> MESSAGES = Collections.unmodifiableList(Arrays.asList(MESSAGE_LABLES));
     private static final String RESOURCE = "PricatUiLabels";
+
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+
     /**
      * Constructor, creates a new HtmlImportThreat.
      */
@@ -61,11 +64,10 @@ public class SampleHtmlThread extends AbstractReportThread {
         try {
             if (getName().startsWith(COUNT_DOWN)) {
                 getReport().println(UtilProperties.getMessage(RESOURCE, "START_COUNT_DOWN", getLocale()), InterfaceReport.FORMAT_HEADLINE);
-                SecureRandom random = new SecureRandom();
                 int j = 0;
                 for (int i = 1000; i > 0; i--) {
                     sleep(20);
-                    j = random.nextInt(7);
+                    j = SECURE_RANDOM.nextInt(7);
                     if (j == 6) {
                         getReport().println(new Throwable(UtilProperties.getMessage(RESOURCE, MESSAGES.get(j), new Object[] {i}, getLocale())));
                     } else {

@@ -47,10 +47,10 @@ import org.w3c.dom.Element;
 public final class OFBizCasAuthenticationHandler extends AbstractOFBizAuthenticationHandler {
 
     public static final String PARAM_TICKET = "ticket";
-
     public static final String PARAM_SERVICE = "service";
-
     public static final String PARAM_RENEW = "renew";
+
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
     /**
      * Public constructor, initializes some required member variables.<p>
@@ -118,9 +118,8 @@ public final class OFBizCasAuthenticationHandler extends AbstractOFBizAuthentica
     }
 
     private static int rand(int lo, int hi) {
-        java.util.Random rn = new SecureRandom();
         int n = hi - lo + 1;
-        int i = rn.nextInt() % n;
+        int i = SECURE_RANDOM.nextInt() % n;
         if (i < 0) {
             i = -i;
         }
