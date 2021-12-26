@@ -77,11 +77,10 @@ public class SampleHtmlThread extends AbstractReportThread {
                 getReport().println(UtilProperties.getMessage(RESOURCE, "COUNT_COMPLETED", getLocale()), InterfaceReport.FORMAT_HEADLINE);
             } else if (getName().startsWith(COUNT_UP)) {
                 getReport().println(UtilProperties.getMessage(RESOURCE, "START_COUNT_UP", getLocale()), InterfaceReport.FORMAT_HEADLINE);
-                SecureRandom random = new SecureRandom();
                 int j = 0;
                 for (int i = 1; i <= 1000; i++) {
                     sleep(20);
-                    j = random.nextInt(7);
+                    j = SECURE_RANDOM.nextInt(7);
                     if (j == 6) {
                         getReport().println(new Throwable(UtilProperties.getMessage(RESOURCE, MESSAGES.get(j), new Object[] {i}, getLocale())));
                     } else {
