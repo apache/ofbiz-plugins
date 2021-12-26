@@ -127,7 +127,7 @@ public final class ReportEncoder {
     public static String createString(byte[] bytes, String encoding) {
 
         String enc = encoding.intern();
-        if (enc != ENCODING_UTF_8) {
+        if (enc.equals(ENCODING_UTF_8)) {
             enc = lookupEncoding(enc, null);
         }
         if (enc != null) {
