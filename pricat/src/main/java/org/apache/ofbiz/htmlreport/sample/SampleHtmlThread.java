@@ -39,9 +39,9 @@ public class SampleHtmlThread extends AbstractReportThread {
     public static final String COUNT_DOWN = "countdown";
     public static final String COUNT_UP = "countup";
     public static final String CONFIRM = "confirm_action";
-    public static final String[] MESSAGE_LABLES = new String[] {"FORMAT_DEFAULT", "FORMAT_WARNING", "FORMAT_HEADLINE", "FORMAT_NOTE",
+    public static final String[] MESSAGE_LABELS = new String[] { "FORMAT_DEFAULT", "FORMAT_WARNING", "FORMAT_HEADLINE", "FORMAT_NOTE",
             "FORMAT_OK", "FORMAT_ERROR", "FORMAT_THROWABLE"};
-    public static final List<String> MESSAGES = Collections.unmodifiableList(Arrays.asList(MESSAGE_LABLES));
+    public static final List<String> MESSAGES = Collections.unmodifiableList(Arrays.asList(MESSAGE_LABELS));
     private static final String RESOURCE = "PricatUiLabels";
 
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();

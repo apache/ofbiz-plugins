@@ -55,8 +55,7 @@ public final class OFBizCasAuthenticationHandler extends AbstractOFBizAuthentica
     /**
      * Public constructor, initializes some required member variables.<p>
      */
-    public OFBizCasAuthenticationHandler() {
-
+    public OFBizCasAuthenticationHandler() { // FIXME: I see nothing happening here and it's never called, remove it?
     }
 
 

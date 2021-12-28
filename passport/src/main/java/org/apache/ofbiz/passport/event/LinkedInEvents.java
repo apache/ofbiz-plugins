@@ -79,6 +79,8 @@ public class LinkedInEvents {
     public static final String SESSION_LINKEDIN_STATE = "_LINKEDIN_STATE_";
     public static final String ENV_PREFIX = UtilProperties.getPropertyValue(LinkedInAuthenticator.getPROPS(), "linkedin.env.prefix", "test");
 
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+
     /**
      * Redirect to LinkedIn login page.
      * @return string "success" or "error"
@@ -93,9 +95,8 @@ public class LinkedInEvents {
         String returnURI = oauth2LinkedIn.getString(ENV_PREFIX + PassportUtil.RETURN_URL_LABEL);
 
         // Get user authorization code
-        SecureRandom secureRandom = new SecureRandom();
         try {
-            String state = System.currentTimeMillis() + String.valueOf((secureRandom.nextLong()));
+            String state = System.currentTimeMillis() + String.valueOf((SECURE_RANDOM.nextLong()));
             request.getSession().setAttribute(SESSION_LINKEDIN_STATE, state);
             String redirectUrl = TOKEN_END_POINT + AUTHORIZE_URI
                     + "?client_id=" + clientId

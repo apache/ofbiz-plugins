@@ -76,6 +76,8 @@ public class GitHubEvents {
     private static final String TOKEN_END_POINT = "https://github.com";
     private static final String SESSION_GITHUB_STATE = "_GITHUB_STATE_";
 
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+
     public static final String ENV_PREFIX = UtilProperties.getPropertyValue(GitHubAuthenticator.PROPS, "github.env.prefix", "test");
 
     public static String getApiEndPoint() {
@@ -97,11 +99,10 @@ public class GitHubEvents {
         }
         String clientId = oauth2GitHub.getString(PassportUtil.COMMON_CLIENT_ID);
         String returnURI = oauth2GitHub.getString(PassportUtil.COMMON_RETURN_RUL);
-        SecureRandom secureRandom = new SecureRandom();
 
         // Get user authorization code
         try {
-            String state = System.currentTimeMillis() + String.valueOf((secureRandom.nextLong()));
+            String state = System.currentTimeMillis() + String.valueOf((SECURE_RANDOM.nextLong()));
             request.getSession().setAttribute(SESSION_GITHUB_STATE, state);
             String redirectUrl = TOKEN_END_POINT + AUTHORIZE_URI
                     + "?client_id=" + clientId
