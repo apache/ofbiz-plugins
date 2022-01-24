@@ -135,6 +135,9 @@ under the License.
     <WorkEffortPartyAssignment  workEffortId="9000" partyId="DemoCustomer3" statusId="PAS_ASSIGNED" roleTypeId="CLIENT_BILLING" fromDate="2007-12-14 16:45:21.831"/>
     <WorkEffortPartyAssignment  workEffortId="9000" partyId="DemoEmployee1" statusId="PAS_ASSIGNED" roleTypeId="PROVIDER_MANAGER" fromDate="2007-12-14 16:45:21.831"/>
     <WorkEffortPartyAssignment  workEffortId="9000" partyId="DemoEmployee2" statusId="PAS_ASSIGNED" roleTypeId="PROVIDER_ANALYST" fromDate="2007-12-14 16:45:21.831"/>
+    <RateAmount  partyId="DemoEmployee2" emplPositionTypeId="_NA_" fromDate="2001-01-01 00:00:00.000" thruDate="2001-12-31 23:59:59" periodTypeId="RATE_HOUR" rateAmount="50.00" rateCurrencyUomId="USD" rateTypeId="STANDARD" workEffortId="_NA_"/> 
+    <PartyRate defaultRate="N" fromDate="2001-01-01 00:00:00.000" thruDate="2001-12-31 23:59:59" partyId="DemoEmployee2" rateTypeId="STANDARD"/>
+    
     <WorkEffort workEffortId="9001" sequenceNum="1" workEffortTypeId="PHASE" currentStatusId="_NA_" lastStatusUpdate="2007-12-14 16:45:14.226" workEffortParentId="9000" workEffortName="phase1" revisionNumber="1"/>
     <WorkEffort workEffortId="9002" sequenceNum="1" workEffortTypeId="TASK" currentStatusId="PTS_CREATED" lastStatusUpdate="2007-12-14 16:45:21.831" workEffortParentId="9001" scopeEnumId="WES_PRIVATE" workEffortName="task1" estimatedStartDate="2007-12-03 00:00:00.0" estimatedCompletionDate="2007-12-05 00:00:00.0" revisionNumber="1"/>
     <WorkEffortSkillStandard workEffortId="9002" skillTypeId="9000" estimatedDuration="16.0"/>
