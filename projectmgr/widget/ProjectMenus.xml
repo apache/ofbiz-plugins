@@ -17,14 +17,12 @@
     specific language governing permissions and limitations
     under the License.
 -->
-
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xmlns="http://ofbiz.apache.org/Widget-Menu" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Menu http://ofbiz.apache.org/dtds/widget-menu.xsd">
     <menu name="ProjectMgrAppBar" title="${uiLabelMap.ProjectMgr}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-
+        <menu-item name="projects" title="${uiLabelMap.WorkEffortProjects}"><link target="FindProject"/></menu-item>
         <menu-item name="mytasks" title="${uiLabelMap.WorkEffortMyTasks}"><link target="MyTasks"/></menu-item>
         <menu-item name="mytime" title="${uiLabelMap.WorkEffortTimesheetMyTime}"><link target="MyTimesheet"/></menu-item>
-        <menu-item name="projects" title="${uiLabelMap.WorkEffortProjects}"><link target="FindProject"/></menu-item>
         <menu-item name="task" title="${uiLabelMap.ProjectMgrTasks}">
             <condition>
                 <if-has-permission permission="PROJECTMGR_ADMIN"/>
@@ -55,6 +53,16 @@
                 <if-has-permission permission="PROJECTMGR_ADMIN"/>
             </condition>
             <link target="requestlist"/>
+        </menu-item>
+    </menu>
+    <menu name="MainActionMenu" menu-container-style="button-bar button-style-2" default-selected-style="selected">
+        <menu-item name="NewProject" title="${uiLabelMap.ProjectMgrNewProject}">
+            <condition>
+                <and>
+                    <if-has-permission permission="PROJECTMGR" action="_CREATE"/>
+                </and>
+            </condition>
+            <link target="EditProject"/>
         </menu-item>
     </menu>
     <menu name="ProjectTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
