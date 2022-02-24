@@ -21,7 +21,7 @@ under the License.
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="http://ofbiz.apache.org/Site-Conf" xsi:schemaLocation="http://ofbiz.apache.org/Site-Conf http://ofbiz.apache.org/dtds/site-conf.xsd">
     <description>OFBiz: eCommerce Controller Configuration File</description>
-    
+
     <errorpage>component://common/webcommon/error/Error.ftl</errorpage>
 
     <handler name="java" type="request" class="org.apache.ofbiz.webapp.event.JavaEventHandler"/>
@@ -1429,27 +1429,6 @@ under the License.
         <response name="error" type="view" value="EditBlogArticle"/>
     </request-map>
 
-    <!--request-map uri="persistBlogSummary">
-        <security https="false" auth="true"/>
-        <event type="service" invoke="persistContentAndAssoc"/>
-        <response name="success" type="view" value="EditBlog"/>
-        <response name="error" type="view" value="EditBlog"/>
-    </request-map>
-
-    <request-map uri="persistBlogText">
-        <security https="false" auth="true"/>
-        <event type="service" invoke="persistContentAndAssoc"/>
-        <response name="success" type="view" value="EditBlog"/>
-        <response name="error" type="view" value="EditBlog"/>
-    </request-map>
-
-    <request-map uri="persistBlogImage">
-        <security https="false" auth="true"/>
-        <event type="service" invoke="persistContentAndAssoc"/>
-        <response name="success" type="view" value="EditBlog"/>
-        <response name="error" type="view" value="EditBlog"/>
-    </request-map-->
-
     <request-map uri="createBlogResponse">
         <security https="true" auth="true"/>
         <event type="service" invoke="createTextContent"/>
@@ -1809,12 +1788,12 @@ under the License.
         <security https="false" auth="false"/>
         <response name="success" type="view" value="compareProducts" save-last-view="true"/>
     </request-map>
-    
+
     <request-map uri="ProductUomDropDownOnly">
         <security auth="false" https="false"/>
         <response name="success" type="view" value="ProductUomDropDownOnly" save-current-view="false" save-last-view="true"/>
     </request-map>
-    
+
     <!-- Captcha: Image request, the captcha code is stored in the session using _CAPTCHA_CODE_ as the key -->
     <request-map uri="captcha.jpg">
         <security https="true" auth="false"/>
@@ -2014,18 +1993,18 @@ under the License.
     <!-- One Page Checkout -->
     <view-map name="OnePageCheckout" type="screen" page="component://ecommerce/widget/OrderScreens.xml#OnePageCheckout"/>
     <view-map name="compareProducts" type="screen" page="component://ecommerce/widget/OrderScreens.xml#compareProducts"/>
-    
+
     <!-- Product in the different UOM -->
     <view-map name="ProductUomDropDownOnly" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#ProductUomDropDownOnly"/>
-    
+
     <!-- Contact List -->
     <view-map name="ContactListOptOut" type="screen" page="component://marketing/widget/ContactListScreens.xml#OptOutResponse"/>
 
     <!-- Product Category 's Ajax -->
     <view-map name="productCategoryList" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#productCategoryList"/>
-    
+
     <!-- Shopping List 's Ajax -->
     <view-map name="showShoppingList" type="screen" page="component://ecommerce/widget/ShoppingListScreens.xml#showShoppingList"/>
-    
+
     <!-- End of View Mappings -->
 </site-conf>
