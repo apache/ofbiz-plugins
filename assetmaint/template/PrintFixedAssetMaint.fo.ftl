@@ -222,8 +222,7 @@ under the License.
           <#list notes as note>
             <fo:table-row>
               <fo:table-cell>
-                <fo:block>Author : ${Static[
-                    "org.apache.ofbiz.party.party.PartyHelper"].getPartyName(delegator, note.noteParty, true)}</fo:block>
+                <fo:block>Author : ${Static["org.apache.ofbiz.party.party.PartyHelper"].getPartyName(delegator, note.noteParty, true)}</fo:block>
                 <fo:block>Date : ${note.noteDateTime?string.short}</fo:block>
                 <#escape x as x?html>
                   <fo:block>${note.noteInfo!}</fo:block>
