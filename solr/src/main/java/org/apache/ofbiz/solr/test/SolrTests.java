@@ -20,10 +20,10 @@
 
 package org.apache.ofbiz.solr.test;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.util.EntityQuery;
@@ -75,11 +75,14 @@ public class SolrTests extends OFBizTestCase {
             throw new Exception(errorMessage);
         }
         assertTrue("Could not query search index", ServiceUtil.isSuccess(sresp));
-
-
     }
 
-    public void testAddToSolrIndex() throws Exception{
+    /**
+     * Test add to solr index.
+     * @throws Exception the exception
+     */
+    public void testAddToSolrIndex() throws Exception {
+        System.setProperty("SolrDispatchFilter", "runsAfterControlFilter");
         context = new HashMap<>();
         context.put("productId", validTestProductId);
         response = dispatcher.runSync("addToSolrIndex", context);
@@ -89,9 +92,15 @@ public class SolrTests extends OFBizTestCase {
         }
         assertTrue("Could not add Product to Index", ServiceUtil.isSuccess(
                 response));
+        System.clearProperty("SolrDispatchFilter");
     }
 
-    public void testAddToSolrIndex_invalidProduct() throws Exception {
+    /**
+     * Test add to solr index invalid product.
+     * @throws Exception the exception
+     */
+    public void testAddToSolrIndexInvalidProduct() throws Exception {
+        System.setProperty("SolrDispatchFilter", "runsAfterControlFilter");
         context = new HashMap<>();
         context.put("productId", invalidTestProductId);
         response = dispatcher.runSync("addToSolrIndex", context);
@@ -101,9 +110,11 @@ public class SolrTests extends OFBizTestCase {
         }
         assertTrue("Could not test the addition of an invalid product to the Solr index", ServiceUtil.isSuccess(
                 response));
+        System.clearProperty("SolrDispatchFilter");
     }
 
     public void testAddListToSolrIndex() throws Exception {
+        System.setProperty("SolrDispatchFilter", "runsAfterControlFilter");
         List<Map<String, Object>> products = new ArrayList<>();
         Map<String, Object> product_1 = new HashMap<>();
         Map<String, Object> product_2 = new HashMap<>();
@@ -124,10 +135,15 @@ public class SolrTests extends OFBizTestCase {
             throw new Exception(errorMessage);
         }
         assertTrue("Could not add products to index", ServiceUtil.isSuccess(response));
-
+        System.clearProperty("SolrDispatchFilter");
     }
 
-    public void testAddListToSolrIndex_invalidProducts() throws Exception {
+    /**
+     * Test add list to solr index invalid products.
+     * @throws Exception the exception
+     */
+    public void testAddListToSolrIndexInvalidProducts() throws Exception {
+        System.setProperty("SolrDispatchFilter", "runsAfterControlFilter");
         List<Map<String, Object>> products = new ArrayList<>();
         Map<String, Object> product_1 = new HashMap<>();
         Map<String, Object> product_2 = new HashMap<>();
@@ -151,7 +167,7 @@ public class SolrTests extends OFBizTestCase {
             throw new Exception(errorMessage);
         }
         assertTrue("Could not test adding invalid products to index", ServiceUtil.isSuccess(response));
-
+        System.clearProperty("SolrDispatchFilter");
     }
 }
 
