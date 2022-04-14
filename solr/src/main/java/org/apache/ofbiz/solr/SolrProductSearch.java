@@ -78,7 +78,8 @@ public abstract class SolrProductSearch {
         String solrIndexName = (String) context.get("indexName");
 
         if (SolrUtil.isSolrEcaEnabled()) {
-            // Debug.logVerbose("Solr: addToSolr: Running indexing for productId '" + productId + "'", module);
+            System.setProperty("SolrDispatchFilter", "runsAfterControlFilter");
+            // Debug.logVerbose("Solr: addToSolr: Running indexing for productId '" + productId + "'", MODULE);
             try {
                 GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne();
                 Map<String, Object> dispatchContext = ProductUtil.getProductContent(product, dctx, context);
@@ -109,6 +110,7 @@ public abstract class SolrProductSearch {
                 Debug.logError(e, e.getMessage(), module);
                 result = ServiceUtil.returnError(e.toString());
             }
+            System.clearProperty("SolrDispatchFilter");
         } else {
             final String statusMsg = "Solr ECA indexing disabled; skipping indexing for productId '" + productId + "'";
             if (Debug.verboseOn()) Debug.logVerbose("Solr: addToSolr: " + statusMsg, module);
