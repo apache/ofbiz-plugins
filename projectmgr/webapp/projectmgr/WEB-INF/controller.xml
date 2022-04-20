@@ -82,7 +82,7 @@
     <request-map uri="createProject">
         <security https="true" auth="true"/>
         <event type="service" invoke="createProject"/>
-        <response name="success" type="request-redirect-noparam" value="projectView"/>
+        <response name="success" type="view" value="projectView"/>
         <response name="error" type="view" value="EditProject"/>
     </request-map>
     <request-map uri="updateProject">
@@ -679,7 +679,7 @@
         <response name="success" type="view" value="EditWorkEffortSurveyAppls"/>
         <response name="error" type="view" value="EditWorkEffortSurveyAppls"/>
     </request-map>
-    
+
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
