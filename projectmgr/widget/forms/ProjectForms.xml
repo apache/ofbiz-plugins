@@ -579,7 +579,7 @@
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display type="date-time"/></field>
         <field name="expireButton" widget-style="smallSubmit"  use-when="${thruDate==null || (thruDate &gt; nowTimestamp)}"><submit button-type="button"/></field>
     </form>
-    <form name="AddWorkEffortPartyAssign" target="createWorkEffortPartyAssign" title="" type="single"
+    <form name="AddWorkEffortPartyAssign" target="addWorkEffortPartyAssign" title="" type="single"
         header-row-style="header-row" default-table-style="basic-table">
         <actions>
             <entity-condition entity-name="PartyRoleAndPartyDetail" distinct="true" list="projectResources">

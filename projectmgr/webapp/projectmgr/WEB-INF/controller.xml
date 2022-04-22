@@ -569,8 +569,14 @@
     <request-map uri="addWorkEffortPartyAssign">
         <security https="true" auth="true"/>
         <event type="service" invoke="assignPartyToWorkEffort"/>
-        <response name="success" type="view" value="listResourcesProject"/>
-        <response name="error" type="view" value="listResourcesProject"/>
+        <response name="success" type="view" value="ListWorkEffortPartyAssigns"/>
+        <response name="error" type="view" value="ListWorkEffortPartyAssigns"/>
+    </request-map>
+    <request-map uri="deleteWorkEffortPartyAssign">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePartyToWorkEffortAssignment"/>
+        <response name="success" type="view" value="ListWorkEffortPartyAssigns"/>
+        <response name="error" type="view" value="ListWorkEffortPartyAssigns"/>
     </request-map>
     <request-map uri="addTaskPartyAssign">
         <security https="true" auth="true"/>
