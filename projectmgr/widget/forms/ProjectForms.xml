@@ -17,7 +17,7 @@
     specific language governing permissions and limitations
     under the License.
 -->
-<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="http://ofbiz.apache.org/Widget-Form" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Form http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="EditProject" type="single" target="updateProject" default-map-name="projectInfo"
         header-row-style="header-row" default-table-style="basic-table">
@@ -164,7 +164,7 @@
                 <field-map field-name="distinct" value="Y"/>
                 <field-map field-name="orderBy" value="-lastStatusUpdate"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
-                <field-map field-name="viewSize" from-field="viewSize"/>           
+                <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
         <row-actions>
@@ -186,27 +186,40 @@
         <field name="actualHours" map-name="resultProject.projectInfo" title="${uiLabelMap.ProjectMgrActualHours}"><display/></field>
         <field name="createdStamp" title="${uiLabelMap.FormFieldTitle_createdDate}"><display type="date"/></field>
     </form>
-    <form name="ListCurrentProjects" type="list" list-name="projects" paginate-target="main"
+    <form name="ListCurrentProjects" type="list" list-name="listIt" paginate-target="main"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>
-            <script location="component://projectmgr/groovyScripts/ListCurrentProjects.groovy"/>
+            <set field="parameters.workEffortTypeId" value="PROJECT"/>
+            <set field="fieldList[]" value="workEffortId"/>
+            <set field="fieldList[]" value="lastStatusUpdate"/>
+            <service service-name="performFind" result-map-list="listIt">
+                <field-map field-name="fieldList" from-field="fieldList"/>
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="WorkEffortAndPartyAssign"/>
+                <field-map field-name="distinct" value="Y"/>
+                <field-map field-name="orderBy" value="-lastStatusUpdate"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
         </actions>
         <row-actions>
-            <script location="component://projectmgr/groovyScripts/ProjectIsBillable.groovy"/>
+            <service service-name="getProject" result-map="resultProject">
+                <field-map field-name="projectId" value="${workEffortId}"/>
+            </service>
         </row-actions>
-        <field name="projectName" title="${uiLabelMap.ProjectMgrProjectName}" widget-style="buttontext">
-            <hyperlink description="${projectName}" target="projectView">
-                <parameter param-name="projectId"/>
+       <field name="projectName" map-name="resultProject.projectInfo" title="${uiLabelMap.ProjectMgrProjectName}" widget-style="buttontext">
+            <hyperlink description="${resultProject.projectInfo.projectName}" target="projectView">
+                <parameter param-name="projectId" from-field="resultProject.projectInfo.projectId"/>
             </hyperlink>
         </field>
-        <field name="currentStatusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
-        <field name="estimatedStartDate" title="${uiLabelMap.FormFieldTitle_estimatedStartDate}"><display type="date"/></field>
-        <field name="estimatedCompletionDate" title="${uiLabelMap.FormFieldTitle_estimatedCompletionDate}"><display type="date"/></field>
-        <field name="actualStartDate" title="${uiLabelMap.FormFieldTitle_actualStartDate}"><display type="date"/></field>
-        <field name="actualCompletionDate" title="${uiLabelMap.FormFieldTitle_actualCompletionDate}"><display type="date"/></field>
-        <field name="plannedHours" title="${uiLabelMap.ProjectMgrPlannedHours}"><display/></field>
-        <field name="actualHours" title="${uiLabelMap.ProjectMgrActualHours}"><display/></field>
-        <field name="actualNonBilledHours" title="${uiLabelMap.ProjectMgrNonBilledActualHours}"><display description="${groovy:isBillable&amp;&amp;actualNonBilledHours!=void?actualNonBilledHours:&quot;&quot;}"/></field>
+        <field name="createdDate" map-name="resultProject.projectInfo" title="${uiLabelMap.FormFieldTitle_createdDate}"><display type="date"/></field>
+        <field name="currentStatusId" map-name="resultProject.projectInfo" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
+        <field name="estimatedStartDate" map-name="resultProject.projectInfo" title="${uiLabelMap.FormFieldTitle_estimatedStartDate}"><display type="date"/></field>
+        <field name="estimatedCompletionDate" map-name="resultProject.projectInfo" title="${uiLabelMap.FormFieldTitle_estimatedCompletionDate}"><display type="date"/></field>
+        <field name="actualStartDate" map-name="resultProject.projectInfo" title="${uiLabelMap.FormFieldTitle_actualStartDate}"><display type="date"/></field>
+        <field name="actualCompletionDate" map-name="resultProject.projectInfo" title="${uiLabelMap.FormFieldTitle_actualCompletionDate}"><display type="date"/></field>
+        <field name="plannedHours" map-name="resultProject.projectInfo" title="${uiLabelMap.ProjectMgrPlannedHours}"><display/></field>
+        <field name="actualHours" map-name="resultProject.projectInfo" title="${uiLabelMap.ProjectMgrActualHours}"><display/></field>
         <field name="createdStamp" title="${uiLabelMap.FormFieldTitle_createdDate}"><display type="date"/></field>
     </form>
     <form name="EditSubProjects" list-name="projects" type="list" target="RemoveSubProject"
@@ -586,7 +599,7 @@
                 <condition-list combine="and">
                     <condition-expr field-name="roleTypeId" operator="equals" value="PROJECT_TEAM"/>
                     <condition-expr field-name="statusId" operator="not-equals" value="PARTY_DISABLED"/>
-                </condition-list>                
+                </condition-list>
                 <select-field field-name="partyId"/>
                 <select-field field-name="lastName"/>
                 <select-field field-name="firstName"/>
