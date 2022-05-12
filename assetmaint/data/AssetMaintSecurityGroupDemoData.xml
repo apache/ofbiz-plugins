@@ -28,4 +28,5 @@ under the License.
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="ASSETMAINTTECH" permissionId="ASSETMAINT_UPDATE"/>
 
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FULLADMIN" permissionId="ASSETMAINT_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-01-01 00:00:00.0" groupId="VIEWADMIN" permissionId="ASSETMAINT_VIEW"/>
 </entity-engine-xml>
