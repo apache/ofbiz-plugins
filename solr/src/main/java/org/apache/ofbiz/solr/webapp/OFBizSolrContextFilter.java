@@ -94,9 +94,8 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
     @Override
     public void init(FilterConfig config) throws ServletException {
         Properties props = System.getProperties();
-        props.setProperty("solr.log.dir", UtilProperties.getPropertyValue("solrconfig", "solr.log.dir", "runtime/logs/solr"));
-        props.setProperty("solr.log.level", UtilProperties.getPropertyValue("solrconfig", "solr.log.level", "INFO"));
-        props.setProperty("solr/home", UtilProperties.getPropertyValue("solrconfig", "solr/home"));
+        String ofbizHome = (String) props.get("ofbiz.home");
+        config.getServletContext().setAttribute(SOLRHOME_ATTRIBUTE, ofbizHome + props.getProperty("solr/home"));
         super.init(config);
     }
     /** Do filter */
