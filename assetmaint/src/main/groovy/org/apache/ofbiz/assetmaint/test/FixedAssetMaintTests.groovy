@@ -20,6 +20,7 @@ package org.apache.ofbiz.assetmaint.test
 
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
+
 import org.apache.ofbiz.base.util.UtilDateTime
 import org.apache.ofbiz.entity.GenericValue
 import org.apache.ofbiz.service.testtools.OFBizTestCase
@@ -38,9 +39,9 @@ class FixedAssetMaintTests extends OFBizTestCase {
         serviceCtx.productMaintSeqId = "seq03"  // product maintenance
         serviceCtx.intervalMeterTypeId = "ODOMETER"
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
         String estimatedStartDate = "2009-12-18 00:00:00.000"
-        serviceCtx.estimatedStartDate = new Timestamp(sdf.parse(estimatedStartDate).getTime());
+        serviceCtx.estimatedStartDate = new Timestamp(sdf.parse(estimatedStartDate).getTime())
 
         String estimatedCompletionDate = "2009-12-18 01:00:00.000"
         serviceCtx.estimatedCompletionDate = new Timestamp(sdf.parse(estimatedCompletionDate).getTime())
@@ -71,9 +72,9 @@ class FixedAssetMaintTests extends OFBizTestCase {
         serviceCtx.productMaintTypeId = "OIL_CHANGE"
         serviceCtx.intervalMeterTypeId = "ODOMETER"
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
         String estimatedStartDate = "2009-12-18 00:00:00.000"
-        serviceCtx.estimatedStartDate = new Timestamp(sdf.parse(estimatedStartDate).getTime());
+        serviceCtx.estimatedStartDate = new Timestamp(sdf.parse(estimatedStartDate).getTime())
 
         String estimatedCompletionDate = "2009-12-18 01:00:00.000"
         serviceCtx.estimatedCompletionDate = new Timestamp(sdf.parse(estimatedCompletionDate).getTime())
@@ -107,7 +108,7 @@ class FixedAssetMaintTests extends OFBizTestCase {
         serviceCtx.productMaintTypeId = "OIL_CHANGE"
         serviceCtx.intervalMeterTypeId = "ODOMETER"
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
         String estimatedCompletionDate = "2009-12-22 01:00:00.000"  // Changed estimatedCompletionDate to test update service
         serviceCtx.estimatedCompletionDate = new Timestamp(sdf.parse(estimatedCompletionDate).getTime())
 
@@ -117,8 +118,6 @@ class FixedAssetMaintTests extends OFBizTestCase {
         serviceCtx.userLogin = userLogin
         Map serviceResult = dispatcher.runSync('updateFixedAssetMaintAndWorkEffort', serviceCtx)
 
-        fixedAssetMaint.clear()
-        fixedAssetMaint = from("FixedAssetMaint").where("fixedAssetId", fixedAssetId).queryFirst()
         GenericValue workEffort = from("WorkEffort").where("workEffortId", fixedAssetMaint.scheduleWorkEffortId).queryOne()
 
         assert fixedAssetMaint
