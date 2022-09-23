@@ -86,6 +86,11 @@ under the License.
             <param-value>/error:/control:/products:/select:/index.html:/index.jsp:/robots.txt:/default.html:/default.jsp:/images</param-value>
         </init-param>
     </filter>
+    <filter>
+        <display-name>SameSiteFilter</display-name>
+        <filter-name>SameSiteFilter</filter-name>
+        <filter-class>org.apache.ofbiz.webapp.control.SameSiteFilter</filter-class>
+    </filter>
     <filter-mapping>
         <filter-name>ContextFilter</filter-name>
         <url-pattern>/*</url-pattern>
@@ -102,7 +107,10 @@ under the License.
         <filter-name>SeoContextFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-
+    <filter-mapping>
+        <filter-name>SameSiteFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
     <listener><listener-class>org.apache.ofbiz.webapp.control.ControlEventListener</listener-class></listener>
     <!-- NOTE: not all app servers support mounting implementations of the HttpSessionActivationListener interface -->
     <!-- <listener><listener-class>org.apache.ofbiz.webapp.control.ControlActivationEventListener</listener-class></listener> -->
