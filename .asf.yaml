@@ -29,6 +29,7 @@ github:
     - https
     - content
     - geospatial
+    - hacktoberfest
 
 notifications:
   jobs: notifications@ofbiz.apache.org
