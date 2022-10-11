@@ -40,10 +40,10 @@ List fillTree(rootCat ,CatLvl, parentCategoryId) {
             // CatLvl uses for identify the Category level for display different css class
             if(catChilds) {
                 if(CatLvl==2)
-                    childList = fillTree(catChilds,CatLvl+1, parentCategoryId.replaceAll("/", "")+'/'+root.productCategoryId)
+                    childList = fillTree(catChilds,CatLvl+1, parentCategoryId.replace("/", "")+'/'+root.productCategoryId)
                     // replaceAll and '/' uses for fix bug in the breadcrum for href of category
                 else if(CatLvl==1)
-                    childList = fillTree(catChilds,CatLvl+1, parentCategoryId.replaceAll("/", "")+root.productCategoryId)
+                    childList = fillTree(catChilds,CatLvl+1, parentCategoryId.replace("/", "")+root.productCategoryId)
                 else
                     childList = fillTree(catChilds,CatLvl+1, parentCategoryId+'/'+root.productCategoryId)
             }
