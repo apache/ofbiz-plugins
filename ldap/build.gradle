@@ -17,7 +17,7 @@
  * under the License.
  */
 
-// 640 shows 2 hard to understand errors:
+// 6.4.0 shows 2 hard to understand errors:
 //    > Task :compileJava
 //    C:\projectsASF\Git\ofbiz-framework\plugins\ldap\src\main\java\org\apache\ofbiz\ldap\activedirectory\OFBizActiveDirectoryAuthenticationHandler.java:95: error: incompatible types: String cannot be converted to DERBuffer
 //                LdapEntry entry = new LdapEntry(username);
