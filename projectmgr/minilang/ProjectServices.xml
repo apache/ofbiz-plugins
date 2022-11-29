@@ -1333,6 +1333,7 @@
                     <set field="teUpdMap.hours" from-field="hours" type="Double"/>
                     <set field="teUpdMap.timeEntryId" from-field="timeEntry.timeEntryId"/>
                     <set field="teUpdMap.rateTypeId" from-field="parameters.rateTypeId"/>
+                    <set field="teUpdMap.partyId" from-field="userLogin.partyId"/>
                     <call-service service-name="updateTimeEntry" in-map-name="teUpdMap"/>
                 </else>
             </if-compare>
@@ -1341,6 +1342,7 @@
                     <set-service-fields service-name="createTimeEntry" map="parameters" to-map="teCreMap"/>
                     <set field="teCreMap.hours" from-field="hours" type="Double"/>
                     <set field="teCreMap.fromDate" from-field="fromDate"/>
+                    <set field="teCreMap.partyId" from-field="userLogin.partyId"/>
                     <call-service service-name="createTimeEntry" in-map-name="teCreMap"/>
                 </if-compare>
             </else>
