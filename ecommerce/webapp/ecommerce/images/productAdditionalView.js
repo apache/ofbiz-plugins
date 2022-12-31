@@ -23,7 +23,7 @@ imgView = {
             allAnchors = document.getElementsByTagName('a');
             if (allAnchors.length) {
                 for (var i = 0; i < allAnchors.length; i++) {
-                    if (allAnchors[i].getAttributeNode('swapDetail') && allAnchors[i].getAttributeNode('swapDetail').value != '') {
+                    if (allAnchors[i].getAttribute('swapDetail') && allAnchors[i].getAttribute('swapDetail').value != '') {
                         allAnchors[i].onmouseover = imgView.showImage;
                         allAnchors[i].onmouseout = imgView.showDetailImage;
                     }
@@ -31,7 +31,7 @@ imgView = {
             }
         }
     },
-    showDetailImage: function() { 
+    showDetailImage: function() {
         var mainImage = document.getElementById('detailImage');
         mainImage.src = document.getElementById('originalImage').value;
         return false;
