@@ -38,7 +38,7 @@ imgView = {
     },
     showImage: function() {
         var mainImage = document.getElementById('detailImage');
-        mainImage.src = this.getAttributeNode('swapDetail').value;
+        mainImage.src = this.getAttribute('swapDetail').value;
         return false;
     },
     addEvent: function(element, eventType, doFunction, useCapture) {
