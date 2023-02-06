@@ -92,7 +92,6 @@ under the License.
                                 </section>
                                 <platform-specific><html><html-template location="component://ecommerce/template/forum/ForumPaging.ftl"/></html></platform-specific>
                                 <platform-specific><html><html-template location="component://ecommerce/template/forum/ShowForum.ftl"/></html></platform-specific>
-                                <!-- <platform-specific><html><html-template location="component://ecommerce/template/forum/ForumPaging.ftl"/></html></platform-specific>-->
                             </widgets>
                         </section>
                     </decorator-section>
