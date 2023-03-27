@@ -19,7 +19,7 @@ import org.apache.ofbiz.service.ServiceUtil;
 
 public class ForumEvents {
 
-    public static final String module = ForumEvents.class.getName();
+    public static final String MODULE = ForumEvents.class.getName();
 
     public static Map<String, Object> getForumMessages(HttpServletRequest request, Delegator delegator) {
 
