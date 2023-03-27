@@ -59,7 +59,7 @@ public class ForumEvents {
             articlesFound = dispatcher.runSync("performFind", UtilMisc.<String, Object>toMap("entityName",
                     "ContentAssocViewTo", "inputFields", inputFields, "userLogin", userLogin, "orderBy", "-createdDate"));
         } catch (GenericServiceException e) {
-            Debug.logError(e, "Cannot get ForumMessages for Forum %s", module, forumId);
+            Debug.logError(e, "Cannot get ForumMessages for Forum %s", MODULE, forumId);
             return ServiceUtil.returnError("Error while searching for Messages, please retry and/or contact Admin.");
         }
         int start = viewIndex * viewSize;
@@ -69,7 +69,7 @@ public class ForumEvents {
             list = it.getPartialList(start + 1, viewSize); // list starts at '1'
             listSize = it.getResultsSizeAfterPartialList();
         } catch (ClassCastException | NullPointerException | GenericEntityException e) {
-            Debug.logInfo("Problem getting partial list" + e, module);
+            Debug.logInfo("Problem getting partial list" + e, MODULE);
         }
 
         // create the result map
