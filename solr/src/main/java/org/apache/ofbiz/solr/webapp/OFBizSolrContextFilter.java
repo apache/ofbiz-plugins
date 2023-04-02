@@ -107,6 +107,12 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
 
         // check if the request is from an authorized user
         String servletPath = httpRequest.getServletPath();
+
+        if (servletPath.equals("/solrdefault/debug/dump")) {
+            sendJsonHeaderMessage(httpRequest, httpResponse, null, "SolrErrorUnauthorisedRequestForSecurityReason", null, locale);
+            return;
+        }
+
         if (UtilValidate.isNotEmpty(servletPath) && (servletPath.startsWith("/admin/") || servletPath.endsWith("/update")
                 || servletPath.endsWith("/update/json") || servletPath.endsWith("/update/csv") || servletPath.endsWith("/update/extract")
                 || servletPath.endsWith("/replication") || servletPath.endsWith("/file") || servletPath.endsWith("/file/"))) {
