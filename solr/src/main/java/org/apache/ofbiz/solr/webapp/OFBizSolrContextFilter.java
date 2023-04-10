@@ -105,7 +105,6 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         Locale locale = UtilHttp.getLocale(httpRequest);
 
-        // check if the request is from an authorized user
         String servletPath = httpRequest.getServletPath();
 
         if (servletPath.equals("/solrdefault/debug/dump")) {
@@ -113,6 +112,7 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
             return;
         }
 
+        // check if the request is from an authorized user
         if (UtilValidate.isNotEmpty(servletPath) && (servletPath.startsWith("/admin/") || servletPath.endsWith("/update")
                 || servletPath.endsWith("/update/json") || servletPath.endsWith("/update/csv") || servletPath.endsWith("/update/extract")
                 || servletPath.endsWith("/replication") || servletPath.endsWith("/file") || servletPath.endsWith("/file/"))) {

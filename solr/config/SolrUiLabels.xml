@@ -70,6 +70,6 @@ under the License.
         <value xml:lang="en">To view files of a Solr index in OFBiz, you should have the permission to do so.</value>
     </property>
     <property key="SolrErrorUnauthorisedRequestForSecurityReason">
-        <value xml:lang="en">The request must be from an authorized user</value>
+        <value xml:lang="en">This is an unauthorized request for security reason</value>
     </property>
 </resource>
