@@ -59,6 +59,26 @@ under the License.
         </section>
     </screen>
 
+    <screen name="example-react-decorator">
+        <section>
+
+            <widgets>
+                <section>
+                    <condition>
+                        <if-has-permission permission="EXAMPLE" action="_VIEW"/>
+                    </condition>
+                    <actions>
+                        <script location="component://example/groovyScripts/LoadReactApp.groovy"/>
+                        <set field="layoutSettings.styleSheets[]" value="${reactAppStylesheetUrlPath}" global="true"/>
+                    </actions>
+                </section>
+
+                <include-screen name="main-decorator" />
+
+            </widgets>
+        </section>
+    </screen>
+
     <screen name="CommonExampleDecorator">
         <!-- The CommonExampleDecorator screen decorates a small group of screens that all have
             something in common. It is decorated by the main-decorator screen. To see how the

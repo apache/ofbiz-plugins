@@ -17,6 +17,30 @@
  * under the License.
  */
 
+plugins {
+    id 'ofbiz-node-conventions'
+}
+
 dependencies {
     pluginLibsCompile 'org.apache.tomcat.embed:tomcat-embed-websocket:9.0.69'
 }
+
+node {
+    nodeProjectDir = file("vite-react-app")
+}
+
+task buildReactApp (type: NpmTask) {
+    inputs.files(fileTree('vite-react-app'))
+
+    outputs.dir('webapp/example/vite-react-app')
+
+    dependsOn npmInstall
+    args = ['run', 'build', '--', '--emptyOutDir']
+}
+
+// Build the react app when the classes task is run.
+project.rootProject.tasks.getByName('classes').dependsOn buildReactApp
+
+// Hook into the root project's clean task to clean up the output from the
+// buildReactApp task.
+project.rootProject.tasks.clean.dependsOn cleanBuildReactApp
