@@ -69,8 +69,18 @@ under the License.
                     </condition>
                     <actions>
                         <script location="component://example/groovyScripts/LoadReactApp.groovy"/>
+                        <script location="component://example/groovyScripts/ApiTokenGenerator.groovy"/>
                         <set field="layoutSettings.styleSheets[]" value="${reactAppStylesheetUrlPath}" global="true"/>
                     </actions>
+                    <widgets>
+                        <container id="ExampleApiKey">
+                            <platform-specific>
+                                <html>
+                                    <html-template location="component://example/template/includes/ApiKey.ftl"/>
+                                </html>
+                            </platform-specific>
+                        </container>
+                    </widgets>
                 </section>
 
                 <include-screen name="main-decorator" />
