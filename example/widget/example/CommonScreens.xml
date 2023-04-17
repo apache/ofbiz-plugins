@@ -59,6 +59,42 @@ under the License.
         </section>
     </screen>
 
+    <screen name="example-react-decorator">
+        <section>
+
+            <widgets>
+                <section>
+                    <condition>
+                        <if-has-permission permission="EXAMPLE" action="_VIEW"/>
+                    </condition>
+                    <actions>
+                        <script location="component://example/groovyScripts/LoadReactApp.groovy"/>
+                        <script location="component://example/groovyScripts/ApiTokenGenerator.groovy"/>
+                        <set field="layoutSettings.styleSheets[]" value="${reactAppStylesheetUrlPath}" global="true"/>
+                    </actions>
+                    <widgets>
+                        <container id="ExampleApiKey">
+                            <platform-specific>
+                                <html>
+                                    <html-template location="component://example/template/includes/ApiKey.ftl"/>
+                                </html>
+                            </platform-specific>
+                        </container>
+                    </widgets>
+                </section>
+
+                <include-screen name="main-decorator" />
+
+                <platform-specific>
+                    <html>
+                        <html-template location="component://example/template/includes/AppendJavascript.ftl"/>
+                    </html>
+                </platform-specific>
+
+            </widgets>
+        </section>
+    </screen>
+
     <screen name="CommonExampleDecorator">
         <!-- The CommonExampleDecorator screen decorates a small group of screens that all have
             something in common. It is decorated by the main-decorator screen. To see how the
