@@ -40,6 +40,9 @@
         <value xml:lang="zh">要使用这个Ajax演示，你必须让你的浏览器启用JavaScript。</value>
         <value xml:lang="zh-TW">要使用這個Ajax演示,你必須讓你的瀏覽器啟用JavaScript.</value>
     </property>
+    <property key="ExampleReactExamples">
+        <value xml:lang="en">React Examples</value>
+    </property>
   <!-- Example component properties -->
     <property key="ExampleApplication">
         <value xml:lang="en">Example Application</value>

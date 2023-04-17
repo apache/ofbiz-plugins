@@ -48,7 +48,7 @@ under the License.
         <filter-class>org.apache.ofbiz.webapp.control.ControlFilter</filter-class>
         <init-param>
             <param-name>allowedPaths</param-name>
-            <param-value>/error:/control:/select:/index.html:/index.jsp:/default.html:/default.jsp:/images:/js:/ws</param-value>
+            <param-value>/error:/control:/select:/index.html:/index.jsp:/default.html:/default.jsp:/images:/js:/ws:/vite-react-app</param-value>
         </init-param>
         <init-param>
             <param-name>redirectPath</param-name>

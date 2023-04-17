@@ -1,0 +1,72 @@
+This README describes the steps taken to add a Vite React app to the example plugin.
+
+The react-app was created using the following command from the `plugins/example` directory:
+
+    npm create vite@latest vite-react-app --template react-ts
+
+
+
+The generated application is geared towards a web server where the react app is the sole component served. We need
+to integrate the app with the example servlet, allowing it to be served alongside OFBiz.
+
+The built react app will be served from within the example webapp from a directory called `vite-react-app`. We
+therefore need to configure the build to use an appropriate URL path so that the main javascript file can locate any
+other javascript chunks it needs to load.
+
+To do this, we added the `base` property to the configuration defined in file `vite.config.ts`:
+
+    base: '/example/vite-react-app/'
+
+
+
+The ControlFilter defined in webapp/example/WEB-INF/web.xml needs to be configured to allow requests to the
+/example/vite-react-app path. We do this by modifying the `allowedPaths` parameter in web.xml:
+
+    <init-param>
+        <param-name>allowedPaths</param-name>
+        <param-value>/error:/control:/select:/index.html:/index.jsp:/default.html:/default.jsp:/images:/js:/ws:/vite-react-app</param-value>
+    </init-param>
+
+The `/vite-react-app` path element was added to the other allowed Paths.
+
+
+
+The new react app has been created outside of the example webapp directory. This ensures that sources and libraries
+used by the react app build process are not served as part of the webapp. We need the output of the build process, i.e.
+the compiled react app, to be available within the webapp. We do this by setting the `build.outDir` property in file
+`vite.config.ts`:
+
+    build: {
+        ...
+        outDir: '../webapp/example/vite-react-app',
+    },
+
+
+
+The assets produced by the apps build process include a hash in the filename. This is to ensure that the browsers don't
+cache older versions of the assets. To help us identify the files to be served by the example plugin we need to write
+a manifest file that contains the names of the files produced by the build process. We do this by adding the
+`build.manifest` property to the configuration in file `vite.config.ts`:
+
+    build: {
+        ...
+        manifest: true,
+    },
+
+
+
+The index.css file produced by the `create vite@latest` command above is not needed and would interfere with the
+OFBiz theme's CSS. The vite react app build process depends on the file being present, so we needed to remove its
+contents.
+
+
+
+To incorporate the react app into pages rendered by the example plugin, we added a new screen in ExampleReactScreens.xml
+and a new screen decorator, `example-react-decorator` in CommonScreens.xml.
+
+The screen includes a container widget with id ReactExamplesRootContainer which will be rendered in HTML as a div.
+React app source file, main.tsx, was modified to search for this element ID which is used as the root element for
+rendering the react app.
+
+The screen decorator does the work of including the react app's CSS and Javascript in rendered output. It identifies
+the relevant files by reading the manifest file produced by the react app's build process.

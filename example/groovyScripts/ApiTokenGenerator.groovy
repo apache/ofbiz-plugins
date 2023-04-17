@@ -17,30 +17,18 @@
  * under the License.
  */
 
-plugins {
-    id 'ofbiz-node-conventions'
-}
+import org.apache.ofbiz.entity.GenericValue
+import org.apache.ofbiz.entity.util.EntityUtilProperties
+import org.apache.ofbiz.webapp.control.JWTManager
 
-dependencies {
-    pluginLibsCompile 'org.apache.tomcat.embed:tomcat-embed-websocket:9.0.69'
-}
+GenericValue userLogin = (GenericValue) parameters.userLogin;
 
-node {
-    nodeProjectDir = file("vite-react-app")
-}
+String expireProperty = "security.jwt.token.expireTime"
+String expireTimeString = EntityUtilProperties.getPropertyValue("security", expireProperty, "1800", delegator)
+int expireTime = Integer.parseInt(expireTimeString);
 
-task buildReactApp (type: NpmTask) {
-    inputs.files(fileTree('vite-react-app'))
+String jwtToken = JWTManager.createJwt(delegator, [userLoginId: userLogin.getString("userLoginId")], expireTime);
 
-    outputs.dir('webapp/example/vite-react-app')
-
-    dependsOn npmInstall
-    args = ['run', 'build', '--', '--emptyOutDir']
-}
-
-// Build the react app when the classes task is run.
-project.rootProject.tasks.getByName('classes').dependsOn buildReactApp
-
-// Hook into the root project's clean task to clean up the output from the
-// buildReactApp task.
-project.rootProject.tasks.clean.dependsOn cleanBuildReactApp
+context.apiToken = [access_token: jwtToken,
+                    expires_in  : expireTimeString,
+                    token_type  : "Bearer"];
