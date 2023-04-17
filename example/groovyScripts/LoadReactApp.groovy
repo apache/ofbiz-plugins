@@ -60,12 +60,6 @@ Map<String, Object> assetManifest = new JsonSlurper().parse(assetManifestPath.to
 String stylesheetDistRelativePath = assetManifest.'index.css'.file
 String javascriptDistRelativePath = assetManifest.'index.html'.file
 
-// Retrieve the content of the javascript file.
-Path javascriptFilesystemPath = Path.of(contextFilesystemPath, reactAppDirectory, javascriptDistRelativePath)
-String javascriptContent = javascriptFilesystemPath.toFile().text
-
-// Prepare a link to the (now cached) javascript file to be included in the end of the currently rendering screen.
-ScriptLinkHelper.prepareScriptLinkForBodyEnd(context.request, reactAppUrlPath + javascriptDistRelativePath, javascriptContent)
-
-// Return the stylesheet path for use by the screen.
+// Return the stylesheet and javascript paths for use by the screen.
 context.reactAppStylesheetUrlPath = reactAppUrlPath + stylesheetDistRelativePath
+context.reactAppJavascriptUrlPath = reactAppUrlPath + javascriptDistRelativePath

@@ -85,6 +85,12 @@ under the License.
 
                 <include-screen name="main-decorator" />
 
+                <platform-specific>
+                    <html>
+                        <html-template location="component://example/template/includes/AppendJavascript.ftl"/>
+                    </html>
+                </platform-specific>
+
             </widgets>
         </section>
     </screen>
