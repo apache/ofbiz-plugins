@@ -1,5 +1,4 @@
 import groovy.json.JsonSlurper
-import org.apache.ofbiz.widget.model.ScriptLinkHelper
 
 import java.nio.file.Path
 
@@ -34,7 +33,7 @@ String contextUrlPath = context.application.context.context.path
 String contextFilesystemPath  = context.contextRoot
 
 String reactAppDirectory = 'vite-react-app'
-String reactAppUrlPath = contextUrlPath + '/' + reactAppDirectory + '/'
+String reactAppUrlPath = "${contextUrlPath}/${reactAppDirectory}/"
 
 // Path to the vite react app manifest file. This lists all the files that are part of the react app.
 // We read this file to identify the main javascript and css files.
@@ -56,7 +55,7 @@ String reactAppUrlPath = contextUrlPath + '/' + reactAppDirectory + '/'
 Path assetManifestPath = Path.of(contextFilesystemPath, reactAppDirectory, 'manifest.json')
 
 // Extract the URL paths to the index javascript and css files from the manifest file.
-Map<String, Object> assetManifest = new JsonSlurper().parse(assetManifestPath.toFile())
+Object assetManifest = new JsonSlurper().parse(assetManifestPath.toFile())
 String stylesheetDistRelativePath = assetManifest.'index.css'.file
 String javascriptDistRelativePath = assetManifest.'index.html'.file
 
