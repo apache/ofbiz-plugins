@@ -17,9 +17,10 @@
  * under the License.
  */
 
-/* This CSS file is used for the Project Manager component. */
+plugins {
+    id 'ofbiz-node-conventions'
+}
 
-/* Remove any margins that my have been set on all divs by the themes, such as Rainbowstone */
-.gchartcontainer div {
-    margin: unset
+node {
+    nodeProjectDir = file("webapp/projectmgr")
 }

@@ -19,46 +19,8 @@ under the License.
 -->
 
 <div style="position:relative" class="gantt" id="GanttChartDIV"></div>
-<script type="application/javascript">
-var g = new JSGantt.GanttChart('g',document.getElementById('GanttChartDIV'), 'day');
 
-g.setShowRes(1); // Show/Hide Responsible (0/1)
-g.setShowDur(1); // Show/Hide Duration (0/1)
-g.setShowComp(1); // Show/Hide % Complete(0/1)
+<input id="ofbizGantItemsJson" type="hidden" value="${phaseTaskListJson}"/>
 
-// Parameters             (pID, pName,                  pStart,      pEnd,        pColor,   pLink,          pMile, pRes,  pComp, pGroup, pParent, pOpen)
-
-<#list phaseTaskList as t>
-    <#if "PHASE" == t.workEffortTypeId>
-        g.AddTaskItem(new JSGantt.TaskItem("${t.phaseNr}", "${t.phaseSeqNum!}. ${t.phaseName}", "", "", "00ff00", "", 0, "", 0, 1, 0, 1));
-    </#if>
-    <#if "TASK" == t.workEffortTypeId>
-        g.AddTaskItem(new JSGantt.TaskItem("${t.taskNr}","${t.taskSeqNum!}. ${t.taskName}","${StringUtil.wrapString(t.estimatedStartDate)}", "${StringUtil.wrapString(t.estimatedCompletionDate)}","009900", "${t.url}", 0 , "${t.resource!}", ${t.completion!} , 0, ${t.phaseNr}, 1<#if t.preDecessor??>, "${t.preDecessor}"</#if>));
-    </#if>
-    <#if "MILESTONE" == t.workEffortTypeId>
-        g.AddTaskItem(new JSGantt.TaskItem("${t.taskNr}","${t.taskName}","${StringUtil.wrapString(t.estimatedStartDate)}", "${StringUtil.wrapString(t.estimatedCompletionDate)}","00ff00", "", 1 , "${t.resource!}", ${t.completion!} , 0,${t.phaseNr}, "", "" ));
-    </#if>
-</#list>
-
-<#--
-
-TaskItem(pID, pName, pStart, pEnd, pColor, pLink, pMile, pRes, pComp, pGroup, pParent, pOpen, pDepend)
-pID: (required) is a unique ID used to identify each row for parent functions and for setting dom id for hiding/showing
-pName: (required) is the task Label
-pStart: (required) the task start date, can enter empty date ('') for groups
-pEnd: (required) the task end date, can enter empty date ('') for groups
-pColor: (required) the html color for this task; e.g. '00ff00'
-pLink: (optional) any http link navigated to when task bar is clicked.
-pMile:(optional) represent a milestone
-pRes: (optional) resource name
-pComp: (required) completion percent
-pGroup: (optional) indicates whether this is a group(parent) - 0=NOT Parent; 1=IS Parent
-pParent: (required) identifies a parent pID, this causes this task to be a child of identified task
-pOpen: UNUSED - in future can be initially set to close folder when chart is first drawn
-pDepend: dependency: need previous task finished.
-
--->
-g.Draw();
-g.DrawDependencies();
-</script>
-
+<script type="application/javascript" src="/projectmgr/node_modules/jsgantt-improved/dist/jsgantt.js"></script>
+<script type="application/javascript" src="/projectmgr/static/projectmgr.js"></script>
