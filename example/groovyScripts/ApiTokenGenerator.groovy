@@ -21,14 +21,14 @@ import org.apache.ofbiz.entity.GenericValue
 import org.apache.ofbiz.entity.util.EntityUtilProperties
 import org.apache.ofbiz.webapp.control.JWTManager
 
-GenericValue userLogin = (GenericValue) parameters.userLogin;
+GenericValue userLogin = (GenericValue) parameters.userLogin
 
-String expireProperty = "security.jwt.token.expireTime"
-String expireTimeString = EntityUtilProperties.getPropertyValue("security", expireProperty, "1800", delegator)
-int expireTime = Integer.parseInt(expireTimeString);
+String expireProperty = 'security.jwt.token.expireTime'
+String expireTimeString = EntityUtilProperties.getPropertyValue('security', expireProperty, '1800', delegator)
+int expireTime = Integer.parseInt(expireTimeString)
 
-String jwtToken = JWTManager.createJwt(delegator, [userLoginId: userLogin.getString("userLoginId")], expireTime);
+String jwtToken = JWTManager.createJwt(delegator, [userLoginId: userLogin.getString('userLoginId')], expireTime)
 
 context.apiToken = [access_token: jwtToken,
                     expires_in  : expireTimeString,
-                    token_type  : "Bearer"];
+                    token_type  : 'Bearer',]
