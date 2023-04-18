@@ -17,9 +17,24 @@
  * under the License.
  */
 
-/* This CSS file is used for the Project Manager component. */
+const ganttItemsJson = document.getElementById("ofbizGantItemsJson").value;
+const ganttItems = JSON.parse(ganttItemsJson);
 
-/* Remove any margins that my have been set on all divs by the themes, such as Rainbowstone */
-.gchartcontainer div {
-    margin: unset
+const g = new JSGantt.GanttChart(document.getElementById('GanttChartDIV'), 'day');
+g.setShowRes(1); // Show/Hide Resource (0/1)
+g.setShowDur(1); // Show/Hide Duration (0/1)
+g.setShowComp(1); // Show/Hide % Complete(0/1)
+g.setShowTaskInfoLink(1);
+g.setShowTaskInfoNotes(0)
+
+g.setDateTaskTableDisplayFormat('dd mon yyyy');
+g.setDayMajorDateDisplayFormat('dd mon');
+
+for (t of ganttItems) {
+    g.AddTaskItem(
+        new JSGantt.TaskItem(t.pID, t.pName, t.pStart, t.pEnd, t.pClass, t.pLink, t.pMile, t.pRes, t.pComp,
+            t.pGroup, t.pParent, t.pOpen, t.pDepend, "", "", g)
+    );
 }
+
+g.Draw();

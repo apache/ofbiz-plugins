@@ -44,7 +44,7 @@
         <filter-class>org.apache.ofbiz.webapp.control.ControlFilter</filter-class>
         <init-param>
             <param-name>allowedPaths</param-name>
-            <param-value>/error:/control:/select:/index.html:/index.jsp:/default.html:/default.jsp:/images:/static:/js</param-value>
+            <param-value>/error:/control:/select:/index.html:/index.jsp:/default.html:/default.jsp:/images:/static:/js:/node_modules/jsgantt-improved</param-value>
         </init-param>
         <init-param>
             <param-name>redirectPath</param-name>

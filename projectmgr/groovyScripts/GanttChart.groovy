@@ -18,16 +18,18 @@
  */
 
 
+import groovy.json.JsonOutput
 import org.apache.ofbiz.base.util.UtilDateTime
-import org.apache.ofbiz.base.util.UtilValidate
 import org.apache.ofbiz.entity.condition.EntityCondition
 import org.apache.ofbiz.entity.condition.EntityOperator
+
+import java.sql.Timestamp
 
 projectId = parameters.projectId
 userLogin = parameters.userLogin
 
 //project info
-result = runService('getProject', [projectId : projectId, userLogin : userLogin])
+result = runService('getProject', [projectId: projectId, userLogin: userLogin])
 project = result.projectInfo
 if (project && project.startDate)
     context.chartStart = project.startDate
@@ -41,7 +43,9 @@ else
 if (project == null) return
 
 ganttList = new LinkedList()
-result = runService('getProjectPhaseList', [userLogin : userLogin , projectId : projectId])
+List<Map<String, Object>> ganttItems = []
+
+result = runService('getProjectPhaseList', [userLogin: userLogin, projectId: projectId])
 phases = result.phaseList
 if (phases) {
     phases.each { phase ->
@@ -61,15 +65,34 @@ if (phases) {
         }
         newPhase.workEffortTypeId = "PHASE"
         ganttList.add(newPhase)
+
+        ganttItems << [
+                pID       : phase.phaseId as Integer,
+                pName     : phase.phaseSeqNum ? "${phase.phaseSeqNum}. ${phase.phaseName}" : phase.phaseName,
+                pStart    : '',
+                pEnd      : '',
+                pPlanStart: '',
+                pPlanEnd  : '',
+                pClass    : 'ggroupblack',
+                pLink     : '',
+                pMile     : 0,
+                pRes      : '',
+                pComp     : 0,
+                pGroup    : 1,
+                pParent   : 0,
+                pOpen     : 1,
+                pDepend   : ''
+        ]
+
         cond = EntityCondition.makeCondition(
                 [
-                EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "PTS_CANCELLED"),
-                EntityCondition.makeCondition("workEffortParentId", EntityOperator.EQUALS, phase.phaseId)
+                        EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "PTS_CANCELLED"),
+                        EntityCondition.makeCondition("workEffortParentId", EntityOperator.EQUALS, phase.phaseId)
                 ], EntityOperator.AND)
-        tasks = from("WorkEffort").where(cond).orderBy("sequenceNum","workEffortName").queryList()
+        tasks = from("WorkEffort").where(cond).orderBy("sequenceNum", "workEffortName").queryList()
         if (tasks) {
             tasks.each { task ->
-                resultTaskInfo = runService('getProjectTask', [userLogin : userLogin , taskId : task.workEffortId])
+                resultTaskInfo = runService('getProjectTask', [userLogin: userLogin, taskId: task.workEffortId])
                 taskInfo = resultTaskInfo.taskInfo
                 taskInfo.taskNr = task.workEffortId
                 taskInfo.phaseNr = phase.phaseId
@@ -100,13 +123,12 @@ if (phases) {
                 if (!taskInfo.estimatedCompletionDate && !duration) {
                     taskInfo.estimatedCompletionDate = UtilDateTime.addDaysToTimestamp(newPhase.estimatedStartDate, 3)
                 } else if (!taskInfo.estimatedCompletionDate && duration) {
-                    taskInfo.estimatedCompletionDate = UtilDateTime.addDaysToTimestamp(newPhase.estimatedStartDate, duration/8)
+                    taskInfo.estimatedCompletionDate = UtilDateTime.addDaysToTimestamp(newPhase.estimatedStartDate, duration / 8)
                 }
-                taskInfo.estimatedStartDate = UtilDateTime.toDateString(taskInfo.estimatedStartDate, "MM/dd/yyyy")
-                taskInfo.estimatedCompletionDate = UtilDateTime.toDateString(taskInfo.estimatedCompletionDate, "MM/dd/yyyy")
+
                 taskInfo.workEffortTypeId = task.workEffortTypeId
                 if (security.hasEntityPermission("PROJECTMGR", "_READ", session) || security.hasEntityPermission("PROJECTMGR", "_ADMIN", session)) {
-                    taskInfo.url = "/projectmgr/control/taskView?workEffortId="+task.workEffortId
+                    taskInfo.url = "/projectmgr/control/taskView?workEffortId=" + task.workEffortId
                 } else {
                     taskInfo.url = ""
                 }
@@ -123,13 +145,35 @@ if (phases) {
                     taskInfo.preDecessor = ""
                     for (i in latestTaskIds) {
                         if (count > 0) {
-                            taskInfo.preDecessor = taskInfo.preDecessor +", " + i
+                            taskInfo.preDecessor = taskInfo.preDecessor + ", " + i
                         } else {
                             taskInfo.preDecessor = taskInfo.preDecessor + i
                         }
-                        count ++
+                        count++
                     }
                 }
+
+                ganttItems << [
+                        pID       : taskInfo.taskNr as Integer,
+                        pName     : taskInfo.taskSeqNum ? "${taskInfo.taskSeqNum}. ${taskInfo.taskName}" : taskInfo.taskName,
+                        pStart    : taskInfo.estimatedStartDate.toLocalDateTime().getDateString(),
+                        pEnd      : (taskInfo.estimatedCompletionDate as Timestamp).toLocalDateTime().getDateString(),
+                        pPlanStart: (taskInfo.estimatedStartDate as Timestamp).toLocalDateTime().getDateString(),
+                        pPlanEnd  : (taskInfo.estimatedCompletionDate as Timestamp).toLocalDateTime().getDateString(),
+                        pClass    : taskInfo.workEffortTypeId == 'MILESTONE' ? 'gmilestone' : 'gtaskgreen',
+                        pLink     : taskInfo.url,
+                        pMile     : taskInfo.workEffortTypeId == 'MILESTONE' ? 1 : 0,
+                        pRes      : taskInfo.resource,
+                        pComp     : taskInfo.completion,
+                        pGroup    : 0,
+                        pParent   : taskInfo.phaseNr,
+                        pOpen     : taskInfo.workEffortTypeId == 'MILESTONE' ? 0 : 1,
+                        pDepend   : taskInfo.preDecessor ?: ''
+                ]
+
+                taskInfo.estimatedStartDate = UtilDateTime.toDateString(taskInfo.estimatedStartDate, "MM/dd/yyyy")
+                taskInfo.estimatedCompletionDate = UtilDateTime.toDateString(taskInfo.estimatedCompletionDate, "MM/dd/yyyy")
+
                 ganttList.add(taskInfo)
             }
         }
@@ -137,4 +181,4 @@ if (phases) {
 }
 
 context.phaseTaskList = ganttList
-
+context.phaseTaskListJson = JsonOutput.toJson(ganttItems)
