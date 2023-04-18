@@ -17,168 +17,160 @@
  * under the License.
  */
 
-
 import groovy.json.JsonOutput
 import org.apache.ofbiz.base.util.UtilDateTime
+import org.apache.ofbiz.entity.GenericValue
 import org.apache.ofbiz.entity.condition.EntityCondition
+import org.apache.ofbiz.entity.condition.EntityConditionList
+import org.apache.ofbiz.entity.condition.EntityExpr
 import org.apache.ofbiz.entity.condition.EntityOperator
 
+import javax.servlet.http.HttpSession
+import java.math.RoundingMode
 import java.sql.Timestamp
 
-projectId = parameters.projectId
-userLogin = parameters.userLogin
+final String taskStatusCompleted = 'PTS_COMPLETED'
+final int defaultTaskDurationDays = 3
+final String milestoneWorkEffortTypeId = 'MILESTONE'
+final String permissionCheckEntity = 'PROJECTMGR'
+final BigDecimal hundredPercent = new BigDecimal(100)
 
-//project info
-result = runService('getProject', [projectId: projectId, userLogin: userLogin])
-project = result.projectInfo
-if (project && project.startDate)
-    context.chartStart = project.startDate
-else
-    context.chartStart = UtilDateTime.nowTimestamp() // default todays date
-if (project && project.completionDate)
-    context.chartEnd = project.completionDate
-else
-    context.chartEnd = UtilDateTime.addDaysToTimestamp(UtilDateTime.nowTimestamp(), 14) // default 14 days long
+String projectId = parameters.projectId
+GenericValue userLogin = parameters.userLogin as GenericValue
 
-if (project == null) return
+Map<String, Object> result = runService('getProject', [projectId: projectId, userLogin: userLogin])
+Map<String, Object> project = result.projectInfo as Map<String, Object>
+if (project == null) {
+    return
+}
 
-ganttList = new LinkedList()
+context.chartStart = project.startDate ?: UtilDateTime.nowTimestamp() // default today's date
+context.chartEnd = project.completionDate ?: UtilDateTime.addDaysToTimestamp(UtilDateTime.nowTimestamp(), 14)
+
+List ganttList = []
 List<Map<String, Object>> ganttItems = []
 
 result = runService('getProjectPhaseList', [userLogin: userLogin, projectId: projectId])
-phases = result.phaseList
+List<Map<String, Object>> phases = result.phaseList as List<Map<String, Object>>
 if (phases) {
     phases.each { phase ->
-        newPhase = phase
+        Map<String, Object> newPhase = phase
         newPhase.phaseNr = phase.phaseId
         if (!newPhase.estimatedStartDate && newPhase.actualStartDate) {
             newPhase.estimatedStartDate = newPhase.actualStartDate
         }
-        if (!newPhase.estimatedStartDate) {
-            newPhase.estimatedStartDate = context.chartStart
-        }
+        newPhase.estimatedStartDate = newPhase.estimatedStartDate ?: context.chartStart
+
         if (!newPhase.estimatedCompletionDate && newPhase.actualCompletionDate) {
             newPhase.estimatedCompletionDate = newPhase.actualCompletionDateDate
         }
-        if (!newPhase.estimatedCompletionDate) {
-            newPhase.estimatedCompletionDate = UtilDateTime.addDaysToTimestamp(newPhase.estimatedStartDate, 3)
-        }
-        newPhase.workEffortTypeId = "PHASE"
+        newPhase.estimatedCompletionDate = newPhase.estimatedCompletionDate
+                ?: UtilDateTime.addDaysToTimestamp(newPhase.estimatedStartDate as Timestamp, defaultTaskDurationDays)
+
+        newPhase.workEffortTypeId = 'PHASE'
         ganttList.add(newPhase)
 
         ganttItems << [
-                pID       : phase.phaseId as Integer,
-                pName     : phase.phaseSeqNum ? "${phase.phaseSeqNum}. ${phase.phaseName}" : phase.phaseName,
-                pStart    : '',
-                pEnd      : '',
+                pID: phase.phaseId as Integer,
+                pName: phase.phaseSeqNum ? "${phase.phaseSeqNum}. ${phase.phaseName}" : phase.phaseName,
+                pStart: '',
+                pEnd: '',
                 pPlanStart: '',
-                pPlanEnd  : '',
-                pClass    : 'ggroupblack',
-                pLink     : '',
-                pMile     : 0,
-                pRes      : '',
-                pComp     : 0,
-                pGroup    : 1,
-                pParent   : 0,
-                pOpen     : 1,
-                pDepend   : ''
+                pPlanEnd: '',
+                pClass: 'ggroupblack',
+                pLink: '',
+                pMile: 0,
+                pRes: '',
+                pComp: 0,
+                pGroup: 1,
+                pParent: 0,
+                pOpen: 1,
+                pDepend: '',
         ]
 
-        cond = EntityCondition.makeCondition(
-                [
-                        EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "PTS_CANCELLED"),
-                        EntityCondition.makeCondition("workEffortParentId", EntityOperator.EQUALS, phase.phaseId)
-                ], EntityOperator.AND)
-        tasks = from("WorkEffort").where(cond).orderBy("sequenceNum", "workEffortName").queryList()
+        EntityConditionList<EntityExpr> cond = EntityCondition.makeCondition([
+                EntityCondition.makeCondition('currentStatusId', EntityOperator.NOT_EQUAL, 'PTS_CANCELLED'),
+                EntityCondition.makeCondition('workEffortParentId', EntityOperator.EQUALS, phase.phaseId)
+        ], EntityOperator.AND)
+        List<GenericValue> tasks = from('WorkEffort').where(cond).orderBy('sequenceNum', 'workEffortName').queryList()
+
         if (tasks) {
             tasks.each { task ->
-                resultTaskInfo = runService('getProjectTask', [userLogin: userLogin, taskId: task.workEffortId])
-                taskInfo = resultTaskInfo.taskInfo
+                Map<String, Object> resultTaskInfo = runService('getProjectTask', [userLogin: userLogin, taskId: task.workEffortId])
+                Map<String, Object> taskInfo = resultTaskInfo.taskInfo as Map<String, Object>
                 taskInfo.taskNr = task.workEffortId
                 taskInfo.phaseNr = phase.phaseId
-                if (taskInfo.plannedHours && !"PTS_COMPLETED".equals(taskInfo.currentStatusId) && taskInfo.plannedHours > taskInfo.actualHours) {
-                    taskInfo.resource = taskInfo.plannedHours + " Hrs"
+
+                taskInfo.resource = ((taskInfo.plannedHours &&
+                        taskStatusCompleted != taskInfo.currentStatusId &&
+                        taskInfo.plannedHours > taskInfo.actualHours) ? taskInfo.plannedHours : taskInfo.actualHours) +
+                        ' Hrs'
+
+                BigDecimal durationHours = resultTaskInfo.plannedHours as BigDecimal
+                if (taskStatusCompleted == taskInfo.currentStatusId) {
+                    taskInfo.completion = hundredPercent
                 } else {
-                    taskInfo.resource = taskInfo.actualHours + " Hrs"
-                }
-                Double duration = resultTaskInfo.plannedHours
-                if ("PTS_COMPLETED".equals(taskInfo.currentStatusId)) {
-                    taskInfo.completion = 100
-                } else {
-                    if (taskInfo.actualHours && taskInfo.plannedHours) {
-                        taskInfo.completion = new BigDecimal(taskInfo.actualHours * 100 / taskInfo.plannedHours).setScale(0, BigDecimal.ROUND_UP)
-                    } else {
-                        taskInfo.completion = 0
-                    }
+                    BigDecimal actualHours = taskInfo.actualHours as BigDecimal
+                    BigDecimal plannedHours = taskInfo.plannedHours as BigDecimal
+                    taskInfo.completion = (actualHours && plannedHours)
+                            ? (actualHours * hundredPercent).divide(plannedHours, 0, RoundingMode.UP)
+                            : 0
                 }
                 if (!taskInfo.estimatedStartDate && taskInfo.actualStartDate) {
                     taskInfo.estimatedStartDate = taskInfo.actualStartDate
                 }
-                if (!taskInfo.estimatedStartDate) {
-                    taskInfo.estimatedStartDate = newPhase.estimatedStartDate
-                }
+                taskInfo.estimatedStartDate = taskInfo.estimatedStartDate ?: newPhase.estimatedStartDate
+
                 if (!taskInfo.estimatedCompletionDate && taskInfo.actualCompletionDate) {
                     taskInfo.estimatedCompletionDate = taskInfo.actualCompletionDate
                 }
-                if (!taskInfo.estimatedCompletionDate && !duration) {
-                    taskInfo.estimatedCompletionDate = UtilDateTime.addDaysToTimestamp(newPhase.estimatedStartDate, 3)
-                } else if (!taskInfo.estimatedCompletionDate && duration) {
-                    taskInfo.estimatedCompletionDate = UtilDateTime.addDaysToTimestamp(newPhase.estimatedStartDate, duration / 8)
+                if (!taskInfo.estimatedCompletionDate && !durationHours) {
+                    taskInfo.estimatedCompletionDate =
+                            UtilDateTime.addDaysToTimestamp(newPhase.estimatedStartDate as Timestamp,
+                                    defaultTaskDurationDays)
+                } else if (!taskInfo.estimatedCompletionDate && durationHours) {
+                    taskInfo.estimatedCompletionDate =
+                            UtilDateTime.addDaysToTimestamp(newPhase.estimatedStartDate as Timestamp,
+                                    durationHours / 8)
                 }
 
                 taskInfo.workEffortTypeId = task.workEffortTypeId
-                if (security.hasEntityPermission("PROJECTMGR", "_READ", session) || security.hasEntityPermission("PROJECTMGR", "_ADMIN", session)) {
-                    taskInfo.url = "/projectmgr/control/taskView?workEffortId=" + task.workEffortId
+                if (security.hasEntityPermission(permissionCheckEntity, '_READ', session as HttpSession) ||
+                        security.hasEntityPermission(permissionCheckEntity, '_ADMIN', session as HttpSession)) {
+                    taskInfo.url = '/projectmgr/control/taskView?workEffortId=' + task.workEffortId
                 } else {
-                    taskInfo.url = ""
+                    taskInfo.url = ''
                 }
 
-                // dependency can only show one in the ganttchart, so onl show the latest one..
-                preTasks = from("WorkEffortAssoc").where("workEffortIdTo", task.workEffortId).orderBy("workEffortIdFrom").queryList()
-                latestTaskIds = new LinkedList()
-                preTasks.each { preTask ->
-                    wf = preTask.getRelatedOne("FromWorkEffort", false)
-                    latestTaskIds.add(wf.workEffortId)
-                }
-                count = 0
-                if (latestTaskIds) {
-                    taskInfo.preDecessor = ""
-                    for (i in latestTaskIds) {
-                        if (count > 0) {
-                            taskInfo.preDecessor = taskInfo.preDecessor + ", " + i
-                        } else {
-                            taskInfo.preDecessor = taskInfo.preDecessor + i
-                        }
-                        count++
-                    }
-                }
+                List<GenericValue> preTaskAssociations = from('WorkEffortAssoc')
+                        .where('workEffortIdTo', task.workEffortId)
+                        .orderBy('workEffortIdFrom')
+                        .queryList()
+
+                taskInfo.preDecessor = preTaskAssociations*.getRelatedOne('FromWorkEffort', false)
+                        .collect { we -> we.workEffortId as String }
+                        .join(',')
 
                 ganttItems << [
-                        pID       : taskInfo.taskNr as Integer,
-                        pName     : taskInfo.taskSeqNum ? "${taskInfo.taskSeqNum}. ${taskInfo.taskName}" : taskInfo.taskName,
-                        pStart    : taskInfo.estimatedStartDate.toLocalDateTime().getDateString(),
-                        pEnd      : (taskInfo.estimatedCompletionDate as Timestamp).toLocalDateTime().getDateString(),
-                        pPlanStart: (taskInfo.estimatedStartDate as Timestamp).toLocalDateTime().getDateString(),
-                        pPlanEnd  : (taskInfo.estimatedCompletionDate as Timestamp).toLocalDateTime().getDateString(),
-                        pClass    : taskInfo.workEffortTypeId == 'MILESTONE' ? 'gmilestone' : 'gtaskgreen',
-                        pLink     : taskInfo.url,
-                        pMile     : taskInfo.workEffortTypeId == 'MILESTONE' ? 1 : 0,
-                        pRes      : taskInfo.resource,
-                        pComp     : taskInfo.completion,
-                        pGroup    : 0,
-                        pParent   : taskInfo.phaseNr,
-                        pOpen     : taskInfo.workEffortTypeId == 'MILESTONE' ? 0 : 1,
-                        pDepend   : taskInfo.preDecessor ?: ''
+                        pID: taskInfo.taskNr as Integer,
+                        pName: taskInfo.taskSeqNum ? "${taskInfo.taskSeqNum}. ${taskInfo.taskName}" : taskInfo.taskName,
+                        pStart: (taskInfo.estimatedStartDate as Timestamp).toLocalDateTime().dateString,
+                        pEnd: (taskInfo.estimatedCompletionDate as Timestamp).toLocalDateTime().dateString,
+                        pPlanStart: (taskInfo.estimatedStartDate as Timestamp).toLocalDateTime().dateString,
+                        pPlanEnd: (taskInfo.estimatedCompletionDate as Timestamp).toLocalDateTime().dateString,
+                        pClass: taskInfo.workEffortTypeId == milestoneWorkEffortTypeId ? 'gmilestone' : 'gtaskgreen',
+                        pLink: taskInfo.url,
+                        pMile: taskInfo.workEffortTypeId == milestoneWorkEffortTypeId ? 1 : 0,
+                        pRes: taskInfo.resource,
+                        pComp: taskInfo.completion,
+                        pGroup: 0,
+                        pParent: taskInfo.phaseNr,
+                        pOpen: taskInfo.workEffortTypeId == milestoneWorkEffortTypeId ? 0 : 1,
+                        pDepend: taskInfo.preDecessor ?: '',
                 ]
-
-                taskInfo.estimatedStartDate = UtilDateTime.toDateString(taskInfo.estimatedStartDate, "MM/dd/yyyy")
-                taskInfo.estimatedCompletionDate = UtilDateTime.toDateString(taskInfo.estimatedCompletionDate, "MM/dd/yyyy")
-
-                ganttList.add(taskInfo)
             }
         }
     }
 }
 
-context.phaseTaskList = ganttList
 context.phaseTaskListJson = JsonOutput.toJson(ganttItems)
