@@ -20,3 +20,12 @@
 dependencies {
     pluginLibsCompile 'org.apereo.cas:cas-server-support-ldap-core:5.0.10' //  6.4.0 declares an API of a component compatible with Java 11 and the consumer needed a runtime of a component compatible with Java 8
 }
+
+configurations.all {
+    exclude group: 'javax.xml.parsers', module: 'jsr173_api'
+    exclude group: 'javax.xml.namespace', module: 'jsr173_api'
+    exclude group: 'javax.xml.bind', module: 'jsr173_api'
+    exclude group: 'javax.xml.bind', module: 'jaxb-api'
+    exclude group: 'geronimo-spec', module: 'geronimo-spec-jta'
+    
+}
