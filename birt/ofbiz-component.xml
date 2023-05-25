@@ -18,7 +18,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<ofbiz-component name="birt" enabled="true"
+<!--
+   Warning: before you enable this component please read:
+https://cwiki.apache.org/confluence/display/OFBIZ/Using+BIRT+with+OFBiz
+-->
+<ofbiz-component name="birt" enabled="false"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/ofbiz-component.xsd">
     <resource-loader name="main" type="component"/>
@@ -40,7 +44,7 @@ under the License.
     <entity-resource type="model" reader-name="main" loader="main" location="entitydef/ServiceReportsView.xml"/>
 
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
-   
+
     <!-- this overrides the accounting, facility and order applications in order to use Birt in these applications -->
     <webapp name="accounting"
         title="Accounting"
