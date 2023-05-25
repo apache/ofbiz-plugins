@@ -18,7 +18,14 @@ under the License.
 ////
 = Birt Apache OFBiz® plugin
 The Apache OFBiz Project
-Release 17.12
+
+
+[CAUTION]
+====
+By default the Birt plugin is disabled for security reason, see the Birt ofbiz-component.xml file for more info.
+
+====
+
 :imagesdir: ./images
 ifdef::backend-pdf[]
 :title-logo-image: image::OFBiz-Logo.svg[Apache OFBiz Logo, pdfwidth=4.25in, align=center]
