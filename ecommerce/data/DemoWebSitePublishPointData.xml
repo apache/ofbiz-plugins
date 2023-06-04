@@ -118,4 +118,9 @@ under the License.
             contentName="Cookie Policy" description="Cookie Policy Description" mimeTypeId="text/html" localeString="en_US" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
     <ContentAssoc contentId="WebStoreCONTENT" contentIdTo="COOKIE_POLICY" mapKey="cookiePolicy" contentAssocTypeId="SUB_CONTENT"
                 fromDate="2001-05-13 12:00:00.000" createdDate="2001-05-13 12:00:00.000" createdByUserLogin="admin"/>
+
+    <!-- add WebSiteContent root for ecommerce template -->
+    <WebSiteContent webSiteId="WebStore" contentId="BLOGROOT" webSiteContentTypeId="BLOG_ROOT" fromDate="2021-01-01 00:00:00"/>
+    <WebSiteContent webSiteId="WebStore" contentId="WebStoreFORUM" webSiteContentTypeId="FORUM_ROOT" fromDate="2021-01-01 00:00:00"/>
+    <WebSiteContent webSiteId="WebStore" contentId="WebStoreFACTOID" webSiteContentTypeId="FACTOIDS_ROOT" fromDate="2021-01-01 00:00:00"/>
 </entity-engine-xml>

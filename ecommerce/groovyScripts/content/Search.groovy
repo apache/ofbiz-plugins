@@ -36,7 +36,7 @@ paramMap = UtilHttp.getParameterMap(request)
 queryLine = paramMap.queryLine.toString()
 //logInfo("in search, queryLine:" + queryLine)
 
-siteId = paramMap.siteId ?: "WebStoreCONTENT"
+siteId = paramMap.siteId ?: defaultSiteId
 //logInfo("in search, siteId:" + siteId)
 featureIdByType = ParametricSearch.makeFeatureIdByTypeMap(paramMap)
 //logInfo("in search, featureIdByType:" + featureIdByType)

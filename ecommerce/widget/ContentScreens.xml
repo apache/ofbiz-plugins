@@ -37,6 +37,15 @@ under the License.
 
     <screen name="content_categories">
         <section>
+            <actions>
+                <!-- retrieve configured content root for web site -->
+                <entity-and entity-name="WebSiteContent" list="contentRoots" filter-by-date="true">
+                    <field-map field-name="webSiteId" from-field="webSiteId"/>
+                    <field-map field-name="webSiteContentTypeId" value="PUBLISH_POINT"/>
+                </entity-and>
+                <!-- get first valid forum root content -->
+                <set field="contentRootId" from-field="contentRoots[0].contentId" default-value="WebStoreCONTENT"/>
+            </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://ecommerce/template/content/ContentCategories.ftl"/></html></platform-specific>
             </widgets>
@@ -45,6 +54,15 @@ under the License.
 
     <screen name="factoids">
         <section>
+            <actions>
+                <!-- retrieve configured factoids root for web site -->
+                <entity-and entity-name="WebSiteContent" list="factoidRoots" filter-by-date="true">
+                    <field-map field-name="webSiteId" from-field="webSiteId"/>
+                    <field-map field-name="webSiteContentTypeId" value="FACTOIDS_ROOT"/>
+                </entity-and>
+                <!-- get first valid forum root content -->
+                <set field="factoidRootId" from-field="factoidRoots[0].contentId" default-value="WebStoreFACTOIDS"/>
+            </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://ecommerce/template/content/Factoids.ftl"/></html></platform-specific>
             </widgets>
@@ -126,7 +144,14 @@ under the License.
                 <set field="permissionType" value="simple"/>
                 <set field="queryFormName" value="searchQuery"/>
                 <set field="listFormName" value="searchList"/>
-                <set field="defaultSiteId" value="WebStoreCONTENT"/>
+                <!-- retrieve configured content root for web site -->
+                <entity-and entity-name="WebSiteContent" list="contentRoots" filter-by-date="true">
+                    <field-map field-name="webSiteId" from-field="webSiteId"/>
+                    <field-map field-name="webSiteContentTypeId" value="PUBLISH_POINT"/>
+                </entity-and>
+                <!-- get first valid forum root content -->
+                <set field="defaultSiteId" from-field="contentRoots[0].contentId" default-value="WebStoreCONTENT"/>
+
                 <script location="component://ecommerce/groovyScripts/content/AdvancedSearchPrep.groovy"/>
                 <script location="component://ecommerce/groovyScripts/content/Search.groovy"/>
             </actions>
