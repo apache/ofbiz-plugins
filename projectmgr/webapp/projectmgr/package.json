@@ -4,6 +4,6 @@
     "repository": "https://github.com/apache/ofbiz-plugins",
     "license": "Apache-2.0",
     "dependencies": {
-        "jsgantt-improved": "^2.8.5"
+        "jsgantt-improved": "^2.8.9"
     }
 }
