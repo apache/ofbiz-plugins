@@ -31,7 +31,7 @@ under the License.
                     <condition-expr field-name="showInSelect" operator="not-equals" value="N"/>
                     <order-by field-name="description"/>
                 </entity-condition>
-                <script location="component://product/groovyScripts/catalog/find/AdvancedSearchOptions.groovy"/>
+                <script location="component://product/src/main/groovy/org/apache/ofbiz/product/catalog/find/AdvancedSearchOptions.groovy"/>
                 <script location="component://ebay/groovyScripts/EbayAdvancedSearch.groovy"/>
             </actions>
             <widgets>
@@ -52,7 +52,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleSearchResults"/>
                 <set field="helpAnchor" value="_search_products_in_category_screen"/>
                 <set field="headerItem" value="export"/>
-                <script location="component://product/groovyScripts/catalog/find/KeywordSearch.groovy"/>
+                <script location="component://product/src/main/groovy/org/apache/ofbiz/product/catalog/find/KeywordSearch.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="permission-decorator" location="${parameters.mainDecoratorLocation}">

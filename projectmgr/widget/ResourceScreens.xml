@@ -80,8 +80,8 @@ under the License.
                 <set field="headerItem" value="find"/>
                 <set field="labelTitleProperty" value="PartyTaxAuthInfos"/>
                 <set field="layoutSettings.javaScripts[]" value="/partymgr/static/PartyProfileContent.js" global="true"/>
-                <script location="component://party/groovyScripts/party/ViewProfile.groovy"/>
-                <script location="component://party/groovyScripts/party/GetUserLoginPrimaryEmail.groovy"/>
+                <script location="component://party/src/main/groovy/org/apache/ofbiz/party/party/ViewProfile.groovy"/>
+                <script location="component://party/src/main/groovy/org/apache/ofbiz/party/party/GetUserLoginPrimaryEmail.groovy"/>
                 <entity-condition entity-name="RoleTypeAndParty" list="partyRoles">
                     <condition-list combine="and">
                         <condition-expr field-name="partyId" operator="equals" value="${parameters.partyId}"/>

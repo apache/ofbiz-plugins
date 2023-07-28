@@ -164,7 +164,7 @@ under the License.
 
                 <set field="titleProperty" value="PageTitleBillingInformation"/>
                 <script location="component://ecommerce/groovyScripts/order/PaymentOptions.groovy"/>
-                <script location="component://order/groovyScripts/entry/StorePaymentOptions.groovy"/>
+                <script location="component://order/src/main/groovy/org/apache/ofbiz/order/entry/StorePaymentOptions.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="anonymousCheckoutDecorator">
@@ -187,7 +187,7 @@ under the License.
 
                 <set field="titleProperty" value="PageTitleBillingInformation"/>
                 <script location="component://ecommerce/groovyScripts/order/PaymentInformation.groovy"/>
-                <script location="component://order/groovyScripts/entry/StorePaymentOptions.groovy"/>
+                <script location="component://order/src/main/groovy/org/apache/ofbiz/order/entry/StorePaymentOptions.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="anonymousCheckoutDecorator">
@@ -227,7 +227,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleBillingInformation"/>
                 <set field="anonymoustrailScreen" value="component://ecommerce/widget/OrderScreens.xml#anonymoustrail"/>
                 <script location="component://ecommerce/groovyScripts/order/BillSettings.groovy"/>
-                <script location="component://order/groovyScripts/entry/StorePaymentOptions.groovy"/>
+                <script location="component://order/src/main/groovy/org/apache/ofbiz/order/entry/StorePaymentOptions.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -247,9 +247,9 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleCheckoutOptions"/>
 
-                <script location="component://order/groovyScripts/entry/CheckoutPayment.groovy"/>
-                <script location="component://order/groovyScripts/entry/CheckoutOptions.groovy"/>
-                <script location="component://order/groovyScripts/entry/StorePaymentOptions.groovy"/>
+                <script location="component://order/src/main/groovy/org/apache/ofbiz/order/entry/CheckoutPayment.groovy"/>
+                <script location="component://order/src/main/groovy/org/apache/ofbiz/order/entry/CheckoutOptions.groovy"/>
+                <script location="component://order/src/main/groovy/org/apache/ofbiz/order/entry/StorePaymentOptions.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -267,7 +267,7 @@ under the License.
                 <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="titleProperty" value="PageTitleCheckoutOptions"/>
-                <script location="component://order/groovyScripts/entry/CheckoutShippingAddress.groovy"/>
+                <script location="component://order/src/main/groovy/org/apache/ofbiz/order/entry/CheckoutShippingAddress.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -307,7 +307,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleSplitItemsForShipping"/>
-                <script location="component://order/groovyScripts/entry/SplitShip.groovy"/>
+                <script location="component://order/src/main/groovy/org/apache/ofbiz/order/entry/SplitShip.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -507,7 +507,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleBillingInformation"/>
                 <script location="component://ecommerce/groovyScripts/order/QuickAnonPaymentInformation.groovy"/>
-                <script location="component://order/groovyScripts/entry/StorePaymentOptions.groovy"/>
+                <script location="component://order/src/main/groovy/org/apache/ofbiz/order/entry/StorePaymentOptions.groovy"/>
             </actions>
             <widgets>
                <platform-specific><html><html-template multi-block="true" location="component://ecommerce/template/order/QuickAnonPaymentInformation.ftl"/></html></platform-specific>
@@ -657,8 +657,8 @@ under the License.
                 <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="titleProperty" value="PageTitleCheckoutOptions"/>
-                <script location="component://order/groovyScripts/entry/CheckoutPayment.groovy"/>
-                <script location="component://order/groovyScripts/entry/StorePaymentOptions.groovy"/>
+                <script location="component://order/src/main/groovy/org/apache/ofbiz/order/entry/CheckoutPayment.groovy"/>
+                <script location="component://order/src/main/groovy/org/apache/ofbiz/order/entry/StorePaymentOptions.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -679,7 +679,7 @@ under the License.
                 <set field="titleProperty" value="ProductCompareProducts"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="title" from-field="uiLabelMap.ProductCompareProducts"/>
-                <script location="component://order/groovyScripts/entry/catalog/CompareProducts.groovy"/>
+                <script location="component://order/src/main/groovy/org/apache/ofbiz/order/entry/catalog/CompareProducts.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPopUpDecorator" location="${parameters.mainDecoratorLocation}">

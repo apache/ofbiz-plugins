@@ -541,7 +541,7 @@
             <actions>
                 <set field="headerItem" value="ebayStore"/>
                 <set field="sellingManagerItem" value="ordersImported"/>
-                <script location="component://order/groovyScripts/order/FindOrders.groovy"/>
+                <script location="component://order/src/main/groovy/org/apache/ofbiz/order/order/FindOrders.groovy"/>
                 <set field="orderList" from-field="orderList" type="List"/>
                 <set field="productStoreId" from-field="parameters.productStoreId"/>
             </actions>

@@ -36,7 +36,7 @@ under the License.
                 <set field="MainColumnStyle" value="nocolumns" global="true"/>
                 <script location="component://ecommerce/groovyScripts/EcommerceSetup.groovy"/>
                 <set field="visualThemeId" from-field="productStore.visualThemeId" default-value="EC_DEFAULT"/>
-                <script location="component://common/groovyScripts/InitTheme.groovy"/>
+                <script location="component://common/src/main/groovy/org/apache/ofbiz/common/InitTheme.groovy"/>
 
                 <!-- The default (main) java scripts -->
                 <!-- NOTE: this should be included on each screen that uses it to avoid including it in all screens: -->
@@ -287,7 +287,7 @@ under the License.
 
                 <!-- Get the store VisualTheme -->
                 <set field="visualThemeId" from-field="productStore.visualThemeId" default-value="EC_DEFAULT"/>
-                <script location="component://common/groovyScripts/InitTheme.groovy"/>
+                <script location="component://common/src/main/groovy/org/apache/ofbiz/common/InitTheme.groovy"/>
 
             </actions>
             <widgets>
@@ -322,7 +322,7 @@ under the License.
                 <set field="randomSurveyGroup" value="testSurveyGroup"/>
 
                 <script location="component://ecommerce/groovyScripts/Main.groovy"/>
-                <script location="component://order/groovyScripts/entry/catalog/Category.groovy"/>
+                <script location="component://order/src/main/groovy/org/apache/ofbiz/order/entry/catalog/Category.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

@@ -84,7 +84,7 @@ context.put("delegator", delegator);
 context.put("dispatcher", dispatcher);
 context.put("userLogin", userLogin);
 context.put("locale", params["locale"].value);
-GroovyUtil.runScriptAtLocation("component://accounting/groovyScripts/reports/BalanceSheet.groovy", null, context);
+GroovyUtil.runScriptAtLocation("component://accounting/src/main/groovy/org/apache/ofbiz/accounting/reports/BalanceSheet.groovy", null, context);
 
 // prepare data source lists
 assetAccountBalanceList = context.get("assetAccountBalanceList");

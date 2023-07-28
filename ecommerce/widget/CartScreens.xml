@@ -117,7 +117,7 @@ under the License.
                 <set field="MainColumnStyle" value="center"/>
                 <set field="productsummaryScreen" value="component://ecommerce/widget/CatalogScreens.xml#productsummary"/>
                 <set field="titleProperty" value="PageTitleShowPromotionDetails"/>
-                <script location="component://order/groovyScripts/entry/cart/ShowPromotionDetails.groovy"/>
+                <script location="component://order/src/main/groovy/org/apache/ofbiz/order/entry/cart/ShowPromotionDetails.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
