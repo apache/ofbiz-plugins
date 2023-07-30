@@ -40,7 +40,7 @@ under the License.
 
     <request-map uri="indexProducts">
         <security https="true" auth="true"/>
-        <event type="groovy" path="component://lucene/groovyScripts/content/IndexProducts.groovy"/>
+        <event type="groovy" path="component://lucene/src/main/groovy/org/apache/ofbiz/lucene/content/IndexProducts.groovy"/>
         <response name="success" type="view" value="AdminIndex"/>
         <response name="error" type="view" value="AdminIndex"/>
     </request-map>

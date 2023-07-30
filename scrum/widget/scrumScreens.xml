@@ -30,7 +30,7 @@ under the License.
                 <set field="permissionMap.projectId" from-field="parameters.projectId"/>
                 <set field="workEffortId" from-field="parameters.projectId"/>
                 <entity-one entity-name="WorkEffort" value-field="project"/>
-                <script location="component://scrum/groovyScripts/ListCurrentSprints.groovy"/>
+                <script location="component://scrum/src/main/groovy/org/apache/ofbiz/scrum/ListCurrentSprints.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="scrumCommonDecorator" location="${parameters.mainDecoratorLocation}">
@@ -119,7 +119,7 @@ under the License.
                 <entity-one entity-name="WorkEffort" value-field="sprintStatus">
                     <field-map field-name="workEffortId" from-field="parameters.sprintId"/>
                 </entity-one>
-                <script location="component://scrum/groovyScripts/SprintBacklogListItems.groovy"/>
+                <script location="component://scrum/src/main/groovy/org/apache/ofbiz/scrum/SprintBacklogListItems.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSprintScreenDecorator" location="${parameters.mainDecoratorLocation}">
@@ -508,7 +508,7 @@ under the License.
                 <set field="UnplannedSequence" from-field="parameters.UnplannedSequence" default-value="Y"/>
                 <set field="backlogListTarget" value="AddProdBacklog"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX_1" type="Integer"/>
-                <script location="component://scrum/groovyScripts/AddProductBacklogItem.groovy"/>
+                <script location="component://scrum/src/main/groovy/org/apache/ofbiz/scrum/AddProductBacklogItem.groovy"/>
                 <entity-and entity-name="ProductAndRole" list="checkOwnerList">
                     <field-map field-name="roleTypeId" value="PRODUCT_OWNER"/>
                     <field-map field-name="productId" from-field="productId"/>
@@ -1493,7 +1493,7 @@ under the License.
                     <order-by field-name="custRequestTypeId DESC"/>
                     <order-by field-name="taskTypeId"/>
                 </entity-condition>
-                <script location="component://scrum/groovyScripts/AddResourceTaskParty.groovy"/>
+                <script location="component://scrum/src/main/groovy/org/apache/ofbiz/scrum/AddResourceTaskParty.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
@@ -1566,8 +1566,8 @@ under the License.
                 <set field="helpAnchor" value="_product_backlog"/>
                 <set field="noConditionFind" value="Y"/>
                 <set field="parameters.statusId" default-value="PRODUCT_ACTIVE" from-field="parameters.statusId"/>
-                <script location="component://scrum/groovyScripts/ListCurrentProducts.groovy"/>
-                <script location="component://scrum/groovyScripts/ListScrumRolesPersonAndCompany.groovy"/>
+                <script location="component://scrum/src/main/groovy/org/apache/ofbiz/scrum/ListCurrentProducts.groovy"/>
+                <script location="component://scrum/src/main/groovy/org/apache/ofbiz/scrum/ListScrumRolesPersonAndCompany.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -1615,7 +1615,7 @@ under the License.
                 <set field="helpAnchor" value="_product_ui"/>
                 <entity-one entity-name="Product" value-field="product"/>
                 <set field="permissionMap.productId" from-field="parameters.productId"/>
-                <script location="component://scrum/groovyScripts/ListScrumRolesPersonAndCompany.groovy"/>
+                <script location="component://scrum/src/main/groovy/org/apache/ofbiz/scrum/ListScrumRolesPersonAndCompany.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonScrumProductDecorator" location="${parameters.mainDecoratorLocation}">
@@ -1796,7 +1796,7 @@ under the License.
                 <set field="sequence" from-field="parameters.sequence" default-value="Y"/>
                 <set field="backlogListTarget" value="ViewTotalBacklog"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX_1" type="Integer"/>
-                <script location="component://scrum/groovyScripts/FindProductBacklogItem.groovy"/>
+                <script location="component://scrum/src/main/groovy/org/apache/ofbiz/scrum/FindProductBacklogItem.groovy"/>
             </actions>
             <widgets>
             <decorator-screen name="CommonScrumProductDecorator" location="${parameters.mainDecoratorLocation}">
@@ -1833,7 +1833,7 @@ under the License.
                 <entity-one entity-name="Product" value-field="product"/>
                 <set field="includeMeeting" from-field="parameters.includeMeeting" default-value="N"/>
                 <set field="organizationPartyId" from-field="userPreferences.ORGANIZATION_PARTY" default-value="${defaultOrganizationPartyId}"/>
-                <script location="component://scrum/groovyScripts/ProductBilling.groovy"/>
+                <script location="component://scrum/src/main/groovy/org/apache/ofbiz/scrum/ProductBilling.groovy"/>
                 <set field="fromDate" from-field="parameters.fromDate" default-value="${resultDate}" type="Date"/>
                 <set field="thruDate" from-field="parameters.thruDate" default-value="${thruDate}" type="Date"/>
                 <set field="nullField" type="Timestamp"/>
@@ -2147,7 +2147,7 @@ under the License.
                             </condition>
                             <actions>
                                 <set field="organizationPartyId" from-field="defaultOrganizationPartyId"/>
-                                <script location="component://scrum/groovyScripts/ProductEmail.groovy"/>
+                                <script location="component://scrum/src/main/groovy/org/apache/ofbiz/scrum/ProductEmail.groovy"/>
                                 <set field="communicationEvent.partyIdFrom" from-field="partyIdFrom" />
                                 <set field="communicationEvent.partyIdTo" from-field="partyIdTo" />
                             </actions>
@@ -2316,7 +2316,7 @@ under the License.
                         <section>
                             <actions>
                                 <set field="organizationPartyId" from-field="defaultOrganizationPartyId"/>
-                                <script location="component://scrum/groovyScripts/ProductEmail.groovy"/>
+                                <script location="component://scrum/src/main/groovy/org/apache/ofbiz/scrum/ProductEmail.groovy"/>
                                 <set field="communicationEvent.partyIdFrom" from-field="partyIdFrom" />
                                 <set field="communicationEvent.partyIdTo" from-field="partyIdTo" />
                             </actions>
@@ -2657,7 +2657,7 @@ under the License.
                 <set field="headerItem" value="admin"/>
                 <set field="tabButtonItem" value="totalBacklog"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX_1" type="Integer"/>
-                <script location="component://scrum/groovyScripts/FindProductBacklogItem.groovy"/>
+                <script location="component://scrum/src/main/groovy/org/apache/ofbiz/scrum/FindProductBacklogItem.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAdminDecorator" location="${parameters.mainDecoratorLocation}">
@@ -2690,7 +2690,7 @@ under the License.
                 <entity-one entity-name="Product" value-field="product"/>
                 <set field="includeMeeting" from-field="parameters.includeMeeting" default-value="N"/>
                 <set field="organizationPartyId" from-field="userPreferences.ORGANIZATION_PARTY" default-value="${defaultOrganizationPartyId}"/>
-                <script location="component://scrum/groovyScripts/ProductBilling.groovy"/>
+                <script location="component://scrum/src/main/groovy/org/apache/ofbiz/scrum/ProductBilling.groovy"/>
                 <set field="fromDate" from-field="parameters.fromDate" default-value="${resultDate}" type="Date"/>
                 <set field="thruDate" from-field="parameters.thruDate" default-value="${thruDate}" type="Date"/>
                 <set field="nullField" type="Timestamp"/>
@@ -2827,7 +2827,7 @@ under the License.
                     else
                         formTarget=&quot;createQuickAddBacklog&quot;
                     }"/>
-                <script location="component://scrum/groovyScripts/QuickAddBacklog.groovy"/>
+                <script location="component://scrum/src/main/groovy/org/apache/ofbiz/scrum/QuickAddBacklog.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAdminDecorator" location="${parameters.mainDecoratorLocation}">
@@ -2875,7 +2875,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleUnplanBacklogItem"/>
                 <set field="tabButtonItem" value="unplanBacklog"/>
                 <set field="backlogStatusId" from-field ="parameters.backlogStatusId" default-value="CRQ_REVIEWED"/>
-                <script location="component://scrum/groovyScripts/ListUnplanBacklog.groovy"/>
+                <script location="component://scrum/src/main/groovy/org/apache/ofbiz/scrum/ListUnplanBacklog.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonScrumProductDecorator" location="${parameters.mainDecoratorLocation}">

@@ -34,7 +34,7 @@ under the License.
                 <property-map resource="MarketingUiLabels.xml" map-name="uiLabelMap" global="true"/>
 
                 <set field="MainColumnStyle" value="nocolumns" global="true"/>
-                <script location="component://ecommerce/groovyScripts/EcommerceSetup.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/EcommerceSetup.groovy"/>
                 <set field="visualThemeId" from-field="productStore.visualThemeId" default-value="EC_DEFAULT"/>
                 <script location="component://common/src/main/groovy/org/apache/ofbiz/common/InitTheme.groovy"/>
 
@@ -283,7 +283,7 @@ under the License.
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
 
                 <set field="MainColumnStyle" value="nocolumns" global="true"/>
-                <script location="component://ecommerce/groovyScripts/EcommerceSetup.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/EcommerceSetup.groovy"/>
 
                 <!-- Get the store VisualTheme -->
                 <set field="visualThemeId" from-field="productStore.visualThemeId" default-value="EC_DEFAULT"/>
@@ -321,7 +321,7 @@ under the License.
                 <set field="headerItem" value="main"/>
                 <set field="randomSurveyGroup" value="testSurveyGroup"/>
 
-                <script location="component://ecommerce/groovyScripts/Main.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/Main.groovy"/>
                 <script location="component://order/src/main/groovy/org/apache/ofbiz/order/entry/catalog/Category.groovy"/>
             </actions>
             <widgets>
@@ -346,7 +346,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleLogin"/>
                 <set field="headerItem" value="login"/>
-                <script location="component://ecommerce/groovyScripts/Login.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/Login.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -368,7 +368,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleLogin"/>
                 <set field="headerItem" value="login"/>
-                <script location="component://ecommerce/groovyScripts/Login.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/Login.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

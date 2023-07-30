@@ -56,7 +56,7 @@ under the License.
                 <set field="tabButtonItem" value="ListBillingHours"/>
                 <set field="labelTitleProperty" value="ProjectMgrProjectName"/>
                 <set field="partyId" from-field="parameters.partyId"/>
-                <script location="component://projectmgr/groovyScripts/ListResourceBillingHours.groovy"/>
+                <script location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/ListResourceBillingHours.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">

@@ -68,8 +68,8 @@ under the License.
                         <if-has-permission permission="EXAMPLE" action="_VIEW"/>
                     </condition>
                     <actions>
-                        <script location="component://example/groovyScripts/LoadReactApp.groovy"/>
-                        <script location="component://example/groovyScripts/ApiTokenGenerator.groovy"/>
+                        <script location="component://example/src/main/groovy/org/apache/ofbiz/example/LoadReactApp.groovy"/>
+                        <script location="component://example/src/main/groovy/org/apache/ofbiz/example/ApiTokenGenerator.groovy"/>
                         <set field="layoutSettings.styleSheets[]" value="${reactAppStylesheetUrlPath}" global="true"/>
                     </actions>
                     <widgets>

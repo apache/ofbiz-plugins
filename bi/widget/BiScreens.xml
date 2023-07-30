@@ -62,7 +62,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="BusinessIntelligenceReportBuilderSelectStarSchemaFields"/>
                 <set field="headerItem" value="reportbuilder"/>
-                <script location="component://bi/groovyScripts/GetStarSchemaFields.groovy"/>
+                <script location="component://bi/src/main/groovy/org/apache/ofbiz/bi/GetStarSchemaFields.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -82,7 +82,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="BusinessIntelligenceReportBuilderRenderStarSchemaReport"/>
                 <set field="headerItem" value="reportbuilder"/>
-                <script location="component://bi/groovyScripts/RunStarSchemaQuery.groovy"/>
+                <script location="component://bi/src/main/groovy/org/apache/ofbiz/bi/RunStarSchemaQuery.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

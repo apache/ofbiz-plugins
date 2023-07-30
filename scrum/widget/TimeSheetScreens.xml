@@ -28,7 +28,7 @@ under the License.
                 <set field="helpAnchor" value="_current_timesheet"/>
                 <set field="labelTitleProperty" value="ScrumFindTimeSheet"/>
                 <set field="tabButtonItem" value="timesheets"/>
-                <script location="component://scrum/groovyScripts/ListTimeSheets.groovy"/>
+                <script location="component://scrum/src/main/groovy/org/apache/ofbiz/scrum/ListTimeSheets.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAdminDecorator" location="${parameters.mainDecoratorLocation}">
@@ -54,7 +54,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleTimesheet"/>
                 <set field="headerItem" value="timesheet"/>
                 <set field="tabButtonItem" value="timesheets"/>
-                <script location="component://scrum/groovyScripts/EditDailyHourReport.groovy"/>
+                <script location="component://scrum/src/main/groovy/org/apache/ofbiz/scrum/EditDailyHourReport.groovy"/>
                 <entity-one entity-name="PartyNameView" value-field="partyNameViewMap">
                     <field-map field-name="partyId" from-field="timesheet.partyId"/>
                 </entity-one>

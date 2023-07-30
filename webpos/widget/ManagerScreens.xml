@@ -54,7 +54,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="WebPosPageTitlePaidOutAndIn"/>
                 <set field="headerItem" value="PaidOutAndIn"/>
-                <script location="component://webpos/groovyScripts/manager/PaidOutAndIn.groovy"/>
+                <script location="component://webpos/src/main/groovy/org/apache/ofbiz/webpos/manager/PaidOutAndIn.groovy"/>
             </actions>
             <widgets>
                 <container>

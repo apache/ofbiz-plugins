@@ -40,7 +40,7 @@ under the License.
         <section>
             <actions>
                 <set field="partyId" from-field="userLogin.partyId"/>
-                <script location="component://ecommerce/groovyScripts/customer/ContactList.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/customer/ContactList.groovy"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
