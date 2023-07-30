@@ -46,7 +46,7 @@ under the License.
     <screen name="minipromotext">
         <section>
             <actions>
-                <script location="component://ecommerce/groovyScripts/cart/ShowPromoText.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/cart/ShowPromoText.groovy"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://ecommerce/template/cart/MiniPromoText.ftl"/></html></platform-specific>
@@ -73,8 +73,8 @@ under the License.
                 <set field="titleProperty" value="PageTitleShoppingCart"/>
                 <set field="headerItem" value="Shopping Cart"/>
                 <property-to-field resource="order" property="orderPreference.giftEnable" field="giftEnable" default="Y"/>
-                <script location="component://ecommerce/groovyScripts/cart/ShowCart.groovy"/>
-                <script location="component://ecommerce/groovyScripts/cart/ShowPromoText.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/cart/ShowCart.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/cart/ShowPromoText.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -96,8 +96,8 @@ under the License.
                 <set field="promoUseDetailsInlineScreen" value="component://ecommerce/widget/CartScreens.xml#promoUseDetailsInline"/>
 
                 <set field="titleProperty" value="PageTitleShowAllPromotions"/>
-                <script location="component://ecommerce/groovyScripts/cart/ShowCart.groovy"/>
-                <script location="component://ecommerce/groovyScripts/cart/ShowPromoText.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/cart/ShowCart.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/cart/ShowPromoText.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -159,7 +159,7 @@ under the License.
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <script location="component://ecommerce/groovyScripts/cart/ShowCart.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/cart/ShowCart.groovy"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://ecommerce/template/cart/UpdateCart.ftl"/></html></platform-specific>

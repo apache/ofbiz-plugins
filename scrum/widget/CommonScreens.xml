@@ -216,7 +216,7 @@ under the License.
                 <entity-one entity-name="CustRequest" value-field="custRequestMap">
                     <field-map field-name="custRequestId" from-field="parameters.custRequestId"/>
                 </entity-one>
-                <script location="component://scrum/groovyScripts/SprintBacklogOptions.groovy"/>
+                <script location="component://scrum/src/main/groovy/org/apache/ofbiz/scrum/SprintBacklogOptions.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

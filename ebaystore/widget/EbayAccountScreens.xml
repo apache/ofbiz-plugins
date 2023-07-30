@@ -83,7 +83,7 @@
                     <field-map field-name="productStoreId" from-field="parameters.productStoreId"/>
                 </service>
                 <set field="itemsAwaitingFeedbackList" from-field="results.itemsAwaitingFeedback"/>
-                <script location="component://ebaystore/groovyScripts/feedback/FeedbackList.groovy"/>
+                <script location="component://ebaystore/src/main/groovy/org/apache/ofbiz/ebaystore/feedback/FeedbackList.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="EbayFeedback" >
@@ -172,7 +172,7 @@
                     <field-map field-name="productStoreId" from-field="parameters.productStoreId"/>
                 </service>
                 <set field="itemsAwaitingFeedbackList" from-field="results.itemsAwaitingFeedback"/>
-                <script location="component://ebaystore/groovyScripts/feedback/FeedbackList.groovy"/>
+                <script location="component://ebaystore/src/main/groovy/org/apache/ofbiz/ebaystore/feedback/FeedbackList.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="EbayFeedback" >

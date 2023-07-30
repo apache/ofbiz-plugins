@@ -77,7 +77,7 @@ under the License.
 
     <request-map uri="ExecuteFlexibleReport">
         <security https="true" auth="true" />
-        <event type="groovy" path="component://birt/groovyScripts/report/PrepareBirtCall.groovy" />
+        <event type="groovy" path="component://birt/src/main/groovy/org/apache/ofbiz/birt/report/PrepareBirtCall.groovy" />
         <response name="success" type="view" value="ExecuteFlexibleReport" />
         <response name="error" type="view-last"/>
     </request-map>

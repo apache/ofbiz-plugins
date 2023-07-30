@@ -26,7 +26,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
-                <script location="component://ecommerce/groovyScripts/order/AnonymousTrail.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/order/AnonymousTrail.groovy"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://ecommerce/template/order/AnonymousTrail.ftl"/></html></platform-specific>
@@ -63,7 +63,7 @@ under the License.
     <screen name="anonymousCheckoutLinks">
         <section>
             <actions>
-                <script location="component://ecommerce/groovyScripts/order/AnonymousCheckoutLinks.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/order/AnonymousCheckoutLinks.groovy"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template multi-block="true" location="component://ecommerce/template/order/AnonymousCheckoutLinks.ftl"/></html></platform-specific>
@@ -73,7 +73,7 @@ under the License.
     <screen name="anonymousCheckoutDecorator">
         <section>
             <actions>
-                <script location="component://ecommerce/groovyScripts/order/AnonymousCheckoutLinks.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/order/AnonymousCheckoutLinks.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -97,7 +97,7 @@ under the License.
                 <set field="parameters.formNameValue" value="custsetupform" global="true"/>
 
                 <set field="titleProperty" value="PageTitleShippingInformation"/>
-                <script location="component://ecommerce/groovyScripts/order/CustSettings.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/order/CustSettings.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="anonymousCheckoutDecorator">
@@ -119,7 +119,7 @@ under the License.
                 <set field="parameters.formNameValue" value="shipsetupform" global="true"/>
 
                 <set field="titleProperty" value="PageTitleShippingInformation"/>
-                <script location="component://ecommerce/groovyScripts/order/ShipSettings.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/order/ShipSettings.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="anonymousCheckoutDecorator">
@@ -141,7 +141,7 @@ under the License.
                 <set field="parameters.formNameValue" value="optsetupform" global="true"/>
 
                 <set field="titleProperty" value="PageTitleShippingOptions"/>
-                <script location="component://ecommerce/groovyScripts/order/OptionSettings.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/order/OptionSettings.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="anonymousCheckoutDecorator">
@@ -163,7 +163,7 @@ under the License.
                 <set field="parameters.formNameValue" value="paymentoptions" global="true"/>
 
                 <set field="titleProperty" value="PageTitleBillingInformation"/>
-                <script location="component://ecommerce/groovyScripts/order/PaymentOptions.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/order/PaymentOptions.groovy"/>
                 <script location="component://order/src/main/groovy/org/apache/ofbiz/order/entry/StorePaymentOptions.groovy"/>
             </actions>
             <widgets>
@@ -186,7 +186,7 @@ under the License.
                 <set field="parameters.formNameValue" value="billsetupform"/>
 
                 <set field="titleProperty" value="PageTitleBillingInformation"/>
-                <script location="component://ecommerce/groovyScripts/order/PaymentInformation.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/order/PaymentInformation.groovy"/>
                 <script location="component://order/src/main/groovy/org/apache/ofbiz/order/entry/StorePaymentOptions.groovy"/>
             </actions>
             <widgets>
@@ -207,7 +207,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleCheckoutReview"/>
                 <set field="parameters.formNameValue" value="orderreview" global="true"/>
-                <script location="component://ecommerce/groovyScripts/order/CheckoutReview.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/order/CheckoutReview.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="anonymousCheckoutDecorator">
@@ -226,7 +226,7 @@ under the License.
 
                 <set field="titleProperty" value="PageTitleBillingInformation"/>
                 <set field="anonymoustrailScreen" value="component://ecommerce/widget/OrderScreens.xml#anonymoustrail"/>
-                <script location="component://ecommerce/groovyScripts/order/BillSettings.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/order/BillSettings.groovy"/>
                 <script location="component://order/src/main/groovy/org/apache/ofbiz/order/entry/StorePaymentOptions.groovy"/>
             </actions>
             <widgets>
@@ -288,7 +288,7 @@ under the License.
                 <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="titleProperty" value="PageTitleCheckoutOptions"/>
-                <script location="component://ecommerce/groovyScripts/order/CheckoutShippingOptions.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/order/CheckoutShippingOptions.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -324,7 +324,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleCheckoutReview"/>
                 <set field="parameters.formNameValue" value="orderreview" global="true"/>
-                <script location="component://ecommerce/groovyScripts/order/CheckoutReview.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/order/CheckoutReview.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -340,7 +340,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleOrderSummary"/>
-                <script location="component://ecommerce/groovyScripts/order/OrderStatus.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/order/OrderStatus.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -358,7 +358,7 @@ under the License.
                 <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="titleProperty" value="PageTitleOrderHistory"/>
-                <script location="component://ecommerce/groovyScripts/order/OrderHistory.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/order/OrderHistory.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -380,7 +380,7 @@ under the License.
 
                 <set field="maySelectItems" value="Y"/>
                 <set field="titleProperty" value="PageTitleOrderStatus"/>
-                <script location="component://ecommerce/groovyScripts/order/OrderStatus.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/order/OrderStatus.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -401,7 +401,7 @@ under the License.
                 <set field="MainColumnStyle" value="rightonly"/>
 
                 <set field="titleProperty" value="PageTitleRequestReturn"/>
-                <script location="component://ecommerce/groovyScripts/order/RequestReturn.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/order/RequestReturn.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -430,7 +430,7 @@ under the License.
     <screen name="quickAnonCheckoutLinks">
         <section>
             <actions>
-                <script location="component://ecommerce/groovyScripts/order/QuickAnonCheckoutLinks.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/order/QuickAnonCheckoutLinks.groovy"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template multi-block="true" location="component://ecommerce/template/order/QuickAnonCheckoutLinks.ftl"/></html></platform-specific>
@@ -441,7 +441,7 @@ under the License.
     <screen name="quickAnonCheckoutDecorator">
         <section>
             <actions>
-                <script location="component://ecommerce/groovyScripts/order/QuickAnonCheckoutLinks.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/order/QuickAnonCheckoutLinks.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -466,7 +466,7 @@ under the License.
 
                 <set field="titleProperty" value="PageTitleShippingInformation"/>
                 <set field="layoutSettings.javaScripts[+0]" value="/ecommerce/images/quickAnonCustSettings.js" global="true"/>
-                <script location="component://ecommerce/groovyScripts/order/QuickAnonCustSettings.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/order/QuickAnonCustSettings.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="quickAnonCheckoutDecorator">
@@ -494,7 +494,7 @@ under the License.
                 <!--set field="parameters.formNameValue" value="quickAnonOptSetupForm" global="true"/-->
 
                 <set field="titleProperty" value="PageTitleShippingOptions"/>
-                <script location="component://ecommerce/groovyScripts/order/QuickAnonOptionSettings.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/order/QuickAnonOptionSettings.groovy"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template multi-block="true" location="component://ecommerce/template/order/QuickAnonOptionSettings.ftl"/></html></platform-specific>
@@ -506,7 +506,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleBillingInformation"/>
-                <script location="component://ecommerce/groovyScripts/order/QuickAnonPaymentInformation.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/order/QuickAnonPaymentInformation.groovy"/>
                 <script location="component://order/src/main/groovy/org/apache/ofbiz/order/entry/StorePaymentOptions.groovy"/>
             </actions>
             <widgets>
@@ -520,7 +520,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleCheckoutReview"/>
                 <set field="parameters.formNameValue" value="quickAnonOrderReview" global="true"/>
-                <script location="component://ecommerce/groovyScripts/order/CheckoutReview.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/order/CheckoutReview.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="quickAnonCheckoutDecorator">
@@ -543,7 +543,7 @@ under the License.
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-                <script location="component://ecommerce/groovyScripts/order/QuickAnonPaymentInformation.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/order/QuickAnonPaymentInformation.groovy"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template multi-block="true" location="component://common-theme/template/includes/Messages.ftl"/></html></platform-specific>
@@ -563,7 +563,7 @@ under the License.
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-                <script location="component://ecommerce/groovyScripts/order/QuickAnonPaymentInformation.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/order/QuickAnonPaymentInformation.groovy"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template multi-block="true" location="component://common-theme/template/includes/Messages.ftl"/></html></platform-specific>
@@ -583,7 +583,7 @@ under the License.
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-                <script location="component://ecommerce/groovyScripts/order/QuickAnonPaymentInformation.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/order/QuickAnonPaymentInformation.groovy"/>
             </actions>
             <widgets>
               <platform-specific><html><html-template multi-block="true" location="component://common-theme/template/includes/Messages.ftl"/></html></platform-specific>
@@ -602,8 +602,8 @@ under the License.
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-                <script location="component://ecommerce/groovyScripts/order/CheckoutReview.groovy"/>
-                <script location="component://ecommerce/groovyScripts/order/QuickAnonPaymentInformation.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/order/CheckoutReview.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/order/QuickAnonPaymentInformation.groovy"/>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://ecommerce/template/order/OrderItems.ftl"/></html></platform-specific>
@@ -617,10 +617,10 @@ under the License.
                 <set field="titleProperty" value="EcommerceOnePageCheckout"/>
                 <set field="layoutSettings.javaScripts[]" value="/ecommerce/images/checkoutProcess.js" global="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/ordermgr-js/geoAutoCompleter.js" global="true"/>
-                <script location="component://ecommerce/groovyScripts/customer/EditShippingAddress.groovy"/>
-                <script location="component://ecommerce/groovyScripts/customer/EditBillingAddress.groovy"/>
-                <script location="component://ecommerce/groovyScripts/customer/EditEmailAndTelecomNumber.groovy"/>
-                <script location="component://ecommerce/groovyScripts/customer/OnePageCheckoutOptions.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/customer/EditShippingAddress.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/customer/EditBillingAddress.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/customer/EditEmailAndTelecomNumber.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/customer/OnePageCheckoutOptions.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

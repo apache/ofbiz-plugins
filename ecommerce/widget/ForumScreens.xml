@@ -64,7 +64,7 @@ under the License.
                 <set field="parameters.viewIndex" from-field="viewIndex"/>
                 <set field="viewSizeDefaultValue" value="${groovy: modelTheme.getDefaultViewSize()}" type="Integer"/>
                 <set field="parameters.viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
-                <script location="component://ecommerce/groovyScripts/forum/ShowForum.groovy"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/forum/ShowForum.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

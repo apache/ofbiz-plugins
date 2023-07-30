@@ -27,7 +27,7 @@ under the License.
         <section>
             <actions> 
                 <property-map resource="PassportUiLabels" map-name="uiLabelMap" global="true"/> 
-                  <script location="component://passport/groovyScripts/login/GetThirdPartyLogins.groovy"/>
+                  <script location="component://passport/src/main/groovy/org/apache/ofbiz/passport/login/GetThirdPartyLogins.groovy"/>
             </actions>
             <widgets>
                 <platform-specific>

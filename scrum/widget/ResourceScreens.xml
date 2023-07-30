@@ -217,7 +217,7 @@ under the License.
                     <field-map field-name="userLoginId" from-field="userLogin.userLoginId"/>
                 </entity-and>
                 <set field="userLoginId" from-field="userLogins[0].userLoginId"/>
-                <script location="component://scrum/groovyScripts/ListScrumPreferenceSecurityGroup.groovy"/>
+                <script location="component://scrum/src/main/groovy/org/apache/ofbiz/scrum/ListScrumPreferenceSecurityGroup.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
@@ -405,7 +405,7 @@ under the License.
                 <set field="productId" from-field="parameters.productId"/>
                 <set field="tabButtonItem" value="productMember"/>
                 <entity-one entity-name="Product" value-field="product"/>
-                <script location="component://scrum/groovyScripts/ListScrumRolesPersonAndCompany.groovy"/>
+                <script location="component://scrum/src/main/groovy/org/apache/ofbiz/scrum/ListScrumRolesPersonAndCompany.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonScrumProductDecorator" location="${parameters.mainDecoratorLocation}">

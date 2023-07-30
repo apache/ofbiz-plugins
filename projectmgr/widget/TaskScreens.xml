@@ -204,7 +204,7 @@ under the License.
                 <set field="labelTitleProperty" value="PageTitleEditTaskList"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <entity-one entity-name="WorkEffort" value-field="task"/>
-                <script location="component://projectmgr/groovyScripts/GetProjectId.groovy"/>
+                <script location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/GetProjectId.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonTaskDecorator" location="${parameters.mainDecoratorLocation}">

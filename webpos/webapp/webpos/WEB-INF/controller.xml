@@ -468,7 +468,7 @@
     
     <request-map uri="EditAddress">
         <security https="false" auth="true"/>
-        <event type="groovy" path="component://webpos/groovyScripts/customer/EditAddress.groovy"/>
+        <event type="groovy" path="component://webpos/src/main/groovy/org/apache/ofbiz/webpos/customer/EditAddress.groovy"/>
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>

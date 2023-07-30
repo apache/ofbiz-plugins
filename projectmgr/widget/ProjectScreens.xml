@@ -114,7 +114,7 @@ under the License.
                 <set field="helpAnchor" value="_project_billing"/>
                 <set field="labelTitleProperty" value="PageTitleProjectBilling"/>
                 <set field="projectId" from-field="parameters.projectId" default-value="${parameters.workEffortId}"/>
-                <script location="component://projectmgr/groovyScripts/ProjectBilling.groovy"/>
+                <script location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/ProjectBilling.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProjectDecorator" location="${parameters.mainDecoratorLocation}">
@@ -426,7 +426,7 @@ under the License.
                 <set field="tabButtonItem" value="ganttchart"/>
                 <set field="layoutSettings.styleSheets[]" value="/projectmgr/node_modules/jsgantt-improved/dist/jsgantt.css" global="true"/>
                 <set field="layoutSettings.styleSheets[]" value="/projectmgr/static/projectmgr.css" global="true"/>
-                <script location="component://projectmgr/groovyScripts/GanttChart.groovy"/>
+                <script location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/GanttChart.groovy"/>
             </actions>
             <widgets>
                 <label text="${project}"/>
@@ -999,7 +999,7 @@ under the License.
                         <actions>
                             <set field="projectId" from-field="project.workEffortId"/>
                             <set field="parameters.projectId" from-field="project.workEffortId"/>
-                            <script location="component://projectmgr/groovyScripts/GanttChart.groovy"/>
+                            <script location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/GanttChart.groovy"/>
                             <service service-name="getProject" result-map="result">
                                 <field-map field-name="projectId" from-field="projectId"/>
                             </service>

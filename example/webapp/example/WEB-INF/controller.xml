@@ -180,7 +180,7 @@ under the License.
     </request-map>
     <request-map uri="findExampleFeatures">
         <security https="true" auth="true"/>
-        <event type="groovy" path="component://example/groovyScripts/FindExampleFeatures.groovy"/>
+        <event type="groovy" path="component://example/src/main/groovy/org/apache/ofbiz/example/FindExampleFeatures.groovy"/>
         <response name="success" type="view" value="ajaxAutocompleteOptions"/>
         <response name="error" type="view" value="ajaxAutocompleteOptions"/>
     </request-map>

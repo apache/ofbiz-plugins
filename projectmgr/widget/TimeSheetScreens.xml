@@ -64,7 +64,7 @@ under the License.
                 <set field="headerItem" value="timesheet"/>
                 <set field="tabButtonItem" value="editTimesheet"/>
                 <set field="labelTitleProperty" value="ProjectMgrTimeSheetMyTime"/>
-                <script location="component://projectmgr/groovyScripts/EditWeekTimesheet.groovy"/>
+                <script location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/EditWeekTimesheet.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonTimesheetDecorator" location="${parameters.mainDecoratorLocation}">
@@ -149,7 +149,7 @@ under the License.
                 <set field="tabButtonItem" value="edittimesheet"/>
                 <set field="labelTitleProperty" value="PageTitleAddTimesheet"/>
                 <set field="my" value="My"/><!-- change link and target -->
-                <script location="component://projectmgr/groovyScripts/EditWeekTimesheet.groovy"/>
+                <script location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/EditWeekTimesheet.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonMyTimeDecorator" location="${parameters.mainDecoratorLocation}">
@@ -216,7 +216,7 @@ under the License.
         <section>
             <actions>
                 <property-map resource="ProjectMgrUiLabels" map-name="uiLabelMap" global="true"/>
-                <script location="component://projectmgr/groovyScripts/EditWeekTimesheet.groovy"/>
+                <script location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/EditWeekTimesheet.groovy"/>
             </actions>
             <widgets>
                     <section>

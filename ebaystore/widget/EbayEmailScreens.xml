@@ -41,7 +41,7 @@
                        <field-map field-name="userLoginId" from-field="userLoginId"/>
                    </entity-one>
                    <set field="partyId" from-field="userLoginCheck.partyId"/>
-                   <script location="component://ebaystore/groovyScripts/email/GetProductStoreEmailTemplate.groovy"/>
+                   <script location="component://ebaystore/src/main/groovy/org/apache/ofbiz/ebaystore/email/GetProductStoreEmailTemplate.groovy"/>
                    <entity-one entity-name="Content" value-field="templateContent"/>
                    <get-related-one value-field="templateContent" relation-name="DataResource" to-value-field="templateDataResource"/>
                    <get-related-one value-field="templateDataResource" relation-name="ElectronicText" to-value-field="templateData"/>

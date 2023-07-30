@@ -46,7 +46,7 @@ under the License.
                 <set field="helpAnchor" value="_ebay_store_detail_screen"/>
                 <set field="headerItem" value="ebayStore"/>
                 <set field="tabButtonItem" value="ebayStoreSetting"/>
-                <script  location="component://ebaystore/groovyScripts/store/RetrieveStoreOptions.groovy"/>
+                <script  location="component://ebaystore/src/main/groovy/org/apache/ofbiz/ebaystore/store/RetrieveStoreOptions.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="permission-decorator" location="${parameters.mainDecoratorLocation}">
@@ -212,7 +212,7 @@ under the License.
                     <order-by field-name="description"/>
                 </entity-condition>
                 <script location="component://product/src/main/groovy/org/apache/ofbiz/product/catalog/find/AdvancedSearchOptions.groovy"/>
-                <script location="component://ebay/groovyScripts/EbayAdvancedSearch.groovy"/>
+                <script location="component://ebay/src/main/groovy/org/apache/ofbiz/ebay/EbayAdvancedSearch.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="permission-decorator" location="${parameters.mainDecoratorLocation}">
@@ -265,7 +265,7 @@ under the License.
                 <entity-one entity-name="EbayConfig" value-field="ebayConfig">
                     <field-map field-name="productStoreId" from-field="parameters.productStoreId"/>
                 </entity-one>
-                <script location="component://ebaystore/groovyScripts/store/PrepareProductListing.groovy"/>
+                <script location="component://ebaystore/src/main/groovy/org/apache/ofbiz/ebaystore/store/PrepareProductListing.groovy"/>
                 <set field="language" from-field="userLogin.lastLocale" default-value="en"/>
             </actions>
             <widgets>

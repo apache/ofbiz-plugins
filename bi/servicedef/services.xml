@@ -36,7 +36,7 @@ under the License.
         <attribute name="dimensionId" type="String" mode="OUT" optional="true"/>
     </service>
     <service name="quickInitDataWarehouse" auth="true" engine="groovy"
-        location="component://bi/groovyScripts/DimensionServices.groovy" invoke="quickInitDataWarehouse">
+        location="component://bi/src/main/groovy/org/apache/ofbiz/bi/DimensionServices.groovy" invoke="quickInitDataWarehouse">
         <description>Quickly initialize the dimensions (Currency, Date, Product) and facts (SalesInvoiceItem): useful to quickly initialize the datawarehouse.</description>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="false"/>
@@ -50,43 +50,43 @@ under the License.
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
     <service name="loadCurrencyDimension" auth="true" engine="groovy"
-        location="component://bi/groovyScripts/DimensionServices.groovy" invoke="loadCurrencyDimension">
+        location="component://bi/src/main/groovy/org/apache/ofbiz/bi/DimensionServices.groovy" invoke="loadCurrencyDimension">
         <description>Loads data in the CurrencyDimension entity (olap entity) using the update strategy of 'type 1': overwrite the values of the attributes</description>
     </service>
     <!-- Product Dimension -->
     <service name="prepareProductDimensionData" auth="true" engine="groovy"
-        location="component://bi/groovyScripts/DimensionServices.groovy" invoke="prepareProductDimensionData">
+        location="component://bi/src/main/groovy/org/apache/ofbiz/bi/DimensionServices.groovy" invoke="prepareProductDimensionData">
         <description>Pulls information from the Product* entities (oltp entities) and prepares data for the ProductDimension entity (olap entity)</description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="productDimension" type="GenericEntity" mode="OUT" optional="false"/>
     </service>
     <service name="loadProductInProductDimension" auth="true" engine="groovy"
-        location="component://bi/groovyScripts/DimensionServices.groovy" invoke="loadProductInProductDimension">
+        location="component://bi/src/main/groovy/org/apache/ofbiz/bi/DimensionServices.groovy" invoke="loadProductInProductDimension">
         <description>Pulls information from the Product* entities and stores them in the ProductDimension entity (olap entity)</description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="updateMode" type="String" mode="IN" optional="false"/> <!-- TYPE1, TYPE2, TYPE3 -->
     </service>
     <service name="loadType1ProductInProductDimension" auth="true" engine="groovy"
-        location="component://bi/groovyScripts/DimensionServices.groovy" invoke="loadProductInProductDimension">
+        location="component://bi/src/main/groovy/org/apache/ofbiz/bi/DimensionServices.groovy" invoke="loadProductInProductDimension">
         <description>Same as loadProductInProductDimension; the update strategy is 'type 1': overwrite the values of the attributes</description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="updateMode" type="String" mode="IN" optional="true" default-value="TYPE1"/>
     </service>
     <service name="loadType2ProductInProductDimension" auth="true" engine="groovy"
-        location="component://bi/groovyScripts/DimensionServices.groovy" invoke="loadProductInProductDimension">
+        location="component://bi/src/main/groovy/org/apache/ofbiz/bi/DimensionServices.groovy" invoke="loadProductInProductDimension">
         <description>Same as loadProductInProductDimension; the update strategy is 'type 2': add a dimension row</description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="updateMode" type="String" mode="IN" optional="true" default-value="TYPE2"/>
     </service>
     <service name="loadAllProductsInProductDimension" auth="true" engine="groovy"
-        location="component://bi/groovyScripts/DimensionServices.groovy" invoke="loadAllProductsInProductDimension">
+        location="component://bi/src/main/groovy/org/apache/ofbiz/bi/DimensionServices.groovy" invoke="loadAllProductsInProductDimension">
         <description>Calls the loadProductInProductDimension service for all the products.</description>
         <attribute name="updateMode" type="String" mode="IN" optional="true" default-value="TYPE1"/>
     </service>
 
     <!-- Accounting Facts -->
     <service name="loadSalesInvoiceItemFact" auth="true" engine="groovy"
-        location="component://bi/groovyScripts/FactServices.groovy" invoke="loadSalesInvoiceItemFact">
+        location="component://bi/src/main/groovy/org/apache/ofbiz/bi/FactServices.groovy" invoke="loadSalesInvoiceItemFact">
         <description>
             Pulls information from the Invoice* entities and stores them in the SalesInvoiceItem entity (olap entity).
             One of invoiceId/invoiceItemSeqId or invoice/invoiceItem must be passed or an error is returned.
@@ -97,14 +97,14 @@ under the License.
         <attribute name="invoiceItem" type="org.apache.ofbiz.entity.GenericValue" mode="IN" optional="true"/>
     </service>
     <service name="loadSalesInvoiceFact" auth="true" engine="groovy"
-        location="component://bi/groovyScripts/FactServices.groovy" invoke="loadSalesInvoiceFact">
+        location="component://bi/src/main/groovy/org/apache/ofbiz/bi/FactServices.groovy" invoke="loadSalesInvoiceFact">
         <description>Calls the loadSalesInvoiceItemFact service for all the invoice items.</description>
         <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
     </service>
 
     <!-- Order Facts -->
     <service name="loadSalesOrderItemFact" auth="true" engine="groovy"
-        location="component://bi/groovyScripts/FactServices.groovy" invoke="loadSalesOrderItemFact">
+        location="component://bi/src/main/groovy/org/apache/ofbiz/bi/FactServices.groovy" invoke="loadSalesOrderItemFact">
         <description>
             Pulls information from the OrderItem* entities and stores them in the SalesOrderItem entity (olap entity).
             One of orderId/orderItemSeqId or order/orderItem must be passed or an error is returned.
@@ -116,22 +116,22 @@ under the License.
         <attribute name="orderAdjustment " type="org.apache.ofbiz.entity.GenericValue" mode="IN" optional="true"/>
     </service>
     <service name="loadSalesOrderFact" auth="true" engine="groovy"
-        location="component://bi/groovyScripts/FactServices.groovy" invoke="loadSalesOrderFact">
+        location="component://bi/src/main/groovy/org/apache/ofbiz/bi/FactServices.groovy" invoke="loadSalesOrderFact">
         <description>Calls the loadSalesOrderItemFact service for all the order items.</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
     </service>
     <service name="loadSalesOrderDataDaily" auth="true" engine="groovy"
-        location="component://bi/groovyScripts/FactServices.groovy" invoke="loadSalesOrderDataDaily" transaction-timeout="10000000">
+        location="component://bi/src/main/groovy/org/apache/ofbiz/bi/FactServices.groovy" invoke="loadSalesOrderDataDaily" transaction-timeout="10000000">
         <description>Load Sales Order Data Daily.</description>
     </service>
     <service name="importSalesOrderData" auth="true" engine="groovy"
-        location="component://bi/groovyScripts/FactServices.groovy" invoke="importSalesOrderData" transaction-timeout="10000000">
+        location="component://bi/src/main/groovy/org/apache/ofbiz/bi/FactServices.groovy" invoke="importSalesOrderData" transaction-timeout="10000000">
         <description>Import Sales Order Data.</description>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
     <service name="convertUomCurrency" auth="true" engine="groovy"
-        location="component://bi/groovyScripts/FactServices.groovy" invoke="convertUomCurrency">
+        location="component://bi/src/main/groovy/org/apache/ofbiz/bi/FactServices.groovy" invoke="convertUomCurrency">
         <description>Import Sales Order Data.</description>
         <attribute name="uomId" type="String" mode="IN"/>
         <attribute name="uomIdTo" type="String" mode="IN"/>
@@ -141,7 +141,7 @@ under the License.
 
     <!-- Inventory Facts -->
     <service name="loadInventoryFact" auth="true" engine="groovy"
-        location="component://bi/groovyScripts/FactServices.groovy" invoke="loadInventoryFact">
+        location="component://bi/src/main/groovy/org/apache/ofbiz/bi/FactServices.groovy" invoke="loadInventoryFact">
         <attribute name="inventoryItemId" type="String" mode="IN" optional="true"/>
     </service>
 

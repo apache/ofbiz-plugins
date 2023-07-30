@@ -32,42 +32,42 @@ under the License.
     </request-map>
     <request-map uri="PaymentAcctgTransEntriesPdf">
         <security https="true" auth="true"/>
-        <event type="groovy" path="component://birt/groovyScripts/accounting/PaymentAcctgTransEntryParameters.groovy"/>
+        <event type="groovy" path="component://birt/src/main/groovy/org/apache/ofbiz/birt/accounting/PaymentAcctgTransEntryParameters.groovy"/>
         <response name="success" type="view" value="PaymentAcctgTransEntriesPdf"/>
     </request-map>
     <request-map uri="InvoiceAcctgTransEntriesPdf">
         <security https="true" auth="true"/>
-        <event type="groovy" path="component://birt/groovyScripts/accounting/InvoiceAcctgTransEntryParameters.groovy"/>
+        <event type="groovy" path="component://birt/src/main/groovy/org/apache/ofbiz/birt/accounting/InvoiceAcctgTransEntryParameters.groovy"/>
         <response name="success" type="view" value="InvoiceAcctgTransEntriesPdf"/>
     </request-map>
     <request-map uri="TrialBalanceSearchResultsPdf.pdf">
         <security https="true" auth="true"/>
-        <event type="groovy" path="component://birt/groovyScripts/accounting/TrialBalanceParameters.groovy"/>
+        <event type="groovy" path="component://birt/src/main/groovy/org/apache/ofbiz/birt/accounting/TrialBalanceParameters.groovy"/>
         <response name="success" type="view" value="TrialBalanceSearchResultsPdf"/>
     </request-map>
     <request-map uri="IncomeStatementListPdf.pdf">
         <security https="true" auth="true"/>
-        <event type="groovy" path="component://birt/groovyScripts/accounting/IncomeStatementParameters.groovy"/>
+        <event type="groovy" path="component://birt/src/main/groovy/org/apache/ofbiz/birt/accounting/IncomeStatementParameters.groovy"/>
         <response name="success" type="view" value="IncomeStatementListPdf"/>
     </request-map>
     <request-map uri="BalanceSheet.pdf">
         <security auth="true" https="true"/>
-        <event type="groovy" path="component://birt/groovyScripts/accounting/BalanceSheetParameters.groovy"/>
+        <event type="groovy" path="component://birt/src/main/groovy/org/apache/ofbiz/birt/accounting/BalanceSheetParameters.groovy"/>
         <response name="success" type="view" value="BalanceSheetPdf"/>
     </request-map>
     <request-map uri="AcctgTransEntriesSearchResultsInvoiceAndPaymentPdf.pdf">
         <security auth="true" https="true"/>
-        <event type="groovy" path="component://birt/groovyScripts/accounting/AcctgTransEntriesSearchResultsParameters.groovy"/>
+        <event type="groovy" path="component://birt/src/main/groovy/org/apache/ofbiz/birt/accounting/AcctgTransEntriesSearchResultsParameters.groovy"/>
         <response name="success" type="view" value="AcctgTransEntriesSearchResultsInvoiceAndPaymentPdf"/>
     </request-map>
     <request-map uri="paymentReportHtml">
         <security https="true" auth="true"/>
-        <event type="groovy" path="component://birt/groovyScripts/accounting/PaymentReport.groovy"/>
+        <event type="groovy" path="component://birt/src/main/groovy/org/apache/ofbiz/birt/accounting/PaymentReport.groovy"/>
         <response name="success" type="view" value="ViewPaymentReportHtml"/>
     </request-map>
     <request-map uri="paymentReportPdf">
         <security https="true" auth="true"/>
-        <event type="groovy" path="component://birt/groovyScripts/accounting/PaymentReport.groovy"/>
+        <event type="groovy" path="component://birt/src/main/groovy/org/apache/ofbiz/birt/accounting/PaymentReport.groovy"/>
         <response name="success" type="view" value="ViewPaymentReportPdf"/>
     </request-map>
 
