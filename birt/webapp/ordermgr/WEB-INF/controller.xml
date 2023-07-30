@@ -85,11 +85,6 @@ under the License.
         <event type="groovy" path="component://birt/src/main/groovy/org/apache/ofbiz/birt/order/ProductDemandReport.groovy"/>
         <response name="success" type="view" value="ProductDemandOrderReport"/>
     </request-map>
-    <request-map uri="ProductContributionReport.pdf"><security https="true" auth="true"/>
-        <event type="groovy" path="component://birt/groovyScripts/order/ProductContributionReport.groovy"/>
-        <response name="success" type="view" value="ProductDemandOrderReport"/>
-    </request-map>
-
     <request-map uri="OrdersByChannel.pdf"><security https="true" auth="true"/>
         <event type="groovy" path="component://birt/src/main/groovy/org/apache/ofbiz/birt/order/OrderByChannel.groovy"/>
         <response name="success" type="view" value="OrdersByChannelReport"/>
