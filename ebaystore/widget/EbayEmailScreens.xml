@@ -47,7 +47,6 @@
                    <get-related-one value-field="templateDataResource" relation-name="ElectronicText" to-value-field="templateData"/>
                    <set field="textData" from-field="templateData.textData"/>
                    <set field="dataResourceId" from-field="templateData.dataResourceId"/>
-                <script location="component://ebaystore/groovyScripts/email/GetEmailOptions.groovy"/>
                 <!-- set all parameters -->
                 <set field="emailType" from-field="parameters.emailType"/>
                 <set field="buyerUserId" from-field="parameters.buyerUserId" default-value="None"/>
