@@ -80,7 +80,7 @@ under the License.
                     <condition-expr field-name="geoTypeId" value="COUNTRY"/>
                     <order-by field-name="geoName"/>
                 </entity-condition>
-                <script location="component://ebay/src/main/groovy/org/apache/ofbiz/ebay/ProductsExportToEbay.groovy"/>
+                <script location="component://ebay/src/main/groovy/org/apache/ofbiz/ebay/ProductsExportToEbayScript.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="permission-decorator" location="${parameters.mainDecoratorLocation}">
