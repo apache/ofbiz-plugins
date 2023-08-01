@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.ecommerce.forum
-
 
 import org.apache.ofbiz.ecommerce.forum.ForumEvents
 import org.apache.ofbiz.service.ServiceUtil

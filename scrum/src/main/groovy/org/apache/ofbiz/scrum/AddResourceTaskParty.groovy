@@ -16,9 +16,7 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-
 package org.apache.ofbiz.scrum
-
 
 partyId = parameters.partyId
 // get existing task that no assign

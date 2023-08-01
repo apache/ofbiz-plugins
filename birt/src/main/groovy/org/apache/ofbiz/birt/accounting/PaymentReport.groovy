@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.birt.accounting
-
 
 birtParameters = [:]
 birtParameters.partyIdTo = request.getParameter("partyIdTo")

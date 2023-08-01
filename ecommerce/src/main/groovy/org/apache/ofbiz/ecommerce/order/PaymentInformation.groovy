@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.ecommerce.order
-
 
 import org.apache.ofbiz.entity.*
 import org.apache.ofbiz.entity.util.*

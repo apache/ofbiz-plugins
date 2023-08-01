@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.assetmaint.assetmaint
-
 
 // This is a small script to set things up when the EditFixedAssetMaint
 // screen is called from one of the WorkEffort calendar screens.

@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.ebaystore.automationPreferences
-
 
 jobSandboxs = from("JobSandbox").where("authUserLoginId", userLoginId).queryList()
 job = null

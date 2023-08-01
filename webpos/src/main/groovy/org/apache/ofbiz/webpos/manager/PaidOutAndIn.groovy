@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.webpos.manager
-
 
 context.paidReasonIn  = from("Enumeration").where("enumTypeId", "POS_PAID_REASON_IN").orderBy("sequenceId").queryList()
 context.paidReasonOut = from("Enumeration").where("enumTypeId", "POS_PAID_REASON_OUT").orderBy("sequenceId").queryList()

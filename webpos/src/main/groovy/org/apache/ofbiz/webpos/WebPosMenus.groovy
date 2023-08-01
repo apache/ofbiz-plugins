@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.webpos
-
 
 import org.apache.ofbiz.webpos.WebPosEvents
 import org.apache.ofbiz.webpos.session.WebPosSession

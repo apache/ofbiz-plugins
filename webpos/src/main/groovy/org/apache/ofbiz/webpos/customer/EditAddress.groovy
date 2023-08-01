@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.webpos.customer
-
 
 person = from("Person").where("partyId", parameters.partyId).queryOne()
 if (person) {

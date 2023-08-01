@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.ebay
-
 
 if (session.getAttribute("orderList")) {
     session.removeAttribute("orderList")

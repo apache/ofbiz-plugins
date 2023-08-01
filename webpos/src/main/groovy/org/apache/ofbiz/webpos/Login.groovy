@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.webpos
-
 
 import org.apache.ofbiz.product.store.ProductStoreWorker
 import org.apache.ofbiz.webapp.control.LoginWorker

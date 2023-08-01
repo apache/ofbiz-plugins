@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.scrum
-
 
 import org.apache.ofbiz.entity.GenericEntityException
 
@@ -49,7 +47,6 @@ try {
             }
     }
 }
-
 
 resultList.each() { result ->
     if (!"N".equals(result.enabled)) {

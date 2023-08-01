@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.ecommerce.forum
-
 
 import java.util.ArrayList
 import java.util.Collection
@@ -43,7 +41,6 @@ import javax.servlet.*
 import javax.servlet.http.*
 
 paramMap = UtilHttp.getParameterMap(request)
-
 
 contentIdTo = paramMap.contentIdTo
 nodeTrailCsv = paramMap.nodeTrailCsv

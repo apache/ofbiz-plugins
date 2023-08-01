@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.ecommerce.cart
-
 
 import org.apache.ofbiz.base.util.UtilMisc
 import org.apache.ofbiz.order.shoppingcart.product.ProductPromoWorker

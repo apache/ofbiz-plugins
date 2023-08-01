@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.bi
-
 
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
@@ -32,7 +30,6 @@ import org.apache.ofbiz.entity.condition.EntityCondition
 import org.apache.ofbiz.entity.condition.EntityOperator
 import org.apache.ofbiz.order.order.OrderReadHelper
 import org.apache.ofbiz.service.ServiceUtil
-
 
 def loadSalesInvoiceFact() {
     GenericValue invoice = from("Invoice").where(parameters).queryOne()
@@ -183,7 +180,6 @@ def loadSalesInvoiceItemFact() {
     return success()
 }
 
-
 def loadSalesOrderFact() {
     GenericValue orderHeader = from("OrderHeader").where(parameters).queryOne()
     if (!orderHeader) {
@@ -219,7 +215,6 @@ def loadSalesOrderItemFact() {
 
     List orderAdjustments
     GenericValue orderStatus
-
 
     if (!orderHeader) {
         orderHeader = from("OrderHeader").where(parameters).queryOne()
@@ -536,7 +531,6 @@ def loadSalesOrderDataDaily() {
     return success()
 }
 
-
 /**
  * Import Sales Order Data
  */
@@ -592,7 +586,6 @@ def convertUomCurrency() {
     }
     return result
 }
-
 
 def loadInventoryFact() {
     GenericValue inventory = from("InventoryItem").where(inventoryItemId: parameters.inventoryItemId).queryOne()

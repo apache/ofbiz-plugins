@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.webpos.search
-
 
 context.salesReps = from("PartyRoleNameDetail").where("roleTypeId", "SALES_REP").orderBy("lastName", "firstName").queryList()
 

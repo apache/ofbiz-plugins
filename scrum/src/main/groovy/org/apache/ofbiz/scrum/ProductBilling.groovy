@@ -17,9 +17,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.scrum
-
 
 import java.sql.Timestamp
 import org.apache.ofbiz.base.util.UtilMisc

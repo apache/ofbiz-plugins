@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.projectmgr
-
 
 projectMembers = from("WorkEffortPartyAssignment").where("workEffortId", context.projectId).filterByDate().queryList()
 

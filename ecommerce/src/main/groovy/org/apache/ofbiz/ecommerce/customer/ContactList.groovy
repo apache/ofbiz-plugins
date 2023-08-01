@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.ecommerce.customer
-
 
 import java.lang.*
 import java.util.*
@@ -59,5 +57,4 @@ if (userLogin) {
     partyAndContactMechList = from("PartyAndContactMech").where("partyId", partyId, "contactMechTypeId", "EMAIL_ADDRESS").orderBy("-fromDate").filterByDate().queryList()
     context.partyAndContactMechList = partyAndContactMechList
 }
-
 

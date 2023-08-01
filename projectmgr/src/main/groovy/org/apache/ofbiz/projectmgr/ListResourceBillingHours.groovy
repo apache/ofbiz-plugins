@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.projectmgr
-
 
 allProjects = select("workEffortId").from("WorkEffortAndPartyAssign").where("workEffortTypeId", "PROJECT", "partyId", parameters.partyId).orderBy("workEffortName").cache(true).queryList()
 
@@ -30,5 +28,4 @@ allProjects.each { project ->
 if (projects) {
     context.billingList = projects
 }
-
 

@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.ecommerce.order
-
 
 import org.apache.ofbiz.entity.*
 import org.apache.ofbiz.base.util.*
@@ -46,7 +44,6 @@ if (partyId) {
     party = from("Party").where("partyId", partyId).queryOne()
     context.party = party
 }
-
 
 context.emailList =  ContactHelper.getContactMechByType(party, "EMAIL_ADDRESS", false)
 

@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.ecommerce.customer
-
 
 import java.util.HashMap
 import org.apache.ofbiz.party.contact.ContactMechWorker
@@ -33,7 +31,6 @@ import org.apache.ofbiz.base.util.UtilMisc
 target = [:]
 ContactMechWorker.getContactMechAndRelated(request, userLogin.partyId, target)
 context.putAll(target)
-
 
 if (!security.hasEntityPermission("PARTYMGR", "_VIEW", session) && !context.partyContactMech && context.contactMech) {
     context.canNotView = true

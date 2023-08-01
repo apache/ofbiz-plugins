@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.ecommerce.shoppinglist
-
 
 import java.util.*
 import org.apache.ofbiz.base.util.*
@@ -41,7 +39,6 @@ if (userLogin)
 }  else {
     return // session ended, prevents a NPE
 }
-
 
 cart = ShoppingCartEvents.getCartObject(request)
 currencyUomId = cart.getCurrency()

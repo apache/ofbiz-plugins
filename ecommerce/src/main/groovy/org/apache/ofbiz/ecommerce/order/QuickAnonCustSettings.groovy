@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.ecommerce.order
-
 
 import org.apache.ofbiz.base.util.*
 import org.apache.ofbiz.entity.util.EntityUtil
@@ -27,7 +25,6 @@ import org.apache.ofbiz.entity.util.*
 import org.apache.ofbiz.order.shoppingcart.*
 import org.apache.ofbiz.party.contact.*
 import org.apache.ofbiz.product.catalog.*
-
 
 partyId = null
 

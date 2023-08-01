@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.ecommerce.customer
-
 
 import java.util.HashMap
 import org.apache.ofbiz.base.util.UtilHttp

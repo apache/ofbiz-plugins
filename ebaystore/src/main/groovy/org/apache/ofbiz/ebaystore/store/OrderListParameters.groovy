@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.ebaystore.store
-
 
     session.setAttribute("shippingAddressCtx", shippingAddressCtx)
     session.setAttribute("shippingServiceSelectedCtx", shippingServiceSelectedCtx)

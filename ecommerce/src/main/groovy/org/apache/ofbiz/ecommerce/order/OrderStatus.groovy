@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.ecommerce.order
-
 
 import java.math.BigDecimal
 import org.apache.ofbiz.base.util.*
@@ -30,7 +28,6 @@ import org.apache.ofbiz.order.order.*
 import org.apache.ofbiz.party.contact.*
 import org.apache.ofbiz.product.catalog.*
 import org.apache.ofbiz.product.store.*
-
 
 orderId = parameters.orderId
 orderHeader = null
@@ -84,7 +81,6 @@ if (userLogin) {
         partyId = userLogin.partyId
     }
 }
-
 
 // can anybody view an anonymous order?  this is set in the screen widget and should only be turned on by an email confirmation screen
 allowAnonymousView = context.allowAnonymousView
@@ -149,7 +145,6 @@ if (orderHeader) {
             }
         }
     }
-
 
     payToPartyId = productStore.payToPartyId
     paymentAddress =  PaymentWorker.getPaymentAddress(delegator, payToPartyId)

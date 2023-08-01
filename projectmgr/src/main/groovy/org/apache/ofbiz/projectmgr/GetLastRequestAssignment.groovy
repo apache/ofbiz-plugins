@@ -17,9 +17,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.projectmgr
-
 
 // get last request from this user and use that project/task assignment as default on the screen
 

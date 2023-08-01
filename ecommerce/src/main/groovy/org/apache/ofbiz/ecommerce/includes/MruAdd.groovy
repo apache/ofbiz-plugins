@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.ecommerce.includes
-
 
 import java.util.ArrayList
 import java.util.Collection

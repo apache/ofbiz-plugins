@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.ecommerce.forum
-
 
 import org.apache.ofbiz.base.util.*
 import org.apache.ofbiz.base.util.template.FreeMarkerWorker
@@ -33,7 +31,6 @@ import org.apache.ofbiz.content.ContentManagementWorker
 import java.io.StringWriter
 import freemarker.template.SimpleHash
 import freemarker.template.WrappingTemplateModel
-
 
 import javax.servlet.*
 import javax.servlet.http.*

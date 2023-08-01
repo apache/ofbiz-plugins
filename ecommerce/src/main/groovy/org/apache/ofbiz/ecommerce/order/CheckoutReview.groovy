@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.ecommerce.order
-
 
 import java.lang.*
 import org.apache.ofbiz.base.util.*
@@ -82,7 +80,6 @@ context.isDemoStore = isDemoStore
 payToPartyId = productStore.payToPartyId
 paymentAddress = PaymentWorker.getPaymentAddress(delegator, payToPartyId)
 if (paymentAddress) context.paymentAddress = paymentAddress
-
 
 // TODO: FIXME!
 /*

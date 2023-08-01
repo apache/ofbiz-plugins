@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.webpos.catalog
-
 
 /*
  * This script is also referenced by the ecommerce's screens and
