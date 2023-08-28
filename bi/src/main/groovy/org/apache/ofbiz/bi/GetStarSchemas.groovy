@@ -28,7 +28,7 @@ List starSchemas = []
 while (entitiesIt.hasNext()) {
     entity = reader.getModelEntity(entitiesIt.next())
     packageName = entity.getPackageName()
-    if (!packageName.contains("starschema")) {
+    if (!packageName.contains('starschema')) {
         continue
     }
 

@@ -25,7 +25,7 @@ selectedFieldList = UtilHttp.parseMultiFormData(parameters)
 
 columnNames = [] as Set
 selectedFieldList.each { selectedField ->
-  columnNames.add(selectedField.selectedFieldName)
+    columnNames.add(selectedField.selectedFieldName)
 }
 context.columnNames = columnNames
 List records = []

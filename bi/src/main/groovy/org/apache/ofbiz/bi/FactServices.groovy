@@ -18,9 +18,9 @@
 */
 package org.apache.ofbiz.bi
 
+import java.sql.Date
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
-import java.sql.Date
 
 import org.apache.ofbiz.base.util.UtilDateTime
 import org.apache.ofbiz.base.util.UtilProperties
@@ -31,107 +31,99 @@ import org.apache.ofbiz.entity.condition.EntityOperator
 import org.apache.ofbiz.order.order.OrderReadHelper
 import org.apache.ofbiz.service.ServiceUtil
 
-def loadSalesInvoiceFact() {
-    GenericValue invoice = from("Invoice").where(parameters).queryOne()
+Map loadSalesInvoiceFact() {
+    GenericValue invoice = from('Invoice').where(parameters).queryOne()
     if (!invoice) {
-        String errorMessage = UtilProperties.getMessage("AccountingUiLabels", "AccountingInvoiceDoesNotExists", parameters.locale)
+        String errorMessage = UtilProperties.getMessage('AccountingUiLabels', 'AccountingInvoiceDoesNotExists', parameters.locale)
         logError(errorMessage)
         return error(errorMessage)
     }
-    if ("SALES_INVOICE".equals(invoice.invoiceTypeId)) {
-        Map andConditions = ["invoiceItemTypeId": "INV_FPROD_ITEM"]
-        List invoiceItems = delegator.getRelated("InvoiceItem", null, null, invoice, false)
+    if (invoice.invoiceTypeId == 'SALES_INVOICE') {
+        List invoiceItems = delegator.getRelated('InvoiceItem', null, null, invoice, false)
         for (GenericValue invoiceItem : invoiceItems) {
             Map inMap = [invoice: invoice, invoiceItem: invoiceItem]
-            run service: "loadSalesInvoiceItemFact", with: inMap
+            run service: 'loadSalesInvoiceItemFact', with: inMap
         }
     }
     return success()
 }
 
-def loadSalesInvoiceItemFact() {
+Map loadSalesInvoiceItemFact() {
     GenericValue invoice = parameters.invoice
     GenericValue invoiceItem = parameters.invoiceItem
-    if (!invoice) {
-        invoice = from("Invoice").where(parameters).queryOne()
-    }
+    invoice = invoice ?: from('Invoice').where(parameters).queryOne()
     if (UtilValidate.isEmpty(invoiceItem)) {
-        invoiceItem = from("InvoiceItem").where(parameters).queryOne()
+        invoiceItem = from('InvoiceItem').where(parameters).queryOne()
     }
     if (!invoice) {
-        String errorMessage = UtilProperties.getMessage("AccountingUiLabels", "AccountingInvoiceDoesNotExists", parameters.locale)
+        String errorMessage = UtilProperties.getMessage('AccountingUiLabels', 'AccountingInvoiceDoesNotExists', parameters.locale)
         logError(errorMessage)
         return error(errorMessage)
     }
     if (!invoiceItem) {
-        String errorMessage = UtilProperties.getMessage("AccountingUiLabels", "AccountingInvoiceItemDoesNotExists", parameters.locale)
+        String errorMessage = UtilProperties.getMessage('AccountingUiLabels', 'AccountingInvoiceItemDoesNotExists', parameters.locale)
         logError(errorMessage)
         return error(errorMessage)
     }
 
-    if ("SALES_INVOICE".equals(invoice.invoiceTypeId)) {
-        GenericValue fact = from("SalesInvoiceItemFact").where(invoiceId: invoiceItem.invoiceId, invoiceItemSeqId: invoiceItem.invoiceItemSeqId).queryOne()
-        // key handling
+    if (invoice.invoiceTypeId == 'SALES_INVOICE') {
+        GenericValue fact = from('SalesInvoiceItemFact')
+            .where(invoiceId: invoiceItem.invoiceId, invoiceItemSeqId: invoiceItem.invoiceItemSeqId)
+            .queryOne()
+    // key handling
         if (!fact) {
             Map inMap
             Map naturalKeyFields
             Map serviceResult
-            String dimensionId
-            fact = makeValue("SalesInvoiceItemFact")
+            fact = makeValue('SalesInvoiceItemFact')
             fact.invoiceId = invoice.invoiceId
             fact.invoiceItemSeqId = invoiceItem.invoiceItemSeqId
             // conversion of the invoice date
             if (invoice.invoiceDate) {
                 inMap = [:]
                 naturalKeyFields = [:]
-                inMap.dimensionEntityName = "DateDimension"
+                inMap.dimensionEntityName = 'DateDimension'
                 Date invoiceDate = new Date(invoice.invoiceDate.getTime())
                 naturalKeyFields.dateValue = invoiceDate
                 inMap.naturalKeyFields = naturalKeyFields
-                serviceResult = run service: "getDimensionIdFromNaturalKey", with: inMap
+                serviceResult = run service: 'getDimensionIdFromNaturalKey', with: inMap
                 fact.invoiceDateDimId = serviceResult.dimensionId
-                if (!fact.invoiceDateDimId) {
-                    fact.invoiceDateDimId = "_NF_"
-                }
+                fact.invoiceDateDimId = fact.invoiceDateDimId ?: '_NF_'
             } else {
-                fact.invoiceDateDimId = "_NA_"
+                fact.invoiceDateDimId = '_NA_'
             }
 
             // conversion of the product id
             if (invoiceItem.productId) {
                 inMap = [:]
                 naturalKeyFields = [:]
-                inMap.dimensionEntityName = "ProductDimension"
+                inMap.dimensionEntityName = 'ProductDimension'
                 naturalKeyFields.productId = invoiceItem.productId
                 inMap.naturalKeyFields = naturalKeyFields
-                serviceResult = run service: "getDimensionIdFromNaturalKey", with: inMap
+                serviceResult = run service: 'getDimensionIdFromNaturalKey', with: inMap
                 fact.productDimId = serviceResult.dimensionId
-                if (!fact.productDimId) {
-                    fact.productDimId = "_NF_"
-                }
+                fact.productDimId = fact.productDimId ?: '_NF_'
             } else {
-                fact.productDimId = "_NA_"
+                fact.productDimId = '_NA_'
             }
 
             // conversion of the invoice currency
             if (invoice.currencyUomId) {
                 inMap = [:]
                 naturalKeyFields = [:]
-                inMap.dimensionEntityName = "CurrencyDimension"
+                inMap.dimensionEntityName = 'CurrencyDimension'
                 naturalKeyFields.currencyId = invoice.currencyUomId
                 inMap.naturalKeyFields = naturalKeyFields
-                serviceResult = run service: "getDimensionIdFromNaturalKey", with: inMap
+                serviceResult = run service: 'getDimensionIdFromNaturalKey', with: inMap
                 fact.origCurrencyDimId = serviceResult.dimensionId
-                if (!fact.origCurrencyDimId) {
-                    fact.origCurrencyDimId = "_NF_"
-                }
+                fact.origCurrencyDimId = fact.origCurrencyDimId ?: '_NF_'
             } else {
-                fact.origCurrencyDimId = "_NA_"
+                fact.origCurrencyDimId = '_NA_'
             }
 
             // TODO
-            fact.orderId = "_NA_"
-            fact.billToCustomerDimId = "_NA_"
+            fact.orderId = '_NA_'
+            fact.billToCustomerDimId = '_NA_'
             fact.create()
         }
         /*
@@ -147,21 +139,18 @@ def loadSalesInvoiceItemFact() {
             fact.extGrossAmount = invoiceItem.quantity * invoiceItem.amount
         }
 
-        Map andConditions
         // taxes
-        andConditions = [invoiceItemTypeId: "ITM_SALES_TAX"]
-        List taxes = delegator.getRelated("ChildrenInvoiceItem", null, null, invoiceItem, false)
+        List taxes = delegator.getRelated('ChildrenInvoiceItem', null, null, invoiceItem, false)
         for (GenericValue tax : taxes) {
             if (tax.amount) {
-            fact.extTaxAmount = fact.extTaxAmount + tax.amount
+                fact.extTaxAmount = fact.extTaxAmount + tax.amount
             }
         }
         // discounts
-        andConditions = [invoiceItemTypeId: "ITM_PROMOTION_ADJ"]
-        List discounts = delegator.getRelated("ChildrenInvoiceItem", null, null, invoiceItem, false)
+        List discounts = delegator.getRelated('ChildrenInvoiceItem', null, null, invoiceItem, false)
         for (GenericValue discount : discounts) {
             if (discount.amount) {
-            fact.extDiscountAmount = fact.extDiscountAmount - discount.amount
+                fact.extDiscountAmount = fact.extDiscountAmount - discount.amount
             }
         }
         fact.extNetAmount = fact.extGrossAmount - fact.extDiscountAmount
@@ -180,17 +169,17 @@ def loadSalesInvoiceItemFact() {
     return success()
 }
 
-def loadSalesOrderFact() {
-    GenericValue orderHeader = from("OrderHeader").where(parameters).queryOne()
+Map loadSalesOrderFact() {
+    GenericValue orderHeader = from('OrderHeader').where(parameters).queryOne()
     if (!orderHeader) {
-        String errorMessage = UtilProperties.getMessage("OrderErrorUiLabels", "OrderOrderIdDoesNotExists", parameters.locale)
+        String errorMessage = UtilProperties.getMessage('OrderErrorUiLabels', 'OrderOrderIdDoesNotExists', parameters.locale)
         logError(errorMessage)
         return error(errorMessage)
     }
-    if ("SALES_ORDER".equals(orderHeader.orderTypeId)) {
-        if ("ORDER_APPROVED".equals(orderHeader.statusId)) {
-            List orderItems = from("OrderItem")
-                .where("orderId", orderHeader.orderId, "orderItemTypeId", "PRODUCT_ORDER_ITEM")
+    if (orderHeader.orderTypeId == 'SALES_ORDER') {
+        if (orderHeader.statusId == 'ORDER_APPROVED') {
+            List orderItems = from('OrderItem')
+                .where('orderId', orderHeader.orderId, 'orderItemTypeId', 'PRODUCT_ORDER_ITEM')
                 .queryList()
 
             for (GenericValue orderItem : orderItems) {
@@ -198,14 +187,14 @@ def loadSalesOrderFact() {
                 inMap.orderHeader = orderHeader
                 inMap.orderItem = orderItem
                 inMap.orderAdjustment = null
-                run service: "loadSalesOrderItemFact", with: inMap
+                run service: 'loadSalesOrderItemFact', with: inMap
             }
         }
     }
     return success()
 }
 
-def loadSalesOrderItemFact() {
+Map loadSalesOrderItemFact() {
     Map inMap
     Map naturalKeyFields
     Map serviceResult
@@ -216,31 +205,27 @@ def loadSalesOrderItemFact() {
     List orderAdjustments
     GenericValue orderStatus
 
-    if (!orderHeader) {
-        orderHeader = from("OrderHeader").where(parameters).queryOne()
-    }
-    if (!orderItem) {
-        orderItem = from("OrderItem").where(parameters).queryOne()
-    }
+    orderHeader ?: from('OrderHeader').where(parameters).queryOne()
+    orderItem ?: this.from('OrderItem').where(parameters).queryOne()
     if (!orderAdjustment) {
-        orderAdjustments = from("OrderAdjustment").where("orderId": orderItem.orderId).queryList()
+        orderAdjustments = from('OrderAdjustment').where('orderId': orderItem.orderId).queryList()
     }
     if (!orderHeader) {
-        String errorMessage = UtilProperties.getMessage("OrderErrorUiLabels", "OrderOrderIdDoesNotExists", parameters.locale)
+        String errorMessage = UtilProperties.getMessage('OrderErrorUiLabels', 'OrderOrderIdDoesNotExists', parameters.locale)
         logError(errorMessage)
         return error(errorMessage)
     }
     if (!orderItem) {
-        String errorMessage = UtilProperties.getMessage("OrderErrorUiLabels", "OrderOrderItemIdDoesNotExists", parameters.locale)
+        String errorMessage = UtilProperties.getMessage('OrderErrorUiLabels', 'OrderOrderItemIdDoesNotExists', parameters.locale)
         logError(errorMessage)
         return error(errorMessage)
     }
 
-    if ("ORDER_APPROVED".equals(orderHeader.statusId)) {
-        GenericValue fact = from("SalesOrderItemFact").where(orderId: orderItem.orderId, orderItemSeqId: orderItem.orderItemSeqId).queryOne()
+    if (orderHeader.statusId == 'ORDER_APPROVED') {
+        GenericValue fact = from('SalesOrderItemFact').where(orderId: orderItem.orderId, orderItemSeqId: orderItem.orderItemSeqId).queryOne()
         // key handling
         if (!fact) {
-            fact = makeValue("SalesOrderItemFact")
+            fact = makeValue('SalesOrderItemFact')
             fact.orderId = orderHeader.orderId
             fact.orderItemSeqId = orderItem.orderItemSeqId
             fact.productStoreId = orderHeader.productStoreId
@@ -249,84 +234,78 @@ def loadSalesOrderItemFact() {
 
             // account
             if (orderHeader.productStoreId) {
-                GenericValue account =  from("ProductStore").where(productStoreId: orderHeader.productStoreId).queryOne()
+                GenericValue account =  from('ProductStore').where(productStoreId: orderHeader.productStoreId).queryOne()
                 fact.account = account.storeName
             }
 
             // pod
-            if ("EUR".equals(orderHeader.currencyUom)) {
-                fact.pod = "Latin"
+            if (orderHeader.currencyUom == 'EUR') {
+                fact.pod = 'Latin'
             } else {
-                fact.pod = "Engish"
+                fact.pod = 'Engish'
             }
 
             // brand
             if (orderHeader.salesChannelEnumId) {
-                GenericValue brand = from("Enumeration").where(enumId: orderHeader.salesChannelEnumId).queryOne()
+                GenericValue brand = from('Enumeration').where(enumId: orderHeader.salesChannelEnumId).queryOne()
                 fact.brand = brand.description
             }
 
             // conversion of the order date
-            orderStatus = from("OrderStatus")
-                .where(orderId: orderHeader.orderId, statusId: "ORDER_APPROVED")
-                .orderBy("-statusDatetime")
+            orderStatus = from('OrderStatus')
+                .where(orderId: orderHeader.orderId, statusId: 'ORDER_APPROVED')
+                .orderBy('-statusDatetime')
                 .queryFirst()
             if (orderStatus.statusDatetime) {
                 inMap = [:]
                 naturalKeyFields = [:]
-                inMap.dimensionEntityName = "DateDimension"
+                inMap.dimensionEntityName = 'DateDimension'
                 Date statusDatetime = new Date(orderStatus.statusDatetime.getTime())
                 naturalKeyFields.dateValue = statusDatetime
                 inMap.naturalKeyFields = naturalKeyFields
-                serviceResult = run service: "getDimensionIdFromNaturalKey", with: inMap
+                serviceResult = run service: 'getDimensionIdFromNaturalKey', with: inMap
                 fact.orderDateDimId = serviceResult.dimensionId
-                if (!fact.orderDateDimId) {
-                    fact.orderDateDimId = "_NF_"
-                }
+                fact.orderDateDimId = fact.orderDateDimId ?: '_NF_'
             } else {
-                fact.orderDateDimId = "_NA_"
+                fact.orderDateDimId = '_NA_'
             }
 
             // conversion of the product id
             if (UtilValidate.isNotEmpty(orderItem.productId)) {
                 inMap = [:]
                 naturalKeyFields = [:]
-                inMap.dimensionEntityName = "ProductDimension"
+                inMap.dimensionEntityName = 'ProductDimension'
                 naturalKeyFields.productId = orderItem.productId
                 inMap.naturalKeyFields = naturalKeyFields
-                serviceResult = run service: "getDimensionIdFromNaturalKey", with: inMap
+                serviceResult = run service: 'getDimensionIdFromNaturalKey', with: inMap
                 fact.productDimId = serviceResult.dimensionId
-                if (!fact.productDimId) {
-                    fact.productDimId = "_NF_"
-                }
+                fact.orderDateDimId = fact.orderDateDimId ?: '_NF_'
             } else {
-                fact.productDimId = "_NA_"
+                fact.productDimId = '_NA_'
             }
 
             // conversion of the order currency
             if (orderHeader.currencyUom) {
                 inMap = [:]
                 naturalKeyFields = [:]
-                inMap.dimensionEntityName = "CurrencyDimension"
+                inMap.dimensionEntityName = 'CurrencyDimension'
                 naturalKeyFields.currencyId = orderHeader.currencyUom
                 inMap.naturalKeyFields = naturalKeyFields
-                serviceResult = run service: "getDimensionIdFromNaturalKey", with: inMap
+                serviceResult = run service: 'getDimensionIdFromNaturalKey', with: inMap
                 fact.origCurrencyDimId = serviceResult.dimensionId
-                if (!fact.origCurrencyDimId) {
-                    fact.origCurrencyDimId = "_NF_"
-                }
+                fact.orderDateDimId = fact.orderDateDimId ?: '_NF_'
             } else {
-                fact.origCurrencyDimId = "_NA_"
+                fact.origCurrencyDimId = '_NA_'
             }
 
             // productCategoryId
-            GenericValue productCategoryMember = from("ProductCategoryMember").where(productId: orderItem.productId, thruDate: null).queryFirst()
+            GenericValue productCategoryMember = from('ProductCategoryMember').where(productId: orderItem.productId, thruDate: null).queryFirst()
             if (productCategoryMember) {
                 fact.productCategoryId = productCategoryMember.productCategoryId
             }
 
             // TODO
-            fact.billToCustomerDimId = "_NA_"
+            fact.billToCustomerDimId = '_NA_'
 
             fact.create()
         }
@@ -338,35 +317,37 @@ def loadSalesOrderItemFact() {
         OrderReadHelper orderReadHelper = new OrderReadHelper(orderHeader)
         Map billFromParty = orderReadHelper.getBillFromParty()
         partyAccountingPreferencesCallMap.organizationPartyId = billFromParty.partyId
-        Map accountResult = run service:"getPartyAccountingPreferences", with: partyAccountingPreferencesCallMap
+        Map accountResult = run service: 'getPartyAccountingPreferences', with: partyAccountingPreferencesCallMap
         GenericValue accPref = accountResult.partyAccountingPreference
 
-        fact.quantity = orderItem.quantity as BigDecimal
-        fact.extGrossAmount = 0 as BigDecimal
-        fact.extGrossCost = 0 as BigDecimal
-        fact.extDiscountAmount = 0 as BigDecimal
-        fact.extNetAmount = 0 as BigDecimal
-        fact.extShippingAmount = 0 as BigDecimal
-        fact.extTaxAmount = 0 as BigDecimal
+        fact.with {
+            quantity = orderItem.quantity as BigDecimal
+            extGrossAmount = 0 as BigDecimal
+            extGrossCost = 0 as BigDecimal
+            extDiscountAmount = 0 as BigDecimal
+            extNetAmount = 0 as BigDecimal
+            extShippingAmount = 0 as BigDecimal
+            extTaxAmount = 0 as BigDecimal
 
-        fact.GS = 0 as BigDecimal
-        fact.GMS = 0 as BigDecimal
-        fact.GMP = 0 as BigDecimal
-        fact.GSS = 0 as BigDecimal
-        fact.GSC = 0 as BigDecimal
-        fact.GSP = 0 as BigDecimal
-        fact.GP = 0 as BigDecimal
+            GS = 0 as BigDecimal
+            GMS = 0 as BigDecimal
+            GMP = 0 as BigDecimal
+            GSS = 0 as BigDecimal
+            GSC = 0 as BigDecimal
+            GSP = 0 as BigDecimal
+            GP = 0 as BigDecimal
+        }
 
-        fact.countOrder = 0 as BigDecimal
+        countOrder = 0 as BigDecimal
 
         // extGrossAmount
         Map convertUomCurrencyMap = [:]
         convertUomCurrencyMap.uomId = orderHeader.currencyUom
         convertUomCurrencyMap.uomIdTo = accPref.baseCurrencyUomId
         if (UtilValidate.isNotEmpty(orderStatus)) {
-        convertUomCurrencyMap.nowDate = orderStatus.statusDatetime
+            convertUomCurrencyMap.nowDate = orderStatus.statusDatetime
         }
-        Map convertResult = run service: "convertUomCurrency", with: convertUomCurrencyMap
+        Map convertResult = run service: 'convertUomCurrency', with: convertUomCurrencyMap
         BigDecimal exchangeRate = convertResult.conversionFactor
 
         if (exchangeRate) {
@@ -376,7 +357,7 @@ def loadSalesOrderItemFact() {
         }
 
         // extGrossCost
-        GenericValue cost = from("SupplierProduct")
+        GenericValue cost = from('SupplierProduct')
             .where(productId: orderItem.productId, availableThruDate: null, minimumOrderQuantity: 0 as BigDecimal)
             .queryFirst()
         if (cost) {
@@ -385,7 +366,7 @@ def loadSalesOrderItemFact() {
             if (orderStatus) {
                 convertUomCurrencyMap.nowDate = orderStatus.statusDatetime
             }
-            Map grossCostResult = run service: "convertUomCurrency", with: convertUomCurrencyMap
+            Map grossCostResult = run service: 'convertUomCurrency', with: convertUomCurrencyMap
             exchangeRate = grossCostResult.conversionFactor
 
             if (exchangeRate) {
@@ -396,28 +377,28 @@ def loadSalesOrderItemFact() {
 
         // extShippingAmount
         for (GenericValue shipping : orderAdjustments) {
-            if ("SHIPPING_CHARGES".equals(shipping.orderAdjustmentTypeId)) {
+            if (shipping.orderAdjustmentTypeId == 'SHIPPING_CHARGES') {
                 fact.extShippingAmount = fact.extShippingAmount + shipping.amount
             }
         }
 
         // extTaxAmount
         for (GenericValue tax : orderAdjustments) {
-            if ("SALES_TAX".equals(tax.orderAdjustmentTypeId)) {
+            if (tax.orderAdjustmentTypeId == 'SALES_TAX') {
                 fact.extTaxAmount = fact.extTaxAmount + tax.amount
             }
         }
 
         // extDiscountAmount
         for (GenericValue discount : orderAdjustments) {
-            if ("PROMOTION_ADJUSTMENT".equals(discount.orderAdjustmentTypeId)) {
+            if (discount.orderAdjustmentTypeId == 'PROMOTION_ADJUSTMENT') {
                 fact.extDiscountAmount = fact.extDiscountAmount + discount.amount
                 // product promo code
-                GenericValue productPromoCode = from("ProductPromoCode").where(productPromoId: discount.productPromoId).queryFirst()
+                GenericValue productPromoCode = from('ProductPromoCode').where(productPromoId: discount.productPromoId).queryFirst()
                 if (productPromoCode) {
                     fact.productPromoCode = productPromoCode.productPromoCodeId
                 } else {
-                    fact.productPromoCode = "Not require code"
+                    fact.productPromoCode = 'Not require code'
                 }
             }
         }
@@ -427,7 +408,7 @@ def loadSalesOrderItemFact() {
 
         // GS
         BigDecimal countGS = 0 as BigDecimal
-        List checkGSList = from("SalesOrderItemFact").where(orderId: orderHeader.orderId).queryList()
+        List checkGSList = from('SalesOrderItemFact').where(orderId: orderHeader.orderId).queryList()
         for (GenericValue checkGS : checkGSList) {
             if (checkGS.GS) {
                 if (0 != checkGS.GS) {
@@ -441,8 +422,8 @@ def loadSalesOrderItemFact() {
             if (orderStatus) {
                 convertUomCurrencyMap.nowDate = orderStatus.statusDatetime
             }
-            Map GSResult = run service: "convertUomCurrency", with: convertUomCurrencyMap
-            exchangeRate = GSResult.conversionFactor
+            Map gsResult = run service: 'convertUomCurrency', with: convertUomCurrencyMap
+            exchangeRate = gsResult.conversionFactor
 
             if (exchangeRate) {
                 fact.GS = orderHeader.grandTotal * exchangeRate
@@ -457,7 +438,7 @@ def loadSalesOrderItemFact() {
 
         // GSP
         BigDecimal countGSP = 0 as BigDecimal
-        List checkGSPList = from("SalesOrderItemFact").where(orderId: orderHeader.orderId).queryList()
+        List checkGSPList = from('SalesOrderItemFact').where(orderId: orderHeader.orderId).queryList()
         for (GenericValue checkGSP : checkGSPList) {
             if (checkGSP.GSP) {
                 if (checkGSP.GSP != 0) {
@@ -466,29 +447,27 @@ def loadSalesOrderItemFact() {
             }
         }
         if (countGSP == 0) {
-            List orderItemList = from("OrderItem").where(orderId: orderHeader.orderId).queryList()
-
             BigDecimal warrantyPrice = 0 as BigDecimal
             for (GenericValue warranty : orderAdjustments) {
-                if ("WARRANTY_ADJUSTMENT".equals(warranty.orderAdjustmentTypeId)) {
+                if (warranty.orderAdjustmentTypeId == 'WARRANTY_ADJUSTMENT') {
                     warrantyPrice = warrantyPrice + warranty.amount
                 }
             }
-            BigDecimal GSS = fact.extShippingAmount + warrantyPrice
+            BigDecimal gss = fact.extShippingAmount + warrantyPrice
 
             convertUomCurrencyMap.uomId = orderHeader.currencyUom
             convertUomCurrencyMap.uomIdTo = accPref.baseCurrencyUomId
             if (orderStatus) {
                 convertUomCurrencyMap.nowDate = orderStatus.statusDatetime
             }
-            Map GSPResult = run service: "convertUomCurrency", with: convertUomCurrencyMap
-            exchangeRate = GSPResult.conversionFactor
+            Map gspResult = run service: 'convertUomCurrency', with: convertUomCurrencyMap
+            exchangeRate = gspResult.conversionFactor
 
             if (exchangeRate) {
-                GSS = GSS * exchangeRate
+                gss = gss * exchangeRate
             }
-            fact.GSS = GSS
-            fact.GSP = GSS as BigDecimal
+            fact.GSS = gss
+            fact.GSP = gss as BigDecimal
         }
 
         // GP
@@ -496,7 +475,7 @@ def loadSalesOrderItemFact() {
 
         // countOrder
         BigDecimal countOrder = 0 as BigDecimal
-        List checkCountOrderList = from("SalesOrderItemFact").where(orderId: orderHeader.orderId).queryList()
+        List checkCountOrderList = from('SalesOrderItemFact').where(orderId: orderHeader.orderId).queryList()
         for (GenericValue checkCountOrder : checkCountOrderList) {
             if (checkCountOrder.countOrder) {
                 if (checkCountOrder.countOrder != 0) {
@@ -515,42 +494,42 @@ def loadSalesOrderItemFact() {
 /**
  * Load Sales Order Data Daily
  */
-def loadSalesOrderDataDaily() {
+Map loadSalesOrderDataDaily() {
     Timestamp nowTimestamp = UtilDateTime.nowTimestamp()
     Date nowDate = new Date(nowTimestamp.getTime())
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd 07:00:00.000")
-    def today = sdf.format(nowDate)
-    Date yesterdayDate = new Date(nowTimestamp.getTime()-86400000)
-    def yesterday = sdf.format(yesterdayDate)
+    SimpleDateFormat sdf = new SimpleDateFormat('yyyy-MM-dd 07:00:00.000', parameters.locale)
+    String today = sdf.format(nowDate)
+    Date yesterdayDate = new Date(nowTimestamp.getTime() - 86400000)
+    String yesterday = sdf.format(yesterdayDate)
 
     Map inMap = [:]
     inMap.fromDate = yesterday
     inMap.thruDate = today
 
-    run service: "importSalesOrderData", with: inMap
+    run service: 'importSalesOrderData', with: inMap
     return success()
 }
 
 /**
  * Import Sales Order Data
  */
-def importSalesOrderData() {
+Map importSalesOrderData() {
     Map inMap = [fromDate: parameters.fromDate, thruDate: parameters.thruDate]
 
-    Map res = run service:"loadDateDimension", with: inMap
+    Map res = run service: 'loadDateDimension', with: inMap
     if (!ServiceUtil.isSuccess(res)) {
         return res
     }
     EntityCondition condition = EntityCondition.makeCondition(
-        EntityCondition.makeCondition("statusId", "ORDER_APPROVED"),
-        EntityCondition.makeCondition("statusDatetime", EntityOperator.GREATER_THAN_EQUAL_TO, parameters.fromDate),
-        EntityCondition.makeCondition("statusDatetime", EntityOperator.LESS_THAN, parameters.thruDate)
+        EntityCondition.makeCondition('statusId', 'ORDER_APPROVED'),
+        EntityCondition.makeCondition('statusDatetime', EntityOperator.GREATER_THAN_EQUAL_TO, parameters.fromDate),
+        EntityCondition.makeCondition('statusDatetime', EntityOperator.LESS_THAN, parameters.thruDate)
         )
-    List orderStatusList = from("OrderStatus").where(condition).queryList()
+    List orderStatusList = from('OrderStatus').where(condition).queryList()
     for (GenericValue orderHeader : orderStatusList) {
-        inMap =[:]
+        inMap = [:]
         inMap.orderId = orderHeader.orderId
-        res = run service:"loadSalesOrderFact", with: inMap
+        res = run service: 'loadSalesOrderFact', with: inMap
         if (!ServiceUtil.isSuccess(res)) {
             return res
         }
@@ -561,87 +540,81 @@ def importSalesOrderData() {
 /**
  * Convert Uom Currency from UomConversionDated entity
  */
-def convertUomCurrency() {
+Map convertUomCurrency() {
     if (!parameters.nowDate) {
         Timestamp now = UtilDateTime.nowTimestamp()
         parameters.nowDate = now
     }
     Map result = success()
     EntityCondition condition = EntityCondition.makeCondition(
-        EntityCondition.makeCondition("uomId", parameters.uomId),
-        EntityCondition.makeCondition("uomIdTo", parameters.uomIdTo),
-        EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, parameters.nowDate),
-        EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, parameters.nowDate)
+        EntityCondition.makeCondition('uomId', parameters.uomId),
+        EntityCondition.makeCondition('uomIdTo', parameters.uomIdTo),
+        EntityCondition.makeCondition('fromDate', EntityOperator.LESS_THAN_EQUAL_TO, parameters.nowDate),
+        EntityCondition.makeCondition('thruDate', EntityOperator.GREATER_THAN, parameters.nowDate)
         )
-    GenericValue UomConversion = from("UomConversionDated").where(condition).orderBy("-fromDate").queryFirst()
-    if (UomConversion) {
-        result.conversionFactor = UomConversion.conversionFactor
+    GenericValue uomConversion = from('UomConversionDated').where(condition).orderBy('-fromDate').queryFirst()
+    if (uomConversion) {
+        result.conversionFactor = uomConversion.conversionFactor
     } else {
-        GenericValue UomConversionLastest = from("UomConversionDated")
+        GenericValue uomConversionLastest = from('UomConversionDated')
             .where(uomId: parameters.uomId, uomIdTo: parameters.uomIdTo, thruDate: null)
             .queryFirst()
-        if (UomConversionLastest) {
-            result.conversionFactor = UomConversionLastest.conversionFactor
+        if (uomConversionLastest) {
+            result.conversionFactor = uomConversionLastest.conversionFactor
         }
     }
     return result
 }
 
-def loadInventoryFact() {
-    GenericValue inventory = from("InventoryItem").where(inventoryItemId: parameters.inventoryItemId).queryOne()
-    GenericValue fact = from("InventoryItemFact").where(inventoryItemId: parameters.inventoryItemId).queryOne()
+Map loadInventoryFact() {
+    GenericValue inventory = from('InventoryItem').where(inventoryItemId: parameters.inventoryItemId).queryOne()
+    GenericValue fact = from('InventoryItemFact').where(inventoryItemId: parameters.inventoryItemId).queryOne()
 
     Map inMap = [:]
     Map naturalKeyFields = [:]
     Map serviceResult
     if (!fact) {
-        fact = makeValue("InventoryItemFact")
+        fact = makeValue('InventoryItemFact')
         fact.inventoryItemId = inventory.inventoryItemId
         // conversion of the inventory date
         if (inventory?.createdStamp) {
             inMap = [:]
             naturalKeyFields = [:]
-            inMap.dimensionEntityName = "DateDimension"
+            inMap.dimensionEntityName = 'DateDimension'
             Date createdStampDatetime = new Date(inventory.createdStamp.getTime())
             naturalKeyFields.dateValue = createdStampDatetime
             inMap.naturalKeyFields = naturalKeyFields
-            serviceResult = run service:"getDimensionIdFromNaturalKey", with: inMap
+            serviceResult = run service: 'getDimensionIdFromNaturalKey', with: inMap
             fact.inventoryDateDimId = serviceResult.dimensionId
-            if (!fact.inventoryDateDimId) {
-                fact.inventoryDateDimId = "_NF_"
-            }
+            fact.inventoryDateDimId = fact.inventoryDateDimId ?: '_NF_'
         } else {
-            fact.inventoryDateDimId = "_NA_"
+            fact.inventoryDateDimId = '_NA_'
         }
         // conversion of the productId
         if (inventory?.productId) {
             inMap = [:]
             naturalKeyFields = [:]
-            inMap.dimensionEntityName = "ProductDimension"
+            inMap.dimensionEntityName = 'ProductDimension'
             naturalKeyFields.productId = inventory.productId
             inMap.naturalKeyFields = naturalKeyFields
-            serviceResult = run service:"getDimensionIdFromNaturalKey", with: inMap
+            serviceResult = run service: 'getDimensionIdFromNaturalKey', with: inMap
             fact.productDimId = serviceResult.dimensionId
-            if (!fact.productDimId) {
-                fact.productDimId = "_NF_"
-            }
+            fact.productDimId = fact.productDimId ?: '_NF_'
         } else {
-            fact.productDimId = "_NA_"
+            fact.productDimId = '_NA_'
         }
         // conversion of the order currency
         if (inventory?.currencyUomId) {
-            inMap =[:]
+            inMap = [:]
             naturalKeyFields = [:]
-            inMap.dimensionEntityName = "CurrencyDimension"
+            inMap.dimensionEntityName = 'CurrencyDimension'
             naturalKeyFields.currencyId = inventory.currencyUomId
             inMap.naturalKeyFields = naturalKeyFields
-            serviceResult = run service:"getDimensionIdFromNaturalKey", with: inMap
+            serviceResult = run service: 'getDimensionIdFromNaturalKey', with: inMap
             fact.origCurrencyDimId = serviceResult.dimensionId
-            if (!fact.origCurrencyDimId) {
-                fact.origCurrencyDimId = "_NF_"
-            }
+            fact.origCurrencyDimId = fact.origCurrencyDimId ?: '_NF_'
         } else {
-            fact.origCurrencyDimId = "_NA_"
+            fact.origCurrencyDimId = '_NA_'
         }
         fact.create()
     }
