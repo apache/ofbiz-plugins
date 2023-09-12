@@ -77,6 +77,7 @@ public class GitHubEvents {
     private static final String SESSION_GITHUB_STATE = "_GITHUB_STATE_";
 
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+    private static final String ALPHANUMERIC = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
     public static final String ENV_PREFIX = UtilProperties.getPropertyValue(GitHubAuthenticator.PROPS, "github.env.prefix", "test");
 
@@ -275,8 +276,9 @@ public class GitHubEvents {
                 String userLoginId = authn.createUser(userInfo);
                 userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", userLoginId).queryOne();
             }
-            String autoPassword = RandomStringUtils.randomAlphanumeric(EntityUtilProperties.getPropertyAsInteger("security",
-                    "password.length.min", 5));
+            String autoPassword = RandomStringUtils.random(
+                    EntityUtilProperties.getPropertyAsInteger("security", "password.length.min", 5), 0, 0, true, true,
+                    ALPHANUMERIC.toCharArray(), SECURE_RANDOM);
             boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security", "password.encrypt"));
             userLogin.set("currentPassword", useEncryption ? HashCrypt.digestHash(LoginServices.getHashType(), null, autoPassword) : autoPassword);
             userLogin.store();
