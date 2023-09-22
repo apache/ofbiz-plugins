@@ -23,6 +23,7 @@ import java.io.OutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -98,6 +99,13 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
         config.getServletContext().setAttribute(SOLRHOME_ATTRIBUTE, ofbizHome + props.getProperty("solr/home"));
         super.init(config);
     }
+
+    private boolean userIsUnauthorized(HttpServletRequest httpRequest) {
+        HttpSession session = httpRequest.getSession();
+        GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+        return UtilValidate.isEmpty(userLogin) || !LoginWorker.hasBasePermission(userLogin, httpRequest);
+    }
+
     /** Do filter */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -107,18 +115,21 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
 
         String servletPath = httpRequest.getServletPath();
 
-        if (servletPath.equals("/solrdefault/debug/dump")) {
+        List<String> solrCoreNames = getCores().getAllCoreNames();
+        boolean userTriesToAccessAnySolrCore = solrCoreNames.stream().anyMatch(
+                coreName -> servletPath.matches(String.format("/%s/.*", coreName)));
+
+        // check if the request is from an authorized user
+        if (userTriesToAccessAnySolrCore && userIsUnauthorized(httpRequest)) {
             sendJsonHeaderMessage(httpRequest, httpResponse, null, "SolrErrorUnauthorisedRequestForSecurityReason", null, locale);
             return;
         }
-
-        // check if the request is from an authorized user
         if (UtilValidate.isNotEmpty(servletPath) && (servletPath.startsWith("/admin/") || servletPath.endsWith("/update")
                 || servletPath.endsWith("/update/json") || servletPath.endsWith("/update/csv") || servletPath.endsWith("/update/extract")
                 || servletPath.endsWith("/replication") || servletPath.endsWith("/file") || servletPath.endsWith("/file/"))) {
             HttpSession session = httpRequest.getSession();
             GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-            if (servletPath.startsWith("/admin/") && (UtilValidate.isEmpty(userLogin) || !LoginWorker.hasBasePermission(userLogin, httpRequest))) {
+            if (servletPath.startsWith("/admin/") && !userIsUnauthorized(httpRequest)) {
                 response.setContentType("application/json");
                 MapToJSON mapToJson = new MapToJSON();
                 JSON json;
@@ -148,20 +159,20 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
                     || servletPath.endsWith("/update/extract")) {
                 // NOTE: the update requests are defined in an index's solrconfig.xml
                 // get the Solr index name from the request
-                if (UtilValidate.isEmpty(userLogin) || !LoginWorker.hasBasePermission(userLogin, httpRequest)) {
+                if (UtilValidate.isEmpty(userLogin) || !userIsUnauthorized(httpRequest)) {
                     sendJsonHeaderMessage(httpRequest, httpResponse, userLogin, "SolrErrorUpdateLoginFirst", "SolrErrorNoUpdatePermission", locale);
                     return;
                 }
             } else if (servletPath.endsWith("/replication")) {
                 // get the Solr index name from the request
-                if (UtilValidate.isEmpty(userLogin) || !LoginWorker.hasBasePermission(userLogin, httpRequest)) {
+                if (UtilValidate.isEmpty(userLogin) || !userIsUnauthorized(httpRequest)) {
                     sendJsonHeaderMessage(httpRequest, httpResponse, userLogin, "SolrErrorReplicateLoginFirst", "SolrErrorNoReplicatePermission",
                             locale);
                     return;
                 }
             } else if (servletPath.endsWith("/file") || servletPath.endsWith("/file/")) {
                 // get the Solr index name from the request
-                if (UtilValidate.isEmpty(userLogin) || !LoginWorker.hasBasePermission(userLogin, httpRequest)) {
+                if (UtilValidate.isEmpty(userLogin) || !userIsUnauthorized(httpRequest)) {
                     sendJsonHeaderMessage(httpRequest, httpResponse, userLogin, "SolrErrorViewFileLoginFirst", "SolrErrorNoViewFilePermission",
                             locale);
                     return;
