@@ -23,6 +23,7 @@ import java.io.OutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -71,9 +72,14 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
         super.init(config);
     }
 
-    /**
-     * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
-     */
+    private boolean userIsUnauthorized(HttpServletRequest httpRequest) {
+        HttpSession session = httpRequest.getSession();
+        GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+        return UtilValidate.isEmpty(userLogin) || !LoginWorker.hasBasePermission(userLogin, httpRequest);
+    }
+
+    /** Do filter */
+    @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
@@ -82,11 +88,15 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
         // check if the request is from an authorized user
         String servletPath = httpRequest.getServletPath();
 
-        if (servletPath.equals("/solrdefault/debug/dump")) {
+        List<String> solrCoreNames = getCores().getAllCoreNames();
+        boolean userTriesToAccessAnySolrCore = solrCoreNames.stream().anyMatch(
+                coreName -> servletPath.matches(String.format("/%s/.*", coreName)));
+
+        // check if the request is from an authorized user
+        if (userTriesToAccessAnySolrCore && userIsUnauthorized(httpRequest)) {
             sendJsonHeaderMessage(httpRequest, httpResponse, null, "SolrErrorUnauthorisedRequestForSecurityReason", null, locale);
             return;
         }
-
         if (UtilValidate.isNotEmpty(servletPath) && (servletPath.startsWith("/admin/") || servletPath.endsWith("/update")
                 || servletPath.endsWith("/update/json") || servletPath.endsWith("/update/csv") || servletPath.endsWith("/update/extract")
                 || servletPath.endsWith("/replication") || servletPath.endsWith("/file") || servletPath.endsWith("/file/"))) {
