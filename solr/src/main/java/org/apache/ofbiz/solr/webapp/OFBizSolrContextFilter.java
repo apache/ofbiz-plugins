@@ -129,7 +129,7 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
                 || servletPath.endsWith("/replication") || servletPath.endsWith("/file") || servletPath.endsWith("/file/"))) {
             HttpSession session = httpRequest.getSession();
             GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-            if (servletPath.startsWith("/admin/") && !userIsUnauthorized(httpRequest)) {
+            if (servletPath.startsWith("/admin/") && userIsUnauthorized(httpRequest)) {
                 response.setContentType("application/json");
                 MapToJSON mapToJson = new MapToJSON();
                 JSON json;
@@ -159,20 +159,20 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
                     || servletPath.endsWith("/update/extract")) {
                 // NOTE: the update requests are defined in an index's solrconfig.xml
                 // get the Solr index name from the request
-                if (UtilValidate.isEmpty(userLogin) || !userIsUnauthorized(httpRequest)) {
+                if (userIsUnauthorized(httpRequest)) {
                     sendJsonHeaderMessage(httpRequest, httpResponse, userLogin, "SolrErrorUpdateLoginFirst", "SolrErrorNoUpdatePermission", locale);
                     return;
                 }
             } else if (servletPath.endsWith("/replication")) {
                 // get the Solr index name from the request
-                if (UtilValidate.isEmpty(userLogin) || !userIsUnauthorized(httpRequest)) {
+                if (userIsUnauthorized(httpRequest)) {
                     sendJsonHeaderMessage(httpRequest, httpResponse, userLogin, "SolrErrorReplicateLoginFirst", "SolrErrorNoReplicatePermission",
                             locale);
                     return;
                 }
             } else if (servletPath.endsWith("/file") || servletPath.endsWith("/file/")) {
                 // get the Solr index name from the request
-                if (UtilValidate.isEmpty(userLogin) || !userIsUnauthorized(httpRequest)) {
+                if (userIsUnauthorized(httpRequest)) {
                     sendJsonHeaderMessage(httpRequest, httpResponse, userLogin, "SolrErrorViewFileLoginFirst", "SolrErrorNoViewFilePermission",
                             locale);
                     return;
