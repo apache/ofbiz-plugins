@@ -65,6 +65,7 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
     /**
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
      */
+    @Override
     public void init(FilterConfig config) throws ServletException {
         Properties props = System.getProperties();
         String ofbizHome = (String) props.get("ofbiz.home");
@@ -102,7 +103,7 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
                 || servletPath.endsWith("/replication") || servletPath.endsWith("/file") || servletPath.endsWith("/file/"))) {
             HttpSession session = httpRequest.getSession();
             GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-            if (servletPath.startsWith("/admin/") && (UtilValidate.isEmpty(userLogin) || !LoginWorker.hasBasePermission(userLogin, httpRequest))) {
+            if (servletPath.startsWith("/admin/") && userIsUnauthorized( httpRequest)) {
                 response.setContentType("application/json");
                 MapToJSON mapToJson = new MapToJSON();
                 JSON json;
@@ -130,19 +131,19 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
             } else if (servletPath.endsWith("/update") || servletPath.endsWith("/update/json") || servletPath.endsWith("/update/csv") || servletPath.endsWith("/update/extract")) {
                 // NOTE: the update requests are defined in an index's solrconfig.xml
                 // get the Solr index name from the request
-                if (UtilValidate.isEmpty(userLogin) || !LoginWorker.hasBasePermission(userLogin, httpRequest)) {
+                if (userIsUnauthorized( httpRequest)) {
                     sendJsonHeaderMessage(httpRequest, httpResponse, userLogin, "SolrErrorUpdateLoginFirst", "SolrErrorNoUpdatePermission", locale);
                     return;
                 }
             } else if (servletPath.endsWith("/replication")) {
                 // get the Solr index name from the request
-                if (UtilValidate.isEmpty(userLogin) || !LoginWorker.hasBasePermission(userLogin, httpRequest)) {
+                if (userIsUnauthorized( httpRequest)) {
                     sendJsonHeaderMessage(httpRequest, httpResponse, userLogin, "SolrErrorReplicateLoginFirst", "SolrErrorNoReplicatePermission", locale);
                     return;
                 }
             } else if (servletPath.endsWith("/file") || servletPath.endsWith("/file/")) {
                 // get the Solr index name from the request
-                if (UtilValidate.isEmpty(userLogin) || !LoginWorker.hasBasePermission(userLogin, httpRequest)) {
+                if (userIsUnauthorized( httpRequest)) {
                     sendJsonHeaderMessage(httpRequest, httpResponse, userLogin, "SolrErrorViewFileLoginFirst", "SolrErrorNoViewFilePermission", locale);
                     return;
                 }
@@ -171,6 +172,7 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
     /**
      * @see javax.servlet.Filter#destroy()
      */
+    @Override
     public void destroy() {
         super.destroy();
     }
@@ -179,6 +181,7 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
      * Override this to change CoreContainer initialization
      * @return a CoreContainer to hold this server's cores
      */
+    @Override
     protected CoreContainer createCoreContainer(Path solrHome, Properties extraProperties) {
         NodeConfig nodeConfig = null;
         try {
