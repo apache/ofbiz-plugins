@@ -119,75 +119,16 @@ public class OFBizSolrContextFilter extends SolrDispatchFilter {
         boolean userTriesToAccessAnySolrCore = solrCoreNames.stream().anyMatch(
                 coreName -> servletPath.matches(String.format("/%s/.*", coreName)));
 
-        // check if the request is from an authorized user
+        // check if the request is from an authorized user trying to access a Solr core feature
         if (userTriesToAccessAnySolrCore && userIsUnauthorized(httpRequest)) {
             sendJsonHeaderMessage(httpRequest, httpResponse, null, "SolrErrorUnauthorisedRequestForSecurityReason", null, locale);
             return;
-        }
-        if (UtilValidate.isNotEmpty(servletPath) && (servletPath.startsWith("/admin/") || servletPath.endsWith("/update")
-                || servletPath.endsWith("/update/json") || servletPath.endsWith("/update/csv") || servletPath.endsWith("/update/extract")
-                || servletPath.endsWith("/replication") || servletPath.endsWith("/file") || servletPath.endsWith("/file/"))) {
-            HttpSession session = httpRequest.getSession();
-            GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-            if (servletPath.startsWith("/admin/") && userIsUnauthorized(httpRequest)) {
-                response.setContentType("application/json");
-                MapToJSON mapToJson = new MapToJSON();
-                JSON json;
-                OutputStream os = null;
-                try {
-                    json = mapToJson.convert(UtilMisc.toMap("ofbizLogin", (Object) "true"));
-                    os = response.getOutputStream();
-                    os.write(json.toString().getBytes());
-                    os.flush();
-                    String message = "";
-                    if (UtilValidate.isEmpty(userLogin)) {
-                        message = UtilProperties.getMessage(RESOURCE, "SolrErrorManageLoginFirst", locale);
-                    } else {
-                        message = UtilProperties.getMessage(RESOURCE, "SolrErrorNoManagePermission", locale);
-                    }
-                    Debug.logInfo("[" + httpRequest.getRequestURI().substring(1) + "(Domain:" + request.getScheme() + "://" + request.getServerName()
-                            + ")] Request error: " + message, MODULE);
-                } catch (ConversionException e) {
-                    Debug.logError("Error while converting Solr ofbizLogin map to JSON.", MODULE);
-                } finally {
-                    if (os != null) {
-                        os.close();
-                    }
-                }
-                return;
-            } else if (servletPath.endsWith("/update") || servletPath.endsWith("/update/json") || servletPath.endsWith("/update/csv")
-                    || servletPath.endsWith("/update/extract")) {
-                // NOTE: the update requests are defined in an index's solrconfig.xml
-                // get the Solr index name from the request
-                if (userIsUnauthorized(httpRequest)) {
-                    sendJsonHeaderMessage(httpRequest, httpResponse, userLogin, "SolrErrorUpdateLoginFirst", "SolrErrorNoUpdatePermission", locale);
-                    return;
-                }
-            } else if (servletPath.endsWith("/replication")) {
-                // get the Solr index name from the request
-                if (userIsUnauthorized(httpRequest)) {
-                    sendJsonHeaderMessage(httpRequest, httpResponse, userLogin, "SolrErrorReplicateLoginFirst", "SolrErrorNoReplicatePermission",
-                            locale);
-                    return;
-                }
-            } else if (servletPath.endsWith("/file") || servletPath.endsWith("/file/")) {
-                // get the Solr index name from the request
-                if (userIsUnauthorized(httpRequest)) {
-                    sendJsonHeaderMessage(httpRequest, httpResponse, userLogin, "SolrErrorViewFileLoginFirst", "SolrErrorNoViewFilePermission",
-                            locale);
-                    return;
-                }
-            }
         }
 
         String charset = request.getCharacterEncoding();
         String rname = null;
         if (httpRequest.getRequestURI() != null) {
             rname = httpRequest.getRequestURI().substring(1);
-        }
-        if (rname != null && (rname.endsWith(".css") || rname.endsWith(".js") || rname.endsWith(".ico") || rname.endsWith(".html")
-                || rname.endsWith(".png") || rname.endsWith(".jpg") || rname.endsWith(".gif"))) {
-            rname = null;
         }
         UtilTimer timer = null;
         if (Debug.timingOn() && rname != null) {
