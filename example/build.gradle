@@ -22,7 +22,7 @@ plugins {
 }
 
 dependencies {
-    pluginLibsCompile 'org.apache.tomcat.embed:tomcat-embed-websocket:9.0.80'
+    pluginLibsCompile 'org.apache.tomcat.embed:tomcat-embed-websocket:9.0.81'
 }
 
 node {
