@@ -33,6 +33,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.ofbiz.base.util.UtilURL;
 import org.apache.ofbiz.base.util.UtilXml;
 import org.apache.ofbiz.ldap.commons.AbstractOFBizAuthenticationHandler;
 import org.apache.ofbiz.ldap.commons.InterfaceOFBizAuthenticationHandler;
@@ -77,7 +78,7 @@ public final class OFBizCasAuthenticationHandler extends AbstractOFBizAuthentica
             response.sendRedirect(casUrl + loginUri + "?" + PARAM_SERVICE + "=" + url);
         } else {
             // there's a ticket, we should validate the ticket
-            URL validateURL = new URL(casUrl + validateUri + "?" + PARAM_TICKET + "=" + ticket + "&" + PARAM_SERVICE + "=" + url);
+            URL validateURL = UtilURL.fromUrlString(casUrl + validateUri + "?" + PARAM_TICKET + "=" + ticket + "&" + PARAM_SERVICE + "=" + url);
             URLConnection conn = validateURL.openConnection();
             try (InputStreamReader result = new InputStreamReader(conn.getInputStream(), "UTF-8");
                      BufferedReader reader = new BufferedReader(result)) {

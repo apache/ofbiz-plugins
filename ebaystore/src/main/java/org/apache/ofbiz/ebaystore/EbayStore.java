@@ -168,7 +168,7 @@ public class EbayStore {
         if (Debug.verboseOn()) {
             Debug.logVerbose("Request of " + callName + " To eBay:\n" + dataItems.toString(), MODULE);
         }
-        HttpURLConnection connection = (HttpURLConnection) (new URL(postItemsUrl)).openConnection();
+        HttpURLConnection connection = (HttpURLConnection) (UtilURL.fromUrlString(postItemsUrl)).openConnection();
         connection.setDoInput(true);
         connection.setDoOutput(true);
         connection.setRequestMethod("POST");
