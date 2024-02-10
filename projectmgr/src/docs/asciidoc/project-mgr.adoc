@@ -24,7 +24,7 @@ under the License.
 :experimental:
 :sourcedir: .
 
-include::_include/prjm_intro.adoc[leveloffset=+1]
+include::plugins/projectmgr/src/docs/asciidoc/_include/prjm_intro.adoc[leveloffset=+1]
 
 == ProjectMgr in UI
 === Main screen.
@@ -43,7 +43,7 @@ It also shows the status of the timesheets.
 === Find Projects
 This screen provides an overview of all projects the user is participating in.
 
-include::_include/prjm_project.adoc[leveloffset=+2]
+include::plugins/projectmgr/src/docs/asciidoc/_include/prjm_project.adoc[leveloffset=+2]
 
 === Project - billing
 This screen shows all hours registered to the various tasks in the project by all participants.

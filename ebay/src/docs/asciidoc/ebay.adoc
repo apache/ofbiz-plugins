@@ -22,7 +22,7 @@ The Ebay component provides an interface to the Ebay website.
 
 It is possible to export products from your store into  eBay category  also import an orders from ebay.
 
-include::_include/ebay-intro.adoc[leveloffset=+1]
+include::plugins/ebay/src/docs/asciidoc/_include/ebay-intro.adoc[leveloffset=+1]
 
 == main Features
 . Ebay configurations for  ofbiz intregrate with ebay.
@@ -35,16 +35,16 @@ include::_include/ebay-intro.adoc[leveloffset=+1]
 
 == Ebay management in User Interface
 
-include::_include/ebay-configurations.adoc[leveloffset=+2]
+include::plugins/ebay/src/docs/asciidoc/_include/ebay-configurations.adoc[leveloffset=+2]
 
-include::_include/ebay-search-product.adoc[leveloffset=+2]
+include::plugins/ebay/src/docs/asciidoc/_include/ebay-search-product.adoc[leveloffset=+2]
 
-include::_include/ebay-filter-result-search-product.adoc[leveloffset=+2]
+include::plugins/ebay/src/docs/asciidoc/_include/ebay-filter-result-search-product.adoc[leveloffset=+2]
 
-include::_include/ebay-import-orders.adoc[leveloffset=+2]
+include::plugins/ebay/src/docs/asciidoc/_include/ebay-import-orders.adoc[leveloffset=+2]
 
-include::_include/ebay-import-single-transaction.adoc[leveloffset=+2]
+include::plugins/ebay/src/docs/asciidoc/_include/ebay-import-single-transaction.adoc[leveloffset=+2]
 
-include::_include/ebay-export-to-ebay.adoc[leveloffset=+2]
+include::plugins/ebay/src/docs/asciidoc/_include/ebay-export-to-ebay.adoc[leveloffset=+2]
 
-include::_include/ebay-ShippingMethods.adoc[leveloffset=+2]
+include::plugins/ebay/src/docs/asciidoc/_include/ebay-ShippingMethods.adoc[leveloffset=+2]

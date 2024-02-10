@@ -51,4 +51,4 @@ main shortcut :
 
 == UI help for Example
 
-include::_include/example_main.adoc[leveloffset=+2]
+include::plugins/example/src/docs/asciidoc/_include/example_main.adoc[leveloffset=+2]

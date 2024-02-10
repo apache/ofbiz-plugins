@@ -40,26 +40,26 @@ Below follows a list how the system should be used and at what time you have to 
 
 == Administration
 
-include::_include/scrum-timeSheet.adoc[leveloffset=+2]
+include::plugins/scrum/src/docs/asciidoc/_include/scrum-timeSheet.adoc[leveloffset=+2]
 
-include::_include/scrum-default-tasks.adoc[leveloffset=+2]
+include::plugins/scrum/src/docs/asciidoc/_include/scrum-default-tasks.adoc[leveloffset=+2]
 
-include::_include/scrum-members.adoc[leveloffset=+2]
+include::plugins/scrum/src/docs/asciidoc/_include/scrum-members.adoc[leveloffset=+2]
 
 == Product Backlog.
 Before anything can start a product backlog is required which will need a product to be created first.
 So create a product assign the it to a product owner which was created in the Scrum member section.
 Then go to the backlog and create the backlog items.
 
-include::_include/scrum-product.adoc[leveloffset=+2]
+include::plugins/scrum/src/docs/asciidoc/_include/scrum-product.adoc[leveloffset=+2]
 
-include::_include/scrum-product-backlog-item.adoc[leveloffset=+2]
+include::plugins/scrum/src/docs/asciidoc/_include/scrum-product-backlog-item.adoc[leveloffset=+2]
 
-include::_include/scrum-product-categories.adoc[leveloffset=+2]
+include::plugins/scrum/src/docs/asciidoc/_include/scrum-product-categories.adoc[leveloffset=+2]
 
-include::_include/scrum-project-sprint.adoc[]
+include::plugins/scrum/src/docs/asciidoc/_include/scrum-project-sprint.adoc[]
 
-include::_include/scrum-my-work.adoc[leveloffset=+1]
+include::plugins/scrum/src/docs/asciidoc/_include/scrum-my-work.adoc[leveloffset=+1]
 
 == Task
 The view task show Task description.
@@ -70,7 +70,7 @@ The view task show Task description.
 . Sprint Backlog Item Note.
 . Task Attachements.
 
-include::_include/scrum-open-test.adoc[leveloffset=+1]
+include::plugins/scrum/src/docs/asciidoc/_include/scrum-open-test.adoc[leveloffset=+1]
 
 
 == Sprint Demonstration and Evaluation meeting

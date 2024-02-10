@@ -29,6 +29,6 @@ The MyPortal application is an example of what it's possible to do with OFBiz Po
 
 == Some Portlet in other components
 
-include::_include/portlet-system-info-notes.adoc[leveloffset=+2]
+include::plugins/myportal/src/docs/asciidoc/_include/portlet-system-info-notes.adoc[leveloffset=+2]
 
-include::_include/portlet-calendar.adoc[leveloffset=+2]
+include::plugins/myportal/src/docs/asciidoc/_include/portlet-calendar.adoc[leveloffset=+2]
