@@ -41,7 +41,7 @@ public final class SearchWorker {
 
     private static final String MODULE = SearchWorker.class.getName();
 
-    private static final Version LUCENE_VERSION = Version.LUCENE_8_11_3;
+    private static final Version LUCENE_VERSION = Version.LUCENE_8_11_2;
 
     private SearchWorker() { }
 
