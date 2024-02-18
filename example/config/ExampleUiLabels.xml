@@ -752,11 +752,11 @@
         <value xml:lang="zh-TW">需要設置一些資料項目,參見 FormWidgetExampleScreens.xml (從multipleSelect開始)</value>
     </property>
     <property key="ExampleMultipleDropDowns">
-        <value xml:lang="en">Multiple drop-downs</value>
-        <value xml:lang="fr">liste déroulante avec choix multiples</value>
-        <value xml:lang="ja">複数ドロップダウン</value>
-        <value xml:lang="zh">多个下拉框</value>
-        <value xml:lang="zh-TW">多個下拉清單</value>
+        <value xml:lang="en">Multiple select with checkboxes</value>
+        <value xml:lang="fr">Selection de choix multiples par cases à cocher</value>
+        <value xml:lang="ja">チェックボックス付きの複数選択</value>
+        <value xml:lang="zh">带复选框的多项选择</value>
+        <value xml:lang="zh-TW">帶有複選框的多項選擇</value>
     </property>
     <property key="ExampleNewExample">
         <value xml:lang="en">New Example</value>
