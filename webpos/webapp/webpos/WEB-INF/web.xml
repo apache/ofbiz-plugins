@@ -42,6 +42,11 @@
         <param-name>mainDecoratorLocation</param-name>
         <param-value>component://webpos/widget/CommonScreens.xml</param-value>
     </context-param>
+    <context-param>
+        <description>The location of the menus file to be used in this webapp; referred to as a context variable in screen def XML files.</description>
+        <param-name>mainMenuLocation</param-name>
+        <param-value>component://webpos/widget/WebPosMenus.xml</param-value>
+    </context-param>
 
     <filter>
         <display-name>ControlFilter</display-name>
