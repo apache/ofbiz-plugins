@@ -147,7 +147,7 @@ under the License.
             <entity-condition entity-name="Example"><order-by field-name="exampleName"/></entity-condition>
         </actions>
         <field name="exampleId" title="${uiLabelMap.ExampleExampleId}" widget-style="buttontext">
-            <hyperlink description="${exampleId}" target="EditExampleLayer" also-hidden="false" link-type="layered-modal">
+          <hyperlink description="${exampleId}" target="EditExampleLayer" text="${exampleName}" also-hidden="false" link-type="layered-modal">
                 <parameter param-name="exampleId"/>
             </hyperlink>
         </field>
