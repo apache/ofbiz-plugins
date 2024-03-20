@@ -54,7 +54,7 @@ under the License.
                             <decorator-section name="menu-bar">
                                 <section>
                                     <widgets>
-                                        <include-menu name="FixedAssetSubTabBar" location="component://assetmaint/widget/ismgr/Menus.xml"/>
+                                        <include-menu name="FixedAssetSubTabBar" location="${parameters.mainMenuLocation}"/>
                                      </widgets>
                                 </section>
                             </decorator-section>
@@ -103,7 +103,7 @@ under the License.
                             <decorator-section name="menu-bar">
                                 <section>
                                     <widgets>
-                                        <include-menu name="FixedAssetSubTabBar" location="component://assetmaint/widget/ismgr/Menus.xml"/>
+                                        <include-menu name="FixedAssetSubTabBar" location="${parameters.mainMenuLocation}"/>
                                      </widgets>
                                 </section>
                             </decorator-section>
