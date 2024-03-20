@@ -33,7 +33,7 @@
                         <section>
                             <condition><not><if-empty field="maintHistSeqId"/></not></condition>
                             <widgets>
-                                <include-menu name="FixedAssetMaintTabBar" location="component://assetmaint/widget/AssetmaintMenus.xml"/>
+                                <include-menu name="FixedAssetMaintTabBar" location="${parameters.mainMenuLocation}"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -118,7 +118,7 @@
                     <actions><set field="titleProperty" value="AccountingAddFixedAssetMaintenance"/></actions>
                     <widgets/>
                 </section>
-                <decorator-screen name="CommonFixedAssetMaintDecorator">
+                <decorator-screen name="CommonFixedAssetMaintDecorator" location="${parametes.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition><not><if-empty field="maintHistSeqId"/></not></condition>
