@@ -27,7 +27,32 @@
         <menu-item name="fixedAssetMaints" title="${uiLabelMap.AccountingFixedAssetMaints}"><link target="findFixedAssetMaints"/></menu-item>
         <menu-item name="facility" title="${uiLabelMap.ProductFacility}"><link target="FindFacility"/></menu-item>
     </menu>
-
+    <menu name="MainActionMenu" menu-container-style="button-bar button-style-2" default-selected-style="selected">
+        <menu-item name="NewAsset" title="${uiLabelMap.New} ${uiLabelMap.AccountingFixedAsset}">
+            <condition>
+                <or>
+                    <if-has-permission permission="ASSETMAINT" action="_CREATE"/>
+                </or>
+            </condition>
+            <link target="EditFixedAsset"/>
+        </menu-item>
+        <menu-item name="NewFacility" title="${uiLabelMap.New} ${uiLabelMap.CommonFacility}">
+            <condition>
+                <or>
+                    <if-has-permission permission="ASSETMAINT" action="_CREATE"/>
+                </or>
+            </condition>
+            <link target="EditFacility"/>
+        </menu-item>
+        <menu-item name="NewMaintenance" title="${uiLabelMap.AccountingNewFixedAssetMaint}">
+            <condition>
+                <or>
+                    <if-has-permission permission="ASSETMAINT" action="_CREATE"/>
+                </or>
+            </condition>
+            <link target="EditFixedAssetMaint"/>
+        </menu-item>
+    </menu>
     <menu name="FixedAssetTabBar" extends="FixedAssetTabBar" extends-resource="component://accounting/widget/AccountingMenus.xml">
         <menu-item name="EditProductMaints" title="${uiLabelMap.AssetMaintProductMaint}">
             <condition><not><if-empty field="fixedAsset.instanceOfProductId"/></not></condition>
@@ -111,5 +136,12 @@
             </link>
         </menu-item>
     </menu>
-
+    <menu name="FacilityActionBar" menu-container-style="button-bar button-style-2" default-selected-style="selected">
+        <menu-item name="createNewFacility" title="${uiLabelMap.ProductNewFacility}">
+            <condition>
+                <if-service-permission service-name="facilityGenericPermission" main-action="CREATE"/>
+            </condition>
+            <link target="EditFacility" text="${uiLabelMap.ProductNewFacility}" style="buttontext create"/>
+        </menu-item>
+    </menu>
 </menus>
