@@ -33,7 +33,7 @@ under the License.
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeApp" value="ismgr" global="true"/>
                 <set field="applicationMenuName" value="IsMgrAppBar" global="true"/>
-                <set field="applicationMenuLocation" value="component://assetmaint/widget/ismgr/Menus.xml" global="true"/>
+                <set field="applicationMenuLocation" value="${parameters.mainMenuLocation}" global="true"/>
                 <set field="helpAnchor" from-field="helpAnchor" default-value="_apache_ofbiz_plugins"/>
                 <set field="layoutSettings.companyName" from-field="uiLabelMap.IsMgrCompanyName" global="true"/>
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.IsMgrCompanySubtitle" global="true"/>
@@ -61,7 +61,7 @@ under the License.
                                 <not><if-empty field="fixedAssetId"/></not>
                             </condition>
                             <widgets>
-                                <include-menu name="ComputerHardwareTabBar" location="component://assetmaint/widget/ismgr/Menus.xml"/>
+                                <include-menu name="ComputerHardwareTabBar" location="${parameters.mainMenuLocation}"/>
                             </widgets>
                         </section>
                         <decorator-section-include name="pre-body"/>
@@ -69,7 +69,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <widgets>
-                                <include-menu name="FixedAssetSubTabBar" location="component://assetmaint/widget/ismgr/Menus.xml"/>
+                                <include-menu name="FixedAssetSubTabBar" location="${parameters.mainMenuLocation}"/>
                             </widgets>
                         </section>
                         <section>
@@ -115,7 +115,7 @@ under the License.
                                 <not><if-empty field="fixedAssetId"/></not>
                             </condition>
                             <widgets>
-                                <include-menu name="ComputerHardwareTabBar" location="component://assetmaint/widget/ismgr/Menus.xml"/>
+                                <include-menu name="ComputerHardwareTabBar" location="${parameters.mainMenuLocation}"/>
                             </widgets>
                         </section>
                         <decorator-section-include name="pre-body"/>
@@ -124,7 +124,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <widgets>
-                                <include-menu name="FixedAssetSubTabBar" location="component://assetmaint/widget/ismgr/Menus.xml"/>
+                                <include-menu name="FixedAssetSubTabBar" location="${parameters.mainMenuLocation}"/>
                             </widgets>
                         </section>
                         <section>
