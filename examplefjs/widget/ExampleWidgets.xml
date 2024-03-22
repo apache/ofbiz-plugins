@@ -1,0 +1,574 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<!-- This document serves as an example for Compound Screen Widget feature -->
+<compound-widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:sc="http://ofbiz.apache.org/Site-Conf"
+        xmlns:sm="http://ofbiz.apache.org/Simple-Method"
+        xmlns:wf="http://ofbiz.apache.org/Widget-Form"
+        xmlns:wt="http://ofbiz.apache.org/Widget-Tree"
+        xmlns:wm="http://ofbiz.apache.org/Widget-Menu"
+        xmlns:ws="http://ofbiz.apache.org/Widget-Screen"
+        xsi:noNamespaceSchemaLocation="../../../framework/widget/dtd/compound-widgets.xsd">
+
+    <sc:site-conf>
+      <sc:request-map uri="Example/mgmtPg"                     method="get"><sc:security https="true" auth="true"/><sc:response name="success" type="view" value="ExampleMgmt"/></sc:request-map>
+      <sc:request-map uri="Example/find"                       method="get"><sc:security https="true" auth="true"/><sc:response name="success" type="view" value="FindExamples"/></sc:request-map>
+      <sc:request-map uri="Example/list"                       method="get"><sc:security https="true" auth="true"/><sc:response name="success" type="view" value="ListExamples"/></sc:request-map><!-- with no parameters or _method="GET" -->
+      <sc:request-map uri="Example/create"                     method="get"><sc:security https="true" auth="true"/><sc:response name="success" type="view" value="CreateExample"/></sc:request-map>
+      <sc:request-map uri="Example/edit/{exampleId}"           method="get"><sc:security https="true" auth="true"/><sc:response name="success" type="view" value="EditExample"/></sc:request-map>
+      <sc:request-map uri="Example/show/{exampleId}"           method="get"><sc:security https="true" auth="true"/><sc:response name="success" type="view" value="ShowExample"/></sc:request-map>
+      <sc:request-map uri="Example/summaryAndMenu/{exampleId}" method="get"><sc:security https="true" auth="true"/><sc:response name="success" type="view" value="ExampleDetailsMenu"/></sc:request-map>
+      <sc:request-map uri="Example/detail/{exampleId}"         method="get"><sc:security https="true" auth="true"/><sc:response name="success" type="view" value="ExampleDetail"/></sc:request-map>
+      <sc:request-map uri="Example/detail/{exampleId}/{resource}/{cover}" method="get"><sc:security https="true" auth="true"/><sc:response name="success" type="view" value="ExampleDetail"/></sc:request-map>
+<!--       <sc:request-map uri="Example/data/{exampleId}" method="get"><sc:security https="true" auth="true"/><sc:response name="success" type="view" value="DataExample"/></sc:request-map> TODO -->
+      <sc:request-map uri="Example/change"                     method="post"><sc:security https="true" auth="true"/>
+        <sc:event type="service" invoke="createExample"/>
+        <sc:response name="success" type="request" value="json"/>
+        <sc:response name="error" type="request" value="json"/>
+        <sc:response name="fail" type="request" value="json"/>
+      </sc:request-map>
+      <sc:request-map uri="Example/change/{exampleId}"         method="put"><sc:security https="true" auth="true"/>
+        <sc:event type="service" invoke="updateExample"/>
+        <sc:response name="success" type="request" value="json"/>
+        <sc:response name="error" type="request" value="json"/>
+      </sc:request-map>
+      <sc:request-map uri="Example/change/{exampleId}"         method="delete"><sc:security https="true" auth="true"/>
+        <sc:event type="service" invoke="deleteExample"/>
+        <sc:response name="success" type="request" value="json"/>
+        <sc:response name="error" type="request" value="json"/>
+      </sc:request-map>
+
+      <sc:view-map name="ExampleMgmt"      type="screenfrontjs" page="component://examplefjs/widget/ExampleWidgets.xml#ExampleMgmt"/>
+      <sc:view-map name="FindExamples"     type="screenfrontjs" page="component://examplefjs/widget/ExampleWidgets.xml#FindExamples"/>
+      <sc:view-map name="SelectExample"    type="screenfrontjs" page="component://examplefjs/widget/ExampleWidgets.xml#SelectExample"/>
+      <sc:view-map name="ListExamples"     type="screenfrontjs" page="component://examplefjs/widget/ExampleWidgets.xml#ListExamples"/>
+      <sc:view-map name="ShowExample"      type="screenfrontjs" page="component://examplefjs/widget/ExampleWidgets.xml#ShowExample"/>
+      <sc:view-map name="CreateExample"    type="screenfrontjs" page="component://examplefjs/widget/ExampleWidgets.xml#CreateExample"/>
+      <sc:view-map name="EditExample"      type="screenfrontjs" page="component://examplefjs/widget/ExampleWidgets.xml#EditExample"/>
+      <sc:view-map name="ExampleDetailsMenu" type="screenfrontjs" page="component://examplefjs/widget/ExampleWidgets.xml#ExampleDetailsMenu"/>
+      <sc:view-map name="ExampleDetail"    type="screenfrontjs" page="component://examplefjs/widget/ExampleWidgets.xml#ExampleDetail"/>
+    </sc:site-conf>
+
+
+
+
+    <wm:menus>
+      <!-- Screenlets menus : to update a part of screen, used purpose icons (refresh, edit, add,...), used TabBar Menu style -->
+      <wm:menu name="ExampleDetailsMenu"  extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" >
+        <wm:actions>
+            <wm:set field="areaId" value="detail"/>
+        </wm:actions>
+        <wm:menu-item name="showExample" >
+            <wm:condition>
+                <wm:and>
+                    <wm:not><wm:if-empty field="exampleId"/></wm:not>
+                    <wm:or>
+                        <wm:if-empty field="showExampleMenu"/>
+                        <wm:if-compare field="showExampleMenu" operator="equals" value="Y"/>
+                    </wm:or>
+                </wm:and>
+            </wm:condition>
+            <wm:link text="Show" target="Example/detail/${exampleId}/Example/show" link-type="set-area" target-window="${areaId}">
+<!--             <wm:link text="Show" target="" link-type="set-watcher" target-window="detailExample"> if double watcher-name works for container-->
+<!--                 <wm:parameter param-name="exampleId" from-field="parameters.exampleId"/> -->
+<!--                 <wm:parameter param-name="resource" value="Example"/> -->
+<!--                 <wm:parameter param-name="cover" value="show"/> -->
+                <wm:image src="${iconsPurpose.Details}" title="${uiLabelMap.IconsTooltips_Details}"/>
+            </wm:link>
+        </wm:menu-item>
+        <wm:menu-item name="exampleItems">
+            <wm:condition>
+                <wm:and>
+                    <wm:not><wm:if-empty field="parameters.exampleId"/></wm:not>
+                    <wm:or>
+                        <wm:if-empty field="exampleItemsMenu"/>
+                        <wm:if-compare field="exampleItemsMenu" operator="equals" value="Y"/>
+                    </wm:or>
+                </wm:and>
+            </wm:condition>
+            <wm:link  text="Items" target="Example/detail/${exampleId}/ExampleItem/list" link-type="set-area" target-window="${areaId}">
+                <wm:image src="${iconsPurpose.Items}" title="${uiLabelMap.IconsTooltips_Items}"/>
+            </wm:link>
+        </wm:menu-item>
+        <wm:menu-item name="exampleFeatureAppls">
+            <wm:condition>
+                <wm:and>
+                    <wm:not><wm:if-empty field="parameters.exampleId"/></wm:not>
+                    <wm:or>
+                        <wm:if-empty field="exampleFeatureApplsMenu"/>
+                        <wm:if-compare field="exampleFeatureApplsMenu" operator="equals" value="Y"/>
+                    </wm:or>
+                </wm:and>
+            </wm:condition>
+            <wm:link  text="Features" target="Example/detail/${exampleId}/ExampleFeatureAppl/list" link-type="set-area"  target-window="${areaId}">
+                <wm:image src="${iconsPurpose.ProductFeature}" title="${uiLabelMap.ExampleFeatures}"/>
+            </wm:link>
+        </wm:menu-item>
+        <wm:menu-item name="exampleStatus">
+            <wm:condition>
+                <wm:and>
+                    <wm:not><wm:if-empty field="parameters.exampleId"/></wm:not>
+                    <wm:or>
+                        <wm:if-empty field="exampleStatusMenu"/>
+                        <wm:if-compare field="exampleStatusMenu" operator="equals" value="Y"/>
+                    </wm:or>
+                </wm:and>
+            </wm:condition>
+            <wm:link  text="Status history" target="Example/detail/${exampleId}/Example/status" link-type="set-area"  target-window="${areaId}">
+                <wm:image src="${iconsPurpose.Plan}" title="${uiLabelMap.ExampleStatusHistory}"/>
+            </wm:link>
+        </wm:menu-item>
+      </wm:menu>
+      <wm:menu name="ShowExample" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <wm:actions>
+          <wm:set field="areaId" from-field="parameters.areaId" default-value="${currentAreaId}"/>
+        </wm:actions>
+        <wm:menu-item name="updateExample">
+            <wm:link  target="/Example/edit/${exampleId}" link-type="set-area" target-window="EditExample01"> <!-- target-window is used to give destination id -->
+                <wm:image src="${iconsPurpose.Edit}" title="${uiLabelMap.IconsTooltips_Edit} ${exampleId}"/>
+            </wm:link>
+        </wm:menu-item>
+      </wm:menu>
+
+      <!-- External menus : use for actions witch drive you on another page, not in screenlet header, used in a screen, used purpose icons, used ButtonBar Menu style-->
+      <wm:menu name="ExampleExternalMenu" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <wm:menu-item name="newExample">
+            <wm:link target="Example/create" text="${uiLabelMap.ExampleNewExample}" link-type="layered-modal">
+                <wm:image src="${iconsPurpose.Add}" title="${uiLabelMap.ExampleNewExample}"/>
+            </wm:link>
+        </wm:menu-item>
+        <wm:menu-item name="recapExample">
+            <wm:condition>
+                <wm:not><wm:if-empty field="parameters.exampleId"/></wm:not>
+            </wm:condition>
+            <wm:link target="showPortalPage" text="${uiLabelMap.CommonRecapPage}">
+                <wm:parameter param-name="portalPageId" from-field="recapPageId" value="ExampleRecapJs"/>
+                <wm:parameter param-name="exampleId" from-field="parameters.exampleId"/>
+                <wm:image src="${iconsPurpose.Overview}" title="${uiLabelMap.IconsTooltips_Overview}"/>
+            </wm:link>
+        </wm:menu-item>
+      </wm:menu>
+    </wm:menus>
+
+
+
+
+    <ws:screens>
+      <ws:screen name="ExampleMgmt">
+        <ws:section>
+          <ws:widgets>
+            <ws:decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+              <ws:decorator-section name="body">
+                <ws:column-container>
+                   <ws:column style="md-4">
+                    <ws:include-screen name="FindExamples"/>
+                    <ws:container  id="detailMenu" watcher-name="showExample" auto-update-target="Example/summaryAndMenu/{exampleId}">
+                      <ws:include-screen name="ExampleDetailsMenu"/>
+                    </ws:container>
+                  </ws:column>
+                  <ws:column>
+                    <ws:container id="listExample" watcher-name="listExample" auto-update-target="Example/list">
+                      <ws:include-screen name="ListExamples"/>
+                    </ws:container>
+                    <ws:container id="detail" watcher-name="showExample" auto-update-target="Example/detail/{exampleId}">
+                      <ws:include-screen name="ExampleDetail"/>
+                    </ws:container>
+                  </ws:column>
+                </ws:column-container>
+              </ws:decorator-section>
+            </ws:decorator-screen>
+          </ws:widgets>
+        </ws:section>
+      </ws:screen>
+      <ws:screen name="FindExamples">
+        <ws:section>
+            <ws:widgets>
+              <ws:screenlet title="${uiLabelMap.PageTitleFindExamples}" id="FindExample" collapsible="true">
+                <ws:include-form name="FindExamples" location="component://examplefjs/widget/ExampleWidgets.xml"/>
+              </ws:screenlet>
+            </ws:widgets>
+        </ws:section>
+      </ws:screen>
+
+      <ws:screen name="ListExamples">
+        <ws:section>
+          <ws:actions>
+            <ws:set field="formExampleListName" value="${groovy:
+                if (parameters.listOtherElements == 'items') return 'ListExamplesWithItems';
+                else if (parameters.listOtherElements == 'features') return 'ListExamplesWithFeatures';
+                else if (parameters.listOtherElements == 'status') return 'ListExamplesWithStatus';
+                else return 'ListExamples'}"/>
+          </ws:actions>
+          <ws:widgets>
+            <ws:decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+              <ws:decorator-section name="body">
+                <ws:screenlet title="${uiLabelMap.PageTitleListExamples}" id="ListExampleLayer" collapsible="true" >
+                  <ws:include-grid name="${formExampleListName}" location="component://examplefjs/widget/ExampleWidgets.xml"/>
+                </ws:screenlet>
+              </ws:decorator-section>
+            </ws:decorator-screen>
+          </ws:widgets>
+        </ws:section>
+      </ws:screen>
+      <ws:screen name="ExampleDetailsMenu">
+        <ws:section>
+          <ws:actions>
+            <ws:set field="exampleId" from-field="parameters.exampleId"/>
+            <ws:entity-one entity-name="Example" value-field="example"/>
+          </ws:actions>
+          <ws:widgets>
+            <ws:decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+              <ws:decorator-section name="body">
+                <ws:screenlet title="${groovy: exampleId ? exampleId+ ': '+example.exampleName : uiLabelMap.PageTitleExampleDetailsMenu}" navigation-menu-name="ExampleDetailsMenu" >
+                  <ws:include-menu name="ExampleDetailsMenu" location="component://examplefjs/widget/ExampleWidgets.xml"/>
+                  <ws:include-menu name="ExampleExternalMenu" location="component://examplefjs/widget/ExampleWidgets.xml"/>
+                  <ws:section>
+                      <ws:condition>
+                          <ws:not><ws:if-empty field="exampleId"/></ws:not>
+                      </ws:condition>
+                      <ws:widgets>
+                          <ws:include-form name="ExampleDetailsMenu" location="component://examplefjs/widget/ExampleWidgets.xml"/>
+                      </ws:widgets>
+                  </ws:section>
+                </ws:screenlet>
+              </ws:decorator-section>
+            </ws:decorator-screen>
+          </ws:widgets>
+        </ws:section>
+      </ws:screen>
+      <ws:screen name="ExampleDetail">
+        <ws:section>
+          <ws:condition>
+            <ws:not><ws:if-empty field="parameters.exampleId"/></ws:not>
+          </ws:condition>
+          <ws:actions>
+            <ws:set field="defaultdetailResource" from-field="detExResource" from-scope="user" default-value="Example"/>
+            <ws:set field="resource" from-field="parameters.resource" default-value="${defaultdetailResource}"/>
+            <ws:set field="detExResource" from-field="resource" to-scope="user"/>
+
+            <ws:set field="defaultdetailCover" from-field="detExCover" from-scope="user" default-value="show"/>
+            <ws:set field="cover" from-field="parameters.cover" default-value="${defaultdetailCover}"/>
+            <ws:set field="detExCover" from-field="cover" to-scope="user"/>
+
+            <ws:set field="screenName" value="${groovy:
+            if (resource == 'ExampleItem') return 'ExampleItems';
+                else if (resource == 'ExampleFeatureAppl') return 'ExampleFeatureApplsA';
+                else if (resource == 'Example' &amp;&amp; cover == 'status') return 'ExampleStatus';
+                else return 'ShowExample'}"/>
+            <ws:set field="location" value="${groovy:
+            if ( resource == 'ExampleFeatureAppl') return 'component://examplefjs/widget/ExampleFeatureApplWidgets.xml';
+                else if (resource == 'ExampleItem') return 'component://examplefjs/widget/ExampleItemWidgets.xml';
+                else return 'component://examplefjs/widget/ExampleWidgets.xml'}"/>
+          </ws:actions>
+          <ws:widgets>
+            <ws:container id="${cover}${resource}_show" auto-update-target="${resource}/${cover}/${parameters.exampleId}">
+              <ws:include-screen name="${screenName}" location="${location}"/>
+            </ws:container>
+          </ws:widgets>
+        </ws:section>
+      </ws:screen>
+      <ws:screen name="ShowExample">
+        <ws:section>
+          <ws:condition>
+            <ws:not><ws:if-empty field="parameters.exampleId"/></ws:not>
+          </ws:condition>
+          <ws:actions>
+            <ws:set field="exampleId" from-field="parameters.exampleId"/>
+            <ws:entity-one entity-name="Example" value-field="example"/>
+          </ws:actions>
+          <ws:widgets>
+            <ws:decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+              <ws:decorator-section name="body">
+                <ws:screenlet title="${uiLabelMap.PageTitleShowExample}" navigation-menu-name="ShowExample" >
+                  <ws:include-menu name="ShowExample" location="component://examplefjs/widget/ExampleWidgets.xml"/>
+                  <ws:container id="EditExample01" > <!-- will be used by a set-area to be able to put EditExample-->
+                    <ws:include-form name="ShowExample" location="component://examplefjs/widget/ExampleWidgets.xml"/>
+                  </ws:container>
+                </ws:screenlet>
+              </ws:decorator-section>
+            </ws:decorator-screen>
+          </ws:widgets>
+        </ws:section>
+      </ws:screen>
+      <ws:screen name="CreateExample">
+        <ws:section>
+          <ws:actions>
+            <ws:set field="example"/>
+          </ws:actions>
+          <ws:widgets>
+            <ws:decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+              <ws:decorator-section name="body">
+                <ws:screenlet title="${uiLabelMap.PageTitleCreateExample}" >
+                  <ws:include-form name="EditExample" location="component://examplefjs/widget/ExampleWidgets.xml"/>
+                </ws:screenlet>
+              </ws:decorator-section>
+            </ws:decorator-screen>
+          </ws:widgets>
+        </ws:section>
+      </ws:screen>
+      <ws:screen name="EditExample">
+        <ws:section>
+          <ws:actions>
+            <ws:set field="exampleId" from-field="parameters.exampleId"/>
+            <ws:entity-one entity-name="Example" value-field="example"/>
+          </ws:actions>
+          <ws:widgets>
+            <ws:decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+              <ws:decorator-section name="body">
+                <ws:include-form name="EditExample" location="component://examplefjs/widget/ExampleWidgets.xml"/>
+              </ws:decorator-section>
+            </ws:decorator-screen>
+          </ws:widgets>
+        </ws:section>
+      </ws:screen>
+
+      <ws:screen name="ExampleStatus"> <!-- Portlet ExampleStatus -->
+        <ws:section>
+          <ws:condition>
+            <ws:not><ws:if-empty field="parameters.exampleId"/></ws:not>
+          </ws:condition>
+          <ws:actions>
+              <ws:set field="idDescription" value="for exampleId=${parameters.exampleId}"/>
+          </ws:actions>
+            <ws:widgets>
+              <ws:decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                <ws:decorator-section name="body">
+                  <ws:screenlet title="${uiLabelMap.PageTitleExampleStatus} ${idDescription}" >
+                    <ws:include-grid name="ExampleStatus" location="component://examplefjs/widget/ExampleFjsForms.xml"/>
+                  </ws:screenlet>
+                </ws:decorator-section>
+              </ws:decorator-screen>
+            </ws:widgets>
+        </ws:section>
+      </ws:screen>
+
+    </ws:screens>
+
+
+
+
+    <wf:forms>
+      <wf:form name="FindExamples" type="single" default-entity-name="Example"> <!-- default-entity-name is used to have help text for field -->
+          <wf:field name="_method"><wf:hidden value="GET"/></wf:field>
+          <wf:field name="noConditionFind"><wf:hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></wf:field>
+          <wf:field name="exampleId" title="${uiLabelMap.ExampleExampleId}"><wf:text-find/></wf:field>
+          <wf:field name="exampleName" title="${uiLabelMap.CommonName}"><wf:text-find/></wf:field>
+          <wf:field name="exampleTypeId" title="${uiLabelMap.CommonType}">
+              <wf:drop-down allow-empty="true" current-description="">
+                  <wf:entity-options key-field-name="exampleTypeId" entity-name="ExampleType">
+                      <wf:entity-order-by field-name="description"/>
+                  </wf:entity-options>
+              </wf:drop-down>
+          </wf:field>
+          <wf:field name="statusId" title="${uiLabelMap.CommonStatus}">
+              <wf:drop-down allow-empty="true" current-description="">
+                  <wf:entity-options key-field-name="statusId" entity-name="ExampleStatusItem"/>
+              </wf:drop-down>
+          </wf:field>
+          <wf:field name="listOtherElements">
+              <wf:radio>
+                  <wf:option key="items"/>
+                  <wf:option key="features"/>
+                  <wf:option key="status"/>
+              </wf:radio>
+          </wf:field>
+          <wf:field name="searchButton"><wf:submit/></wf:field>
+          <wf:field name="exportButton" position="2" widget-style="smallSubmit" title=" ">
+              <wf:hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.CommonExport}"/>
+              <wf:on-field-event-update-area event-type="submit" area-id="" area-target="ListExampleExport"/>
+          </wf:field>
+          <wf:on-event-update-area area-target="" event-type="set-watcher" area-id="listExample"/><!-- When parameters-map is empty all form field are sent  -->
+          <wf:on-event-update-area event-type="collapse" area-id="ListExampleLayer" area-target="expand"></wf:on-event-update-area>
+      </wf:form>
+
+      <wf:grid name="ListExamples" list-name="listIt" paginate-target="listExample" default-entity-name="Example" separate-columns="true"
+          odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+          <wf:actions>
+              <wf:service service-name="performFind" result-map="result" result-map-list="listIt">
+                  <wf:field-map field-name="inputFields" from-field="parameters"/>
+                  <wf:field-map field-name="entityName" value="Example"/>
+                  <wf:field-map field-name="orderBy" from-field="parameters.sortField"/>
+                  <wf:field-map field-name="viewIndex" from-field="viewIndex"/>
+                  <wf:field-map field-name="viewSize" from-field="viewSize"/>
+              </wf:service>
+              <wf:set field="sortField" from-field="parameters.sortField"/>
+          </wf:actions>
+          <wf:alt-row-style use-when="'EXST_APPROVED'.equals(statusId)" style="Validate"/>
+          <wf:alt-row-style use-when="'EXST_CANCELLED'.equals(statusId)" style="Warn"/>
+          <wf:field name="exampleId" title="${uiLabelMap.ExampleExampleId}" widget-style="buttontext">
+              <wf:hyperlink description="${exampleId}" target="showExample" also-hidden="false" >
+                  <wf:parameter param-name="exampleId"/>
+              </wf:hyperlink>
+              <wf:on-field-event-update-area event-type="set-watcher" area-id="showExample" area-target="">
+                  <wf:parameter param-name="exampleId"/>
+              </wf:on-field-event-update-area>
+              <wf:on-field-event-update-area event-type="collapse" area-id="ListExampleLayer" area-target="collapse"></wf:on-field-event-update-area>
+              <wf:on-field-event-update-area event-type="collapse" area-id="FindExample" area-target="collapse"></wf:on-field-event-update-area>
+          </wf:field>
+          <wf:field name="exampleName" title="${uiLabelMap.CommonName}" sort-field="true"><wf:display/></wf:field>
+          <wf:field name="exampleTypeId" title="${uiLabelMap.CommonType}"><wf:display-entity entity-name="ExampleType"/></wf:field>
+          <wf:field name="statusId" title="${uiLabelMap.CommonStatus}"><wf:display-entity entity-name="StatusItem"/></wf:field>
+          <wf:field name="description" title="${uiLabelMap.CommonDescription}" sort-field="true"><wf:display/></wf:field>
+          <wf:field name="conditionalDesc" ignore-when="&quot;exampleName&quot;.equals(sortField)" title="my desc"><wf:display description="${description}"/></wf:field>
+      </wf:grid>
+
+      <wf:form name="EditExample" extends="EditExample" extends-resource="component://example/widget/example/ExampleForms.xml"
+            type="single" target="Example/change/{exampleId}" default-map-name="example" default-entity-name="Example">
+          <wf:alt-target use-when="example==null" target="Example/change"/>
+          <wf:field name="_method" use-when="example!=null"><wf:hidden value="PUT"/></wf:field>
+          <wf:field name="statusId" use-when="example!=null" title="${uiLabelMap.CommonStatus}" required-field="true">
+              <wf:drop-down allow-empty="false" current-description="${currentStatus.description}">
+                  <wf:option key="${currentStatus.statusId}" description="${currentStatus.description}"/>
+                  <wf:entity-options entity-name="StatusValidChangeToDetail" key-field-name="statusIdTo" description="${transitionName} (${description})">
+                      <wf:entity-constraint name="statusId" env-name="example.statusId"/>
+                  </wf:entity-options>
+              </wf:drop-down>
+          </wf:field>
+          <wf:field name="back" title=" " position="2" widget-style="buttontext" use-when="example!=null">  <!-- Back button that refresh screenlet with edit area-->
+              <wf:hyperlink description="${uiLabelMap.CommonCancel}" also-hidden="false"/>
+              <wf:on-field-event-update-area area-target="" event-type="refresh-area" area-id="showExample_show"/>
+          </wf:field>
+          <wf:field name="back" title=" " position="2" widget-style="buttontext" use-when="example==null">
+              <wf:hyperlink description="${uiLabelMap.CommonCancel}" also-hidden="false"/>
+              <wf:on-field-event-update-area area-target="" event-type="close-modal" area-id=""/>
+          </wf:field>
+          <wf:on-event-update-area area-target="" event-type="submit" area-id="form"/><!-- area-id not empty otherwise this event is overload by the next one without area-id -->
+          <wf:on-event-update-area area-target="" event-type="close-modal" area-id=""/>
+<!--          <wf:on-event-update-area area-target="" event-type="set-watcher" area-id="showExample"> for all container about example after creation
+              <wf:parameter param-name="exampleId"/>
+              <wf:parameter param-name="redirect" value="exampleId"/>
+          </wf:on-event-update-area>  -->
+          <wf:on-event-update-area area-target="" event-type="refresh-area" area-id="showExample_show"/><!-- for the container of the parent (which have called the edit) -->
+          <wf:on-event-update-area area-target="" event-type="refresh-area" area-id="exampleStatus"/><!--  for the container about status history (if present) -->
+      </wf:form>
+
+      <wf:form name="ShowExample" type="single" default-map-name="example" default-entity-name="Example">
+        <wf:actions>
+          <wf:entity-one entity-name="Example" value-field="example" use-cache="true"/>
+        </wf:actions>
+          <wf:auto-fields-service service-name="updateExample" default-field-type="display"/>
+          <wf:field name="exampleId" title="${uiLabelMap.ExampleExampleId}"><wf:display/></wf:field>
+          <wf:field name="exampleName" title="${uiLabelMap.CommonName}" position="2"><wf:display/></wf:field>
+          <wf:field name="exampleTypeId" title="${uiLabelMap.CommonType}"><wf:display-entity entity-name="ExampleType"/></wf:field>
+          <wf:field name="statusId" title="${uiLabelMap.CommonStatus}" position="2"><wf:display-entity entity-name="StatusItem"/></wf:field>
+          <wf:field name="description" title="${uiLabelMap.CommonDescription}"><wf:display/></wf:field>
+          <wf:field name="exampleDate" ><wf:display type="date"/></wf:field>
+          <wf:field name="longDescription" title="${uiLabelMap.ExampleLongDescription}"><wf:display/></wf:field>
+      </wf:form>
+
+      <wf:form name="SelectExample" type="single" target="showPortalPage" >
+          <wf:field name="portalPageId"><wf:hidden/></wf:field>
+          <wf:field name="exampleId" title="${uiLabelMap.ExampleExampleId}" position="1"><wf:lookup target-form-name="LookupExample"/></wf:field>
+          <wf:field name="searchButton" position="2"><wf:submit/></wf:field>
+          <wf:on-event-update-area area-target="" event-type="set-watcher" area-id="selectExample"/>
+      </wf:form>
+
+      <!-- Form used by a screen : need to include a secondary menu for external page links -->
+      <wf:form name="ExampleDetailsMenu" type="single" default-map-name="example" default-entity-name="Example">
+          <wf:field name="exampleId" title="${uiLabelMap.ExampleExampleId}"><wf:display/></wf:field>
+          <wf:field name="exampleName" title="${uiLabelMap.CommonName}" position="2"><wf:display/></wf:field>
+          <wf:field name="exampleTypeId" title="${uiLabelMap.CommonType}"><wf:display-entity entity-name="ExampleType"/></wf:field>
+          <wf:field name="statusId" title="${uiLabelMap.CommonStatus}" position="2"><wf:display-entity entity-name="StatusItem"/></wf:field>
+          <wf:field name="description" title="${uiLabelMap.CommonDescription}"><wf:display/></wf:field>
+          <wf:field name="exampleDate" ><wf:display type="date"/></wf:field>
+      </wf:form>
+
+
+      <wf:grid name="ExampleStatus" list-name="exampleStatus" default-entity-name="ExampleStatus"
+            odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+          <wf:actions>
+              <wf:set field="exampleId" from-field="parameters.exampleId"/>
+              <wf:entity-condition entity-name="ExampleStatus">
+                  <wf:condition-expr field-name="exampleId" from-field="exampleId"/>
+                  <wf:order-by field-name="statusDate"/>
+                  <wf:order-by field-name="statusId"/>
+              </wf:entity-condition>
+          </wf:actions>
+          <wf:field name="exampleId"><wf:hidden/></wf:field>
+          <wf:field name="statusId" title="${uiLabelMap.CommonStatus}">
+            <wf:display-entity entity-name="StatusItem"/>
+          </wf:field>
+          <wf:field name="statusDate" title="${uiLabelMap.CommonDate}"><wf:display type="date"/></wf:field>
+          <wf:field name="statusEndDate" title="${uiLabelMap.CommonEndDate}"><wf:display type="date"/></wf:field>
+      </wf:grid>
+
+
+      <wf:form name="LookupFindExamples" type="single" target="LookupExample" title="">
+          <wf:auto-fields-entity entity-name="Example" default-field-type="find"/>
+          <wf:field name="lookupResult"><wf:hidden value="Y"/></wf:field>
+          <wf:field name="lookupFieldForm"><wf:hidden value="${parameters.lookupFieldForm}"/></wf:field>
+          <wf:field name="lookupField"><wf:hidden value="${parameters.lookupField}"/></wf:field>
+          <wf:field name="noConditionFind"><wf:hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></wf:field>
+          <wf:field name="exampleTypeId" title="${uiLabelMap.CommonType}">
+              <wf:drop-down allow-empty="true" current-description="">
+                  <wf:entity-options description="${description}" key-field-name="exampleTypeId" entity-name="ExampleType">
+                      <wf:entity-order-by field-name="description"/>
+                  </wf:entity-options>
+              </wf:drop-down>
+          </wf:field>
+          <wf:field name="statusId" title="${uiLabelMap.CommonStatus}">
+              <wf:drop-down allow-empty="true" current-description="">
+                  <wf:entity-options description="${description}" key-field-name="statusId" entity-name="ExampleStatusItem"/>
+              </wf:drop-down>
+          </wf:field>
+          <wf:field name="submitButton" title="${uiLabelMap.CommonFind}"><wf:submit/></wf:field>
+         <wf:on-event-update-area event-type="set-area" area-id="lookup-results" area-target="LookupExample"/>
+         <wf:on-event-update-area event-type="collapse" area-id="LookupFindScreenlet" area-target="collapse"/>
+      </wf:form>
+
+      <wf:form name="LookupListExamples" list-name="listIt" title="" type="list" paginate-target="LookupExample" default-entity-name="Example"
+          separate-columns="true" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+          <wf:actions>
+              <wf:service service-name="performFind" result-map="result" result-map-list="listIt">
+                  <wf:field-map field-name="inputFields" from-field="parameters"/>
+                  <wf:field-map field-name="entityName" from-field="entityName"/>
+                  <wf:field-map field-name="orderBy" from-field="parameters.sortField"/>
+                  <wf:field-map field-name="viewIndex" from-field="viewIndex"/>
+                  <wf:field-map field-name="viewSize" from-field="viewSize"/>
+              </wf:service>
+          </wf:actions>
+          <wf:alt-row-style use-when="&quot;EXST_APPROVED&quot;.equals(statusId)" style="Validate"/>
+          <wf:alt-row-style use-when="&quot;EXST_CANCELLED&quot;.equals(statusId)" style="Warn"/>
+          <wf:field name="exampleId" title="${uiLabelMap.ExampleExampleId}" widget-style="buttontext">
+              <wf:hyperlink description="${exampleId}" also-hidden="false" target-type="plain"
+                         target="javascript:set_value('${exampleId}')"/>
+              <wf:on-field-event-update-area event-type="set-field-in-form" area-id="${parameters.lookupFieldForm}" area-target="${parameters.lookupField}"/>
+              <wf:on-field-event-update-area event-type="close-modal" area-id="" area-target="" /><!-- area-id empty => close all modal -->
+  <!--             <wf:on-field-event-update-area event-type="close-modal" area-id="SelectExample_exampleId" area-target="" /> currently modalId depend on form name and field name where the lookup is done -->
+          </wf:field>
+          <wf:field name="exampleName" title="${uiLabelMap.CommonName}" sort-field="true"><wf:display/></wf:field>
+          <wf:field name="exampleTypeId" title="${uiLabelMap.CommonType}"><wf:display-entity entity-name="ExampleType"/></wf:field>
+          <wf:field name="statusId" title="${uiLabelMap.CommonStatus}"><wf:display-entity entity-name="StatusItem"/></wf:field>
+          <wf:field name="description" title="${uiLabelMap.CommonDescription}" sort-field="true"><wf:display/></wf:field>
+      </wf:form>
+    </wf:forms>
+
+
+
+
+<!--     For memory, but mini-langue is deprecated -->
+    <sm:simple-methods>
+        <sm:simple-method method-name="CompoundWidgetsFunc">
+            <sm:log message="CompoundWidgetsFunc runs" level="info"/>
+        </sm:simple-method>
+    </sm:simple-methods>
+
+</compound-widgets>

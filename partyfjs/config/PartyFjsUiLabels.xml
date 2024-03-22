@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
+    <!-- just the French translation modification-->
+    <property key="CommonSearchOptions">
+        <value xml:lang="ar">خيارات البحث</value>
+        <value xml:lang="cs">Možnosti vyhledávání</value>
+        <value xml:lang="de">Suchoptionen</value>
+        <value xml:lang="en">Search Options</value>
+        <value xml:lang="es">Opciones de búsqueda</value>
+        <value xml:lang="es-CL">Opciones de Búsqueda</value>
+        <value xml:lang="fr">Critères de recherche</value>
+        <value xml:lang="hi-IN">खोजने के लिए विकल्प</value>
+        <value xml:lang="it">Opzioni di ricerca</value>
+        <value xml:lang="ja">検索オプション</value>
+        <value xml:lang="nl">Zoekmogelijkheden</value>
+        <value xml:lang="pt-BR">Opções de pesquisa</value>
+        <value xml:lang="ru">Опции поиска</value>
+        <value xml:lang="vi">Tuỳ chọn tìm kiếm</value>
+        <value xml:lang="zh">搜索选项</value>
+        <value xml:lang="zh-TW">搜尋選項</value>
+    </property>
+
+    <property key="FormFieldTitle_contactName">
+        <value xml:lang="en">Contact Name</value>
+        <value xml:lang="fr">Nom du contact</value>
+    </property>
+    <property key="FormFieldTitle_parentPartyClassificationTypeId">
+        <value xml:lang="en">Parent Party Classification Type Id</value>
+        <value xml:lang="fr">Classification d'acteur parent</value>
+    </property>
+    <property key="FormFieldTitle_partyName">
+        <value xml:lang="en">Name</value>
+        <value xml:lang="fr">Nom</value>
+    </property>
+    <property key="FormFieldTitle_roleTypeGroupIdFrom">
+        <value xml:lang="en">Role Type Group From</value>
+        <value xml:lang="fr">Groupe de Rôle d'origine</value>
+    </property>
+    <property key="FormFieldTitle_roleTypeGroupIdTo">
+        <value xml:lang="en">Role Type Group To</value>
+        <value xml:lang="fr">Groupe de Rôle de destination</value>
+    </property>
+    <property key="PageTitleListParties">
+        <value xml:lang="en">Party List</value>
+        <value xml:lang="fr">Liste des acteurs</value>
+    </property>
+    <property key="PageTitlePartyRelationTos">
+        <value xml:lang="en">Party Lists to which it is associated</value>
+        <value xml:lang="fr">Liste des acteurs auxquels il est associés</value>
+    </property>
+    <property key="PageTitlePartyUserLogins">
+        <value xml:lang="de">Benutzername(n)</value>
+        <value xml:lang="en">UserLogins management</value>
+        <value xml:lang="es">Usuario(s)</value>
+        <value xml:lang="fr">Gestion des identifiants de connexion</value>
+        <value xml:lang="hi-IN">उपयोगकर्ता नाम(ओं)</value>
+        <value xml:lang="it">Nome Utente(i)</value>
+        <value xml:lang="nl">Gebruikersnamen</value>
+        <value xml:lang="pt-BR">Nome(s) de usuário</value>
+        <value xml:lang="pt-PT">Utilizador(es)</value>
+        <value xml:lang="ro">Nume Utilizator(i)</value>
+        <value xml:lang="ru">Имя пользователя (ей)</value>
+        <value xml:lang="th">ชื่อผู้ใช้</value>
+        <value xml:lang="zh">用户名</value>
+        <value xml:lang="zh-TW">使用者名稱</value>
+    </property>
+    <property key="PageTitleSelectParty">
+        <value xml:lang="en">Select one Party</value>
+        <value xml:lang="fr">Sélection d'un acteur</value>
+    </property>
+    <property key="PartyRoleTypeParent">
+        <value xml:lang="en">Parent Role Type Id</value>
+        <value xml:lang="fr">Rôle Père</value>
+    </property>
+    <property key="PartySelectMainRole">
+        <value xml:lang="en">Select the Parent Role</value>
+        <value xml:lang="fr">Sélectionnez le rôle père</value>
+    </property>
+    <property key="CreateNewFaxNumber">
+        <value xml:lang="en">Add a phone number</value>
+        <value xml:lang="fr">Ajouter un fax</value>
+    </property>
+    <property key="CreateNewMailAddress">
+        <value xml:lang="en">Add an Email address</value>
+        <value xml:lang="fr">Ajouter une Adresse mail</value>
+    </property>
+    <property key="CreateNewMobileNumber">
+        <value xml:lang="en">Add a phone number</value>
+        <value xml:lang="fr">Ajouter un portable</value>
+    </property>
+    <property key="CreateNewPostalAddress">
+        <value xml:lang="en">Add a postal Address</value>
+        <value xml:lang="fr">Ajouter une Adresse postale</value>
+    </property>
+    <property key="CreateNewTelNumber">
+        <value xml:lang="en">Add a phone number</value>
+        <value xml:lang="fr">Ajouter un num.tel.</value>
+    </property>
+    <property key="PartyLookupPartyByRoleType">
+        <value xml:lang="en">Lookup Party by role</value>
+        <value xml:lang="fr">Recherche d'acteurs selon le rôle</value>
+    </property>
+    <property key="PartyLookupPartyByRoleTypeGroup">
+        <value xml:lang="en">Lookup Party by role group</value>
+        <value xml:lang="fr">Recherche d'acteurs selon le groupe de rôle</value>
+    </property>
+    <property key="PartyLookupPartyRoles">
+        <value xml:lang="en">Lookup Party roles</value>
+        <value xml:lang="fr">Recherche de rôles d'un acteur</value>
+    </property>
+    <property key="Title_SupplierList">
+        <value xml:lang="fr">Liste des fournisseurs</value>
+        <value xml:lang="en">Suppliers list</value>
+    </property>
+    <property key="Title_ConsumerList">
+        <value xml:lang="fr">Liste des consommateurs</value>
+        <value xml:lang="en">Consumer list</value>
+    </property>
+    <property key="TitleSelectCustomer">
+        <value xml:lang="en">Select one customer</value>
+        <value xml:lang="fr">Sélectionner un consommateur</value>
+    </property>
+    <property key="TitleSelectSupplier">
+        <value xml:lang="en">Select one supplier</value>
+        <value xml:lang="fr">Sélectionner un fournisseur</value>
+    </property>
+    <property key="EftAccountBic">
+        <value xml:lang="en">BIC</value>
+        <value xml:lang="fr">BIC</value>
+    </property>
+    <property key="EftAccountIban">
+        <value xml:lang="en">IBAN</value>
+        <value xml:lang="fr">IBAN</value>
+    </property>
+</resource>

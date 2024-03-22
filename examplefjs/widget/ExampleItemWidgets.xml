@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<!-- This document serves as an example for Compound Screen Widget feature -->
+<compound-widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:sc="http://ofbiz.apache.org/Site-Conf"
+        xmlns:sm="http://ofbiz.apache.org/Simple-Method"
+        xmlns:wf="http://ofbiz.apache.org/Widget-Form"
+        xmlns:wt="http://ofbiz.apache.org/Widget-Tree"
+        xmlns:wm="http://ofbiz.apache.org/Widget-Menu"
+        xmlns:ws="http://ofbiz.apache.org/Widget-Screen"
+        xsi:noNamespaceSchemaLocation="../../../framework/widget/dtd/compound-widgets.xsd">
+
+  <sc:site-conf>
+    <sc:request-map uri="ExampleItem/list/{exampleId}"           method="get"><sc:security https="true" auth="true"/><sc:response name="success" type="view" value="ExampleItems"/></sc:request-map>
+    <sc:request-map uri="ExampleItem/create/{exampleId}"         method="get"><sc:security https="true" auth="true"/><sc:response name="success" type="view" value="EditExampleItem"/></sc:request-map>
+    <sc:request-map uri="ExampleItem/edit/{exampleId}/{exampleItemSeqId}"   method="get">
+        <sc:security https="true" auth="true"/><sc:response name="success" type="view" value="EditExampleItem"/></sc:request-map>
+    <sc:request-map uri="ExampleItem/change"                     method="post"><sc:security https="true" auth="true"/>
+        <sc:event type="service" invoke="createExampleItem"/>
+        <sc:response name="success" type="request" value="json"/>
+        <sc:response name="error" type="request" value="json"/>
+        <sc:response name="fail" type="request" value="json"/>
+    </sc:request-map>
+    <sc:request-map uri="ExampleItem/change/{exampleId}/{exampleItemSeqId}" method="put"><sc:security https="true" auth="true"/>
+        <sc:event type="service" invoke="updateExampleItem"/>
+        <sc:response name="success" type="request" value="json"/>
+        <sc:response name="error" type="request" value="json"/>
+    </sc:request-map>
+    <sc:request-map uri="ExampleItem/change/{exampleId}/{exampleItemSeqId}" method="delete"><sc:security https="true" auth="true"/>
+        <sc:event type="service" invoke="deleteExampleItem"/>
+        <sc:response name="success" type="request" value="json"/>
+        <sc:response name="error" type="request" value="json"/>
+    </sc:request-map>
+
+    <sc:view-map name="EditExampleItem"   type="screenfrontjs" page="component://examplefjs/widget/ExampleItemWidgets.xml#EditExampleItem"/>
+    <sc:view-map name="ExampleItems"      type="screenfrontjs" page="component://examplefjs/widget/ExampleItemWidgets.xml#ExampleItems"/>
+  </sc:site-conf>
+
+
+
+
+  <wm:menus>
+    <wm:menu name="ExampleItems" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <wm:menu-item name="addExampleItem">
+            <wm:link  text="Add" target="ExampleItem/create/${parameters.exampleId}" link-type="set-area" target-window="ExampleItem01"> <!-- target-window is used to give which area will be update -->
+                <wm:image src="${iconsPurpose.Add}" title="${uiLabelMap.IconsTooltips_Add}"/>
+            </wm:link>
+        </wm:menu-item>
+    </wm:menu>
+  </wm:menus>
+
+
+
+
+  <ws:screens>
+    <ws:screen name="EditExampleItem">
+      <ws:section>
+        <ws:actions>
+          <ws:set field="exampleId" from-field="parameters.exampleId"/>
+          <ws:set field="exampleItemSeqId" from-field="parameters.exampleItemSeqId"/>
+          <ws:entity-one value-field="exampleItem" entity-name="ExampleItem"/>
+        </ws:actions>
+        <ws:widgets>
+          <ws:decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+            <ws:decorator-section name="body">
+              <ws:include-form name="EditExampleItem" location="component://examplefjs/widget/ExampleItemWidgets.xml"/>
+            </ws:decorator-section>
+          </ws:decorator-screen>
+        </ws:widgets>
+      </ws:section>
+    </ws:screen>
+
+    <ws:screen name="ExampleItems">
+      <ws:section>
+        <ws:condition>
+          <ws:not><ws:if-empty field="parameters.exampleId"/></ws:not>
+        </ws:condition>
+        <ws:actions>
+            <ws:set field="idDescription" value="for exampleId=${parameters.exampleId}"/>
+        </ws:actions>
+          <ws:widgets>
+            <ws:decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+              <ws:decorator-section name="body">
+                <ws:screenlet title="${uiLabelMap.PageTitleExampleItems} ${idDescription}" navigation-menu-name="ExampleItems" >
+                  <ws:include-menu name="ExampleItems" location="component://examplefjs/widget/ExampleItemWidgets.xml"/>
+                  <ws:container id="ExampleItem01" /> <!-- will be used by add and edit exampleItem with a set-area -->
+                  <ws:include-grid name="ExampleItems" location="component://examplefjs/widget/ExampleItemWidgets.xml"/>
+                </ws:screenlet>
+              </ws:decorator-section>
+            </ws:decorator-screen>
+          </ws:widgets>
+      </ws:section>
+    </ws:screen>
+  </ws:screens>
+
+
+
+
+  <wf:forms>
+    <wf:grid name="ExampleItems" list-name="exampleItems" default-entity-name="ExampleItem"
+          odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <wf:actions>
+            <wf:set field="exampleId" from-field="parameters.exampleId"/>
+            <wf:entity-condition entity-name="ExampleItem">
+                <wf:condition-expr field-name="exampleId" from-field="exampleId"/>
+                <wf:order-by field-name="exampleItemSeqId"/>
+            </wf:entity-condition>
+        </wf:actions>
+        <wf:field name="exampleId"><wf:hidden/></wf:field>
+        <wf:field name="exampleItemSeqId" title="${uiLabelMap.CommonItem}">
+            <wf:hyperlink description="${exampleItemSeqId}" also-hidden="false"
+                 link-type="set-area" target="ExampleItem/edit/${exampleId}/${exampleItemSeqId}" target-window="ExampleItem01"/>
+        </wf:field>
+        <wf:field name="description"><wf:display size="30"/></wf:field>
+        <wf:field name="amount"><wf:display/></wf:field>
+        <wf:field name="amountUomId" title="${uiLabelMap.CommonUom}" >
+          <wf:display-entity entity-name="Uom" key-field-name="uomId" description="${description} (${abbreviation})" size="20"/>
+        </wf:field>
+        <wf:field name="deleteLink" title=" " widget-style="buttontext">
+            <wf:hyperlink also-hidden="false" image-location="${iconsPurpose.Delete}" image-title="${uiLabelMap.IconsTooltips_Delete}"
+                       request-confirmation="true" confirmation-message="${uiLabelMap.CommonConfirmDelete} ${exampleId}">
+            </wf:hyperlink>
+            <wf:on-field-event-update-area event-type="delete" area-id="" area-target="ExampleItem/change/${exampleId}/${exampleItemSeqId}"/>
+            <wf:on-field-event-update-area event-type="refresh-area" area-id="listExampleItem_show" area-target=""/>
+        </wf:field>
+    </wf:grid>
+    <wf:form name="EditExampleItem" type="single" target="ExampleItem/change" title="" default-map-name="exampleItem">
+        <wf:alt-target use-when="exampleItem!=null" target="ExampleItem/change/${exampleId}/${exampleItemSeqId}"/>
+        <wf:auto-fields-service service-name="createExampleItem"/>
+        <wf:field name="_method" use-when="exampleItem!=null"><wf:hidden value="PUT"/></wf:field>
+        <wf:field name="exampleId"><wf:hidden/></wf:field>
+        <wf:field name="exampleItemSeqId" use-when="exampleItem==null"><wf:ignored/><!-- this will be auto-sequenced --></wf:field>
+        <wf:field name="exampleItemSeqId" use-when="exampleItem!=null"><wf:display/></wf:field><!-- appears after all fields from auto service (doesn't appear without it) -->
+        <wf:field name="amountUomId" title="${uiLabelMap.CommonUom}">
+            <wf:drop-down allow-empty="true">
+                <wf:entity-options entity-name="UomAndType" key-field-name="uomId" description="${typeDescription}: ${description} (${abbreviation})">
+                    <wf:entity-order-by field-name="typeDescription"/>
+                    <wf:entity-order-by field-name="description"/>
+                </wf:entity-options>
+            </wf:drop-down>
+        </wf:field>
+        <wf:field name="submitButton" title="${context.exampleItem == null ? uiLabelMap.CommonAdd : uiLabelMap.CommonSave}">
+           <wf:submit/>
+        </wf:field>
+        <wf:field name="back" title=" " position="2" widget-style="buttontext">  <!-- Back button that refresh portlet with edit area-->
+            <wf:hyperlink description="${uiLabelMap.CommonBack}" also-hidden="false"/>
+            <wf:on-field-event-update-area area-target="" event-type="refresh-area" area-id="listExampleItem_show"/>
+        </wf:field>
+        <wf:on-event-update-area area-target="" event-type="submit" area-id="" />
+        <wf:on-event-update-area area-target="" event-type="refresh-area" area-id="listExampleItem_show"/>
+    </wf:form>
+  </wf:forms>
+
+
+
+</compound-widgets>

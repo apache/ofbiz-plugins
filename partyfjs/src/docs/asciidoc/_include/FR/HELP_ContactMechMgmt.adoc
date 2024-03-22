@@ -1,0 +1,30 @@
+
+= Portlet de gestion des coordonnées.
+
+Cette portlet permet d'afficher les coordonnées d'un objet metier, acteur, magasin, commande, ...
+
+Selon le type de coordonnée (adresse postal, mail, téléphone, ...), l'affichage et la saisie diffère.
+Dans tous les cas, il est possible de préciser le but de la coordonnée (adresse de facturation, et/ou de livraison, et/ou ...)
+
+Une coordonnée peut être associé à un ou plusieurs objet métier, par exemple l'adresse postal de livraison d'un client sera aussi associé à ses différentes commandes ou devis.
+Il est donc trés rare de supprimer une coordonnée, il est par contre, possible de  l'invalider, en effet chaque coordonnée posséde des date de validité (de .. jusqu'a ..)
+
+Par défaut seul les coordonnées valide sont affiché et un boutton permet d'afficher l'historique
+
+&nbsp;
+
+== Les paramètre de la Portlet
+
+* Paramétrage du champ N° de téléphone : ce champ peut être compéter par 3 sous-champ complémentaire (pay, région, ext), chacun peut ou non etre utilisé.
+* Il est possible de faire apparaitre ou chacune des options du menu d'ajout
+* Il est possible, pour chacun des types d'ajout de donner un but qui sera utilisé lors de la création
+
+
+== Règles de Securité
+
+* aucune au niveau de la portlet, uniquement celle au niveau du service de mise à jours (et celles du composant)
+
+
+== Remarques Techniques
+
+Cette portlet fonctionne si elle reçoit un partyId, ou un facilityId ou un orderId ou un workEffortId

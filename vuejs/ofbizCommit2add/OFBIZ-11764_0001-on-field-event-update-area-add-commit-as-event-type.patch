@@ -1,0 +1,39 @@
+From 576edb7eca1869909c8ec118fe6b16f5d5fbd505 Mon Sep 17 00:00:00 2001
+From: holivier <holivier@apache.org>
+Date: Wed, 27 May 2020 10:59:30 +0200
+Subject: [PATCH 12/22] Improved: on-field-event-update-area: add commit as
+ event-type (OFBIZ-11764)
+
+it's a click event, when click the form is submitted
+---
+ framework/widget/dtd/widget-form.xsd                                     | 1 +
+ .../main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java   | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/framework/widget/dtd/widget-form.xsd b/framework/widget/dtd/widget-form.xsd
+index fe57b0dc47..f171869dff 100644
+--- a/framework/widget/dtd/widget-form.xsd
++++ b/framework/widget/dtd/widget-form.xsd
+@@ -1581,6 +1581,7 @@ under the License.
+                         </xs:enumeration>
+                         <xs:enumeration value="set-watcher" />
+                         <xs:enumeration value="refresh-watcher" />
++                        <xs:enumeration value="submit" />
+                     </xs:restriction>
+                 </xs:simpleType>
+             </xs:attribute>
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java
+index cfcba807eb..04cac8497a 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java
+@@ -222,6 +222,7 @@ public class ModelFormFieldBuilder {
+                         || "refresh-area".equals(updateArea.getEventType())
+                         || "set-watcher".equals(updateArea.getEventType())
+                         || "refresh-watcher".equals(updateArea.getEventType())
++                        || "submit".equals(updateArea.getEventType())
+                         ) {
+                     onClickUpdateAreas.add(updateArea);
+                 }
+-- 
+2.11.0
+
