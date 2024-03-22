@@ -18,11 +18,8 @@
 */
 package org.apache.ofbiz.birt.order
 
-import org.apache.ofbiz.base.util.UtilDatetime
-import java.sql.*
-
 productStoreId = parameters.productStoreId
-DateTime = UtilDateTime.nowTimestamp()
+DateTime = org.apache.ofbiz.base.util.UtilDateTime.nowTimestamp()
 String DateStr = DateTime
 DateDay = DateStr.substring(0,10)
 DateMonth = DateStr.substring(5,7)
