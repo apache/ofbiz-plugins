@@ -31,7 +31,7 @@
                 <set field="layoutSettings.companyName" from-field="uiLabelMap.EbayStoreCompanyName" global="true"/>
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.EbayStoreApplication" global="true"/>
                 <set field="applicationMenuName" value="EbayStoreAppBar" global="true"/>
-                <set field="applicationMenuLocation" value="component://ebaystore/widget/EbayStoreMenus.xml" global="true"/>
+                <set field="applicationMenuLocation" value="${parameters.mainMenuLocation}" global="true"/>
                 <set field="applicationTitle" from-field="uiLabelMap.EbayStoreApplication" global="true"/>
                 <set field="helpAnchor" from-field="helpAnchor" default-value="_ebay_store"/>
             </actions>
@@ -73,7 +73,7 @@
                                         <widgets>
                                            <include-form name="EbayAccountSelection" location="component://ebaystore/widget/EbayStoreForms.xml"/>
                                               <label text="${uiLabelMap.EbayAccount} : ${person.firstName} ${person.lastName}" style="h1"></label>
-                                            <include-menu name="EbayStoreFunctionTabBar"  location="component://ebaystore/widget/EbayStoreMenus.xml"/>
+                                            <include-menu name="EbayStoreFunctionTabBar"  location="${parameters.mainMenuLocation}"/>
                                         </widgets>
                                     </section>
                                 </container>
@@ -131,7 +131,7 @@
                     <decorator-section name="body">
                         <section>
                             <widgets>
-                                <include-menu name="EbaySellingManagerTabBar" location="component://ebaystore/widget/EbayStoreMenus.xml"/>
+                                <include-menu name="EbaySellingManagerTabBar" location="${parameters.mainMenuLocation}"/>
                                 <decorator-section-include name="body"/>
                             </widgets>
                         </section>
@@ -150,7 +150,7 @@
                     <decorator-section name="body">
                         <section>
                             <widgets>
-                                <include-menu name="EbayAccountTabBar" location="component://ebaystore/widget/EbayStoreMenus.xml"/>
+                                <include-menu name="EbayAccountTabBar" location="${parameters.mainMenuLocation}"/>
                                 <decorator-section-include name="body"/>
                             </widgets>
                         </section>

@@ -56,7 +56,7 @@
                             </condition>
                             <widgets>
                                 <screenlet title="${uiLabelMap.EbayFeedback}">
-                                    <include-menu name="EbayFeedbackTabBar" location="component://ebaystore/widget/EbayStoreMenus.xml"/>
+                                    <include-menu name="EbayFeedbackTabBar" location="${parameters.mainMenuLocation}"/>
                                     <decorator-section-include name="body"/>
                                 </screenlet>
                             </widgets>
@@ -118,7 +118,7 @@
                     <decorator-section name="body">
                         <screenlet>
                             <screenlet title="${uiLabelMap.EbayLeaveFeedback}">
-                                <include-menu name="EbayFeedbackSubTabBar" location="component://ebaystore/widget/EbayStoreMenus.xml"/>
+                                <include-menu name="EbayFeedbackSubTabBar" location="${parameters.mainMenuLocation}"/>
                                 <platform-specific>
                                     <html><html-template multi-block="true" location="component://ebaystore/template/feedback/LeaveFeedback.ftl"/></html>
                                 </platform-specific>
@@ -146,7 +146,7 @@
                             </condition>
                             <widgets>
                                 <screenlet title="${uiLabelMap.EbayFeedback}">
-                                    <include-menu name="EbayFeedbackTabBar" location="component://ebaystore/widget/EbayStoreMenus.xml"/>
+                                    <include-menu name="EbayFeedbackTabBar" location="${parameters.mainMenuLocation}"/>
                                     <decorator-section-include name="body"/>
                                 </screenlet>
                             </widgets>
@@ -206,7 +206,7 @@
                     <decorator-section name="body">
                         <screenlet>
                             <screenlet title="${uiLabelMap.EbayLeaveFeedback}">
-                                <include-menu name="EbayFeedbackSubTabBar" location="component://ebaystore/widget/EbayStoreMenus.xml"/>
+                                <include-menu name="EbayFeedbackSubTabBar" location="${parameters.mainMenuLocation}"/>
                                 <platform-specific>
                                     <html><html-template multi-block="true" location="component://ebaystore/template/feedback/LeaveFeedback.ftl"/></html>
                                 </platform-specific>
