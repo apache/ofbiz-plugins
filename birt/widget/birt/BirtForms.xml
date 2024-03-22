@@ -139,7 +139,7 @@ under the License.
         <field name="masterContentName" sort-field="true" map-name="masterContent" entry-name="contentName"><display /></field>
         <field name="statusId" sort-field="true"><display-entity entity-name="StatusItem" /></field>
         <field name="description" sort-field="true"><display/></field>
-        <field name="manageLink"><include-menu name="ListFlexibleBirtAction" location="component://birt/widget/birt/BirtMenus.xml"/></field>
+        <field name="manageLink"><include-menu name="ListFlexibleBirtAction" location="${parameters.mainMenuLocation}"/></field>
   </form>
 
 </forms>
