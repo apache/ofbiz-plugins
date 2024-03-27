@@ -30,7 +30,7 @@ under the License.
             <widgets>
                 <decorator-screen name="permission-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <include-menu name="EbaySubTabBar" location="component://ebaystore/widget/EbayStoreMenus.xml"/>
+                        <include-menu name="EbaySubTabBar" location="${parameters.mainMenuLocation}"/>
                         <screenlet title="Ebay Accounts">
                             <include-form name="EbayAccountList" location="component://ebaystore/widget/EbayStoreForms.xml"/>
                         </screenlet>
