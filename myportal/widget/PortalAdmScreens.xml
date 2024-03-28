@@ -95,7 +95,7 @@ under the License.
                             <actions><set field="targetPortalPage" value="updatePortalPageAdm"/></actions>
                             <widgets>
                                 <screenlet title="${uiLabelMap.CommonPortalEditPage}" navigation-menu-name="PortalPageAdmin">
-                                    <include-menu name="PortalPageAdmin" location="component:/myportal/widget/MyPortalMenus.xml"/>
+                                    <include-menu name="PortalPageAdmin" location="${parameters.mainMenuLocation}"/>
                                     <include-form name="EditPortalPage" location="component://myportal/widget/PortalAdmForms.xml"/>
                                 </screenlet>
                             </widgets>
