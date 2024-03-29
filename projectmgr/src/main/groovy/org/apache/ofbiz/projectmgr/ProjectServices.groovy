@@ -25,7 +25,7 @@ Map createProject() {
     Map result = success()
     wepaInMap = [:]
     emailInMap = [:]
-    if (parameters.templateId != null) {
+    if (parameters.templateId) {
         parameters.projectId = parameters.templateId
         pc = run service: 'copyProject', with: parameters
         workEffortId = pc.workEffortId
@@ -36,13 +36,13 @@ Map createProject() {
     }
     wepaInMap.workEffortId = workEffortId
     // create project role for the internal organisation
-    if (parameters.organizationPartyId != null) {
+    if (parameters.organizationPartyId) {
         wepaInMap.partyId = parameters.organizationPartyId
         wepaInMap.roleTypeId = 'INTERNAL_ORGANIZATIO'
         wepa = run service: 'createWorkEffortPartyAssignment', with: wepaInMap
     }
     // create project role for the client
-    if (parameters.clientBillingPartyId != null) {
+    if (parameters.clientBillingPartyId) {
         wepaInMap.partyId = parameters.clientBillingPartyId
         wepaInMap.roleTypeId = 'CLIENT_BILLING'
         wepa = run service: 'createWorkEffortPartyAssignment', with: wepaInMap
@@ -50,7 +50,7 @@ Map createProject() {
     // create email address for the project
     emailInMap.contactMechTypeId = 'EMAIL_ADDRESS'
     emailAddress = parameters.emailAddress
-    if (emailAddress != null) {
+    if (emailAddress) {
         emailInMap.emailAddress = emailAddress
     } else {
         emailAddress = 'project.' + workEffortId + '@example.com'
