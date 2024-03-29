@@ -18,46 +18,42 @@
 */
 package org.apache.ofbiz.projectmgr
 
-import org.apache.ofbiz.base.util.Debug
-import org.apache.ofbiz.service.ModelService
-import org.apache.ofbiz.service.ServiceUtil
-
 /**
 * service to create project
 */
-def createProject() {
+Map createProject() {
     Map result = success()
     wepaInMap = [:]
     emailInMap = [:]
-    if(parameters.templateId != null) {
+    if (parameters.templateId != null) {
         parameters.projectId = parameters.templateId
         pc = run service: 'copyProject', with: parameters
         workEffortId = pc.workEffortId
     } else {
-        parameters.currentStatusId ="PRJ_ACTIVE"
+        parameters.currentStatusId = 'PRJ_ACTIVE'
         we = run service: 'createWorkEffort', with: parameters
         workEffortId = we.workEffortId
     }
     wepaInMap.workEffortId = workEffortId
     // create project role for the internal organisation
-    if(parameters.organizationPartyId) {
+    if (parameters.organizationPartyId != null) {
         wepaInMap.partyId = parameters.organizationPartyId
-        wepaInMap.roleTypeId = "INTERNAL_ORGANIZATIO"
+        wepaInMap.roleTypeId = 'INTERNAL_ORGANIZATIO'
         wepa = run service: 'createWorkEffortPartyAssignment', with: wepaInMap
     }
     // create project role for the client
-    if(parameters.clientBillingPartyId) {
+    if (parameters.clientBillingPartyId != null) {
         wepaInMap.partyId = parameters.clientBillingPartyId
         wepaInMap.roleTypeId = 'CLIENT_BILLING'
-         wepa = run service: 'createWorkEffortPartyAssignment', with: wepaInMap
+        wepa = run service: 'createWorkEffortPartyAssignment', with: wepaInMap
     }
     // create email address for the project
-    emailInMap.contactMechTypeId = "EMAIL_ADDRESS"
+    emailInMap.contactMechTypeId = 'EMAIL_ADDRESS'
     emailAddress = parameters.emailAddress
-    if(emailAddress != null) {
+    if (emailAddress != null) {
         emailInMap.emailAddress = emailAddress
     } else {
-        emailAddress = "project." + workEffortId + "@example.com"
+        emailAddress = 'project.' + workEffortId + '@example.com'
         emailInMap.emailAddress = emailAddress
     }
     email = run service: 'createEmailAddress', with: emailInMap
@@ -65,7 +61,7 @@ def createProject() {
     wecmInMap = [:]
     wecmInMap.workEffortId = workEffortId
     wecmInMap.contactMechId = email.contactMechId
-    wecmInMap.contactMechTypeId = "EMAIL_ADDRESS"
+    wecmInMap.contactMechTypeId = 'EMAIL_ADDRESS'
     wecmInMap.infoString = emailAddress
     weContactMech = run service: 'createWorkEffortContactMech', with: wecmInMap
     result.put('projectId', workEffortId)
