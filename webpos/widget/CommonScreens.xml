@@ -38,7 +38,7 @@ under the License.
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.WebPosCompanySubtitle" global="true"/>
                 <set field="activeApp" value="webpos" global="true"/>
                 <set field="applicationMenuName" value="WebPosAppBar" global="true"/>
-                <set field="applicationMenuLocation" value="component://webpos/widget/WebPosMenus.xml" global="true"/>
+                <set field="applicationMenuLocation" value="${parameters.mainMenuLocation}" global="true"/>
                 <set field="applicationTitle" from-field="uiLabelMap.WebPosMenuMain" global="true"/>
                 <set field="helpAnchor" from-field="helpAnchor" default-value="_apache_ofbiz_plugins"/>
                 <set field="layoutSettings.javaScripts[]" value="/webpos/images/js/jquery.hotkeys-0.7.9.min.js" global="true"/>
@@ -121,7 +121,7 @@ under the License.
                     <decorator-section name="pre-body">
                         <section>
                             <widgets>
-                                <include-menu name="ManagerTabBar" location="component://webpos/widget/WebPosMenus.xml"/>
+                                <include-menu name="ManagerTabBar" location="${parameters.mainMenuLocation}"/>
                             </widgets>
                         </section>
                     </decorator-section>
