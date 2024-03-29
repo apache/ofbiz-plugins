@@ -21,46 +21,6 @@
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="http://ofbiz.apache.org/Simple-Method" xsi:schemaLocation="http://ofbiz.apache.org/Simple-Method http://ofbiz.apache.org/dtds/simple-methods.xsd">
 
-    <simple-method method-name="createProject" short-description="Create a project">
-        <if-not-empty field="parameters.templateId">
-            <set field="parameters.projectId" from-field="parameters.templateId"/>
-            <call-simple-method method-name="copyProject"/>
-            <else>
-                <set field="parameters.currentStatusId" value="PRJ_ACTIVE"/>
-                <call-simple-method method-name="createWorkEffort" xml-resource="component://workeffort/minilang/workeffort/WorkEffortSimpleServices.xml"/>
-            </else>
-        </if-not-empty>
-        <set field="parameters.workEffortId" from-field="newEntity.workEffortId"/>
-        <if-not-empty field="parameters.organizationPartyId">
-            <set field="updProjectRole.newPartyId" from-field="parameters.organizationPartyId"/>
-            <set field="updProjectRole.roleTypeId" value="INTERNAL_ORGANIZATIO"/>
-            <call-simple-method method-name="updProjectRole"/>
-        </if-not-empty>
-        <if-not-empty field="parameters.clientBillingPartyId">
-            <set field="updProjectRole.newPartyId" from-field="parameters.clientBillingPartyId"/>
-            <set field="updProjectRole.roleTypeId" value="CLIENT_BILLING"/>
-            <call-simple-method method-name="updProjectRole"/>
-        </if-not-empty>
-        <if-not-empty field="parameters.emailAddress">
-            <if-validate-method field="parameters.emailAddress" method="isEmail">
-                <else><add-error><fail-property resource="PartyUiLabels" property="PartyEmailAddressNotFormattedCorrectly"/></add-error></else>
-            </if-validate-method>
-            <check-errors/>
-            
-            <!-- create new work effort's e-mail address -->
-            <set field="emailAddressIn.emailAddress" from-field="parameters.emailAddress"/>
-            <set field="emailAddressIn.contactMechTypeId" value="EMAIL_ADDRESS"/>
-            <call-service service-name="createEmailAddress" in-map-name="emailAddressIn">
-                <result-to-field result-name="contactMechId"/>
-            </call-service>
-            <set field="workEffortContactMechIn.workEffortId" from-field="parameters.workEffortId"/>
-            <set field="workEffortContactMechIn.contactMechId" from-field="contactMechId"/>
-            <set field="workEffortContactMechIn.contactMechTypeId" value="EMAIL_ADDRESS"/>
-            <set field="workEffortContactMechIn.infoString" from-field="parameters.emailAddress"/>
-            <call-service service-name="createWorkEffortContactMech" in-map-name="workEffortContactMechIn"/>
-        </if-not-empty>
-    </simple-method>
-
     <simple-method method-name="updateProject" short-description="Update a project">
         <set-service-fields service-name="updateWorkEffort" map="parameters" to-map="updWorkEffort"/>
         <call-service service-name="updateWorkEffort" in-map-name="updWorkEffort"/>
