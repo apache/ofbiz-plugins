@@ -271,7 +271,7 @@ Map loadSalesOrderItemFact() {
             }
 
             // conversion of the product id
-            if (UtilValidate.isNotEmpty(orderItem.productId)) {
+            if (orderItem.productId) {
                 inMap = [:]
                 naturalKeyFields = [:]
                 inMap.dimensionEntityName = 'ProductDimension'
@@ -344,7 +344,7 @@ Map loadSalesOrderItemFact() {
         Map convertUomCurrencyMap = [:]
         convertUomCurrencyMap.uomId = orderHeader.currencyUom
         convertUomCurrencyMap.uomIdTo = accPref.baseCurrencyUomId
-        if (UtilValidate.isNotEmpty(orderStatus)) {
+        if (orderStatus) {
             convertUomCurrencyMap.nowDate = orderStatus.statusDatetime
         }
         Map convertResult = run service: 'convertUomCurrency', with: convertUomCurrencyMap
