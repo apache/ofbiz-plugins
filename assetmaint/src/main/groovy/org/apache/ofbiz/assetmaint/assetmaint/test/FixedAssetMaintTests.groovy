@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.ofbiz.assetmaint.test
+package org.apache.ofbiz.assetmaint.assetmaint.test
 
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
@@ -26,13 +26,14 @@ import org.apache.ofbiz.entity.GenericValue
 import org.apache.ofbiz.service.testtools.OFBizTestCase
 
 class FixedAssetMaintTests extends OFBizTestCase {
+
     public FixedAssetMaintTests(String name) {
         super(name)
     }
 
     void testCreateFixedAssetMaintUpdateWorkEffortWithProductMaint() {
         // Test case for service createFixedAssetMaintUpdateWorkEffort with a product Maintenance
-        SimpleDateFormat sdf = new SimpleDateFormat('yyyy-MM-dd HH:mm:ss.SSS')
+        SimpleDateFormat sdf = new SimpleDateFormat('yyyy-MM-dd HH:mm:ss.SSS', Locale.getDefault())
         String fixedAssetId = 'DEMO_VEHICLE_01'
         Map serviceCtx = [fixedAssetId: fixedAssetId,
                           statusId: 'FAM_CREATED',
@@ -57,10 +58,9 @@ class FixedAssetMaintTests extends OFBizTestCase {
         assert workEffort.estimatedCompletionDate == serviceCtx.estimatedCompletionDate
         assert workEffort.actualStartDate == serviceCtx.actualStartDate
     }
-
     void testCreateFixedAssetMaintUpdateWorkEffortWithoutProductMaint() {
         // Test case for service createFixedAssetMaintUpdateWorkEffort without a product maintenance
-        SimpleDateFormat sdf = new SimpleDateFormat('yyyy-MM-dd HH:mm:ss.SSS')
+        SimpleDateFormat sdf = new SimpleDateFormat('yyyy-MM-dd HH:mm:ss.SSS', Locale.getDefault())
         String fixedAssetId = 'DEMO_VEHICLE_01'
         Map serviceCtx = [fixedAssetId: fixedAssetId,
                           statusId: 'FAM_CREATED',
@@ -91,7 +91,7 @@ class FixedAssetMaintTests extends OFBizTestCase {
 
     void testUpdateFixedAssetMaintAndWorkEffort() {
         // Test case for service updateFixedAssetMaintAndWorkEffort
-        SimpleDateFormat sdf = new SimpleDateFormat('yyyy-MM-dd HH:mm:ss.SSS')
+        SimpleDateFormat sdf = new SimpleDateFormat('yyyy-MM-dd HH:mm:ss.SSS', Locale.getDefault())
         String fixedAssetId = 'DEMO_VEHICLE_01'
         String maintHistSeqId = '00001'    // Sequence created by testCreateFixedAssetMaintUpdateWorkEffortWithProductMaint
         GenericValue fixedAssetMaint = from('FixedAssetMaint')
@@ -140,4 +140,5 @@ class FixedAssetMaintTests extends OFBizTestCase {
         assert workEffort.currentStatusId == 'CAL_COMPLETED'
         assert workEffort.actualCompletionDate == serviceCtx.actualCompletionDate
     }
+
 }
