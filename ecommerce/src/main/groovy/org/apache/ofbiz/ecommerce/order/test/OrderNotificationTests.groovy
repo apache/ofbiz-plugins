@@ -22,11 +22,11 @@ import org.apache.ofbiz.service.ServiceUtil
 import org.apache.ofbiz.service.testtools.OFBizTestCase
 
 class OrderNotificationTests extends OFBizTestCase {
+
     public OrderNotificationTests(String name) {
         super(name)
     }
-    
-    
+
     void testSendOrderConfirmation() {
         Map serviceCtx = [
             orderId: 'TEST_DEMO10090',
@@ -35,7 +35,7 @@ class OrderNotificationTests extends OFBizTestCase {
         ]
         Map serviceResult = dispatcher.runSync('sendOrderConfirmation', serviceCtx)
         assert ServiceUtil.isSuccess(serviceResult)
-        assert serviceResult.emailType.equals("PRDS_ODR_CONFIRM")
+        assert serviceResult.emailType == 'PRDS_ODR_CONFIRM'
     }
     void testSendOrderChangeNotification() {
         Map serviceCtx = [
@@ -47,7 +47,7 @@ class OrderNotificationTests extends OFBizTestCase {
         ]
         Map serviceResult = dispatcher.runSync('sendOrderChangeNotification', serviceCtx)
         assert ServiceUtil.isSuccess(serviceResult)
-        assert serviceResult.emailType.equals("PRDS_ODR_CHANGE")
+        assert serviceResult.emailType == 'PRDS_ODR_CHANGE'
     }
     void testSendOrderBackorderNotification() {
         Map serviceCtx = [
@@ -57,7 +57,7 @@ class OrderNotificationTests extends OFBizTestCase {
         ]
         Map serviceResult = dispatcher.runSync('sendOrderBackorderNotification', serviceCtx)
         assert ServiceUtil.isSuccess(serviceResult)
-        assert serviceResult.emailType.equals("PRDS_ODR_BACKORDER")
+        assert serviceResult.emailType == 'PRDS_ODR_BACKORDER'
     }
     void testsendOrderPayRetryNotification() {
         Map serviceCtx = [
@@ -67,7 +67,7 @@ class OrderNotificationTests extends OFBizTestCase {
         ]
         Map serviceResult = dispatcher.runSync('sendOrderPayRetryNotification', serviceCtx)
         assert ServiceUtil.isSuccess(serviceResult)
-        assert serviceResult.emailType.equals("PRDS_ODR_PAYRETRY")
+        assert serviceResult.emailType == 'PRDS_ODR_PAYRETRY'
     }
     void testsendOrderCompleteNotification() {
         Map serviceCtx = [
@@ -77,6 +77,7 @@ class OrderNotificationTests extends OFBizTestCase {
         ]
         Map serviceResult = dispatcher.runSync('sendOrderCompleteNotification', serviceCtx)
         assert ServiceUtil.isSuccess(serviceResult)
-        assert serviceResult.emailType.equals("PRDS_ODR_COMPLETE")
+        assert serviceResult.emailType == 'PRDS_ODR_COMPLETE'
     }
+
 }
