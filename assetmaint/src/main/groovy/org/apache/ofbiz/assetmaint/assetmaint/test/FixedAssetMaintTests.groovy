@@ -18,9 +18,6 @@
  */
 package org.apache.ofbiz.assetmaint.assetmaint.test
 
-import java.sql.Timestamp
-import java.text.SimpleDateFormat
-
 import org.apache.ofbiz.base.util.UtilDateTime
 import org.apache.ofbiz.entity.GenericValue
 import org.apache.ofbiz.service.testtools.OFBizTestCase
@@ -33,15 +30,14 @@ class FixedAssetMaintTests extends OFBizTestCase {
 
     void testCreateFixedAssetMaintUpdateWorkEffortWithProductMaint() {
         // Test case for service createFixedAssetMaintUpdateWorkEffort with a product Maintenance
-        SimpleDateFormat sdf = new SimpleDateFormat('yyyy-MM-dd HH:mm:ss.SSS', Locale.getDefault())
         String fixedAssetId = 'DEMO_VEHICLE_01'
         Map serviceCtx = [fixedAssetId: fixedAssetId,
                           statusId: 'FAM_CREATED',
                           productMaintSeqId: 'seq03',  // product maintenance,
                           intervalMeterTypeId: 'ODOMETER',
-                          estimatedStartDate: new Timestamp(sdf.parse('2009-12-18 00:00:00.000').getTime()),
-                          estimatedCompletionDate: new Timestamp(sdf.parse('2009-12-18 01:00:00.000').getTime()),
-                          actualStartDate: new Timestamp(sdf.parse('2009-12-20 00:00:00.000').getTime()),
+                          estimatedStartDate: UtilDateTime.toTimestamp('2009-12-18 00:00:00.000'),
+                          estimatedCompletionDate: UtilDateTime.toTimestamp('2009-12-18 00:00:00.000'),
+                          actualStartDate: UtilDateTime.toTimestamp('2009-12-20 00:00:00.000'),
                           userLogin: userLogin]
         Map serviceResult = dispatcher.runSync('createFixedAssetMaintUpdateWorkEffort', serviceCtx)
         GenericValue fixedAssetMaint = from('FixedAssetMaint')
@@ -60,15 +56,14 @@ class FixedAssetMaintTests extends OFBizTestCase {
     }
     void testCreateFixedAssetMaintUpdateWorkEffortWithoutProductMaint() {
         // Test case for service createFixedAssetMaintUpdateWorkEffort without a product maintenance
-        SimpleDateFormat sdf = new SimpleDateFormat('yyyy-MM-dd HH:mm:ss.SSS', Locale.getDefault())
         String fixedAssetId = 'DEMO_VEHICLE_01'
         Map serviceCtx = [fixedAssetId: fixedAssetId,
                           statusId: 'FAM_CREATED',
                           productMaintTypeId: 'OIL_CHANGE',
                           intervalMeterTypeId: 'ODOMETER',
-                          estimatedStartDate: new Timestamp(sdf.parse('2009-12-18 00:00:00.000').getTime()),
-                          estimatedCompletionDate: new Timestamp(sdf.parse('2009-12-18 01:00:00.000').getTime()),
-                          actualStartDate: new Timestamp(sdf.parse('2009-12-20 00:00:00.000').getTime()),
+                          estimatedStartDate: UtilDateTime.toTimestamp('2009-12-18 00:00:00.000'),
+                          estimatedCompletionDate: UtilDateTime.toTimestamp('2009-12-18 00:00:00.000'),
+                          actualStartDate: UtilDateTime.toTimestamp('2009-12-20 00:00:00.000'),
                           userLogin: userLogin]
         Map serviceResult = dispatcher.runSync('createFixedAssetMaintUpdateWorkEffort', serviceCtx)
         String maintHistSeqId = serviceResult.maintHistSeqId
@@ -91,19 +86,27 @@ class FixedAssetMaintTests extends OFBizTestCase {
 
     void testUpdateFixedAssetMaintAndWorkEffort() {
         // Test case for service updateFixedAssetMaintAndWorkEffort
-        SimpleDateFormat sdf = new SimpleDateFormat('yyyy-MM-dd HH:mm:ss.SSS', Locale.getDefault())
         String fixedAssetId = 'DEMO_VEHICLE_01'
-        String maintHistSeqId = '00001'    // Sequence created by testCreateFixedAssetMaintUpdateWorkEffortWithProductMaint
+        Map serviceCtx = [fixedAssetId: fixedAssetId,
+                          statusId: 'FAM_CREATED',
+                          productMaintSeqId: 'seq03',  // product maintenance,
+                          intervalMeterTypeId: 'ODOMETER',
+                          estimatedStartDate: UtilDateTime.toTimestamp('2009-12-18 00:00:00.000'),
+                          estimatedCompletionDate: UtilDateTime.toTimestamp('2009-12-18 00:00:00.000'),
+                          actualStartDate: UtilDateTime.toTimestamp('2009-12-20 00:00:00.000'),
+                          userLogin: userLogin]
+        Map serviceResult = dispatcher.runSync('createFixedAssetMaintUpdateWorkEffort', serviceCtx)
+        String maintHistSeqId = serviceResult.maintHistSeqId
         GenericValue fixedAssetMaint = from('FixedAssetMaint')
                 .where('fixedAssetId', fixedAssetId,
                         'maintHistSeqId', maintHistSeqId)
                 .queryOne()
-        Map serviceCtx = [fixedAssetId: fixedAssetId,
+        serviceCtx = [fixedAssetId: fixedAssetId,
                           maintHistSeqId: maintHistSeqId,
                           statusId: 'FAM_CREATED',
                           productMaintTypeId: 'OIL_CHANGE',
                           intervalMeterTypeId: 'ODOMETER',
-                          estimatedCompletionDate: new Timestamp(sdf.parse('2009-12-22 01:00:00.000').getTime()),
+                          estimatedCompletionDate: UtilDateTime.toTimestamp('2009-12-22 01:00:00.000'),
                           scheduleWorkEffortId: fixedAssetMaint.scheduleWorkEffortId,
                           userLogin: userLogin]
 
@@ -116,12 +119,9 @@ class FixedAssetMaintTests extends OFBizTestCase {
         assert fixedAssetMaint.scheduleWorkEffortId
         assert workEffort
         assert workEffort.estimatedCompletionDate == serviceCtx.estimatedCompletionDate
-    }
 
-    void testUpdateFixedAssetMaintAndWorkEffortComplete() {
         // Test case for service updateFixedAssetMaintAndWorkEffort
-        GenericValue fixedAssetMaint = from('FixedAssetMaint').where('fixedAssetId', 'DEMO_VEHICLE_01', 'maintHistSeqId', '00001').queryOne()
-        Map serviceCtx = [fixedAssetId: fixedAssetMaint.fixedAssetId,
+        serviceCtx = [fixedAssetId: fixedAssetMaint.fixedAssetId,
                           maintHistSeqId: fixedAssetMaint.maintHistSeqId,
                           scheduleWorkEffortId: fixedAssetMaint.scheduleWorkEffortId,
                           statusId: 'FAM_COMPLETED',
@@ -131,10 +131,10 @@ class FixedAssetMaintTests extends OFBizTestCase {
         dispatcher.runSync('updateFixedAssetMaintAndWorkEffort', serviceCtx)
         GenericValue newFixedAssetMaint = from('FixedAssetMaint')
                 .where('fixedAssetId', 'DEMO_VEHICLE_01',
-                        'maintHistSeqId', '00001')
+                        'maintHistSeqId', maintHistSeqId)
                 .queryOne()
         assert newFixedAssetMaint.statusId == 'FAM_COMPLETED'
-        GenericValue workEffort = from('WorkEffort')
+        workEffort = from('WorkEffort')
                 .where('workEffortId', fixedAssetMaint.scheduleWorkEffortId)
                 .queryOne()
         assert workEffort.currentStatusId == 'CAL_COMPLETED'
