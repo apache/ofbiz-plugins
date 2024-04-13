@@ -35,7 +35,7 @@ under the License.
 
                 <set field="activeApp" value="scrum" global="true"/>
                 <set field="applicationMenuName" value="ScrumAppBar" global="true"/>
-                <set field="applicationMenuLocation" value="component://scrum/widget/scrumMenus.xml" global="true"/>
+                <set field="applicationMenuLocation" value="${parameters.mainMenuLocation}" global="true"/>
                 <set field="applicationTitle" from-field="uiLabelMap.ScrumApplication" global="true"/>
                 <set field="helpAnchor" from-field="helpAnchor" default-value="_the_scrum_component"/>
             </actions>
@@ -84,7 +84,7 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-menu name="ProjectMenu" location="component://scrum/widget/scrumMenus.xml"/>
+                                <include-menu name="ProjectMenu" location="${parameters.mainMenuLocation}"/>
                                 <container style="clear"/>
                                 <label style="h1" text="${uiLabelMap.ScrumProjectCurrent}: ${project.workEffortName}[${project.workEffortId}]"/>
                                 <decorator-section-include name="body"/>
@@ -118,13 +118,13 @@ under the License.
                                         <not><if-empty field="task"/></not>
                                     </condition>
                                     <widgets>
-                                        <include-menu name="TaskTabBar" location="component://scrum/widget/scrumMenus.xml"/>
+                                        <include-menu name="TaskTabBar" location="${parameters.mainMenuLocation}"/>
                                         <section>
                                             <condition>
                                                 <if-service-permission service-name="scrumPermissionCheck" main-action="UPDATE" resource-description="TASK"/>
                                             </condition>
                                             <widgets>
-                                                 <include-menu name="TaskSubTabBar" location="component://scrum/widget/scrumMenus.xml"/>
+                                                 <include-menu name="TaskSubTabBar" location="${parameters.mainMenuLocation}"/>
                                             </widgets>
                                         </section>
                                         <container style="clear"/>
@@ -182,7 +182,7 @@ under the License.
                                 <if-service-permission service-name="scrumPermissionCheck" main-action="VIEW" resource-description="SCRUM"/>
                             </condition>
                             <widgets>
-                                <include-menu name="ProductTabBar" location="component://scrum/widget/scrumMenus.xml"/>
+                                <include-menu name="ProductTabBar" location="${parameters.mainMenuLocation}"/>
                                 <section>
                                     <condition>
                                         <and>
@@ -191,7 +191,7 @@ under the License.
                                         </and>
                                     </condition>
                                     <widgets>
-                                        <include-menu name="ProductSubTabBar" location="component://scrum/widget/scrumMenus.xml" />
+                                        <include-menu name="ProductSubTabBar" location="${parameters.mainMenuLocation}" />
                                         <label style="h1" text="Product: ${product.internalName}[${product.productId}]"/>
                                     </widgets>
                                 </section>
@@ -229,8 +229,8 @@ under the License.
                                 </or>
                             </condition>
                             <widgets>
-                                <include-menu name="ProductBackLogItemTabBar" location="component://scrum/widget/scrumMenus.xml"/>
-                                <include-menu name="ProductBackLogItemStatusTabBar" location="component://scrum/widget/scrumMenus.xml"/>
+                                <include-menu name="ProductBackLogItemTabBar" location="${parameters.mainMenuLocation}"/>
+                                <include-menu name="ProductBackLogItemStatusTabBar" location="${parameters.mainMenuLocation}"/>
                                 <section>
                                     <condition>
                                         <and>
@@ -241,7 +241,7 @@ under the License.
                                         </and>
                                     </condition>
                                     <widgets>
-                                        <include-menu name="ProductSubTabBar" location="component://scrum/widget/scrumMenus.xml"/>
+                                        <include-menu name="ProductSubTabBar" location="${parameters.mainMenuLocation}"/>
                                     </widgets>
                                 </section>
                                 <section>
@@ -297,8 +297,8 @@ under the License.
                                 </or>
                             </condition>
                             <widgets>
-                                <include-menu name="ProductBackLogItemTabBar" location="component://scrum/widget/scrumMenus.xml"/>
-                                <include-menu name="ProductBacklogEmailTabBar" location="component://scrum/widget/scrumMenus.xml"/>
+                                <include-menu name="ProductBackLogItemTabBar" location="${parameters.mainMenuLocation}"/>
+                                <include-menu name="ProductBacklogEmailTabBar" location="${parameters.mainMenuLocation}"/>
                                 <section>
                                     <condition>
                                         <and>
@@ -309,7 +309,7 @@ under the License.
                                         </and>
                                     </condition>
                                     <widgets>
-                                        <include-menu name="ProductSubTabBar" location="component://scrum/widget/scrumMenus.xml"/>
+                                        <include-menu name="ProductSubTabBar" location="${parameters.mainMenuLocation}"/>
                                     </widgets>
                                 </section>
                                 <section>
@@ -386,7 +386,7 @@ under the License.
                                 <section>
                                     <condition><not><if-empty field="partyId"/></not></condition>
                                     <widgets>
-                                        <include-menu name="ResourceTabBar" location="component://scrum/widget/scrumMenus.xml"/>
+                                        <include-menu name="ResourceTabBar" location="${parameters.mainMenuLocation}"/>
                                         <container>
                                             <section>
                                                 <widgets>
@@ -432,10 +432,10 @@ under the License.
                                         <not><if-empty field="workEffort"/></not>
                                     </condition>
                                     <widgets>
-                                        <include-menu name="ProjectMenu" location="component://scrum/widget/scrumMenus.xml"/>
+                                        <include-menu name="ProjectMenu" location="${parameters.mainMenuLocation}"/>
                                         <section>
                                             <widgets>
-                                                 <include-menu name="ProjectSubTabBar" location="component://scrum/widget/scrumMenus.xml"/>
+                                                 <include-menu name="ProjectSubTabBar" location="${parameters.mainMenuLocation}"/>
                                             </widgets>
                                         </section>
                                         <container style="clear"/>
@@ -531,8 +531,8 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <include-menu name="SprintMenu" location="component://scrum/widget/scrumMenus.xml"/>
-                        <include-menu name="SprintSubMenu" location="component://scrum/widget/scrumMenus.xml"/>
+                        <include-menu name="SprintMenu" location="${parameters.mainMenuLocation}"/>
+                        <include-menu name="SprintSubMenu" location="${parameters.mainMenuLocation}"/>
                         <label text="Current Sprint: ${sprint.workEffortName} [${sprint.workEffortId}]" style="h1"/>
                         <decorator-section-include name="body"/>
                     </decorator-section>
@@ -553,7 +553,7 @@ under the License.
                                 <if-service-permission service-name="scrumPermissionCheck" main-action="CREATE" resource-description="MEMBER"/>
                             </condition>
                             <widgets>
-                                <include-menu name="ScrumAdminSubMenu" location="component://scrum/widget/scrumMenus.xml"/>
+                                <include-menu name="ScrumAdminSubMenu" location="${parameters.mainMenuLocation}"/>
                             </widgets>
                             <fail-widgets>
                                 <label style="h3">${uiLabelMap.ScrumViewPermissionError}</label>

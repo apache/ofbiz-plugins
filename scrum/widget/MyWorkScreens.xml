@@ -128,7 +128,7 @@ under the License.
                         <fail-widgets>
                             <screenlet title="${uiLabelMap.PageTitleCurrentTimesheet} ${uiLabelMap.CommonNbr} ${timesheet.timesheetId} ${uiLabelMap.CommonFrom} ${groovy:timesheet.get(&quot;fromDate&quot;).toString().substring(0,10)} ${uiLabelMap.CommonTo} ${groovy:timesheet.get(&quot;thruDate&quot;).toString().substring(0,10)}"
                                 navigation-menu-name="TimesheetBar">
-                                <include-menu name="TimesheetBar" location="component://scrum/widget/scrumMenus.xml"/>
+                                <include-menu name="TimesheetBar" location="${parameters.mainMenuLocation}"/>
                                 <include-form name="EditWeekTimesheet" location="component://scrum/widget/MyWorkForms.xml"/>
                             </screenlet>
                         </fail-widgets>
