@@ -42,7 +42,7 @@ under the License.
                 <set field="layoutSettings.styleSheets[]" value="/projectmgr/static/projectmgr.css" global="true"/>
                 <set field="activeApp" value="projectmgr" global="true"/>
                 <set field="applicationMenuName" value="ProjectMgrAppBar" global="true"/>
-                <set field="applicationMenuLocation" value="component://projectmgr/widget/ProjectMenus.xml" global="true"/>
+                <set field="applicationMenuLocation" value="${parameters.mainMenuLocation}" global="true"/>
                 <set field="applicationTitle" from-field="uiLabelMap.ProjectMgrApplication" global="true"/>
                 <set field="helpAnchor" from-field="helpAnchor" default-value="_project_manager"/>
                 <set field="my" value="My" global="true"/>
@@ -65,7 +65,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="pre-body">
-                        <include-menu name="MainActionMenu" location="component://projectmgr/widget/ProjectMenus.xml"/>
+                        <include-menu name="MainActionMenu" location="${parameters.mainMenuLocation}"/>
                         <section>
                             <condition>
                                 <and>
@@ -75,8 +75,8 @@ under the License.
                             </condition>
                             <widgets>
                                 <label style="h1" text="${uiLabelMap.Project}: ${project.workEffortId}"/>
-                                <include-menu name="ProjectTabBar" location="component://projectmgr/widget/ProjectMenus.xml"/>
-                                <include-menu name="ProjectButtonBar" location="component://projectmgr/widget/ProjectMenus.xml"/>
+                                <include-menu name="ProjectTabBar" location="${parameters.mainMenuLocation}"/>
+                                <include-menu name="ProjectButtonBar" location="${parameters.mainMenuLocation}"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -116,7 +116,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="pre-body">
-                        <include-menu name="MainActionMenu" location="component://projectmgr/widget/ProjectMenus.xml"/>
+                        <include-menu name="MainActionMenu" location="${parameters.mainMenuLocation}"/>
                         <section>
                             <condition>
                                 <and>
@@ -126,8 +126,8 @@ under the License.
                             </condition>
                             <widgets>
                                 <label style="h1" text="${uiLabelMap.WorkEffortTask}: ${workEffort.workEffortId}"/>
-                                <include-menu name="TaskTabBar" location="component://projectmgr/widget/ProjectMenus.xml"/>
-                                <include-menu name="TaskSubTabBar" location="component://projectmgr/widget/ProjectMenus.xml"/>
+                                <include-menu name="TaskTabBar" location="${parameters.mainMenuLocation}"/>
+                                <include-menu name="TaskSubTabBar" location="${parameters.mainMenuLocation}"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -157,7 +157,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="pre-body">
-                        <include-menu name="MainActionMenu" location="component://projectmgr/widget/ProjectMenus.xml"/>
+                        <include-menu name="MainActionMenu" location="${parameters.mainMenuLocation}"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
@@ -185,7 +185,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="pre-body">
-                        <include-menu name="MainActionMenu" location="component://projectmgr/widget/ProjectMenus.xml"/>
+                        <include-menu name="MainActionMenu" location="${parameters.mainMenuLocation}"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
@@ -219,7 +219,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="pre-body">
-                        <include-menu name="MainActionMenu" location="component://projectmgr/widget/ProjectMenus.xml"/>
+                        <include-menu name="MainActionMenu" location="${parameters.mainMenuLocation}"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
@@ -227,8 +227,8 @@ under the License.
                                 <if-has-permission permission="PROJECTMGR" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <!--include-menu name="TimesheetTabBar" location="component://projectmgr/widget/ProjectMenus.xml"/-->
-                                <include-menu name="TimesheetSubTabBar" location="component://projectmgr/widget/ProjectMenus.xml"/>
+                                <!--include-menu name="TimesheetTabBar" location="${parameters.mainMenuLocation}"/-->
+                                <include-menu name="TimesheetSubTabBar" location="${parameters.mainMenuLocation}"/>
                                 <section>
                                     <condition>
                                         <not>
@@ -263,7 +263,7 @@ under the License.
                                     <if-has-permission permission="PROJECTMGR" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <include-menu name="MyTimeSubTabBar" location="component://projectmgr/widget/ProjectMenus.xml"/>
+                                <include-menu name="MyTimeSubTabBar" location="${parameters.mainMenuLocation}"/>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
@@ -285,7 +285,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="pre-body">
-                        <include-menu name="MainActionMenu" location="component://projectmgr/widget/ProjectMenus.xml"/>
+                        <include-menu name="MainActionMenu" location="${parameters.mainMenuLocation}"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
@@ -341,6 +341,9 @@ under the License.
                     <widgets/>
                 </section>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="pre-body">
+                        <include-menu name="MainActionMenu" location="${parameters.mainMenuLocation}"/>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <!-- do check for PROJECTMGR, _VIEW permission -->
@@ -354,7 +357,7 @@ under the License.
                                 <section>
                                     <condition><not><if-empty field="partyId"/></not></condition>
                                     <widgets>
-                                        <include-menu name="ResourceTabBar" location="component://projectmgr/widget/ProjectMenus.xml"/>
+                                        <include-menu name="ResourceTabBar" location="${parameters.mainMenuLocation}"/>
                                         <container>
                                             <section>
                                                 <widgets>
@@ -384,7 +387,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRequestDecorator" location="component://order/widget/ordermgr/CommonScreens.xml">
                     <decorator-section name="pre-body">
-                        <include-menu name="MainActionMenu" location="component://projectmgr/widget/ProjectMenus.xml"/>
+                        <include-menu name="MainActionMenu" location="${parameters.mainMenuLocation}"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
@@ -401,7 +404,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="pre-body">
-                        <include-menu name="MainActionMenu" location="component://projectmgr/widget/ProjectMenus.xml"/>
+                        <include-menu name="MainActionMenu" location="${parameters.mainMenuLocation}"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <decorator-section-include name="body"/>
