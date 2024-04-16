@@ -231,8 +231,8 @@ under the License.
                         </widgets>
                         <fail-widgets>
                             <screenlet title="${uiLabelMap.PageTitleCurrentTimesheet} ${uiLabelMap.CommonNbr} ${timesheet.timesheetId} ${uiLabelMap.ProjectMgrWeek}: ${weekNumber} ${uiLabelMap.CommonFrom} ${groovy:timesheet.get(&quot;fromDate&quot;).toString().substring(0,10)} ${uiLabelMap.CommonTo} ${groovy:timesheet.get(&quot;thruDate&quot;).toString().substring(0,10)}"
-                                navigation-menu-name="TimesheetBar">
-                                <include-menu name="TimesheetBar" location="${parameters.mainMenuLocation}"/>
+                                navigation-menu-name="TimesheetActionMenu">
+                                <include-menu name="TimesheetActionMenu" location="${parameters.timesheetMenuLocation}"/>
                                 <include-form name="EditWeekTimesheet" location="component://projectmgr/widget/forms/TimeSheetForms.xml"/>
                             </screenlet>
                         </fail-widgets>
