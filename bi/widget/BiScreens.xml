@@ -31,7 +31,7 @@ under the License.
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.BusinessIntelligenceCompanySubtitle" global="true"/>
                 <set field="activeApp" value="bi" global="true"/>
                 <set field="applicationMenuName" value="BiAppBar" global="true"/>
-                <set field="applicationMenuLocation" value="component://bi/widget/BiMenus.xml" global="true"/>
+                <set field="applicationMenuLocation" value="${parameters.mainMenuLocation}" global="true"/>
                 <set field="applicationTitle" from-field="uiLabelMap.BusinessIntelligenceApplication" global="true"/>
                 <set field="helpAnchor" from-field="helpAnchor" default-value="_apache_ofbiz_plugins"/>
             </actions>
