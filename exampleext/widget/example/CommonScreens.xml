@@ -50,7 +50,7 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-menu name="EditExample" location="component://exampleext/widget/example/ExampleMenus.xml"/>
+                                <include-menu name="EditExample" location="${parameters.mainMenuLocation"/>
                             </widgets>
                         </section>
                     </decorator-section>
