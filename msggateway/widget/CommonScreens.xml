@@ -32,7 +32,7 @@ under the License.
 
                 <set field="activeApp" value="msggateway" global="true"/>
                 <set field="applicationMenuName" value="MainAppBar" global="true"/>
-                <set field="applicationMenuLocation" value="component://msggateway/widget/MsgGatewayMenus.xml" global="true"/>
+                <set field="applicationMenuLocation" value="${parameters.mainMenuLocation" global="true"/>
                 <set field="applicationTitle" from-field="uiLabelMap.MsgGatewayApplication" global="true"/>
             </actions>
             <widgets>
