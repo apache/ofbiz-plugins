@@ -49,6 +49,7 @@ under the License.
         <param-name>mainMenuLocation</param-name>
         <param-value>component://ecommerce/widget/EcommerceMenus.xml</param-value>
     </context-param>
+    
     <filter>
         <display-name>ContextFilter</display-name>
         <filter-name>ContextFilter</filter-name>
