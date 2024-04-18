@@ -22,17 +22,18 @@ under the License.
     xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/services.xsd">
     <description>Project Manager service definitions.</description>
 
-    <service name="createTimeEntryInTimesheet" default-entity-name="TimeEntry" engine="simple" auth="true"
-        location="component://projectmgr/minilang/ProjectServices.xml" invoke="createTimeEntryInTimesheet">
+    <service name="createTimeEntryInTimesheet" default-entity-name="TimeEntry" engine="groovy" auth="true"
+        location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/ProjectServicesScript.groovy" invoke="createTimeEntryInTimesheet">
         <description>Creates TimeEntry and searches for a timesheetId, if required it will create a weekly time sheet, it also assigns the party to the task</description>
         <permission-service service-name="projectMgrPermission" main-action="CREATE"/>
-        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="pk" mode="OUT"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="timesheetId" type="String" mode="OUT" optional="true"/>
         <attribute name="fromDate" type="Timestamp" mode="OUT" optional="true"/>
     </service>
 
+    <!-- FIXME -->
     <service name="createProjectTimesheet" engine="simple" default-entity-name="Timesheet"
         location="component://workeffort/minilang/timesheet/TimesheetServices.xml" invoke="createTimesheetForThisWeek">
         <description>Creates Timesheet for this week if no required date specified.</description>
@@ -45,6 +46,7 @@ under the License.
         <attribute name="requiredDate" type="Timestamp" mode="IN" optional="true"/>
     </service>
 
+    <!-- FIXME -->
     <service name="projectMgrPermission" engine="simple"
         location="component://projectmgr/minilang/ProjectPermissionServices.xml" invoke="projectMgrPermission">
         <implements service="permissionInterface"/>
@@ -56,17 +58,17 @@ under the License.
         <attribute name="timesheetId" type="String" mode="IN" optional="true"/>
         <attribute name="timeEntryId" type="String" mode="IN" optional="true"/>
     </service>
-    
+    <!-- FIXME -->
     <service name="projectMgrRequestPermission" engine="simple"
         location="component://projectmgr/minilang/ProjectPermissionServices.xml" invoke="projectMgrRequestPermission">
         <implements service="permissionInterface"/>
     </service>
-    
-    <service name="updateTimeEntryByWorkeffort" engine="simple"
-        location="component://projectmgr/minilang/ProjectServices.xml" invoke="updateTimeEntryByWorkeffort">
+
+    <service name="updateTimeEntryByWorkEffort" engine="groovy"
+        location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/ProjectServicesScript.groovy" invoke="updateTimeEntryByWorkEffort">
         <description>Update workeffort by workeffortId and timesheetId </description>
         <permission-service service-name="projectMgrPermission" main-action="UPDATE"/>
-        <attribute name="timesheetId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="timesheetId" type="String" mode="INOUT"/>
         <attribute name="workEffortId" type="String" mode="INOUT" optional="true"/><!-- when empty will be ignored -->
         <attribute name="fromDate" type="Timestamp" mode="INOUT" optional="true"/>
         <attribute name="rateTypeId" type="String" mode="IN" optional="true"/>
@@ -81,8 +83,8 @@ under the License.
         <attribute name="checkComplete" type="String" mode="IN" optional="true"/>
     </service>
 
-    <service name="getProject" engine="simple"
-        location="component://projectmgr/minilang/ProjectServices.xml" invoke="getProject">
+    <service name="getProject" engine="groovy"
+        location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/ProjectServicesScript.groovy" invoke="getProject">
         <description>Get project information and related phase and task info.</description>
         <permission-service service-name="projectMgrPermission" main-action="VIEW"/>
         <attribute name="projectId" type="String" mode="INOUT" optional="true"/>
@@ -91,8 +93,8 @@ under the License.
     </service>
 
     <service name="createProject" engine="groovy" default-entity-name="WorkEffort"
-        location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/ProjectServices.groovy" invoke="createProject">
-        <description>Create a new Project</description>
+        location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/ProjectServicesScript.groovy" invoke="createProject">
+        <description>Create a new Project.</description>
         <permission-service service-name="projectMgrPermission" main-action="CREATE"/>
         <implements service="interfaceWorkEffort"/>
         <auto-attributes mode="INOUT" include="pk" optional="true"/>
@@ -110,8 +112,9 @@ under the License.
         <override name="workEffortName" optional="false"/>
         <override name="currentStatusId" optional="false"/>
     </service>
-    <service name="updateProject" default-entity-name="WorkEffort" engine="simple"
-        location="component://projectmgr/minilang/ProjectServices.xml" invoke="updateProject">
+
+    <service name="updateProject" default-entity-name="WorkEffort" engine="groovy"
+        location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/ProjectServicesScript.groovy" invoke="updateProject">
         <description>Update a Project</description>
         <permission-service service-name="projectMgrPermission" main-action="UPDATE"/>
         <implements service="interfaceWorkEffort"/>
@@ -120,21 +123,27 @@ under the License.
         <attribute name="clientBillingPartyId" type="String" mode="IN" optional="true"/>
         <attribute name="emailAddress" type="String" mode="IN" optional="true"/>
     </service>
+    <service name="updateProjectRole" default-entity-name="WorkEffortPartyAssignment" engine="groovy"
+        location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/ProjectServicesScript.groovy" invoke="updateProjectRole">
+        <description>Update a Project Role</description>
+        <permission-service service-name="projectMgrPermission" main-action="UPDATE"/>
+        <implements service="createWorkEffortPartyAssignment"/>
+    </service>
 
-    <service name="createProjectTask" engine="simple" default-entity-name="WorkEffort"
-        location="component://projectmgr/minilang/ProjectServices.xml" invoke="createProjectTask">
+    <service name="createProjectTask" engine="groovy" default-entity-name="WorkEffort"
+        location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/ProjectServicesScript.groovy" invoke="createProjectTask">
         <description>Create a new task and optionally assign to a resource.</description>
         <permission-service service-name="projectMgrPermission" main-action="CREATE"/>
         <implements service="interfaceWorkEffort"/>
         <auto-attributes mode="INOUT" include="pk" optional="true"/>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="statusId" type="String" mode="IN" optional="true"/>
+        <attribute name="statusId" type="String" mode="IN" default-value="PTS_CREATED"/>
         <attribute name="fromDate" type="Timestamp" mode="OUT" optional="true"/>
         <attribute name="quickAssignPartyId" type="String" mode="IN" optional="true"/>
         <attribute name="requirementId" type="String" mode="IN" optional="true"/>
         <attribute name="communicationEventId" type="String" mode="IN" optional="true"/>
-        <attribute name="skillTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="skillTypeId" type="String" mode="IN" default-value="_NA_"/>
         <attribute name="estimatedHours" type="Double" mode="IN" optional="true"/>
         <override name="workEffortTypeId" optional="false"/>
         <override name="workEffortName" optional="false"/>
@@ -142,33 +151,31 @@ under the License.
         <override name="workEffortParentId" optional="false"/>
     </service>
 
-    <service name="copyProject" engine="simple"
-        location="component://projectmgr/minilang/ProjectServices.xml" invoke="copyProject">
+    <service name="copyProject" engine="groovy"
+        location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/ProjectServicesScript.groovy" invoke="copyProject">
         <description>Copy a project planning data but ignore the actual data.</description>
         <permission-service service-name="projectMgrPermission" main-action="CREATE"/>
-        <attribute name="projectId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="projectId" type="String" mode="INOUT"/>
         <attribute name="fromDate" type="Timestamp" mode="OUT" optional="true"/>
         <attribute name="workEffortId" type="String" mode="OUT" optional="true"/>
     </service>
 
-    <service name="copyProjectToTemplate" engine="simple"
-        location="component://projectmgr/minilang/ProjectServices.xml" invoke="copyProjectToTemplate">
+    <service name="copyProjectToTemplate" engine="groovy"
+        location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/ProjectServicesScript.groovy" invoke="copyProject">
         <description>Copy a project planning data to a template project.</description>
-        <permission-service service-name="projectMgrPermission" main-action="CREATE"/>
-        <attribute name="projectId" type="String" mode="INOUT" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="OUT" optional="true"/>
-        <attribute name="workEffortId" type="String" mode="OUT" optional="true"/>
+        <implements service="copyProject"/>
+        <attribute name="toTemplate" type="String" mode="IN" default-value="Y"/>
     </service>
 
-    <service name="scheduleProject" engine="simple"
-        location="component://projectmgr/minilang/ProjectServices.xml" invoke="scheduleProject">
+    <service name="scheduleProject" engine="groovy"
+        location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/ProjectServicesScript.groovy" invoke="scheduleProject">
         <description>(re) calculate the estimated start and enddates of tasks within a project</description>
         <permission-service service-name="projectMgrPermission" main-action="UPDATE"/>
         <attribute name="projectId" type="String" mode="INOUT" optional="true"/>
     </service>
 
-    <service name="getProjectIdAndNameFromTask" engine="simple"
-        location="component://projectmgr/minilang/ProjectServices.xml" invoke="getProjectIdAndNameFromTask">
+    <service name="getProjectIdAndNameFromTask" engine="groovy"
+        location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/ProjectServicesScript.groovy" invoke="getProjectIdAndNameFromTask">
         <description>Get the projectId and Name when a phase or task is provided.</description>
         <permission-service service-name="projectMgrPermission" main-action="VIEW"/>
         <attribute name="taskId" type="String" mode="INOUT" optional="true"/>
@@ -181,24 +188,24 @@ under the License.
         <attribute name="taskWbsId" type="String" mode="OUT" optional="true"/>
     </service>
 
-    <service name="getProjectPhaseList" engine="simple"
-        location="component://projectmgr/minilang/ProjectServices.xml" invoke="getProjectPhaseList">
+    <service name="getProjectPhaseList" engine="groovy"
+        location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/ProjectServicesScript.groovy" invoke="getProjectPhaseList">
         <description>Get project phase information and related task info.</description>
         <permission-service service-name="projectMgrPermission" main-action="VIEW"/>
         <attribute name="projectId" type="String" mode="INOUT" optional="true"/>
         <attribute name="phaseList" type="List" mode="OUT" optional="true"/>
     </service>
 
-    <service name="getProjectTaskList" engine="simple"
-        location="component://projectmgr/minilang/ProjectServices.xml" invoke="getProjectTaskList">
+    <service name="getProjectTaskList" engine="groovy"
+        location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/ProjectServicesScript.groovy" invoke="getProjectTaskList">
         <description>Get project phase information and related task info.</description>
         <permission-service service-name="projectMgrPermission" main-action="VIEW"/>
         <attribute name="projectId" type="String" mode="INOUT" optional="true"/>
         <attribute name="taskList" type="List" mode="OUT" optional="true"/>
     </service>
 
-    <service name="getProjectTask" engine="simple"
-        location="component://projectmgr/minilang/ProjectServices.xml" invoke="getProjectTask">
+    <service name="getProjectTask" engine="groovy"
+        location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/ProjectServicesScript.groovy" invoke="getProjectTask">
         <description>Get project task information and related timesheet info.</description>
         <permission-service service-name="projectMgrPermission" main-action="VIEW"/>
         <attribute name="hoursPartyId" type="String" mode="IN" optional="true"/>
@@ -208,8 +215,8 @@ under the License.
         <attribute name="taskInfo" type="Map" mode="OUT" optional="true"/>
     </service>
 
-    <service name="getProjectsByParties" engine="simple"
-        location="component://projectmgr/minilang/ProjectServices.xml" invoke="getProjectsByParties">
+    <service name="getProjectsByParties" engine="groovy"
+        location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/ProjectServicesScript.groovy" invoke="getProjectsByParties">
         <description>Get project information by party</description>
         <permission-service service-name="projectMgrPermission" main-action="VIEW"/>
         <attribute name="projectId" type="String" mode="INOUT" optional="true"/>
@@ -217,8 +224,8 @@ under the License.
         <attribute name="projectParties" type="List" mode="OUT" optional="true"/>
     </service>
 
-    <service name="getTasksByParties" engine="simple"
-        location="component://projectmgr/minilang/ProjectServices.xml" invoke="getTasksByParties">
+    <service name="getTasksByParties" engine="groovy"
+        location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/ProjectServicesScript.groovy" invoke="getTasksByParties">
         <description>Get project information by party</description>
         <permission-service service-name="projectMgrPermission" main-action="VIEW"/>
         <attribute name="workEffortId" type="String" mode="INOUT" optional="true"/>
@@ -226,8 +233,8 @@ under the License.
         <attribute name="taskParties" type="List" mode="OUT" optional="true"/>
     </service>
 
-    <service name="updateTaskAndRelatedInfo" default-entity-name="WorkEffort" engine="simple"
-            location="component://projectmgr/minilang/ProjectServices.xml" invoke="updateTaskAndRelatedInfo">
+    <service name="updateTaskAndRelatedInfo" default-entity-name="WorkEffort" engine="groovy"
+            location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/ProjectServicesScript.groovy" invoke="updateTaskAndRelatedInfo">
         <description>Update a task and related info</description>
         <permission-service service-name="projectMgrPermission" main-action="VIEW"/>
         <implements service="interfaceWorkEffort"/>
@@ -239,8 +246,8 @@ under the License.
         <attribute name="estimatedDuration" mode="IN" type="Double" optional="true"/>
     </service>
  
-     <service name="updateTaskAssigment" default-entity-name="WorkEffortPartyAssignment" engine="simple"
-        location="component://projectmgr/minilang/ProjectServices.xml" invoke="updateTaskAssigment">
+     <service name="updateTaskAssigment" default-entity-name="WorkEffortPartyAssignment" engine="groovy"
+        location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/ProjectServicesScript.groovy" invoke="updateTaskAssigment">
         <description>Update a WorkEffortPartyAssignment Entity, including set enddate and create new</description>
         <permission-service service-name="projectMgrPermission" main-action="UPDATE"/>
         <attribute name="workEffortId" type="String" mode="INOUT"/>
@@ -254,26 +261,26 @@ under the License.
         <attribute name="delegateReasonEnumId" type="String" mode="IN" optional="true"/>
         <attribute name="comments" type="String" mode="IN" optional="true"/>
     </service>
-    <service name="addProjectTimeToNewInvoice" engine="simple" auth="true"
-        location="component://projectmgr/minilang/ProjectServices.xml" invoke="addProjectTimeToNewInvoice">
+    <service name="addProjectTimeToNewInvoice" engine="groovy" auth="true"
+        location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/ProjectServicesScript.groovy" invoke="addProjectTimeToInvoice">
         <description>Add Project Time to a new Invoice</description>
-        <attribute name="projectId" type="String" mode="IN" optional="false"/>
+        <attribute name="projectId" type="String" mode="IN"/>
         <attribute name="partyIdFrom" type="String" mode="IN" optional="true"/>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="invoiceId" type="String" mode="INOUT" optional="true"/>
-        <attribute name="reCreate" type="String" mode="IN" optional="true"/>
+        <attribute name="reCreate" type="String" mode="IN" default-value="Y"/>
     </service>
-    <service name="addProjectTimeToInvoice" engine="simple" auth="true"
-        location="component://projectmgr/minilang/ProjectServices.xml" invoke="addProjectTimeToInvoice">
+    <service name="addProjectTimeToInvoice" engine="groovy" auth="true"
+        location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/ProjectServicesScript.groovy" invoke="addProjectTimeToInvoice">
         <description>Add Project Time to an existing Invoice. The billed party must be the same between the two invoice.</description>
-        <attribute name="projectId" type="String" mode="IN" optional="false"/>
-        <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
-        <attribute name="billedPartyId" type="String" mode="IN" optional="false"/>
+        <attribute name="projectId" type="String" mode="IN"/>
+        <attribute name="invoiceId" type="String" mode="IN"/>
+        <attribute name="billedPartyId" type="String" mode="IN"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
     </service>
-    <service name="addValidationPartiesToTask" engine="simple" auth="true"
-        location="component://projectmgr/minilang/ProjectServices.xml" invoke="addValidationPartiesToTask">
+    <service name="addValidationPartiesToTask" engine="groovy" auth="true"
+        location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/ProjectServicesScript.groovy" invoke="addValidationPartiesToTask">
         <description>SECA to add either project-testing or -approval parties to a task when a task is set to complete</description>
         <attribute name="workEffortId" type="String" mode="IN" optional="true"/>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
