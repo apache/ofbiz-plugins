@@ -102,12 +102,12 @@
                                 <if-has-permission permission="EBAY" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <include-menu name="EbayConfigTabBar"  location="component://ebay/widget/EbayMenus.xml"/>
+                                <include-menu name="EbayConfigTabBar"  location="${parameters.ebayMenuLocation}"/>
                                 <section>
                                     <condition><not><if-empty field="ebayConfig"/></not>
                                     </condition>
                                     <widgets>
-                                        <include-menu name="EbayConfigSubTabBar" location="component://ebay/widget/EbayMenus.xml"/>
+                                        <include-menu name="EbayConfigSubTabBar" location="${parameters.ebayMenuLocation}"/>
                                     </widgets>
                                 </section>
                                 <decorator-section-include name="body"/>
