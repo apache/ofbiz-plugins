@@ -22,13 +22,13 @@ under the License.
 # The fromDate value for business intelligence
 bi.properties setting is: fromDate=2013-09-01
 -->
-    <SystemProperty systemResourceId="bi" systemPropertyId="fromDate" systemPropertyValue="2013-09-01"
+    <SystemProperty systemResourceId="bi" systemPropertyId="fromDate" systemPropertyValue="2023-09-01"
     description="The fromDate value for business intelligence. Convention: yyyy-mm-dd"
     />
     <!--
 # The thruDate value for for business intelligence bi.properties setting is: 2123-09-01
 -->
-    <SystemProperty systemResourceId="bi" systemPropertyId="thruDate" systemPropertyValue="2123-09-01"
+    <SystemProperty systemResourceId="bi" systemPropertyId="thruDate" systemPropertyValue="2133-09-01"
     description="The thruDate value for business intelligence. Convention: yyyy-mm-dd"
     />
 
