@@ -32,7 +32,7 @@ under the License.
 
                 <set field="activeApp" value="firstdata" global="true"/>
                 <set field="applicationMenuName" value="MainAppBar" global="true"/>
-                <set field="applicationMenuLocation" value="component://firstdatapaymentgateway/widget/FirstDataMenus.xml" global="true"/>
+                <set field="applicationMenuLocation" value="${parameters.mainMenuLocation}" global="true"/>
                 <set field="applicationTitle" from-field="uiLabelMap.FirstDataApplication" global="true"/>
             </actions>
             <widgets>
