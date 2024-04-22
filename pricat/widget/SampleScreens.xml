@@ -30,7 +30,7 @@ under the License.
 
                 <set field="layoutSettings.companyName" from-field="uiLabelMap.PriCatDemoCompanyName" global="true"/>
                 <set field="applicationMenuName" value="PriCatDemoAppBar" global="true"/>
-                <set field="applicationMenuLocation" value="component://pricat/widget/PriCatDemoMenus.xml" global="true"/>
+                <set field="applicationMenuLocation" value="${parameters.mainMenuLocation}" global="true"/>
                 <set field="applicationTitle" from-field="uiLabelMap.PriCatDemoApplication" global="true"/>
             </actions>
             <widgets>

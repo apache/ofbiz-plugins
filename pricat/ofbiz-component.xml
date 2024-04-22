@@ -32,7 +32,7 @@ under the License.
         title="PriCat"
         server="default-server"
         location="webapp/pricat"
-        app-bar-display="false"
+        app-bar-display="true"
         base-permission="OFBTOOLS,CATALOG"
         mount-point="/pricat" />
 
@@ -40,7 +40,7 @@ under the License.
         title="PriCat Demo"
         server="default-server"
         location="webapp/pricatdemo"
-        app-bar-display="false"
+        app-bar-display="true"
         base-permission="OFBTOOLS"
         mount-point="/pricatdemo" />
 </ofbiz-component>
