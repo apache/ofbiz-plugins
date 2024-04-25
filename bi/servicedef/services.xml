@@ -35,7 +35,7 @@ under the License.
         <attribute name="naturalKeyFields" type="Map" mode="IN" optional="false"/> <!-- the names/values pairs of the fields that compose the natural key of the dimension -->
         <attribute name="dimensionId" type="String" mode="OUT" optional="true"/>
     </service>
-    <service name="quickInitDataWarehouse" auth="true" engine="groovy"
+    <service name="quickInitDataWarehouse" auth="true" engine="groovy" transaction-timeout="300"
         location="component://bi/src/main/groovy/org/apache/ofbiz/bi/DimensionServices.groovy" invoke="quickInitDataWarehouse">
         <description>Quickly initialize the dimensions (Currency, Date, Product) and facts (SalesInvoiceItem): useful to quickly initialize the datawarehouse.</description>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
@@ -140,7 +140,7 @@ under the License.
     </service>
 
     <!-- Inventory Facts -->
-    <service name="loadInventoryFact" auth="true" engine="groovy"
+    <service name="loadInventoryFact" auth="true" engine="groovy" transaction-timeout="300"
         location="component://bi/src/main/groovy/org/apache/ofbiz/bi/FactServices.groovy" invoke="loadInventoryFact">
         <attribute name="inventoryItemId" type="String" mode="IN" optional="true"/>
     </service>
