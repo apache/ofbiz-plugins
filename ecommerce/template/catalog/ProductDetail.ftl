@@ -725,7 +725,7 @@ ${variantInfoJavaScript!}
                 </label>
                 <@htmlTemplate.renderDateTimeField event="" action="" name="reservStart" className="" alert=""
                     title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${startDate}" size="25" maxlength="30"
-                    id="reservStart1" shortDateInput=true timeDropdownParamName=""
+                    id="reservStart1" dateType="date" shortDateInput=true timeDropdownParamName=""
                     defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString=""
                     hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected=""
                     pmSelected="" compositeType="" formName=""/>
