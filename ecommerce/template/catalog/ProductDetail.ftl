@@ -725,7 +725,7 @@ ${variantInfoJavaScript!}
                 </label>
                 <@htmlTemplate.renderDateTimeField event="" action="" name="reservStart" className="" alert=""
                     title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${startDate}" size="25" maxlength="30"
-                    id="reservStart1" dateType="date" shortDateInput=true timeDropdownParamName=""
+                    id="reservStart1" isDateType=true shortDateInput=true timeDropdownParamName=""
                     defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString=""
                     hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected=""
                     pmSelected="" compositeType="" formName=""/>
@@ -807,7 +807,7 @@ ${variantInfoJavaScript!}
               ${uiLabelMap.CommonStartDate}(yyyy-mm-dd)
               <@htmlTemplate.renderDateTimeField name="reservStartStr" event="" action="" value="${startDate}"
                   className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="15" maxlength="30"
-                  id="reservStartStr" dateType="date" shortDateInput=false timeDropdownParamName=""
+                  id="reservStartStr" isDateType=true shortDateInput=false timeDropdownParamName=""
                   defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1=""
                   hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected=""
                   compositeType="" formName=""/>&nbsp;Number of&nbsp;days&nbsp;&nbsp;
@@ -819,7 +819,7 @@ ${variantInfoJavaScript!}
               ${uiLabelMap.CommonStartDate}(yyyy-mm-dd)&nbsp;&nbsp;&nbsp;
               <@htmlTemplate.renderDateTimeField name="reservStartStr" event="" action="" value="${startDate}"
                   className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="15" maxlength="30"
-                  id="reservStartStr" dateType="date" shortDateInput=false timeDropdownParamName=""
+                  id="reservStartStr" isDateType=true shortDateInput=false timeDropdownParamName=""
                   defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1=""
                   hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected=""
                   compositeType="" formName=""/>&nbsp;&nbsp;Number of&nbsp;days&nbsp;&nbsp;
