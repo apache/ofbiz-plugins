@@ -22,29 +22,29 @@ under the License.
         xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/service-eca.xsd">
 
     <!-- ECAs used to extend service permission checking -->
-    <eca service="fixedAssetPermissionCheck" event="return" run-on-failure="true">
+    <eca service="assetMaintPermissionCheck" event="return" run-on-failure="true">
         <condition field-name="hasPermission" operator="equals" value="false" type="Boolean"/>
-        <action service="assetMaintPermissionCheck" mode="sync" result-to-result="true"/>
+        <action service="fixedAssetPermissionCheck" mode="sync" result-to-result="true"/>
     </eca>
 
-    <eca service="facilityGenericPermission" event="return" run-on-failure="true">
+    <eca service="assetMaintPermissionCheck" event="return" run-on-failure="true">
         <condition field-name="hasPermission" operator="equals" value="false" type="Boolean"/>
-        <action service="assetMaintPermissionCheck" mode="sync" result-to-result="true"/>
+        <action service="facilityGenericPermission" mode="sync" result-to-result="true"/>
     </eca>
 
-    <eca service="workEffortGenericPermission" event="return" run-on-failure="true">
+    <eca service="assetMaintPermissionCheck" event="return" run-on-failure="true">
         <condition field-name="hasPermission" operator="equals" value="false" type="Boolean"/>
-        <action service="assetMaintPermissionCheck" mode="sync" result-to-result="true"/>
+        <action service="workEffortGenericPermission" mode="sync" result-to-result="true"/>
     </eca>
 
-    <eca service="catalogPermissionCheck" event="return" run-on-failure="true">
+    <eca service="assetMaintPermissionCheck" event="return" run-on-failure="true">
         <condition field-name="hasPermission" operator="equals" value="false" type="Boolean"/>
-        <action service="assetMaintPermissionCheck" mode="sync" result-to-result="true"/>
+        <action service="catalogPermissionCheck" mode="sync" result-to-result="true"/>
     </eca>
 
-    <eca service="partyBasePermissionCheck" event="return" run-on-failure="true">
+    <eca service="assetMaintPermissionCheck" event="return" run-on-failure="true">
         <condition field-name="hasPermission" operator="equals" value="false" type="Boolean"/>
-        <action service="assetMaintPermissionCheck" mode="sync" result-to-result="true"/>
+        <action service="partyBasePermissionCheck" mode="sync" result-to-result="true"/>
     </eca>
 
 </service-eca>
