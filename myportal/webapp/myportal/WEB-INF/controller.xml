@@ -63,7 +63,7 @@
     </request-map>
     <request-map uri="DuplicatePortalPage">
         <security https="true" auth="true"/>
-        <event  type="simple" invoke="duplicatePortalPage" path="component://common/minilang/PortalPageMethods.xml"/>
+        <event  type="groovy" invoke="duplicatePortalPage" path="component://common/src/main/groovy/org/apache/ofbiz/common/PortalPageMethods.groovy"/>
         <response name="success" type="view" value="EditPortalPage"/>
     </request-map>
     <request-map uri="NewPortalPage">
