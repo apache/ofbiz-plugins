@@ -188,14 +188,14 @@ if(productPromoCodes.size()>0){
             shippingCharge = 0;
             shippingCharge = orderAdjustments.get(j).get("amount");
             if(shippingCharge){
-                shippingCharge = shippingCharge.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                shippingCharge = shippingCharge.setScale(2, RoundingMode.ROUND_HALF_UP).doubleValue();
             }
             totalShippingCharge = totalShippingCharge + shippingCharge;
         }
         shippingAmount = dispatcher.runSync("getOrderShippingAmount", input);
         amount = shippingAmount.get("shippingAmount");
         if(amount){
-            amount = amount.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            amount = amount.setScale(2, RoundingMode.ROUND_HALF_UP).doubleValue();
         }
         totalShippingAmount = totalShippingAmount + amount;
     }
