@@ -30,21 +30,23 @@ if(!UtilValidate.isEmpty(parentCategoryStr)) {
         cateMap = [:]
         category = from("ProductCategory").where("productCategoryId", path).queryOne()
         categoryContentWrapper = new CategoryContentWrapper(category, request)
-        
+
         pathTemp = pathTemp + path
         cateMap.title = categoryContentWrapper.get("DESCRIPTION", "html")
         cateMap.productCategoryId = category.productCategoryId
         cateMap.parentCategory = pathTemp
-        
+
         cateList.add(cateMap)
-        
+
         pathTemp = pathTemp + '/'
     }
 
     context.productCategoryTrail = cateList
 }
-currentCategory = from("ProductCategory").where("productCategoryId", productCategoryId).queryOne()
-currentCategoryContentWrapper = new CategoryContentWrapper(currentCategory, request)
-context.currentCategoryName = currentCategoryContentWrapper.get("CATEGORY_NAME", "html")
-context.currentCategoryDescription = currentCategoryContentWrapper.get("DESCRIPTION", "html")
-context.currentCategoryId = productCategoryId
+if (productCategoryId) {
+    currentCategory = from("ProductCategory").where("productCategoryId", productCategoryId).queryOne()
+    currentCategoryContentWrapper = new CategoryContentWrapper(currentCategory, request)
+    context.currentCategoryName = currentCategoryContentWrapper.get("CATEGORY_NAME", "html")
+    context.currentCategoryDescription = currentCategoryContentWrapper.get("DESCRIPTION", "html")
+    context.currentCategoryId = productCategoryId
+}
