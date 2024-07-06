@@ -79,7 +79,8 @@ public final class OFBizLdapAuthenticationHandler extends AbstractOFBizAuthentic
             }
             String filter = UtilXml.childElementValue(rootElement, "Filter", "(objectclass=*)");
             String attribute = UtilXml.childElementValue(rootElement, "Attribute", "uid=%u");
-            LdapEntry entry = new LdapEntry(username);
+            LdapEntry entry = new LdapEntry();
+            entry.setDn(username);
             attribute = LdapUtils.getString(entry, attribute);
             NamingEnumeration<SearchResult> answer = ctx.search(baseDN,
                     // Filter expression
