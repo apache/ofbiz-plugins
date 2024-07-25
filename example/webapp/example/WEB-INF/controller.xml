@@ -272,7 +272,7 @@ under the License.
     <view-map name="LookupPartyGroupByName" type="screen" page="component://example/widget/example/FormWidgetExampleLookupScreens.xml#LookupPartyGroupByName"/>
 
     <!-- ajax view mappings -->
-    <view-map name="findExampleAjax" type="screen" page="component://example/widget/example/ExampleAjaxScreens.xml#AjaxExample" direct-view-rendering-with-auth="true" allow-direct-view-rendering="true"/>
+    <view-map name="findExampleAjax" type="screen" page="component://example/widget/example/ExampleAjaxScreens.xml#AjaxExample"/>
     <view-map name="ListExampleFormOnly" type="screen" page="component://example/widget/example/ExampleAjaxScreens.xml#ListExampleFormOnly"/>
     <view-map name="CreateExampleFormOnly" type="screen" page="component://example/widget/example/ExampleAjaxScreens.xml#CreateExampleFormOnly"/>
     <view-map name="printExampleFOPFonts" type="screenfop" page="component://example/widget/example/FormWidgetExampleScreens.xml#printExampleFOPFonts" content-type="application/pdf"  encoding="none"/>
