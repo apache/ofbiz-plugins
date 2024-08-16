@@ -110,6 +110,7 @@ under the License.
 
     <!-- General Request Mappings -->
     <request-map uri="cms">
+        <security https="false" auth="false"/>
         <event type="java" path="org.apache.ofbiz.content.cms.CmsEvents" invoke="cms"/>
         <response name="success" type="none"/>
         <response name="error" type="view" value="error"/>
@@ -164,7 +165,7 @@ under the License.
     <!-- Common json reponse events, chain these after events to send json reponses -->
     <!-- Standard json response, For security reason (OFBIZ-5409) tries to keep only the initially called service attributes -->
     <request-map uri="json">
-        <security direct-request="false"/>
+        <security https="false" auth="false" direct-request="false"/>
         <event type="java" path="org.apache.ofbiz.common.CommonEvents" invoke="jsonResponseFromRequestAttributes"/>
         <response name="success" type="none"/>
     </request-map>
@@ -177,7 +178,7 @@ under the License.
     </request-map>
 
     <request-map uri="js">
-        <security direct-request="false"/>
+        <security https="false" auth="false" direct-request="false"/>
         <event type="java" path="org.apache.ofbiz.common.CommonEvents" invoke="jsResponseFromRequest"/>
         <response name="success" type="none"/>
     </request-map>
@@ -366,7 +367,7 @@ under the License.
     </request-map>
 
     <request-map uri="anonCheckShipmentNeeded">
-        <security direct-request="false"/>
+        <security https="false" auth="false" direct-request="false"/>
         <event type="java" path="org.apache.ofbiz.order.shoppingcart.CheckOutEvents" invoke="checkShipmentNeeded"/>
         <response name="shipmentNeeded" type="request" value="setShipping"/>
         <!-- NOTE: it seems like setTaxBeforePayment would be the best here, but without an address it doesn't work -->
@@ -398,14 +399,14 @@ under the License.
     </request-map>
 
     <request-map uri="setShippingBeforePayment">
-        <security direct-request="false"/>
+        <security https="false" auth="false" direct-request="false"/>
         <event type="java" path="org.apache.ofbiz.order.shoppingcart.shipping.ShippingEvents" invoke="getShipEstimate"/>
         <response name="success" type="request" value="setTaxBeforePayment"/>
         <response name="error" type="view" value="optionsetting"/>
     </request-map>
 
     <request-map uri="setTaxBeforePayment">
-        <security direct-request="false"/>
+        <security https="false" auth="false" direct-request="false"/>
         <event type="java" path="org.apache.ofbiz.order.shoppingcart.CheckOutEvents" invoke="calcTax"/>
         <response name="success" type="request" value="setPaymentOption"/>
         <response name="error" type="view" value="optionsetting"/>
@@ -526,14 +527,14 @@ under the License.
     </request-map>
 
     <request-map uri="quickAnonSetShippingBeforePayment">
-        <security direct-request="false"/>
+        <security https="false" auth="false" direct-request="false"/>
         <event type="java" path="org.apache.ofbiz.order.shoppingcart.shipping.ShippingEvents" invoke="getShipEstimate"/>
         <response name="success" type="request" value="quickAnonSetTaxBeforePayment"/>
         <response name="error" type="view" value="quickAnonOptionSetting"/>
     </request-map>
 
     <request-map uri="quickAnonSetTaxBeforePayment">
-        <security direct-request="false"/>
+        <security https="false" auth="false" direct-request="false"/>
         <event type="java" path="org.apache.ofbiz.order.shoppingcart.CheckOutEvents" invoke="calcTax"/>
         <response name="success" type="view" value="quickAnonOrderReview"/>
         <response name="error" type="view" value="quickAnonCustSetting"/>
@@ -630,7 +631,7 @@ under the License.
         <response name="error" type="request" value="checkouterror"/>
     </request-map>
     <request-map uri="setPoNumber">
-      <security direct-request="false"/>
+      <security https="false" auth="false" direct-request="false"/>
       <event type="java" path="org.apache.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="setPoNumber"/>
       <response name="success" type="request" value="calcShippingBeforePayment"/>
     </request-map>
@@ -699,20 +700,20 @@ under the License.
     </request-map>
 
     <request-map uri="calcShipping">
-        <security direct-request="false"/>
+        <security https="false" auth="false" direct-request="false"/>
         <event type="java" path="org.apache.ofbiz.order.shoppingcart.shipping.ShippingEvents" invoke="getShipEstimate"/>
         <response name="success" type="request" value="calcTax"/>
         <response name="error" type="request" value="checkouterror"/>
     </request-map>
     <request-map uri="calcTax">
-        <security direct-request="false"/>
+        <security https="false" auth="false" direct-request="false"/>
         <event type="java" path="org.apache.ofbiz.order.shoppingcart.CheckOutEvents" invoke="calcTax"/>
         <response name="success" type="request" value="validatePaymentMethods"/>
         <response name="error" type="request" value="checkouterror"/>
     </request-map>
 
     <request-map uri="validatePaymentMethods">
-        <security direct-request="false"/>
+        <security https="false" auth="false" direct-request="false"/>
         <event type="java" path="org.apache.ofbiz.order.shoppingcart.CheckOutEvents" invoke="checkPaymentMethods"/>
         <response name="success" type="view" value="checkoutreview"/>
         <response name="error" type="request" value="checkouterror"/>
@@ -721,33 +722,33 @@ under the License.
     <!-- this request chain is for calculating shipping & tax before getting to the payments page, so that the visitor
          will know the full shipping & tax charges when trying to split payments between various payment methods -->
     <request-map uri="calcShippingBeforePayment">
-        <security direct-request="false"/>
+        <security https="false" auth="false" direct-request="false"/>
         <event type="java" path="org.apache.ofbiz.order.shoppingcart.shipping.ShippingEvents" invoke="getShipEstimate"/>
         <response name="success" type="request" value="calcTaxBeforePayment"/>
         <response name="error" type="request" value="checkouterror"/>
     </request-map>
     <request-map uri="calcTaxBeforePayment">
-        <security direct-request="false"/>
+        <security https="false" auth="false" direct-request="false"/>
         <event type="java" path="org.apache.ofbiz.order.shoppingcart.CheckOutEvents" invoke="calcTax"/>
         <response name="success" type="request" value="validatePaymentMethodsBeforePayment"/>
         <response name="error" type="request" value="checkouterror"/>
     </request-map>
     <request-map uri="validatePaymentMethodsBeforePayment">
-        <security direct-request="false"/>
+        <security https="false" auth="false" direct-request="false"/>
         <event type="java" path="org.apache.ofbiz.order.shoppingcart.CheckOutEvents" invoke="checkPaymentMethods"/>
         <response name="success" type="view" value="checkoutpayment"/>
         <response name="error" type="request" value="checkouterror"/>
     </request-map>
 
     <request-map uri="checkDenylist">
-        <security direct-request="false"/>
+        <security https="false" auth="false" direct-request="false"/>
         <event type="java" path="org.apache.ofbiz.order.shoppingcart.CheckOutEvents" invoke="checkOrderDenylist"/>
         <response name="success" type="request" value="processpayment"/>
         <response name="failed" type="request" value="failedDenylist"/>
         <response name="error" type="view" value="checkoutreview"/>
     </request-map>
     <request-map uri="failedDenylist">
-        <security direct-request="false"/>
+        <security https="false" auth="false" direct-request="false"/>
         <event type="java" path="org.apache.ofbiz.order.shoppingcart.CheckOutEvents" invoke="failedDenylistCheck"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
@@ -768,14 +769,14 @@ under the License.
         <response name="error" type="view" value="checkoutreview"/>
     </request-map>
     <request-map uri="clearcartfororder">
-        <security direct-request="false"/>
+        <security https="false" auth="false" direct-request="false"/>
         <event type="java" path="org.apache.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="clearCart"/>
         <response name="success" type="request" value="checkExternalPayment"/>
         <response name="error" type="view" value="checkoutreview"/>
     </request-map>
 
     <request-map uri="checkExternalPayment">
-        <security https="true" direct-request="false"/>
+        <security https="true" auth="false" direct-request="false"/>
         <event type="java" path="org.apache.ofbiz.order.shoppingcart.CheckOutEvents" invoke="checkExternalPayment"/>
         <response name="none" type="request" value="emailorder"/>
         <response name="offline" type="request" value="emailorder"/>
@@ -787,39 +788,39 @@ under the License.
     </request-map>
 
     <request-map uri="emailorder">
-        <security https="true" direct-request="false"/>
+        <security https="true" auth="false" direct-request="false"/>
         <event type="service" path="async" invoke="sendOrderConfirmation"/>
         <response name="success" type="view" value="ordercomplete"/>
         <response name="error" type="view" value="ordercomplete"/>
     </request-map>
 
     <request-map uri="callWorldPay">
-        <security https="true" direct-request="false"/>
+        <security https="true" auth="false" direct-request="false"/>
         <event type="java" path="org.apache.ofbiz.accounting.thirdparty.worldpay.WorldPayEvents" invoke="worldPayRequest"/>
         <response name="success" type="none"/>
         <response name="error" type="view" value="checkoutreview"/>
     </request-map>
     <request-map uri="worldPayNotify">
-        <security https="false"/>
+        <security https="false" auth="false"/>
         <event type="java" path="org.apache.ofbiz.accounting.thirdparty.worldpay.WorldPayEvents" invoke="worldPayNotify"/>
         <response name="success" type="none"/>
         <response name="error" type="view" value="checkoutreview"/>
     </request-map>
 
     <request-map uri="callPayPal">
-        <security https="true" direct-request="false"/>
+        <security https="true" auth="false" direct-request="false"/>
         <event type="java" path="org.apache.ofbiz.accounting.thirdparty.paypal.PayPalEvents" invoke="callPayPal"/>
         <response name="success" type="none"/>
         <response name="error" type="view" value="checkoutreview"/>
     </request-map>
     <request-map uri="payPalNotify">
-        <security https="false"/>
+        <security https="false" auth="false"/>
         <event type="java" path="org.apache.ofbiz.accounting.thirdparty.paypal.PayPalEvents" invoke="payPalIPN"/>
         <response name="success" type="none"/>
         <response name="error" type="none"/>
     </request-map>
     <request-map uri="payPalCancel">
-        <security https="true"/>
+        <security https="true" auth="false"/>
         <event type="java" path="org.apache.ofbiz.accounting.thirdparty.paypal.PayPalEvents" invoke="cancelPayPalOrder"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="main"/>
@@ -1532,7 +1533,7 @@ under the License.
         <response name="error" type="request" value="finalizeOrderError"/>
     </request-map>
     <request-map uri="finalizeOrderError">
-        <security direct-request="false"/>
+        <security https="false" auth="false" direct-request="false"/>
         <event type="java" path="org.apache.ofbiz.order.shoppingcart.CheckOutEvents" invoke="finalizeOrderEntryError"/>
         <response name="customer" type="view" value="custsetting"/>
         <response name="shipping" type="view" value="shipsetting"/>
@@ -1674,7 +1675,7 @@ under the License.
     </request-map>
 
     <request-map uri="onePageCheckDenylist">
-        <security direct-request="false"/>
+        <security https="false" auth="false" direct-request="false"/>
         <event type="java" path="org.apache.ofbiz.order.shoppingcart.CheckOutEvents" invoke="checkOrderDenylist"/>
         <response name="success" type="request" value="onePageProcessPayment"/>
         <response name="failed" type="request" value="failedDenylist"/>
@@ -1682,7 +1683,7 @@ under the License.
     </request-map>
 
     <request-map uri="onePageProcessPayment">
-        <security https="true" direct-request="false"/>
+        <security https="true" auth="false" direct-request="false"/>
         <event type="java" path="org.apache.ofbiz.order.shoppingcart.CheckOutEvents" invoke="processPayment"/>
         <response name="success" type="request" value="onePageClearCartForOrder"/>
         <response name="fail" type="request" value="checkouterror"/>
@@ -1690,14 +1691,14 @@ under the License.
     </request-map>
 
     <request-map uri="onePageClearCartForOrder">
-        <security direct-request="false"/>
+        <security https="false" auth="false" direct-request="false"/>
         <event type="java" path="org.apache.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="clearCart"/>
         <response name="success" type="request" value="onePageCheckExternalPayment"/>
         <response name="error" type="view" value="OnePageCheckout"/>
     </request-map>
 
     <request-map uri="onePageCheckExternalPayment">
-        <security https="true" direct-request="false"/>
+        <security https="true" auth="false" direct-request="false"/>
         <event type="java" path="org.apache.ofbiz.order.shoppingcart.CheckOutEvents" invoke="checkExternalPayment"/>
         <response name="none" type="request" value="emailorder"/>
         <!-- these are not yet supported
@@ -1818,6 +1819,7 @@ under the License.
         <response name="success" type="view" value="productCategoryList" save-current-view="true"/>
     </request-map>
     <request-map uri="fromSetSessionLocale">
+        <security https="false" auth="false"/>
         <event type="simple" path="component://ecommerce/minilang/customer/CustomerEvents.xml" invoke="fromSetSessionLocale"/>
         <response name="success" type="view-last" value="main"/>
         <response name="error" type="view" value="main"/>
@@ -1868,69 +1870,69 @@ under the License.
     <!-- End of Request Mappings -->
 
     <!-- View Mappings -->
-    <view-map name="error" type="ftl" page="component://common/webcommon/error/Error.ftl"/>
-    <view-map name="main" type="screen" page="component://ecommerce/widget/CommonScreens.xml#main"/>
-    <view-map name="policies" type="screen" page="component://ecommerce/widget/CommonScreens.xml#policies"/>
-    <view-map name="CookiePolicy" type="screen" page="component://ecommerce/widget/CommonScreens.xml#CookiePolicy"/>
-    <view-map name="login" type="screen" page="component://ecommerce/widget/CommonScreens.xml#login"/>
+    <view-map name="error" type="ftl" page="component://common/webcommon/error/Error.ftl" auth="false"/>
+    <view-map name="main" type="screen" page="component://ecommerce/widget/CommonScreens.xml#main" auth="false"/>
+    <view-map name="policies" type="screen" page="component://ecommerce/widget/CommonScreens.xml#policies" auth="false"/>
+    <view-map name="CookiePolicy" type="screen" page="component://ecommerce/widget/CommonScreens.xml#CookiePolicy" auth="false"/>
+    <view-map name="login" type="screen" page="component://ecommerce/widget/CommonScreens.xml#login" auth="false"/>
     <view-map name="requirePasswordChange" type="screen" page="component://ecommerce/widget/CommonScreens.xml#requirePasswordChange"/>
 
     <!-- Cart Views -->
     <view-map name="editShoppingList" type="screen" page="component://ecommerce/widget/ShoppingListScreens.xml#editShoppingList"/>
-    <view-map name="showcart" type="screen" page="component://ecommerce/widget/CartScreens.xml#showcart"/>
+    <view-map name="showcart" type="screen" page="component://ecommerce/widget/CartScreens.xml#showcart" auth="false"/>
     <!--view-map name="showcart" type="screen" page="component://ecommerce/widget/CartScreens.xml#showcart" no-cache="true"/--><!-- to be used to avoid "conflicts" when someone use the same machine with different user logins -->
-    <view-map name="showAllPromotions" type="screen" page="component://ecommerce/widget/CartScreens.xml#showAllPromotions"/>
-    <view-map name="showPromotionDetails" type="screen" page="component://ecommerce/widget/CartScreens.xml#showPromotionDetails"/>
-    <view-map name="UpdateCart" type="screen" page="component://ecommerce/widget/CartScreens.xml#UpdateCart"/>
+    <view-map name="showAllPromotions" type="screen" page="component://ecommerce/widget/CartScreens.xml#showAllPromotions" auth="false"/>
+    <view-map name="showPromotionDetails" type="screen" page="component://ecommerce/widget/CartScreens.xml#showPromotionDetails" auth="false"/>
+    <view-map name="UpdateCart" type="screen" page="component://ecommerce/widget/CartScreens.xml#UpdateCart" auth="false"/>
 
     <!-- Catalog Views -->
-    <view-map name="quickadd" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#quickadd"/>
-    <view-map name="category" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#category"/>
-    <view-map name="product" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#product"/>
-    <view-map name="detailImage" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#detailImage"/>
-    <view-map name="lastviewedproducts" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#lastviewedproducts"/>
+    <view-map name="quickadd" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#quickadd" auth="false"/>
+    <view-map name="category" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#category" auth="false"/>
+    <view-map name="product" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#product" auth="false"/>
+    <view-map name="detailImage" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#detailImage" auth="false"/>
+    <view-map name="lastviewedproducts" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#lastviewedproducts" auth="false"/>
     <view-map name="productReview" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#productreview"/>
 
-    <view-map name="keywordsearch" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#keywordsearch"/>
-    <view-map name="tagsearch" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#tagsearch"/>
-    <view-map name="advancedsearch" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#advancedsearch"/>
+    <view-map name="keywordsearch" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#keywordsearch" auth="false"/>
+    <view-map name="tagsearch" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#tagsearch" auth="false"/>
+    <view-map name="advancedsearch" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#advancedsearch" auth="false"/>
 
-    <view-map name="tellafriend" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#tellafriend"/>
+    <view-map name="tellafriend" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#tellafriend" auth="false"/>
 
     <!-- Order Views -->
-    <view-map name="custsetting" type="screen" page="component://ecommerce/widget/OrderScreens.xml#custsettings"/>
-    <view-map name="shipsetting" type="screen" page="component://ecommerce/widget/OrderScreens.xml#shipsettings"/>
-    <view-map name="optionsetting" type="screen" page="component://ecommerce/widget/OrderScreens.xml#optionsettings"/>
-    <view-map name="paymentoptions" type="screen" page="component://ecommerce/widget/OrderScreens.xml#paymentoptions"/>
-    <view-map name="paymentinformation" type="screen" page="component://ecommerce/widget/OrderScreens.xml#paymentinformation"/>
+    <view-map name="custsetting" type="screen" page="component://ecommerce/widget/OrderScreens.xml#custsettings" auth="false"/>
+    <view-map name="shipsetting" type="screen" page="component://ecommerce/widget/OrderScreens.xml#shipsettings" auth="false"/>
+    <view-map name="optionsetting" type="screen" page="component://ecommerce/widget/OrderScreens.xml#optionsettings" auth="false"/>
+    <view-map name="paymentoptions" type="screen" page="component://ecommerce/widget/OrderScreens.xml#paymentoptions" auth="false"/>
+    <view-map name="paymentinformation" type="screen" page="component://ecommerce/widget/OrderScreens.xml#paymentinformation" auth="false"/>
 
     <view-map name="quickcheckout" type="screen" page="component://ecommerce/widget/OrderScreens.xml#checkoutoptions"/>
     <view-map name="checkoutshippingaddress" type="screen" page="component://ecommerce/widget/OrderScreens.xml#checkoutshippingaddress"/>
     <view-map name="checkoutshippingoptions" type="screen" page="component://ecommerce/widget/OrderScreens.xml#checkoutshippingoptions"/>
-    <view-map name="checkoutpayment" type="screen" page="component://ecommerce/widget/OrderScreens.xml#checkoutpayment"/>
+    <view-map name="checkoutpayment" type="screen" page="component://ecommerce/widget/OrderScreens.xml#checkoutpayment" auth="false"/>
     <view-map name="splitship" type="screen" page="component://ecommerce/widget/OrderScreens.xml#splitship"/>
 
-    <view-map name="checkoutreview" type="screen" page="component://ecommerce/widget/OrderScreens.xml#checkoutreview"/>
-    <view-map name="orderreview" type="screen" page="component://ecommerce/widget/OrderScreens.xml#orderreview"/>
+    <view-map name="checkoutreview" type="screen" page="component://ecommerce/widget/OrderScreens.xml#checkoutreview" auth="false"/>
+    <view-map name="orderreview" type="screen" page="component://ecommerce/widget/OrderScreens.xml#orderreview" auth="false"/>
     <view-map name="billsetting" type="screen" page="component://ecommerce/widget/OrderScreens.xml#billsettings"/>
-    <view-map name="ordercomplete" type="screen" page="component://ecommerce/widget/OrderScreens.xml#ordercomplete"/>
+    <view-map name="ordercomplete" type="screen" page="component://ecommerce/widget/OrderScreens.xml#ordercomplete" auth="false"/>
 
     <view-map name="orderhistory" type="screen" page="component://ecommerce/widget/OrderScreens.xml#orderhistory"/>
     <view-map name="orderstatus" type="screen" page="component://ecommerce/widget/OrderScreens.xml#orderstatus"/>
     <view-map name="requestreturn" type="screen" page="component://ecommerce/widget/OrderScreens.xml#requestreturn"/>
 
     <!-- Anonymous Checkout 3 steps entry-->
-    <view-map name="quickAnonCustSetting" type="screen" page="component://ecommerce/widget/OrderScreens.xml#quickAnonCustSettings"/>
-    <view-map name="quickAnonOptionSetting" type="screen" page="component://ecommerce/widget/OrderScreens.xml#quickAnonOptionSettings"/>
-    <view-map name="quickAnonOrderReview" type="screen" page="component://ecommerce/widget/OrderScreens.xml#quickAnonOrderReview"/>
-    <view-map name="quickAnonOrderItems" type="screen" page="component://ecommerce/widget/OrderScreens.xml#quickAnonOrderItems"/>
-    <view-map name="quickAnonCcInfo" type="screen" page="component://ecommerce/widget/OrderScreens.xml#quickAnonCcInfo"/>
-    <view-map name="quickAnonGcInfo" type="screen" page="component://ecommerce/widget/OrderScreens.xml#quickAnonGcInfo"/>
-    <view-map name="quickAnonEftInfo" type="screen" page="component://ecommerce/widget/OrderScreens.xml#quickAnonEftInfo"/>
+    <view-map name="quickAnonCustSetting" type="screen" page="component://ecommerce/widget/OrderScreens.xml#quickAnonCustSettings" auth="false"/>
+    <view-map name="quickAnonOptionSetting" type="screen" page="component://ecommerce/widget/OrderScreens.xml#quickAnonOptionSettings" auth="false"/>
+    <view-map name="quickAnonOrderReview" type="screen" page="component://ecommerce/widget/OrderScreens.xml#quickAnonOrderReview" auth="false"/>
+    <view-map name="quickAnonOrderItems" type="screen" page="component://ecommerce/widget/OrderScreens.xml#quickAnonOrderItems" auth="false"/>
+    <view-map name="quickAnonCcInfo" type="screen" page="component://ecommerce/widget/OrderScreens.xml#quickAnonCcInfo" auth="false"/>
+    <view-map name="quickAnonGcInfo" type="screen" page="component://ecommerce/widget/OrderScreens.xml#quickAnonGcInfo" auth="false"/>
+    <view-map name="quickAnonEftInfo" type="screen" page="component://ecommerce/widget/OrderScreens.xml#quickAnonEftInfo" auth="false"/>
 
     <!-- Customer Info Views -->
-    <view-map name="survey" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#survey"/>
-    <view-map name="newcustomer" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#newcustomer"/>
+    <view-map name="survey" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#survey" auth="false"/>
+    <view-map name="newcustomer" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#newcustomer" auth="false"/>
 
     <view-map name="viewprofile" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#viewprofile"/>
     <view-map name="editcontactmech" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#editcontactmech"/>
@@ -1939,15 +1941,15 @@ under the License.
     <view-map name="editgiftcard" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#editgiftcard"/>
     <view-map name="passwordChange" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#passwordChange"/>
     <view-map name="editperson" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#editperson"/>
-    <view-map name="giftcardbalance" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#giftcardbalance"/>
-    <view-map name="giftcardlink" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#giftcardlink"/>
+    <view-map name="giftcardbalance" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#giftcardbalance" auth="false"/>
+    <view-map name="giftcardlink" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#giftcardlink" auth="false"/>
     <view-map name="profilesurvey" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#customersurvey"/>
 
     <view-map name="digitalproductlist" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#digitalproductlist"/>
     <view-map name="digitalproductedit" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#digitalproductedit"/>
 
     <view-map name="contactus" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#contactus"/>
-    <view-map name="AnonContactus" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#AnonContactus"/>
+    <view-map name="AnonContactus" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#AnonContactus" auth="false"/>
     <view-map name="messagelist" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#messagelist"/>
     <view-map name="messagedetail" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#messagedetail"/>
     <view-map name="messagecreate" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#messagecreate"/>
@@ -1955,16 +1957,16 @@ under the License.
     <view-map name="EditProfile" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#EditProfile"/>
 
     <!-- Content Views -->
-    <view-map name="defaultcontent" type="screen" page="component://ecommerce/widget/ContentScreens.xml#defaultcontent"/>
-    <view-map name="showcontenttree" type="screen" page="component://ecommerce/widget/ContentScreens.xml#showcontenttree"/>
-    <view-map name="viewcontent" type="screen" page="component://ecommerce/widget/ContentScreens.xml#viewcontent"/>
-    <view-map name="searchContent" type="screen" page="component://ecommerce/widget/ContentScreens.xml#searchContent"/>
+    <view-map name="defaultcontent" type="screen" page="component://ecommerce/widget/ContentScreens.xml#defaultcontent" auth="false"/>
+    <view-map name="showcontenttree" type="screen" page="component://ecommerce/widget/ContentScreens.xml#showcontenttree" auth="false"/>
+    <view-map name="viewcontent" type="screen" page="component://ecommerce/widget/ContentScreens.xml#viewcontent" auth="false"/>
+    <view-map name="searchContent" type="screen" page="component://ecommerce/widget/ContentScreens.xml#searchContent" auth="false"/>
 
     <!-- Forum Views -->
     <!-- new -->
-    <view-map name="Showforum" type="screen" page="component://ecommerce/widget/ForumScreens.xml#Showforum"/>
+    <view-map name="Showforum" type="screen" page="component://ecommerce/widget/ForumScreens.xml#Showforum" auth="false"/>
     <view-map name="AddForumThread" type="screen" page="component://ecommerce/widget/ForumScreens.xml#AddForumThread"/>
-    <view-map name="ViewForumMessage" type="screen" page="component://ecommerce/widget/ForumScreens.xml#ViewForumMessage"/>
+    <view-map name="ViewForumMessage" type="screen" page="component://ecommerce/widget/ForumScreens.xml#ViewForumMessage" auth="false"/>
 
     <!-- Quote Views -->
     <view-map name="ListQuotes" type="screen" page="component://ecommerce/widget/QuoteScreens.xml#ListQuotes"/>
@@ -1974,37 +1976,37 @@ under the License.
     <view-map name="ViewRequest" type="screen" page="component://ecommerce/widget/CustRequestScreens.xml#ViewRequest"/>
 
     <!-- Blog Views -->
-    <view-map name="MainBlog" type="screen" page="component://ecommerce/widget/blog/BlogScreens.xml#MainBlog"/>
-    <view-map name="ViewBlogArticle" type="screen" page="component://ecommerce/widget/blog/BlogScreens.xml#ViewArticle"/>
+    <view-map name="MainBlog" type="screen" page="component://ecommerce/widget/blog/BlogScreens.xml#MainBlog" auth="false"/>
+    <view-map name="ViewBlogArticle" type="screen" page="component://ecommerce/widget/blog/BlogScreens.xml#ViewArticle" auth="false"/>
     <view-map name="NewBlogArticle" type="screen" page="component://ecommerce/widget/blog/BlogScreens.xml#NewArticle"/>
     <view-map name="EditBlogArticle" type="screen" page="component://ecommerce/widget/blog/BlogScreens.xml#EditArticle"/>
-    <view-map name="ViewResponse" type="screen" page="component://ecommerce/widget/blog/BlogScreens.xml#ViewResponse"/>
+    <view-map name="ViewResponse" type="screen" page="component://ecommerce/widget/blog/BlogScreens.xml#ViewResponse" auth="false"/>
     <view-map name="RespondBlog" type="screen" page="component://ecommerce/widget/blog/BlogScreens.xml#AddBlogResponse"/>
     <view-map name="EditBlogText" type="screen" page="component://ecommerce/widget/blog/BlogScreens.xml#EditBlogResponse"/>
     <view-map name="EditBlogImage" type="screen" page="component://ecommerce/widget/blog/BlogScreens.xml#EditBlogResponse"/>
     <view-map name="EditBlog" type="screen" page="component://ecommerce/widget/blog/BlogScreens.xml#EditBlogResponse"/>
-    <view-map name="LatestResponses" type="screen" page="component://ecommerce/widget/blog/BlogScreens.xml#LatestResponses"/>
+    <view-map name="LatestResponses" type="screen" page="component://ecommerce/widget/blog/BlogScreens.xml#LatestResponses" auth="false"/>
 
-    <view-map name="ViewSimpleContent" page="" type="simplecontent"/>
+    <view-map name="ViewSimpleContent" page="" type="simplecontent" auth="false"/>
     <!-- PDFs  -->
     <view-map name="OrderPDF" type="screenfop" page="component://order/widget/ordermgr/OrderPrintScreens.xml#OrderPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="InvoicePDF" type="screenfop" page="component://accounting/widget/AccountingPrintScreens.xml#InvoicePDF" content-type="application/pdf" encoding="none"/>
 
     <!-- One Page Checkout -->
-    <view-map name="OnePageCheckout" type="screen" page="component://ecommerce/widget/OrderScreens.xml#OnePageCheckout"/>
-    <view-map name="compareProducts" type="screen" page="component://ecommerce/widget/OrderScreens.xml#compareProducts"/>
+    <view-map name="OnePageCheckout" type="screen" page="component://ecommerce/widget/OrderScreens.xml#OnePageCheckout" auth="false"/>
+    <view-map name="compareProducts" type="screen" page="component://ecommerce/widget/OrderScreens.xml#compareProducts" auth="false"/>
 
     <!-- Product in the different UOM -->
-    <view-map name="ProductUomDropDownOnly" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#ProductUomDropDownOnly"/>
+    <view-map name="ProductUomDropDownOnly" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#ProductUomDropDownOnly" auth="false"/>
 
     <!-- Contact List -->
-    <view-map name="ContactListOptOut" type="screen" page="component://marketing/widget/ContactListScreens.xml#OptOutResponse"/>
+    <view-map name="ContactListOptOut" type="screen" page="component://marketing/widget/ContactListScreens.xml#OptOutResponse" auth="false"/>
 
     <!-- Product Category 's Ajax -->
-    <view-map name="productCategoryList" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#productCategoryList"/>
+    <view-map name="productCategoryList" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#productCategoryList" auth="false"/>
 
     <!-- Shopping List 's Ajax -->
-    <view-map name="showShoppingList" type="screen" page="component://ecommerce/widget/ShoppingListScreens.xml#showShoppingList"/>
+    <view-map name="showShoppingList" type="screen" page="component://ecommerce/widget/ShoppingListScreens.xml#showShoppingList" auth="false"/>
 
     <!-- End of View Mappings -->
 </site-conf>
