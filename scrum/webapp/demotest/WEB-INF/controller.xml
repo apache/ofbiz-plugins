@@ -36,5 +36,5 @@ under the License.
         <response name="error" type="view" value="main" />
     </request-map>
 
-    <view-map name="main" type="screen" page="component://scrum/widget/demotest/DemotestScreen.xml#main" />
+    <view-map name="main" type="screen" page="component://scrum/widget/demotest/DemotestScreen.xml#main" auth="false"/>
 </site-conf>
