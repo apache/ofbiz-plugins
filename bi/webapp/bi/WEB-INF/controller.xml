@@ -56,7 +56,7 @@
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
-    <view-map name="main" type="screen" page="component://bi/widget/BiScreens.xml#main"/>
+    <view-map name="main" type="screen" page="component://bi/widget/BiScreens.xml#main" auth="false"/>
 
     <view-map name="ReportBuilderSelectStarSchema" type="screen" page="component://bi/widget/BiScreens.xml#ReportBuilderSelectStarSchema"/>
     <view-map name="ReportBuilderSelectStarSchemaFields" type="screen" page="component://bi/widget/BiScreens.xml#ReportBuilderSelectStarSchemaFields"/>
