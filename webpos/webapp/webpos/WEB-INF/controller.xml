@@ -97,7 +97,7 @@
     <!-- Common json reponse events, chain these after events to send json reponses -->
     <!-- Standard json response, For security reason (OFBIZ-5409) tries to keep only the initially called service attributes -->
     <request-map uri="json">
-        <security direct-request="false"/>
+        <security https="false" auth="false" direct-request="false"/>
         <event type="java" path="org.apache.ofbiz.common.CommonEvents" invoke="jsonResponseFromRequestAttributes"/>
         <response name="success" type="none"/>
     </request-map>
@@ -481,7 +481,7 @@
     </request-map>
 
     <!-- View Mappings -->
-    <view-map name="error" page="/error/error.jsp"/>
+    <view-map name="error" page="/error/error.jsp auth="false"/>
     <view-map name="Error" type="screen" page="component://webpos/widget/WebPosScreens.xml#Main"/>
     <view-map name="main" type="screen" page="component://webpos/widget/WebPosScreens.xml#Main"/>
     <view-map name="login" type="screen" page="component://webpos/widget/CommonScreens.xml#Login"/>
@@ -502,7 +502,7 @@
     <view-map name="SearchSalesRepsList" type="screen" page="component://webpos/widget/SearchScreens.xml#SearchSalesRepsList"/>
     <view-map name="SideDeepCategory" type="screen" page="component://webpos/widget/CatalogScreens.xml#SideDeepCategory"/>
     <view-map name="CategoryDetail" type="screen" page="component://webpos/widget/CatalogScreens.xml#CategoryDetail"/>
-    <view-map name="ForgotPassword_step1" type="screen" page="component://webpos/widget/CommonScreens.xml#ForgotPassword_step1"/>
-    <view-map name="ForgotPassword_step2" type="screen" page="component://webpos/widget/CommonScreens.xml#ForgotPassword_step2"/>
+    <view-map name="ForgotPassword_step1" type="screen" page="component://webpos/widget/CommonScreens.xml#ForgotPassword_step1" auth="false"/>
+    <view-map name="ForgotPassword_step2" type="screen" page="component://webpos/widget/CommonScreens.xml#ForgotPassword_step2" auth="false"/>
     <!-- End of View Mappings -->
 </site-conf>

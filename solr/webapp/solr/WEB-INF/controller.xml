@@ -59,6 +59,6 @@ under the License.
     </request-map>
     
     <!-- view-maps -->
-    <view-map name="main" type="screen" page="component://solr/widget/SolrScreens.xml#Main"/>
+    <view-map name="main" type="screen" page="component://solr/widget/SolrScreens.xml#Main" auth="false"/>
     
 </site-conf>
