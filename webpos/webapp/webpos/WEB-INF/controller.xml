@@ -481,7 +481,7 @@
     </request-map>
 
     <!-- View Mappings -->
-    <view-map name="error" page="/error/error.jsp auth="false"/>
+    <view-map name="error" page="/error/error.jsp" auth="false"/>
     <view-map name="Error" type="screen" page="component://webpos/widget/WebPosScreens.xml#Main"/>
     <view-map name="main" type="screen" page="component://webpos/widget/WebPosScreens.xml#Main"/>
     <view-map name="login" type="screen" page="component://webpos/widget/CommonScreens.xml#Login"/>
