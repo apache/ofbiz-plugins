@@ -58,7 +58,7 @@ under the License.
       <fo:block text-align="center">
         <#setting url_escaping_charset='UTF-8'>
         <fo:external-graphic
-            src="/example/control/qrcode;jsessionid=${session.id}?message=${example.exampleName?url}&amp;format=bmp&amp;encoding=UTF-8&amp;verifyOutput=true&amp;logoImageMaxWidth=20&amp;logoImageMaxHeight=20"
+            src="/example/control/qrcode?message=${example.exampleName?url}&amp;format=bmp&amp;encoding=UTF-8&amp;verifyOutput=true&amp;logoImageMaxWidth=20&amp;logoImageMaxHeight=20"
             overflow="hidden" height="1.5in" content-height="scale-to-fit"/>
       </fo:block>
     </fo:flow>
