@@ -1,0 +1,25 @@
+
+= Liste des roles de l'acteur.
+
+Cette portlet affiche la liste des roles de l'acteur, tous ou seulement ceux faisant partie d'un groupe de rôle, celui-ci étant alors affiché  dans le titre de la portlet, cela depend du paramétrage de la portlet dans cette page.
+
+S'il n'y a pas de groupe de rôle de paramétré alors lors de l'ajout d'un rôle, il est possible de commencer par sélectionner un rôle père puis un de ses fils.
+
+S'il y a un groupe de rôle de paramétré alors lors de l'ajout d'un rôle, il ne sera possible de choisir que parmi les rôles du groupe.
+
+&nbsp;
+
+== Limitations ou futures fonctionnalitées
+
+* Actuellement c'est le Role père qui permet de regrouper plusieurs rôle, donc il n'est pas possible pour un rôle d'être  dans plusieurs "groupe".
+
+
+== Les paramètre de la Portlet
+
+* Le show edit Standard: s'il est positionné à N alors les bouttons "ajout" et "suppression n'apparaissent pas, la valeur par défaut est Y
+* Groupe de role : indique le groupe de rôle parmi lequel l'utisateur choisira dans l'écran d'ajout. La liste des rôles affiché est alors filtré seul ceux du groupe sont affiché.
+
+
+== Règles de Securité
+
+* PORTAL_ADMIN est nécessaire pour pouvoir éditer les paramètres de la portlet

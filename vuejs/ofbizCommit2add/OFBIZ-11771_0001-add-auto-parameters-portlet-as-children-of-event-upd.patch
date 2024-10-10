@@ -1,0 +1,127 @@
+From 606251ffe8c2b99c34d6bda1ecf1f09f569077b7 Mon Sep 17 00:00:00 2001
+From: holivier <holivier@apache.org>
+Date: Wed, 27 May 2020 12:12:47 +0200
+Subject: [PATCH 20/25] Improved: add auto-parameters-portlet as children of (OFBIZ-11771)
+ event-update-area (field and form).
+
+auto-parameters-portlet add for parameters in parameters-map:
+- portalPageId
+- portalPortletId
+- portletSeqId
+- currentAreaId
+auto-parameters-portlet is used by showPortlet to be able to renderer
+only one portlet, because often, it's necessary to have the 4 parameters
+for a future other update (ex: button back)
+---
+ framework/widget/dtd/widget-common.xsd                       |  8 ++++++++
+ framework/widget/dtd/widget-form.xsd                         |  2 ++
+ .../org/apache/ofbiz/widget/model/CommonWidgetModels.java    | 12 ++++++++++--
+ .../main/java/org/apache/ofbiz/widget/model/ModelForm.java   | 12 ++++++++++--
+ 4 files changed, 30 insertions(+), 4 deletions(-)
+
+diff --git a/framework/widget/dtd/widget-common.xsd b/framework/widget/dtd/widget-common.xsd
+index 0fd32d3334..4a076f2ed3 100644
+--- a/framework/widget/dtd/widget-common.xsd
++++ b/framework/widget/dtd/widget-common.xsd
+@@ -515,6 +515,13 @@ under the License.
+             <xs:attribute name="send-if-empty" type="xs:boolean" default="true"/>
+         </xs:complexType>
+     </xs:element>
++    <xs:element name="auto-parameters-portlet">
++        <xs:annotation>
++            <xs:documentation>Generate 4 parameters : portalPageId, portalPortletId, portletSeqId and currentAreaId update from-field parameters.xxx</xs:documentation>
++        </xs:annotation>
++        <xs:complexType>
++        </xs:complexType>
++    </xs:element>
+     <xs:element name="exclude">
+         <xs:complexType>
+             <xs:attribute name="field-name" type="xs:string" use="required" />
+@@ -525,6 +532,7 @@ under the License.
+             <xs:element minOccurs="0" ref="auto-parameters-service"/>
+             <xs:element minOccurs="0" ref="auto-parameters-entity"/>
+             <xs:element minOccurs="0" maxOccurs="unbounded" ref="parameter" />
++            <xs:element minOccurs="0" ref="auto-parameters-portlet"/>
+             <xs:element minOccurs="0" name="image" type="image" />
+         </xs:sequence>
+         <xs:attribute type="xs:string" name="text" />
+diff --git a/framework/widget/dtd/widget-form.xsd b/framework/widget/dtd/widget-form.xsd
+index f82a0b2f44..ec3096dc58 100644
+--- a/framework/widget/dtd/widget-form.xsd
++++ b/framework/widget/dtd/widget-form.xsd
+@@ -587,6 +587,7 @@ under the License.
+                 <xs:element minOccurs="0" ref="auto-parameters-service"/>
+                 <xs:element minOccurs="0" ref="auto-parameters-entity"/>
+                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="parameter" />
++                <xs:element minOccurs="0" ref="auto-parameters-portlet"/>
+             </xs:sequence>
+             <xs:attribute name="event-type" use="required">
+                 <xs:annotation>
+@@ -1553,6 +1554,7 @@ under the License.
+         <xs:complexType>
+             <xs:sequence>
+                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="parameter" />
++                <xs:element minOccurs="0" ref="auto-parameters-portlet"/>
+             </xs:sequence>
+             <xs:attribute name="event-type" use="required">
+                 <xs:annotation>
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/CommonWidgetModels.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/CommonWidgetModels.java
+index e339858201..1cbcc1f9aa 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/CommonWidgetModels.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/CommonWidgetModels.java
+@@ -364,14 +364,22 @@ public final class CommonWidgetModels {
+                 this.linkType = linkElement.getAttribute("link-type");
+             }
+             List<? extends Element> parameterElementList = UtilXml.childElementList(linkElement, "parameter");
+-            if (parameterElementList.isEmpty()) {
++            boolean autoPortletParamsElement = UtilXml.firstChildElement(linkElement, "auto-parameters-portlet") == null ? false : true;
++            if (parameterElementList.isEmpty() && ! autoPortletParamsElement) {
+                 this.parameterList = Collections.emptyList();
+             } else {
++                int paramListSize = parameterElementList.size() + (autoPortletParamsElement ? 4 : 0);
+                 List<Parameter> parameterList = new ArrayList<>(
+-                        parameterElementList.size());
++                        paramListSize);
+                 for (Element parameterElement : parameterElementList) {
+                     parameterList.add(new Parameter(parameterElement));
+                 }
++                if (autoPortletParamsElement) {
++                    parameterList.add(new CommonWidgetModels.Parameter("portalPageId",    "parameters.portalPageId",    true));
++                    parameterList.add(new CommonWidgetModels.Parameter("portalPortletId", "parameters.portalPortletId", true));
++                    parameterList.add(new CommonWidgetModels.Parameter("portletSeqId",    "parameters.portletSeqId",    true));
++                    parameterList.add(new CommonWidgetModels.Parameter("currentAreaId",   "parameters.currentAreaId",   true));
++                }
+                 this.parameterList = Collections.unmodifiableList(parameterList);
+             }
+             Element autoServiceParamsElement = UtilXml.firstChildElement(linkElement, "auto-parameters-service");
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java
+index 3a9e0a4a49..f94a742eb6 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java
+@@ -1750,13 +1750,21 @@ public abstract class ModelForm extends ModelWidget {
+             this.defaultServiceName = defaultServiceName;
+             this.defaultEntityName = defaultEntityName;
+             List<? extends Element> parameterElementList = UtilXml.childElementList(updateAreaElement, "parameter");
+-            if (parameterElementList.isEmpty()) {
++            boolean autoPortletParamsElement = UtilXml.firstChildElement(updateAreaElement, "auto-parameters-portlet") == null ? false : true;
++            if (parameterElementList.isEmpty() && ! autoPortletParamsElement) {
+                 this.parameterList = Collections.emptyList();
+             } else {
+-                List<CommonWidgetModels.Parameter> parameterList = new ArrayList<>(parameterElementList.size());
++                int paramListSize = parameterElementList.size() + (autoPortletParamsElement ? 4 : 0);
++                List<CommonWidgetModels.Parameter> parameterList = new ArrayList<>(paramListSize);
+                 for (Element parameterElement : parameterElementList) {
+                     parameterList.add(new CommonWidgetModels.Parameter(parameterElement));
+                 }
++                if (autoPortletParamsElement) {
++                    parameterList.add(new CommonWidgetModels.Parameter("portalPageId",    "parameters.portalPageId",    true));
++                    parameterList.add(new CommonWidgetModels.Parameter("portalPortletId", "parameters.portalPortletId", true));
++                    parameterList.add(new CommonWidgetModels.Parameter("portletSeqId",    "parameters.portletSeqId",    true));
++                    parameterList.add(new CommonWidgetModels.Parameter("currentAreaId",   "parameters.currentAreaId",   true));
++                }
+                 this.parameterList = Collections.unmodifiableList(parameterList);
+             }
+             Element autoServiceParamsElement = UtilXml.firstChildElement(updateAreaElement, "auto-parameters-service");
+-- 
+2.11.0
+

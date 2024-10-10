@@ -1,0 +1,134 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+= Example
+== Category Example.
+This category is for Example component. There is only one category for Example component.
+
+=== Find Examples
+It's the standard search criteria form to be able to show a example list print. +
+This screenlet update watcherName listExample.
+
+==== Screenlet parameters
+* no
+
+==== Security rules
+* nothing (component rules only)
+
+
+=== Example List
+List all examples according to the search criteria provided in watcherName ListExample
+
+In the list, exampleId is a link to select the example for all portlet watching watcherName showExample +
+(the link update watcherName showExample) +
+Click on link collapse the list. It's possible to un-collapse without doing a new search.
+
+==== Screenlet parameters
+GenericRecapPageParam to give 
+
+* recapPageId : give id to use as link to go to recap page for one example.
+
+==== Security rules
+* nothing (component rules only)
+
+
+=== DetailMenu for one example
+For one example (exampleId is in the parameterized watcherName in the portal page) Show a summary, a link to the recap page and a menu to choose what
+detail to show for this example in the ExampleDetail container. 
+
+This screenlet is completely empty if there is no exampleId in watcherName.
+
+==== Screenlet parameters
+* no
+
+==== Security rules
+* nothing (component rules only)
+
+
+=== Example Detail
+Container used to show one detail about one example, one detail means a associated entity with example
+(ex: show exampleFeature associated to the example or show exampleItems associated to the example or ...)
+
+This screenlet store which screenlet to show each time it's call, and will be updated each time the exampleId value
+in the parameterized watcherName in the portal page is updated.
+
+This screenlet is used to define where show the detail.
+
+==== Screenlet parameters
+* no
+
+==== Security rules
+* nothing (component rules only)
+
+
+=== Show Example
+Show all example field for one example.
+
+It's possible to edit the example. When some modification is validated in this screenlet, watcherName exampleStatus is update.
+So if screenlet ExampleStatus is in the same page and watch this watcherName a new call to the server is done for it.
+
+==== Screenlet parameters
+* no
+
+==== Security rules
+* nothing (component rules only)
+
+
+=== Example Items
+Lists items for one example and manage them, create new one, edit existing or delete it.
+
+This screenlet is completely empty if it is call with no exampleId.
+
+==== Screenlet parameters
+GenericEditEditOrShowParam is used for parameters form so,
+
+* showEditButton : Y or N, show or not the edit button in items list for each item
+* showScreenletMenu : Y or N, show or not edit menu in the screenlet bar, in this case the Add item button.
+
+==== Security rules
+* nothing (component rules only)
+
+
+=== Example status History
+List all status change for the current example.
+
+This screenlet is completely empty if it is call with no exampleId.
+
+==== Screenlet parameters
+* no
+
+==== Security rules
+* nothing (component rules only)
+
+
+=== Example Feature associated to a example
+Lists ExampleFeatures associated for one example and manage association, create new one, edit existing or delete it.
+
+This screenlet contain a link to Create a new ExampleFeature out of this screenlet.
+
+This screenlet is completely empty if it is call with no exampleId
+
+==== Screenlet parameters
+GenericEditEditOrShowParam is used for parameters form so,
+
+* showEditButton : Y or N, show or not the edit button in features list for each feature
+* showScreenletMenu : Y or N, show or not edit menu in the screenlet bar, in this case the Add a new feature association.
+
+==== Security rules
+* nothing (component rules only)
+

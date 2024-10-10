@@ -1,0 +1,87 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+= Vue.js
+
+== Vue.js general
+todo
+
+== Components
+A Vue.Js component is defined by 3 distinct blocks ( template, script, style ) which are regrouped in a single '.vue' file.
+
+. Template :
+* Template must be contained in a single root element (div, span, table, ect... ) +
+* In template we can access computed properties and function with double curly bracket *{{}}* +
+* Classic html attributes can be preceded by ':' to use script properties and js code instead of plain text
+* Vue.Js give us some directives (v-for, v-if v-on:click, ect...) that are bind to script context and work like a classic
+attribute preceded by ':' and so can bind to script part and interpret js.
+
+. Script
+* Script section is wrapped into an `export default {}` that contain the whole script elements.
+TIP: import have to be made before this export
+* This export is a map that can contain predefined keys used by Vue.Js (data, computed, methods, props, created, ect...)
+** data() is a function that contain variable used is the component context. +
+All variable contained in data() are reactive, which mean that Vue.Js will track any change on them and will reverberate
+theses changes everywhere there are used to reevaluate render.
+** computed is a map that contain evaluation based on reactive data. +
+They can be used like a reactive variable in the component and will reevaluate itself when one of its entry had changed.
+** methods is a map containing helper function (handleClick, doPost, ect...). +
+WARNING: these functions don't aim to be reactive.
+** props is an array of string who give attribute to the component for passing data from its parent to it.
+** This section can also contain *hooks* of the component life cycle (created(), mount(), beforeUpdate(), ect...). +
+Theses block of code will be executed when the hook is fired. +
+See below : +
+image:https://fr.vuejs.org/images/lifecycle.png["Component lifecycle", link="https://fr.vuejs.org/images/lifecycle.png"] +
+
+
+. Style +
+This part is dedicated to internal css of the component. +
+Style of this part is applied before other style of the project.
+
+== Vuex
+Vuex is the centralised state system of the application.
+It allow us to create 'store' which contain data that can be accessed/modified by any component of the application.
+
+A store is composed of 4 elements :
+
+. `State` +
+State is a map that contain all stored informations. +
+State can only be modify by `mutation`.
+Default state's data will be reactive. +
+If Data had to be added in the state after its creation, they must be added with the method `Vue.set()` for them to be reactive.
+
+. `Mutations` +
+Mutations is a map that contain function allowed to alter state.
+By convention, mutation's key have to be upper-case.
+Mutations can't be accessed through code, they must be called by actions.
+Mutations must be synchronous.
+
+. `Actions` +
+Mutation first aim to fire mutation. +
+Actions can be asynchronous, in which case there return a promise.
+
+. `Getters` +
+Getters allow to access state data. +
+Getters are reactive. +
+Getters can use parameters, if they are they return a function instead of a reactive variable. +
+
+Store can be split into modules who can be described in an index.js file, stores can so be stored into a modules repository. +
+
+
+== Reactivity
+todo
