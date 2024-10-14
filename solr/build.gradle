@@ -27,7 +27,7 @@ dependencies {
 configurations.all {
     resolutionStrategy {
       dependencySubstitution {
-          substitute module('com.google.guava:guava') with module('com.google.guava:guava:28.0-jre')
+          substitute module('com.google.guava:guava') using module('com.google.guava:guava:28.0-jre')
       }
     }
 }
