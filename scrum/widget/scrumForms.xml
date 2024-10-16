@@ -1219,22 +1219,22 @@ under the License.
                 <parameter param-name="partyId" from-field="productOwnerId"/>
             </hyperlink>
         </field>
-        <field name="dummy" title=" " position="2"    use-when="'${sprintId}'!=''"><display description=" "/></field>
-        <field name="sprintName" title="${uiLabelMap.ScrumTab} ${uiLabelMap.ScrumSprint}" position="2" use-when="'${sprintId}'!=''">
+        <field name="dummy" title=" " position="2"    use-when="sprintId!=''"><display description=" "/></field>
+        <field name="sprintName" title="${uiLabelMap.ScrumTab} ${uiLabelMap.ScrumSprint}" position="2" use-when="sprintId!=''">
             <hyperlink description="${uiLabelMap.ScrumTab} ${sprintName} [${sprintId}]" target="ViewSprint">
                 <parameter param-name="projectId"/>
                 <parameter param-name="sprintId"/>
             </hyperlink>
         </field>
-        <field name="sprintCurrentStatusId" title="${uiLabelMap.CommonStatus}" position="2" use-when="'${sprintId}'!=''">
+        <field name="sprintCurrentStatusId" title="${uiLabelMap.CommonStatus}" position="2" use-when="sprintId!=''">
             <display-entity entity-name="StatusItem" key-field-name="statusId"/>
         </field>
-        <field name="estimatedHrs" title="${uiLabelMap.ScrumSprintLengthWeeks}" position="2" use-when="'${sprintId}'!=''"><display/></field>
-        <field name="planHours" title="${uiLabelMap.ScrumPlannedHours}" position="2" use-when="'${sprintId}'!=''"><display/></field>
-        <field name="actualHours" title="${uiLabelMap.ScrumActualHours}" position="2" use-when="'${sprintId}'!=''"><display/></field>
-        <field name="actualHoursNotBillYet" title="${uiLabelMap.ScrumActualHoursNotBill}" position="2" use-when="'${sprintId}'!=''"><display/></field>
-        <field name="sprintActualStartDate" title="${uiLabelMap.CommonStartDate}" position="2" use-when="'${sprintId}'!=''"><display type="date"></display></field>
-        <field name="sprintActualCompletionDate" title="${uiLabelMap.CommonEndDate}" position="2" use-when="'${sprintId}'!=''"><display type="date"></display></field>
+        <field name="estimatedHrs" title="${uiLabelMap.ScrumSprintLengthWeeks}" position="2" use-when="sprintId!=''"><display/></field>
+        <field name="planHours" title="${uiLabelMap.ScrumPlannedHours}" position="2" use-when="sprintId!=''"><display/></field>
+        <field name="actualHours" title="${uiLabelMap.ScrumActualHours}" position="2" use-when="sprintId!=''"><display/></field>
+        <field name="actualHoursNotBillYet" title="${uiLabelMap.ScrumActualHoursNotBill}" position="2" use-when="sprintId!=''"><display/></field>
+        <field name="sprintActualStartDate" title="${uiLabelMap.CommonStartDate}" position="2" use-when="sprintId!=''"><display type="date"></display></field>
+        <field name="sprintActualCompletionDate" title="${uiLabelMap.CommonEndDate}" position="2" use-when="sprintId!=''"><display type="date"></display></field>
     </form>
     <form name="ProjectListWithNoLinkProfile" extends="ProjectList">
         <field name="companyId" title="${uiLabelMap.ScrumOwnerCompany}" position="1" use-when="!isCurrentCompany"  widget-style="buttontext">
@@ -1292,21 +1292,21 @@ under the License.
                 <parameter param-name="projectId" from-field="workEffortId"/>
             </hyperlink>
         </field>
-        <field name="sprintName" title="${uiLabelMap.ScrumTab} ${uiLabelMap.ScrumSprint}" position="2" use-when="'${sprintId}'!=''">
+        <field name="sprintName" title="${uiLabelMap.ScrumTab} ${uiLabelMap.ScrumSprint}" position="2" use-when="sprintId!=''">
             <hyperlink description="${uiLabelMap.ScrumTab} ${sprintName} [${sprintId}]" target="ViewSprint">
                 <parameter param-name="projectId"/>
                 <parameter param-name="sprintId"/>
             </hyperlink>
         </field>
-        <field name="sprintCurrentStatusId" title="${uiLabelMap.CommonStatus}" position="2" use-when="'${sprintId}'!=''">
+        <field name="sprintCurrentStatusId" title="${uiLabelMap.CommonStatus}" position="2" use-when="sprintId!=''">
             <display-entity entity-name="StatusItem" key-field-name="statusId"/>
         </field>
-        <field name="estimatedHrs" title="${uiLabelMap.ScrumSprintLengthWeeks}" position="2" use-when="'${sprintId}'!=''"><display/></field>
-        <field name="planHours" title="${uiLabelMap.ScrumPlannedHours}" position="2" use-when="'${sprintId}'!=''"><display/></field>
-        <field name="actualHours" title="${uiLabelMap.ScrumActualHours}" position="2" use-when="'${sprintId}'!=''"><display/></field>
-        <field name="actualHoursNotBillYet" title="${uiLabelMap.ScrumActualHoursNotBill}" position="2" use-when="'${sprintId}'!=''"><display/></field>
-        <field name="sprintActualStartDate" title="${uiLabelMap.CommonStartDate}" position="2" use-when="'${sprintId}'!=''"><display type="date"></display></field>
-        <field name="sprintActualCompletionDate" title="${uiLabelMap.CommonEndDate}" position="2" use-when="'${sprintId}'!=''"><display type="date"></display></field>
+        <field name="estimatedHrs" title="${uiLabelMap.ScrumSprintLengthWeeks}" position="2" use-when="sprintId!=''"><display/></field>
+        <field name="planHours" title="${uiLabelMap.ScrumPlannedHours}" position="2" use-when="sprintId!=''"><display/></field>
+        <field name="actualHours" title="${uiLabelMap.ScrumActualHours}" position="2" use-when="sprintId!=''"><display/></field>
+        <field name="actualHoursNotBillYet" title="${uiLabelMap.ScrumActualHoursNotBill}" position="2" use-when="sprintId!=''"><display/></field>
+        <field name="sprintActualStartDate" title="${uiLabelMap.CommonStartDate}" position="2" use-when="sprintId!=''"><display type="date"></display></field>
+        <field name="sprintActualCompletionDate" title="${uiLabelMap.CommonEndDate}" position="2" use-when="sprintId!=''"><display type="date"></display></field>
     </form>
     <form name="SprintListInfo" extends="SprintList" odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="basic-table hover-bar" paginate-target="viewScrumProject">
         <actions>
@@ -2926,8 +2926,8 @@ under the License.
                 <parameter param-name="statusId" from-field="parameters.statusId"/>
             </hyperlink>
         </field>
-        <!--<field name="estimatedHours" title="${uiLabelMap.ScrumPlannedHours}" use-when="'${statusId}'=='CRQ_ACCEPTED'"><text size="3"/></field>
-        <field name="estimatedHours" title="${uiLabelMap.ScrumPlannedHours}" use-when="'${statusId}'=='CRQ_REVIEWED'"><display/></field>-->
+        <!--<field name="estimatedHours" title="${uiLabelMap.ScrumPlannedHours}" use-when="statusId=='CRQ_ACCEPTED'"><text size="3"/></field>
+        <field name="estimatedHours" title="${uiLabelMap.ScrumPlannedHours}" use-when="statusId=='CRQ_REVIEWED'"><display/></field>-->
         <field name="parentCustRequestId" title="${uiLabelMap.ScrumCategory}">
             <drop-down allow-empty="true">
                 <entity-options description="${custRequestName}" entity-name="CustRequestAndCustRequestItem" key-field-name="custRequestId">
@@ -3130,16 +3130,16 @@ under the License.
             <display-entity entity-name="CustRequest" key-field-name="custRequestId" description="${custRequestName}"/>
         </field>-->
         <field name="submitButton" widget-style="buttontext"><submit button-type="text-link"/></field>
-        <field name="setToReview" title="${uiLabelMap.ScrumMoveToUnplannedSprint}" widget-style="buttontext" use-when="'${statusId}'=='CRQ_ACCEPTED'" position="2">
+        <field name="setToReview" title="${uiLabelMap.ScrumMoveToUnplannedSprint}" widget-style="buttontext" use-when="statusId=='CRQ_ACCEPTED'" position="2">
             <hyperlink description="${uiLabelMap.ScrumMoveToUnplannedSprint}" target="setUnplannedSprint">
                 <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
                 <parameter param-name="productId" from-field="parameters.productId"/>
                 <parameter param-name="statusId" value="parameters.statusId"/>
             </hyperlink>
         </field>
-        <field name="setToReview" title="${uiLabelMap.ScrumMoveToUnplannedSprint}" use-when="'${statusId}'=='CRQ_REVIEWED'" position="2"><hidden /></field>
+        <field name="setToReview" title="${uiLabelMap.ScrumMoveToUnplannedSprint}" use-when="statusId=='CRQ_REVIEWED'" position="2"><hidden /></field>
         <field name="deleteFlag" position="2" title="${uiLabelMap.CommonDelete}"/>
-        <field name="dummy1" title="${uiLabelMap.ScrumMoveToUnplannedSprint}" use-when="'${statusId}'=='CRQ_REVIEWED'" position="2"><display description=" "/></field>
+        <field name="dummy1" title="${uiLabelMap.ScrumMoveToUnplannedSprint}" use-when="statusId=='CRQ_REVIEWED'" position="2"><display description=" "/></field>
     </form>
     <form name="UnplannedBacklogListByCategoriesForOwner" extends="UnplannedBacklogListByCategories">
         <field name="estimatedHours" position="2" title="${uiLabelMap.ScrumPlannedHours}"><display/></field>
