@@ -103,7 +103,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="comments" title="Ebay Category Id"><display description="${ebayCategoryId}"></display></field>
-        <field name="subCategory"><display description="${groovy:prodCategoryRollup.size()}"></display></field>
+        <field name="subCategory"><display description="${util:size(prodCategoryRollup)}"></display></field>
         <field name="updateButton"  title="${uiLabelMap.CommonDelete}"><submit button-type="button"/></field>
     </form>
     <form name="NewEbayAccount" type="single"  target="createEbayAccount">

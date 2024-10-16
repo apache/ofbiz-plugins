@@ -1364,7 +1364,7 @@
             </iterate>
         </if-not-empty>
         <if-not-empty field="billingItemIndexList">
-            <set field="billingItemIndexToSet" value="${groovy: import java.util.Set; new HashSet(billingItemIndexList);}"/>
+            <set field="billingItemIndexToSet" value="${groovy: billingItemIndexList.unique()}"/>
             <set field="billingItemIndexList" from-field="billingItemIndexToSet" />
             <iterate list="billingItemIndexList" entry="billingItemIndexMap">
                 <set field="inputMap" type="NewMap"/>
