@@ -116,6 +116,6 @@ under the License.
     </div>
   </div>
 </div>
-<script type="application/javascript">
+<script type="text/javascript">
   customerAddressSelected();
 </script>

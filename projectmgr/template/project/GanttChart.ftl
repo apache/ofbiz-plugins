@@ -22,5 +22,5 @@ under the License.
 
 <input id="ofbizGantItemsJson" type="hidden" value="${phaseTaskListJson}"/>
 
-<script type="application/javascript" src="/projectmgr/node_modules/jsgantt-improved/dist/jsgantt.js"></script>
-<script type="application/javascript" src="/projectmgr/static/projectmgr.js"></script>
+<script type="text/javascript" src="/projectmgr/node_modules/jsgantt-improved/dist/jsgantt.js"></script>
+<script type="text/javascript" src="/projectmgr/static/projectmgr.js"></script>

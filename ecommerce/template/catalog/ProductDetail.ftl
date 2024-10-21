@@ -24,7 +24,7 @@ under the License.
 <#-- virtual product javascript -->
 ${virtualJavaScript!}
 ${virtualVariantJavaScript!}
-<script type="application/javascript">
+<script type="text/javascript">
     var detailImageUrl = null;
     function setAddProductId2(sku, with_bak) {
         document.addform.add_product_id.value = sku;
@@ -844,7 +844,7 @@ ${variantInfoJavaScript!}
     </div>
     <#-- Prefill first select box (virtual products only) -->
     <#if variantTree?? && 0 &lt; variantTree.size()>
-      <script type="application/javascript">eval("list" + "${featureOrderFirst}" + "()");</script>
+      <script type="text/javascript">eval("list" + "${featureOrderFirst}" + "()");</script>
     </#if>
 
     <#-- Swatches (virtual products only) -->

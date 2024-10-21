@@ -16,7 +16,7 @@
   specific language governing permissions and limitations
   under the License.
   -->
-<script type="application/javascript">
+<script type="text/javascript">
   <#-- some labels are not unescaped in the JSON object so we have to do this manuely -->
   function unescapeHtmlText(text) {
     return jQuery('<div />').html(text).text()

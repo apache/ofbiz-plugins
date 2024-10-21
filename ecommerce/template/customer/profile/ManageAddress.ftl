@@ -98,7 +98,7 @@ under the License.
         </fieldset>
       </form>
     </div>
-    <script type="application/javascript">
+    <script type="text/javascript">
             jQuery("#displayCreateAddressForm").dialog({
                 autoOpen: false, modal: true,
                 buttons: {
@@ -160,7 +160,7 @@ under the License.
       <div id="displayEditBillToPostalAddress" style="display: none;">
         <#include "EditBillToAddress.ftl" />
       </div>
-      <script type="application/javascript">
+      <script type="text/javascript">
             jQuery("#displayEditBillToPostalAddress").dialog({
                 autoOpen: false, modal: true,
                 buttons: {
@@ -218,7 +218,7 @@ under the License.
       <div id="displayEditShipToPostalAddress" style="display: none;">
         <#include "EditShipToAddress.ftl" />
       </div>
-      <script type="application/javascript">
+      <script type="text/javascript">
               jQuery("#displayEditShipToPostalAddress").dialog({
                 autoOpen: false, modal: true,
                 buttons: {
@@ -296,7 +296,7 @@ under the License.
                   </fieldset>
                 </form>
               </div>
-              <script type="application/javascript">
+              <script type="text/javascript">
                       jQuery("#displayEditAddressForm_${contactMech.contactMechId}").dialog({
                           autoOpen: false, modal: true,
                           buttons: {

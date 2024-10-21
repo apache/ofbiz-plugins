@@ -56,7 +56,7 @@ under the License.
         </tr>
       </table>
     <#else>
-      <script type="application/javascript">
+      <script type="text/javascript">
         window.close();
       </script>
       <div>${uiLabelMap.EcommerceTellAFriendSorry}</div>

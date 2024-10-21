@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<script type="application/javascript">
+<script type="text/javascript">
         function selectChange(formId, elementId) {
             if (elementId.id == 'searchProductStoreId') {
                 document.getElementById('searchCatalogId')[document.getElementById('searchCatalogId')

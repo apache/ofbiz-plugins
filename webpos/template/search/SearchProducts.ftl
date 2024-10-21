@@ -34,6 +34,6 @@ under the License.
   </div>
 </form>
 <br />
-<script type="application/javascript">
+<script type="text/javascript">
   document.SearchProducts.productToSearch.focus();
 </script>

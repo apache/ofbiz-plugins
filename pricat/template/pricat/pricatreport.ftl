@@ -141,7 +141,7 @@ function continueReport() {
 
 ${StringUtil.wrapString(report.htmlStart())}
 
-<script type="application/javascript">
+<script type="text/javascript">
 <!--
 
 // saves the HTML of the extended report format, 

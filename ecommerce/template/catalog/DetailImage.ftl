@@ -21,7 +21,7 @@ under the License.
     <#if requestParameters.detail?has_content>
       <img src="${requestParameters.detail}" alt=""/>
     <#else>
-    <script type="application/javascript">
+    <script type="text/javascript">
             window.close();
     </script>
     </#if>

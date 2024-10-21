@@ -26,7 +26,7 @@ under the License.
     </td>
   </tr>
 </table>
-<script type="application/javascript">
+<script type="text/javascript">
   function activateHotKeys() {
     $(document).keydown(function(e){
         switch (e.keyCode) {

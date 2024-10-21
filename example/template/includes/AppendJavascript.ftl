@@ -16,4 +16,4 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<script type="application/javascript" src="${reactAppJavascriptUrlPath}"></script>
+<script type="text/javascript" src="${reactAppJavascriptUrlPath}"></script>

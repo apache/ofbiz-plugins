@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<script type="application/javascript">
+<script type="text/javascript">
     <!-- function to add extra info for Timestamp format -->
     function TimestampSubmit(obj) {
        reservStartStr = jQuery(obj).find("input[name='reservStartStr']");

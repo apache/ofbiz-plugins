@@ -32,7 +32,7 @@
    "application/java-archive": "jar",
    "text/x-java-source": "java",
    "image/jpeg": "jpeg",
-   "application/javascript": "js",
+   "text/javascript": "js",
    "application/vnd.oasis.opendocument.chart": "odc",
    "application/vnd.oasis.opendocument.formula": "odf",
    "application/vnd.oasis.opendocument.graphics": "odg",

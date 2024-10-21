@@ -78,7 +78,7 @@ under the License.
   </#if>
   <#if layoutSettings.VT_HDR_JAVASCRIPT?has_content>
     <#list layoutSettings.VT_HDR_JAVASCRIPT as javaScript>
-      <script type="application/javascript"
+      <script type="text/javascript"
           src="<@ofbizContentUrl>${StringUtil.wrapString(javaScript)}</@ofbizContentUrl>"></script>
     </#list>
   </#if>
@@ -89,7 +89,7 @@ under the License.
     <#list layoutSettings.javaScripts as javaScript>
       <#if javaScriptsSet.contains(javaScript)>
         <#assign nothing = javaScriptsSet.remove(javaScript)/>
-        <script type="application/javascript"
+        <script type="text/javascript"
                 src="<@ofbizContentUrl>${StringUtil.wrapString(javaScript)}</@ofbizContentUrl>"></script>
       </#if>
     </#list>
@@ -110,7 +110,7 @@ under the License.
     <meta name="keywords" content="${metaKeywords}"/>
   </#if>
   <#if webAnalyticsConfigs?has_content>
-    <script type="application/javascript">
+    <script type="text/javascript">
       <#list webAnalyticsConfigs as webAnalyticsConfig>
         <#if  webAnalyticsConfig.webAnalyticsTypeId != "BACKEND_ANALYTICS">
           ${StringUtil.wrapString(webAnalyticsConfig.webAnalyticsCode!)}

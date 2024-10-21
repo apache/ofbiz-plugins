@@ -62,7 +62,7 @@ under the License.
         background-color:#FFF;
     }
 </style>
-<script type="application/javascript">
+<script type="text/javascript">
 
     function retrieveEbayCategoryByParent(url,cateId,productStoreId,id){
         if (cateId.match('true')){
@@ -584,18 +584,18 @@ under the License.
                                     <td>
                                       <script
                                               src="<@ofbizContentUrl>/common/js/jquery/plugins/elrte-1.3/js/elrte.min.js</@ofbizContentUrl>"
-                                              type="application/javascript">
+                                              type="text/javascript">
                                       </script>
                                       <#if language?has_content && language != "en">
                                         <script
                                                 src="<@ofbizContentUrl>/common/js/jquery/plugins/elrte-1.3/js/i18n/elrte.${language!"en"}.js</@ofbizContentUrl>"
-                                                type="application/javascript">
+                                                type="text/javascript">
                                         </script>
                                         <#rt/>
                                       </#if>
                                       <link href="<@ofbizContentUrl>/common/js/jquery/plugins/elrte-1.3/css/elrte.min.css</@ofbizContentUrl>"
                                               rel="stylesheet" type="text/css">
-                                      <script type="application/javascript">
+                                      <script type="text/javascript">
                                           var opts = {
                                               cssClass: 'el-rte',
                                               lang: '${language}',
@@ -608,7 +608,7 @@ under the License.
                                       <textarea id="description" name="description" style="width:800px; height:300px">
                                         <#if item.getDescription()??>description<#else>${item.getDescription()!}</#if>
                                       </textarea>
-                                      <script type="application/javascript">
+                                      <script type="text/javascript">
                                           jQuery('#description').elrte(opts);
                                       </script>
                                     </td>
@@ -657,7 +657,7 @@ under the License.
                                   <tr>
                                     <td></td>
                                     <td valign="top">
-                                      <script type="application/javascript">
+                                      <script type="text/javascript">
                                           function popUpImg() {
                                               //popUp(document.getElementById('themeImg').src, 'themeImgBig', '400', '550');
                                           }

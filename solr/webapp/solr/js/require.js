@@ -9994,7 +9994,7 @@ jQuery.ajaxPrefilter( "json jsonp", function( s, originalSettings, jqXHR ) {
 // Install script dataType
 jQuery.ajaxSetup({
   accepts: {
-    script: "text/javascript, application/javascript, application/ecmascript, application/x-ecmascript"
+    script: "text/javascript, text/javascript, application/ecmascript, application/x-ecmascript"
   },
   contents: {
     script: /javascript|ecmascript/
