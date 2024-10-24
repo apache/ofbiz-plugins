@@ -683,7 +683,7 @@
                 
                 <!-- Check if there are duplicate value will reorder and change it -->
                 <set field="custRequestIndex" type="List"/>
-                <set field="custRequestIndexToSet" value="${groovy: import java.util.Set; new HashSet(custRequestIndexList);}"/>
+                <set field="custRequestIndexToSet" value="${groovy: custRequestIndexList.unique()}"/>
                 <iterate list="custRequestIndexToSet" entry="custRequestIndexMap">
                     <set field="count" value="0" type="Integer"/>
                     <loop count="${custRequestListSize}" field="l">

@@ -115,7 +115,7 @@ under the License.
             </service>
             <set field="planHours" from-field="taskPlanHourOutMap.planHours"/>
             <!-- condition -->
-             <set field="showPosition1" value="${groovy:String prev=(String)previousItem.get(&quot;custRequestId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(custRequestId)));}" type="Boolean"/>
+             <set field="showPosition1" value="${groovy: previousItem?.custRequestId == custRequestId}" type="Boolean"/>
             <!-- Get list of task for each sprint backlog -->
             <entity-and entity-name="WorkEffortPartyAssignView" list="sprintMember">
                 <field-map field-name="workEffortId" from-field="sprintId"/>
@@ -149,7 +149,7 @@ under the License.
         <field name="taskId" position="2"><hidden/></field>
         <field name="VIEW_SIZE_2" position="2"><hidden value="${parameters.VIEW_SIZE_2}"/></field>
         <field name="VIEW_INDEX_2" position="2"><hidden value="${parameters.VIEW_INDEX_2}"/></field>
-        <field name="custRequestId" title="${uiLabelMap.ScrumSprintBacklog}" position="1" use-when="showPosition1&amp;&amp;&quot;${custRequestTypeId}&quot;!=&quot;RF_SCRUM_MEETINGS&quot;">
+        <field name="custRequestId" title="${uiLabelMap.ScrumSprintBacklog}" position="1" use-when="showPosition1&amp;&amp;'${custRequestTypeId}'!='RF_SCRUM_MEETINGS'">
             <display-entity entity-name="CustRequest" key-field-name="custRequestId" description=" ">
                 <sub-hyperlink  target="ViewProdBacklogItem" description="${context.description} - [${custRequestId}]" link-type="hidden-form" target-window="_BLANK" link-style="buttontext">
                     <parameter param-name="custRequestId"/>
@@ -157,14 +157,14 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="custRequestId" title="${uiLabelMap.ScrumSprintBacklog}" position="1" use-when="showPosition1&amp;&amp;&quot;${custRequestTypeId}&quot;==&quot;RF_SCRUM_MEETINGS&quot;" widget-style="disabled">
+        <field name="custRequestId" title="${uiLabelMap.ScrumSprintBacklog}" position="1" use-when="showPosition1&amp;&amp;'${custRequestTypeId}'=='RF_SCRUM_MEETINGS'" widget-style="disabled">
             <display-entity entity-name="CustRequest" key-field-name="custRequestId" description="${context.description} - [${custRequestId}]">
             </display-entity>
         </field>
-        <field name="custRequest.statusId" title="${uiLabelMap.ScrumStatusBacklog}" position="1" use-when="showPosition1&amp;&amp;&quot;Any&quot;.equals(paraBacklogStatusId)">
+        <field name="custRequest.statusId" title="${uiLabelMap.ScrumStatusBacklog}" position="1" use-when="showPosition1&amp;&amp;'Any'.equals(paraBacklogStatusId)">
             <display-entity entity-name="StatusItem" key-field-name="statusId"/>
         </field>
-        <field name="taskId" title="${uiLabelMap.ScrumTab} ${uiLabelMap.ScrumTask}" position="2" parameter-name="workEffortId" use-when="!&quot;SCRUM_SPRINT&quot;.equals(taskTypeId)">
+        <field name="taskId" title="${uiLabelMap.ScrumTab} ${uiLabelMap.ScrumTask}" position="2" parameter-name="workEffortId" use-when="!'SCRUM_SPRINT'.equals(taskTypeId)">
             <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description=" ">
                 <sub-hyperlink  target="taskView" description="${uiLabelMap.ScrumTab} ${taskName} - [${taskId}]" link-type="hidden-form" target-window="_BLANK">
                     <parameter param-name="projectId"/>
@@ -172,45 +172,45 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="taskTypeId" title="${uiLabelMap.ScrumTab} ${uiLabelMap.ScrumTaskType}" position="2" use-when="!&quot;SCRUM_SPRINT&quot;.equals(taskTypeId)">
+        <field name="taskTypeId" title="${uiLabelMap.ScrumTab} ${uiLabelMap.ScrumTaskType}" position="2" use-when="!'SCRUM_SPRINT'.equals(taskTypeId)">
             <display-entity entity-name="WorkEffortType" key-field-name="workEffortTypeId" description="${uiLabelMap.ScrumTab} ${description}"/>
         </field>
-        <field name="taskCurrentStatusId" title="${uiLabelMap.CommonStatus}" position="2" use-when="!&quot;STS_COMPLETED&quot;.equals(taskCurrentStatusId)&amp;&amp;!&quot;SCRUM_SPRINT&quot;.equals(taskTypeId)"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
-        <field name="taskCurrentStatusId" title="${uiLabelMap.CommonStatus}" position="2" use-when="&quot;STS_COMPLETED&quot;.equals(taskCurrentStatusId)&amp;&amp;!&quot;SCRUM_SPRINT&quot;.equals(taskTypeId)" widget-style="alert"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
+        <field name="taskCurrentStatusId" title="${uiLabelMap.CommonStatus}" position="2" use-when="!'STS_COMPLETED'.equals(taskCurrentStatusId)&amp;&amp;!'SCRUM_SPRINT'.equals(taskTypeId)"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
+        <field name="taskCurrentStatusId" title="${uiLabelMap.CommonStatus}" position="2" use-when="'STS_COMPLETED'.equals(taskCurrentStatusId)&amp;&amp;!'SCRUM_SPRINT'.equals(taskTypeId)" widget-style="alert"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
         <field name="dummy1" title=" " position="1" use-when="showPosition1"><display description=" "/></field>
         <field name="dummy2" title=" " position="1" use-when="showPosition1"><display description=" "/></field>
         <field name="dummy3" title=" " position="1" use-when="showPosition1"><display description=" "/></field>
         <field name="initialPlannedHours" title="Initial Plan / Total Plan" position="1" use-when="showPosition1"><display description="${initialPlannedHours} / ${backlogPlanHours}"/></field>
         <field name="dummy4" title=" " position="1" use-when="showPosition1"><display description=" "/></field>
         <field name="dummy5" title=" " position="1" use-when="showPosition1"><display description=" "/></field>
-        <field name="taskActualHours" title="${uiLabelMap.ScrumActualHours}" position="2" use-when="!&quot;SCRUM_SPRINT&quot;.equals(taskTypeId)"><display/></field>
-        <field name="planHours" title="${uiLabelMap.ScrumPlannedHours}" position="2" use-when="!&quot;SCRUM_SPRINT&quot;.equals(taskTypeId)"><display></display>
+        <field name="taskActualHours" title="${uiLabelMap.ScrumActualHours}" position="2" use-when="!'SCRUM_SPRINT'.equals(taskTypeId)"><display/></field>
+        <field name="planHours" title="${uiLabelMap.ScrumPlannedHours}" position="2" use-when="!'SCRUM_SPRINT'.equals(taskTypeId)"><display></display>
         </field>
-        <field name="deleteButton" title=" " position="1" use-when="showPosition1&amp;&amp;!&quot;CRQ_COMPLETED&quot;.equals(&quot;${custRequest.statusId}&quot;)" widget-style="buttontext">
+        <field name="deleteButton" title=" " position="1" use-when="showPosition1&amp;&amp;!'CRQ_COMPLETED'.equals('${custRequest.statusId}')" widget-style="buttontext">
             <hyperlink description="Delete" target="DeleteSprintBackLogs" confirmation-message="Are you sure to delete this sprint backlog ?" link-type="hidden-form">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="sprintId"/>
                 <parameter param-name="projectId"/>
             </hyperlink>
         </field>
-        <field name="newTask" title=" " position="1" use-when="showPosition1&amp;&amp;!&quot;CRQ_COMPLETED&quot;.equals(&quot;${custRequest.statusId}&quot;)" widget-style="buttontext">
+        <field name="newTask" title=" " position="1" use-when="showPosition1&amp;&amp;!'CRQ_COMPLETED'.equals('${custRequest.statusId}')" widget-style="buttontext">
             <hyperlink description="Add Task" target="NewSprintBacklogTask" link-type="hidden-form">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="sprintId"/>
                 <parameter param-name="projectId"/>
             </hyperlink>
         </field>
-        <field name="dummy6" title=" " position="2" use-when="!&quot;SCRUM_SPRINT&quot;.equals(taskTypeId)"><display description=" "/></field>
-        <field name="partyId" title="${uiLabelMap.ScrumAssignedTo}" position="2" parameter-name="partyId" use-when="!&quot;SCRUM_SPRINT&quot;.equals(taskTypeId)">
+        <field name="dummy6" title=" " position="2" use-when="!'SCRUM_SPRINT'.equals(taskTypeId)"><display description=" "/></field>
+        <field name="partyId" title="${uiLabelMap.ScrumAssignedTo}" position="2" parameter-name="partyId" use-when="!'SCRUM_SPRINT'.equals(taskTypeId)">
             <display-entity entity-name="PartyNameView"  description="${lastName}, ${firstName} ${middleName}" key-field-name="partyId"/>
         </field>
-        <field name="editTaskParty" title=" " position="2" use-when="!&quot;STS_COMPLETED&quot;.equals(taskCurrentStatusId)&amp;&amp;!&quot;SCRUM_SPRINT&quot;.equals(taskTypeId)" widget-style="buttontext">
+        <field name="editTaskParty" title=" " position="2" use-when="!'STS_COMPLETED'.equals(taskCurrentStatusId)&amp;&amp;!'SCRUM_SPRINT'.equals(taskTypeId)" widget-style="buttontext">
             <hyperlink description="${uiLabelMap.CommonEdit}" target="EditTask" link-type="hidden-form" target-window="_BLANK">
                 <parameter param-name="taskId"/>
                 <parameter param-name="sprintId"></parameter>
             </hyperlink>
         </field>
-        <field name="deleteTaskButton" title=" " position="2" use-when="!&quot;STS_COMPLETED&quot;.equals(taskCurrentStatusId)&amp;&amp;!&quot;SCRUM_SPRINT&quot;.equals(taskTypeId)" widget-style="buttontext">
+        <field name="deleteTaskButton" title=" " position="2" use-when="!'STS_COMPLETED'.equals(taskCurrentStatusId)&amp;&amp;!'SCRUM_SPRINT'.equals(taskTypeId)" widget-style="buttontext">
             <hyperlink description="Delete" target="DeleteTaskFromSprintOverview" confirmation-message="Are you sure to delete this task ?" link-type="hidden-form">
                 <parameter param-name="workEffortId" from-field="taskId"/>
                 <parameter param-name="custRequestId"/>
@@ -218,20 +218,20 @@ under the License.
                 <parameter param-name="projectId"/>
             </hyperlink>
         </field>
-        <field name="setCompleteButton" title=" " widget-style="buttontext" use-when="!&quot;STS_COMPLETED&quot;.equals(taskCurrentStatusId)&amp;&amp;!&quot;SCRUM_SPRINT&quot;.equals(taskTypeId)"
+        <field name="setCompleteButton" title=" " widget-style="buttontext" use-when="!'STS_COMPLETED'.equals(taskCurrentStatusId)&amp;&amp;!'SCRUM_SPRINT'.equals(taskTypeId)"
          position="2">
             <hyperlink description="${uiLabelMap.ScrumSetComplete}" target="setCompleteTask" link-type="hidden-form">
                 <parameter param-name="workEffortId" from-field="taskId"/>
                 <parameter param-name="sprintId"></parameter>
             </hyperlink>
         </field>
-        <field name="dummy7" title=" " position="2" use-when="!&quot;SCRUM_SPRINT&quot;.equals(taskTypeId)"><display description=" "/></field>
+        <field name="dummy7" title=" " position="2" use-when="!'SCRUM_SPRINT'.equals(taskTypeId)"><display description=" "/></field>
     </form>
     
     <form name="SprintBacklogListItemsHideDelete" extends="SprintBacklogListItems">
-        <field name="planHours" title="${uiLabelMap.ScrumPlannedHours}" position="2" use-when="!&quot;SCRUM_SPRINT&quot;.equals(taskTypeId)"><display/></field>
+        <field name="planHours" title="${uiLabelMap.ScrumPlannedHours}" position="2" use-when="!'SCRUM_SPRINT'.equals(taskTypeId)"><display/></field>
         <field name="deleteButton" position="1" use-when="showPosition1"><hidden/></field>
-        <field name="deleteTaskButton" position="2" use-when="!&quot;STS_COMPLETED&quot;.equals(taskCurrentStatusId)&amp;&amp;!&quot;SCRUM_SPRINT&quot;.equals(taskTypeId)"><hidden/></field>
+        <field name="deleteTaskButton" position="2" use-when="!'STS_COMPLETED'.equals(taskCurrentStatusId)&amp;&amp;!'SCRUM_SPRINT'.equals(taskTypeId)"><hidden/></field>
         <sort-order>
             <sort-field name="custRequestId"/>
             <sort-field name="taskId"/>
@@ -269,8 +269,7 @@ under the License.
                 <field-map field-name="productId" from-field="workeffAndProList[0].productId"/>
             </entity-one>
             <set field="maxHours" value="${groovy: 
-                def memberSize = delegator.findByAnd(&quot;WorkEffortPartyAssignment&quot;, [&quot;workEffortId&quot;: parameters.sprintId], null, false);
-                maxHours = memberSize.size() * context.estimatedHrs * 40;
+                from('WorkEffortPartyAssignment').where(workEffortId: parameters.sprintId).queryCount() * context.estimatedHrs * 40
             }"/>
             <service service-name="getScrumPlanHour" result-map="planHourOutMap">
                 <field-map field-name="sprintId" from-field="parameters.sprintId"/>
@@ -398,12 +397,12 @@ under the License.
             <set field="sprintId" from-field="parameters.sprintId"/>
         </actions>
         <field name="productId"><hidden/></field>
-        <field name="partyId" title="${uiLabelMap.Person}" tooltip="${uiLabelMap.CommonPerson}" use-when="parameters.get(&quot;partyId&quot;)!=null" parameter-name="partyId">
+        <field name="partyId" title="${uiLabelMap.Person}" tooltip="${uiLabelMap.CommonPerson}" use-when="parameters.get('partyId')!=null" parameter-name="partyId">
             <display-entity entity-name="PartyNameView"  description="${lastName}, ${firstName} ${middleName}" key-field-name="partyId">
                 <sub-hyperlink target="SprintMember?sprintId=${parameters.sprintId}" description="[${uiLabelMap.CommonChange}]"/>
             </display-entity>
         </field>
-        <field name="partyId" title="${uiLabelMap.Person}" tooltip="${uiLabelMap.CommonPerson}" event="onchange" action="javascript:document.addSprintMember.action='SprintMember';document.addSprintMember.submit();" use-when="parameters.get(&quot;partyId&quot;)==null" parameter-name="partyId">
+        <field name="partyId" title="${uiLabelMap.Person}" tooltip="${uiLabelMap.CommonPerson}" event="onchange" action="javascript:document.addSprintMember.action='SprintMember';document.addSprintMember.submit();" use-when="parameters.get('partyId')==null" parameter-name="partyId">
             <drop-down allow-empty="false">
                 <option key="" description="- ${uiLabelMap.CommonSelectOne} -"/>
                 <list-options key-name="partyId" list-name="listPerson" description="${lastName} ${firstName} ${middleName}"/>
@@ -898,8 +897,8 @@ under the License.
             <entity-one entity-name="CustRequest" value-field="custRequest"/>
             <set field="description" from-field="custRequest.description"/>
             <set field="custRequestCategoryGroupId" from-field="parentCustRequestId"/>
-            <set field="estimatedHours" value="${groovy:custEstimatedMilliSeconds!=null?custEstimatedMilliSeconds/3600000:0;}"/>
-            <set field="showPosition1" value="${groovy:String prev=(String)previousItem.get(&quot;parentCustRequestId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(parentCustRequestId)));}" type="Boolean"/>
+            <set field="estimatedHours" value="${groovy: custEstimatedMilliSeconds ? custEstimatedMilliSeconds / 3600000 : 0}"/>
+            <set field="showPosition1" value="${groovy: parentCustRequestId == previousItem.parentCustRequestId}" type="Boolean"/>
         </row-actions>
         <field name="postWorkHours"><hidden value="1"/></field>
         <field name="priority"><hidden/></field>
@@ -1019,7 +1018,7 @@ under the License.
         <row-actions>
             <entity-one entity-name="CustRequest" value-field="custRequest"/>
             <set field="product" from-field="custRequest.description"/>
-            <set field="estimatedHours" value="${groovy:custEstimatedMilliSeconds!=null?custEstimatedMilliSeconds/3600000:0;}"/>
+            <set field="estimatedHours" value="${groovy:custEstimatedMilliSeconds ? custEstimatedMilliSeconds / 3600000 : 0}"/>
         </row-actions>
         <field name="sequence"><hidden value="Y"/></field>
         <field name="custRequestCategoryGroupId"><hidden/></field>
@@ -1147,28 +1146,28 @@ under the License.
     </form>
     <form name="ProjectList" type="list" target="main" odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="Sprints" list-name="sprints">
         <actions>
-            <set field="isCurrentProject" value="${groovy: request.setAttribute(&quot;isCurrentProject&quot;, false);}" type="Boolean"/>
-            <set field="currentProject" value="${groovy: request.setAttribute(&quot;currentProject&quot;, ' ');}" type="String"/>
+            <set field="isCurrentProject" value="${groovy: request.setAttribute('isCurrentProject', false)}" type="Boolean"/>
+            <set field="currentProject" value="${groovy: request.setAttribute('currentProject', ' ')}" type="String"/>
         </actions>
         <row-actions>
             <set field="isCurrentProject" value="${groovy: 
-                if (request.getAttribute(&quot;currentProject&quot;) != context.projectId)
-                    request.setAttribute(&quot;isCurrentProject&quot;, false);
+                if (request.getAttribute('currentProject') != context.projectId)
+                    request.setAttribute('isCurrentProject', false)
                 else
-                    request.setAttribute(&quot;isCurrentProject&quot;, true);
-                if (request.getAttribute(&quot;currentProject&quot;) != context.projectId)
-                    request.setAttribute(&quot;currentProject&quot;, context.projectId);
-                return (boolean)request.getAttribute(&quot;isCurrentProject&quot;);
+                    request.setAttribute('isCurrentProject', true)
+                if (request.getAttribute('currentProject') != context.projectId)
+                    request.setAttribute('currentProject', context.projectId)
+                return (boolean)request.getAttribute('isCurrentProject')
                 }"
                 type="Boolean"/>
             <set field="isCurrentCompany" value="${groovy: 
-                if (request.getAttribute(&quot;currentCompany&quot;) != context.companyId)
-                    request.setAttribute(&quot;isCurrentCompany&quot;, false);
+                if (request.getAttribute('currentCompany') != context.companyId)
+                    request.setAttribute('isCurrentCompany', false)
                 else
-                    request.setAttribute(&quot;isCurrentCompany&quot;, true);
-                if (request.getAttribute(&quot;currentCompany&quot;) != context.companyId)
-                    request.setAttribute(&quot;currentCompany&quot;, context.companyId);
-                return (boolean)request.getAttribute(&quot;isCurrentCompany&quot;);
+                    request.setAttribute('isCurrentCompany', true)
+                if (request.getAttribute('currentCompany') != context.companyId)
+                    request.setAttribute('currentCompany', context.companyId)
+                return (boolean)request.getAttribute('isCurrentCompany')
                 }"
                 type="Boolean"/>
             <set field="estimatedHrs" value="${sprintEstimatedMilliSeconds/1000/60/60/40}" type="Integer"/>
@@ -1220,22 +1219,22 @@ under the License.
                 <parameter param-name="partyId" from-field="productOwnerId"/>
             </hyperlink>
         </field>
-        <field name="dummy" title=" " position="2"    use-when="&quot;${sprintId}&quot;!=&quot;&quot;"><display description=" "/></field>
-        <field name="sprintName" title="${uiLabelMap.ScrumTab} ${uiLabelMap.ScrumSprint}" position="2" use-when="&quot;${sprintId}&quot;!=&quot;&quot;">
+        <field name="dummy" title=" " position="2"    use-when="sprintId!=''"><display description=" "/></field>
+        <field name="sprintName" title="${uiLabelMap.ScrumTab} ${uiLabelMap.ScrumSprint}" position="2" use-when="sprintId!=''">
             <hyperlink description="${uiLabelMap.ScrumTab} ${sprintName} [${sprintId}]" target="ViewSprint">
                 <parameter param-name="projectId"/>
                 <parameter param-name="sprintId"/>
             </hyperlink>
         </field>
-        <field name="sprintCurrentStatusId" title="${uiLabelMap.CommonStatus}" position="2" use-when="&quot;${sprintId}&quot;!=&quot;&quot;">
+        <field name="sprintCurrentStatusId" title="${uiLabelMap.CommonStatus}" position="2" use-when="sprintId!=''">
             <display-entity entity-name="StatusItem" key-field-name="statusId"/>
         </field>
-        <field name="estimatedHrs" title="${uiLabelMap.ScrumSprintLengthWeeks}" position="2" use-when="&quot;${sprintId}&quot;!=&quot;&quot;"><display/></field>
-        <field name="planHours" title="${uiLabelMap.ScrumPlannedHours}" position="2" use-when="&quot;${sprintId}&quot;!=&quot;&quot;"><display/></field>
-        <field name="actualHours" title="${uiLabelMap.ScrumActualHours}" position="2" use-when="&quot;${sprintId}&quot;!=&quot;&quot;"><display/></field>
-        <field name="actualHoursNotBillYet" title="${uiLabelMap.ScrumActualHoursNotBill}" position="2" use-when="&quot;${sprintId}&quot;!=&quot;&quot;"><display/></field>
-        <field name="sprintActualStartDate" title="${uiLabelMap.CommonStartDate}" position="2" use-when="&quot;${sprintId}&quot;!=&quot;&quot;"><display type="date"></display></field>
-        <field name="sprintActualCompletionDate" title="${uiLabelMap.CommonEndDate}" position="2" use-when="&quot;${sprintId}&quot;!=&quot;&quot;"><display type="date"></display></field>
+        <field name="estimatedHrs" title="${uiLabelMap.ScrumSprintLengthWeeks}" position="2" use-when="sprintId!=''"><display/></field>
+        <field name="planHours" title="${uiLabelMap.ScrumPlannedHours}" position="2" use-when="sprintId!=''"><display/></field>
+        <field name="actualHours" title="${uiLabelMap.ScrumActualHours}" position="2" use-when="sprintId!=''"><display/></field>
+        <field name="actualHoursNotBillYet" title="${uiLabelMap.ScrumActualHoursNotBill}" position="2" use-when="sprintId!=''"><display/></field>
+        <field name="sprintActualStartDate" title="${uiLabelMap.CommonStartDate}" position="2" use-when="sprintId!=''"><display type="date"></display></field>
+        <field name="sprintActualCompletionDate" title="${uiLabelMap.CommonEndDate}" position="2" use-when="sprintId!=''"><display type="date"></display></field>
     </form>
     <form name="ProjectListWithNoLinkProfile" extends="ProjectList">
         <field name="companyId" title="${uiLabelMap.ScrumOwnerCompany}" position="1" use-when="!isCurrentCompany"  widget-style="buttontext">
@@ -1248,18 +1247,18 @@ under the License.
     <form name="ProjectAndSprintListInfo" type="list" target="ViewProduct" paginate-target="ViewProduct" 
           odd-row-style="alternate-row" default-table-style="basic-table hover-bar" list-name="sprints">
         <actions>
-            <set field="isCurrentProject" value="${groovy: request.setAttribute(&quot;isCurrentProject&quot;, false);}" type="Boolean"/>
-            <set field="currentProject" value="${groovy: request.setAttribute(&quot;currentProject&quot;, ' ');}" type="String"/>
+            <set field="isCurrentProject" value="${groovy: request.setAttribute('isCurrentProject', false)}" type="Boolean"/>
+            <set field="currentProject" value="${groovy: request.setAttribute('currentProject', ' ')}" type="String"/>
         </actions>
         <row-actions>
             <set field="isCurrentProject" value="${groovy: 
-                if (request.getAttribute(&quot;currentProject&quot;) != context.projectId)
-                    request.setAttribute(&quot;isCurrentProject&quot;, false);
+                if (request.getAttribute('currentProject') != context.projectId)
+                    request.setAttribute('isCurrentProject', false)
                 else
-                    request.setAttribute(&quot;isCurrentProject&quot;, true);
-                if (request.getAttribute(&quot;currentProject&quot;) != context.projectId)
-                    request.setAttribute(&quot;currentProject&quot;, context.projectId);
-                return (boolean)request.getAttribute(&quot;isCurrentProject&quot;);
+                    request.setAttribute('isCurrentProject', true)
+                if (request.getAttribute('currentProject') != context.projectId)
+                    request.setAttribute('currentProject', context.projectId)
+                return (boolean)request.getAttribute('isCurrentProject')
                 }"
                 type="Boolean"/>
             <service service-name="getScrumProject" result-map="result">
@@ -1293,21 +1292,21 @@ under the License.
                 <parameter param-name="projectId" from-field="workEffortId"/>
             </hyperlink>
         </field>
-        <field name="sprintName" title="${uiLabelMap.ScrumTab} ${uiLabelMap.ScrumSprint}" position="2" use-when="&quot;${sprintId}&quot;!=&quot;&quot;">
+        <field name="sprintName" title="${uiLabelMap.ScrumTab} ${uiLabelMap.ScrumSprint}" position="2" use-when="sprintId!=''">
             <hyperlink description="${uiLabelMap.ScrumTab} ${sprintName} [${sprintId}]" target="ViewSprint">
                 <parameter param-name="projectId"/>
                 <parameter param-name="sprintId"/>
             </hyperlink>
         </field>
-        <field name="sprintCurrentStatusId" title="${uiLabelMap.CommonStatus}" position="2" use-when="&quot;${sprintId}&quot;!=&quot;&quot;">
+        <field name="sprintCurrentStatusId" title="${uiLabelMap.CommonStatus}" position="2" use-when="sprintId!=''">
             <display-entity entity-name="StatusItem" key-field-name="statusId"/>
         </field>
-        <field name="estimatedHrs" title="${uiLabelMap.ScrumSprintLengthWeeks}" position="2" use-when="&quot;${sprintId}&quot;!=&quot;&quot;"><display/></field>
-        <field name="planHours" title="${uiLabelMap.ScrumPlannedHours}" position="2" use-when="&quot;${sprintId}&quot;!=&quot;&quot;"><display/></field>
-        <field name="actualHours" title="${uiLabelMap.ScrumActualHours}" position="2" use-when="&quot;${sprintId}&quot;!=&quot;&quot;"><display/></field>
-        <field name="actualHoursNotBillYet" title="${uiLabelMap.ScrumActualHoursNotBill}" position="2" use-when="&quot;${sprintId}&quot;!=&quot;&quot;"><display/></field>
-        <field name="sprintActualStartDate" title="${uiLabelMap.CommonStartDate}" position="2" use-when="&quot;${sprintId}&quot;!=&quot;&quot;"><display type="date"></display></field>
-        <field name="sprintActualCompletionDate" title="${uiLabelMap.CommonEndDate}" position="2" use-when="&quot;${sprintId}&quot;!=&quot;&quot;"><display type="date"></display></field>
+        <field name="estimatedHrs" title="${uiLabelMap.ScrumSprintLengthWeeks}" position="2" use-when="sprintId!=''"><display/></field>
+        <field name="planHours" title="${uiLabelMap.ScrumPlannedHours}" position="2" use-when="sprintId!=''"><display/></field>
+        <field name="actualHours" title="${uiLabelMap.ScrumActualHours}" position="2" use-when="sprintId!=''"><display/></field>
+        <field name="actualHoursNotBillYet" title="${uiLabelMap.ScrumActualHoursNotBill}" position="2" use-when="sprintId!=''"><display/></field>
+        <field name="sprintActualStartDate" title="${uiLabelMap.CommonStartDate}" position="2" use-when="sprintId!=''"><display type="date"></display></field>
+        <field name="sprintActualCompletionDate" title="${uiLabelMap.CommonEndDate}" position="2" use-when="sprintId!=''"><display type="date"></display></field>
     </form>
     <form name="SprintListInfo" extends="SprintList" odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="basic-table hover-bar" paginate-target="viewScrumProject">
         <actions>
@@ -1388,25 +1387,25 @@ under the License.
             <entity-and entity-name="CustRequestNote" list="custRequestNote">
                 <field-map field-name="custRequestId" from-field="parameters.custRequestId"/>
             </entity-and>
-            <set field="test" value="${groovy: println(&quot;dddddddddddddddddddddddddddddd&quot;+custRequestNote)}"/>
+            <set field="test" value="${groovy: logInfo('dddddddddddddddddddddddddddddd' + custRequestNote)}"/>
             <set field="noteId" from-field="custRequestNote[0].noteId"/>
             <entity-and entity-name="NoteData" list="Question1">
                 <field-map field-name="noteId" from-field="custRequestNote[0].noteId"/>
                 <field-map field-name="noteName" value="Question1"/>
             </entity-and>
-            <set field="test" value="${groovy: println(&quot;dddddddddddddddddddddddddddddd&quot;+Question1)}"/>
+            <set field="test" value="${groovy: logInfo('dddddddddddddddddddddddddddddd' + Question1)}"/>
             <set field="noteId" from-field="custRequestNote[1].noteId"/>
             <entity-and entity-name="NoteData" list="Question2">
                 <field-map field-name="noteId" from-field="custRequestNote[1].noteId"/>
                 <field-map field-name="noteName" value="Question1"/>
             </entity-and>
-            <set field="test" value="${groovy: println(&quot;dddddddddddddddddddddddddddddd&quot;+Question2)}"/>
+            <set field="test" value="${groovy: logInfo('dddddddddddddddddddddddddddddd' + Question2)}"/>
             <set field="noteId" from-field="custRequestNote[2].noteId"/>
             <entity-and entity-name="NoteData" list="Question1">
                 <field-map field-name="noteId" from-field="custRequestNote[2].noteId"/>
                 <field-map field-name="noteName" value="Question3"/>
             </entity-and>
-            <set field="test" value="${groovy: println(&quot;dddddddddddddddddddddddddddddd&quot;+Question3)}"/>
+            <set field="test" value="${groovy: logInfo('dddddddddddddddddddddddddddddd' + Question3)}"/>
         </actions>
         <field name="custRequestId"><hidden value="${parameters.custRequestId}"/></field>
         <field name="createdDate" title="Create Date Perform"><display/></field>
@@ -1432,7 +1431,7 @@ under the License.
                </condition-list>
                <order-by field-name="custSequenceNum"/>
             </entity-condition>
-            <set field="maxNum" value="${groovy: return productBacklog.size();}"/>
+            <set field="maxNum" value="${util:size(productBacklog)}"/>
         </actions>
         <field name="projectId"><hidden></hidden></field>
         <field name="sprintId"><hidden/></field>
@@ -1452,14 +1451,14 @@ under the License.
             <display-entity entity-name="CustRequest" key-field-name="custRequestId" description="${custRequestName}"></display-entity>
         </field>
         <field name="custSequenceNum"><display/></field>
-        <field name="estimatedHours" title="${uiLabelMap.ScrumPlannedHours}"><text default-value="${groovy:return custRequest.custEstimatedMilliSeconds/3600000}"/></field>
+        <field name="estimatedHours" title="${uiLabelMap.ScrumPlannedHours}"><text default-value="${groovy: custRequest.custEstimatedMilliSeconds / 3600000}"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit/></field>
     </form>
     <!-- Product -->
     <form name="EditProduct" type="single" target="createProductAndRole" default-map-name="product">
         <actions>
             <set field="supportDiscontinuationDate" from-field="supportDiscontinuationDate"/>
-            <set field="statusId" value="${groovy: if(supportDiscontinuationDate == null) return 'PRODUCT_ACTIVE' else return 'PRODUCT_CLOSED'}"/>
+            <set field="statusId" value="${groovy: supportDiscontinuationDate ? 'PRODUCT_ACTIVE' : 'PRODUCT_CLOSED'}"/>
         </actions>
         <alt-target use-when="product!=null" target="updateProduct"/>
         <field name="partyCompany"><hidden/></field>
@@ -1535,7 +1534,7 @@ under the License.
                 <field-map field-name="partyId" from-field="productRole[0].partyId"/>
             </entity-and>
             <set field="supportDiscontinuationDate" from-field="product.supportDiscontinuationDate"/>
-            <set field="statusMap.statusId" value="${groovy: if(supportDiscontinuationDate == null) return 'PRODUCT_ACTIVE' else return 'PRODUCT_CLOSED'}"/>
+            <set field="statusMap.statusId" value="${groovy: supportDiscontinuationDate ? 'PRODUCT_ACTIVE' : 'PRODUCT_CLOSED'}"/>
         </actions>
         <field name="productOwerId" title="${uiLabelMap.ScrumCompanyAndProductOwner}">
             <hyperlink description="${parties[0].groupName} -- ${parties[0].lastName} ${parties[0].firstName} ${parties[0].middleName}" target="viewprofile">
@@ -1630,7 +1629,7 @@ under the License.
                 <field-map field-name="productId" from-field="productId"/>
             </entity-one>
             <set field="longDescription" from-field="product.longDescription"/>
-            <set field="statusId" value="${groovy: if(product.supportDiscontinuationDate == null) return 'PRODUCT_ACTIVE' else return 'PRODUCT_CLOSED'}"/>
+            <set field="statusId" value="${groovy: !product.supportDiscontinuationDate ? 'PRODUCT_ACTIVE' : 'PRODUCT_CLOSED'}"/>
             <entity-and entity-name="PartyRelationshipAndPartyDetail" list="company">
                 <field-map field-name="partyId" from-field="partyId"/>
                 <field-map field-name="roleTypeIdFrom" value="ACCOUNT"/>
@@ -1716,7 +1715,7 @@ under the License.
              </entity-one>
              <set field="internalName" from-field="product.internalName"/>
              <set field="longDescription" from-field="product.longDescription"/>
-             <set field="statusId" value="${groovy: if(product.supportDiscontinuationDate == null) return 'PRODUCT_ACTIVE' else return 'PRODUCT_CLOSED'}"/>
+             <set field="statusId" value="${groovy: !product.supportDiscontinuationDate ? 'PRODUCT_ACTIVE' : 'PRODUCT_CLOSED'}"/>
              <entity-and entity-name="PartyRelationshipAndPartyDetail" list="company">
                 <field-map field-name="partyId" from-field="partyId"/>
                 <field-map field-name="roleTypeIdFrom" value="ACCOUNT"/>
@@ -1775,7 +1774,7 @@ under the License.
     <form name="HoursNotYetBilled" type="multi" list-name="hoursNotYetBilledTasks" use-row-submit="false" paginate-target="ProductBilling" odd-row-style="alternate-row" default-table-style="basic-table hover-bar" 
         target="updateNotBilledBacklog?productId=${productId}&amp;fromDate=${fromDate}&amp;thruDate=${thruDate}&amp;includeMeeting=${includeMeeting}&amp;VIEW_SIZE_1=${parameters.VIEW_SIZE_1}&amp;VIEW_INDEX_1=${parameters.VIEW_INDEX_1}">
         <row-actions>
-            <set field="showPosition1" value="${groovy:String prev=(String)previousItem.get(&quot;custRequestId&quot;);return !(prev!=null&amp;&amp;prev.equals(custRequestId));}" type="Boolean"/>
+            <set field="showPosition1" value="${groovy: previousItem.custRequestId != custRequestId}" type="Boolean"/>
             <entity-one entity-name="WorkEffort" value-field="project">
                 <field-map field-name="workEffortId" from-field="projectId"/>
             </entity-one>
@@ -1851,13 +1850,13 @@ under the License.
                 <option key="N"/>
             </drop-down>
         </field>
-        <field name="reCreate" position="1" title="${uiLabelMap.ScrumRecreateInvoice}: ${invoiceId}" use-when="context.get(&quot;invoiceId&quot;)!=null">
+        <field name="reCreate" position="1" title="${uiLabelMap.ScrumRecreateInvoice}: ${invoiceId}" use-when="context.get('invoiceId')!=null">
             <drop-down no-current-selected-key="N">
                 <option key="Y" description="${uiLabelMap.CommonYes}"/>
                 <option key="N" description="${uiLabelMap.CommonNo}"/>
             </drop-down>
            </field>
-        <field name="invoiceDate" title="${uiLabelMap.ScrumInvoiceDate}" use-when="context.get(&quot;invoiceId&quot;)!=null"><date-time type="date"></date-time></field>
+        <field name="invoiceDate" title="${uiLabelMap.ScrumInvoiceDate}" use-when="context.get('invoiceId')!=null"><date-time type="date"></date-time></field>
         <field name="submitButton" title="${uiLabelMap.PageTitleAddProjectTimeToNewInvoice}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="FindProductBilling" type="single" target="ProductBilling">
@@ -1928,10 +1927,8 @@ under the License.
                 <field-map field-name="statusId" from-field="statusId"/>
             </entity-one>
             <set field="custRequestType" value="${groovy: 
-                 if (custRequest.custRequestTypeId.equals(&quot;RF_UNPLAN_BACKLOG&quot;))
-                     custRequestType = &quot;Y&quot;
-                 else
-                     custRequestType = &quot;N&quot;
+                 custRequest.custRequestTypeId == 'RF_UNPLAN_BACKLOG' ?
+                     custRequestType = 'Y' : 'N'
                 }"/>
             <service service-name="getScrumActualHour" result-map="resultMap">
                 <field-map field-name="custRequestId" from-field="custRequestId"/>
@@ -1985,8 +1982,8 @@ under the License.
             <entity-one entity-name="CustRequest" value-field="custRequest"/>
             <set field="description" from-field="custRequest.description"/>
             <set field="custRequestCategoryGroupId" from-field="parentCustRequestId"/>
-            <set field="estimatedHours" value="${groovy:custEstimatedMilliSeconds!=null?custEstimatedMilliSeconds/3600000:0;}"/>
-            <set field="showPosition1" value="${groovy:String prev=(String)previousItem.get(&quot;parentCustRequestId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(parentCustRequestId)));}" type="Boolean"/>
+            <set field="estimatedHours" value="${groovy:custEstimatedMilliSeconds ? custEstimatedMilliSeconds / 3600000 : 0}"/>
+            <set field="showPosition1" value="${groovy:previousItem.parentCustRequestId != parentCustRequestId}" type="Boolean"/>
         </row-actions>
         <field name="custSequenceNum" position="2" title="${uiLabelMap.ScrumSeq}"><display/></field>
         <field name="custRequestId" position="2" title="${uiLabelMap.ScrumProductBacklogItem}">
@@ -1998,7 +1995,7 @@ under the License.
         <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
             <display-entity entity-name="StatusItem" key-field-name="statusId"/>
         </field>
-        <field name="custRequestCategoryGroupId" position="1" use-when="${groovy:showPosition1==true&amp;&amp;sequence.equals(&quot;N&quot;)}" title="${uiLabelMap.ScrumCategory}" widget-style="h3">
+        <field name="custRequestCategoryGroupId" position="1" use-when="${groovy:showPosition1 &amp;&amp; sequence == 'N'}" title="${uiLabelMap.ScrumCategory}" widget-style="h3">
             <display-entity entity-name="CustRequest" key-field-name="custRequestId" description="${custRequestName}"/>
         </field>
         <field name="parentCustRequestId" position="2" title="${uiLabelMap.ScrumCategory}">
@@ -2018,8 +2015,8 @@ under the License.
         <row-actions>
             <entity-one entity-name="CustRequest" value-field="custRequest"/>
             <set field="description" from-field="custRequest.description"/>
-            <set field="estimatedHours" value="${groovy:custEstimatedMilliSeconds!=null?custEstimatedMilliSeconds/3600000:0;}"/>
-            <set field="showPosition1" value="${groovy:String prev=(String)previousItem.get(&quot;productId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(productId)));}" type="Boolean"/>
+            <set field="estimatedHours" value="${groovy:custEstimatedMilliSeconds ? custEstimatedMilliSeconds / 3600000 : 0}"/>
+            <set field="showPosition1" value="${groovy:productId != previousItem.productId}" type="Boolean"/>
         </row-actions>
         <field name="productId" title="${uiLabelMap.PageTitleProduct}" position="1" use-when="showPosition1">
             <display-entity entity-name="Product" description="${internalName} " key-field-name="productId">
@@ -2064,12 +2061,12 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonDelete}"><hidden/></field>
     </form>
     <form name="ViewSprintBacklogListItemsNoAction" extends="SprintBacklogListItems">
-        <field name="planHours" title="${uiLabelMap.ScrumPlannedHours}" position="2" use-when="!&quot;SCRUM_SPRINT&quot;.equals(taskTypeId)"><display/></field>
+        <field name="planHours" title="${uiLabelMap.ScrumPlannedHours}" position="2" use-when="!'SCRUM_SPRINT'.equals(taskTypeId)"><display/></field>
         <field name="deleteButton" position="1" use-when="showPosition1"><hidden/></field>
-        <field name="deleteTaskButton" position="2" use-when="!&quot;STS_COMPLETED&quot;.equals(taskCurrentStatusId)&amp;&amp;!&quot;SCRUM_SPRINT&quot;.equals(taskTypeId)"><hidden/></field>
-        <field name="setCompleteButton" position="2" use-when="!&quot;STS_COMPLETED&quot;.equals(taskCurrentStatusId)&amp;&amp;!&quot;SCRUM_SPRINT&quot;.equals(taskTypeId)"><hidden/></field>
-        <field name="editTaskParty" position="2" use-when="!&quot;STS_COMPLETED&quot;.equals(taskCurrentStatusId)&amp;&amp;!&quot;SCRUM_SPRINT&quot;.equals(taskTypeId)"><hidden/></field>
-        <field name="newTask" use-when="showPosition1&amp;&amp;!&quot;CRQ_COMPLETED&quot;.equals(&quot;${custRequest.statusId}&quot;)"><hidden/></field>
+        <field name="deleteTaskButton" position="2" use-when="!'STS_COMPLETED'.equals(taskCurrentStatusId)&amp;&amp;!'SCRUM_SPRINT'.equals(taskTypeId)"><hidden/></field>
+        <field name="setCompleteButton" position="2" use-when="!'STS_COMPLETED'.equals(taskCurrentStatusId)&amp;&amp;!'SCRUM_SPRINT'.equals(taskTypeId)"><hidden/></field>
+        <field name="editTaskParty" position="2" use-when="!'STS_COMPLETED'.equals(taskCurrentStatusId)&amp;&amp;!'SCRUM_SPRINT'.equals(taskTypeId)"><hidden/></field>
+        <field name="newTask" use-when="showPosition1&amp;&amp;!'CRQ_COMPLETED'.equals('${custRequest.statusId}')"><hidden/></field>
         <sort-order>
             <sort-field name="custRequestId"/>
             <sort-field name="taskId"/>
@@ -2095,7 +2092,7 @@ under the License.
             <entity-and entity-name="PartyDetailAndWorkEffortAssign" list="sprintMembers" filter-by-date="true">
                 <field-map field-name="workEffortId" from-field="sprintId"/>
             </entity-and>
-            <set field="partyId" value="${groovy: if (assignTo.size() != 0) return assignTo.get(0).getString(&quot;partyId&quot;)}"/>
+            <set field="partyId" value="${groovy: if (assignTo.size() != 0) return assignTo.first().partyId}"/>
             <service service-name="getScrumActualHour" result-map="results">
                 <field-map field-name="taskId" from-field="taskId"/>
             </service>
@@ -2357,7 +2354,7 @@ under the License.
         <field name="actualHours"><hidden/></field>
         <field name="UpdateButton"><hidden/></field>
         <field name="custRequestId1" title="${uiLabelMap.ScrumSprintBacklog}">
-            <display description="${groovy:return sprint.getString(&quot;workEffortName&quot;)+' - '+backlog.getString(&quot;description&quot;);}"/>
+            <display description="${groovy: sprint.workEffortName + ' - ' + backlog.description}"/>
         </field>
         <field name="createButton"><hidden/></field>
         <field name="createButton1" title="${uiLabelMap.CommonCreate}"><submit/></field>
@@ -2366,8 +2363,8 @@ under the License.
     <form name="ListProduct" type="list" default-entity-name="ProductRole" use-row-submit="true" list-name="listIt" target="deleteProduct" paginate-target="main" separate-columns="true"
         odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="basic-table hover-bar">
         <actions>
-            <set field="isCurrentCompany" value="${groovy: request.setAttribute(&quot;isCurrentCompany&quot;, false);}" type="Boolean"/>
-            <set field="currentCompany" value="${groovy: request.setAttribute(&quot;currentCompany&quot;, ' ');}" type="String"/>
+            <set field="isCurrentCompany" value="${groovy: request.setAttribute('isCurrentCompany', false)}" type="Boolean"/>
+            <set field="currentCompany" value="${groovy: request.setAttribute('currentCompany', ' ')}" type="String"/>
         </actions>
         <row-actions>
             <entity-one entity-name="Product" value-field="product">
@@ -2389,26 +2386,26 @@ under the License.
                 <field-map field-name="partyId" from-field="ownerRoles[0].partyId"/>
             </entity-one>
             <set field="isCurrentCompany" value="${groovy: 
-                if (request.getAttribute(&quot;currentCompany&quot;) != context.groupName)
-                    request.setAttribute(&quot;isCurrentCompany&quot;, false);
+                if (request.getAttribute('currentCompany') != context.groupName)
+                    request.setAttribute('isCurrentCompany', false)
                 else
-                    request.setAttribute(&quot;isCurrentCompany&quot;, true);
-                if (request.getAttribute(&quot;currentCompany&quot;) != context.groupName)
-                    request.setAttribute(&quot;currentCompany&quot;, context.groupName);
-                return (boolean)request.getAttribute(&quot;isCurrentCompany&quot;);
+                    request.setAttribute('isCurrentCompany', true)
+                if (request.getAttribute('currentCompany') != context.groupName)
+                    request.setAttribute('currentCompany', context.groupName)
+                return (boolean)request.getAttribute('isCurrentCompany');
                 }"
                 type="Boolean"/>
             <set field="groupId" from-field="partyAndSecurityGroupList[0].groupId"/> 
             <set field="productTartget" value="${groovy:
-                if (&quot;SCRUM_PRODUCT_OWNER&quot;.equals(groupId))
-                    productTartget = &quot;AddProdBacklog&quot;
-                else if (&quot;SCRUM_MASTER&quot;.equals(groupId) || &quot;SCRUM_TEAM&quot;.equals(groupId) || &quot;SCRUM_STAKEHOLDER&quot;.equals(groupId))
-                    productTartget = &quot;ViewTotalBacklog&quot;
+                if (groupId == 'SCRUM_PRODUCT_OWNER')
+                    productTartget = 'AddProdBacklog'
+                else if (['SCRUM_MASTER', 'SCRUM_TEAM', 'SCRUM_STAKEHOLDER'].contains(groupId))
+                    productTartget = 'ViewTotalBacklog'
                 else 
-                    productTartget = &quot;ViewProduct&quot;
+                    productTartget = 'ViewProduct'
                 }"/>
             <set field="supportDiscontinuationDate" from-field="supportDiscontinuationDate"/>
-            <set field="statusId" value="${groovy: if(supportDiscontinuationDate == null) return 'PRODUCT_ACTIVE' else return 'PRODUCT_CLOSED'}"/>
+            <set field="statusId" value="${groovy: !supportDiscontinuationDate ? 'PRODUCT_ACTIVE' : 'PRODUCT_CLOSED'}"/>
         </row-actions>
         <field name="isCurrentCompany"><hidden/></field>
         <field name="partyId"><hidden/></field>
@@ -2506,12 +2503,12 @@ under the License.
         <field name="workEffortContentTypeId"><hidden/></field>
         <field name="mimeTypeId"><hidden/></field>
         <field name="contentTypeId"><display description="${descContent.description}"/></field>
-        <field name="contentName" use-when="headerItem.equals(&quot;EditProjectContents&quot;)">
+        <field name="contentName" use-when="headerItem.equals('EditProjectContents')">
             <display description="${contentMap.contentName} ${contentId}"/>
         </field>
         <field name="thruDate"><ignored/></field>
         <field name="submitButton"><ignored/></field>
-        <field name="deleteLink" title=" " widget-style="buttontext" use-when="headerItem.equals(&quot;EditProjectContents&quot;)">
+        <field name="deleteLink" title=" " widget-style="buttontext" use-when="headerItem.equals('EditProjectContents')">
             <hyperlink description="${uiLabelMap.CommonDelete}" target="deleteProjectContent" also-hidden="false" request-confirmation="true">
                 <parameter param-name="contentId"/>
                 <parameter param-name="workEffortId"/>
@@ -2744,8 +2741,8 @@ under the License.
             <entity-and entity-name="WorkEffortPartyAssignment" list="assignTo" filter-by-date="true">
                 <field-map field-name="workEffortId" from-field="taskId"/>
             </entity-and>
-            <set field="partyId" value="${groovy: if (assignTo.size() != 0) return assignTo.get(0).getString(&quot;partyId&quot;)}"/>
-            <set field="taskActualMilliSeconds" value="${groovy: if (resultTask.actualMilliSeconds != null) return actualMilliSeconds/3600000}"/>
+            <set field="partyId" value="${groovy: if (assignTo.size() != 0) return assignTo.first().partyId}"/>
+            <set field="taskActualMilliSeconds" value="${groovy: if (resultTask.actualMilliSeconds) return actualMilliSeconds/3600000}"/>
             <service service-name="getScrumActualHour" result-map="result">
                 <field-map field-name="taskId" from-field="taskId"/>
             </service>
@@ -2789,10 +2786,9 @@ under the License.
             </service>
             <set field="actualHours" from-field="resultMap.actualHours" default-value="0" type="Double"/>
             <set field="actualHoursMessage" value="${groovy: 
-                if (actualHours > 0)
-                    actualHoursMessage = &quot;There are already &quot;+ actualHours +&quot; hours have been spent on this backlog item, Are you sure you want to delete?&quot;
-                else
-                    actualHoursMessage = &quot;Are you sure to delete selected product backlog item(s)?&quot;
+                 actualHours > 0
+                 ? 'There are already '+ actualHours +' hours have been spent on this backlog item, Are you sure you want to delete?'
+                 : 'Are you sure to delete selected product backlog item(s)?'
                 }"/>
         </actions>
         <field name="reason"><textarea/> </field>
@@ -2805,10 +2801,9 @@ under the License.
             </service>
             <set field="actualHours" from-field="resultMap.actualHours" default-value="0" type="Double"/>
             <set field="actualHoursMessage" value="${groovy: 
-                if (actualHours > 0)
-                    actualHoursMessage = &quot;There are already &quot;+ actualHours +&quot; hours have been spent on this backlog item, Are you sure you want to delete?&quot;
-                else
-                    actualHoursMessage = &quot;Are you sure to delete selected product backlog item(s)?&quot;
+                actualHours > 0
+                ? 'There are already '+ actualHours +' hours have been spent on this backlog item, Are you sure you want to delete?'
+                : 'Are you sure to delete selected product backlog item(s)?'
                 }"/>
         </actions>
         <field name="reason"><textarea/> </field>
@@ -2837,7 +2832,7 @@ under the License.
                 <option key="N" description="${uiLabelMap.CommonNo}"/>
             </drop-down>
         </field>
-        <field name="productId" title="${uiLabelMap.ScrumProductName}" use-when="${groovy: unplanned.equals(&quot;Y&quot;)}" event="onchange" action="javascript:document.QuickAddBacklog.action='QuickAddBacklog';document.QuickAddBacklog.submit();"
+        <field name="productId" title="${uiLabelMap.ScrumProductName}" use-when="${groovy: unplanned == 'Y'}" event="onchange" action="javascript:document.QuickAddBacklog.action='QuickAddBacklog';document.QuickAddBacklog.submit();"
             required-field="true">
             <drop-down allow-empty="true">
                 <entity-options description="${groupName} -- ${internalName}[${productId}]" entity-name="ProductAndRole" key-field-name="productId">
@@ -2848,7 +2843,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="keyId" title="${uiLabelMap.ScrumProduct} ${uiLabelMap.ScrumProject} ${uiLabelMap.ScrumSprint}" use-when="${groovy: unplanned.equals(&quot;N&quot;)}" event="onchange" action="javascript:document.QuickAddBacklog.action='QuickAddBacklog';document.QuickAddBacklog.submit();"
+        <field name="keyId" title="${uiLabelMap.ScrumProduct} ${uiLabelMap.ScrumProject} ${uiLabelMap.ScrumSprint}" use-when="${groovy: unplanned == 'N'}" event="onchange" action="javascript:document.QuickAddBacklog.action='QuickAddBacklog';document.QuickAddBacklog.submit();"
             required-field="true">
             <drop-down allow-empty="true">
                 <list-options key-name="keyId" list-name="workEffortList" description="[${productId}] ${internalName} -- [${projectId}] ${projectName} -- [${sprintId}] ${sprintName}"/>
@@ -2920,7 +2915,7 @@ under the License.
         <row-actions>
             <entity-one entity-name="CustRequest" value-field="custRequest"/>
             <set field="product" from-field="custRequest.description"/>
-            <set field="estimatedHours" value="${groovy:custEstimatedMilliSeconds!=null?custEstimatedMilliSeconds/3600000:0;}"/>
+            <set field="estimatedHours" value="${groovy:custEstimatedMilliSeconds ? custEstimatedMilliSeconds / 3600000 : 0}"/>
             <set field="custRequestCategoryGroupId" from-field="parentCustRequestId"/>
         </row-actions>
         <field name="UnplannedSequence"><hidden value="Y"/></field>
@@ -2931,8 +2926,8 @@ under the License.
                 <parameter param-name="statusId" from-field="parameters.statusId"/>
             </hyperlink>
         </field>
-        <!--<field name="estimatedHours" title="${uiLabelMap.ScrumPlannedHours}" use-when="&quot;${statusId}&quot;==&quot;CRQ_ACCEPTED&quot;"><text size="3"/></field>
-        <field name="estimatedHours" title="${uiLabelMap.ScrumPlannedHours}" use-when="&quot;${statusId}&quot;==&quot;CRQ_REVIEWED&quot;"><display/></field>-->
+        <!--<field name="estimatedHours" title="${uiLabelMap.ScrumPlannedHours}" use-when="statusId=='CRQ_ACCEPTED'"><text size="3"/></field>
+        <field name="estimatedHours" title="${uiLabelMap.ScrumPlannedHours}" use-when="statusId=='CRQ_REVIEWED'"><display/></field>-->
         <field name="parentCustRequestId" title="${uiLabelMap.ScrumCategory}">
             <drop-down allow-empty="true">
                 <entity-options description="${custRequestName}" entity-name="CustRequestAndCustRequestItem" key-field-name="custRequestId">
@@ -2941,14 +2936,14 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="setToReview" title="${uiLabelMap.ScrumMoveToUnplannedSprint}" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;CRQ_ACCEPTED&quot;||&quot;${statusId}&quot;==&quot;CRQ_REOPENED&quot;" >
+        <field name="setToReview" title="${uiLabelMap.ScrumMoveToUnplannedSprint}" widget-style="buttontext" use-when="['CRQ_ACCEPTED', 'CRQ_REOPENED'].contains(statusId)" >
             <hyperlink description="${uiLabelMap.ScrumMoveToUnplannedSprint}" target="setUnplannedSprint">
                 <parameter param-name="custRequestId" from-field="parameters.custRequestId"/>
                 <parameter param-name="productId" from-field="parameters.productId"/>
                 <parameter param-name="statusId" from-field="custRequest.statusId"/>
             </hyperlink>
         </field>
-        <field name="setToReview" title="${uiLabelMap.ScrumMoveToUnplannedSprint}" use-when="&quot;${statusId}&quot;==&quot;CRQ_REVIEWED&quot;"><hidden /></field>
+        <field name="setToReview" title="${uiLabelMap.ScrumMoveToUnplannedSprint}" use-when="statusId == 'CRQ_REVIEWED'"><hidden /></field>
         <field name="dummy2" title="${uiLabelMap.CommonDelete}"><display description=" "/></field>
         <field name="submitButton" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
@@ -2976,7 +2971,7 @@ under the License.
             </service>
             <set field="planHours" from-field="taskPlanHourOutMap.planHours"/>
             <!-- condition -->
-            <set field="showPosition1" value="${groovy:String prev=(String)previousItem.get(&quot;custRequestId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(custRequestId)));}" type="Boolean"/>
+            <set field="showPosition1" value="${groovy:previousItem.custRequestId != custRequestId}" type="Boolean"/>
             <!-- Get list of task for each sprint backlog -->
             <entity-and entity-name="WorkEffortPartyAssignView" list="assignedTos">
                 <field-map field-name="workEffortId" from-field="workEffortId"/>
@@ -3005,18 +3000,18 @@ under the License.
             <set field="productId" from-field="custRequestItems[0].productId"/>
         </row-actions>
         <field name="productId" position="2"><hidden/></field>
-        <field name="custRequestId" title="${uiLabelMap.PageTitleUnplanBacklogItem}" position="1" use-when="showPosition1&amp;&amp;&quot;${custRequestTypeId}&quot;!=&quot;RF_SCRUM_MEETINGS&quot;">
+        <field name="custRequestId" title="${uiLabelMap.PageTitleUnplanBacklogItem}" position="1" use-when="showPosition1&amp;&amp;'${custRequestTypeId}'!='RF_SCRUM_MEETINGS'">
             <display-entity entity-name="CustRequest" key-field-name="custRequestId" description=" ">
                 <sub-hyperlink  target="ViewProdBacklogItem" description="${context.description} - [${custRequestId}]" link-type="hidden-form" target-window="_BLANK" link-style="buttontext">
                     <parameter param-name="custRequestId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
-         <field name="custRequestId" title="${uiLabelMap.ScrumSprintBacklog}" position="1" use-when="showPosition1&amp;&amp;&quot;${custRequestTypeId}&quot;==&quot;RF_SCRUM_MEETINGS&quot;" widget-style="disabled">
+         <field name="custRequestId" title="${uiLabelMap.ScrumSprintBacklog}" position="1" use-when="showPosition1&amp;&amp;'${custRequestTypeId}'=='RF_SCRUM_MEETINGS'" widget-style="disabled">
             <display-entity entity-name="CustRequest" key-field-name="custRequestId" description="${context.description} - [${custRequestId}]">
             </display-entity>
         </field>
-        <field name="statusId" title="${uiLabelMap.ScrumStatusBacklog}" position="1" use-when="showPosition1&amp;&amp;&quot;Any&quot;.equals(paraBacklogStatusId)">
+        <field name="statusId" title="${uiLabelMap.ScrumStatusBacklog}" position="1" use-when="showPosition1&amp;&amp;'Any'.equals(paraBacklogStatusId)">
             <display-entity entity-name="StatusItem" key-field-name="statusId"/>
         </field>
         <field name="workEffortId" title="${uiLabelMap.ScrumTab} ${uiLabelMap.ScrumTask}" position="2" use-when="workEffortId!=null">
@@ -3029,8 +3024,8 @@ under the License.
         <field name="workEffortTypeId" title="${uiLabelMap.ScrumTab} ${uiLabelMap.ScrumTaskType}" position="2" use-when="workEffortId!=null">
             <display-entity entity-name="WorkEffortType" key-field-name="workEffortTypeId" description="${uiLabelMap.ScrumTab} ${description}"/>
         </field>
-        <field name="currentStatusId" title="${uiLabelMap.CommonStatus}" position="2" use-when="!&quot;STS_COMPLETED&quot;.equals(currentStatusId)"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
-        <field name="currentStatusId" title="${uiLabelMap.CommonStatus}" position="2" use-when="&quot;STS_COMPLETED&quot;.equals(currentStatusId)" widget-style="alert"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
+        <field name="currentStatusId" title="${uiLabelMap.CommonStatus}" position="2" use-when="!'STS_COMPLETED'.equals(currentStatusId)"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
+        <field name="currentStatusId" title="${uiLabelMap.CommonStatus}" position="2" use-when="'STS_COMPLETED'.equals(currentStatusId)" widget-style="alert"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
         <field name="dummy1" title=" " position="1" use-when="showPosition1"><display description=" "/></field>
         <field name="dummy2" title=" " position="1" use-when="showPosition1"><display description=" "/></field>
         <field name="dummy3" title=" " position="1" use-when="showPosition1"><display description=" "/></field>
@@ -3041,14 +3036,14 @@ under the License.
         <field name="planHours" title="${uiLabelMap.ScrumPlannedHours}" position="2" use-when="workEffortId!=null">
             <display/>
         </field>
-        <field name="deleteButton" title=" " position="1" use-when="showPosition1&amp;&amp;!&quot;CRQ_COMPLETED&quot;.equals(&quot;${custRequest.statusId}&quot;)" widget-style="buttontext">
+        <field name="deleteButton" title=" " position="1" use-when="showPosition1&amp;&amp;!'CRQ_COMPLETED'.equals('${custRequest.statusId}')" widget-style="buttontext">
             <hyperlink description="Delete" target="DeleteUnplanBacklog" confirmation-message="Are you sure to delete this sprint backlog ?" link-type="hidden-form">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="productId"/>
             </hyperlink>
         </field>
-        <field name="newTask" title=" " use-when="showPosition1&amp;&amp;!&quot;CRQ_COMPLETED&quot;.equals(&quot;${custRequest.statusId}&quot;)" widget-style="buttontext">
+        <field name="newTask" title=" " use-when="showPosition1&amp;&amp;!'CRQ_COMPLETED'.equals('${custRequest.statusId}')" widget-style="buttontext">
             <hyperlink description="Add Task" target="NewUnplanBacklogTask" link-type="hidden-form">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="productId"/>
@@ -3058,19 +3053,19 @@ under the License.
         <field name="partyId" title="${uiLabelMap.ScrumAssignedTo}" position="2" use-when="workEffortId!=null" >
             <display description="${partyList[0].lastName} ${partyList[0].firstName} ${partyList[0].middleName}"></display>
         </field>
-        <field name="editTaskParty" title=" " position="2" use-when="workEffortId!=null&amp;&amp;!&quot;STS_COMPLETED&quot;.equals(currentStatusId)" widget-style="buttontext">
+        <field name="editTaskParty" title=" " position="2" use-when="workEffortId!=null&amp;&amp;!'STS_COMPLETED'.equals(currentStatusId)" widget-style="buttontext">
              <hyperlink description="${uiLabelMap.CommonEdit}" target="EditTask" link-type="hidden-form" target-window="_BLANK">
                 <parameter param-name="taskId" from-field="${workEffortId}"/>
             </hyperlink>
         </field>
-        <field name="deleteTaskButton" title=" " position="2" use-when="workEffortId!=null&amp;&amp;!&quot;STS_COMPLETED&quot;.equals(currentStatusId)" widget-style="buttontext">
+        <field name="deleteTaskButton" title=" " position="2" use-when="workEffortId!=null&amp;&amp;!'STS_COMPLETED'.equals(currentStatusId)" widget-style="buttontext">
             <hyperlink description="Delete" target="DeleteTaskFromUnplanBacklog" confirmation-message="Are you sure to delete this task ?" link-type="hidden-form">
                 <parameter param-name="workEffortId" from-field="workEffortId"/>
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="productId" from-field="parameters.productId"/>
             </hyperlink>
         </field>
-        <field name="setCompleteButton" title=" " widget-style="buttontext" use-when="workEffortId!=null&amp;&amp;!&quot;STS_COMPLETED&quot;.equals(currentStatusId)"
+        <field name="setCompleteButton" title=" " widget-style="buttontext" use-when="workEffortId!=null&amp;&amp;!'STS_COMPLETED'.equals(currentStatusId)"
          position="2">
             <hyperlink description="${uiLabelMap.ScrumSetComplete}" target="setCompleteFromUnplanBacklog" link-type="hidden-form">
                 <parameter param-name="workEffortId" from-field="workEffortId"/>
@@ -3106,7 +3101,7 @@ under the License.
         <field name="deleteTaskButton" position="2" use-when="workEffortId!=null"><hidden/></field>
         <field name="setCompleteButton" position="2" use-when="workEffortId!=null"><hidden/></field>
         <field name="editTaskParty" position="2" use-when="workEffortId!=null"><hidden/></field>
-        <field name="newTask" use-when="showPosition1&amp;&amp;!&quot;CRQ_COMPLETED&quot;.equals(&quot;${custRequest.statusId}&quot;)"><hidden/></field>
+        <field name="newTask" use-when="showPosition1&amp;&amp;!'CRQ_COMPLETED'.equals('${custRequest.statusId}')"><hidden/></field>
         <sort-order>
             <sort-field name="custRequestId"/>
             <sort-field name="workEffortId"/>
@@ -3128,23 +3123,23 @@ under the License.
             <entity-one entity-name="CustRequest" value-field="custRequest"/>
             <set field="description" from-field="custRequest.description"/>
             <set field="custRequestCategoryGroupId" from-field="parentCustRequestId"/>
-            <set field="estimatedHours" value="${groovy:custEstimatedMilliSeconds!=null?custEstimatedMilliSeconds/3600000:0;}"/>
-            <set field="showPosition1" value="${groovy:String prev=(String)previousItem.get(&quot;parentCustRequestId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(parentCustRequestId)));}" type="Boolean"/>
+            <set field="estimatedHours" value="${groovy: custEstimatedMilliSeconds ? custEstimatedMilliSeconds / 3600000 : 0}"/>
+            <set field="showPosition1" value="${groovy: previousItem.parentCustRequestId != parentCustRequestId}" type="Boolean"/>
         </row-actions>
         <!--<field name="custRequestCategoryGroupId" position="1" use-when="${groovy:showPosition1}" title="${uiLabelMap.ScrumCategory}">
             <display-entity entity-name="CustRequest" key-field-name="custRequestId" description="${custRequestName}"/>
         </field>-->
         <field name="submitButton" widget-style="buttontext"><submit button-type="text-link"/></field>
-        <field name="setToReview" title="${uiLabelMap.ScrumMoveToUnplannedSprint}" widget-style="buttontext" use-when="&quot;${statusId}&quot;==&quot;CRQ_ACCEPTED&quot;" position="2">
+        <field name="setToReview" title="${uiLabelMap.ScrumMoveToUnplannedSprint}" widget-style="buttontext" use-when="statusId=='CRQ_ACCEPTED'" position="2">
             <hyperlink description="${uiLabelMap.ScrumMoveToUnplannedSprint}" target="setUnplannedSprint">
                 <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
                 <parameter param-name="productId" from-field="parameters.productId"/>
                 <parameter param-name="statusId" value="parameters.statusId"/>
             </hyperlink>
         </field>
-        <field name="setToReview" title="${uiLabelMap.ScrumMoveToUnplannedSprint}" use-when="&quot;${statusId}&quot;==&quot;CRQ_REVIEWED&quot;" position="2"><hidden /></field>
+        <field name="setToReview" title="${uiLabelMap.ScrumMoveToUnplannedSprint}" use-when="statusId=='CRQ_REVIEWED'" position="2"><hidden /></field>
         <field name="deleteFlag" position="2" title="${uiLabelMap.CommonDelete}"/>
-        <field name="dummy1" title="${uiLabelMap.ScrumMoveToUnplannedSprint}" use-when="&quot;${statusId}&quot;==&quot;CRQ_REVIEWED&quot;" position="2"><display description=" "/></field>
+        <field name="dummy1" title="${uiLabelMap.ScrumMoveToUnplannedSprint}" use-when="statusId=='CRQ_REVIEWED'" position="2"><display description=" "/></field>
     </form>
     <form name="UnplannedBacklogListByCategoriesForOwner" extends="UnplannedBacklogListByCategories">
         <field name="estimatedHours" position="2" title="${uiLabelMap.ScrumPlannedHours}"><display/></field>
