@@ -53,6 +53,7 @@ public class SolrTests extends OFBizTestCase {
     }
 
     public void testAddProductToIndex() throws Exception {
+        System.setProperty("SolrDispatchFilter", "runsAfterControlFilter");
 
         GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", validTestProductId).queryOne();
 
@@ -75,6 +76,7 @@ public class SolrTests extends OFBizTestCase {
             throw new Exception(errorMessage);
         }
         assertTrue("Could not query search index", ServiceUtil.isSuccess(sresp));
+        System.clearProperty("SolrDispatchFilter");
     }
 
     /**
