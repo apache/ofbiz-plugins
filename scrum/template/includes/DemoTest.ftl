@@ -24,7 +24,7 @@ This component is based on the following documents: <br/>
 <a href="http://www.scrumalliance.org/pages/what_is_scrum" target="_BLANK">Scrum in 30 seconds.</a><br/>
 <a href="http://www.softhouse.se/Uploades/Scrum_eng_webb.pdf" target="_BLANK">Scrum in 5 minutes</a><br/>
 
-The table shows the demo user's which are setup in the demo data for this component.<br/>  
+The table shows the demo user's which are setup in the demo data for this component.<br/>
 When you click on the User Login ID,the system will login to the Scrum Component of that User Login ID <br/><br/>
 </div>
 
@@ -35,7 +35,7 @@ When you click on the User Login ID,the system will login to the Scrum Component
     </tr>
     <tr>
         <td>
-        <a href="<@ofbizUrl controlPath="/scrum/control">main?USERNAME=scrumadmin&PASSWORD=ofbiz&JavaScriptEnabled=Y</@ofbizUrl>" class="buttontext">Scrum Admin</a><br/>
+        <a href="<@ofbizUrl controlPath="/scrum/control">main?USERNAME=scrumadmin&PASSWORD=ofbiz</@ofbizUrl>" class="buttontext">Scrum Admin</a><br/>
         </td>
         <td>
             <b>Scrum Admin</b><br/>
@@ -44,7 +44,7 @@ When you click on the User Login ID,the system will login to the Scrum Component
     </tr>
     <tr>
         <td>
-        <a href="<@ofbizUrl controlPath="/scrum/control">main?USERNAME=scrummaster&PASSWORD=ofbiz&JavaScriptEnabled=Y</@ofbizUrl>" class="buttontext">Scrum Master</td>
+        <a href="<@ofbizUrl controlPath="/scrum/control">main?USERNAME=scrummaster&PASSWORD=ofbiz</@ofbizUrl>" class="buttontext">Scrum Master</td>
         <td>
             <b>Scrum Master</b><br/>
             The Scrummaster can create the project and sprint and will put the product backlog into the sprint,<br/>
@@ -53,8 +53,8 @@ When you click on the User Login ID,the system will login to the Scrum Component
     </tr>
     <tr>
         <td>
-        <a href="<@ofbizUrl controlPath="/scrum/control">main?USERNAME=productowner&PASSWORD=ofbiz&JavaScriptEnabled=Y</@ofbizUrl>" class="buttontext">Product Owner</a><br/>
-        <a href="<@ofbizUrl controlPath="/scrum/control">main?USERNAME=productowner2&PASSWORD=ofbiz&JavaScriptEnabled=Y</@ofbizUrl>" class="buttontext">Product Owner2</a><br/>
+        <a href="<@ofbizUrl controlPath="/scrum/control">main?USERNAME=productowner&PASSWORD=ofbiz</@ofbizUrl>" class="buttontext">Product Owner</a><br/>
+        <a href="<@ofbizUrl controlPath="/scrum/control">main?USERNAME=productowner2&PASSWORD=ofbiz</@ofbizUrl>" class="buttontext">Product Owner2</a><br/>
         </td>
         <td>
             <b>Product Owner</b><br/>
@@ -64,10 +64,10 @@ When you click on the User Login ID,the system will login to the Scrum Component
     </tr>
     <tr>
         <td>
-        <a href="<@ofbizUrl controlPath="/scrum/control">main?USERNAME=scrumteam1&PASSWORD=ofbiz&JavaScriptEnabled=Y</@ofbizUrl>" class="buttontext">Scrumteam1</a><br/>
-        <a href="<@ofbizUrl controlPath="/scrum/control">main?USERNAME=scrumteam2&PASSWORD=ofbiz&JavaScriptEnabled=Y</@ofbizUrl>" class="buttontext">Scrumteam2</a><br/>
-        <a href="<@ofbizUrl controlPath="/scrum/control">main?USERNAME=scrumteam3&PASSWORD=ofbiz&JavaScriptEnabled=Y</@ofbizUrl>" class="buttontext">Scrumteam3</a><br/>
-        <a href="<@ofbizUrl controlPath="/scrum/control">main?USERNAME=scrumteam4&PASSWORD=ofbiz&JavaScriptEnabled=Y</@ofbizUrl>" class="buttontext">Scrumteam4</a><br/>
+        <a href="<@ofbizUrl controlPath="/scrum/control">main?USERNAME=scrumteam1&PASSWORD=ofbiz</@ofbizUrl>" class="buttontext">Scrumteam1</a><br/>
+        <a href="<@ofbizUrl controlPath="/scrum/control">main?USERNAME=scrumteam2&PASSWORD=ofbiz</@ofbizUrl>" class="buttontext">Scrumteam2</a><br/>
+        <a href="<@ofbizUrl controlPath="/scrum/control">main?USERNAME=scrumteam3&PASSWORD=ofbiz</@ofbizUrl>" class="buttontext">Scrumteam3</a><br/>
+        <a href="<@ofbizUrl controlPath="/scrum/control">main?USERNAME=scrumteam4&PASSWORD=ofbiz</@ofbizUrl>" class="buttontext">Scrumteam4</a><br/>
         </td>
         <td>
             <b>Scrumteam</b><br/>
@@ -77,7 +77,7 @@ When you click on the User Login ID,the system will login to the Scrum Component
     </tr>
     <tr>
         <td>
-        <a href="<@ofbizUrl controlPath="/scrum/control">main?USERNAME=testadmin&PASSWORD=ofbiz&JavaScriptEnabled=Y</@ofbizUrl>" class="buttontext">Testadmin</a>
+        <a href="<@ofbizUrl controlPath="/scrum/control">main?USERNAME=testadmin&PASSWORD=ofbiz</@ofbizUrl>" class="buttontext">Testadmin</a>
         </td>
         <td>
             <b>Opentest</b><br/>
@@ -88,7 +88,7 @@ When you click on the User Login ID,the system will login to the Scrum Component
     </tr>
     <tr>
         <td>
-        <a href="<@ofbizUrl controlPath="/scrum/control">main?USERNAME=DemoStakeholder&PASSWORD=ofbiz&JavaScriptEnabled=Y</@ofbizUrl>" class="buttontext">DemoStakeholder</a>
+        <a href="<@ofbizUrl controlPath="/scrum/control">main?USERNAME=DemoStakeholder&PASSWORD=ofbiz</@ofbizUrl>" class="buttontext">DemoStakeholder</a>
         </td>
         <td>
             <b>The Stakeholder</b><br/>
