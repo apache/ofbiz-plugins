@@ -25,9 +25,9 @@ import java.util.Map;
 
 import javax.naming.NamingException;
 import javax.naming.directory.SearchResult;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import org.apache.ofbiz.base.crypto.HashCrypt;
 import org.apache.ofbiz.base.util.UtilDateTime;

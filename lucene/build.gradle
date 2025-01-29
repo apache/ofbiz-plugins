@@ -20,7 +20,8 @@ dependencies {
     // 1. Remember to change the version LUCENE_VERSION in SearchWorker class when upgrading.
     // 2. luceneMatchVersion should be updated in solrconfig.xml
     // 3. Also Solr et Lucene should use the same version, 
-    pluginLibsCompile 'org.apache.lucene:lucene-core:8.11.3'
-    pluginLibsCompile 'org.apache.lucene:lucene-queryparser:8.11.3'
-    pluginLibsCompile 'org.apache.lucene:lucene-analyzers-common:8.11.3'
+    pluginLibsCompile 'org.apache.lucene:lucene-core:9.8.0'
+    pluginLibsCompile 'org.apache.lucene:lucene-queryparser:9.8.0'
+//    pluginLibsCompile 'org.apache.lucene:lucene-analyzers-common:9.8.0'
+    pluginLibsCompile 'org.apache.lucene:lucene-analysis-common:9.8.0'
 }
