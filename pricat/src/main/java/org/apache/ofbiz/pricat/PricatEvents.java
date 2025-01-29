@@ -28,7 +28,7 @@ import java.nio.file.Paths;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload2.jakarta.JakartaServletFileUpload;
 import org.apache.ofbiz.base.location.ComponentLocationResolver;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.FileUtil;
@@ -77,7 +77,7 @@ public class PricatEvents {
      * Upload a pricat.
      */
     public static String pricatUpload(HttpServletRequest request, HttpServletResponse response) {
-        boolean isMultiPart = ServletFileUpload.isMultipartContent(request);
+        boolean isMultiPart = JakartaServletFileUpload.isMultipartContent(request);
         if (isMultiPart) {
             return "parse_pricat";
         } else {
