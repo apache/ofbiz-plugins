@@ -21,7 +21,7 @@ under the License.
     <simple-method method-name="setPartyToCart" short-description="Set party to cart" login-required="true">
         <clear-field field="posTerminalId"/>
         <call-class-method class-name="org.apache.ofbiz.webpos.WebPosEvents" method-name="getWebPosSession" ret-field="webPosSession">
-            <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+            <field field="request" type="jakarta.servlet.http.HttpServletRequest"/>
             <field field="posTerminalId" type="String"/>
         </call-class-method>
         <if-not-empty field="webPosSession">
@@ -97,15 +97,15 @@ under the License.
     <simple-method method-name="addCartItem" short-description="Add Cart Item" login-required="true">
         <clear-field field="posTerminalId"/>
         <call-class-method class-name="org.apache.ofbiz.webpos.WebPosEvents" method-name="getWebPosSession" ret-field="webPosSession">
-            <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+            <field field="request" type="jakarta.servlet.http.HttpServletRequest"/>
             <field field="posTerminalId" type="String"/>
         </call-class-method>
         <if-not-empty field="webPosSession">
             <call-object-method obj-field="webPosSession" method-name="getCurrentTransaction" ret-field="webPosTransaction"/>
             <check-errors/>
             <call-class-method class-name="org.apache.ofbiz.order.shoppingcart.ShoppingCartEvents" method-name="addToCart">
-                <field field="request" type="javax.servlet.http.HttpServletRequest"/>
-                <field field="response" type="javax.servlet.http.HttpServletResponse"/>
+                <field field="request" type="jakarta.servlet.http.HttpServletRequest"/>
+                <field field="response" type="jakarta.servlet.http.HttpServletResponse"/>
             </call-class-method>
             <call-object-method obj-field="webPosTransaction" method-name="calcTax"/>
             <check-errors/>
@@ -115,7 +115,7 @@ under the License.
     <simple-method method-name="updateCartItem" short-description="Update Cart Item" login-required="true">
         <clear-field field="posTerminalId"/>
         <call-class-method class-name="org.apache.ofbiz.webpos.WebPosEvents" method-name="getWebPosSession" ret-field="webPosSession">
-            <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+            <field field="request" type="jakarta.servlet.http.HttpServletRequest"/>
             <field field="posTerminalId" type="String"/>
         </call-class-method>
         <if-not-empty field="webPosSession">
@@ -156,7 +156,7 @@ under the License.
     <simple-method method-name="deleteCartItem" short-description="Delete Cart Item" login-required="true">
         <clear-field field="posTerminalId"/>
         <call-class-method class-name="org.apache.ofbiz.webpos.WebPosEvents" method-name="getWebPosSession" ret-field="webPosSession">
-            <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+            <field field="request" type="jakarta.servlet.http.HttpServletRequest"/>
             <field field="posTerminalId" type="String"/>
         </call-class-method>
         <if-not-empty field="webPosSession">
@@ -267,7 +267,7 @@ under the License.
     <simple-method method-name="removeSalesRep" short-description="Remove Sales Rep from cart" login-required="true">
         <clear-field field="posTerminalId"/>
         <call-class-method class-name="org.apache.ofbiz.webpos.WebPosEvents" method-name="getWebPosSession" ret-field="webPosSession">
-            <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+            <field field="request" type="jakarta.servlet.http.HttpServletRequest"/>
             <field field="posTerminalId" type="String"/>
         </call-class-method>
         <if-not-empty field="webPosSession">
@@ -306,7 +306,7 @@ under the License.
     <simple-method method-name="addSalesRep" short-description="Add Sales Rep to cart" login-required="true">
         <clear-field field="posTerminalId"/>
         <call-class-method class-name="org.apache.ofbiz.webpos.WebPosEvents" method-name="getWebPosSession" ret-field="webPosSession">
-            <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+            <field field="request" type="jakarta.servlet.http.HttpServletRequest"/>
             <field field="posTerminalId" type="String"/>
         </call-class-method>
         <if-not-empty field="webPosSession">
@@ -330,7 +330,7 @@ under the License.
     <simple-method method-name="getShipMethods" short-description="Get shipping methods" login-required="false">
         <clear-field field="posTerminalId"/>
         <call-class-method class-name="org.apache.ofbiz.webpos.WebPosEvents" method-name="getWebPosSession" ret-field="webPosSession">
-            <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+            <field field="request" type="jakarta.servlet.http.HttpServletRequest"/>
             <field field="posTerminalId" type="String"/>
         </call-class-method>
         <if-not-empty field="webPosSession">
@@ -383,7 +383,7 @@ under the License.
     <simple-method method-name="setShipMethod" short-description="Set ship method" login-required="false">
         <clear-field field="posTerminalId"/>
         <call-class-method class-name="org.apache.ofbiz.webpos.WebPosEvents" method-name="getWebPosSession" ret-field="webPosSession">
-            <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+            <field field="request" type="jakarta.servlet.http.HttpServletRequest"/>
             <field field="posTerminalId" type="String"/>
         </call-class-method>
         <if-not-empty field="webPosSession">

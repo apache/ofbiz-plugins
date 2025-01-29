@@ -37,8 +37,8 @@ import org.apache.ofbiz.content.ContentManagementWorker
 import org.apache.ofbiz.content.content.ContentWorker
 import org.apache.ofbiz.base.util.collections.LifoSet
 
-import javax.servlet.*
-import javax.servlet.http.*
+import jakarta.servlet.*
+import jakarta.servlet.http.*
 
 lookupCaches = session.getAttribute("lookupCaches")
 //logInfo("entityName:" + entityName)

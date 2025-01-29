@@ -41,8 +41,8 @@ import org.apache.ofbiz.content.content.ContentWorker
 import freemarker.template.SimpleHash
 import freemarker.template.SimpleSequence
 
-import javax.servlet.*
-import javax.servlet.http.*
+import jakarta.servlet.*
+import jakarta.servlet.http.*
 
 singleWrapper = context.singleWrapper
 singleWrapper.putInContext("contentPurposeTypeId", page.contentPurposeTypeId)

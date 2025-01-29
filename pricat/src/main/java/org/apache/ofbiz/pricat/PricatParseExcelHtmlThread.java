@@ -33,18 +33,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload2.core.DiskFileItem;
+import org.apache.commons.fileupload2.core.DiskFileItemFactory;
+import org.apache.commons.fileupload2.core.FileItem;
+import org.apache.commons.fileupload2.core.FileUploadException;
+import org.apache.commons.fileupload2.jakarta.JakartaServletFileUpload;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.FileUtil;
 import org.apache.ofbiz.base.util.UtilDateTime;
 import org.apache.ofbiz.base.util.UtilGenerics;
+import org.apache.ofbiz.base.util.UtilHttp;
 import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.base.util.UtilProperties;
 import org.apache.ofbiz.base.util.UtilValidate;
@@ -84,7 +86,7 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
     private static final String RESOURCE = "PricatUiLabels";
     private LocalDispatcher dispatcher;
     private Delegator delegator;
-    private List<FileItem> fileItems;
+    private List<FileItem<DiskFileItem>> fileItems;
     private File pricatFile;
     private String userLoginId;
     private GenericValue userLogin;
@@ -127,7 +129,7 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
         }
         try {
             getReport().print(UtilProperties.getMessage(RESOURCE, "StartStoreExcel", getLocale()), InterfaceReport.FORMAT_HEADLINE);
-            ServletFileUpload dfu = new ServletFileUpload(new DiskFileItemFactory(10240, userFolder));
+            JakartaServletFileUpload<DiskFileItem, DiskFileItemFactory> dfu = UtilHttp.getServletFileUpload(request);
             fileItems = UtilGenerics.cast(dfu.parseRequest(request));
         } catch (FileUploadException e) {
             getReport().addError(e);
@@ -208,8 +210,8 @@ public class PricatParseExcelHtmlThread extends AbstractReportThread {
     }
 
     private boolean storePricatFile() throws IOException {
-        FileItem fi = null;
-        FileItem pricatFi = null;
+        FileItem<DiskFileItem> fi = null;
+        FileItem<DiskFileItem> pricatFi = null;
         byte[] pricatBytes = {};
         // check excelTemplateType
         for (int i = 0; i < fileItems.size(); i++) {

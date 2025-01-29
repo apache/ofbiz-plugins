@@ -21,7 +21,6 @@ package org.apache.ofbiz.content.search;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.lucene.util.Version;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.UtilDateTime;
 import org.apache.ofbiz.base.util.UtilMisc;
@@ -40,8 +39,6 @@ import org.apache.ofbiz.service.LocalDispatcher;
 public final class SearchWorker {
 
     private static final String MODULE = SearchWorker.class.getName();
-
-    private static final Version LUCENE_VERSION = Version.LUCENE_8_11_4;
 
     private SearchWorker() { }
 
@@ -92,7 +89,4 @@ public final class SearchWorker {
         }
     }
 
-    public static Version getLuceneVersion() {
-        return LUCENE_VERSION;
-    }
 }

@@ -645,7 +645,7 @@
             </condition>
             <then>
                 <call-class-method method-name="getParameterMap" class-name="org.apache.ofbiz.base.util.UtilHttp" ret-field="paramMap">
-                    <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+                    <field field="request" type="jakarta.servlet.http.HttpServletRequest"/>
                 </call-class-method>
                 <call-class-method method-name="getMultiFormRowCount" class-name="org.apache.ofbiz.base.util.UtilHttp" ret-field="rowCount">
                     <field field="paramMap" type="java.util.Map"/>
@@ -1288,7 +1288,7 @@
     
     <simple-method method-name="createSprintBacklogTask" short-description="Create Sprint Backlog Task">
         <call-class-method class-name="org.apache.ofbiz.content.layout.LayoutWorker" method-name="uploadImageAndParameters" ret-field="formInput">
-            <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+            <field field="request" type="jakarta.servlet.http.HttpServletRequest"/>
             <string value="uploadedFile"/>
         </call-class-method>
         <entity-one entity-name="UserLogin" value-field="systemUser">
@@ -2246,7 +2246,7 @@
     
     <simple-method method-name="createTestTask" short-description="Create A test task">
         <call-class-method class-name="org.apache.ofbiz.content.layout.LayoutWorker" method-name="uploadImageAndParameters" ret-field="formInput">
-            <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+            <field field="request" type="jakarta.servlet.http.HttpServletRequest"/>
             <string value="uploadedFile"/>
         </call-class-method>
         <entity-one entity-name="UserLogin" value-field="systemUser">
@@ -2780,7 +2780,7 @@
         <call-class-method class-name="org.apache.ofbiz.content.layout.LayoutWorker"
             method-name="uploadImageAndParameters"
             ret-field="formInput">
-            <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+            <field field="request" type="jakarta.servlet.http.HttpServletRequest"/>
             <string value="dataResourceName"/>
         </call-class-method>
         <if-empty field="formInput.formInput.contentIdTo">
@@ -2858,7 +2858,7 @@
         <call-class-method class-name="org.apache.ofbiz.content.layout.LayoutWorker"
             method-name="uploadImageAndParameters"
             ret-field="formInput">
-            <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+            <field field="request" type="jakarta.servlet.http.HttpServletRequest"/>
             <string value="dataResourceName"/>
         </call-class-method>
         <if-empty field="formInput.formInput.contentIdTo">
@@ -2965,7 +2965,7 @@
         </entity-one>
         <call-class-method class-name="org.apache.ofbiz.content.layout.LayoutWorker"
             method-name="uploadImageAndParameters" ret-field="formInput">
-            <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+            <field field="request" type="jakarta.servlet.http.HttpServletRequest"/>
             <string value="dataResourceName"/>
         </call-class-method>
 
@@ -4327,7 +4327,7 @@
     </simple-method>
     <simple-method method-name="updateNotBilledBacklog" short-description="Update Not Billed Backlog">
        <call-class-method method-name="getParameterMap" class-name="org.apache.ofbiz.base.util.UtilHttp" ret-field="paramMap">
-           <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+           <field field="request" type="jakarta.servlet.http.HttpServletRequest"/>
        </call-class-method>
        <call-class-method method-name="getMultiFormRowCount" class-name="org.apache.ofbiz.base.util.UtilHttp" ret-field="rowCount">
            <field field="paramMap" type="java.util.Map"/>
@@ -4344,7 +4344,7 @@
         <!-- for notification -->
         <if-not-empty field="request">
             <call-class-method method-name="getWebSiteId" class-name="org.apache.ofbiz.webapp.website.WebSiteWorker" ret-field="webSiteId">
-                <field field="request" type="javax.servlet.ServletRequest"/>
+                <field field="request" type="jakarta.servlet.ServletRequest"/>
             </call-class-method>
         </if-not-empty>
         <if-not-empty field="webSiteId">

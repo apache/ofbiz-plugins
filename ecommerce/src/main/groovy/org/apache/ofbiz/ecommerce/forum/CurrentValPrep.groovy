@@ -34,8 +34,8 @@ import org.apache.ofbiz.service.*
 import org.apache.ofbiz.entity.model.*
 import org.apache.ofbiz.content.ContentManagementWorker
 
-import javax.servlet.*
-import javax.servlet.http.*
+import jakarta.servlet.*
+import jakarta.servlet.http.*
 
 currentEntityMap = session.getAttribute("currentEntityMap")
 if (!currentEntityMap) {

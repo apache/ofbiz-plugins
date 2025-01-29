@@ -37,8 +37,8 @@ import org.apache.ofbiz.securityext.login.*
 import org.apache.ofbiz.common.*
 import org.apache.ofbiz.content.content.ContentWorker
 
-import javax.servlet.*
-import javax.servlet.http.*
+import jakarta.servlet.*
+import jakarta.servlet.http.*
 
 paramMap = UtilHttp.getParameterMap(request)
 

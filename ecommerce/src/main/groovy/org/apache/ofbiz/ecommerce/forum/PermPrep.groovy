@@ -36,8 +36,8 @@ import org.apache.ofbiz.entity.model.*
 import org.apache.ofbiz.content.content.PermissionRecorder
 import org.apache.ofbiz.content.ContentManagementWorker
 
-import javax.servlet.*
-import javax.servlet.http.*
+import jakarta.servlet.*
+import jakarta.servlet.http.*
 
 paramMap = UtilHttp.getParameterMap(request)
 //logInfo("in permprep, userLogin(0):" + userLogin)
