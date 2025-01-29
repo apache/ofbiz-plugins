@@ -30,6 +30,7 @@ import java.util.Map;
 import jakarta.servlet.AsyncContext;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletConnection;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletInputStream;
@@ -181,11 +182,6 @@ public class MultiSiteRequestWrapper implements HttpServletRequest {
         return request.isRequestedSessionIdFromURL();
     }
 
-    @Deprecated @Override
-    public boolean isRequestedSessionIdFromUrl() {
-        return request.isRequestedSessionIdFromURL();
-    }
-
     @Override
     public boolean isRequestedSessionIdValid() {
         return request.isRequestedSessionIdValid();
@@ -285,11 +281,6 @@ public class MultiSiteRequestWrapper implements HttpServletRequest {
     public BufferedReader getReader() throws IOException {
         return request.getReader();
     }
-    /** get real path */
-    @Override @Deprecated
-    public String getRealPath(String arg0) {
-        return request.getServletContext().getRealPath(arg0);
-    }
     /** get remote addr */
     @Override
     public String getRemoteAddr() {
@@ -380,6 +371,22 @@ public class MultiSiteRequestWrapper implements HttpServletRequest {
     public DispatcherType getDispatcherType() {
         return request.getDispatcherType();
     }
+
+    @Override
+    public String getRequestId() {
+        return request.getRequestId();
+    }
+
+    @Override
+    public String getProtocolRequestId() {
+        return request.getProtocolRequestId();
+    }
+
+    @Override
+    public ServletConnection getServletConnection() {
+        return request.getServletConnection();
+    }
+
     /** get servlet context */
     @Override
     public ServletContext getServletContext() {
