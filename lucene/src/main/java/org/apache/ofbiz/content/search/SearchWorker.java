@@ -41,8 +41,6 @@ public final class SearchWorker {
 
     private static final String MODULE = SearchWorker.class.getName();
 
-    private static final Version LUCENE_VERSION = Version.LUCENE_8_11_3;
-
     private SearchWorker() { }
 
     public static void indexContentTree(LocalDispatcher dispatcher, Delegator delegator, String siteId) throws Exception {
@@ -92,7 +90,4 @@ public final class SearchWorker {
         }
     }
 
-    public static Version getLuceneVersion() {
-        return LUCENE_VERSION;
-    }
 }
