@@ -20,8 +20,8 @@ package org.apache.ofbiz.pricat;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.ofbiz.htmlreport.AbstractHtmlReport;
 import org.apache.ofbiz.htmlreport.InterfaceReportThread;
 import org.apache.ofbiz.htmlreport.util.ReportStringUtil;

@@ -19,8 +19,10 @@
 dependencies {
     // 1. Remember to change the version LUCENE_VERSION in SearchWorker class when upgrading.
     // 2. luceneMatchVersion should be updated in solrconfig.xml
-    // 3. Also Solr et Lucene should use the same version, 
-    pluginLibsCompile 'org.apache.solr:solr-core:8.11.3'
+    // 3. Also Solr et Lucene should use the same version,
+    // TODO : upgrade when jakarte update has been done ?
+    pluginLibsCompile 'org.apache.solr:solr-core:9.8.0'
+//    pluginLibsCompile 'org.apache.solr:solr-core:8.11.3'
     pluginLibsCompile 'com.google.guava:guava:28.0-jre'
 }
 

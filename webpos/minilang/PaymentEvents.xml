@@ -21,7 +21,7 @@ under the License.
     <simple-method method-name="payCash" short-description="Pay Cash" login-required="true">
         <clear-field field="posTerminalId"/>
         <call-class-method class-name="org.apache.ofbiz.webpos.WebPosEvents" method-name="getWebPosSession" ret-field="webPosSession">
-            <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+            <field field="request" type="jakarta.servlet.http.HttpServletRequest"/>
             <field field="posTerminalId" type="String"/>
         </call-class-method>
         <if-not-empty field="webPosSession">
@@ -79,7 +79,7 @@ under the License.
     <simple-method method-name="payCheck" short-description="Pay Check" login-required="true">
         <clear-field field="posTerminalId"/>
         <call-class-method class-name="org.apache.ofbiz.webpos.WebPosEvents" method-name="getWebPosSession" ret-field="webPosSession">
-            <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+            <field field="request" type="jakarta.servlet.http.HttpServletRequest"/>
             <field field="posTerminalId" type="String"/>
         </call-class-method>
         <if-not-empty field="webPosSession">
@@ -167,7 +167,7 @@ under the License.
     <simple-method method-name="payGiftCard" short-description="Pay Gift Card" login-required="true">
         <clear-field field="posTerminalId"/>
         <call-class-method class-name="org.apache.ofbiz.webpos.WebPosEvents" method-name="getWebPosSession" ret-field="webPosSession">
-            <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+            <field field="request" type="jakarta.servlet.http.HttpServletRequest"/>
             <field field="posTerminalId" type="String"/>
         </call-class-method>
         <if-not-empty field="webPosSession">
@@ -251,7 +251,7 @@ under the License.
     <simple-method method-name="payCreditCard" short-description="Pay Credit Card" login-required="true">
         <clear-field field="posTerminalId"/>
         <call-class-method class-name="org.apache.ofbiz.webpos.WebPosEvents" method-name="getWebPosSession" ret-field="webPosSession">
-            <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+            <field field="request" type="jakarta.servlet.http.HttpServletRequest"/>
             <field field="posTerminalId" type="String"/>
         </call-class-method>
         <if-not-empty field="webPosSession">
@@ -443,7 +443,7 @@ under the License.
     <simple-method method-name="payFinish" short-description="Process Sale" login-required="true">
         <clear-field field="posTerminalId"/>
         <call-class-method class-name="org.apache.ofbiz.webpos.WebPosEvents" method-name="getWebPosSession" ret-field="webPosSession">
-            <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+            <field field="request" type="jakarta.servlet.http.HttpServletRequest"/>
             <field field="posTerminalId" type="String"/>
         </call-class-method>
         <if-not-empty field="webPosSession">
@@ -470,8 +470,8 @@ under the License.
                         <check-errors/>
                     </if-compare>
                     <call-class-method class-name="org.apache.ofbiz.webpos.WebPosEvents" method-name="completeSale">
-                        <field field="request"  type="javax.servlet.http.HttpServletRequest"/>
-                        <field field="response" type="javax.servlet.http.HttpServletResponse"/>
+                        <field field="request"  type="jakarta.servlet.http.HttpServletRequest"/>
+                        <field field="response" type="jakarta.servlet.http.HttpServletResponse"/>
                     </call-class-method>
                 </if-compare>
             </if-not-empty>
@@ -485,7 +485,7 @@ under the License.
     <simple-method method-name="clearPayment" short-description="Clear Payment" login-required="true">
         <clear-field field="posTerminalId"/>
         <call-class-method class-name="org.apache.ofbiz.webpos.WebPosEvents" method-name="getWebPosSession" ret-field="webPosSession">
-            <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+            <field field="request" type="jakarta.servlet.http.HttpServletRequest"/>
             <field field="posTerminalId" type="String"/>
         </call-class-method>
         <if-not-empty field="webPosSession">
@@ -578,7 +578,7 @@ under the License.
     <simple-method method-name="clearAllPayments" short-description="Clear All Payments" login-required="true">
         <clear-field field="posTerminalId"/>
         <call-class-method class-name="org.apache.ofbiz.webpos.WebPosEvents" method-name="getWebPosSession" ret-field="webPosSession">
-            <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+            <field field="request" type="jakarta.servlet.http.HttpServletRequest"/>
             <field field="posTerminalId" type="String"/>
         </call-class-method>
         <if-not-empty field="webPosSession">
