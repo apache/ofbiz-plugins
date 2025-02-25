@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
-package org.apache.ofbiz.ws.rs.security;
+package org.apache.ofbiz.ws.rs.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

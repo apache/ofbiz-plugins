@@ -16,23 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
-package org.apache.ofbiz.ws.rs;
+package org.apache.ofbiz.ws.rs.annotation;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import javax.ws.rs.NameBinding;
 
-/**
- * A HTTP 409 (Conflict) exception
- */
-public class ConflictException extends WebApplicationException {
 
-    private static final long serialVersionUID = -3002310435429546325L;
-
-    /**
-     * Construct a new ConflictException exception.
-     */
-    public ConflictException(String message) {
-        super(message, Response.Status.CONFLICT);
-    }
+@NameBinding
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.METHOD})
+public @interface Secured {
 
 }

@@ -20,6 +20,7 @@ package org.apache.ofbiz.ws.rs.resources;
 
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.HeaderParam;
@@ -33,10 +34,11 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
 import org.apache.ofbiz.base.util.UtilMisc;
+import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.util.EntityUtilProperties;
 import org.apache.ofbiz.webapp.control.JWTManager;
-import org.apache.ofbiz.ws.rs.security.AuthToken;
+import org.apache.ofbiz.ws.rs.annotation.AuthToken;
 import org.apache.ofbiz.ws.rs.util.RestApiUtil;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,9 +49,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 
 @Path("/auth")
-@Provider
 @Tag(name = "Authentication Token Generating Resource", description = "Intended to provide generation of authentication tokens.")
-public class AuthenticationResource extends OFBizResource {
+public class AuthenticationResource {
+
+    @Context
+    private ServletContext servletContext;
 
     @Context
     private HttpServletRequest httpRequest;
@@ -68,13 +72,13 @@ public class AuthenticationResource extends OFBizResource {
     public Response getAuthToken(@Parameter(in = ParameterIn.HEADER, name = "Authorization",
             description = "Authorization header using Basic Authentication", example = HttpHeaders.AUTHORIZATION + ": Basic YWRtaW46b2ZiaXo=")
             @HeaderParam(HttpHeaders.AUTHORIZATION) String creds) {
-        httpRequest.setAttribute("delegator", getDelegator());
-        httpRequest.setAttribute("dispatcher", getDispatcher());
+        httpRequest.setAttribute("delegator", servletContext.getAttribute("delegator"));
+        httpRequest.setAttribute("dispatcher", servletContext.getAttribute("dispatcher"));
         GenericValue userLogin = (GenericValue) httpRequest.getAttribute("userLogin");
         //TODO : Move this into an OFBiz service. All such implementations should be inside an OFBiz service.
-        String jwtToken = JWTManager.createJwt(getDelegator(), UtilMisc.toMap("userLoginId", userLogin.getString("userLoginId")));
+        String jwtToken = JWTManager.createJwt((Delegator)servletContext.getAttribute("delegator"), UtilMisc.toMap("userLoginId", userLogin.getString("userLoginId")));
         Map<String, Object> tokenPayload = UtilMisc.toMap("access_token", jwtToken, "expires_in",
-                EntityUtilProperties.getPropertyValue("security", "security.jwt.token.expireTime", "1800", getDelegator()), "token_type", "Bearer");
+                EntityUtilProperties.getPropertyValue("security", "security.jwt.token.expireTime", "1800", (Delegator)servletContext.getAttribute("delegator")), "token_type", "Bearer");
         return RestApiUtil.success("Token granted.", tokenPayload);
     }
 
