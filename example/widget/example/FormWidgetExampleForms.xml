@@ -134,6 +134,28 @@ under the License.
                title="${uiLabelMap.ExampleDateField15Title}">
             <date-find type="time"/>
         </field>
+
+        <!-- ********************************** -->
+        <!-- *** Date Range Picker examples *** -->
+        <!-- ********************************** -->
+        <field name="oneDate">
+            <date-range-picker single-date-picker="true" time-picker-increment="3" min-year="2010" max-year="2030" max-span="9"/>
+        </field>
+        <field name="oneDateTime">
+            <date-range-picker single-date-picker="true" time-picker="true" time-picker-increment="3" linked-calendars="false" min-year="2010" max-year="2030" drops="up"/>
+        </field>
+        <field name="oneDateTimeSeconds">
+            <date-range-picker single-date-picker="true" time-picker="true" time-picker-seconds="true" linked-calendars="false" min-year="2010" max-year="2030" drops="up"/>
+        </field>
+        <field name="dateRange">
+            <date-range-picker single-date-picker="false" linked-calendars="false" min-year="2010" max-year="2030" show-week-numbers="true" drops="up"/>
+        </field>
+        <field name="dateTimeRange">
+            <date-range-picker single-date-picker="false" time-picker="true" max-span="6" clear-title="EMPTY THE INPUT PLEASE" drops="up"/>
+        </field>
+        <field name="dateTimeRangeSeconds">
+            <date-range-picker single-date-picker="false" time-picker="true" time-picker-seconds="true" time-picker-increment="30" linked-calendars="false" drops="up"/>
+        </field>
     </form>
 
     <form name="DropDownFieldsExampleForm" type="single" title="">
