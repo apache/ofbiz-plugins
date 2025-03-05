@@ -66,7 +66,7 @@ under the License.
                 <process field="USERNAME"><copy to-field="userLoginId"/><not-empty><fail-property resource="PartyUiLabels" property="PartyUserLoginMissingError"/></not-empty></process>
                 <process field="PASSWORD"><copy to-field="currentPassword"/><not-empty><fail-property resource="PartyUiLabels" property="PartyPasswordMissing"/></not-empty></process>
                 <process field="CONFIRM_PASSWORD">
-                    <compare-field operator="equals" field="PASSWORD"><fail-property resource="PartyUiLabels" property="PartyPasswordMatchError"/></compare-field>                    
+                    <compare-field operator="equals" field="PASSWORD"><fail-property resource="PartyUiLabels" property="PartyPasswordMatchError"/></compare-field>
                     <copy to-field="currentPasswordVerify"/>
                 </process>
                 <process field="PASSWORD_HINT"><copy to-field="passwordHint"/></process>
@@ -409,7 +409,7 @@ under the License.
         <!-- now finished, log in the user and set the cart's partyId to that of the newly created customer ... -->
         <if-compare field="allowPassword" operator="equals" value="Y">
             <script>groovy:
-                org.apache.ofbiz.webapp.control.LoginWorker.doBasicLogin(createdUserLogin, request)
+                org.apache.ofbiz.webapp.control.LoginWorker.doBasicLogin(createdUserLogin, request, response)
                 org.apache.ofbiz.webapp.control.LoginWorker.autoLoginSet(request, response)
                 session = request.getSession()
                 cart = session.getAttribute("shoppingCart")
@@ -449,7 +449,7 @@ under the License.
                 <call-service-asynch service-name="sendMailFromScreen" in-map-name="emailParams" include-user-login="true"/>
             </if-not-empty>
         </if-not-empty>
-        
+
         <!-- security for manage profile  -->
         <set field="securityParams.userLoginId" from-field="createdUserLogin.userLoginId"/>
         <set field="securityParams.groupId" value="ECOMMERCE_CUSTOMER"/>
@@ -949,7 +949,7 @@ under the License.
 
             <!-- now finished, log in the user and set the cart's partyId -->
             <script>groovy:
-                    org.apache.ofbiz.webapp.control.LoginWorker.doBasicLogin(userLogin, request)
+                    org.apache.ofbiz.webapp.control.LoginWorker.doBasicLogin(userLogin, request, response)
                     org.apache.ofbiz.webapp.control.LoginWorker.autoLoginSet(request, response)
             </script>
             <set field="parameters.userLogin" from-field="userLogin"/>
@@ -1255,7 +1255,7 @@ under the License.
             </call-service>
             <set-current-user-login value-field="newUserLogin"/>
             <script>groovy:
-                    org.apache.ofbiz.webapp.control.LoginWorker.doBasicLogin(newUserLogin, request)
+                    org.apache.ofbiz.webapp.control.LoginWorker.doBasicLogin(newUserLogin, request, response)
                     org.apache.ofbiz.webapp.control.LoginWorker.autoLoginSet(request, response)
             </script>
             <!-- disabledDateTime/disableForYears set time until a user login remains disabled -->
@@ -1322,9 +1322,9 @@ under the License.
             <default-message property="ThankYouForContactingUs" resource="EcommerceUiLabels"></default-message>
         </call-service>
     </simple-method>
-    <simple-method method-name="fromSetSessionLocale" 
+    <simple-method method-name="fromSetSessionLocale"
       short-description="Add field to request for redirection after SetSessionLocale" login-required="false">
         <set field="fromSetSessionLocale" value="true"/>
         <field-to-request field="fromSetSessionLocale" request-name="fromSetSessionLocale"/>
-    </simple-method>    
+    </simple-method>
 </simple-methods>
