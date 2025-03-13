@@ -22,7 +22,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- * Provides String utility functions.<p>
+ * Provides String utility functions.
  */
 public final class ReportStringUtil {
 

@@ -40,7 +40,7 @@ import org.apache.ofbiz.ldap.commons.InterfaceOFBizAuthenticationHandler;
 import org.w3c.dom.Element;
 
 /**
- * The OFBiz CAS-LDAP Authentication Handler.<p>
+ * The OFBiz CAS-LDAP Authentication Handler.
  *
  * The ACL of a user is still controlled by OFBiz.
  *
