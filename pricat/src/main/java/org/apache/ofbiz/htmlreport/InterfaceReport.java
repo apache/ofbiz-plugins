@@ -24,7 +24,7 @@ import java.util.Locale;
 /**
  * This is the interface for the report classes which are used for the output
  * during operations that run on a separate Thread in OFBiz,
- * like import, export etc.<p>
+ * like import, export etc.
  */
 public interface InterfaceReport {
 

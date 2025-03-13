@@ -37,7 +37,7 @@ import org.w3c.dom.Element;
 
 
 /**
- * The OFBiz ActiveDirectory Authentication Handler.<p>
+ * The OFBiz ActiveDirectory Authentication Handler.
  *
  * The ACL of a user is still controlled by OFBiz.
  *

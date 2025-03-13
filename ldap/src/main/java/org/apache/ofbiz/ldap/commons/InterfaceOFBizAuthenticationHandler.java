@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.w3c.dom.Element;
 
 /**
- * The OFBiz LDAP Authentication Handler interface.<p>
+ * The OFBiz LDAP Authentication Handler interface.
  *
  */
 public interface InterfaceOFBizAuthenticationHandler {
