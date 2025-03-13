@@ -53,7 +53,7 @@ import org.apache.ofbiz.service.ServiceUtil;
 /**
  * The abstract Authentication Handler.
  *
- * The ACL of a user is still controlled by OFBiz.<p>
+ * The ACL of a user is still controlled by OFBiz.
  *
  */
 public abstract class AbstractOFBizAuthenticationHandler implements InterfaceOFBizAuthenticationHandler {

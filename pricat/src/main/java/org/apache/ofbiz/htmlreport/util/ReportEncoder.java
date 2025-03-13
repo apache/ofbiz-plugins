@@ -30,15 +30,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * The ReportEncoder class provides static methods to decode and encode data.<p>
+ * The ReportEncoder class provides static methods to decode and encode data.
  * The methods in this class are substitutes for <code>java.net.URLEncoder.encode()</code> and
- * <code>java.net.URLDecoder.decode()</code>.<p>
+ * <code>java.net.URLDecoder.decode()</code>.
  * The de- and encoding uses the same coding mechanism as JavaScript, special characters are
- * replaced with <code>%hex</code> where hex is a two digit hex number.<p>
+ * replaced with <code>%hex</code> where hex is a two digit hex number.
  * <b>Note:</b> On the client side (browser) instead of using corresponding <code>escape</code>
  * and <code>unescape</code> JavaScript functions, better use <code>encodeURIComponent</code> and
  * <code>decodeURIComponent</code> functions which are work properly with unicode characters.
- * These functions are supported in IE 5.5+ and NS 6+ only.<p>
+ * These functions are supported in IE 5.5+ and NS 6+ only.
  */
 public final class ReportEncoder {
 

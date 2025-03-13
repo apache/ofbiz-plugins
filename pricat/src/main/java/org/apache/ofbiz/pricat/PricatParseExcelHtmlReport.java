@@ -27,7 +27,7 @@ import org.apache.ofbiz.htmlreport.InterfaceReportThread;
 import org.apache.ofbiz.htmlreport.util.ReportStringUtil;
 
 /**
- * Provides a html report for running parse a PriCat file.<p>
+ * Provides a html report for running parse a PriCat file.
  */
 public class PricatParseExcelHtmlReport extends AbstractHtmlReport {
 
