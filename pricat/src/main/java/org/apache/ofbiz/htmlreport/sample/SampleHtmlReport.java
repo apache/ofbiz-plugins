@@ -30,7 +30,8 @@ import org.apache.ofbiz.htmlreport.InterfaceReportThread;
 public class SampleHtmlReport extends AbstractHtmlReport {
 
     /**
-     * Public constructor with report variables.<p>
+     * Public constructor with report variables.
+     *
      * @param request the HttpServletRequest request
      * @param response the HttpServletResponse response
      */

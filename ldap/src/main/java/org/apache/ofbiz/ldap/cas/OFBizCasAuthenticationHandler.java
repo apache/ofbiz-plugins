@@ -54,7 +54,8 @@ public final class OFBizCasAuthenticationHandler extends AbstractOFBizAuthentica
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
     /**
-     * Public constructor, initializes some required member variables.<p>
+     * Public constructor, initializes some required member variables.
+     *
      */
     public OFBizCasAuthenticationHandler() { // FIXME: I see nothing happening here and it's never called, remove it?
     }

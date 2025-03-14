@@ -44,7 +44,8 @@ import org.w3c.dom.Element;
 public final class OFBizLdapAuthenticationHandler extends AbstractOFBizAuthenticationHandler {
 
     /**
-     * Public constructor, initializes some required member variables.<p>
+     * Public constructor, initializes some required member variables.
+     *
      */
     public OFBizLdapAuthenticationHandler() {
 

@@ -76,7 +76,8 @@ public abstract class AbstractHtmlReport extends HtmlReport {
     }
 
     /**
-     * Initializes the report thread to use for this report.<p>
+     * Initializes the report thread to use for this report.
+     *
      * @return the reported thread to use for this report.
      */
     public abstract InterfaceReportThread initializeThread(HttpServletRequest request, HttpServletResponse response, String name);

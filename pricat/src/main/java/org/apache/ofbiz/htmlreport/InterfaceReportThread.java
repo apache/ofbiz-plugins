@@ -26,12 +26,14 @@ import org.safehaus.uuid.UUID;
 public interface InterfaceReportThread {
 
     /**
-     * Starts the report thread.<p>
+     * Starts the report thread.
+     *
      */
     void start();
 
     /**
-     * Returns the UUID of this report thread.<p>
+     * Returns the UUID of this report thread.
+     *
      * @return the UUID of this report thread
      */
     UUID getUUID();
