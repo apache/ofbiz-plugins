@@ -34,7 +34,8 @@ public class PricatParseExcelHtmlReport extends AbstractHtmlReport {
     public static final String PRICAT_REPORT_CLASS = "PRICAT_HTML_REPORT";
 
     /**
-     * Public constructor with report variables.<p>
+     * Public constructor with report variables.
+     *
      * @param request the HttpServletRequest request
      * @param response the HttpServletResponse response
      */
@@ -106,7 +107,8 @@ public class PricatParseExcelHtmlReport extends AbstractHtmlReport {
     }
 
     /**
-     * Performs the dialog actions depending on the initialized action.<p>
+     * Performs the dialog actions depending on the initialized action.
+     *
      * @throws IOException
      */
     @Override

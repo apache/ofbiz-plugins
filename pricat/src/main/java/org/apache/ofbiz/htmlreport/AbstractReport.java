@@ -135,7 +135,8 @@ public abstract class AbstractReport implements InterfaceReport {
     }
 
     /**
-     * Initializes some member variables for this report.<p>
+     * Initializes some member variables for this report.
+     *
      * @param locale the locale for this report
      */
     protected void init(Locale locale) {
@@ -145,7 +146,8 @@ public abstract class AbstractReport implements InterfaceReport {
     }
 
     /**
-     * Prints a String to the report.<p>
+     * Prints a String to the report.
+     *
      * @param value the String to add
      */
     @Override
@@ -154,9 +156,11 @@ public abstract class AbstractReport implements InterfaceReport {
     }
 
     /**
-     * Prints a String to the report, using the indicated formatting.<p>
+     * Prints a String to the report, using the indicated formatting.
+     *
      * Use the contants starting with <code>FORMAT</code> from this interface
-     * to indicate which formatting to use.<p>
+     * to indicate which formatting to use.
+     *
      * @param value the message container to add
      * @param format the formatting to use for the output
      */
@@ -164,7 +168,8 @@ public abstract class AbstractReport implements InterfaceReport {
     public abstract void print(String value, int format);
 
     /**
-     * Prints a String with line break to the report.<p>
+     * Prints a String with line break to the report.
+     *
      * @param value the message container to add
      */
     @Override
@@ -174,9 +179,11 @@ public abstract class AbstractReport implements InterfaceReport {
     }
 
     /**
-     * Prints a String with line break to the report, using the indicated formatting.<p>
+     * Prints a String with line break to the report, using the indicated formatting.
+     *
      * Use the contants starting with <code>FORMAT</code> from this interface
-     * to indicate which formatting to use.<p>
+     * to indicate which formatting to use.
+     *
      * @param value the String to add
      * @param format the formatting to use for the output
      */
