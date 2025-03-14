@@ -45,7 +45,8 @@ import org.apache.ofbiz.htmlreport.util.ReportEncoder;
 import org.apache.ofbiz.htmlreport.util.ReportStringUtil;
 
 /**
- * HTML report output to be used in report.ftl.<p>
+ * HTML report output to be used in report.ftl.
+ *
  */
 public class HtmlReport extends AbstractReport {
 
