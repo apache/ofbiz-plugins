@@ -688,7 +688,8 @@ public class BirtServices {
 
     /**
      * Update birt rptdesign file from uploaded one.
-     * <p>This will update only STYLES, BODY, MASTERPAGE AND CUBES from existing rptdesign with uploaded ones.</p>
+     * <p>This will update only STYLES, BODY, MASTERPAGE AND CUBES from existing rptdesign with uploaded ones.
+     *
      */
     public static Map<String, Object> uploadRptDesign(DispatchContext dctx, Map<String, Object> context) {
         String dataResourceId = (String) context.get("dataResourceIdRpt");

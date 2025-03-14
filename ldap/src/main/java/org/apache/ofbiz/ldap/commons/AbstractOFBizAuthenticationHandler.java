@@ -59,7 +59,8 @@ import org.apache.ofbiz.service.ServiceUtil;
 public abstract class AbstractOFBizAuthenticationHandler implements InterfaceOFBizAuthenticationHandler {
 
     /**
-     * Public constructor, initializes some required member variables.<p>
+     * Public constructor, initializes some required member variables.
+     *
      */
     public AbstractOFBizAuthenticationHandler() {
 
