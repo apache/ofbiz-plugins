@@ -18,46 +18,46 @@
 */
 package org.apache.ofbiz.ecommerce.order
 
-import org.apache.ofbiz.entity.*
-import org.apache.ofbiz.entity.util.*
-import org.apache.ofbiz.base.util.*
-import org.apache.ofbiz.order.shoppingcart.*
-import org.apache.ofbiz.party.contact.*
-import org.apache.ofbiz.product.catalog.*
+import org.apache.ofbiz.base.util.UtilHttp
 
-cart = session.getAttribute("shoppingCart")
+cart = session.getAttribute('shoppingCart')
 partyId = cart.getPartyId()
 context.cart = cart
 
 // nuke the event messages
-request.removeAttribute("_EVENT_MESSAGE_")
+request.removeAttribute('_EVENT_MESSAGE_')
 
-if (partyId && !"_NA_".equals(partyId)) {
-    party = from("Party").where("partyId", partyId).queryOne()
-    person = party.getRelatedOne("Person", false)
+if (partyId && partyId != '_NA_') {
+    party = from('Party').where('partyId', partyId).queryOne()
+    person = party.getRelatedOne('Person', false)
     context.party = party
     context.person = person
 }
 
 if (cart?.getShippingContactMechId()) {
     shippingContactMechId = cart.getShippingContactMechId()
-    shippingPartyContactDetail = from("PartyContactDetailByPurpose").where("partyId", partyId, "contactMechId", shippingContactMechId).filterByDate().queryFirst()
+    shippingPartyContactDetail = from('PartyContactDetailByPurpose')
+            .where(partyId: partyId,
+                    contactMechId: shippingContactMechId)
+            .filterByDate()
+            .queryFirst()
     parameters.shippingContactMechId = shippingPartyContactDetail.contactMechId
     context.callSubmitForm = true
 
     fullAddressBuf = new StringBuffer()
     fullAddressBuf.append(shippingPartyContactDetail.address1)
     if (shippingPartyContactDetail.address2) {
-        fullAddressBuf.append(", ")
+        fullAddressBuf.append(', ')
         fullAddressBuf.append(shippingPartyContactDetail.address2)
     }
-    fullAddressBuf.append(", ")
+    fullAddressBuf.append(', ')
     fullAddressBuf.append(shippingPartyContactDetail.city)
-    fullAddressBuf.append(", ")
+    fullAddressBuf.append(', ')
     fullAddressBuf.append(shippingPartyContactDetail.postalCode)
     parameters.fullAddress = fullAddressBuf.toString()
 
-    // NOTE: these parameters are a special case because they might be filled in by the address lookup service, so if they are there we won't fill in over them...
+    // NOTE: these parameters are a special case because they might be filled in by the address lookup service,
+    // so if they are there we won't fill in over them...
     if (!parameters.postalCode) {
         parameters.attnName = shippingPartyContactDetail.attnName
         parameters.address1 = shippingPartyContactDetail.address1

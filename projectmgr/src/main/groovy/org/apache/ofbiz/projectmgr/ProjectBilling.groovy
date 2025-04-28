@@ -19,35 +19,35 @@
 */
 package org.apache.ofbiz.projectmgr
 
-
 import org.apache.ofbiz.base.util.UtilDateTime
+import org.apache.ofbiz.entity.GenericValue
 import org.apache.ofbiz.entity.condition.EntityCondition
 import org.apache.ofbiz.entity.condition.EntityOperator
 
 projectId = parameters.projectId
 entryExprs =
-    EntityCondition.makeCondition([
-        EntityCondition.makeCondition("projectId", EntityOperator.EQUALS, projectId),
-        EntityCondition.makeCondition("invoiceId", EntityOperator.NOT_EQUAL, null),
+        EntityCondition.makeCondition([
+                EntityCondition.makeCondition('projectId', EntityOperator.EQUALS, projectId),
+                EntityCondition.makeCondition('invoiceId', EntityOperator.NOT_EQUAL, null),
         ], EntityOperator.AND)
-orderBy = ["-fromDate"]
+orderBy = ['-fromDate']
 // check if latest invoice generated is still in process so allow re-generation to correct errors
-entryIterator = from("ProjectPhaseTaskAndTimeEntryTimeSheet")
-                    .where(EntityCondition.makeCondition([
-                                EntityCondition.makeCondition("projectId", EntityOperator.EQUALS, projectId),
-                                EntityCondition.makeCondition("invoiceId", EntityOperator.NOT_EQUAL, null),
-                            ], EntityOperator.AND))
-                    .orderBy("-fromDate")
-                    .queryIterator()
-while (entryItem = entryIterator.next()) {
-    invoice = entryItem.getRelatedOne("Invoice", false)
-    if ("INVOICE_IN_PROCESS".equals(invoice.getString("statusId"))) {
+List entries = from('ProjectPhaseTaskAndTimeEntryTimeSheet')
+        .where(EntityCondition.makeCondition([
+                EntityCondition.makeCondition('projectId', EntityOperator.EQUALS, projectId),
+                EntityCondition.makeCondition('invoiceId', EntityOperator.NOT_EQUAL, null),
+        ], EntityOperator.AND))
+        .orderBy('-fromDate')
+        .queryList()
+for (entryItem in entries) {
+    GenericValue invoice = entryItem.getRelatedOne('Invoice', false)
+    if (invoice.statusId == 'INVOICE_IN_PROCESS') {
         context.partyIdFrom = invoice.partyIdFrom
         context.partyId = invoice.partyId
         context.invoiceId = invoice.invoiceId
         break
-        }
     }
-entryIterator.close()
+}
+
 //start of this month
 context.thruDate = UtilDateTime.getMonthStart(UtilDateTime.nowTimestamp())

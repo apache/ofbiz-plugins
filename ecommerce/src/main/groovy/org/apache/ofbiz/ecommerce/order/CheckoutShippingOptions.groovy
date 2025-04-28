@@ -18,15 +18,12 @@
 */
 package org.apache.ofbiz.ecommerce.order
 
-import org.apache.ofbiz.base.util.*
-import org.apache.ofbiz.entity.*
-import org.apache.ofbiz.entity.util.*
-import org.apache.ofbiz.party.contact.*
-import org.apache.ofbiz.product.store.*
-import org.apache.ofbiz.order.shoppingcart.shipping.*
+import org.apache.ofbiz.order.shoppingcart.shipping.ShippingEstimateWrapper
+import org.apache.ofbiz.party.contact.ContactHelper
+import org.apache.ofbiz.product.store.ProductStoreWorker
 
-cart = session.getAttribute("shoppingCart")
-party = userLogin.getRelatedOne("Party", false)
+cart = session.getAttribute('shoppingCart')
+party = userLogin.getRelatedOne('Party', false)
 productStore = ProductStoreWorker.getProductStore(request)
 
 if (cart) {
@@ -39,7 +36,7 @@ context.shoppingCart = cart
 context.userLogin = userLogin
 context.productStoreId = productStore.productStoreId
 context.productStore = productStore
-context.emailList = ContactHelper.getContactMechByType(party, "EMAIL_ADDRESS", false)
+context.emailList = ContactHelper.getContactMechByType(party, 'EMAIL_ADDRESS', false)
 
 if (cart.getShipmentMethodTypeId() && cart.getCarrierPartyId()) {
     context.chosenShippingMethod = cart.getShipmentMethodTypeId() + '@' + cart.getCarrierPartyId()

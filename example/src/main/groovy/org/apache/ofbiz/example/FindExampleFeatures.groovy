@@ -23,19 +23,19 @@ import org.apache.ofbiz.entity.condition.EntityFieldValue
 import org.apache.ofbiz.entity.condition.EntityFunction
 import org.apache.ofbiz.entity.condition.EntityOperator
 
-delegator = request.getAttribute("delegator")
+delegator = request.getAttribute('delegator')
 
 andExprs = []
-fieldValue = request.getParameter("exampleFeatureId")
+fieldValue = request.getParameter('exampleFeatureId')
 if (fieldValue) {
-    andExprs.add(EntityCondition.makeCondition(EntityFunction.upper(EntityFieldValue.makeFieldValue("exampleFeatureId")),
-            EntityOperator.LIKE, "%" + fieldValue.toUpperCase() + "%"))
+    andExprs.add(EntityCondition.makeCondition(EntityFunction.upper(EntityFieldValue.makeFieldValue('exampleFeatureId')),
+            EntityOperator.LIKE, '%' + fieldValue.toUpperCase() + '%'))
 }
 
 autocompleteOptions = []
 if (andExprs) {
-    autocompleteOptions = select("exampleFeatureId", "description").from("ExampleFeature").where(andExprs).orderBy("-exampleFeatureId").queryList()
+    autocompleteOptions = select('exampleFeatureId', 'description').from('ExampleFeature').where(andExprs).orderBy('-exampleFeatureId').queryList()
     //context.autocompleteOptions = autocompleteOptions
-    request.setAttribute("autocompleteOptions", autocompleteOptions)
+    request.setAttribute('autocompleteOptions', autocompleteOptions)
 }
-return "success"
+return 'success'

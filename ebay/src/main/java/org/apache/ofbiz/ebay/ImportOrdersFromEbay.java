@@ -864,7 +864,7 @@ public class ImportOrdersFromEbay {
         EntityCondition condition = EntityCondition.makeCondition(UtilMisc.toList(EntityCondition.makeCondition("externalId",
                 EntityComparisonOperator.EQUALS, externalId), EntityCondition.makeCondition("statusId", EntityComparisonOperator.NOT_EQUAL,
                         "ORDER_CANCELLED")), EntityComparisonOperator.AND);
-        GenericValue orderHeader = EntityQuery.use(delegator).from("OrderHeader").where(condition).cache(true).queryFirst();
+        GenericValue orderHeader = EntityQuery.use(delegator).from("OrderHeader").where(condition).cache().queryFirst();
         return orderHeader;
     }
 }

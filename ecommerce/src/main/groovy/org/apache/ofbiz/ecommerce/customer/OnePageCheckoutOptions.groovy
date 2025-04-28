@@ -18,11 +18,9 @@
 */
 package org.apache.ofbiz.ecommerce.customer
 
- import org.apache.ofbiz.order.shoppingcart.shipping.*
-
-shoppingCart = session.getAttribute("shoppingCart")
+shoppingCart = session.getAttribute('shoppingCart')
 
 // Reassign items requiring drop-shipping to new or existing drop-ship groups
 if (shoppingCart) {
-  shoppingCart.createDropShipGroups(dispatcher)
+    shoppingCart.createDropShipGroups(dispatcher)
 }

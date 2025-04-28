@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
 package org.apache.ofbiz.ebay
 
 import org.apache.ofbiz.entity.util.EntityUtil
@@ -25,9 +24,9 @@ webSiteList = []
 webSite = null
 if (parameters.productStoreId) {
     productStoreId = parameters.productStoreId
-    webSiteList = from("WebSite").where("productStoreId", productStoreId).queryList()
+    webSiteList = from('WebSite').where(productStoreId: productStoreId).queryList()
     if (parameters.webSiteId) {
-        webSite = from("WebSite").where("webSiteId", parameters.webSiteId).cache(true).queryOne()
+        webSite = from('WebSite').where(webSiteId: parameters.webSiteId).cache().queryOne()
         context.selectedWebSiteId = parameters.webSiteId
     } else if (webSiteList) {
         webSite = EntityUtil.getFirst(webSiteList)
@@ -35,38 +34,23 @@ if (parameters.productStoreId) {
     }
     context.productStoreId = productStoreId
     context.webSiteList = webSiteList
-    countryCode = null
-    if (parameters.country) {
-        countryCode = parameters.country
-    } else {
-        countryCode = "US"
-    }
-    context.countryCode = countryCode
+    context.countryCode = parameters.country ?: 'US'
     if (webSite) {
-        eBayConfig = from("EbayConfig").where("productStoreId", productStoreId).queryOne()
+        eBayConfig = from('EbayConfig').where(productStoreId: productStoreId).queryOne()
         context.customXml = eBayConfig.customXml
-        context.webSiteUrl = webSite.getString("standardContentPrefix")
-        
+        context.webSiteUrl = webSite.standardContentPrefix
         categoryCode = parameters.categoryCode
-        context.categoryCode = categoryCode
-        userLogin = parameters.userLogin
-        
+
         if (productStoreId) {
-            results = runService('getEbayCategories', [categoryCode : categoryCode, userLogin : userLogin, productStoreId : productStoreId])
+            results = run service: 'getEbayCategories', with:
+                    [categoryCode: categoryCode,
+                     productStoreId: productStoreId]
         }
-        
         if (results.categories) {
             context.categories = results.categories
         }
-        
-        if (categoryCode) {
-            if (!"Y".equals(categoryCode.substring(0, 1)) && !"".equals(categoryCode)) {
-                context.hideExportOptions = "Y"
-            } else {
-                context.hideExportOptions = "N"
-            }
-        } else {
-            context.hideExportOptions = "N"
-        }    
+        context.hideExportOptions = categoryCode && categoryCode.substring(0, 1) != 'Y'
+                ? 'Y'
+                : 'N'
     }
 }

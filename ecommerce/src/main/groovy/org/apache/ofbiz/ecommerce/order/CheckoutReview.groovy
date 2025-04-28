@@ -18,20 +18,16 @@
 */
 package org.apache.ofbiz.ecommerce.order
 
-import java.lang.*
-import org.apache.ofbiz.base.util.*
-import org.apache.ofbiz.entity.*
-import org.apache.ofbiz.accounting.payment.*
-import org.apache.ofbiz.order.order.*
-import org.apache.ofbiz.party.contact.*
-import org.apache.ofbiz.product.catalog.*
-import org.apache.ofbiz.product.store.*
-import org.apache.ofbiz.webapp.website.WebSiteWorker
+import org.apache.ofbiz.accounting.payment.PaymentWorker
+import org.apache.ofbiz.entity.GenericValue
+import org.apache.ofbiz.order.order.OrderReadHelper
+import org.apache.ofbiz.order.shoppingcart.ShoppingCart
+import org.apache.ofbiz.product.store.ProductStoreWorker
 
-cart = session.getAttribute("shoppingCart")
+ShoppingCart cart = session.getAttribute('shoppingCart')
 context.cart = cart
 
-orderItems = cart.makeOrderItems(dispatcher)
+List orderItems = cart.makeOrderItems(dispatcher)
 context.orderItems = orderItems
 
 orderAdjustments = cart.makeAllAdjustments()
@@ -39,9 +35,9 @@ orderAdjustments = cart.makeAllAdjustments()
 orderItemShipGroupInfo = cart.makeAllShipGroupInfos()
 if (orderItemShipGroupInfo) {
     orderItemShipGroupInfo.each { valueObj ->
-        if ("OrderAdjustment".equals(valueObj.getEntityName())) {
+        if (valueObj.getEntityName() == 'OrderAdjustment') {
             // shipping / tax adjustment(s)
-            orderAdjustments.add(valueObj)
+            orderAdjustments << valueObj
         }
     }
 }
@@ -50,40 +46,33 @@ context.orderAdjustments = orderAdjustments
 workEfforts = cart.makeWorkEfforts() // if required make workefforts for rental fixed assets too.
 context.workEfforts = workEfforts
 
-orderHeaderAdjustments = OrderReadHelper.getOrderHeaderAdjustments(orderAdjustments, null)
+List orderHeaderAdjustments = OrderReadHelper.getOrderHeaderAdjustments(orderAdjustments, null)
 context.orderHeaderAdjustments = orderHeaderAdjustments
 context.orderItemShipGroups = cart.getShipGroups()
 context.headerAdjustmentsToShow = OrderReadHelper.filterOrderAdjustments(orderHeaderAdjustments, true, false, false, false, false)
 
-orderSubTotal = OrderReadHelper.getOrderItemsSubTotal(orderItems, orderAdjustments, workEfforts)
-context.orderSubTotal = orderSubTotal
-context.placingCustomerPerson = userLogin?.getRelatedOne("Person", false)
+context.orderSubTotal = OrderReadHelper.getOrderItemsSubTotal(orderItems, orderAdjustments, workEfforts)
+context.placingCustomerPerson = userLogin?.getRelatedOne('Person', true)
 context.paymentMethods = cart.getPaymentMethods()
 
-paymentMethodTypeIds = cart.getPaymentMethodTypeIds()
-paymentMethodType = null
-paymentMethodTypeId = null
+List paymentMethodTypeIds = cart.getPaymentMethodTypeIds()
 if (paymentMethodTypeIds) {
-    paymentMethodTypeId = paymentMethodTypeIds[0]
-    paymentMethodType = from("PaymentMethodType").where("paymentMethodTypeId", paymentMethodTypeId).queryOne()
-    context.paymentMethodType = paymentMethodType
+    context.paymentMethodType = from('PaymentMethodType').where(paymentMethodTypeId: paymentMethodTypeIds.first()).queryOne()
 }
 
-webSiteId = WebSiteWorker.getWebSiteId(request)
-
-productStore = ProductStoreWorker.getProductStore(request)
+GenericValue productStore = ProductStoreWorker.getProductStore(request)
 context.productStore = productStore
+context.isDemoStore = productStore.isDemoStore() != 'N'
 
-isDemoStore = !"N".equals(productStore.isDemoStore)
-context.isDemoStore = isDemoStore
-
-payToPartyId = productStore.payToPartyId
-paymentAddress = PaymentWorker.getPaymentAddress(delegator, payToPartyId)
-if (paymentAddress) context.paymentAddress = paymentAddress
+String payToPartyId = productStore.payToPartyId
+GenericValue paymentAddress = PaymentWorker.getPaymentAddress(delegator, payToPartyId)
+if (paymentAddress) {
+    context.paymentAddress = paymentAddress
+}
 
 // TODO: FIXME!
 /*
-billingAccount = cart.getBillingAccountId() ? delegator.findOne("BillingAccount", [billingAccountId : cart.getBillingAccountId()], false) : null
+billingAccount = cart.getBillingAccountId() ? delegator.findOne('BillingAccount', [billingAccountId : cart.getBillingAccountId()], false) : null
 if (billingAccount)
     context.billingAccount = billingAccount
 */
@@ -97,14 +86,15 @@ context.giftMessage = cart.getGiftMessage()
 context.isGift = cart.getIsGift()
 context.currencyUomId = cart.getCurrency()
 
-shipmentMethodType = from("ShipmentMethodType").where("shipmentMethodTypeId", cart.getShipmentMethodTypeId()).queryOne()
-if (shipmentMethodType) context.shipMethDescription = shipmentMethodType.description
+GenericValue shipmentMethodType = from('ShipmentMethodType').where(shipmentMethodTypeId: cart.getShipmentMethodTypeId()).queryOne()
+if (shipmentMethodType) {
+    context.shipMethDescription = shipmentMethodType.description
+}
 
-orh = new OrderReadHelper(orderAdjustments, orderItems)
-context.localOrderReadHelper = orh
+context.localOrderReadHelper = new OrderReadHelper(orderAdjustments, orderItems)
 context.orderShippingTotal = cart.getTotalShipping()
 context.orderTaxTotal = cart.getTotalSalesTax()
 context.orderGrandTotal = cart.getGrandTotal()
 
 // nuke the event messages
-request.removeAttribute("_EVENT_MESSAGE_")
+request.removeAttribute('_EVENT_MESSAGE_')

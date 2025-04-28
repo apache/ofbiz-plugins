@@ -18,43 +18,43 @@
 */
 package org.apache.ofbiz.lucene.content
 
-
 import org.apache.lucene.analysis.core.WhitespaceAnalyzer
-import org.apache.ofbiz.content.search.SearchWorker
-
 import org.apache.lucene.document.Document
 import org.apache.lucene.index.DirectoryReader
 import org.apache.lucene.queryparser.classic.ParseException
 import org.apache.lucene.queryparser.classic.QueryParser
-import org.apache.lucene.search.BooleanClause
 import org.apache.lucene.search.BooleanQuery
 import org.apache.lucene.search.IndexSearcher
-import org.apache.lucene.search.Query
 import org.apache.lucene.search.ScoreDoc
 import org.apache.lucene.search.TopScoreDocCollector
 import org.apache.lucene.store.FSDirectory
+import org.apache.ofbiz.content.search.SearchWorker
+
+import javax.management.Query
 
 if (parameters.luceneQuery) {
     Query combQuery = new BooleanQuery()
     IndexSearcher searcher
     WhitespaceAnalyzer analyzer
     try {
-        DirectoryReader reader = DirectoryReader.open(FSDirectory.open(new File(SearchWorker.getIndexPath("products")).toPath()))
+        DirectoryReader reader = DirectoryReader.open(
+                FSDirectory.open(
+                        new File(SearchWorker.getIndexPath('products')).toPath()))
         searcher = new IndexSearcher(reader)
         analyzer = new WhitespaceAnalyzer()
     } catch (FileNotFoundException e) {
-        context.errorMessageList.add(e.getMessage())
-        return
+        context.errorMessageList << e.getMessage()
+        return 'error'
     }
 
-    QueryParser parser = new QueryParser("fullText", analyzer)
+    QueryParser parser = new QueryParser('fullText', analyzer)
     parser.setLocale(locale)
     Query query
     try {
         query = parser.parse(parameters.luceneQuery)
-    } catch(ParseException pe) {
-        context.errorMessageList.add(pe.getMessage())
-        return
+    } catch (ParseException pe) {
+        context.errorMessageList << pe.getMessage()
+        return 'error'
     }
     combQuery.add(query, BooleanClause.Occur.MUST)
 
@@ -65,9 +65,9 @@ if (parameters.luceneQuery) {
     hits.each { hit ->
         Document doc = searcher.doc(hit.doc)
         productId = doc.productId
-        product = from("Product").where("productId", productId).cache(true).queryOne()
+        product = from('Product').where('productId', productId).cache().queryOne()
         if (product) {
-            productList.add(product)
+            productList << product
         }
     }
     context.queryResults = productList

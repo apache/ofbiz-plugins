@@ -18,39 +18,37 @@
 */
 package org.apache.ofbiz.ecommerce.order
 
-import org.apache.ofbiz.base.util.*
-import org.apache.ofbiz.entity.*
-import org.apache.ofbiz.party.contact.*
+import org.apache.ofbiz.party.contact.ContactHelper
 
 orderId = parameters.orderId
 context.orderId = orderId
 
-party = userLogin.getRelatedOne("Party", false)
+party = userLogin.getRelatedOne('Party', false)
 context.party = party
 
-returnTypes = from("ReturnType").orderBy("sequenceId").queryList()
+returnTypes = from('ReturnType').orderBy('sequenceId').queryList()
 context.returnTypes = returnTypes
 
-returnReasons = from("ReturnReason").orderBy("sequenceId").queryList()
+returnReasons = from('ReturnReason').orderBy('sequenceId').queryList()
 context.returnReasons = returnReasons
 
 if (orderId) {
-    returnRes = runService('getReturnableItems', [orderId : orderId])
+    returnRes = runService('getReturnableItems', [orderId: orderId])
     context.returnableItems = returnRes.returnableItems
-    orderHeader = from("OrderHeader").where("orderId", orderId).queryOne()
+    orderHeader = from('OrderHeader').where('orderId', orderId).queryOne()
     context.orderHeader = orderHeader
 }
 
-returnItemTypeMap = from("ReturnItemTypeMap").where("returnHeaderTypeId", "CUSTOMER_RETURN").queryList()
-typeMap = new HashMap()
+returnItemTypeMap = from('ReturnItemTypeMap').where('returnHeaderTypeId', 'CUSTOMER_RETURN').queryList()
+typeMap = [:]
 returnItemTypeMap.each { value -> typeMap[value.returnItemMapKey] = value.returnItemTypeId }
 context.returnItemTypeMap = typeMap
 
 //put in the return to party information from the order header
 if (orderId) {
-    order = from("OrderHeader").where("orderId", orderId).queryOne()
-    productStore = order.getRelatedOne("ProductStore", false)
+    order = from('OrderHeader').where('orderId', orderId).queryOne()
+    productStore = order.getRelatedOne('ProductStore', false)
     context.toPartyId = productStore.payToPartyId
 }
 
-context.shippingContactMechList = ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false)
+context.shippingContactMechList = ContactHelper.getContactMech(party, 'SHIPPING_LOCATION', 'POSTAL_ADDRESS', false)

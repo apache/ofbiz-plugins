@@ -18,32 +18,14 @@
 */
 package org.apache.ofbiz.ecommerce.content
 
-import java.util.ArrayList
-import java.util.Collection
-import java.util.HashMap
-import java.util.Iterator
-import java.util.LinkedList
-import java.util.List
-import java.util.Map
-import java.util.Set
-import java.util.TreeSet
-
-import org.apache.ofbiz.base.util.*
-import org.apache.ofbiz.entity.*
-import org.apache.ofbiz.security.*
-import org.apache.ofbiz.service.*
-import org.apache.ofbiz.entity.model.*
 import org.apache.ofbiz.base.util.collections.LifoSet
 
-import jakarta.servlet.*
-import jakarta.servlet.http.*
-
-entityName = "ContentDataResourceView"
-lookupCaches = session.getAttribute("lookupCaches")
+entityName = 'ContentDataResourceView'
+lookupCaches = session.getAttribute('lookupCaches')
 
 if (!lookupCaches) {
     lookupCaches = [:]
-    session.setAttribute("lookupCaches", lookupCaches)
+    session.setAttribute('lookupCaches', lookupCaches)
 }
 lifoSet = lookupCaches[entityName]
 
@@ -58,14 +40,10 @@ mrvList = []
 
 lifoSet.each { pk0 ->
     pk = pk0.getPrimaryKey()
-    gv = from(pk.getEntityName()).where(pk).cache(true).queryOne()
+    gv = from(pk.getEntityName()).where(pk).cache().queryOne()
     if (gv) {
         arr = [gv.contentId, gv.contentName] as String[]
         mrvList.add(arr)
-    } else {
-        // should handle errors in some other way; this does not provide any tracing; impossible to locat
-        // where the error actually occurred
-        //logError("findOne on " + pk + " returned null")
     }
 }
-context.put("mrvList", mrvList)
+context.put('mrvList', mrvList)

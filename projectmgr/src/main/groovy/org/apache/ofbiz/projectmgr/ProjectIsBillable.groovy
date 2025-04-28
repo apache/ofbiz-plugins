@@ -18,22 +18,22 @@
 */
 package org.apache.ofbiz.projectmgr
 
-projectMembers = from("WorkEffortPartyAssignment").where("workEffortId", context.projectId).filterByDate().queryList()
+projectMembers = from('WorkEffortPartyAssignment').where('workEffortId', context.projectId).filterByDate().queryList()
 
 toPartyId = null
 fromPartyId = null
-projectMembers.each {member ->
-    if ("INTERNAL_ORGANIZATIO".equals(member.roleTypeId)) {
+projectMembers.each { member ->
+    if (member.roleTypeId == 'INTERNAL_ORGANIZATIO') {
         fromPartyId = member.partyId
     }
-    if ("CLIENT_BILLING".equals(member.roleTypeId)) {
+    if (member.roleTypeId == 'CLIENT_BILLING') {
         toPartyId = member.partyId
     }
-    if (fromPartyId && toPartyId && fromPartyId.equals(toPartyId)) {
+    if (fromPartyId && toPartyId && fromPartyId == toPartyId) {
         context.isBillable = false
-    } else if (!toPartyId || !fromPartyId){
+    } else if (!toPartyId || !fromPartyId) {
         context.isBillable = false
-    } else {    
+    } else {
         context.isBillable = true
     }
 }

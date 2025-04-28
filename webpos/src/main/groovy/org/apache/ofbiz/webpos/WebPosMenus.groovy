@@ -18,10 +18,6 @@
 */
 package org.apache.ofbiz.webpos
 
-import org.apache.ofbiz.webpos.WebPosEvents
-import org.apache.ofbiz.webpos.session.WebPosSession
-import org.apache.ofbiz.webpos.transaction.WebPosTransaction
-
 webPosSession = WebPosEvents.getWebPosSession(request, null)
 if (webPosSession) {
     context.shoppingCartSize = webPosSession.getCart().size()

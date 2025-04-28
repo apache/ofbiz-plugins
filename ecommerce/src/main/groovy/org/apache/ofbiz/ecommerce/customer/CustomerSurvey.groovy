@@ -18,9 +18,7 @@
 */
 package org.apache.ofbiz.ecommerce.customer
 
-import org.apache.ofbiz.base.util.*
-import org.apache.ofbiz.entity.Delegator
-import org.apache.ofbiz.entity.GenericValue
+import org.apache.ofbiz.base.util.UtilHttp
 import org.apache.ofbiz.product.store.ProductStoreSurveyWrapper
 
 partyId = userLogin.partyId
@@ -28,13 +26,13 @@ paramMap = UtilHttp.getParameterMap(request)
 
 productStoreSurveyId = parameters.productStoreSurveyId
 
-surveyAppl = from("ProductStoreSurveyAppl").where("productStoreSurveyId", productStoreSurveyId).queryOne()
+surveyAppl = from('ProductStoreSurveyAppl').where('productStoreSurveyId', productStoreSurveyId).queryOne()
 if (surveyAppl) {
-    survey = surveyAppl.getRelatedOne("Survey", false)
+    survey = surveyAppl.getRelatedOne('Survey', false)
     context.survey = survey
 
     if (!parameters._ERROR_MESSAGE_) {
-        paramMap = [productStoreSurveyId : productStoreSurveyId]
+        paramMap = [productStoreSurveyId: productStoreSurveyId]
     }
     wrapper = new ProductStoreSurveyWrapper(surveyAppl, partyId, paramMap)
     context.surveyWrapper = wrapper

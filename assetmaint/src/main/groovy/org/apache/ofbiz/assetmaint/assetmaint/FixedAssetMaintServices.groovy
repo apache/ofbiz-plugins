@@ -18,16 +18,13 @@
 */
 package org.apache.ofbiz.assetmaint.assetmaint
 
-
 import org.apache.ofbiz.entity.GenericValue
 
 /**
  * Create FixedAssetMaint and Update Schedule information in WorkEffort
- * @return
  */
-def createFixedAssetMaintUpdateWorkEffort() {
+Map createFixedAssetMaintUpdateWorkEffort() {
     Map serviceResult = run service: 'createFixedAssetMaint', with: parameters
-    
     GenericValue findAssetMaint = from('FixedAssetMaint')
             .where(maintHistSeqId: serviceResult.maintHistSeqId,
                     fixedAssetId: parameters.fixedAssetId)
@@ -40,10 +37,9 @@ def createFixedAssetMaintUpdateWorkEffort() {
 
 /**
  * Update FixedAssetMaint and Schedule information in WorkEffort
- * @return
  */
 
-def updateFixedAssetMaintAndWorkEffort() {
+Map updateFixedAssetMaintAndWorkEffort() {
     run service: 'updateFixedAssetMaint', with: parameters
 
     Map updateWorkEffortCtx = [*: parameters]
@@ -61,20 +57,16 @@ def updateFixedAssetMaintAndWorkEffort() {
 
 /**
  * Create WorkEffort and Associate it with Parent (identified by workEffortFromId)
- * @return
  */
-def createWorkEffortAndAssocWithParent() {
-    Map serviceResult = run service: 'createWorkEffortAndAssoc', with: [*:parameters,
-                                                                        workEffortId: parameters.workEffortIdTo]
-    return serviceResult
+Map createWorkEffortAndAssocWithParent() {
+    return (run service: 'createWorkEffortAndAssoc', with: [*:parameters,
+                                                            workEffortId: parameters.workEffortIdTo])
 }
 
 /**
  * Asset Maintenance permission logic
- * @return
  */
-def assetMaintPermissionCheck() {
-    Map serviceResult = run service: 'genericBasePermissionCheck', with: [*:parameters,
-                                                                          primaryPermission: 'ASSETMAINT']
-    return serviceResult
+Map assetMaintPermissionCheck() {
+    return (run service: 'genericBasePermissionCheck', with: [*:parameters,
+                                                              primaryPermission: 'ASSETMAINT'])
 }

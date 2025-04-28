@@ -32,12 +32,12 @@ if (parameters.productStoreId) {
 } else {
     productStoreId = ProductStoreWorker.getProductStoreId(request)
 }
-ebayConfigList = from("EbayConfig").queryList()
+ebayConfigList = from('EbayConfig').queryList()
 if (productStoreId) {
     productStoreCatalogs = CatalogWorker.getStoreCatalogs(delegator, productStoreId)
     if (productStoreCatalogs) {
         productStoreCatalogs.each { productStoreCatalog ->
-            prodCatalog = from("ProdCatalog").where("prodCatalogId", productStoreCatalog.prodCatalogId).cache(true).queryOne()
+            prodCatalog = from('ProdCatalog').where('prodCatalogId', productStoreCatalog.prodCatalogId).cache().queryOne()
             prodCatalogList.add(prodCatalog)
         }
     }
@@ -50,19 +50,18 @@ if (parameters.SEARCH_CATALOG_ID) {
     currentCatalogId = catalog.prodCatalogId
 }
 topCategory = CatalogWorker.getCatalogTopEbayCategoryId(request, currentCatalogId)
-if (!topCategory) {
-    topCategory = CatalogWorker.getCatalogTopCategoryId(request, currentCatalogId)
-}
+        ?: CatalogWorker.getCatalogTopCategoryId(request, currentCatalogId)
+
 if (topCategory) {
-    CategoryWorker.getRelatedCategories(request, "topLevelList", topCategory, true)
-    if (request.getAttribute("topLevelList")) {
-        categoryList = request.getAttribute("topLevelList")
+    CategoryWorker.getRelatedCategories(request, 'topLevelList', topCategory, true)
+    if (request.getAttribute('topLevelList')) {
+        categoryList = request.getAttribute('topLevelList')
     } else {
-        categoryIds.add(topCategory)
+        categoryIds << topCategory
     }
 }
 if (categoryList) {
-    categoryIds = EntityUtil.getFieldListFromEntityList(categoryList, "productCategoryId", true)
+    categoryIds = EntityUtil.getFieldListFromEntityList(categoryList, 'productCategoryId', true)
 }
 context.ebayConfigList = ebayConfigList
 context.categoryIds = categoryIds

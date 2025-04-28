@@ -18,17 +18,15 @@
 */
 package org.apache.ofbiz.ecommerce.content
 
-import org.apache.ofbiz.base.util.*
-import org.apache.ofbiz.product.catalog.*
-import org.apache.ofbiz.product.feature.*
-import org.apache.ofbiz.product.product.*
+import org.apache.ofbiz.product.feature.ParametricSearch
+import org.apache.ofbiz.product.product.ProductSearchSession
 
 productFeaturesByTypeMap = ParametricSearch.getAllFeaturesByType(delegator, 2000)
 productFeatureTypeIdsOrdered = new ArrayList(new TreeSet(productFeaturesByTypeMap.keySet()))
 
 searchOperator = parameters.SEARCH_OPERATOR
-if (!"AND".equals(searchOperator) && !"OR".equals(searchOperator)) {
-  searchOperator = "OR"
+if (!['AND', 'OR'].contains(searchOperator)) {
+    searchOperator = 'OR'
 }
 
 searchConstraintStrings = ProductSearchSession.searchGetConstraintStrings(false, session, delegator)

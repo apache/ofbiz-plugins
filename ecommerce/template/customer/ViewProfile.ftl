@@ -90,7 +90,7 @@ under the License.
             <dd class="col-lg-10">${person.weight}</dd>
           </#if>
           <#if person.maritalStatusEnumId?has_content>
-            <#assign maritalStatus = EntityQuery.use(delegator).from("Enumeration").where("enumId", person.maritalStatusEnumId!).cache(true).queryOne()!>
+            <#assign maritalStatus = EntityQuery.use(delegator).from("Enumeration").where("enumId", person.maritalStatusEnumId!).cache().queryOne()!>
             <dt class="col-lg-2">${uiLabelMap.PartyMaritalStatus}</dt>
             <dd class="col-lg-10">${maritalStatus.description!person.maritalStatusEnumId}</dd>
           </#if>

@@ -37,5 +37,5 @@ if (prodCatalog) {
 }
 
 globalContext.productStore = productStore
-globalContext.checkLoginUrl = LoginWorker.makeLoginUrl(request, "checkLogin")
+globalContext.checkLoginUrl = LoginWorker.makeLoginUrl(request, 'checkLogin')
 globalContext.catalogQuickaddUse = CatalogWorker.getCatalogQuickaddUse(request)

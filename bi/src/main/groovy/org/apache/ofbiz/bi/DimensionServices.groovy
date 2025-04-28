@@ -18,133 +18,90 @@
 */
 package org.apache.ofbiz.bi
 
-import org.apache.ofbiz.base.util.UtilProperties
+import org.apache.ofbiz.entity.GenericEntity
 import org.apache.ofbiz.entity.GenericValue
 import org.apache.ofbiz.entity.condition.EntityCondition
-import org.apache.ofbiz.entity.condition.EntityOperator
-import org.apache.ofbiz.entity.util.EntityListIterator
-import org.apache.ofbiz.service.ModelService
-import org.apache.ofbiz.service.ServiceUtil
+import org.apache.ofbiz.entity.condition.EntityConditionBuilder
 
 Map quickInitDataWarehouse() {
-    Map inMap = dispatcher.getDispatchContext().makeValidContext('loadDateDimension', ModelService.IN_PARAM, parameters)
-    serviceResult = run service: 'loadDateDimension', with: inMap
-    if (!ServiceUtil.isSuccess(serviceResult)) {
-        return error(serviceResult.errorMessage)
-    }
-
-    inMap.clear()
-    serviceResult = run service: 'loadCurrencyDimension', with: inMap
-    if (!ServiceUtil.isSuccess(serviceResult)) {
-        return error(serviceResult.errorMessage)
-    }
+    run service: 'loadDateDimension', with: parameters
+    run service: 'loadCurrencyDimension', with: [:]
 
     // loads all products in the ProductDimension
-    serviceResult = run service: 'loadAllProductsInProductDimension', with: inMap
-    if (!ServiceUtil.isSuccess(serviceResult)) {
-        return error(serviceResult.errorMessage)
-    }
+    run service: 'loadAllProductsInProductDimension', with: [:]
 
     // loads the invoice items in the SalesInvoiceItemFact fact entity
-    entryExprs = EntityCondition.makeCondition([
-            EntityCondition.makeCondition('invoiceTypeId', EntityOperator.EQUALS, 'SALES_INVOICE'),
-            EntityCondition.makeCondition('invoiceDate', EntityOperator.GREATER_THAN_EQUAL_TO, parameters.fromDate),
-            EntityCondition.makeCondition('invoiceDate', EntityOperator.LESS_THAN_EQUAL_TO, parameters.thruDate)
-    ], EntityOperator.AND)
-    EntityListIterator listIterator = from('Invoice').where(entryExprs).queryIterator()
-    GenericValue iterator
-    while (iterator = listIterator.next()) {
-        inMap.invoiceId = iterator.invoiceId
-        serviceResult = run service: 'loadSalesInvoiceFact', with: inMap
-        if (!ServiceUtil.isSuccess(serviceResult)) {
-            return error(serviceResult.errorMessage)
-        }
+    EntityCondition entryExprs = new EntityConditionBuilder().AND {
+        EQUALS(invoiceTypeId: 'SALES_INVOICE')
+        GREATER_THAN_EQUAL_TO(invoiceDate: parameters.fromDate)
+        LESS_THAN_EQUAL_TO(invoiceDate: parameters.thruDate)
+    }
+    from('Invoice').where(entryExprs).queryIterator().each {
+        run service: 'loadSalesInvoiceFact', with: it
     }
 
     // loads the order items in the SalesOrderItemFact fact entity
-    entryExprs = EntityCondition.makeCondition([
-            EntityCondition.makeCondition('orderTypeId', EntityOperator.EQUALS, 'SALES_ORDER'),
-            EntityCondition.makeCondition('orderDate', EntityOperator.GREATER_THAN_EQUAL_TO, parameters.fromDate),
-            EntityCondition.makeCondition('orderDate', EntityOperator.LESS_THAN_EQUAL_TO, parameters.thruDate)
-    ], EntityOperator.AND)
-    listIterator = from('OrderHeader').where(entryExprs).queryIterator()
-    inMap.clear()
-    while (iterator = listIterator.next()) {
-        inMap.orderId = iterator.orderId
-        serviceResult = run service: 'loadSalesOrderFact', with: inMap
-        if (!ServiceUtil.isSuccess(serviceResult)) {
-            return error(serviceResult.errorMessage)
-        }
+    entryExprs = new EntityConditionBuilder().AND {
+        EQUALS(orderTypeId: 'SALES_ORDER')
+        GREATER_THAN_EQUAL_TO(orderDate: parameters.fromDate)
+        LESS_THAN_EQUAL_TO(orderDate: parameters.thruDate)
+    }
+    from('OrderHeader').where(entryExprs).queryIterator().each {
+        run service: 'loadSalesOrderFact', with: [orderId: it.orderId]
     }
 
     // loads the inventory items in the InventoryItemFact fact entity
-    listIterator = from('InventoryItem').where('inventoryItemTypeId', 'NON_SERIAL_INV_ITEM').queryIterator()
-    inMap.clear()
-    while (iterator = listIterator.next()) {
-        inMap.inventoryItemId = iterator.inventoryItemId
-        serviceResult = run service: 'loadInventoryFact', with: inMap
-        if (!ServiceUtil.isSuccess(serviceResult)) {
-            return error(serviceResult.errorMessage)
-        }
+    from('InventoryItem').where('inventoryItemTypeId', 'NON_SERIAL_INV_ITEM').queryIterator().each {
+        run service: 'loadInventoryFact', with: [inventoryItemId: it.inventoryItemId]
     }
+    return success()
 }
 
-void loadCurrencyDimension() {
+Map loadCurrencyDimension() {
     // Initialize the CurrencyDimension using the update strategy of 'type 1
-    EntityListIterator listIterator = from('Uom').where('uomTypeId', 'CURRENCY_MEASURE').queryIterator()
-    GenericValue currency
-    while (currency == listIterator.next()) {
-        currencyDims = from('CurrencyDimension').where('currencyId', currency.uomId).queryList()
+    from('Uom').where(uomTypeId: 'CURRENCY_MEASURE').queryIterator().each {
+        List currencyDims = from('CurrencyDimension').where(currencyId: it.uomId).queryList()
         if (currencyDims) {
-            for (GenericValue currencyDim: currencyDims) {
-                currencyDim.description = currency.description
+            for (GenericValue currencyDim : currencyDims) {
+                currencyDim.description = it.description
                 currencyDim.store()
             }
         } else {
-            currencyDim = makeValue('CurrencyDimension', [dimensionId: currency.uomId])
-            currencyDim.currencyId = currency.uomId
-            currencyDim.description = currency.description
-            currencyDim.create()
+            makeValue('CurrencyDimension', [dimensionId: it.uomId,
+                                            currencyId: it.uomId,
+                                            description: it.description])
+                    .create()
         }
     }
+    return success()
 }
 
 Map prepareProductDimensionData() {
-    GenericValue product = from('Product').where('productId', parameters.productId).queryOne()
-    if (product == null) {
-        return error(UtilProperties.getMessage('ProductUiLabels', 'ProductProductNotFoundWithProduct', locale))
+    GenericValue product = from('Product').where(parameters).queryOne()
+    if (!product) {
+        return error(label('ProductUiLabels', 'ProductProductNotFoundWithProduct'))
     }
-    productDimension = makeValue('ProductDimension')
+    GenericValue productDimension = makeValue('ProductDimension')
     productDimension.setNonPKFields(product)
     GenericValue productType = select('description').from('ProductType')
             .where('productTypeId', product.productTypeId).cache().queryOne()
     productDimension.productType = productType.description
-    Map result = success()
-    result.productDimension = productDimension
-    return result
+    return success(productDimension: productDimension)
 }
 
-void loadProductInProductDimension() {
-    Map inMap = dispatcher.getDispatchContext().makeValidContext('prepareProductDimensionData', ModelService.IN_PARAM, parameters)
-    serviceResult = run service: 'prepareProductDimensionData', with: inMap
-    GenericValue productDimension
-    if (ServiceUtil.isSuccess(serviceResult)) {
-        productDimension  = serviceResult.productDimension
-    }
-    inMap.clear()
-    inMap = dispatcher.getDispatchContext().makeValidContext('storeGenericDimension', ModelService.IN_PARAM, parameters)
-    inMap.naturalKeyFields = 'productId'
-    inMap.dimensionValue = productDimension
-    run service: 'storeGenericDimension', with: inMap
+Map loadProductInProductDimension() {
+    Map serviceResult = run service: 'prepareProductDimensionData', with: parameters
+    GenericEntity productDimension = serviceResult.productDimension
+    run service: 'storeGenericDimension', with: [*: parameters,
+                                                 naturalKeyFields: 'productId',
+                                                 dimensionValue: productDimension]
+    return success()
 }
 
-void loadAllProductsInProductDimension() {
-    EntityListIterator listIterator = from('Product').queryIterator()
-    GenericValue product
-    Map inMap
-    while (product == listIterator.next()) {
-        inMap = dispatcher.getDispatchContext().makeValidContext('loadProductInProductDimension', ModelService.IN_PARAM, parameters)
-        inMap.productId = product.productId
-        run service: 'loadProductInProductDimension', with: inMap
+Map loadAllProductsInProductDimension() {
+    from('Product').queryIterator().each {
+        run service: 'loadProductInProductDimension', with: [*: parameters,
+                                                             productId: it.productId]
     }
+    return success()
 }

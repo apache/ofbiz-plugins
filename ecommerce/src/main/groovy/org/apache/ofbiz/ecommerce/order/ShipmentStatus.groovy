@@ -18,24 +18,18 @@
 */
 package org.apache.ofbiz.ecommerce.order
 
-import org.apache.ofbiz.base.util.UtilMisc
-import org.apache.ofbiz.entity.Delegator
-import org.apache.ofbiz.entity.*
-import org.apache.ofbiz.entity.condition.*
-import org.apache.ofbiz.entity.util.*
-
 shipmentId = parameters.shipmentId
 if (shipmentId) {
-    shipment = from("Shipment").where("shipmentId", shipmentId).queryOne()
-    shipmentItems = from("ShipmentItem").where("shipmentId", shipmentId).queryList()
+    shipment = from('Shipment').where('shipmentId', shipmentId).queryOne()
+    shipmentItems = from('ShipmentItem').where('shipmentId', shipmentId).queryList()
 
     // get Shipment tracking info
-    orderShipmentInfoSummaryList = select("shipmentId", "shipmentRouteSegmentId", "shipmentPackageSeqId", "carrierPartyId", "trackingCode")
-                                    .from("OrderShipmentInfoSummary")
-                                    .where("shipmentId", shipmentId)
-                                    .orderBy("shipmentId", "shipmentRouteSegmentId", "shipmentPackageSeqId")
-                                    .distinct()
-                                    .queryList()
+    orderShipmentInfoSummaryList = select('shipmentId', 'shipmentRouteSegmentId', 'shipmentPackageSeqId', 'carrierPartyId', 'trackingCode')
+            .from('OrderShipmentInfoSummary')
+            .where('shipmentId', shipmentId)
+            .orderBy('shipmentId', 'shipmentRouteSegmentId', 'shipmentPackageSeqId')
+            .distinct()
+            .queryList()
 
     context.shipment = shipment
     context.shipmentItems = shipmentItems

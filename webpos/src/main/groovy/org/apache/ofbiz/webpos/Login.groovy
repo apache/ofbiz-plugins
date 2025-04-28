@@ -21,15 +21,15 @@ package org.apache.ofbiz.webpos
 import org.apache.ofbiz.product.store.ProductStoreWorker
 import org.apache.ofbiz.webapp.control.LoginWorker
 
-context.autoUserLogin = session.getAttribute("autoUserLogin")
-context.autoLogoutUrl = LoginWorker.makeLoginUrl(request, "autoLogout")
+context.autoUserLogin = session.getAttribute('autoUserLogin')
+context.autoLogoutUrl = LoginWorker.makeLoginUrl(request, 'autoLogout')
 
-previousParams = session.getAttribute("_PREVIOUS_PARAMS_")
+previousParams = session.getAttribute('_PREVIOUS_PARAMS_')
 if (previousParams) {
     previousParams = UtilHttp.stripNamedParamsFromQueryString(previousParams, ['USERNAME', 'PASSWORD'])
-    previousParams = "?" + previousParams
+    previousParams = '?' + previousParams
 } else {
-    previousParams = ""
+    previousParams = ''
 }
 context.previousParams = previousParams
 
@@ -37,11 +37,11 @@ productStoreId = ProductStoreWorker.getProductStoreId(request)
 productStore = ProductStoreWorker.getProductStore(productStoreId, delegator)
 
 if (productStore) {
-    facilityId = productStore.getString("inventoryFacilityId")
+    facilityId = productStore.getString('inventoryFacilityId')
 
     if (facilityId) {
-        context.posTerminals = from("PosTerminal").where("facilityId", facilityId).orderBy("posTerminalId").queryList()
+        context.posTerminals = from('PosTerminal').where('facilityId', facilityId).orderBy('posTerminalId').queryList()
     } else {
-        context.posTerminals = from("PosTerminal").orderBy("posTerminalId").queryList()
+        context.posTerminals = from('PosTerminal').orderBy('posTerminalId').queryList()
     }
 }

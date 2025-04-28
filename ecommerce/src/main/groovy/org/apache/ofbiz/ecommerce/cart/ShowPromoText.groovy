@@ -18,8 +18,9 @@
 */
 package org.apache.ofbiz.ecommerce.cart
 
-import org.apache.ofbiz.base.util.UtilMisc
 import org.apache.ofbiz.order.shoppingcart.product.ProductPromoWorker
+
+import java.security.SecureRandom
 
 promoShowLimit = 3
 
@@ -28,24 +29,24 @@ productPromosAll = ProductPromoWorker.getStoreProductPromos(delegator, dispatche
 //Make sure that at least one promo has non-empty promoText
 showPromoText = false
 promoToShow = 0
-productPromosAllShowable = new ArrayList(productPromosAll.size())
+productPromosAllShowable = []
 productPromosAll.each { productPromo ->
     promoText = productPromo.promoText
 
-    if (promoText && !"N".equals(productPromo.showToCustomer)) {
+    if (promoText && productPromo.showToCustomer != 'N') {
         showPromoText = true
         promoToShow++
-        productPromosAllShowable.add(productPromo)
+        productPromosAllShowable << productPromo
     }
 }
 
 // now slim it down to promoShowLimit
-productPromosRandomTemp = new ArrayList(productPromosAllShowable)
+productPromosRandomTemp = [*productPromosAllShowable]
 productPromos = null
 if (productPromosRandomTemp.size() > promoShowLimit) {
     productPromos = new ArrayList(promoShowLimit)
     for (i = 0; i < promoShowLimit; i++) {
-        randomIndex = Math.round(java.lang.Math.random() * (productPromosRandomTemp.size() - 1)) as int
+        randomIndex = Math.round(new SecureRandom().nextInt(5) * (productPromosRandomTemp.size() - 1)) as int
         productPromos.add(productPromosRandomTemp.remove(randomIndex))
     }
 } else {
