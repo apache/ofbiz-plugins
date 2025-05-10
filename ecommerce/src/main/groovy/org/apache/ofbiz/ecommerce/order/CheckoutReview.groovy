@@ -62,7 +62,7 @@ if (paymentMethodTypeIds) {
 
 GenericValue productStore = ProductStoreWorker.getProductStore(request)
 context.productStore = productStore
-context.isDemoStore = productStore.isDemoStore() != 'N'
+context.isDemoStore = productStore.isDemoStore != 'N'
 
 String payToPartyId = productStore.payToPartyId
 GenericValue paymentAddress = PaymentWorker.getPaymentAddress(delegator, payToPartyId)

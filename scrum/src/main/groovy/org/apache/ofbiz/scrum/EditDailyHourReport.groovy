@@ -167,14 +167,9 @@ void retrieveWorkEffortData() {
     entry = [timesheetId: timesheet.timesheetId]
 }
 
-timeEntries = timesheet.getRelated('TimeEntry', null, ['workEffortId', 'rateTypeId', 'fromDate'], false)
-te = timeEntries.iterator()
-while (te.hasNext()) {
-    // only fill lastTimeEntry when not the first time
-    if (timeEntry) {
-        lastTimeEntry = timeEntry
-    }
-    timeEntry = te.next()
+timesheet
+        .getRelated('TimeEntry', null, ['workEffortId', 'rateTypeId', 'fromDate'], false)
+        .each { timeEntry ->
 
     if (lastTimeEntry &&
             (lastTimeEntry.workEffortId != timeEntry.workEffortId ||
@@ -212,14 +207,18 @@ while (te.hasNext()) {
         planTotal += planHours
 
     }
+    lastTimeEntry = timeEntry
     entry.rateTypeId = timeEntry.rateTypeId
 }
+
 //retrieve Empl Leave data.
-void retrieveEmplLeaveData() {
+void retrieveEmplLeaveData(Map leaveEntry) {
     if (lastEmplLeaveEntry) {
         //service get Hours
         Map result = run service: 'getPartyLeaveHoursForDate', with:
-                [partyId: lastEmplLeaveEntry.partyId, leaveTypeId: lastEmplLeaveEntry.leaveTypeId, fromDate: lastEmplLeaveEntry.fromDate]
+                [partyId: lastEmplLeaveEntry.partyId,
+                 leaveTypeId: lastEmplLeaveEntry.leaveTypeId,
+                 fromDate: lastEmplLeaveEntry.fromDate]
         if (result.hours) {
             leaveEntry.plannedHours = result.hours
             leaveEntry.planHours = result.hours
@@ -262,7 +261,7 @@ from('EmplLeave')
             if (lastEmplLeaveEntry
                     && (lastEmplLeaveEntry.leaveTypeId != emplLeaveEntry.leaveTypeId
                     || lastEmplLeaveEntry.partyId != emplLeaveEntry.partyId)) {
-                retrieveEmplLeaveData()
+                retrieveEmplLeaveData(leaveEntry)
             }
             Map resultHours = run service: 'getPartyLeaveHoursForDate', with:
                     [partyId: emplLeaveEntry.partyId, leaveTypeId: emplLeaveEntry.leaveTypeId, fromDate: emplLeaveEntry.fromDate]
@@ -310,7 +309,7 @@ if (timeEntry) {
 }
 if (emplLeaveEntry) {
     lastEmplLeaveEntry = emplLeaveEntry
-    retrieveEmplLeaveData()
+    retrieveEmplLeaveData(leaveEntry)
 }
 
 // add empty lines if timesheet not completed

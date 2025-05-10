@@ -46,7 +46,7 @@ productPromos = null
 if (productPromosRandomTemp.size() > promoShowLimit) {
     productPromos = new ArrayList(promoShowLimit)
     for (i = 0; i < promoShowLimit; i++) {
-        randomIndex = Math.round(new SecureRandom().nextInt(5) * (productPromosRandomTemp.size() - 1)) as int
+        randomIndex = Math.round(new SecureRandom().nextLong(0, 1) * (productPromosRandomTemp.size() - 1)) as int
         productPromos.add(productPromosRandomTemp.remove(randomIndex))
     }
 } else {

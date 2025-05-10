@@ -30,7 +30,7 @@ List<GenericValue> custRequestAndItems = []
 if (parameters.statusId == 'Any') {
     parameters.statusId = ''
 }
-Map performFindResults = run runService: 'performFind', with: [entityName: 'CustRequestAndCustRequestItem',
+Map performFindResults = run service: 'performFind', with: [entityName: 'CustRequestAndCustRequestItem',
                                                                inputFields: [*: parameters,
                                                                              custRequestTypeId: 'RF_PROD_BACKLOG'],
                                                                orderBy: 'custSequenceNum']

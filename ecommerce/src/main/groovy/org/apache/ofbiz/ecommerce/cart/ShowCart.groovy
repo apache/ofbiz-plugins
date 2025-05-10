@@ -61,8 +61,9 @@ shoppingCartItems = shoppingCart.items()
 
 if (shoppingCartItems) {
     shoppingCartItems.each { shoppingCartItem ->
+        parentProductId = shoppingCartItem.getParentProductId() ?: shoppingCartItem.getProductId()
         if (shoppingCartItem.getProductId()) {
-            context.parentProductId = shoppingCartItem.getParentProductId() ?: shoppingCartItem.getProductId()
+            context.parentProductId = parentProductId
         }
         productCategoryMembers = from('ProductCategoryMember').where('productId', parentProductId).queryList()
         if (productCategoryMembers) {

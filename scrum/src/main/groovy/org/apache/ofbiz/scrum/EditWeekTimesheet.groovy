@@ -133,15 +133,9 @@ void retrieveWorkEffortData() {
     entry = [timesheetId: timesheet.timesheetId]
 }
 
-timeEntries = timesheet.getRelated('TimeEntry', null, ['workEffortId', 'rateTypeId', 'fromDate'], false)
-te = timeEntries.iterator()
-while (te.hasNext()) {
-    // only fill lastTimeEntry when not the first time
-    if (timeEntry != void) {
-        lastTimeEntry = timeEntry
-    }
-    timeEntry = te.next()
-
+timesheet
+        .getRelated('TimeEntry', null, ['workEffortId', 'rateTypeId', 'fromDate'], false)
+        .each {timeEntry ->
     if (lastTimeEntry &&
             (timeEntry.workEffortId != lastTimeEntry.workEffortId ||
                     timeEntry.rateTypeId != lastTimeEntry.rateTypeId)) {
@@ -163,6 +157,7 @@ while (te.hasNext()) {
         taskTotal += hours
     }
     entry.rateTypeId = timeEntry.rateTypeId
+    lastTimeEntry = timeEntry
 }
 
 if (timeEntry) {
@@ -195,7 +190,7 @@ if (timeEntry) {
 context.timeEntries = entries
 // get all timesheets of this user, including the planned hours
 timesheetsDb = from('Timesheet').where('partyId', partyId).orderBy('fromDate DESC').queryList()
-timesheets = new LinkedList()
+timesheets = []
 timesheetsDb.each { timesheetDb ->
     timesheet = [*: timesheetDb]
     entries = timesheetDb.getRelated('TimeEntry', null, null, false)

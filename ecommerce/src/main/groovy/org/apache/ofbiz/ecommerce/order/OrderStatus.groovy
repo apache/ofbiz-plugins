@@ -24,7 +24,6 @@ import org.apache.ofbiz.entity.condition.EntityCondition
 import org.apache.ofbiz.entity.condition.EntityOperator
 import org.apache.ofbiz.entity.util.EntityUtil
 import org.apache.ofbiz.order.order.OrderReadHelper
-import org.ldaptive.beans.Entry
 
 String orderId = parameters.orderId
 GenericValue orderHeader = from('OrderHeader').where(orderId: orderId).queryOne()
@@ -50,7 +49,7 @@ if (!userLogin && orderHeader) {
     if (filteredOrderStatusList) {
         String userLoginId = filteredOrderStatusList.size() < 2
                 ? EntityUtil.getFirst(filteredOrderStatusList).statusUserLogin
-                : filteredOrderStatusList.find {it.statusId == 'ORDER_COMPLETED'}?.statusUserLogin
+                : filteredOrderStatusList.find { it.statusId == 'ORDER_COMPLETED' } ?.statusUserLogin
         userLogin = from('UserLogin').where(userLoginId: userLoginId).queryOne()
     }
     if (!userLogin && delegator.getDelegatorName().startsWith('test')) {

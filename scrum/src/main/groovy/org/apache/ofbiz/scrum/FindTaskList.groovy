@@ -42,11 +42,11 @@ errorTaskList = []
 installTaskList = []
 
 // get Unplaned task list
-if ((taskId != null) || (taskName != null) || (taskTypeId != null) || (sprintId != null) || (sprintName != null)
-        || (projectId != null) || (projectName != null) || (backlogTypeId != null) || (statusId != null)
-        || (partyId != null) || (viewIndex_1 > 0) || (viewIndex_2 > 0) || (viewIndex_3 > 0) || (viewIndex_4 > 0)
-        || (viewIndexNo_1 > 0) || (viewIndexNo_2 > 0) || (viewIndexNo_3 > 0) || (viewIndexNo_4 > 0)) {
-    if ((taskId != null) || (taskName != null) || (taskTypeId != null)) {
+if (taskId|| taskName || taskTypeId  || sprintId || sprintName
+        || projectId || projectName || backlogTypeId || statusId
+        || partyId || viewIndex_1 || viewIndex_2 || viewIndex_3  || viewIndex_4
+        || viewIndexNo_1 || viewIndexNo_2 || viewIndexNo_3 || viewIndexNo_4) {
+    if (taskId || taskName || taskTypeId) {
         exprBldr = []
         if (taskId) {
             exprBldr.add(EntityCondition.makeCondition('workEffortId', EntityOperator.EQUALS, taskId))
@@ -176,11 +176,11 @@ if ((taskId != null) || (taskName != null) || (taskTypeId != null) || (sprintId 
     }
 
     resultList.each {
-        switch (resultMap.taskTypeId) {
-            case 'SCRUM_TASK_IMPL' -> implementTaskList << resultMap
-            case 'SCRUM_TASK_INST' -> installTaskList << resultMap
-            case 'SCRUM_TASK_TEST' -> testTaskList << resultMap
-            case 'SCRUM_TASK_ERROR' -> errorTaskList << resultMap
+        switch (it.taskTypeId) {
+            case 'SCRUM_TASK_IMPL' -> implementTaskList << it
+            case 'SCRUM_TASK_INST' -> installTaskList << it
+            case 'SCRUM_TASK_TEST' -> testTaskList << it
+            case 'SCRUM_TASK_ERROR' -> errorTaskList << it
         }
     }
 
