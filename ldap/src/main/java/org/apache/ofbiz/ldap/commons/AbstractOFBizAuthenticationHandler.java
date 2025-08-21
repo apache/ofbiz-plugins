@@ -25,9 +25,9 @@ import java.util.Map;
 
 import javax.naming.NamingException;
 import javax.naming.directory.SearchResult;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import org.apache.ofbiz.base.crypto.HashCrypt;
 import org.apache.ofbiz.base.util.UtilDateTime;
@@ -53,13 +53,14 @@ import org.apache.ofbiz.service.ServiceUtil;
 /**
  * The abstract Authentication Handler.
  *
- * The ACL of a user is still controlled by OFBiz.<p>
+ * The ACL of a user is still controlled by OFBiz.
  *
  */
 public abstract class AbstractOFBizAuthenticationHandler implements InterfaceOFBizAuthenticationHandler {
 
     /**
-     * Public constructor, initializes some required member variables.<p>
+     * Public constructor, initializes some required member variables.
+     *
      */
     public AbstractOFBizAuthenticationHandler() {
 

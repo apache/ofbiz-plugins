@@ -18,8 +18,8 @@
  *******************************************************************************/
 package org.apache.ofbiz.htmlreport.sample;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.ofbiz.htmlreport.AbstractHtmlReport;
 import org.apache.ofbiz.htmlreport.InterfaceReportThread;
@@ -30,7 +30,8 @@ import org.apache.ofbiz.htmlreport.InterfaceReportThread;
 public class SampleHtmlReport extends AbstractHtmlReport {
 
     /**
-     * Public constructor with report variables.<p>
+     * Public constructor with report variables.
+     *
      * @param request the HttpServletRequest request
      * @param response the HttpServletResponse response
      */

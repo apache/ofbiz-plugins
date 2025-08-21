@@ -44,6 +44,9 @@ under the License.
                 <option key="status"/>
             </radio>
         </field>
+        <field name="anotherDate">
+            <date-range-picker single-date-picker="false" time-picker="true" drops="up"/>
+        </field>
         <field name="searchButton"><submit/></field>
         <field name="exportButton" position="2" widget-style="smallSubmit" title=" ">
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.CommonExport}"
@@ -219,6 +222,9 @@ under the License.
         </field>
         <field name="displayAnotherText" use-when="anotherText!=null">
             <display description="${example.anotherText}"/>
+        </field>
+        <field name="anotherDate">
+            <date-range-picker time-picker="true" drops="up"/>
         </field>
         <field name="submitButton" use-when="example==null" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
         <field name="submitButton" use-when="example!=null" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>

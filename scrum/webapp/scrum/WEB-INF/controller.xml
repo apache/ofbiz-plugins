@@ -374,7 +374,7 @@ under the License.
     </request-map>
     <request-map uri="removeTaskMember">
         <security https="true" auth="true"/>
-        <event type="service" invoke="deletePartyToWorkEffortAssignment"/>
+        <event type="service" invoke="expireWorkEffortPartyAssignment"/>
         <response name="error" type="request" value="SprintTaskView"/>
         <response name="success" type="request" value="SprintTaskView"/>
     </request-map>
@@ -500,7 +500,7 @@ under the License.
     </request-map>
     <request-map uri="deleteTaskPartyAssign">
         <security https="true" auth="true"/>
-        <event type="service" invoke="deletePartyToWorkEffortAssignment"/>
+        <event type="service" invoke="expireWorkEffortPartyAssignment"/>
         <response name="success" type="view" value="EditTaskPartyAssigns"/>
         <response name="error" type="view" value="EditTaskPartyAssigns"/>
     </request-map>

@@ -191,7 +191,7 @@
     </request-map>
     <request-map uri="deleteTaskPartyAssign">
         <security https="true" auth="true"/>
-        <event type="service" invoke="deletePartyToWorkEffortAssignment"/>
+        <event type="service" invoke="expireWorkEffortPartyAssignment"/>
         <response name="success" type="view" value="EditTaskPartyAssigns"/>
         <response name="error" type="view" value="EditTaskPartyAssigns"/>
     </request-map>
@@ -574,7 +574,7 @@
     </request-map>
     <request-map uri="deleteWorkEffortPartyAssign">
         <security https="true" auth="true"/>
-        <event type="service" invoke="deletePartyToWorkEffortAssignment"/>
+        <event type="service" invoke="expireWorkEffortPartyAssignment"/>
         <response name="success" type="view" value="ListWorkEffortPartyAssigns"/>
         <response name="error" type="view" value="ListWorkEffortPartyAssigns"/>
     </request-map>

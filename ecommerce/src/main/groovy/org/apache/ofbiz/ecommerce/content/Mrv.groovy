@@ -35,8 +35,8 @@ import org.apache.ofbiz.service.*
 import org.apache.ofbiz.entity.model.*
 import org.apache.ofbiz.base.util.collections.LifoSet
 
-import javax.servlet.*
-import javax.servlet.http.*
+import jakarta.servlet.*
+import jakarta.servlet.http.*
 
 entityName = "ContentDataResourceView"
 lookupCaches = session.getAttribute("lookupCaches")

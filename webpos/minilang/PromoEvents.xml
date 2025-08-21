@@ -21,7 +21,7 @@ under the License.
     <simple-method method-name="addPromoCode" short-description="Add Promotion Code" login-required="true">
         <clear-field field="posTerminalId"/>
         <call-class-method class-name="org.apache.ofbiz.webpos.WebPosEvents" method-name="getWebPosSession" ret-field="webPosSession">
-            <field field="request" type="javax.servlet.http.HttpServletRequest"/>
+            <field field="request" type="jakarta.servlet.http.HttpServletRequest"/>
             <field field="posTerminalId" type="String"/>
         </call-class-method>
         <if-not-empty field="webPosSession">
