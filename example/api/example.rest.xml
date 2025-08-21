@@ -20,12 +20,13 @@ under the License.
 
 <api name="ExampleRestApi"
      displayName="Example REST API"
+     path="example-rest"
      description="This API exposes example services as REST endpoints."
      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/rest-api.xsd">
 
     <resource name="ExampleResource"
-              path="/example"
+              path="example"
               displayName="Example Resource"
               description="Handles example-related operations">
 
