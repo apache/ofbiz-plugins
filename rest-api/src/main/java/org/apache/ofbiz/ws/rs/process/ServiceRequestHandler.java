@@ -56,7 +56,6 @@ public final class ServiceRequestHandler extends RestRequestHandler {
      */
     @Override
     protected Response execute(ContainerRequestContext ctx, Map<String, Object> arguments) {
-        ctx.setProperty("requestForService", service);
         ServiceNameContextHolder.set(service);
         LocalDispatcher dispatcher = (LocalDispatcher) getServletContext().getAttribute("dispatcher");
         Map<String, Object> serviceContext = null;
