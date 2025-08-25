@@ -20,28 +20,19 @@ under the License.
 
 <api name="ExampleRestApi"
      displayName="Example REST API"
-     path="example-rest"
-     description="This API exposes example services as REST endpoints."
+     path="example-product"
+     description="This API exposes example product services as REST endpoints."
      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/rest-api.xsd">
 
-    <resource name="ExampleResource"
-              path="example"
-              displayName="Example Resource"
-              description="Handles example-related operations">
+    <resource name="ExampleProductResource"
+              path="product"
+              displayName="Example Product Resource"
+              description="Handles example-product operations">
 
-        <operation verb="post" description="Create Example"
+        <operation verb="post" description="Find product by id"
                    consumes="application/json">
-            <service name="createExample"/>
-        </operation>
-
-        <operation verb="delete" description="delete Example"
-                   consumes="application/json">
-            <service name="deleteExample"/>
-        </operation>
-        <operation verb="put" description="Update Example"
-                   consumes="application/json">
-            <service name="updateExample"/>
+            <service name="findProductById"/>
         </operation>
     </resource>
 </api>
