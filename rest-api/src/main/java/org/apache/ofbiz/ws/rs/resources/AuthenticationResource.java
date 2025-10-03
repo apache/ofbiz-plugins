@@ -20,18 +20,18 @@ package org.apache.ofbiz.ws.rs.resources;
 
 import java.util.Map;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.Provider;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.Provider;
 
 import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.entity.Delegator;
@@ -77,9 +77,47 @@ public class AuthenticationResource {
         GenericValue userLogin = (GenericValue) httpRequest.getAttribute("userLogin");
         //TODO : Move this into an OFBiz service. All such implementations should be inside an OFBiz service.
         String jwtToken = JWTManager.createJwt((Delegator)servletContext.getAttribute("delegator"), UtilMisc.toMap("userLoginId", userLogin.getString("userLoginId")));
-        Map<String, Object> tokenPayload = UtilMisc.toMap("access_token", jwtToken, "expires_in",
-                EntityUtilProperties.getPropertyValue("security", "security.jwt.token.expireTime", "1800", (Delegator)servletContext.getAttribute("delegator")), "token_type", "Bearer");
+        String refreshToken = JWTManager.createRefreshToken((Delegator)servletContext.getAttribute("delegator"), userLogin.getString("userLoginId"));
+
+        Map<String, Object> tokenPayload = UtilMisc.toMap("access_token", jwtToken, "refresh_token", refreshToken,
+                "expires_in", EntityUtilProperties.getPropertyValue("security", "security.jwt.token.expireTime", "1800", getDelegator()),
+                "token_type", "Bearer");
         return RestApiUtil.success("Token granted.", tokenPayload);
     }
 
+    /**
+     * Generates a new access token using a refresh token.
+     * <p>
+     * Subclasses overriding this method should ensure they call the parent implementation
+     * or handle JWT validation and token generation securely.
+     * </p>
+     *
+     * @param refreshToken The refresh token provided in the request header.
+     * @return A response containing the new access and refresh tokens.
+    ]*/
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/refresh-token")
+    @Operation(description = "Generates a new access token using a refresh token.")
+    public Response refreshToken(@HeaderParam("Refresh-Token") String refreshToken) {
+
+        httpRequest.setAttribute("delegator", getDelegator());
+        httpRequest.setAttribute("dispatcher", getDispatcher());
+        Map<String, Object> claims = JWTManager.validateRefreshToken(refreshToken, JWTManager.getJWTKey(getDelegator()));
+
+        // Fetch delegator, dispatcher, and userLogin
+        if (claims.containsKey("errorMessage")) {
+            System.out.println("Error with JWT token: ");
+        }
+
+        String userLoginId = (String) claims.get("userLoginId");
+
+        String newAccessToken = JWTManager.createJwt(getDelegator(), UtilMisc.toMap("userLoginId", userLoginId));
+        String newRefreshToken = JWTManager.createRefreshToken(getDelegator(), userLoginId);
+
+        Map<String, Object> tokenPayload = UtilMisc.toMap("access_token", newAccessToken, "refresh_token", newRefreshToken, "expires_in",
+                EntityUtilProperties.getPropertyValue("security", "security.jwt.token.expireTime", "1800", getDelegator()), "token_type", "Bearer");
+
+        return RestApiUtil.success("Token refreshed.", tokenPayload);
+    }
 }

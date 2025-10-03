@@ -18,10 +18,21 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<web-app version="4.0" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
-    <display-name>Apache OFBiz - REST API Swagger Component</display-name>
-    <description>REST API Swagger Component of the Apache OFBiz Project</description>
-    <welcome-file-list>
-        <welcome-file>swagger-ui.html</welcome-file>
-    </welcome-file-list>
-</web-app>
+<api name="ExampleRestApi"
+     displayName="Example REST API"
+     path="example-product"
+     description="This API exposes example product services as REST endpoints."
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/rest-api.xsd">
+
+    <resource name="ExampleProductResource"
+              path="product"
+              displayName="Example Product Resource"
+              description="Handles example-product operations">
+
+        <operation verb="post" description="Find product by id"
+                   consumes="application/json">
+            <service name="findProductById"/>
+        </operation>
+    </resource>
+</api>

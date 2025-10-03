@@ -28,8 +28,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.ofbiz.base.util.Debug;
+import org.apache.ofbiz.base.util.StringUtil;
 import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.base.util.UtilProperties;
 import org.apache.ofbiz.base.util.UtilValidate;
@@ -138,17 +138,18 @@ public class ScrumServices {
         StringBuilder logMessage = new StringBuilder();
         StringBuilder diffMessage = new StringBuilder();
         try {
-            if (UtilValidate.isNotEmpty(repository) && UtilValidate.isNotEmpty(revision)) {
+            if (UtilValidate.isNotEmpty(repository) && UtilValidate.isNotEmpty(revision)
+                    && UtilValidate.isValidUrl(repository) && UtilValidate.isInteger(revision)) {
                 String logline = null;
-                String logCommand = "svn log -r" + revision + " " + repository;
-                Process logProcess = Runtime.getRuntime().exec(logCommand);
+                Process logProcess = Runtime.getRuntime().exec("svn",
+                        new String[]{"log", "-r", revision, repository});
                 BufferedReader logIn = new BufferedReader(new InputStreamReader(logProcess.getInputStream()));
                 while ((logline = logIn.readLine()) != null) {
                     logMessage.append(logline).append("\n");
                 }
                 String diffline = null;
-                String diffCommand = "svn diff -r" + Integer.toString((Integer.parseInt(revision.trim()) - 1)) + ":" + revision + " " + repository;
-                Process diffProcess = Runtime.getRuntime().exec(diffCommand);
+                Process diffProcess = Runtime.getRuntime().exec("svn",
+                        new String[]{"diff", "-r", StringUtil.addToNumberString(revision.trim(), -1) + ":" + revision, repository});
                 BufferedReader diffIn = new BufferedReader(new InputStreamReader(diffProcess.getInputStream()));
                 while ((diffline = diffIn.readLine()) != null) {
                     diffMessage.append(diffline).append("\n");
@@ -181,13 +182,14 @@ public class ScrumServices {
         String repositoryRoot = (String) context.get("repositoryRoot");
         Map<String, Object> result = ServiceUtil.returnSuccess();
         try {
-            if (UtilValidate.isNotEmpty(repositoryRoot) && UtilValidate.isNotEmpty(latestRevision)) {
+            if (UtilValidate.isNotEmpty(repositoryRoot) && UtilValidate.isNotEmpty(latestRevision)
+                    && UtilValidate.isValidUrl(repositoryRoot) && UtilValidate.isInteger(latestRevision)) {
                 Integer revision = Integer.parseInt(latestRevision.trim());
                 for (int i = 1; i <= revision; i++) {
                     String logline = null;
                     List<String> logMessageList = new LinkedList<>();
-                    String logCommand = "svn log -r" + i + " " + repositoryRoot;
-                    Process logProcess = Runtime.getRuntime().exec(logCommand);
+                    Process logProcess = Runtime.getRuntime().exec("svn",
+                            new String[]{"log", "-r", String.valueOf(i), repositoryRoot});
                     BufferedReader logIn = new BufferedReader(new InputStreamReader(logProcess.getInputStream()));
                     while ((logline = logIn.readLine()) != null) {
                         logMessageList.add(logline.toString().trim());

@@ -20,21 +20,22 @@ package org.apache.ofbiz.pricat;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.ofbiz.htmlreport.AbstractHtmlReport;
 import org.apache.ofbiz.htmlreport.InterfaceReportThread;
 import org.apache.ofbiz.htmlreport.util.ReportStringUtil;
 
 /**
- * Provides a html report for running parse a PriCat file.<p>
+ * Provides a html report for running parse a PriCat file.
  */
 public class PricatParseExcelHtmlReport extends AbstractHtmlReport {
 
     public static final String PRICAT_REPORT_CLASS = "PRICAT_HTML_REPORT";
 
     /**
-     * Public constructor with report variables.<p>
+     * Public constructor with report variables.
+     *
      * @param request the HttpServletRequest request
      * @param response the HttpServletResponse response
      */
@@ -106,7 +107,8 @@ public class PricatParseExcelHtmlReport extends AbstractHtmlReport {
     }
 
     /**
-     * Performs the dialog actions depending on the initialized action.<p>
+     * Performs the dialog actions depending on the initialized action.
+     *
      * @throws IOException
      */
     @Override

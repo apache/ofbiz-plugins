@@ -26,8 +26,9 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.HttpMethod;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.HttpMethod;
+//import org.glassfish.jersey.server.ServerProperties;
+import jakarta.ws.rs.core.MediaType;
 
 import org.apache.ofbiz.base.component.ComponentConfig;
 import org.apache.ofbiz.base.component.ComponentException;
@@ -46,6 +47,7 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.model.Resource;
 import org.glassfish.jersey.server.model.ResourceMethod;
+import org.apache.ofbiz.ws.rs.filters.ServiceContextCleanupFilter;
 
 public class OFBizApiConfig extends ResourceConfig {
     private static final String MODULE = OFBizApiConfig.class.getName();
@@ -60,6 +62,8 @@ public class OFBizApiConfig extends ResourceConfig {
         register(JacksonFeature.class);
         register(ServiceRequestFilter.class);
         register(MultiPartFeature.class);
+        register(ServiceContextCleanupFilter.class);
+        //property(ServerProperties.TRACING, "ALL");
         if (Debug.verboseOn()) {
             register(new LoggingFeature(Logger.getLogger(LoggingFeature.DEFAULT_LOGGER_NAME), Level.INFO,
                     LoggingFeature.Verbosity.PAYLOAD_ANY, 10000));
@@ -81,12 +85,26 @@ public class OFBizApiConfig extends ResourceConfig {
         components.forEach(component -> {
             String cName = component.getComponentName();
             try {
-                String apiSchema = ComponentConfig.getRootLocation(cName) + "/api/" + cName + ".rest.xml";
-                File apiSchemaF = new File(apiSchema);
-                if (apiSchemaF.exists()) {
-                    Debug.logInfo("Processing REST API " + cName + ".rest.xml" + " from component " + cName, MODULE);
-                    ModelApi api = ModelApiReader.getModelApi(apiSchemaF);
-                    MICRO_APIS.put(cName, api);
+                String apiDirPath = ComponentConfig.getRootLocation(cName) + "/api";
+                File apiDir = new File(apiDirPath);
+                if (apiDir.exists() && apiDir.isDirectory()) {
+                    File[] restXmlFiles = apiDir.listFiles((dir, name) -> name.endsWith(".rest.xml"));
+                    for (File apiSchemaF : restXmlFiles) {
+                        ModelApi api = ModelApiReader.getModelApi(apiSchemaF);
+                        if (!api.isPublish()) {
+                            Debug.logInfo("API {}[{}] is declared to be a non-publish, ignoring...", api.getName(), api.getPath(), MODULE);
+                            continue;
+                        }
+                        String path = api.getPath();
+                        if (MICRO_APIS.containsKey(path)) {
+                            Debug.logWarning("Duplicate REST API definition detected for path: " + path
+                                    + " at location " + apiSchemaF
+                                    + ". Overriding existing entry from component: " + cName, MODULE);
+                        } else {
+                            Debug.logInfo("Processing REST API path: " + path + " from component " + cName, MODULE);
+                        }
+                        MICRO_APIS.put(path, api);
+                    }
                 }
             } catch (ComponentException e) {
                 Debug.logError(e, MODULE);
@@ -100,15 +118,13 @@ public class OFBizApiConfig extends ResourceConfig {
             return;
         }
         MICRO_APIS.forEach((k, v) -> {
-            if (!v.isPublish()) {
-                Debug.logInfo("API '" + v.getName() + "' is declared to be a non-publish, ignoring...", MODULE);
-                return;
-            }
             Debug.logInfo("Registring Resource Definitions from API - " + k, MODULE);
             List<ModelResource> resources = v.getResources();
+            String entryPath = v.getPath();
             resources.forEach(modelResource -> {
                 if (modelResource.isPublish()) {
-                    Resource.Builder resourceBuilder = Resource.builder(modelResource.getPath())
+                    String path = entryPath + "/" + modelResource.getPath() + "/";
+                    Resource.Builder resourceBuilder = Resource.builder(path)
                             .name(modelResource.getName());
                     for (ModelOperation op : modelResource.getOperations()) {
                         String verb = op.getVerb().toUpperCase();

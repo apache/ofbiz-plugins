@@ -24,7 +24,7 @@ import java.util.Locale;
 /**
  * This is the interface for the report classes which are used for the output
  * during operations that run on a separate Thread in OFBiz,
- * like import, export etc.<p>
+ * like import, export etc.
  */
 public interface InterfaceReport {
 
@@ -53,96 +53,113 @@ public interface InterfaceReport {
     String REPORT_TYPE_SIMPLE = "simple";
 
     /**
-     * Adds an error object to the list of errors that occured during the report.<p>
+     * Adds an error object to the list of errors that occured during the report.
+     *
      * @param obj the error object
      */
     void addError(Object obj);
 
     /**
-     * Adds a warning object to the list of warnings that occured during the report.<p>
+     * Adds a warning object to the list of warnings that occured during the report.
+     *
      * @param obj the error object
      */
     void addWarning(Object obj);
 
     /**
-     * Formats the runtime formatted as "hh:mm:ss".<p>
+     * Formats the runtime formatted as "hh:mm:ss".
+     *
      * @return the runtime formatted as "hh:mm:ss"
      */
     String formatRuntime();
 
     /**
-     * Returns a list of all errors that occured during the report.<p>
+     * Returns a list of all errors that occured during the report.
+     *
      * @return an error list that occured during the report
      */
     List<Object> getErrors();
 
     /**
-     * Returns the locale this report was initialized with.<p>
+     * Returns the locale this report was initialized with.
+     *
      * @return the locale this report was initialized with
      */
     Locale getLocale();
 
     /**
      * Updates this report, this processes all new output added since
-     * the last call to this method.<p>
+     * the last call to this method.
+     *
      * This is only required in case the output is written to a HTML page,
-     * if the shell output is used, this will just return an empty String.<p>
+     * if the shell output is used, this will just return an empty String.
+     *
      * @return new elements that have been added to the report and not yet processed.
      */
     String getReportUpdate();
 
     /**
-     * Returns the time this report has been running.<p>
+     * Returns the time this report has been running.
+     *
      * @return the time this report has been running
      */
     long getRuntime();
 
     /**
-     * Returns a list of all warnings that occured during the report.<p>
+     * Returns a list of all warnings that occured during the report.
+     *
      * @return a warning list that occured during the report
      */
     List<Object> getWarnings();
 
     /**
-     * Returns if the report generated an error output.<p>
+     * Returns if the report generated an error output.
+     *
      * @return true if the report generated an error, otherwise false
      */
     boolean hasError();
 
     /**
-     * Returns if the report generated a warning output.<p>
+     * Returns if the report generated a warning output.
+     *
      * @return true if the report generated a warning, otherwise false
      */
     boolean hasWarning();
 
     /**
-     * Prints a localized message to the report.<p>
+     * Prints a localized message to the report.
+     *
      * @param uiLabel the String to add
      */
     void print(String uiLabel);
 
     /**
-     * Prints a localized message to the report, using the indicated formatting.<p>
+     * Prints a localized message to the report, using the indicated formatting.
+     *
      * Use the contants starting with <code>FORMAT</code> from this interface
-     * to indicate which formatting to use.<p>
+     * to indicate which formatting to use.
+     *
      * @param uiLabel the String to add
      * @param format the formatting to use for the output
      */
     void print(String uiLabel, int format);
 
     /**
-     * Adds a line break to the report.<p>
+     * Adds a line break to the report.
+     *
      */
     void println();
 
     /**
-     * Prints a localized message to the report.<p>
+     * Prints a localized message to the report.
+     *
      * @param uiLabel the message to add
      */
     void println(String uiLabel);
 
     /**
-     * Prints a localized message to the report, using the indicated formatting.<p>
+     * Prints a localized message to the report, using the indicated formatting.
+     *
      * Use the contents starting with <code>FORMAT</code> from this interface
      * to indicate which formatting to use.
      * @param uiLabel the message container to add
@@ -152,22 +169,26 @@ public interface InterfaceReport {
 
     /**
      * Adds an Exception to the report, ensuring that the Exception content is
-     * processed to generate a valid output esp. for HTML pages.<p>
+     * processed to generate a valid output esp. for HTML pages.
+     *
      * The exception will be stored and the output will later be processed
-     * in a special way.<p>
+     * in a special way.
+     *
      * @param t the exception to add
      */
     void println(Throwable t);
 
     /**
-     * Prints a localized message followed by a parameter and dots to the report.<p>
+     * Prints a localized message followed by a parameter and dots to the report.
+     *
      * @param uiLabel the Message to add
      * @param param the Parameter to add
      */
     void printMessageWithParam(String uiLabel, Object param);
 
     /**
-     * Convenience method to print a localized message, followed by a parameter and dots to the report.<p>
+     * Convenience method to print a localized message, followed by a parameter and dots to the report.
+     *
      * The output follows the pattern: ( 3 / 8 ) Deleting filename.txt ...
      * @param m the number of the report output
      * @param n the total number of report outputs
@@ -177,7 +198,8 @@ public interface InterfaceReport {
     void printMessageWithParam(int m, int n, String uiLabel, Object param);
 
     /**
-     * Resets the runtime to 0 milliseconds.<p>
+     * Resets the runtime to 0 milliseconds.
+     *
      */
     void resetRuntime();
 

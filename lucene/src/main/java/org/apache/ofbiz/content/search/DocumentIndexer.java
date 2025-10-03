@@ -99,7 +99,6 @@ public final class DocumentIndexer extends Thread {
             if (indexWriter == null) {
                 try {
                     StandardAnalyzer analyzer = new StandardAnalyzer();
-                    analyzer.setVersion(SearchWorker.getLuceneVersion());
                     indexWriter = new IndexWriter(this.indexDirectory, new IndexWriterConfig(analyzer));
                 } catch (CorruptIndexException e) {
                     Debug.logError("Corrupted lucene index: " + e.getMessage(), MODULE);

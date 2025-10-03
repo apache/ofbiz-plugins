@@ -482,11 +482,11 @@
                             <set field="days" value="${dayNr}" type="Integer"/>
                             <set field="hours" from-field="parameters.hoursDay${dayNr}" type="Integer" default-value="0"/>
                             <!-- for fromDate and thuDate with time-->
-                            <set field="leaveFromDate" value="${groovy:import java.sql.Timestamp;
-                                return new Timestamp(fromDate.getTime() + ((int) (24L*60L*60L*1000L*days)));}"/>
+                            <set field="leaveFromDate" value="${groovy: org.apache.ofbiz.base.util.UtilDateTime.addDaysToTimestamp(
+                                fromDate, days)}"/>
                             <set field="emplLeaveFromDate" from-field="leaveFromDate" type="Timestamp"/>
-                            <set field="leaveThruDate" value="${groovy:import java.sql.Timestamp;
-                                return new Timestamp(emplLeaveFromDate.getTime() + ((int) (60L*60L*1000L*hours)));}"/>
+                            <set field="leaveThruDate" value="${groovy: org.apache.ofbiz.base.util.UtilDateTime.adjustTimestamp(
+                                emplLeaveFromDate, Calendar.HOUR, hours)}"/>
                             <set field="emplLeaveThruDate" from-field="leaveThruDate" type="Timestamp"/>
                             <entity-one entity-name="EmplLeave" value-field="emplLeaveMap">
                                 <field-map field-name="partyId" from-field="timesheet.partyId"/>
@@ -527,11 +527,11 @@
                                 <set field="fromDate" from-field="timesheet.fromDate"/>
                                 <set field="days" value="${dayNr}" type="Integer"/>
                                 <set field="hours" from-field="parameters.hoursDay${dayNr}" type="Integer" default-value="0"/>
-                                <set field="leaveFromDate" value="${groovy:import java.sql.Timestamp;
-                                    return new Timestamp(fromDate.getTime() + ((int) (24L*60L*60L*1000L*days)));}"/>
+                                <set field="leaveFromDate" value="${groovy: org.apache.ofbiz.base.util.UtilDateTime.addDaysToTimestamp(
+                                    fromDate, days)}"/>
                                 <set field="emplLeaveFromDate" from-field="leaveFromDate" type="Timestamp"/>
-                                <set field="leaveThruDate" value="${groovy:import java.sql.Timestamp;
-                                return new Timestamp(emplLeaveFromDate.getTime() + ((int) (60L*60L*1000L*hours)));}"/>
+                                <set field="leaveThruDate" value="${groovy: org.apache.ofbiz.base.util.UtilDateTime.adjustTimestamp(
+                                emplLeaveFromDate, Calendar.HOUR, hours)}"/>
                                 <set field="emplLeaveThruDate" from-field="leaveThruDate" type="Timestamp"/>
                                 <entity-one entity-name="EmplLeave" value-field="emplLeave">
                                     <field-map field-name="partyId" from-field="timesheet.partyId"/>
@@ -2739,8 +2739,8 @@
             <field-map field-name="fromDate" from-field="parameters.fromDate"/>
         </entity-one>
         <if-not-empty field="emplLeaveMap">
-            <set field="hours" value="${groovy:import java.sql.Timestamp;
-               return new Double((emplLeaveMap.thruDate.getTime() - emplLeaveMap.fromDate.getTime()) / ((int) (60L*60L*1000L)));}" type="Double"/>
+            <set field="hours" value="${groovy: org.apache.ofbiz.base.util.UtilDateTime.getInterval(emplLeaveMap.fromDate,
+             emplLeaveMap.thruDate) / ((int) (60L*60L*1000L))}" type="Double"/>
            <set field="result.hours" from-field="hours"/>
            <field-to-result field="result.hours" result-name="hours" />
            <else>

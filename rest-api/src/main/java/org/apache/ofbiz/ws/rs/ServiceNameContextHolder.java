@@ -16,26 +16,38 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
-package org.apache.ofbiz.htmlreport;
+package org.apache.ofbiz.ws.rs;
 
-import org.safehaus.uuid.UUID;
+public final class ServiceNameContextHolder {
 
-/**
- * Identifies a class that can be used as a report thread.
- */
-public interface InterfaceReportThread {
+    private static final ThreadLocal<String> SERVICE_NAME = new ThreadLocal<>();
 
-    /**
-     * Starts the report thread.
-     *
-     */
-    void start();
+    private ServiceNameContextHolder() {
+        // Prevent instantiation
+    }
 
     /**
-     * Returns the UUID of this report thread.
+     * Sets the current service name for this thread.
      *
-     * @return the UUID of this report thread
+     * @param serviceName the name of the service being executed
      */
-    UUID getUUID();
+    public static void set(String serviceName) {
+        SERVICE_NAME.set(serviceName);
+    }
 
+    /**
+     * Returns the current service name for this thread, or null if none is set.
+     *
+     * @return the service name
+     */
+    public static String get() {
+        return SERVICE_NAME.get();
+    }
+
+    /**
+     * Clears the stored service name from the current thread context.
+     */
+    public static void clear() {
+        SERVICE_NAME.remove();
+    }
 }

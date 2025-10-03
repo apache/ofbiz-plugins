@@ -39,8 +39,8 @@ import org.apache.ofbiz.entity.model.*
 import org.apache.ofbiz.content.content.ContentWorker
 import org.apache.ofbiz.content.ContentManagementWorker
 
-import javax.servlet.*
-import javax.servlet.http.*
+import jakarta.servlet.*
+import jakarta.servlet.http.*
 
 nodeTrailCsv = ContentManagementWorker.getFromSomewhere("nodeTrailCsv", parameters, request, context)
 passedParams = null

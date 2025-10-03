@@ -1151,24 +1151,14 @@ under the License.
         </actions>
         <row-actions>
             <set field="isCurrentProject" value="${groovy: 
-                if (request.getAttribute('currentProject') != context.projectId)
-                    request.setAttribute('isCurrentProject', false)
-                else
-                    request.setAttribute('isCurrentProject', true)
-                if (request.getAttribute('currentProject') != context.projectId)
+                    request.setAttribute('isCurrentProject', request.getAttribute('currentProject') == context.projectIdfalse)
                     request.setAttribute('currentProject', context.projectId)
-                return (boolean)request.getAttribute('isCurrentProject')
-                }"
+                    request.getAttribute('isCurrentProject')}"
                 type="Boolean"/>
             <set field="isCurrentCompany" value="${groovy: 
-                if (request.getAttribute('currentCompany') != context.companyId)
-                    request.setAttribute('isCurrentCompany', false)
-                else
-                    request.setAttribute('isCurrentCompany', true)
-                if (request.getAttribute('currentCompany') != context.companyId)
+                    request.setAttribute('isCurrentCompany', request.getAttribute('currentCompany') == context.companyId)
                     request.setAttribute('currentCompany', context.companyId)
-                return (boolean)request.getAttribute('isCurrentCompany')
-                }"
+                    request.getAttribute('isCurrentCompany')}"
                 type="Boolean"/>
             <set field="estimatedHrs" value="${sprintEstimatedMilliSeconds/1000/60/60/40}" type="Integer"/>
             <entity-and entity-name="WorkEffortCustRequestView" list="custRequests">
@@ -1251,15 +1241,9 @@ under the License.
             <set field="currentProject" value="${groovy: request.setAttribute('currentProject', ' ')}" type="String"/>
         </actions>
         <row-actions>
-            <set field="isCurrentProject" value="${groovy: 
-                if (request.getAttribute('currentProject') != context.projectId)
-                    request.setAttribute('isCurrentProject', false)
-                else
-                    request.setAttribute('isCurrentProject', true)
-                if (request.getAttribute('currentProject') != context.projectId)
-                    request.setAttribute('currentProject', context.projectId)
-                return (boolean)request.getAttribute('isCurrentProject')
-                }"
+            <set field="isCurrentProject" value="${groovy:
+                request.setAttribute('isCurrentProject', request.getAttribute('currentProject') != context.projectId)
+                request.getAttribute('isCurrentProject')}"
                 type="Boolean"/>
             <service service-name="getScrumProject" result-map="result">
                 <field-map field-name="projectId" from-field="projectId"/>
@@ -2092,7 +2076,7 @@ under the License.
             <entity-and entity-name="PartyDetailAndWorkEffortAssign" list="sprintMembers" filter-by-date="true">
                 <field-map field-name="workEffortId" from-field="sprintId"/>
             </entity-and>
-            <set field="partyId" value="${groovy: if (assignTo.size() != 0) return assignTo.first().partyId}"/>
+            <set field="partyId" value="${groovy: assignTo?.first()?.partyId}"/>
             <service service-name="getScrumActualHour" result-map="results">
                 <field-map field-name="taskId" from-field="taskId"/>
             </service>
@@ -2385,16 +2369,10 @@ under the License.
             <entity-one entity-name="Person" value-field="person">
                 <field-map field-name="partyId" from-field="ownerRoles[0].partyId"/>
             </entity-one>
-            <set field="isCurrentCompany" value="${groovy: 
-                if (request.getAttribute('currentCompany') != context.groupName)
-                    request.setAttribute('isCurrentCompany', false)
-                else
-                    request.setAttribute('isCurrentCompany', true)
-                if (request.getAttribute('currentCompany') != context.groupName)
+            <set field="isCurrentCompany" value="${groovy:
+                    request.setAttribute('isCurrentCompany', request.getAttribute('currentCompany') == context.groupName)
                     request.setAttribute('currentCompany', context.groupName)
-                return (boolean)request.getAttribute('isCurrentCompany');
-                }"
-                type="Boolean"/>
+                    request.getAttribute('isCurrentCompany')}"/>
             <set field="groupId" from-field="partyAndSecurityGroupList[0].groupId"/> 
             <set field="productTartget" value="${groovy:
                 if (groupId == 'SCRUM_PRODUCT_OWNER')
@@ -2741,7 +2719,7 @@ under the License.
             <entity-and entity-name="WorkEffortPartyAssignment" list="assignTo" filter-by-date="true">
                 <field-map field-name="workEffortId" from-field="taskId"/>
             </entity-and>
-            <set field="partyId" value="${groovy: if (assignTo.size() != 0) return assignTo.first().partyId}"/>
+            <set field="partyId" value="${groovy: assignTo?.first()?.partyId}"/>
             <set field="taskActualMilliSeconds" value="${groovy: if (resultTask.actualMilliSeconds) return actualMilliSeconds/3600000}"/>
             <service service-name="getScrumActualHour" result-map="result">
                 <field-map field-name="taskId" from-field="taskId"/>

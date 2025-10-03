@@ -41,9 +41,9 @@ under the License.
         <test-case case-name="product-tests">
              <simple-method-test location="component://scrum/minilang/test/ProductTest.xml"/>
         </test-case>
-        <!--<test-case case-name="task-test">
+        <test-case case-name="task-test">
             <simple-method-test location="component://scrum/minilang/test/TaskTests.xml"/>
-        </test-case>-->
+        </test-case>
         <test-case case-name="myWork-test">
             <simple-method-test location="component://scrum/minilang/test/MyWorkTests.xml"/>
         </test-case>

@@ -18,15 +18,16 @@
  *******************************************************************************/
 package org.apache.ofbiz.ws.rs.openapi;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.ServletContext;
-import javax.ws.rs.HttpMethod;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Response;
+import jakarta.servlet.ServletContext;
+import jakarta.ws.rs.HttpMethod;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.Response;
 
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.UtilValidate;
@@ -75,9 +76,9 @@ public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
     private OpenAPI openApi;
     private DispatchContext context;
     private static final Parameter HEADER_CONTENT_TYPE_JSON = new HeaderParameter().name(HttpHeaders.CONTENT_TYPE)
-            .schema(new StringSchema()).example(javax.ws.rs.core.MediaType.APPLICATION_JSON).required(true);
+            .schema(new StringSchema()).example(jakarta.ws.rs.core.MediaType.APPLICATION_JSON).required(true);
     private static final Parameter HEADER_ACCEPT_JSON = new HeaderParameter().name(HttpHeaders.ACCEPT)
-            .schema(new StringSchema()).example(javax.ws.rs.core.MediaType.APPLICATION_JSON).required(true);
+            .schema(new StringSchema()).example(jakarta.ws.rs.core.MediaType.APPLICATION_JSON).required(true);
 
     @Override
     public void setConfiguration(OpenAPIConfiguration openApiConfiguration) {
@@ -109,11 +110,14 @@ public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
             }
             List<ModelResource> resources = v.getResources();
             resources.forEach(modelResource -> {
+                List<String> segments = new ArrayList<>();
+                segments.add(v.getPath());
                 Tag resourceTab = new Tag().name(modelResource.getDisplayName()).description(modelResource.getDescription());
                 openApi.addTagsItem(resourceTab);
-                String basePath = modelResource.getPath();
+                segments.add(modelResource.getPath());
                 for (ModelOperation op : modelResource.getOperations()) {
-                    String uri = basePath + op.getPath();
+                    segments.add(op.getPath());
+                    String uri = buildNestedUrl(segments);
                     boolean pathExists = false;
                     PathItem pathItemObject = paths.get(uri);
                     if (UtilValidate.isEmpty(pathItemObject)) {
@@ -138,13 +142,13 @@ public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
                                 .description("Operation Input Parameters in JSON").name("input");
                         Schema<?> refSchema = new Schema<>();
                         refSchema.$ref("#/components/schemas/" + "api.request." + service.getName());
-                        serviceInParam.content(new Content().addMediaType(javax.ws.rs.core.MediaType.APPLICATION_JSON,
+                        serviceInParam.content(new Content().addMediaType(jakarta.ws.rs.core.MediaType.APPLICATION_JSON,
                                 new MediaType().schema(refSchema)));
                         operation.addParametersItem(serviceInParam);
                     } else if (verb.matches(HttpMethod.POST + "|" + HttpMethod.PUT + "|" + HttpMethod.PATCH)) {
                         RequestBody request = new RequestBody()
                                 .description("Request Body for operation " + op.getDescription())
-                                .content(new Content().addMediaType(javax.ws.rs.core.MediaType.APPLICATION_JSON,
+                                .content(new Content().addMediaType(jakarta.ws.rs.core.MediaType.APPLICATION_JSON,
                                         new MediaType().schema(new Schema<>()
                                                 .$ref("#/components/schemas/" + "api.request." + service.getName()))));
                         operation.setRequestBody(request);
@@ -166,13 +170,28 @@ public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
                     addServiceOperationApiResponses(service, operation);
                     setPathItemOperation(pathItemObject, verb.toUpperCase(), operation);
                     if (!pathExists) {
-                        paths.addPathItem(basePath + op.getPath(), pathItemObject);
+                        paths.addPathItem(uri, pathItemObject);
                     }
                 }
             });
         });
     }
 
+    public static String buildNestedUrl(List<String> segments) {
+        StringBuilder pathBuilder = new StringBuilder();
+        for (String segment : segments) {
+            if (segment == null || segment.trim().isEmpty()) {
+                continue;
+            }
+
+            // Trim leading/trailing slashes
+            segment = segment.replaceAll("^/+", "").replaceAll("/+$", "");
+            if (!segment.isEmpty()) {
+                pathBuilder.append("/").append(segment);
+            }
+        }
+        return pathBuilder.toString();
+    }
     private void addExportableServices() {
         Set<String> serviceNames = context.getAllServiceNames();
         for (String serviceName : serviceNames) {
@@ -198,14 +217,14 @@ public final class OFBizOpenApiReader extends Reader implements OpenApiReader {
                                 .description("Service In Parameters in JSON").name("inParams");
                         Schema<?> refSchema = new Schema<>();
                         refSchema.$ref("#/components/schemas/" + "api.request." + service.getName());
-                        serviceInParam.content(new Content().addMediaType(javax.ws.rs.core.MediaType.APPLICATION_JSON,
+                        serviceInParam.content(new Content().addMediaType(jakarta.ws.rs.core.MediaType.APPLICATION_JSON,
                                 new MediaType().schema(refSchema)));
                         operation.addParametersItem(serviceInParam);
                     }
                     operation.addParametersItem(HEADER_ACCEPT_JSON);
                 } else if (action.matches(HttpMethod.POST + "|" + HttpMethod.PUT + "|" + HttpMethod.PATCH)) {
                     RequestBody request = new RequestBody().description("Request Body for service " + service.getName())
-                            .content(new Content().addMediaType(javax.ws.rs.core.MediaType.APPLICATION_JSON,
+                            .content(new Content().addMediaType(jakarta.ws.rs.core.MediaType.APPLICATION_JSON,
                                     new MediaType().schema(new Schema<>().$ref("#/components/schemas/" + "api.request." + service.getName()))));
                     operation.setRequestBody(request);
                     operation.addParametersItem(HEADER_CONTENT_TYPE_JSON);

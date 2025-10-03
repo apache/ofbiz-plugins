@@ -31,8 +31,8 @@ import freemarker.ext.beans.BeansWrapper
 import freemarker.template.SimpleHash
 import freemarker.template.WrappingTemplateModel
 
-import javax.servlet.*
-import javax.servlet.http.*
+import jakarta.servlet.*
+import jakarta.servlet.http.*
 
 contentIdTo = parameters.contentIdTo
 

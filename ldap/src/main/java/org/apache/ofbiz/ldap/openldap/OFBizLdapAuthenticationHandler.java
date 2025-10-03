@@ -36,7 +36,7 @@ import org.ldaptive.LdapEntry;
 import org.w3c.dom.Element;
 
 /**
- * The OFBiz LDAP Authentication Handler.<p>
+ * The OFBiz LDAP Authentication Handler.
  *
  * The ACL of a user is still controlled by OFBiz.
  *
@@ -44,7 +44,8 @@ import org.w3c.dom.Element;
 public final class OFBizLdapAuthenticationHandler extends AbstractOFBizAuthenticationHandler {
 
     /**
-     * Public constructor, initializes some required member variables.<p>
+     * Public constructor, initializes some required member variables.
+     *
      */
     public OFBizLdapAuthenticationHandler() {
 

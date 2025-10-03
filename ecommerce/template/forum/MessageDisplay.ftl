@@ -35,25 +35,3 @@ under the License.
 <p>
   ${forumMessage.description!}
 </p>
-
-<#--
-  <#assign result = dispatcher.runSync("getPublicForumMessage", Static["org.apache.ofbiz.base.util.UtilMisc"]
-      .toMap("contentId", contentId, "userLogin", userLogin))/>
-  <#if (result.resultData)??>
-    <div class="tableheadtext">
-        ${uiLabelMap.CommonTitle}: ${result.resultData.content.description!}
-        ${uiLabelMap.CommonBy}:${result.resultData.content.createdByUserLogin} ${uiLabelMap.CommonAt}:
-        ${result.resultData.content.createdDate.toString().substring(0,16)}
-        <a href="addForumMessage?forumId=${parameters.forumId}&amp;forumMessageIdTo=${result.resultData.content.contentId}&amp;threadView=${parameters.threadView!}"
-            class="buttontext">${uiLabelMap.PartyReply}</a>
-    </div>
-    <div>
-        <#if result.resultData.electronicText??>
-          ${result.resultData.electronicText.textData}
-        </#if>
-    </div>
-    <hr />
-  <#else>
-      <div> ${result.errorMessage!}</div>
-</#if>
--->

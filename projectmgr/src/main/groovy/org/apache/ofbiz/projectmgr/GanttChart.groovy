@@ -26,7 +26,7 @@ import org.apache.ofbiz.entity.condition.EntityConditionList
 import org.apache.ofbiz.entity.condition.EntityExpr
 import org.apache.ofbiz.entity.condition.EntityOperator
 
-import javax.servlet.http.HttpSession
+import jakarta.servlet.http.HttpSession
 import java.math.RoundingMode
 import java.sql.Timestamp
 

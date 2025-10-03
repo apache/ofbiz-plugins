@@ -21,13 +21,13 @@ package org.apache.ofbiz.ldap.commons;
 
 import javax.naming.NamingException;
 import javax.naming.directory.SearchResult;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.w3c.dom.Element;
 
 /**
- * The OFBiz LDAP Authentication Handler interface.<p>
+ * The OFBiz LDAP Authentication Handler interface.
  *
  */
 public interface InterfaceOFBizAuthenticationHandler {

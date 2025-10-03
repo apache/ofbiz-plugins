@@ -22,10 +22,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.ExceptionMapper;
 
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.UtilValidate;
@@ -37,6 +37,7 @@ import org.apache.ofbiz.service.ModelParam;
 import org.apache.ofbiz.service.ModelService;
 import org.apache.ofbiz.service.ServiceUtil;
 import org.apache.ofbiz.ws.rs.util.RestApiUtil;
+import org.apache.ofbiz.ws.rs.ServiceNameContextHolder;
 
 public final class ServiceRequestHandler extends RestRequestHandler {
 
@@ -54,7 +55,7 @@ public final class ServiceRequestHandler extends RestRequestHandler {
      */
     @Override
     protected Response execute(ContainerRequestContext ctx, Map<String, Object> arguments) {
-        ctx.setProperty("requestForService", service);
+        ServiceNameContextHolder.set(service);
         LocalDispatcher dispatcher = (LocalDispatcher) getServletContext().getAttribute("dispatcher");
         Map<String, Object> serviceContext = null;
         try {
