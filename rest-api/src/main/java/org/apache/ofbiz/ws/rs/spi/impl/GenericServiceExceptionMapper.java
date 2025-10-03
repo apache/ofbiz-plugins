@@ -27,7 +27,6 @@ import jakarta.ws.rs.ext.Provider;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.ofbiz.base.util.Debug;
-import org.apache.ofbiz.base.util.UtilProperties;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericEntityNotFoundException;
 import org.apache.ofbiz.entity.GenericNoSuchEntityException;

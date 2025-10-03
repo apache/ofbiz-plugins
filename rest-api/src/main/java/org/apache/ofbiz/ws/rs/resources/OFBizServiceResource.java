@@ -29,6 +29,7 @@ import java.util.Set;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HttpMethod;
@@ -44,7 +45,6 @@ import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
-import jakarta.ws.rs.ext.Provider;
 
 import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.base.util.UtilValidate;
@@ -82,7 +82,7 @@ public class OFBizServiceResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response serviceList() throws GenericServiceException {
-        LocalDispatcher dispatcher = (LocalDispatcher)servletContext.getAttribute("dispatcher");
+        LocalDispatcher dispatcher = (LocalDispatcher) servletContext.getAttribute("dispatcher");
         DispatchContext context = dispatcher.getDispatchContext();
         Set<String> serviceNames = context.getAllServiceNames();
         List<Map<String, Object>> serviceList = new ArrayList<>();

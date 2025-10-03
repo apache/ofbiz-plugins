@@ -81,7 +81,7 @@ public class APIAuthFilter implements ContainerRequestFilter {
             if (UtilValidate.isNotEmpty(service)) {
                 ModelService mdService = null;
                 try {
-                    mdService = ((LocalDispatcher)servletContext.getAttribute("dispatcher")).getDispatchContext().getModelService(service);
+                    mdService = ((LocalDispatcher) servletContext.getAttribute("dispatcher")).getDispatchContext().getModelService(service);
                 } catch (GenericServiceException e) {
                     Debug.logError(e.getMessage(), MODULE);
                 }

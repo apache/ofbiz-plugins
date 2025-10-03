@@ -27,7 +27,7 @@ import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.ws.rs.response.Error;
 
 @Provider
-public class GlobalExceptionMapper implements javax.ws.rs.ext.ExceptionMapper<Throwable> {
+public class GlobalExceptionMapper implements jakarta.ws.rs.ext.ExceptionMapper<Throwable> {
 
     /**
      * Module Name Used for debugging
@@ -45,9 +45,9 @@ public class GlobalExceptionMapper implements javax.ws.rs.ext.ExceptionMapper<Th
         if (Debug.verboseOn()) {
             throwable.printStackTrace();
         }
-        Response.StatusType type = (throwable instanceof WebApplicationException?
-                                    ((WebApplicationException) throwable).getResponse().getStatusInfo():
-                                    Response.Status.INTERNAL_SERVER_ERROR);
+        Response.StatusType type = (throwable instanceof WebApplicationException
+                    ? ((WebApplicationException) throwable).getResponse().getStatusInfo()
+                    : Response.Status.INTERNAL_SERVER_ERROR);
 
         Error error = new Error(type.getStatusCode(), type.getReasonPhrase(), throwable.getMessage());
         return Response.status(type.getStatusCode()).entity(error).type(MediaType.APPLICATION_JSON).build();
