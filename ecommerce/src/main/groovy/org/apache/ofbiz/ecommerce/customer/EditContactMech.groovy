@@ -18,35 +18,33 @@
 */
 package org.apache.ofbiz.ecommerce.customer
 
-import java.util.HashMap
+import org.apache.ofbiz.entity.GenericValue
 import org.apache.ofbiz.party.contact.ContactMechWorker
-import org.apache.ofbiz.base.util.UtilHttp
-import org.apache.ofbiz.base.util.UtilMisc
 
-/* puts the following in the context: "contactMech", "contactMechId",
-        "partyContactMech", "partyContactMechPurposes", "contactMechTypeId",
-        "contactMechType", "purposeTypes", "postalAddress", "telecomNumber",
-        "requestName", "donePage", "tryEntity", "contactMechTypes"
+/* puts the following in the context: 'contactMech', 'contactMechId',
+        'partyContactMech', 'partyContactMechPurposes', 'contactMechTypeId',
+        'contactMechType', 'purposeTypes', 'postalAddress', 'telecomNumber',
+        'requestName', 'donePage', 'tryEntity', 'contactMechTypes'
  */
 target = [:]
 ContactMechWorker.getContactMechAndRelated(request, userLogin.partyId, target)
 context.putAll(target)
 
-if (!security.hasEntityPermission("PARTYMGR", "_VIEW", session) && !context.partyContactMech && context.contactMech) {
-    context.canNotView = true
-} else {
-    context.canNotView = false
-}
+context.canNotView = !security.hasEntityPermission('PARTYMGR', '_VIEW', session) && !context.partyContactMech && context.contactMech
 
 preContactMechTypeId = parameters.preContactMechTypeId
-if (preContactMechTypeId) context.preContactMechTypeId = preContactMechTypeId
+if (preContactMechTypeId) {
+    context.preContactMechTypeId = preContactMechTypeId
+}
 
 paymentMethodId = parameters.paymentMethodId
-if (paymentMethodId) context.paymentMethodId = paymentMethodId
+if (paymentMethodId) {
+    context.paymentMethodId = paymentMethodId
+}
 
 cmNewPurposeTypeId = parameters.contactMechPurposeTypeId
 if (cmNewPurposeTypeId) {
-    contactMechPurposeType = from("ContactMechPurposeType").where("contactMechPurposeTypeId", cmNewPurposeTypeId).queryOne()
+    GenericValue contactMechPurposeType = from('ContactMechPurposeType').where(contactMechPurposeTypeId: cmNewPurposeTypeId).queryOne()
     if (contactMechPurposeType) {
         context.contactMechPurposeType = contactMechPurposeType
     } else {
@@ -58,46 +56,36 @@ if (cmNewPurposeTypeId) {
 tryEntity = context.tryEntity
 
 contactMechData = context.contactMech
-if (!tryEntity) contactMechData = parameters
-if (!contactMechData) contactMechData = [:]
-if (contactMechData) context.contactMechData = contactMechData
+if (!tryEntity) {
+    contactMechData = parameters
+}
+context.contactMechData = contactMechData ?: [:]
 
 partyContactMechData = context.partyContactMech
-if (!tryEntity) partyContactMechData = parameters
-if (!partyContactMechData) partyContactMechData = [:]
-if (partyContactMechData) context.partyContactMechData = partyContactMechData
+if (!tryEntity) {
+    partyContactMechData = parameters
+}
+context.partyContactMechData = partyContactMechData ?: [:]
 
 postalAddressData = context.postalAddress
-if (!tryEntity) postalAddressData = parameters
-if (!postalAddressData) postalAddressData = [:]
-if (postalAddressData) context.postalAddressData = postalAddressData
+if (!tryEntity) {
+    postalAddressData = parameters
+}
+context.postalAddressData = postalAddressData ?: [:]
 
 telecomNumberData = context.telecomNumber
-if (!tryEntity) telecomNumberData = parameters
-if (!telecomNumberData) telecomNumberData = [:]
-if (telecomNumberData) context.telecomNumberData = telecomNumberData
+if (!tryEntity) {
+    telecomNumberData = parameters
+}
+context.telecomNumberData = telecomNumberData ?: [:]
 
 // load the geo names for selected countries and states/regions
-if (parameters.countryGeoId) {
-    geoValue = from("Geo").where("geoId", parameters.countryGeoId).cache(true).queryOne()
-    if (geoValue) {
-        context.selectedCountryName = geoValue.geoName
-    }
-} else if (postalAddressData?.countryGeoId) {
-    geoValue = from("Geo").where("geoId", postalAddressData.countryGeoId).cache(true).queryOne()
-    if (geoValue) {
-        context.selectedCountryName = geoValue.geoName
-    }
+String geoId = parameters.countryGeoId ?: postalAddressData?.countryGeoId
+if (geoId) {
+    context.selectedCountryName = from('Geo').where(geoId: geoId).cache().queryOne()?.geoName
 }
 
-if (parameters.stateProvinceGeoId) {
-    geoValue = from("Geo").where("geoId", parameters.stateProvinceGeoId).cache(true).queryOne()
-    if (geoValue) {
-        context.selectedStateName = geoValue.geoId
-    }
-} else if (postalAddressData?.stateProvinceGeoId) {
-    geoValue = from("Geo").where("geoId", postalAddressData.stateProvinceGeoId).cache(true).queryOne()
-    if (geoValue) {
-        context.selectedStateName = geoValue.geoId
-    }
+geoId = parameters.stateProvinceGeoId ?: postalAddressData?.stateProvinceGeoId
+if (geoId) {
+    context.selectedStateName = from('Geo').where(geoId: geoId).cache().queryOne()?.geoName
 }

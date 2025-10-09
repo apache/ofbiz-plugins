@@ -18,66 +18,73 @@
 */
 package org.apache.ofbiz.ecommerce.customer
 
+import org.apache.ofbiz.entity.GenericValue
 import org.apache.ofbiz.entity.util.EntityUtil
 import org.apache.ofbiz.party.contact.ContactHelper
-import org.apache.ofbiz.entity.condition.EntityCondition
 
 if (userLogin) {
-    party = userLogin.getRelatedOne("Party", false)
-    contactMech = EntityUtil.getFirst(ContactHelper.getContactMech(party, "BILLING_LOCATION", "POSTAL_ADDRESS", false))
+    GenericValue party = userLogin.getRelatedOne('Party', true)
+    GenericValue contactMech = EntityUtil.getFirst(ContactHelper.getContactMech(party, 'BILLING_LOCATION', 'POSTAL_ADDRESS', false))
     if (contactMech) {
-        postalAddress = contactMech.getRelatedOne("PostalAddress", false)
-        billToContactMechId = postalAddress.contactMechId
-        context.billToContactMechId = billToContactMechId
-        context.billToName = postalAddress.toName
-        context.billToAttnName = postalAddress.attnName
-        context.billToAddress1 = postalAddress.address1
-        context.billToAddress2 = postalAddress.address2
-        context.billToCity = postalAddress.city
-        context.billToPostalCode = postalAddress.postalCode
-        context.billToStateProvinceGeoId = postalAddress.stateProvinceGeoId
-        context.billToCountryGeoId = postalAddress.countryGeoId
-        billToStateProvinceGeo = from("Geo").where("geoId", postalAddress.stateProvinceGeoId).queryOne()
+        GenericValue postalAddress = contactMech.getRelatedOne('PostalAddress', false)
+        String billToContactMechId = postalAddress.contactMechId
+        context.with {
+            billToContactMechId = postalAddress.billToContactMechId
+            billToName = postalAddress.toName
+            billToAttnName = postalAddress.attnName
+            billToAddress1 = postalAddress.address1
+            billToAddress2 = postalAddress.address2
+            billToCity = postalAddress.city
+            billToPostalCode = postalAddress.postalCode
+            billToStateProvinceGeoId = postalAddress.stateProvinceGeoId
+            billToCountryGeoId = postalAddress.countryGeoId
+        }
+        GenericValue billToStateProvinceGeo = from('Geo').where('geoId', postalAddress.stateProvinceGeoId).cache().queryOne()
         if (billToStateProvinceGeo) {
             context.billToStateProvinceGeo = billToStateProvinceGeo.geoName
         }
-        billToCountryProvinceGeo = from("Geo").where("geoId", postalAddress.countryGeoId).queryOne()
+        GenericValue billToCountryProvinceGeo = from('Geo').where('geoId', postalAddress.countryGeoId).cache().queryOne()
         if (billToCountryProvinceGeo) {
             context.billToCountryProvinceGeo = billToCountryProvinceGeo.geoName
         }
 
-        creditCards = []
-        paymentMethod = from("PaymentMethod").where("partyId", party.partyId, "paymentMethodTypeId", "CREDIT_CARD").orderBy("fromDate").filterByDate().queryFirst()
+        GenericValue paymentMethod = from('PaymentMethod')
+                .where(partyId: party.partyId, paymentMethodTypeId: 'CREDIT_CARD')
+                .orderBy('fromDate')
+                .filterByDate()
+                .queryFirst()
         if (paymentMethod) {
-            creditCard = paymentMethod.getRelatedOne("CreditCard", false)
-            context.paymentMethodTypeId = "CREDIT_CARD"
-            context.cardNumber = creditCard.cardNumber
-            context.cardType = creditCard.cardType
-            context.paymentMethodId = creditCard.paymentMethodId
-            context.firstNameOnCard = creditCard.firstNameOnCard
-            context.lastNameOnCard = creditCard.lastNameOnCard
-            context.expMonth = (creditCard.expireDate).substring(0, 2)
-            context.expYear = (creditCard.expireDate).substring(3)
+            GenericValue creditCard = paymentMethod.getRelatedOne('CreditCard', false)
+            context.with {
+                paymentMethodTypeId = 'CREDIT_CARD'
+                cardNumber = creditCard.cardNumber
+                cardType = creditCard.cardType
+                paymentMethodId = creditCard.paymentMethodId
+                firstNameOnCard = creditCard.firstNameOnCard
+                lastNameOnCard = creditCard.lastNameOnCard
+                expMonth = (creditCard.expireDate).substring(0, 2)
+                expYear = (creditCard.expireDate).substring(3)
+            }
         }
         if (shipToContactMechId) {
-            if (billToContactMechId && billToContactMechId.equals(shipToContactMechId)) {
-                context.useShippingAddressForBilling = "Y"
+            if (billToContactMechId && billToContactMechId == shipToContactMechId) {
+                context.useShippingAddressForBilling = 'Y'
             }
         }
     }
 
-    billToContactMechList = ContactHelper.getContactMech(party, "PHONE_BILLING", "TELECOM_NUMBER", false)
+    List billToContactMechList = ContactHelper.getContactMech(party, 'PHONE_BILLING', 'TELECOM_NUMBER', false)
     if (billToContactMechList) {
-        billToTelecomNumber = (EntityUtil.getFirst(billToContactMechList)).getRelatedOne("TelecomNumber", false)
-        pcm = EntityUtil.getFirst(billToTelecomNumber.getRelated("PartyContactMech", null, null, false))
+        billToTelecomNumber = (EntityUtil.getFirst(billToContactMechList)).getRelatedOne('TelecomNumber', false)
+        pcm = EntityUtil.getFirst(billToTelecomNumber.getRelated('PartyContactMech', null, null, false))
         context.billToTelecomNumber = billToTelecomNumber
         context.billToExtension = pcm.extension
     }
 
-    billToFaxNumberList = ContactHelper.getContactMech(party, "FAX_BILLING", "TELECOM_NUMBER", false)
+    List billToFaxNumberList = ContactHelper.getContactMech(party, 'FAX_BILLING', 'TELECOM_NUMBER', false)
     if (billToFaxNumberList) {
-        billToFaxNumber = (EntityUtil.getFirst(billToFaxNumberList)).getRelatedOne("TelecomNumber", false)
-        faxPartyContactMech = EntityUtil.getFirst(billToFaxNumber.getRelated("PartyContactMech", null, null, false))
+        billToFaxNumber = (EntityUtil.getFirst(billToFaxNumberList)).getRelatedOne('TelecomNumber', false)
+        faxPartyContactMech = EntityUtil.getFirst(billToFaxNumber.getRelated('PartyContactMech', null, null, false))
         context.billToFaxNumber = billToFaxNumber
         context.billToFaxExtension = faxPartyContactMech.extension
     }

@@ -18,21 +18,21 @@
 */
 package org.apache.ofbiz.ecommerce.catalog
 
-import org.apache.ofbiz.product.category.*
+import org.apache.ofbiz.product.category.CategoryContentWrapper
 
 parentCategoryStr = parameters.parentCategoryStr
-productCategoryId=parameters.category_id
-if(parentCategoryStr) {
+productCategoryId = parameters.category_id
+if (parentCategoryStr) {
     pathList = parentCategoryStr.split('/')
     cateList = []
     pathTemp = ''
-    for(path in pathList) {
+    for (path in pathList) {
         cateMap = [:]
-        category = from("ProductCategory").where("productCategoryId", path).queryOne()
+        category = from('ProductCategory').where('productCategoryId', path).queryOne()
         categoryContentWrapper = new CategoryContentWrapper(category, request)
 
         pathTemp = pathTemp + path
-        cateMap.title = categoryContentWrapper.get("DESCRIPTION", "html")
+        cateMap.title = categoryContentWrapper.get('DESCRIPTION', 'html')
         cateMap.productCategoryId = category.productCategoryId
         cateMap.parentCategory = pathTemp
 
@@ -44,9 +44,9 @@ if(parentCategoryStr) {
     context.productCategoryTrail = cateList
 }
 if (productCategoryId) {
-    currentCategory = from("ProductCategory").where("productCategoryId", productCategoryId).queryOne()
+    currentCategory = from('ProductCategory').where('productCategoryId', productCategoryId).queryOne()
     currentCategoryContentWrapper = new CategoryContentWrapper(currentCategory, request)
-    context.currentCategoryName = currentCategoryContentWrapper.get("CATEGORY_NAME", "html")
-    context.currentCategoryDescription = currentCategoryContentWrapper.get("DESCRIPTION", "html")
+    context.currentCategoryName = currentCategoryContentWrapper.get('CATEGORY_NAME', 'html')
+    context.currentCategoryDescription = currentCategoryContentWrapper.get('DESCRIPTION', 'html')
     context.currentCategoryId = productCategoryId
 }

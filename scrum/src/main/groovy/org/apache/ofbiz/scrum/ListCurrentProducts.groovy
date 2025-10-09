@@ -18,190 +18,197 @@
 */
 package org.apache.ofbiz.scrum
 
+import org.apache.ofbiz.entity.GenericValue
 import org.apache.ofbiz.entity.condition.EntityCondition
-import org.apache.ofbiz.entity.condition.EntityJoinOperator
-import org.apache.ofbiz.entity.condition.EntityOperator
-import org.apache.ofbiz.base.util.UtilValidate
+import org.apache.ofbiz.entity.condition.EntityConditionBuilder
 
-roleTypeId = null
-paramCond = []
-products = []
-productId = parameters.productId
-internalName = parameters.internalName
-statusId = parameters.statusId
-if ("Any".equals(statusId)) {
+List products = []
+String productId = parameters.productId
+String internalName = parameters.internalName
+String statusId = parameters.statusId
+if (statusId == 'Any') {
     statusId = null
 }
 partyId = parameters.partyId
 
-if(!security.hasEntityPermission("SCRUM", "_ADMIN", session)){
-    if(security.hasEntityPermission("SCRUM_PRODUCT", "_ADMIN", session)){
-        roleTypeId = "PRODUCT_OWNER"
-    }
-}
-
 if (userLogin) {
-    if(partyId){
-        paramCond.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId))
-    }
-    if(productId){
-        paramCond.add(EntityCondition.makeCondition("productId", EntityOperator.LIKE, productId + "%"))
-    }
-    if(internalName){
-        paramCond.add(EntityCondition.makeCondition("internalName", EntityOperator.LIKE, "%" + internalName + "%"))
-    }
-    if(statusId){
-        if ("PRODUCT_ACTIVE".equals(statusId)) {
-            paramCond.add(EntityCondition.makeCondition("supportDiscontinuationDate", EntityOperator.EQUALS, null))
-        } else {
-             paramCond.add(EntityCondition.makeCondition("supportDiscontinuationDate", EntityOperator.NOT_EQUAL, null))
+    EntityCondition condition = new EntityConditionBuilder().AND {
+        EQUALS(productTypeId: 'SCRUM_ITEM')
+        EQUALS(roleTypeId: 'PRODUCT_OWNER_COMP')
+        EQUALS(thruDate: null)
+        if (partyId) {
+            EQUALS(partyId: partyId)
+        }
+        if (productId) {
+            LIKE(productId: "$productId%")
+        }
+        if (internalName) {
+            LIKE(internalName: "%$internalName%")
+        }
+        if (statusId) {
+            if (statusId == 'PRODUCT_ACTIVE') {
+                EQUALS(supportDiscontinuationDate: null)
+            } else {
+                NOT_EQUAL(supportDiscontinuationDate: null)
+            }
         }
     }
-    
-    paramCond.add(EntityCondition.makeCondition("productTypeId", EntityOperator.EQUALS, "SCRUM_ITEM"))
-    paramCond.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "PRODUCT_OWNER_COMP"))
-    paramCond.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null))
-    
-    allProducts = from("ProductAndRole").where(paramCond).orderBy("groupName", "internalName").queryList()
-    
-    partyAndSecurityGroupList = select("partyId", "groupId")
-                                    .from("ScrumMemberUserLoginAndSecurityGroup").where(EntityCondition.makeCondition([
-                                        EntityCondition.makeCondition ("partyId", EntityOperator.EQUALS, userLogin.partyId),
-                                        EntityCondition.makeCondition ("partyStatusId", EntityOperator.NOT_EQUAL, "PARTY_DISABLED"),
-                                        EntityCondition.makeCondition ("thruDate", EntityOperator.EQUALS, null)
-                                    ], EntityJoinOperator.AND))
-                                    .orderBy("partyId")
-                                    .queryList()
-    
+    List allProducts = from('ProductAndRole')
+            .where(condition)
+            .orderBy('groupName', 'internalName')
+            .queryList()
+
+    condition = new EntityConditionBuilder().AND {
+        EQUALS(partyId: userLogin.partyId)
+        NOT_EQUAL(partyStatusId: 'PARTY_DISABLED')
+        EQUALS(thruDate: null)
+    }
+    List partyAndSecurityGroupList = select('partyId', 'groupId')
+            .from('ScrumMemberUserLoginAndSecurityGroup')
+            .where(condition)
+            .orderBy('partyId')
+            .queryList()
     context.partyAndSecurityGroupList = partyAndSecurityGroupList
+
     boolean addAllProducts = false
-    allProducts.each { product ->
-        product = product.getAllFields()
-        productMap = from("Product").where("productId", product.productId).queryOne()
-        product.put("longDescription",productMap.longDescription)
-        if(security.hasEntityPermission("SCRUM", "_ADMIN", session)){
+    allProducts.each { it ->
+        Map product = it.getAllFields()
+        GenericValue productGV = from('Product').where('productId', product.productId).queryOne()
+        product.longDescription = productGV.longDescription
+        if (security.hasEntityPermission('SCRUM', '_ADMIN', session)) {
             addAllProducts = true
-        }else{
-            ismember = false
+        } else {
+            boolean isMember = false
             if (partyAndSecurityGroupList) {
-                groupId = partyAndSecurityGroupList[0].groupId
-                if ("SCRUM_PRODUCT_OWNER".equals(groupId)) {
-                    productAndRoleList = from("ProductRole").where("productId", product.productId, "partyId", userLogin.partyId, "thruDate", null).queryList()
-                    if (productAndRoleList) {
-                        productAndRoleList.each { productAndRoleMap ->
-                            productIdInner = productAndRoleMap.productId
-                                if (productIdInner.equals(product.productId)) {
-                                    ismember = true
+                String groupId = partyAndSecurityGroupList.first().groupId
+                switch (groupId) {
+                    case 'SCRUM_PRODUCT_OWNER':
+                        isMember = from('ProductRole')
+                                .where(productId: product.productId, partyId: userLogin.partyId, thruDate: null)
+                                .queryCount() > 0
+                        break
+                    case 'SCRUM_STAKEHOLDER':
+                        // check in company relationship.
+                        condition = new EntityConditionBuilder().AND {
+                            EQUALS(partyId: userLogin.partyId)
+                            EQUALS(roleTypeId: 'STAKEHOLDER')
+                            NOT_EQUAL(partyStatusId: 'PARTY_DISABLED')
+                            EQUALS(thruDate: null)
+                        }
+                        String partyIdFrom = from('ScrumRolesPersonAndCompany')
+                                .where(condition)
+                                .queryFirst()?.partyIdFrom
+
+                        isMember = from('ProductRole')
+                                .where(partyId: partyIdFrom, roleTypeId: 'PRODUCT_OWNER_COMP', thruDate: null)
+                                .queryCount() > 0 ?:
+                                from('ProductAndRole')
+                                        .where(productId: product.productId,
+                                                partyId: userLogin.partyId,
+                                                roleTypeId: 'STAKEHOLDER',
+                                                supportDiscontinuationDate: null,
+                                                thruDate: null)
+                                        .queryCount() > 0
+                        break
+                    case 'SCRUM_MASTER':
+                        //check in product.
+                        isMember = from('ProductAndRole')
+                                .where(productId: product.productId,
+                                        partyId: userLogin.partyId,
+                                        roleTypeId: 'SCRUM_MASTER',
+                                        supportDiscontinuationDate: null,
+                                        thruDate: null)
+                                .queryCount() > 0
+
+                        //check in project.
+                        if (!isMember) {
+                            List projectIds =
+                                    from('WorkEffortAndProduct')
+                                            .where(productId: product.productId,
+                                                    workEffortTypeId: 'SCRUM_PROJECT',
+                                                    currentStatusId: 'SPJ_ACTIVE')
+                                            .select('workEffortId')
+                                            .queryList()*.workEffortId
+                            condition = new EntityConditionBuilder().AND {
+                                EQUALS(partyId: userLogin.partyId)
+                                IN(workEffortId: projectIds)
+                            }
+                            isMember = from('WorkEffortPartyAssignment')
+                                    .where(condition)
+                                    .queryCount() > 0
+                        }
+
+                        //check in sprint.
+                        if (!isMember) {
+                            List projectIds = from('WorkEffortAndProduct')
+                                    .where(productId: product.productId,
+                                            workEffortTypeId: 'SCRUM_PROJECT',
+                                            currentStatusId: 'SPJ_ACTIVE')
+                                    .queryList()*.workEffortId
+                            condition = new EntityConditionBuilder().AND {
+                                EQUALS(currentStatusId: 'SPRINT_ACTIVE')
+                                IN(workEffortParentId: projectIds)
+                            }
+                            List sprintIds = from('WorkEffort')
+                                    .where(condition)
+                                    .queryList()*.workEffortId
+                            condition = new EntityConditionBuilder().AND {
+                                EQUALS(partyId: userLogin.partyId)
+                                IN(workEffortId: sprintIds)
+                            }
+                            isMember = from('WorkEffortPartyAssignment')
+                                    .where(condition)
+                                    .queryCount() > 0
+                        }
+                        break
+                    default:
+                        List projectIds = from('WorkEffortAndProduct')
+                                .where(productId: product.productId,
+                                        workEffortTypeId: 'SCRUM_PROJECT',
+                                        currentStatusId: 'SPJ_ACTIVE')
+                                .queryList()*.workEffortId
+                        condition = new EntityConditionBuilder().AND {
+                            EQUALS(currentStatusId: 'SPRINT_ACTIVE')
+                            IN(workEffortParentId: projectIds)
+                        }
+                        List sprintIds = from('WorkEffort')
+                                .where(condition)
+                                .queryList()*.workEffortId
+                        condition = new EntityConditionBuilder().AND {
+                            EQUALS(partyId: userLogin.partyId)
+                            IN(workEffortId: sprintIds)
+                        }
+                        isMember = from('WorkEffortPartyAssignment')
+                                .where()
+                                .queryCount() > 0
+                        if (!isMember) {
+                            List unplannedBacklogIds = from('UnPlannedBacklogsAndTasks')
+                                    .where(condition)*.workEffortId
+                            if (unplannedBacklogIds) {
+                                condition = new EntityConditionBuilder().AND {
+                                    EQUALS(partyId: userLogin.partyId)
+                                    IN(workEffortId: unplannedBacklogIds)
                                 }
+                                isMember = from('WorkEffortPartyAssignment')
+                                        .where(condition)
+                                        .queryCount() > 0
                             }
                         }
-                } else if ("SCRUM_STAKEHOLDER".equals(groupId)) {
-                    // check in company relationship.
-                    scrumRolesCond = EntityCondition.makeCondition([
-                        EntityCondition.makeCondition ("partyId", EntityOperator.EQUALS, userLogin.partyId),
-                        EntityCondition.makeCondition ("roleTypeId", EntityOperator.EQUALS, "STAKEHOLDER"),
-                        EntityCondition.makeCondition ("partyStatusId", EntityOperator.NOT_EQUAL, "PARTY_DISABLED"),
-                        EntityCondition.makeCondition ("thruDate", EntityOperator.EQUALS, null)
-                        ], EntityJoinOperator.AND)
-                    scrumRolesPersonAndCompanyList = from("ScrumRolesPersonAndCompany").where(scrumRolesCond).queryList()
-                    productRoleList = from("ProductRole").where("partyId", scrumRolesPersonAndCompanyList[0].partyIdFrom, "roleTypeId", "PRODUCT_OWNER_COMP", "thruDate", null).queryList()
-                    if (productRoleList) {
-                        productRoleList.each { productRoleMap ->
-                            stakeholderProduct = productRoleMap.productId
-                            if (stakeholderProduct.equals(product.productId)) {
-                                ismember = true
-                            }
-                        }
-                   }
-                   //check in product.
-                    if (ismember == false) {
-                        productAndRoleList = from("ProductAndRole").where("productId" : product.productId, "partyId" : userLogin.partyId, "roleTypeId" : "STAKEHOLDER", "supportDiscontinuationDate" : null, "thruDate" : null).queryList()
-                        if (productAndRoleList) {
-                            ismember = true
-                        }
-                    }
-                } else if ("SCRUM_MASTER".equals(groupId)) {
-                    //check in product.
-                    productRoleList = []
-                    productRoleList = from("ProductAndRole").where("productId" : product.productId, "partyId" : userLogin.partyId, "roleTypeId" : "SCRUM_MASTER", "supportDiscontinuationDate" : null, "thruDate" : null).queryList()
-                    if (productRoleList) {
-                        ismember = true
-                    }
-                    //check in project.
-                    if (ismember == false) {
-                        projects = []
-                        projects = from("WorkEffortAndProduct").where("productId", product.productId, "workEffortTypeId", "SCRUM_PROJECT", "currentStatusId", "SPJ_ACTIVE").queryList()
-                        if (projects) {
-                            projects.each { project ->
-                                projectPartyAssignment = from("WorkEffortPartyAssignment").where("partyId", userLogin.partyId, "workEffortId", project.workEffortId).queryList()
-                                if (projectPartyAssignment) {
-                                    ismember = true
-                                }
-                            }
-                        }
-                    }
-                    //check in sprint.
-                    if (ismember == false) {
-                        projects.each { project ->
-                            allSprintList = []
-                            allSprintList = from("WorkEffort").where("workEffortParentId", project.workEffortId, "currentStatusId", "SPRINT_ACTIVE").queryList()
-                            allSprintList.each { SprintListMap ->
-                                sprintId = SprintListMap.workEffortId
-                                workEffortPartyAssignment = from("WorkEffortPartyAssignment").where("partyId", userLogin.partyId, "workEffortId", sprintId).queryList()
-                                if (workEffortPartyAssignment) {
-                                    ismember = true
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    projects = []
-                    projects = from("WorkEffortAndProduct").where("productId", product.productId, "workEffortTypeId", "SCRUM_PROJECT", "currentStatusId", "SPJ_ACTIVE").queryList()
-                    if (projects) {
-                        projects.each { project ->
-                            allSprintList = []
-                            allSprintList = from("WorkEffort").where("workEffortParentId", project.workEffortId, "currentStatusId", "SPRINT_ACTIVE").queryList()
-                            allSprintList.each { SprintListMap ->
-                                sprintId = SprintListMap.workEffortId
-                                workEffortPartyAssignment = from("WorkEffortPartyAssignment").where("partyId", userLogin.partyId, "workEffortId", sprintId).queryList()
-                                if (workEffortPartyAssignment) {
-                                    ismember = true
-                                }
-                            }
-                        }
-                    }
-                    if (ismember == false) {
-                        exprBldr = [EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "CRQ_REVIEWED"),
-                                    EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "CRQ_REOPENED")]
-                        andExprs = [EntityCondition.makeCondition("productId", EntityOperator.EQUALS, product.productId),
-                                    EntityCondition.makeCondition("currentStatusId", EntityOperator.EQUALS, "STS_CREATED"),
-                                    EntityCondition.makeCondition(exprBldr, EntityOperator.OR)]
-                        unplannedBacklogCond = EntityCondition.makeCondition(andExprs, EntityOperator.AND)
-                        unplannedBacklogList = from("UnPlannedBacklogsAndTasks").where(unplannedBacklogCond).queryList()
-                        if (unplannedBacklogList) {
-                            unplannedBacklogList.each { unplannedMap ->
-                                workEffortId = unplannedMap.workEffortId
-                                workEffortPartyAssignment = from("WorkEffortPartyAssignment").where("partyId", userLogin.partyId, "workEffortId", workEffortId).queryList()
-                                if (workEffortPartyAssignment) {
-                                    ismember = true
-                                }
-                            }
-                        }
-                    }
+                        break
                 }
-                
-                if (ismember) {
-                      products.add(product)
+                if (isMember) {
+                    products << product
                 }
-              }
             }
-            if(addAllProducts)
-                products.add(product)
+        }
+        if (addAllProducts) {
+            products << product
+        }
     }
 } else {
-    logError("Party ID missing =========>>> : null ")
+    logError('Party ID missing =========>>> : null ')
 }
 
-if (products){
+if (products) {
     context.listIt = products
 }

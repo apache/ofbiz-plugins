@@ -20,20 +20,16 @@ package org.apache.ofbiz.scrum
 
 import org.apache.ofbiz.entity.GenericEntityException
 
-performFindInMap = [:]
-performFindInMap.entityName = "ScrumMemberUserLoginAndSecurityGroup"
-inputFields = [:]
 outputList = []
-
-inputFields.putAll(parameters)
-performFindInMap.noConditionFind = "Y"
-performFindInMap.inputFields = inputFields
-performFindInMap.orderBy = parameters.sortField
-performFindInMap.filterByDate = "Y"
+performFindInMap = [entityName: 'ScrumMemberUserLoginAndSecurityGroup',
+                    noConditionFind: 'Y',
+                    inputFields: [*: parameters],
+                    orderBy: parameters.sortField,
+                    filterByDate: 'Y']
 if (parameters.sortField) {
-    performFindInMap.orderBy = "lastName"
+    performFindInMap.orderBy = 'lastName'
 }
-performFindResults = runService('performFind', performFindInMap)
+performFindResults = run service: 'performFind', with: performFindInMap
 try {
     resultList = performFindResults.listIt.getCompleteList()
 } catch (GenericEntityException e) {
@@ -42,15 +38,15 @@ try {
     if (performFindResults.listIt != null) {
         try {
             performFindResults.listIt.close()
-            } catch (GenericEntityException e) {
-                logError(e)
-            }
+        } catch (GenericEntityException e) {
+            logError(e)
+        }
     }
 }
 
-resultList.each() { result ->
-    if (!"N".equals(result.enabled)) {
-        outputList.add(result)
+resultList.each { result ->
+    if (result.enabled != 'N') {
+        outputList << result
     }
 }
 if (outputList) {

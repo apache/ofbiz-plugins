@@ -75,7 +75,7 @@ public final class SearchWorker {
         List<GenericValue> contentList = new ArrayList<>();
         for (String id : idList) {
             try {
-                GenericValue content = EntityQuery.use(delegator).from("Content").where("contentId", id).cache(true).queryOne();
+                GenericValue content = EntityQuery.use(delegator).from("Content").where("contentId", id).cache().queryOne();
                 if (content != null) {
                     contentList.add(content);
                 }

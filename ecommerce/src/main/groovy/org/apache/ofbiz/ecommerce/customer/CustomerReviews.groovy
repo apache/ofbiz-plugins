@@ -18,12 +18,7 @@
 */
 package org.apache.ofbiz.ecommerce.customer
 
-import org.apache.ofbiz.entity.condition.EntityOperator
-import org.apache.ofbiz.entity.condition.EntityCondition
-
 // get the product review(s) for the given user
 if (userLogin) {
-  reviews = from("ProductReview").where("userLoginId", userLogin.userLoginId).cache(true).queryList()
-
-  context.reviews = reviews
+    context.reviews = from('ProductReview').where('userLoginId', userLogin.userLoginId).cache().queryList()
 }

@@ -18,35 +18,29 @@
 */
 package org.apache.ofbiz.ecommerce.catalog
 
-import java.util.List
-import org.apache.ofbiz.entity.*
-import org.apache.ofbiz.entity.condition.*
-import org.apache.ofbiz.entity.util.*
-import org.apache.ofbiz.entity.util.EntityUtil
-import org.apache.ofbiz.entity.transaction.*
-import org.apache.ofbiz.base.util.*
-import org.apache.ofbiz.base.util.string.*
-import org.apache.ofbiz.content.content.*
-import org.apache.commons.lang.StringEscapeUtils
 import org.apache.ofbiz.entity.util.EntityUtilProperties
 
-int minFontSize = EntityUtilProperties.getPropertyAsInteger("ecommerce", "tagcloud.min.fontsize", 0).intValue()
-int maxFontSize = EntityUtilProperties.getPropertyAsInteger("ecommerce", "tagcloud.max.fontsize", 0).intValue()
-int limitTagCloud = EntityUtilProperties.getPropertyAsInteger("ecommerce", "tagcloud.limit", 0).intValue()
+int minFontSize = EntityUtilProperties.getPropertyAsInteger('ecommerce', 'tagcloud.min.fontsize', 0).intValue()
+int maxFontSize = EntityUtilProperties.getPropertyAsInteger('ecommerce', 'tagcloud.max.fontsize', 0).intValue()
+int limitTagCloud = EntityUtilProperties.getPropertyAsInteger('ecommerce', 'tagcloud.limit', 0).intValue()
 
 tagCloudList = [] as LinkedList
 tagList = [] as LinkedList
 
-productKeywords = select("keyword", "keywordTypeId", "statusId")
-                    .from("ProductKeyword")
-                    .where(keywordTypeId : "KWT_TAG", statusId : "KW_APPROVED")
-                    .orderBy("keyword")
-                    .distinct(true)
-                    .queryList()
+productKeywords = select('keyword', 'keywordTypeId', 'statusId')
+        .from('ProductKeyword')
+        .where(keywordTypeId: 'KWT_TAG', statusId: 'KW_APPROVED')
+        .orderBy('keyword')
+        .distinct(true)
+        .queryList()
 
 if (productKeywords) {
     productKeywords.each { productKeyword ->
-        productTags = from("ProductKeyword").where("keyword", productKeyword.keyword, "keywordTypeId", "KWT_TAG", "statusId", "KW_APPROVED").queryList()
+        productTags = from('ProductKeyword')
+                .where(keyword: productKeyword.keyword,
+                        keywordTypeId: 'KWT_TAG',
+                        statusId: 'KW_APPROVED')
+                .queryList()
         searchResult = [:]
         searchResult.tag = productKeyword.keyword
         searchResult.countTag = productTags.size()
@@ -56,7 +50,7 @@ if (productKeywords) {
 
 if (tagList) {
     int tag = 0
-    tagList.sort{ a,b -> b.countTag <=> a.countTag }
+    tagList.sort { a, b -> b.countTag <=> a.countTag }
     if (tagList.size() < limitTagCloud) {
         limitTagCloud = tagList.size()
     }
@@ -65,19 +59,18 @@ if (tagList) {
     tagList.each { tagCloud ->
         if (tag < limitTagCloud) {
             tagCloudOfbizInfo = [:]
-            double weight = 0
+            BigDecimal weight = 0
             if ((maxResult - minResult) > 0) {
                 weight = (tagCloud.countTag - minResult) / (maxResult - minResult)
             }
-            double fontSize = minFontSize + ((maxFontSize - minFontSize) * weight)
-            tagCloudOfbizInfo.tag = tagCloud.tag
-            tagCloudOfbizInfo.fontSize = fontSize
-            tagCloudList.add(tagCloudOfbizInfo)
+            BigDecimal fontSize = minFontSize + ((maxFontSize - minFontSize) * weight)
+            tagCloudList << [tag: tagCloud.tag,
+                             fontSize: fontSize]
             tag++
         }
     }
 }
 
-tagCloudList = tagCloudList.sort{it.tag}
+tagCloudList = tagCloudList.sort { it.tag }
 
 context.tagCloudList = tagCloudList

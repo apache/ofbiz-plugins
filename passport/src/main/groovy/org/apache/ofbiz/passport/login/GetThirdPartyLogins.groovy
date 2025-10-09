@@ -21,8 +21,6 @@ package org.apache.ofbiz.passport.login
 import org.apache.ofbiz.entity.util.EntityUtil
 import org.apache.ofbiz.product.store.ProductStoreWorker
 
-final String module = "GetThirdPartyLogins.groovy"
-
 adminErrorInfo = context.adminErrorInfo
 productStoreId = context.productStoreId
 if (!productStoreId) {
@@ -34,16 +32,18 @@ if (!adminErrorInfo || !adminErrorInfo.hasError()) {
     storePassportLoginMethList = null
     // Get lists of passport login methods
     if (productStoreId) {
-        storePassportLoginMethList = from("ThirdPartyLogin").where("productStoreId", productStoreId).orderBy("sequenceNum ASC").queryList();
+        storePassportLoginMethList = from('ThirdPartyLogin').where(productStoreId: productStoreId).orderBy('sequenceNum').queryList()
         storePassportLoginMethList = EntityUtil.filterByDate(storePassportLoginMethList)
     }
-        
+
     // Extra data preparation for each login method.
     if (storePassportLoginMethList) {
         storeLoginMethList = []
         for (storeLoginMeth in storePassportLoginMethList) {
-            storeLoginMethDetail = from(storeLoginMeth.loginMethTypeId + storeLoginMeth.loginProviderId).where("productStoreId", productStoreId).filterByDate().queryFirst();
-            storeLoginMethList.add(storeLoginMethDetail)
+            storeLoginMethList << from(storeLoginMeth.loginMethTypeId + storeLoginMeth.loginProviderId)
+                    .where(productStoreId: productStoreId)
+                    .filterByDate()
+                    .queryFirst()
         }
         context.storeLoginMethList = storeLoginMethList
     }

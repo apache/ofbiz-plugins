@@ -21,17 +21,17 @@ package org.apache.ofbiz.projectmgr
 
 // get last request from this user and use that project/task assignment as default on the screen
 
-custRequestList = from("CustRequest").where("fromPartyId", fromPartyId).orderBy("-createdDate").queryList()
+custRequestList = from('CustRequest').where('fromPartyId', fromPartyId).orderBy('-createdDate').queryList()
 if (custRequestList) {
-    custReqTaskList = custRequestList.get(0).getRelated("CustRequestWorkEffort", null, null, false)
+    custReqTaskList = custRequestList.first().getRelated('CustRequestWorkEffort', null, null, false)
     if (custReqTaskList) {
-        custReqTask = custReqTaskList.get(0).getRelatedOne("WorkEffort", false) // phase
-        projectChildWorkEffort = custReqTask.getRelatedOne("ParentWorkEffort", false) // phase name
+        custReqTask = custReqTaskList.first().getRelatedOne('WorkEffort', false) // phase
+        projectChildWorkEffort = custReqTask.getRelatedOne('ParentWorkEffort', false) // phase name
         if (projectChildWorkEffort) {
-            partyList = custReqTask.getRelated("WorkEffortPartyAssignment", null, null, false)
+            partyList = custReqTask.getRelated('WorkEffortPartyAssignment', null, null, false)
             if (partyList) {
                 context.childWorkEffortId = projectChildWorkEffort.workEffortId
-                context.partyId= partyList.get(0).partyId
+                context.partyId = partyList.first().partyId
             }
         }
     }

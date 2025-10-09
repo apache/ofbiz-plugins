@@ -18,13 +18,7 @@
 */
 package org.apache.ofbiz.ecommerce.order
 
-import org.apache.ofbiz.base.util.*
-import org.apache.ofbiz.entity.util.EntityUtil
-import org.apache.ofbiz.entity.*
-import org.apache.ofbiz.entity.util.*
-import org.apache.ofbiz.order.shoppingcart.*
-import org.apache.ofbiz.party.contact.*
-import org.apache.ofbiz.product.catalog.*
+import org.apache.ofbiz.base.util.UtilHttp
 
 partyId = null
 
@@ -32,17 +26,15 @@ userLogin = context.userLogin
 if (userLogin) {
     partyId = userLogin.partyId
 }
-
-if (!partyId && parameters.partyId) {
-    partyId = parameters.partyId
-}
+partyId = partyId ?: parameters.partyId
 
 if (partyId) {
     parameters.partyId = partyId
 
-    // NOTE: if there was an error, then don't look up and fill in all of this data, just use the values from the previous request (which will be in the parameters Map automagically)
-    if (!request.getAttribute("_ERROR_MESSAGE_") && !request.getAttribute("_ERROR_MESSAGE_LIST_")) {
-        person = from("Person").where("partyId", partyId).queryOne()
+    // NOTE: if there was an error, then don't look up and fill in all of this data,
+    // just use the values from the previous request (which will be in the parameters Map automagically)
+    if (!request.getAttribute('_ERROR_MESSAGE_') && !request.getAttribute('_ERROR_MESSAGE_LIST_')) {
+        person = from('Person').where('partyId', partyId).queryOne()
         if (person) {
             context.callSubmitForm = true
             // should never be null for the anonymous checkout, but just in case
@@ -52,7 +44,11 @@ if (partyId) {
         }
 
         // get the Email Address
-        emailPartyContactDetail = from("PartyContactDetailByPurpose").where("partyId", partyId, "contactMechPurposeTypeId", "PRIMARY_EMAIL").filterByDate().queryFirst()
+        emailPartyContactDetail = from('PartyContactDetailByPurpose')
+                .where(partyId: partyId,
+                        contactMechPurposeTypeId: 'PRIMARY_EMAIL')
+                .filterByDate()
+                .queryFirst()
         if (emailPartyContactDetail) {
             parameters.emailContactMechId = emailPartyContactDetail.contactMechId
             parameters.emailAddress = emailPartyContactDetail.infoString
@@ -60,7 +56,11 @@ if (partyId) {
         }
 
         // get the Phone Numbers
-        homePhonePartyContactDetail = from("PartyContactDetailByPurpose").where("partyId", partyId, "contactMechPurposeTypeId", "PHONE_HOME").filterByDate().queryFirst()
+        homePhonePartyContactDetail = from('PartyContactDetailByPurpose')
+                .where(partyId: partyId,
+                        contactMechPurposeTypeId: 'PHONE_HOME')
+                .filterByDate()
+                .queryFirst()
         if (homePhonePartyContactDetail) {
             parameters.homePhoneContactMechId = homePhonePartyContactDetail.contactMechId
             parameters.homeCountryCode = homePhonePartyContactDetail.countryCode
@@ -70,7 +70,11 @@ if (partyId) {
             parameters.homeSol = homePhonePartyContactDetail.allowSolicitation
         }
 
-        workPhonePartyContactDetail = from("PartyContactDetailByPurpose").where(partyId : partyId, contactMechPurposeTypeId : "PHONE_WORK").filterByDate().queryFirst()
+        workPhonePartyContactDetail = from('PartyContactDetailByPurpose')
+                .where(partyId: partyId,
+                        contactMechPurposeTypeId: 'PHONE_WORK')
+                .filterByDate()
+                .queryFirst()
         if (workPhonePartyContactDetail) {
             parameters.workPhoneContactMechId = workPhonePartyContactDetail.contactMechId
             parameters.workCountryCode = workPhonePartyContactDetail.countryCode
@@ -82,17 +86,17 @@ if (partyId) {
     }
 }
 
-cart = session.getAttribute("shoppingCart")
+cart = session.getAttribute('shoppingCart')
 cartPartyId = cart.getPartyId()
 context.cart = cart
 
 // nuke the event messages
-request.removeAttribute("_EVENT_MESSAGE_")
+request.removeAttribute('_EVENT_MESSAGE_')
 
-if (cartPartyId && !"_NA_".equals(cartPartyId)) {
-    cartParty = from("Party").where("partyId", cartPartyId).queryOne()
+if (cartPartyId && cartPartyId != '_NA_') {
+    cartParty = from('Party').where('partyId', cartPartyId).queryOne()
     if (cartParty) {
-        cartPerson = cartParty.getRelatedOne("Person", false)
+        cartPerson = cartParty.getRelatedOne('Person', false)
         context.party = cartParty
         context.person = cartPerson
     }
@@ -100,7 +104,11 @@ if (cartPartyId && !"_NA_".equals(cartPartyId)) {
 
 if (cart && cart.getShippingContactMechId()) {
     shippingContactMechId = cart.getShippingContactMechId()
-    shippingPartyContactDetail = from("PartyContactDetailByPurpose").where("partyId", cartPartyId, "contactMechId", shippingContactMechId).filterByDate().queryFirst()
+    shippingPartyContactDetail = from('PartyContactDetailByPurpose')
+            .where(partyId: cartPartyId,
+                    contactMechId: shippingContactMechId)
+            .filterByDate()
+            .queryFirst()
     parameters.shippingContactMechId = shippingPartyContactDetail.contactMechId
     context.callSubmitForm = true
     parameters.shipToName = shippingPartyContactDetail.toName
@@ -115,25 +123,27 @@ if (cart && cart.getShippingContactMechId()) {
     context.postalFields = UtilHttp.getParameterMap(request)
 }
 
-billingContactMechId = session.getAttribute("billingContactMechId")
+billingContactMechId = session.getAttribute('billingContactMechId')
 if (billingContactMechId) {
-    billPostalAddress = from("PostalAddress").where("contactMechId", billingContactMechId).queryOne()
-    parameters.billingContactMechId = billPostalAddress.contactMechId
-    parameters.billToName = billPostalAddress.toName
-    parameters.billToAttnName = billPostalAddress.attnName
-    parameters.billToAddress1 = billPostalAddress.address1
-    parameters.billToAddress2 = billPostalAddress.address2
-    parameters.billToCity = billPostalAddress.city
-    parameters.billToPostalCode = billPostalAddress.postalCode
-    parameters.billToStateProvinceGeoId = billPostalAddress.stateProvinceGeoId
-    parameters.billToCountryGeoId = billPostalAddress.countryGeoId
+    billPostalAddress = from('PostalAddress').where('contactMechId', billingContactMechId).queryOne()
+    parameters.with {
+        billingContactMechId = billPostalAddress.contactMechId
+        billToName = billPostalAddress.toName
+        billToAttnName = billPostalAddress.attnName
+        billToAddress1 = billPostalAddress.address1
+        billToAddress2 = billPostalAddress.address2
+        billToCity = billPostalAddress.city
+        billToPostalCode = billPostalAddress.postalCode
+        billToStateProvinceGeoId = billPostalAddress.stateProvinceGeoId
+        billToCountryGeoId = billPostalAddress.countryGeoId
+    }
 }
 
 if (cart?.getShippingContactMechId() && shippingPartyContactDetail) {
     shippingContactMechId = shippingPartyContactDetail.contactMechId
-    if (billingContactMechId?.equals(shippingContactMechId)) {
-        context.useShippingPostalAddressForBilling = "Y"
+    if (billingContactMechId == shippingContactMechId) {
+        context.useShippingPostalAddressForBilling = 'Y'
     }
 }
-parameters.shippingContactMechPurposeTypeId = "SHIPPING_LOCATION"
-parameters.billingContactMechPurposeTypeId = "BILLING_LOCATION"
+parameters.shippingContactMechPurposeTypeId = 'SHIPPING_LOCATION'
+parameters.billingContactMechPurposeTypeId = 'BILLING_LOCATION'

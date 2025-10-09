@@ -31,12 +31,12 @@ if (shippingContactMechId) {
     context.enableShipmentMethod = true
 }
 
-shipmentMethodTypeId  = shoppingCart.getShipmentMethodTypeId()
+shipmentMethodTypeId = shoppingCart.getShipmentMethodTypeId()
 if (shipmentMethodTypeId) {
     context.enablePaymentOptions = true
 }
 
-paymentMethodIds  = shoppingCart.getPaymentMethodIds()
+paymentMethodIds = shoppingCart.getPaymentMethodIds()
 paymentMethodTypeId = parameters.paymentMethodTypeId
 if (paymentMethodIds || paymentMethodTypeId) {
     context.enablePaymentInformation = true

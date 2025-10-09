@@ -18,14 +18,15 @@
 */
 package org.apache.ofbiz.projectmgr
 
-import org.apache.ofbiz.base.util.UtilValidate
+import org.apache.ofbiz.entity.GenericValue
 
 if (parameters.workEffortId) {
     workEffortId = parameters.workEffortId
-    projects = from("ProjectAndPhaseAndTask").where("workEffortId", workEffortId).queryList()
+    projects = from('ProjectAndPhaseAndTask').where('workEffortId', workEffortId).queryList()
     if (projects) {
-        context.put("projectId", projects.get(0).getString("projectId"))
-        context.put("projectName", projects.get(0).getString("projectName"))
-        context.put("phaseName", projects.get(0).getString("phaseName"))
+        GenericValue project = projects.first()
+        context.put('projectId', project.projectId)
+        context.put('projectName', project.projectName)
+        context.put('phaseName', project.phaseName)
     }
 }

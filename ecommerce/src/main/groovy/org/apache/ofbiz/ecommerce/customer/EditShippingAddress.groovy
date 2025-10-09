@@ -18,59 +18,62 @@
 */
 package org.apache.ofbiz.ecommerce.customer
 
+import org.apache.ofbiz.entity.GenericValue
 import org.apache.ofbiz.entity.util.EntityUtil
 import org.apache.ofbiz.party.contact.ContactHelper
 
 if (userLogin) {
-    party = userLogin.getRelatedOne("Party", false)
+    GenericValue party = userLogin.getRelatedOne('Party', false)
     context.partyId = party.partyId
-    if ("PERSON".equals(party.partyTypeId)) {
-        person = from("Person").where("partyId", party.partyId).queryOne()
+    if (party.partyTypeId == 'PERSON') {
+        GenericValue person = from('Person').where('partyId', party.partyId).cache().queryOne()
         context.firstName = person.firstName
         context.lastName = person.lastName
     } else {
-        group = from("PartyGroup").where("partyId", party.partyId).queryOne()
+        GenericValue group = from('PartyGroup').where('partyId', party.partyId).cache().queryOne()
         context.firstName = group.groupName
-        context.lastName = ""
+        context.lastName = ''
     }
 
-    contactMech = EntityUtil.getFirst(ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false))
+    GenericValue contactMech = EntityUtil.getFirst(ContactHelper.getContactMech(party,
+            'SHIPPING_LOCATION', 'POSTAL_ADDRESS', false))
     if (contactMech) {
-        postalAddress = contactMech.getRelatedOne("PostalAddress", false)
-        context.shipToContactMechId = postalAddress.contactMechId
-
-        context.shipToName = postalAddress.toName
-        context.shipToAttnName = postalAddress.attnName
-        context.shipToAddress1 = postalAddress.address1
-        context.shipToAddress2 = postalAddress.address2
-        context.shipToCity = postalAddress.city
-        context.shipToPostalCode = postalAddress.postalCode
-        context.shipToStateProvinceGeoId = postalAddress.stateProvinceGeoId
-        context.shipToCountryGeoId = postalAddress.countryGeoId
-        shipToStateProvinceGeo = from("Geo").where("geoId", postalAddress.stateProvinceGeoId).queryOne()
-        if (shipToStateProvinceGeo) {
-            context.shipToStateProvinceGeo =  shipToStateProvinceGeo.geoName
+        GenericValue postalAddress = contactMech.getRelatedOne('PostalAddress', false)
+        context.with {
+            shipToContactMechId = postalAddress.contactMechId
+            shipToName = postalAddress.toName
+            shipToAttnName = postalAddress.attnName
+            shipToAddress1 = postalAddress.address1
+            shipToAddress2 = postalAddress.address2
+            shipToCity = postalAddress.city
+            shipToPostalCode = postalAddress.postalCode
+            shipToStateProvinceGeoId = postalAddress.stateProvinceGeoId
+            shipToCountryGeoId = postalAddress.countryGeoId
         }
-        shipToCountryProvinceGeo = from("Geo").where("geoId", postalAddress.countryGeoId).queryOne()
+        GenericValue shipToStateProvinceGeo = from('Geo').where('geoId', postalAddress.stateProvinceGeoId).queryOne()
+        if (shipToStateProvinceGeo) {
+            context.shipToStateProvinceGeo = shipToStateProvinceGeo.geoName
+        }
+        GenericValue shipToCountryProvinceGeo = from('Geo').where('geoId', postalAddress.countryGeoId).queryOne()
         if (shipToCountryProvinceGeo) {
-            context.shipToCountryProvinceGeo =  shipToCountryProvinceGeo.geoName
+            context.shipToCountryProvinceGeo = shipToCountryProvinceGeo.geoName
         }
     } else {
         context.shipToContactMechId = null
     }
 
-    shipToContactMechList = ContactHelper.getContactMech(party, "PHONE_SHIPPING", "TELECOM_NUMBER", false)
+    GenericValue shipToContactMechList = ContactHelper.getContactMech(party, 'PHONE_SHIPPING', 'TELECOM_NUMBER', false)
     if (shipToContactMechList) {
-        shipToTelecomNumber = (EntityUtil.getFirst(shipToContactMechList)).getRelatedOne("TelecomNumber", false)
-        pcm = EntityUtil.getFirst(shipToTelecomNumber.getRelated("PartyContactMech", null, null, false))
+        GenericValue shipToTelecomNumber = (EntityUtil.getFirst(shipToContactMechList)).getRelatedOne('TelecomNumber', false)
+        pcm = EntityUtil.getFirst(shipToTelecomNumber.getRelated('PartyContactMech', null, null, false))
         context.shipToTelecomNumber = shipToTelecomNumber
         context.shipToExtension = pcm.extension
     }
 
-    shipToFaxNumberList = ContactHelper.getContactMech(party, "FAX_SHIPPING", "TELECOM_NUMBER", false)
+    GenericValue shipToFaxNumberList = ContactHelper.getContactMech(party, 'FAX_SHIPPING', 'TELECOM_NUMBER', false)
     if (shipToFaxNumberList) {
-        shipToFaxNumber = (EntityUtil.getFirst(shipToFaxNumberList)).getRelatedOne("TelecomNumber", false)
-        faxPartyContactMech = EntityUtil.getFirst(shipToFaxNumber.getRelated("PartyContactMech", null, null, false))
+        GenericValue shipToFaxNumber = (EntityUtil.getFirst(shipToFaxNumberList)).getRelatedOne('TelecomNumber', false)
+        GenericValue faxPartyContactMech = EntityUtil.getFirst(shipToFaxNumber.getRelated('PartyContactMech', null, null, false))
         context.shipToFaxNumber = shipToFaxNumber
         context.shipToFaxExtension = faxPartyContactMech.extension
     }

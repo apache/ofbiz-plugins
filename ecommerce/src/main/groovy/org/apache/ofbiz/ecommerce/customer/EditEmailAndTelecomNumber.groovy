@@ -18,23 +18,29 @@
 */
 package org.apache.ofbiz.ecommerce.customer
 
+import org.apache.ofbiz.entity.GenericValue
 import org.apache.ofbiz.entity.util.EntityUtil
 import org.apache.ofbiz.party.contact.ContactHelper
 
 if (userLogin) {
-    party = userLogin.getRelatedOne("Party", false)
+    GenericValue party = userLogin.getRelatedOne('Party', true)
 
-    contactMech = EntityUtil.getFirst(ContactHelper.getContactMech(party, "PRIMARY_EMAIL", "EMAIL_ADDRESS", false))
+    GenericValue contactMech = EntityUtil.getFirst(ContactHelper.getContactMech(party,
+            'PRIMARY_EMAIL', 'EMAIL_ADDRESS', false))
     if (contactMech) {
         context.emailContactMechId = contactMech.contactMechId
         context.emailAddress = contactMech.infoString
     }
 
-    contactMech = EntityUtil.getFirst(ContactHelper.getContactMech(party, "PRIMARY_PHONE", "TELECOM_NUMBER", false))
+    contactMech = EntityUtil.getFirst(ContactHelper.getContactMech(party,
+            'PRIMARY_PHONE', 'TELECOM_NUMBER', false))
     if (contactMech) {
-        partyContactMech = from("PartyContactMech").where("partyId", party.partyId, "contactMechId", contactMech.contactMechId).filterByDate().queryFirst()
+        GenericValue partyContactMech = from('PartyContactMech')
+                .where(partyId: party.partyId, contactMechId: contactMech.contactMechId)
+                .filterByDate()
+                .queryFirst()
         if (partyContactMech) {
-            telecomNumber = partyContactMech.getRelatedOne("TelecomNumber", false)
+            GenericValue telecomNumber = partyContactMech.getRelatedOne('TelecomNumber', false)
             context.phoneContactMechId = telecomNumber.contactMechId
             context.countryCode = telecomNumber.countryCode
             context.areaCode = telecomNumber.areaCode

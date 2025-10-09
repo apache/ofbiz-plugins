@@ -18,5 +18,6 @@
 */
 package org.apache.ofbiz.ecommerce.customer
 
- import org.apache.ofbiz.product.store.*
- context.paymentProperties = ProductStoreWorker.getProductStorePaymentProperties(request, "GIFT_CARD", null, true)
+import org.apache.ofbiz.product.store.ProductStoreWorker
+
+context.paymentProperties = ProductStoreWorker.getProductStorePaymentProperties(request, 'GIFT_CARD', null, true)

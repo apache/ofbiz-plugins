@@ -18,7 +18,6 @@
 */
 package org.apache.ofbiz.ecommerce.customer
 
-import java.util.HashMap
 import org.apache.ofbiz.base.util.UtilHttp
 
 tryEntity = true
@@ -26,8 +25,6 @@ errorMessage = parameters._ERROR_MESSAGE_
 if (errorMessage) {
     tryEntity = false
 }
-personData = person
-if (!tryEntity) personData = UtilHttp.getParameterMap(request)
-if (!personData) personData = [:]
-
-context.personData = personData
+context.personData = tryEntity
+        ? (person ?: [:])
+        : UtilHttp.getParameterMap(request)

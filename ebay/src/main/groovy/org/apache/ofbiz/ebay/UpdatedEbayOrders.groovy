@@ -18,7 +18,7 @@
 */
 package org.apache.ofbiz.ebay
 
-if (session.getAttribute("orderList")) {
-    session.removeAttribute("orderList")
-    return "success"
+if (session.getAttribute('orderList')) {
+    session.removeAttribute('orderList')
+    return 'success'
 }

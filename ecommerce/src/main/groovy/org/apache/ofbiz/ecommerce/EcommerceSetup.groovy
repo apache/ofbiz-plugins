@@ -18,25 +18,24 @@
 */
 package org.apache.ofbiz.ecommerce
 
-import java.util.*
-import org.apache.ofbiz.base.util.*
-import org.apache.ofbiz.entity.*
 import org.apache.ofbiz.product.catalog.CatalogWorker
 import org.apache.ofbiz.product.store.ProductStoreWorker
-import org.apache.ofbiz.common.CommonWorkers
-import org.apache.ofbiz.order.shoppingcart.*
-import org.apache.ofbiz.webapp.control.*
+import org.apache.ofbiz.webapp.control.LoginWorker
 
 productStore = ProductStoreWorker.getProductStore(request)
 
 prodCatalog = CatalogWorker.getProdCatalog(request)
 if (prodCatalog) {
     catalogStyleSheet = prodCatalog.styleSheet
-    if (catalogStyleSheet) globalContext.catalogStyleSheet = catalogStyleSheet
+    if (catalogStyleSheet) {
+        globalContext.catalogStyleSheet = catalogStyleSheet
+    }
     catalogHeaderLogo = prodCatalog.headerLogo
-    if (catalogHeaderLogo) globalContext.catalogHeaderLogo = catalogHeaderLogo
+    if (catalogHeaderLogo) {
+        globalContext.catalogHeaderLogo = catalogHeaderLogo
+    }
 }
 
 globalContext.productStore = productStore
-globalContext.checkLoginUrl = LoginWorker.makeLoginUrl(request, "checkLogin")
+globalContext.checkLoginUrl = LoginWorker.makeLoginUrl(request, 'checkLogin')
 globalContext.catalogQuickaddUse = CatalogWorker.getCatalogQuickaddUse(request)

@@ -18,43 +18,38 @@
 */
 package org.apache.ofbiz.ecommerce.order
 
-import org.apache.ofbiz.entity.*
-import org.apache.ofbiz.entity.util.*
-import org.apache.ofbiz.base.util.*
-import org.apache.ofbiz.accounting.payment.*
-import org.apache.ofbiz.order.shoppingcart.*
-import org.apache.ofbiz.party.contact.*
+import org.apache.ofbiz.base.util.UtilHttp
+import org.apache.ofbiz.order.shoppingcart.ShoppingCartEvents
 
 cart = ShoppingCartEvents.getCartObject(request)
 context.cart = cart
 
-partyId = cart.getPartyId()
+partyId = cart.getPartyId() ?: userLogin.partyId
+context.partyId = partyId
 currencyUomId = cart.getCurrency()
 
-if (!partyId) {
-    partyId = userLogin.partyId
-}
-context.partyId = partyId
-
-if (partyId && !"_NA_".equals(partyId)) {
-    party = from("Party").where("partyId", partyId).queryOne()
-    person = party.getRelatedOne("Person", false)
+if (partyId && partyId != '_NA_') {
+    party = from('Party').where('partyId', partyId).queryOne()
+    person = party.getRelatedOne('Person', false)
     context.party = party
     context.person = person
 }
 
 // nuke the event messages
-request.removeAttribute("_EVENT_MESSAGE_")
+request.removeAttribute('_EVENT_MESSAGE_')
 
 if (parameters.useShipAddr && cart.getShippingContactMechId()) {
     shippingContactMech = cart.getShippingContactMechId()
-    postalAddress = from("PostalAddress").where("contactMechId", shippingContactMech).queryOne()
-    context.useEntityFields = "Y"
+    postalAddress = from('PostalAddress').where('contactMechId', shippingContactMech).queryOne()
+    context.useEntityFields = 'Y'
     context.postalAddress = postalAddress
 
     if (postalAddress && partyId) {
-        partyContactMech = from("PartyContactMech").where("partyId", partyId, "contactMechId", postalAddress.contactMechId).orderBy("-fromDate").filterByDate().queryFirst()
-        context.partyContactMech = partyContactMech
+        context.partyContactMech = from('PartyContactMech')
+                .where(partyId: partyId, contactMechId: postalAddress.contactMechId)
+                .orderBy('-fromDate')
+                .filterByDate()
+                .queryFirst()
     }
 } else {
     context.postalAddress = UtilHttp.getParameterMap(request)
@@ -65,24 +60,29 @@ if (cart) {
         paymentMethods = cart.getPaymentMethods()
         paymentMethods.each { paymentMethod ->
             account = null
-            if ("CREDIT_CARD".equals(paymentMethod?.paymentMethodTypeId)) {
-                account = paymentMethod.getRelatedOne("CreditCard", false)
-                context.creditCard = account
-                context.paymentMethodTypeId = "CREDIT_CARD"
-            } else if ("EFT_ACCOUNT".equals(paymentMethod?.paymentMethodTypeId)) {
-                account = paymentMethod.getRelatedOne("EftAccount", false)
-                context.eftAccount = account
-                context.paymentMethodTypeId = "EFT_ACCOUNT"
-            } else if ("GIFT_CARD".equals(paymentMethod?.paymentMethodTypeId)) {
-                account = paymentMethod.getRelatedOne("GiftCard", false)
-                context.giftCard = account
-                context.paymentMethodTypeId = "GIFT_CARD"
-                context.addGiftCard = "Y"
-            } else {
-                context.paymentMethodTypeId = "EXT_OFFLINE"
+            switch (paymentMethod.paymentMethodTypeId) {
+                case 'CREDIT_CARD':
+                    account = paymentMethod.getRelatedOne('CreditCard', false)
+                    context.creditCard = account
+                    context.paymentMethodTypeId = 'CREDIT_CARD'
+                    break
+                case 'EFT_ACCOUNT':
+                    account = paymentMethod.getRelatedOne('EftAccount', false)
+                    context.eftAccount = account
+                    context.paymentMethodTypeId = 'EFT_ACCOUNT'
+                    break
+                case 'GIFT_CARD':
+                    account = paymentMethod.getRelatedOne('GiftCard', false)
+                    context.giftCard = account
+                    context.paymentMethodTypeId = 'GIFT_CARD'
+                    context.addGiftCard = 'Y'
+                    break
+                default:
+                    context.paymentMethodTypeId = 'EXT_OFFLINE'
+                    break
             }
             if (account && !parameters.useShipAddr) {
-                address = account.getRelatedOne("PostalAddress", false)
+                address = account.getRelatedOne('PostalAddress', false)
                 context.postalAddress = address
             }
         }
@@ -95,11 +95,9 @@ if (!parameters.useShipAddr) {
         shippingContactMechId = cart.getShippingContactMechId()
         contactMechId = postalAddress.contactMechId
         if (shippingContactMechId?.equals(contactMechId)) {
-            context.useShipAddr = "Y"
+            context.useShipAddr = 'Y'
         }
     }
-} else {
-    context.useShipAddr = parameters.useShipAddr
 }
 
 // Added here to satisfy GenericAddress.ftl
@@ -113,6 +111,6 @@ if (context.postalAddress) {
     parameters.countryGeoId = postalAddress.countryGeoId
     parameters.contactMechId = postalAddress.contactMechId
     if (context.creditCard) {
-       context.callSubmitForm = true
+        context.callSubmitForm = true
     }
 }

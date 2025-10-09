@@ -18,21 +18,19 @@
 */
 package org.apache.ofbiz.ecommerce.catalog
 
-import org.apache.ofbiz.base.util.UtilValidate
-import org.apache.ofbiz.base.util.UtilMisc
-import org.apache.ofbiz.product.catalog.*
-import org.apache.ofbiz.product.category.*
+import org.apache.ofbiz.product.catalog.CatalogWorker
+import org.apache.ofbiz.product.category.CategoryWorker
 
 catalogId = CatalogWorker.getCurrentCatalogId(request)
 bestSellerCates = []
 
 if (catalogId) {
-    prodCatalogCategoryList = CatalogWorker.getProdCatalogCategories(request, catalogId, "PCCT_BEST_SELL")
+    prodCatalogCategoryList = CatalogWorker.getProdCatalogCategories(request, catalogId, 'PCCT_BEST_SELL')
     if (prodCatalogCategoryList.size() > 0) {
         for (int i = 0; i < prodCatalogCategoryList.size(); i++) {
             prodCatalogCategory = prodCatalogCategoryList[i]
-            productCategoryId = prodCatalogCategory.getString("productCategoryId")
-            childCategoryList = CategoryWorker.getRelatedCategoriesRet(request, "childCategoryList", productCategoryId, true)
+            productCategoryId = prodCatalogCategory.productCategoryId
+            childCategoryList = CategoryWorker.getRelatedCategoriesRet(request, 'childCategoryList', productCategoryId, true)
             if (childCategoryList.size() > 0) {
                 bestSellerCates.add(childCategoryList)
             }

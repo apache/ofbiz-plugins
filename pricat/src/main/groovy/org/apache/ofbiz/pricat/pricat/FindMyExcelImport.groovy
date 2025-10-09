@@ -18,9 +18,7 @@
 */
 package org.apache.ofbiz.pricat.pricat
 
-import org.apache.ofbiz.base.util.*;
-
-module = "FindMyExcelImport.groovy";
-
-data = from("ExcelImportHistory").where("userLoginId", userLogin.userLoginId).orderBy("sequenceNum DESC").queryList();
-context.data = data;
+context.data = from('ExcelImportHistory')
+        .where('userLoginId', userLogin.userLoginId)
+        .orderBy('-sequenceNum')
+        .queryList()

@@ -18,36 +18,15 @@
 */
 package org.apache.ofbiz.ecommerce.forum
 
-import java.util.ArrayList
-import java.util.Collection
-import java.util.HashMap
-import java.util.Iterator
-import java.util.LinkedList
-import java.util.List
-import java.util.Map
-import java.util.Set
-import java.util.TreeSet
-
-import org.apache.ofbiz.base.util.*
-import org.apache.ofbiz.entity.*
-import org.apache.ofbiz.security.*
-import org.apache.ofbiz.service.*
-import org.apache.ofbiz.entity.model.*
-import org.apache.ofbiz.securityext.login.*
-import org.apache.ofbiz.common.*
-import org.apache.ofbiz.entity.model.*
 import org.apache.ofbiz.content.content.ContentWorker
 import org.apache.ofbiz.content.ContentManagementWorker
 
-import jakarta.servlet.*
-import jakarta.servlet.http.*
-
-nodeTrailCsv = ContentManagementWorker.getFromSomewhere("nodeTrailCsv", parameters, request, context)
+nodeTrailCsv = ContentManagementWorker.getFromSomewhere('nodeTrailCsv', parameters, request, context)
 passedParams = null
 
 if (!nodeTrailCsv) {
     // this only happens in UploadContentAndImage
-    passedParams = request.getAttribute("passedParams")
+    passedParams = request.getAttribute('passedParams')
     if (passedParams) {
         nodeTrailCsv = passedParams.nodeTrailCsv
     }
@@ -58,24 +37,20 @@ if (nodeTrailCsv) {
     context.globalNodeTrail = nodeTrail
     singleWrapper = context.singleWrapper
     if (singleWrapper) {
-        singleWrapper.putInContext("nodeTrailCsv",nodeTrailCsv)
+        singleWrapper.putInContext('nodeTrailCsv', nodeTrailCsv)
         // there might be another way to do this, but if the widget form def already has a default-map
-        // (such as "currentValue"), then I don't know how to reference another map (defined in the
-        //  field def via "map-name", except to do this.
-        // What I want to do is specify 'map-name=""' and have it use the context main
-        Map dummy = singleWrapper.getFromContext("dummy")
-        if (!dummy) {
-           dummy = [:]
-        }
+        // (such as 'currentValue'), then I don't know how to reference another map (defined in the
+        //  field def via 'map-name', except to do this.
+        // What I want to do is specify 'map-name=''' and have it use the context main
+        Map dummy = singleWrapper.getFromContext('dummy') ?: [:]
         dummy.nodeTrailCsv = nodeTrailCsv
-        //logInfo("in nodetrailprep, dummy:" + dummy)
-        singleWrapper.putInContext("dummy",dummy)
+        singleWrapper.putInContext('dummy', dummy)
     }
     context.nodeTrailCsv = nodeTrailCsv
 
-    //logInfo("in nodetrailprep, nodeTrailCsv:" + nodeTrailCsv)
+    //logInfo('in nodetrailprep, nodeTrailCsv:' + nodeTrailCsv)
     trailContentList = ContentWorker.csvToContentList(nodeTrailCsv, delegator)
-    //logInfo("in nodetrailprep, trailContentList:" + trailContentList)
+    //logInfo('in nodetrailprep, trailContentList:' + trailContentList)
     context.ancestorList = trailContentList
-    //logInfo("in vewprep, siteAncestorList:" + siteAncestorList)
+    //logInfo('in vewprep, siteAncestorList:' + siteAncestorList)
 }

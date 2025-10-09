@@ -19,43 +19,44 @@
 package org.apache.ofbiz.scrum
 
 import org.apache.ofbiz.base.util.UtilDateTime
-import org.apache.ofbiz.base.util.UtilValidate
 import org.apache.ofbiz.entity.GenericEntityException
 
 productId = parameters.productId
 loginPartyId = userLogin.partyId
 communicationEventId = parameters.communicationEventId
 now = UtilDateTime.nowTimestamp()
-try{
+try {
     if (loginPartyId) {
         if (productId) {
-        context.product = from("Product").where("productId", productId).queryOne()
+            context.product = from('Product').where('productId', productId).queryOne()
         }
-        communicationEvent = from("CommunicationEvent").where("communicationEventId", communicationEventId).queryOne()
-        communicationEvent.communicationEventTypeId = "EMAIL_COMMUNICATION"
-        communicationEvent.contactMechTypeId = "EMAIL_ADDRESS"
+        communicationEvent = from('CommunicationEvent').where('communicationEventId', communicationEventId).queryOne()
+        communicationEvent.communicationEventTypeId = 'EMAIL_COMMUNICATION'
+        communicationEvent.contactMechTypeId = 'EMAIL_ADDRESS'
         communicationEvent.datetimeStarted = now
-        checkOwner = from("ProductRole").where("productId", productId,"partyId", loginPartyId,"roleTypeId", "PRODUCT_OWNER").queryList()
+        checkOwner = from('ProductRole').where('productId', productId, 'partyId', loginPartyId, 'roleTypeId', 'PRODUCT_OWNER').queryList()
         if (checkOwner) {
             /* for product owner to our company */
-            
+
             // for owner
-            productRole = from("ProductRole").where("productId", productId,"roleTypeId", "PRODUCT_OWNER").queryList()
+            productRole = from('ProductRole').where('productId', productId, 'roleTypeId', 'PRODUCT_OWNER').queryList()
             context.productOwnerId = productRole[0].partyId
-            parentCom = from("CommunicationEvent").where("communicationEventId", communicationEventId).queryOne()
+            parentCom = from('CommunicationEvent').where('communicationEventId', communicationEventId).queryOne()
             if (parentCom) {
                 context.partyIdFrom = productRole[0].partyId
             } else {
                 context.partyIdFrom = parentCom.partyIdTo
             }
-            resultsIdFrom = runService('getPartyEmail', ["partyId" : productRole[0].partyId, "userLogin" : userLogin])
+            resultsIdFrom = runService('getPartyEmail', ['partyId': productRole[0].partyId, 'userLogin': userLogin])
             if (resultsIdFrom.contactMechId != null) {
                 context.contactMechIdFrom = resultsIdFrom.contactMechId
                 communicationEvent.contactMechIdFrom = resultsIdFrom.contactMechId
             }
             // for team
             defaultPartyIdTo = organizationPartyId
-            resultsIdTo = runService('getPartyEmail', ["partyId" : defaultPartyIdTo,"contactMechPurposeTypeId" :"SUPPORT_EMAIL", "userLogin" : userLogin])
+            resultsIdTo = run service: 'getPartyEmail', with:
+                    [partyId: defaultPartyIdTo,
+                     contactMechPurposeTypeId: 'SUPPORT_EMAIL']
             if (resultsIdTo.contactMechId != null) {
                 context.contactMechIdTo = resultsIdTo.contactMechId
                 communicationEvent.contactMechIdTo = resultsIdTo.contactMechId
@@ -65,35 +66,36 @@ try{
             context.communicationEvent = communicationEvent
         } else {
             /* from company to owner */
-            
+
             // for team
             defaultPartyIdFrom = organizationPartyId
             context.partyIdFrom = defaultPartyIdFrom
-            resultsIdFrom = runService('getPartyEmail', ["partyId" : defaultPartyIdFrom,"contactMechPurposeTypeId" :"SUPPORT_EMAIL", "userLogin" : userLogin])
+            resultsIdFrom = run service: 'getPartyEmail', with:
+                    [partyId: defaultPartyIdFrom,
+                     contactMechPurposeTypeId: 'SUPPORT_EMAIL']
             if (resultsIdFrom.contactMechId != null) {
                 context.contactMechIdFrom = resultsIdFrom.contactMechId
                 communicationEvent.contactMechIdFrom = resultsIdFrom.contactMechId
             }
             // for owner
-            productRole = from("ProductRole").where("productId", productId,"roleTypeId", "PRODUCT_OWNER").queryList()
+            productRole = from('ProductRole').where('productId', productId, 'roleTypeId', 'PRODUCT_OWNER').queryList()
             context.productOwnerId = productRole[0].partyId
-            parentCom = from("CommunicationEvent").where("communicationEventId", communicationEventId).queryOne()
-            if(parentCom){
-                context.partyIdTo = productRole[0].partyId
-            } else {
-                 context.partyIdTo = parentCom.partyIdFrom
+            parentCom = from('CommunicationEvent').where('communicationEventId', communicationEventId).queryOne()
+            context.partyIdTo = parentCom
+                    ? productRole[0].partyId
+                    : parentCom.partyIdFrom
+
+            resultsIdTo = run service: 'getPartyEmail', with: [partyId: productRole[0].partyId]
+            if (resultsIdTo.contactMechId != null) {
+                context.contactMechIdTo = resultsIdTo.contactMechId
+                communicationEvent.contactMechIdTo = resultsIdTo.contactMechId
             }
-           resultsIdTo = runService('getPartyEmail', ["partyId" : productRole[0].partyId, "userLogin" : userLogin])
-           if (resultsIdTo.contactMechId != null) {
-              context.contactMechIdTo = resultsIdTo.contactMechId
-              communicationEvent.contactMechIdTo = resultsIdTo.contactMechId
-           }
-           communicationEvent.store()
-           context.communicationEvent = communicationEvent
-       }
+            communicationEvent.store()
+            context.communicationEvent = communicationEvent
+        }
     }
 } catch (exeption) {
-    logInfo("catch exeption ================" + exeption)
+    logInfo('catch exeption ================' + exeption)
 } catch (GenericEntityException e) {
-    logInfo("catch GenericEntityException ================" + e.getMessage())
+    logInfo('catch GenericEntityException ================' + e.getMessage())
 }

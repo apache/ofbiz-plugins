@@ -18,88 +18,88 @@
 */
 package org.apache.ofbiz.ecommerce.shoppinglist
 
-import java.util.*
-import org.apache.ofbiz.base.util.*
-import org.apache.ofbiz.entity.*
-import org.apache.ofbiz.entity.util.*
-import org.apache.ofbiz.entity.condition.*
+import org.apache.ofbiz.base.util.UtilHttp
+import org.apache.ofbiz.entity.GenericValue
+import org.apache.ofbiz.entity.condition.EntityCondition
+import org.apache.ofbiz.entity.condition.EntityConditionBuilder
+import org.apache.ofbiz.entity.util.EntityUtil
+import org.apache.ofbiz.order.shoppingcart.ShoppingCart
 import org.apache.ofbiz.order.shoppingcart.ShoppingCartEvents
-import org.apache.ofbiz.order.shoppingcart.shipping.*
-import org.apache.ofbiz.order.shoppinglist.*
-import org.apache.ofbiz.party.contact.*
-import org.apache.ofbiz.product.catalog.*
-import org.apache.ofbiz.product.store.*
-import org.apache.ofbiz.service.calendar.*
+import org.apache.ofbiz.order.shoppingcart.shipping.ShippingEstimateWrapper
+import org.apache.ofbiz.order.shoppinglist.ShoppingListServices
+import org.apache.ofbiz.party.contact.ContactHelper
+import org.apache.ofbiz.product.catalog.CatalogWorker
+import org.apache.ofbiz.product.store.ProductStoreWorker
+import org.apache.ofbiz.service.calendar.RecurrenceInfo
 import org.apache.ofbiz.webapp.website.WebSiteWorker
-import org.apache.ofbiz.widget.renderer.VisualTheme
 
-if (userLogin) 
-{
-    party = userLogin.getRelatedOne("Party", false)
-}  else {
+if (!userLogin) {
     return // session ended, prevents a NPE
 }
+GenericValue party = userLogin.getRelatedOne('Party', false)
 
-cart = ShoppingCartEvents.getCartObject(request)
+ShoppingCart cart = ShoppingCartEvents.getCartObject(request)
 currencyUomId = cart.getCurrency()
 
-productStoreId = ProductStoreWorker.getProductStoreId(request)
-prodCatalogId = CatalogWorker.getCurrentCatalogId(request)
-webSiteId = WebSiteWorker.getWebSiteId(request)
+String productStoreId = ProductStoreWorker.getProductStoreId(request)
+String prodCatalogId = CatalogWorker.getCurrentCatalogId(request)
+String webSiteId = WebSiteWorker.getWebSiteId(request)
 
 context.productStoreId = productStoreId
 context.currencyUomId = currencyUomId
 
 // get the top level shopping lists for the logged in user
-exprList = [EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin.partyId),
-        EntityCondition.makeCondition("listName", EntityOperator.NOT_EQUAL, "auto-save")]
-condition = EntityCondition.makeCondition(exprList, EntityOperator.AND)
-allShoppingLists = from("ShoppingList").where(exprList).orderBy("listName").queryList()
-shoppingLists = EntityUtil.filterByAnd(allShoppingLists, [parentShoppingListId : null])
+EntityCondition condition = new EntityConditionBuilder().AND {
+    EQUALS(partyId: userLogin.partyId)
+    NOT_EQUAL(listName: 'auto-save')
+}
+List allShoppingLists = from('ShoppingList')
+        .where(condition)
+        .orderBy('listName')
+        .queryList()
+List shoppingLists = EntityUtil.filterByAnd(allShoppingLists, [parentShoppingListId: null])
 context.allShoppingLists = allShoppingLists
 context.shoppingLists = shoppingLists
 
 // get all shoppingListTypes
-shoppingListTypes = from("ShoppingListType").orderBy("description").cache(true).queryList()
-context.shoppingListTypes = shoppingListTypes
+context.shoppingListTypes = from('ShoppingListType').orderBy('description').cache().queryList()
 
-// get the shoppingListId for this reqest
-parameterMap = UtilHttp.getParameterMap(request)
-shoppingListId = parameterMap.shoppingListId ?: request.getAttribute("shoppingListId") ?: session.getAttribute("currentShoppingListId")
+// get the shoppingListId for this request
+Map parameterMap = UtilHttp.getParameterMap(request)
+String shoppingListId = parameterMap.shoppingListId ?: request.getAttribute('shoppingListId') ?: session.getAttribute('currentShoppingListId')
 context.shoppingListId = shoppingListId
 
 // no passed shopping list id default to first list
-if (!shoppingListId) {
-    firstList = EntityUtil.getFirst(shoppingLists)
-    if (firstList) {
-        shoppingListId = firstList.shoppingListId
-    }
+if (!shoppingListId && shoppingLists) {
+    shoppingListId = shoppingLists.first().shoppingListId
 }
-session.setAttribute("currentShoppingListId", shoppingListId)
+session.setAttribute('currentShoppingListId', shoppingListId)
 
 // if we passed a shoppingListId get the shopping list info
 if (shoppingListId) {
-    shoppingList = from("ShoppingList").where("shoppingListId", shoppingListId).queryOne()
+    GenericValue shoppingList = from('ShoppingList').where(shoppingListId: shoppingListId).queryOne()
     context.shoppingList = shoppingList
 
     if (shoppingList) {
-        shoppingListItemTotal = 0.0
-        shoppingListChildTotal = 0.0
+        BigDecimal shoppingListItemTotal = 0.0
+        BigDecimal shoppingListChildTotal = 0.0
 
-        shoppingListItems = shoppingList.getRelated("ShoppingListItem", null, null, true)
+        List shoppingListItems = shoppingList.getRelated('ShoppingListItem', null, null, true)
         if (shoppingListItems) {
-            shoppingListItemDatas = new ArrayList(shoppingListItems.size())
+            List shoppingListItemDatas = []
             shoppingListItems.each { shoppingListItem ->
-                shoppingListItemData = [:]
-
-                product = shoppingListItem.getRelatedOne("Product", true)
-
-                calcPriceOutMap = runService('calculateProductPrice', [product : product, quantity : shoppingListItem.quantity, currencyUomId : currencyUomId, userLogin : userLogin,
-                    webSiteId: webSiteId, prodCatalogId: prodCatalogId, productStoreId: productStoreId])
-                price = calcPriceOutMap.price
-                totalPrice = price * shoppingListItem.quantity
+                Map shoppingListItemData = [:]
+                GenericValue product = shoppingListItem.getRelatedOne('Product', true)
+                Map calcPriceOutMap = run service: 'calculateProductPrice', with: [product: product,
+                                                                                   quantity: shoppingListItem.quantity,
+                                                                                   currencyUomId: currencyUomId,
+                                                                                   webSiteId: webSiteId,
+                                                                                   prodCatalogId: prodCatalogId,
+                                                                                   productStoreId: productStoreId]
+                BigDecimal price = calcPriceOutMap.price
+                BigDecimal totalPrice = price * shoppingListItem.quantity
                 // similar code at ShoppingCartItem.java getRentalAdjustment
-                if ("ASSET_USAGE".equals(product.productTypeId) || "ASSET_USAGE_OUT_IN".equals(product.productTypeId)) {
+                if (['ASSET_USAGE', 'ASSET_USAGE_OUT_IN'].contains(product.productTypeId)) {
                     persons = shoppingListItem.reservPersons ?: 0
                     reservNthPPPerc = product.reservNthPPPerc ?: 0
                     reserv2ndPPPerc = product.reserv2ndPPPerc ?: 0
@@ -124,13 +124,13 @@ if (shoppingListId) {
                     }
                     rentalValue += 100 // add final 100 percent for first person
                     reservLength = shoppingListItem.reservLength ?: 0
-                    totalPrice *= (rentalValue/100 * reservLength)
+                    totalPrice *= (rentalValue / 100 * reservLength)
                 }
                 shoppingListItemTotal += totalPrice
 
                 productVariantAssocs = null
-                if ("Y".equals(product.isVirtual)) {
-                    productVariantAssocs = product.getRelated("MainProductAssoc", [productAssocTypeId : "PRODUCT_VARIANT"], ["sequenceNum"], true)
+                if (product.isVirtual == 'Y') {
+                    productVariantAssocs = product.getRelated('MainProductAssoc', [productAssocTypeId: 'PRODUCT_VARIANT'], ['sequenceNum'], true)
                     productVariantAssocs = EntityUtil.filterByDate(productVariantAssocs)
                 }
                 shoppingListItemData.shoppingListItem = shoppingListItem
@@ -142,8 +142,8 @@ if (shoppingListId) {
             }
             context.shoppingListItemDatas = shoppingListItemDatas
             // pagination for the shopping list
-            viewIndex = Integer.valueOf(parameters.VIEW_INDEX  ?: 1)
-            viewSize = parameters.VIEW_SIZE ? Integer.valueOf(parameters.VIEW_SIZE) : visualTheme.getModelTheme().getDefaultViewSize()?:20
+            viewIndex = Integer.valueOf(parameters.VIEW_INDEX ?: 1)
+            viewSize = parameters.VIEW_SIZE ? Integer.valueOf(parameters.VIEW_SIZE) : visualTheme.getModelTheme().getDefaultViewSize() ?: 20
             listSize = shoppingListItemDatas ? shoppingListItemDatas.size() : 0
 
             lowIndex = ((viewIndex - 1) * viewSize) + 1
@@ -158,24 +158,32 @@ if (shoppingListId) {
             context.highIndex = highIndex
         }
 
-        shoppingListType = shoppingList.getRelatedOne("ShoppingListType", false)
+        shoppingListType = shoppingList.getRelatedOne('ShoppingListType', false)
         context.shoppingListType = shoppingListType
 
         // get the child shopping lists of the current list for the logged in user
-        childShoppingLists = from("ShoppingList").where("partyId", userLogin.partyId, "parentShoppingListId", shoppingListId).orderBy("listName").cache(true).queryList()
+        List childShoppingLists = from('ShoppingList')
+                .where(partyId: userLogin.partyId, parentShoppingListId: shoppingListId)
+                .orderBy('listName')
+                .cache()
+                .queryList()
         // now get prices for each child shopping list...
         if (childShoppingLists) {
-            childShoppingListDatas = new ArrayList(childShoppingLists.size())
+            List childShoppingListDatas = []
             childShoppingLists.each { childShoppingList ->
-                childShoppingListData = [:]
+                Map childShoppingListData = [:]
 
-                childShoppingListPriceMap = runService('calculateShoppingListDeepTotalPrice', [shoppingListId : childShoppingList.shoppingListId, prodCatalogId : prodCatalogId, webSiteId : webSiteId, userLogin : userLogin, currencyUomId : currencyUomId])
-                totalPrice = childShoppingListPriceMap.totalPrice
+                Map childShoppingListPriceMap = run service: 'calculateShoppingListDeepTotalPrice', with:
+                        [shoppingListId: childShoppingList.shoppingListId,
+                         prodCatalogId: prodCatalogId,
+                         webSiteId: webSiteId,
+                         currencyUomId: currencyUomId]
+                BigDecimal totalPrice = childShoppingListPriceMap.totalPrice
                 shoppingListChildTotal += totalPrice
 
                 childShoppingListData.childShoppingList = childShoppingList
                 childShoppingListData.totalPrice = totalPrice
-                childShoppingListDatas.add(childShoppingListData)
+                childShoppingListDatas << childShoppingListData
             }
             context.childShoppingListDatas = childShoppingListDatas
         }
@@ -184,34 +192,30 @@ if (shoppingListId) {
         context.shoppingListChildTotal = shoppingListChildTotal
 
         // get the parent shopping list if there is one
-        parentShoppingList = shoppingList.getRelatedOne("ParentShoppingList", false)
+        parentShoppingList = shoppingList.getRelatedOne('ParentShoppingList', false)
         context.parentShoppingList = parentShoppingList
 
-        context.canView = userLogin.partyId.equals(shoppingList.partyId)
+        context.canView = userLogin.partyId == shoppingList.partyId
 
         // auto-reorder info
-        if ("SLT_AUTO_REODR".equals(shoppingListType?.shoppingListTypeId)) {
-            recurrenceVo = shoppingList.getRelatedOne("RecurrenceInfo", false)
+        if (shoppingListType?.shoppingListTypeId == 'SLT_AUTO_REODR') {
+            recurrenceVo = shoppingList.getRelatedOne('RecurrenceInfo', false)
             context.recurrenceInfo = recurrenceVo
 
-            if (userLogin.partyId.equals(shoppingList.partyId)) {
-                listCart = ShoppingListServices.makeShoppingListCart(dispatcher, shoppingListId, locale)
-
+            if (userLogin.partyId == shoppingList.partyId) {
                 // get customer's shipping & payment info
-                context.chosenShippingMethod = shoppingList.shipmentMethodTypeId + "@" + shoppingList.carrierPartyId
-                context.shippingContactMechList = ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false)
-                context.paymentMethodList = EntityUtil.filterByDate(party.getRelated("PaymentMethod", null, ["paymentMethodTypeId"], false))
+                context.chosenShippingMethod = shoppingList.shipmentMethodTypeId + '@' + shoppingList.carrierPartyId
+                context.shippingContactMechList = ContactHelper.getContactMech(party, 'SHIPPING_LOCATION', 'POSTAL_ADDRESS', false)
+                context.paymentMethodList = EntityUtil.filterByDate(party.getRelated('PaymentMethod', null, ['paymentMethodTypeId'], false))
 
-                shipAddress = from("PostalAddress").where("contactMechId", shoppingList.contactMechId).queryOne()
-                Debug.log("SL - address : " + shipAddress)
+                GenericValue shipAddress = from('PostalAddress').where(contactMechId: shoppingList.contactMechId).queryOne()
                 if (shipAddress) {
-                    listCart = ShoppingListServices.makeShoppingListCart(dispatcher, shoppingListId, locale)
+                    ShoppingCart listCart = ShoppingListServices.makeShoppingListCart(dispatcher, shoppingListId, locale)
                     if (listCart) {
-                        shippingEstWpr = new ShippingEstimateWrapper(dispatcher, listCart, 0)
-                        carrierShipMeths = shippingEstWpr.getShippingMethods()
+                        ShippingEstimateWrapper shippingEstWpr = new ShippingEstimateWrapper(dispatcher, listCart, 0)
                         context.listCart = listCart
                         context.shippingEstWpr = shippingEstWpr
-                        context.carrierShipMethods = carrierShipMeths
+                        context.carrierShipMethods = shippingEstWpr.getShippingMethods()
                     }
                 }
 
@@ -220,9 +224,7 @@ if (shoppingListId) {
                     context.recInfo = recInfo
                     lastSlOrderDate = shoppingList.lastOrderedDate
                     context.lastSlOrderDate = lastSlOrderDate
-                    if (!lastSlOrderDate) {
-                        lastSlOrderDate = recurrenceVo.startDateTime
-                    }
+                    lastSlOrderDate = lastSlOrderDate ?: recurrenceVo.startDateTime
                     context.lastSlOrderTime = lastSlOrderDate.getTime()
                 }
             }

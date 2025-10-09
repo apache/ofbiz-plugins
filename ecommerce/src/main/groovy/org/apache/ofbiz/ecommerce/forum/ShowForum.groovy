@@ -18,15 +18,14 @@
 */
 package org.apache.ofbiz.ecommerce.forum
 
-import org.apache.ofbiz.ecommerce.forum.ForumEvents
 import org.apache.ofbiz.service.ServiceUtil
 
 Map result = ForumEvents.getForumMessages(request, delegator)
 if (ServiceUtil.isSuccess(result)) {
-    context.put("viewSize",result.get("viewSize"))
-    context.put("forumMessages", result.get("forumMessages"))
-    context.put("viewIndex", result.get("viewIndex"))
-    context.put("listSize", result.get("listSize"))
-    context.put("lowIndex", result.get("lowIndex"))
-    context.put("highIndex", result.get("highIndex"))
+    context.viewSize = result.viewSize
+    context.forumMessages = result.forumMessages
+    context.viewIndex = result.viewIndex
+    context.listSize = result.listSize
+    context.lowIndex = result.lowIndex
+    context.highIndex = result.highIndex
 }

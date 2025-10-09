@@ -49,7 +49,7 @@ package org.apache.ofbiz.ebaystore.store
          content = [:]
          item = addItem.getItem()
          productId = item.getSKU()
-         product = from("Product").where("productId", productId).cache(true).queryOne()
+         product = from("Product").where("productId", productId).cache().queryOne()
          contentWrapper = new ProductContentWrapper(product, request)
          content.productContentWrapper = contentWrapper
          content.product = product

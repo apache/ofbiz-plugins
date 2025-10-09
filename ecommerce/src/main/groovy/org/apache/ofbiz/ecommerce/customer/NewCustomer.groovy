@@ -18,9 +18,6 @@
 */
 package org.apache.ofbiz.ecommerce.customer
 
-import org.apache.ofbiz.base.util.UtilProperties
-import org.apache.ofbiz.base.util.UtilHttp
-import org.apache.ofbiz.base.util.UtilMisc
 import org.apache.ofbiz.base.util.UtilHttp
 import org.apache.ofbiz.product.store.ProductStoreWorker
 
@@ -28,22 +25,15 @@ productStore = ProductStoreWorker.getProductStore(request)
 context.productStoreId = productStore.productStoreId
 context.productStore = productStore
 
-context.createAllowPassword = "Y".equals(productStore.allowPassword)
-context.getUsername = !"Y".equals(productStore.usePrimaryEmailUsername)
+context.createAllowPassword = productStore.allowPassword == 'Y'
+context.getUsername = productStore.usePrimaryEmailUsername != 'Y'
 
-previousParams = parameters._PREVIOUS_PARAMS_
-if (previousParams) {
-    previousParams = "?" + previousParams
-} else {
-    previousParams = ""
-}
-context.previousParams = previousParams
+context.previousParams = parameters._PREVIOUS_PARAMS_
+        ? '?' + parameters._PREVIOUS_PARAMS_
+        : ''
 
 //the parameters from janrain
-userInfoMap = request.getAttribute("userInfoMap")
-if (!userInfoMap) {
-    userInfoMap = request.getSession().getAttribute("userInfoMap")
-}
+userInfoMap = request.getAttribute('userInfoMap') ?: request.getSession().getAttribute('userInfoMap')
 if (userInfoMap) {
     if (userInfoMap.givenName && userInfoMap.familyName) {
         requestParameters.USER_FIRST_NAME = userInfoMap.givenName
@@ -54,8 +44,7 @@ if (userInfoMap) {
     requestParameters.CUSTOMER_EMAIL = userInfoMap.email
     requestParameters.preferredUsername = userInfoMap.preferredUsername
     requestParameters.USERNAME = userInfoMap.preferredUsername
-    request.getSession().setAttribute("userInfoMap", userInfoMap)
+    request.getSession().setAttribute('userInfoMap', userInfoMap)
 }
 
-donePage = "main;" + UtilHttp.getSessionId(request)
-context.donePage = donePage
+context.donePage = 'main;' + UtilHttp.getSessionId(request)

@@ -28,8 +28,8 @@ String expireProperty = 'security.jwt.token.expireTime'
 String expireTimeString = EntityUtilProperties.getPropertyValue('security', expireProperty, '1800', delegator)
 int expireTime = Integer.parseInt(expireTimeString)
 
-String jwtToken = JWTManager.createJwt(delegator, [userLoginId: userLogin.getString('userLoginId')], expireTime)
+String jwtToken = JWTManager.createJwt(delegator, [userLoginId: userLogin.userLoginId], expireTime)
 
 context.apiToken = [access_token: jwtToken,
-                    expires_in  : expireTimeString,
-                    token_type  : 'Bearer',]
+                    expires_in: expireTimeString,
+                    token_type: 'Bearer']

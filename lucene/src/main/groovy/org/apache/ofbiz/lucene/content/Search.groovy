@@ -20,15 +20,19 @@ package org.apache.ofbiz.lucene.content
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.document.Document
+import org.apache.lucene.index.DirectoryReader
 import org.apache.lucene.index.Term
 import org.apache.lucene.queryparser.classic.QueryParser
+import org.apache.lucene.search.BooleanQuery
+import org.apache.lucene.search.IndexSearcher
+import org.apache.lucene.search.Query
+import org.apache.lucene.search.ScoreDoc
+import org.apache.lucene.search.TermQuery
+import org.apache.lucene.search.TopScoreDocCollector
 import org.apache.lucene.store.FSDirectory
 import org.apache.ofbiz.base.util.UtilHttp
 import org.apache.ofbiz.content.search.SearchWorker
 import org.apache.ofbiz.product.feature.ParametricSearch
-import org.apache.lucene.search.*
-import org.apache.lucene.index.DirectoryReader
-import org.apache.ofbiz.base.util.UtilProperties
 
 queryLine = parameters.queryLine
 
@@ -43,23 +47,23 @@ featureIdByType = ParametricSearch.makeFeatureIdByTypeMap(UtilHttp.getParameterM
 combQuery = new BooleanQuery.Builder()
 
 try {
-    DirectoryReader reader = DirectoryReader.open(FSDirectory.open(new File(SearchWorker.getIndexPath("content")).toPath()))
+    DirectoryReader reader = DirectoryReader.open(FSDirectory.open(new File(SearchWorker.getIndexPath('content')).toPath()))
     searcher = new IndexSearcher(reader)
     analyzer = new StandardAnalyzer()
 } catch (java.io.FileNotFoundException e) {
-    context.errorMessageList.add(UtilProperties.getMessage("ContentErrorUiLabels", "ContentSearchNotIndexed", locale))
-    return
+    context.errorMessageList << label('ContentErrorUiLabels', 'ContentSearchNotIndexed')
+    return 'error'
 }
 
 if (queryLine || siteId) {
     Query query = null
     if (queryLine) {
-        QueryParser parser = new QueryParser("content", analyzer)
+        QueryParser parser = new QueryParser('content', analyzer)
         query = parser.parse(queryLine)
         combQuery.add(query, BooleanClause.Occur.MUST)
     }
     if (siteId) {
-        termQuery = new TermQuery(new Term("site", siteId.toString()))
+        termQuery = new TermQuery(new Term('site', siteId.toString()))
         combQuery.add(termQuery, BooleanClause.Occur.MUST)
     }
 }
@@ -67,31 +71,31 @@ if (queryLine || siteId) {
 if (searchFeature1 || searchFeature2 || searchFeature3 || !featureIdByType.isEmpty()) {
     featureQuery = new BooleanQuery.Builder()
     featuresRequired = BooleanClause.Occur.MUST
-    if ("any".equals(parameters.any_or_all)) {
+    if (parameters.any_or_all == 'any') {
         featuresRequired = BooleanClause.Occur.SHOULD
     }
 
     if (searchFeature1) {
-        termQuery = new TermQuery(new Term("feature", searchFeature1))
+        termQuery = new TermQuery(new Term('feature', searchFeature1))
         featureQuery.add(termQuery, featuresRequired)
     }
 
     if (searchFeature2) {
-        termQuery = new TermQuery(new Term("feature", searchFeature2))
+        termQuery = new TermQuery(new Term('feature', searchFeature2))
         featureQuery.add(termQuery, featuresRequired)
     }
 
     if (searchFeature3) {
-        termQuery = new TermQuery(new Term("feature", searchFeature3))
+        termQuery = new TermQuery(new Term('feature', searchFeature3))
         featureQuery.add(termQuery, featuresRequired)
     }
 
-  if (featureIdByType) {
-    featureIdByType.each { key, value ->
-            termQuery = new TermQuery(new Term("feature", value))
+    if (featureIdByType) {
+        featureIdByType.each { key, value ->
+            termQuery = new TermQuery(new Term('feature', value))
             featureQuery.add(termQuery, featuresRequired)
         }
-    combQuery.add(featureQuery.build(), featuresRequired)
+        combQuery.add(featureQuery.build(), featuresRequired)
     }
 }
 if (searcher) {
@@ -103,8 +107,8 @@ if (searcher) {
     hitSet = [:] as HashSet
     for (int start = 0; start < collector.getTotalHits(); start++) {
         Document doc = searcher.doc(hits[start].doc)
-        contentId = doc.get("contentId")
-        content = from("Content").where("contentId", contentId).cache(true).queryOne()
+        contentId = doc.get('contentId')
+        content = from('Content').where('contentId', contentId).cache().queryOne()
         if (!hitSet.contains(contentId)) {
             contentList.add(content)
             hitSet.add(contentId)

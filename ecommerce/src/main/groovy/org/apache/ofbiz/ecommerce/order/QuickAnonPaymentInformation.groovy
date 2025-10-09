@@ -18,25 +18,20 @@
 */
 package org.apache.ofbiz.ecommerce.order
 
-import org.apache.ofbiz.entity.*
-import org.apache.ofbiz.entity.util.*
-import org.apache.ofbiz.base.util.*
-import org.apache.ofbiz.accounting.payment.*
-import org.apache.ofbiz.order.shoppingcart.*
-import org.apache.ofbiz.party.contact.*
+import org.apache.ofbiz.order.shoppingcart.ShoppingCartEvents
 
 cart = ShoppingCartEvents.getCartObject(request)
 context.cart = cart
 
-paymentMethodTypeId = parameters.paymentMethodTypeId ?: "CREDIT_CARD"
+paymentMethodTypeId = parameters.paymentMethodTypeId ?: 'CREDIT_CARD'
 
 // nuke the event messages
-request.removeAttribute("_EVENT_MESSAGE_")
+request.removeAttribute('_EVENT_MESSAGE_')
 
 if (cart?.getPaymentMethodIds()) {
     paymentMethods = cart.getPaymentMethods()
-    paymentMethods.each {paymentMethod ->
-        if ("CREDIT_CARD".equals(paymentMethod?.paymentMethodTypeId)) {
+    paymentMethods.each { paymentMethod ->
+        if (paymentMethod?.paymentMethodTypeId == 'CREDIT_CARD') {
             paymentMethodId = paymentMethod.paymentMethodId
             parameters.paymentMethodId = paymentMethodId
         }
