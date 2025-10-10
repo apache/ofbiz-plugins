@@ -42,7 +42,7 @@ errorTaskList = []
 installTaskList = []
 
 // get Unplaned task list
-if (taskId|| taskName || taskTypeId  || sprintId || sprintName
+if (taskId || taskName || taskTypeId  || sprintId || sprintName
         || projectId || projectName || backlogTypeId || statusId
         || partyId || viewIndex_1 || viewIndex_2 || viewIndex_3  || viewIndex_4
         || viewIndexNo_1 || viewIndexNo_2 || viewIndexNo_3 || viewIndexNo_4) {

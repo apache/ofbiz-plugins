@@ -61,7 +61,6 @@ if (shoppingCart) {
                     case 'PERSONAL_CHECK' -> context.checkAmount = new BigDecimal((context.checkAmount).add(amount))
                     case 'GIFT_CARD' -> context.giftAmount = new BigDecimal((context.giftAmount).add(amount))
                     case 'CREDIT_CARD' -> context.creditAmount = new BigDecimal((context.creditAmount).add(amount))
-
                 }
                 context.totalPay = new BigDecimal((context.totalPay).add(amount))
             }

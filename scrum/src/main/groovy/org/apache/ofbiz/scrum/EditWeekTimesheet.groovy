@@ -26,7 +26,7 @@ import org.apache.ofbiz.entity.condition.EntityCondition
 import org.apache.ofbiz.entity.condition.EntityOperator
 import org.apache.ofbiz.entity.util.EntityUtil
 
-uiLabelMap = UtilProperties.getResourceBundleMap("scrumUiLabels", locale)
+uiLabelMap = UtilProperties.getResourceBundleMap('scrumUiLabels', locale)
 
 partyId = parameters.partyId ?: parameters.userLogin.partyId
 
@@ -123,7 +123,6 @@ void retrieveWorkEffortData() {
         entry.projectId = result.projectId
         entry.projectName = result.projectName
         entry.taskWbsId = result.taskWbsId
-
     }
     entry.total = taskTotal
     //Drop Down Lists
@@ -135,30 +134,30 @@ void retrieveWorkEffortData() {
 
 timesheet
         .getRelated('TimeEntry', null, ['workEffortId', 'rateTypeId', 'fromDate'], false)
-        .each {timeEntry ->
-    if (lastTimeEntry &&
-            (timeEntry.workEffortId != lastTimeEntry.workEffortId ||
-                    timeEntry.rateTypeId != lastTimeEntry.rateTypeId)) {
-        retrieveWorkEffortData()
-    }
-    if (timeEntry.hours) {
-        dayNumber = 'd' + (timeEntry.fromDate.getTime() - timesheet.fromDate.getTime()) / (24 * 60 * 60 * 1000)
-        hours = timeEntry.hours.doubleValue()
-        entry.(dayNumber) = hours
-        switch (dayNumber) {
-            case 'd0' -> day0Total += hours
-            case 'd1' -> day1Total += hours
-            case 'd2' -> day2Total += hours
-            case 'd3' -> day3Total += hours
-            case 'd4' -> day4Total += hours
-            case 'd5' -> day5Total += hours
-            case 'd6' -> day6Total += hours
+        .each { timeEntry ->
+            if (lastTimeEntry &&
+                    (timeEntry.workEffortId != lastTimeEntry.workEffortId ||
+                            timeEntry.rateTypeId != lastTimeEntry.rateTypeId)) {
+                retrieveWorkEffortData()
+            }
+            if (timeEntry.hours) {
+                dayNumber = 'd' + (timeEntry.fromDate.getTime() - timesheet.fromDate.getTime()) / (24 * 60 * 60 * 1000)
+                hours = timeEntry.hours.doubleValue()
+                entry.(dayNumber) = hours
+                switch (dayNumber) {
+                    case 'd0' -> day0Total += hours
+                    case 'd1' -> day1Total += hours
+                    case 'd2' -> day2Total += hours
+                    case 'd3' -> day3Total += hours
+                    case 'd4' -> day4Total += hours
+                    case 'd5' -> day5Total += hours
+                    case 'd6' -> day6Total += hours
+                }
+                taskTotal += hours
+            }
+            entry.rateTypeId = timeEntry.rateTypeId
+            lastTimeEntry = timeEntry
         }
-        taskTotal += hours
-    }
-    entry.rateTypeId = timeEntry.rateTypeId
-    lastTimeEntry = timeEntry
-}
 
 if (timeEntry) {
     lastTimeEntry = timeEntry
@@ -175,16 +174,18 @@ if (timesheet.statusId != 'TIMESHEET_COMPLETED') {
 // add the totals line if at least one entry
 if (timeEntry) {
     entry = [timesheetId: timesheet.timesheetId]
-    entry.d0 = day0Total
-    entry.d1 = day1Total
-    entry.d2 = day2Total
-    entry.d3 = day3Total
-    entry.d4 = day4Total
-    entry.d5 = day5Total
-    entry.d6 = day6Total
-    entry.phaseName = uiLabelMap.ProjectMgrTotals
-    entry.workEffortId = 'Totals'
-    entry.total = day0Total + day1Total + day2Total + day3Total + day4Total + day5Total + day6Total
+    entry.with {
+        d0 = day0Total
+        d1 = day1Total
+        d2 = day2Total
+        d3 = day3Total
+        d4 = day4Total
+        d5 = day5Total
+        d6 = day6Total
+        phaseName = uiLabelMap.ProjectMgrTotals
+        workEffortId = 'Totals'
+        total = day0Total + day1Total + day2Total + day3Total + day4Total + day5Total + day6Total
+    }
     entries << entry
 }
 context.timeEntries = entries

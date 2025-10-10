@@ -31,10 +31,7 @@ import org.apache.ofbiz.entity.util.EntityUtil
 import org.apache.ofbiz.webapp.website.WebSiteWorker
 
 uiLabelMap = UtilProperties.getResourceBundleMap('scrumUiLabels', locale)
-partyId = parameters.partyId
-if (!partyId) {
-    partyId = parameters.userLogin.partyId
-}
+partyId = parameters.partyId ?: parameters.userLogin.partyId
 
 // show the requested timesheet, otherwise the current , if not exist create
 timesheet = null
@@ -60,7 +57,9 @@ if (timesheetId) {
         }
     }
 }
-if (!timesheet) return
+if (!timesheet) {
+    return
+}
 context.timesheet = timesheet
 context.weekNumber = UtilDateTime.weekNumber(timesheet.fromDate)
 
@@ -102,8 +101,9 @@ void retrieveWorkEffortData() {
         estimatedHour = 0.00
 
         estimatedMilliSeconds = entryWorkEffort.estimatedMilliSeconds
-        if (estimatedMilliSeconds > 0)
+        if (estimatedMilliSeconds > 0) {
             estimatedHour = estimatedMilliSeconds / 3600000
+        }
         entry.plannedHours = estimatedHour
         //entry.plannedHours = pHours
         planHours = 0.0
@@ -132,7 +132,6 @@ void retrieveWorkEffortData() {
             entry.roleTypeId = workEffortPartyAssign.roleTypeId
             if (workEffortPartyAssign.statusId == 'SCAS_COMPLETED') {
                 entry.checkComplete = 'Y'
-
             }
         } else {
             if (entryWorkEffort.currentStatusId == 'STS_COMPLETED') {
@@ -149,7 +148,6 @@ void retrieveWorkEffortData() {
         entry.projectId = result.projectId
         entry.projectName = result.projectName
         entry.taskWbsId = result.taskWbsId
-
     }
     entry.acualTotal = taskTotal
     entry.planTotal = planTotal
@@ -170,46 +168,44 @@ void retrieveWorkEffortData() {
 timesheet
         .getRelated('TimeEntry', null, ['workEffortId', 'rateTypeId', 'fromDate'], false)
         .each { timeEntry ->
-
-    if (lastTimeEntry &&
-            (lastTimeEntry.workEffortId != timeEntry.workEffortId ||
-                    lastTimeEntry.rateTypeId != timeEntry.rateTypeId)) {
-        retrieveWorkEffortData()
-    }
-    if (timeEntry.hours) {
-        String dayNumber = 'd' + (timeEntry.fromDate.getTime() - timesheet.fromDate.getTime()) / (24 * 60 * 60 * 1000)
-        double hours = timeEntry.hours.doubleValue()
-        entry.(dayNumber) = hours
-        switch (dayNumber) {
-            case 'd0' -> day0Total += hours
-            case 'd1' -> day1Total += hours
-            case 'd2' -> day2Total += hours
-            case 'd3' -> day3Total += hours
-            case 'd4' -> day4Total += hours
-            case 'd5' -> day5Total += hours
-            case 'd6' -> day6Total += hours
+            if (lastTimeEntry &&
+                    (lastTimeEntry.workEffortId != timeEntry.workEffortId ||
+                            lastTimeEntry.rateTypeId != timeEntry.rateTypeId)) {
+                retrieveWorkEffortData()
+            }
+            if (timeEntry.hours) {
+                String dayNumber = 'd' + (timeEntry.fromDate.getTime() - timesheet.fromDate.getTime()) / (24 * 60 * 60 * 1000)
+                BigDecimal hours = timeEntry.hours
+                entry.(dayNumber) = hours
+                switch (dayNumber) {
+                    case 'd0' -> day0Total += hours
+                    case 'd1' -> day1Total += hours
+                    case 'd2' -> day2Total += hours
+                    case 'd3' -> day3Total += hours
+                    case 'd4' -> day4Total += hours
+                    case 'd5' -> day5Total += hours
+                    case 'd6' -> day6Total += hours
+                }
+                taskTotal += hours
+            }
+            if (timeEntry.planHours) {
+                String dayNumber = 'pd' + (timeEntry.fromDate.getTime() - timesheet.fromDate.getTime()) / (24 * 60 * 60 * 1000)
+                BigDecimal planHours = timeEntry.planHours
+                entry.(dayNumber) = planHours
+                switch (dayNumber) {
+                    case 'pd0' -> pDay0Total += planHours
+                    case 'pd1' -> pDay1Total += planHours
+                    case 'pd2' -> pDay2Total += planHours
+                    case 'pd3' -> pDay3Total += planHours
+                    case 'pd4' -> pDay4Total += planHours
+                    case 'pd5' -> pDay5Total += planHours
+                    case 'pd6' -> pDay6Total += planHours
+                }
+                planTotal += planHours
+            }
+            lastTimeEntry = timeEntry
+            entry.rateTypeId = timeEntry.rateTypeId
         }
-        taskTotal += hours
-    }
-    if (timeEntry.planHours) {
-        String dayNumber = 'pd' + (timeEntry.fromDate.getTime() - timesheet.fromDate.getTime()) / (24 * 60 * 60 * 1000)
-        double planHours = timeEntry.planHours.doubleValue()
-        entry.(dayNumber) = planHours
-        switch (dayNumber) {
-            case 'pd0' -> pDay0Total += planHours
-            case 'pd1' -> pDay1Total += planHours
-            case 'pd2' -> pDay2Total += planHours
-            case 'pd3' -> pDay3Total += planHours
-            case 'pd4' -> pDay4Total += planHours
-            case 'pd5' -> pDay5Total += planHours
-            case 'pd6' -> pDay6Total += planHours
-        }
-        planTotal += planHours
-
-    }
-    lastTimeEntry = timeEntry
-    entry.rateTypeId = timeEntry.rateTypeId
-}
 
 //retrieve Empl Leave data.
 void retrieveEmplLeaveData(Map leaveEntry) {
@@ -223,7 +219,7 @@ void retrieveEmplLeaveData(Map leaveEntry) {
             leaveEntry.plannedHours = result.hours
             leaveEntry.planHours = result.hours
         }
-        if ('LEAVE_APPROVED' == lastEmplLeaveEntry.leaveStatus) {
+        if (lastEmplLeaveEntry.leaveStatus == 'LEAVE_APPROVED') {
             leaveEntry.checkComplete = 'Y'
         }
         leaveEntry.partyId = lastEmplLeaveEntry.partyId
@@ -245,11 +241,12 @@ void retrieveEmplLeaveData(Map leaveEntry) {
 
 // define condition
 from('EmplLeave')
-        .where(new EntityConditionBuilder().AND {
-            GREATER_THAN_EQUAL_TO(fromDate: timesheet.fromDate)
-            LESS_THAN_EQUAL_TO(fromDate: timesheet.fromDate)
-            EQUALS(partyId: partyId)
-        })
+        .where(new EntityConditionBuilder()
+                .AND {
+                    GREATER_THAN_EQUAL_TO(fromDate: timesheet.fromDate)
+                    LESS_THAN_EQUAL_TO(thruDate: timesheet.fromDate)
+                    EQUALS(partyId: partyId)
+                })
         .cursorScrollInsensitive()
         .distinct()
         .queryIterator()
@@ -270,7 +267,7 @@ from('EmplLeave')
                 String leaveDayNumber = 'd' + (emplLeaveEntry.fromDate.getTime() - timesheet.fromDate.getTime()) / (24 * 60 * 60 * 1000)
                 resultHours = run service: 'getPartyLeaveHoursForDate', with:
                         [partyId: emplLeaveEntry.partyId, leaveTypeId: emplLeaveEntry.leaveTypeId, fromDate: emplLeaveEntry.fromDate]
-                double leaveHours = resultHours.hours.doubleValue()
+                BigDecimal leaveHours = resultHours.hours
                 switch (leaveDayNumber) {
                     case 'd0' -> day0Total += leaveHours
                     case 'd1' -> day1Total += leaveHours
@@ -287,21 +284,21 @@ from('EmplLeave')
                 String leavePlanDay = 'pd' + (emplLeaveEntry.fromDate.getTime() - timesheet.fromDate.getTime()) / (24 * 60 * 60 * 1000)
                 Map resultPlanHours = run service: 'getPartyLeaveHoursForDate', with:
                         [partyId: emplLeaveEntry.partyId, leaveTypeId: emplLeaveEntry.leaveTypeId, fromDate: emplLeaveEntry.fromDate]
-        double leavePlanHours = resultPlanHours.hours.doubleValue()
-        switch (leavePlanDay) {
-            case 'pd0' ->  pDay0Total += leavePlanHours
-            case 'pd1' ->  pDay1Total += leavePlanHours
-            case 'pd2' ->  pDay2Total += leavePlanHours
-            case 'pd3' ->  pDay3Total += leavePlanHours
-            case 'pd4' ->  pDay4Total += leavePlanHours
-            case 'pd5' ->  pDay5Total += leavePlanHours
-            case 'pd6' ->  pDay6Total += leavePlanHours
+                BigDecimal leavePlanHours = resultPlanHours.hours
+                switch (leavePlanDay) {
+                    case 'pd0' -> pDay0Total += leavePlanHours
+                    case 'pd1' -> pDay1Total += leavePlanHours
+                    case 'pd2' -> pDay2Total += leavePlanHours
+                    case 'pd3' -> pDay3Total += leavePlanHours
+                    case 'pd4' -> pDay4Total += leavePlanHours
+                    case 'pd5' -> pDay5Total += leavePlanHours
+                    case 'pd6' -> pDay6Total += leavePlanHours
+                }
+                leaveEntry.(leavePlanDay) = leavePlanHours
+                leavePlanTotal += leavePlanHours
+            }
+            leaveEntry.rateTypeId = 'STANDARD'
         }
-        leaveEntry.(leavePlanDay) = leavePlanHours
-        leavePlanTotal += leavePlanHours
-    }
-    leaveEntry.rateTypeId = 'STANDARD'
-}
 
 if (timeEntry) {
     lastTimeEntry = timeEntry
@@ -322,36 +319,38 @@ if (timesheet.statusId != 'TIMESHEET_COMPLETED') {
 // add the totals line if at least one entry
 if (timeEntry || emplLeaveEntry) {
     entry = [timesheetId: timesheet.timesheetId]
-    entry.d0 = day0Total
-    entry.d1 = day1Total
-    entry.d2 = day2Total
-    entry.d3 = day3Total
-    entry.d4 = day4Total
-    entry.d5 = day5Total
-    entry.d6 = day6Total
-    entry.pd0 = pDay0Total
-    entry.pd1 = pDay1Total
-    entry.pd2 = pDay2Total
-    entry.pd3 = pDay3Total
-    entry.pd4 = pDay4Total
-    entry.pd5 = pDay5Total
-    entry.pd6 = pDay6Total
-    entry.phaseName = uiLabelMap.ScrumTotals
-    entry.workEffortId = 'Totals'
-    entry.total = day0Total + day1Total + day2Total + day3Total + day4Total + day5Total + day6Total
+    entry.with {
+        d0 = day0Total
+        d1 = day1Total
+        d2 = day2Total
+        d3 = day3Total
+        d4 = day4Total
+        d5 = day5Total
+        d6 = day6Total
+        pd0 = pDay0Total
+        pd1 = pDay1Total
+        pd2 = pDay2Total
+        pd3 = pDay3Total
+        pd4 = pDay4Total
+        pd5 = pDay5Total
+        pd6 = pDay6Total
+        phaseName = uiLabelMap.ScrumTotals
+        workEffortId = 'Totals'
+        total = day0Total + day1Total + day2Total + day3Total + day4Total + day5Total + day6Total
+    }
     entries << entry
 }
 context.timeEntries = entries
 // get all timesheets of this user, including the planned hours
 timesheetsDb = from('Timesheet').where(partyId: partyId).orderBy('-fromDate').queryList()
-timesheets = new LinkedList()
+timesheets = []
 timesheetsDb.each { timesheetDb ->
     //get hours from EmplLeave
     findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true)
-    leaveExprsList = []
-    leaveExprsList.add(EntityCondition.makeCondition('fromDate', EntityOperator.GREATER_THAN_EQUAL_TO, timesheetDb.fromDate))
-    leaveExprsList.add(EntityCondition.makeCondition('fromDate', EntityOperator.LESS_THAN_EQUAL_TO, timesheetDb.thruDate))
-    leaveExprsList.add(EntityCondition.makeCondition('partyId', EntityOperator.EQUALS, partyId))
+    leaveExprsList = [
+            EntityCondition.makeCondition('fromDate', EntityOperator.GREATER_THAN_EQUAL_TO, timesheetDb.fromDate),
+            EntityCondition.makeCondition('fromDate', EntityOperator.LESS_THAN_EQUAL_TO, timesheetDb.thruDate),
+            EntityCondition.makeCondition('partyId', EntityOperator.EQUALS, partyId)]
     leaveHours = 0.00
 
     from('EmplLeave').where(leaveExprsList).cursorScrollInsensitive().distinct().queryIterator().each {
@@ -390,24 +389,24 @@ from('ProjectSprintBacklogAndTask')
             sprintId = projectAndTaskMap.sprintId
             backlogIndexList << from('WorkEffortAndProduct').where(workEffortId: projectAndTaskMap.projectId).queryFirst()?.productId
 
-    GenericValue partyAssignmentSprintMap = from('WorkEffortPartyAssignment')
-            .where(workEffortId: sprintId, partyId: userLoginId).queryFirst()
-    // if this userLoginId is a member of sprint
-    if (partyAssignmentSprintMap) {
-        GenericValue partyAssignmentTaskMap = from('WorkEffortPartyAssignment')
-                .where(workEffortId: projectAndTaskMap.taskId)
-                .queryFirst()
-        // if the task do not assigned
-        if (partyAssignmentTaskMap) {
-            if (projectAndTaskMap.custRequestTypeId == 'RF_SCRUM_MEETINGS'
-                    && projectAndTaskMap.backlogStatusId == 'CRQ_REVIEWED') {
-                projectSprintBacklogAndTaskList.add(projectAndTaskMap)
+            GenericValue partyAssignmentSprintMap = from('WorkEffortPartyAssignment')
+                    .where(workEffortId: sprintId, partyId: userLoginId).queryFirst()
+            // if this userLoginId is a member of sprint
+            if (partyAssignmentSprintMap) {
+                GenericValue partyAssignmentTaskMap = from('WorkEffortPartyAssignment')
+                        .where(workEffortId: projectAndTaskMap.taskId)
+                        .queryFirst()
+                // if the task do not assigned
+                if (partyAssignmentTaskMap) {
+                    if (projectAndTaskMap.custRequestTypeId == 'RF_SCRUM_MEETINGS'
+                            && projectAndTaskMap.backlogStatusId == 'CRQ_REVIEWED') {
+                        projectSprintBacklogAndTaskList.add(projectAndTaskMap)
+                    }
+                } else {
+                    projectSprintBacklogAndTaskList.add(0, projectAndTaskMap)
+                }
             }
-        } else {
-            projectSprintBacklogAndTaskList.add(0, projectAndTaskMap)
         }
-    }
-}
 
 // for unplanned taks.
 unplanList = []
@@ -459,7 +458,7 @@ projectSprintBacklogAndTaskList.each { projectSprintBacklogAndTaskMap ->
 }
 projectSprintBacklogAndTaskList = UtilMisc.sortMaps(projectSprintBacklogAndTaskList, ['-projectName', 'sprintName', '-taskTypeId', 'custRequestId'])
 projectSprintBacklogAndTaskList.each { projectSprintBacklogAndTaskMap ->
-    if ('RF_PROD_BACKLOG' == projectSprintBacklogAndTaskMap.custRequestTypeId) {
+    if (projectSprintBacklogAndTaskMap.custRequestTypeId == 'RF_PROD_BACKLOG') {
         taskList.add(0, projectSprintBacklogAndTaskMap)
     }
 }

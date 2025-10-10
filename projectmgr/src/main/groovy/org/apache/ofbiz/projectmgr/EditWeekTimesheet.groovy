@@ -123,7 +123,6 @@ void retrieveWorkEffortData() {
         entry.projectId = result.projectId
         entry.projectName = result.projectName
         entry.taskWbsId = result.taskWbsId
-
     }
     entry.total = taskTotal
     //Drop Down Lists
@@ -180,22 +179,24 @@ if (timesheet.statusId != 'TIMESHEET_COMPLETED') {
 // add the totals line if at least one entry
 if (timeEntry) {
     entry = [timesheetId: timesheet.timesheetId]
-    entry.d0 = day0Total
-    entry.d1 = day1Total
-    entry.d2 = day2Total
-    entry.d3 = day3Total
-    entry.d4 = day4Total
-    entry.d5 = day5Total
-    entry.d6 = day6Total
-    entry.phaseName = uiLabelMap.ProjectMgrTotals
-    entry.workEffortId = 'Totals'
-    entry.total = day0Total + day1Total + day2Total + day3Total + day4Total + day5Total + day6Total
+    entry.with {
+        d0 = day0Total
+        d1 = day1Total
+        d2 = day2Total
+        d3 = day3Total
+        d4 = day4Total
+        d5 = day5Total
+        d6 = day6Total
+        phaseName = uiLabelMap.ProjectMgrTotals
+        workEffortId = 'Totals'
+        total = day0Total + day1Total + day2Total + day3Total + day4Total + day5Total + day6Total
+    }
     entries << entry
 }
 context.timeEntries = entries
 // get all timesheets of this user, including the planned hours
 timesheetsDb = from('Timesheet').where('partyId', partyId).orderBy('fromDate DESC').queryList()
-timesheets = new LinkedList()
+timesheets = []
 timesheetsDb.each { timesheetDb ->
     timesheet = [*: timesheetDb]
     entries = timesheetDb.getRelated('TimeEntry', null, null, false)
