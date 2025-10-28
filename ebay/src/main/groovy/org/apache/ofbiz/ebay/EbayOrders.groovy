@@ -19,5 +19,5 @@
 package org.apache.ofbiz.ebay
 
 if (parameters.orderList) {
-    session.setAttribute("orderList", parameters.orderList)
+    session.setAttribute('orderList', parameters.orderList)
 }

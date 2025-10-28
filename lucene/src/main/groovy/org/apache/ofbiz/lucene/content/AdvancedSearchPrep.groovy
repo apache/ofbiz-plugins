@@ -24,9 +24,9 @@ import org.apache.ofbiz.product.product.ProductSearchSession
 productFeaturesByTypeMap = ParametricSearch.getAllFeaturesByType(delegator, 2000)
 productFeatureTypeIdsOrdered = new ArrayList(new TreeSet(productFeaturesByTypeMap.keySet()))
 
-searchOperator = request.getParameter("SEARCH_OPERATOR")
-if (!"AND".equals(searchOperator) && !"OR".equals(searchOperator)) {
-  searchOperator = "OR"
+searchOperator = request.getParameter('SEARCH_OPERATOR')
+if (!['AND', 'OR'].contains(searchOperator)) {
+    searchOperator = 'OR'
 }
 
 searchConstraintStrings = ProductSearchSession.searchGetConstraintStrings(false, session, delegator)

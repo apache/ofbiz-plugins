@@ -18,44 +18,43 @@
 */
 package org.apache.ofbiz.scrum
 
+import org.apache.ofbiz.entity.GenericValue
 
-def module = "BacklogNotifications.groovy"
-
-custRequest = from("CustRequest").where("custRequestId", custRequestId).queryOne()
-person = from("PartyNameView").where("partyId", partyIdTo).queryOne()
-informationMap = [:]
-informationMap.internalName = null
-informationMap.productId = null
-informationMap.workEffortName = null
-informationMap.workEffortId = null
+GenericValue custRequest = from('CustRequest').where(custRequestId: custRequestId).queryOne()
+GenericValue person = from('PartyNameView').where(partyId: partyIdTo).queryOne()
+Map informationMap = [internalName: null,
+                  productId: null,
+                  workEffortName: null,
+                  workEffortId: null]
 
 //check in sprint
-backlogList = select("productId", "workEffortId", "custRequestId").from("ProductBacklog").where("workEffortTypeId", "SCRUM_SPRINT", "custRequestId", custRequestId).queryList()
+List<GenericValue> backlogList = select('productId', 'workEffortId', 'custRequestId')
+        .from('ProductBacklog')
+        .where('workEffortTypeId', 'SCRUM_SPRINT', 'custRequestId', custRequestId)
+        .queryList()
 if (backlogList) {
-    product = from("Product").where("productId", backlogList[0].productId).queryOne()
-    sprint = from("WorkEffort").where("workEffortId", backlogList[0].workEffortId).queryOne()
-    informationMap.internalName = product.internalName
-    informationMap.productId = product.productId
+    GenericValue sprint = from('WorkEffort').where(workEffortId: backlogList.first().workEffortId).cache().queryOne()
     informationMap.workEffortName = sprint.workEffortName
     informationMap.workEffortId = sprint.workEffortId
 } else {
-    backlogList = select("productId", "workEffortId", "custRequestId").from("ProductBacklog").where("custRequestId", custRequestId).queryList()
-    if (backlogList) {
-        if (backlogList[0].productId) {
-            product = from("Product").where("productId", backlogList[0].productId).queryOne()
-            informationMap.internalName = product.internalName
-            informationMap.productId = product.productId
-        }
+    backlogList = select('productId', 'workEffortId', 'custRequestId')
+            .from('ProductBacklog')
+            .where(custRequestId: custRequestId).queryList()
+}
+if (backlogList) {
+    GenericValue product = from('Product').where(productId: backlogList.first().productId).cache().queryOne()
+    informationMap.internalName = product.internalName
+    informationMap.productId = product.productId
+}
+
+// check backlog removed from sprint.
+boolean removedFromSprint = false
+if (custRequest.statusId == 'CRQ_ACCEPTED') {
+    List custStatusList = custRequest.getRelated('CustRequestStatus', null, ['-custRequestStatusId'], false)
+    if (custStatusList.size() > 2 && custStatusList[1].statusId == 'CRQ_REVIEWED') {
+        removedFromSprint = true
     }
 }
-// check backlog removed from sprint.
-removedFromSprint = false
-if ("CRQ_ACCEPTED".equals(custRequest.statusId)) {
-    custStatusList = custRequest.getRelated("CustRequestStatus", null, ["-custRequestStatusId"], false)
-    if (custStatusList.size() > 2 && "CRQ_REVIEWED".equals(custStatusList[1].statusId)) {
-        removedFromSprint = true
-        }
-    }
 
 context.custRequest = custRequest
 context.person = person

@@ -4,7 +4,7 @@
  * distributed with this work for additional information
  * regarding copyright ownership.  The ASF licenses this file
  * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
+ * 'License') you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
@@ -18,38 +18,34 @@
 */
 package org.apache.ofbiz.pricat.pricat
 
-import org.apache.ofbiz.base.util.*;
-import java.io.FileInputStream;
+import org.apache.ofbiz.base.util.FileUtil
 
-module = "FindMyExcelImport.groovy";
+context.borderStyle = '2px inset /*begin-color ThreeDHighlight*/#ffffff/*end-color*/'
+context.borderSimpleStyle = '2px solid /*begin-color ThreeDFace*/#f0f0f0/*end-color*/'
 
-context.borderStyle = "2px inset /*begin-color ThreeDHighlight*/#ffffff/*end-color*/";
-context.borderSimpleStyle = "2px solid /*begin-color ThreeDFace*/#f0f0f0/*end-color*/";
-
-sequenceNum = request.getParameter("sequenceNum");
+sequenceNum = request.getParameter('sequenceNum')
 
 if (sequenceNum == null) {
-    context.logFileContent = "No sequenceNum parameter found.";
-    return; 
+    context.logFileContent = 'No sequenceNum parameter found.'
+    return
 }
 
-historyEntry = from("ExcelImportHistory").where("sequenceNum", Long.valueOf(sequenceNum), "userLoginId", userLogin.userLoginId).queryOne();
+historyEntry = from('ExcelImportHistory').where('sequenceNum', Long.valueOf(sequenceNum), 'userLoginId', userLogin.userLoginId).queryOne()
 if (historyEntry == null) {
-    context.logFileContent = "No import history found.";
-    return;
+    context.logFileContent = 'No import history found.'
+    return
 }
 
-logFile = FileUtil.getFile("runtime/pricat/" + userLogin.userLoginId + "/" + sequenceNum + ".log");
+logFile = FileUtil.getFile('runtime/pricat/' + userLogin.userLoginId + '/' + sequenceNum + '.log')
 if (!logFile.exists()) {
-    context.logFileContent = "No log file found.";
+    context.logFileContent = 'No log file found.'
 }
 
-FileInputStream fis = new FileInputStream(logFile);
-InputStreamReader isr = new InputStreamReader(fis);
-BufferedReader br = new BufferedReader(isr);
-logFileContent = "";
-while((s = br.readLine())!=null){
-    logFileContent += s;
+FileInputStream fis = new FileInputStream(logFile)
+InputStreamReader isr = new InputStreamReader(fis)
+BufferedReader br = new BufferedReader(isr)
+logFileContent = ''
+while ((s = br.readLine()) != null) {
+    logFileContent += s
 }
-context.logFileContent = logFileContent;
-
+context.logFileContent = logFileContent

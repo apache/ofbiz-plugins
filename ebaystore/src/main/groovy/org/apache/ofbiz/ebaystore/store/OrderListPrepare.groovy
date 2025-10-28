@@ -41,7 +41,7 @@ if (orderList) {
             item = items[itemCount]
             title = null
             if (!(item.get("title"))) {
-                product = from("Product").where("productId", item.get("productId")).cache(true).queryOne()
+                product = from("Product").where("productId", item.get("productId")).cache().queryOne()
                 title = product.get("internalName")
             }
             orderMap = [:]

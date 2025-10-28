@@ -21,49 +21,53 @@ package org.apache.ofbiz.ecommerce.content
 import org.apache.lucene.analysis.Analyzer
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.document.Document
+import org.apache.lucene.index.DirectoryReader
 import org.apache.lucene.index.Term
 import org.apache.lucene.queryparser.classic.QueryParser
+import org.apache.lucene.search.BooleanQuery
+import org.apache.lucene.search.IndexSearcher
+import org.apache.lucene.search.ScoreDoc
+import org.apache.lucene.search.TermQuery
+import org.apache.lucene.search.TopScoreDocCollector
+import org.apache.lucene.store.Directory
 import org.apache.lucene.store.FSDirectory
-import org.apache.ofbiz.base.util.Debug
 import org.apache.ofbiz.base.util.UtilHttp
 import org.apache.ofbiz.content.search.SearchWorker
 import org.apache.ofbiz.product.feature.ParametricSearch
-import org.apache.lucene.search.*
-import org.apache.lucene.index.DirectoryReader
-import org.apache.lucene.store.Directory
-import org.apache.ofbiz.base.util.UtilProperties
+
+import javax.management.Query
 
 paramMap = UtilHttp.getParameterMap(request)
 queryLine = paramMap.queryLine.toString()
-//logInfo("in search, queryLine:" + queryLine)
+//logInfo('in search, queryLine:' + queryLine)
 
-siteId = paramMap.siteId ?: "WebStoreCONTENT"
-//logInfo("in search, siteId:" + siteId)
+siteId = paramMap.siteId ?: 'WebStoreCONTENT'
+//logInfo('in search, siteId:' + siteId)
 featureIdByType = ParametricSearch.makeFeatureIdByTypeMap(paramMap)
-//logInfo("in search, featureIdByType:" + featureIdByType)
+//logInfo('in search, featureIdByType:' + featureIdByType)
 
 combQuery = new BooleanQuery.Builder()
 IndexSearcher searcher = null
 Analyzer analyzer = null
 
 try {
-    Directory directory = FSDirectory.open(new File(SearchWorker.getIndexPath("content")).toPath())
+    Directory directory = FSDirectory.open(new File(SearchWorker.getIndexPath('content')).toPath())
     DirectoryReader reader = DirectoryReader.open(directory)
     searcher = new IndexSearcher(reader)
     analyzer = new StandardAnalyzer()
 } catch (java.io.FileNotFoundException e) {
-    context.errorMessageList.add(UtilProperties.getMessage("ContentErrorUiLabels", "ContentSearchNotIndexed", locale))
-    return
+    context.errorMessageList << label('ContentErrorUiLabels', 'ContentSearchNotIndexed')
+    return 'error'
 }
 
-termQuery = new TermQuery(new Term("site", siteId.toString()))
+termQuery = new TermQuery(new Term('site', siteId.toString()))
 combQuery.add(termQuery, BooleanClause.Occur.MUST)
-//logInfo("in search, termQuery:" + termQuery.toString())
+//logInfo('in search, termQuery:' + termQuery.toString())
 
-//logInfo("in search, combQuery(1):" + combQuery)
+//logInfo('in search, combQuery(1):' + combQuery)
 if (queryLine && analyzer) {
     Query query = null
-    QueryParser parser = new QueryParser("content", analyzer)
+    QueryParser parser = new QueryParser('content', analyzer)
     query = parser.parse(queryLine)
     combQuery.add(query, BooleanClause.Occur.MUST)
 }
@@ -71,36 +75,36 @@ if (queryLine && analyzer) {
 if (featureIdByType) {
     featureQuery = new BooleanQuery.Builder()
     featuresRequired = BooleanClause.Occur.MUST
-    if ("any".equals(paramMap.anyOrAll)) {
+    if (paramMap.anyOrAll == 'any') {
         featuresRequired = BooleanClause.Occur.SHOULD
     }
 
     if (featureIdByType) {
         featureIdByType.each { key, value ->
-            termQuery = new TermQuery(new Term("feature", value))
+            termQuery = new TermQuery(new Term('feature', value))
             featureQuery.add(termQuery, featuresRequired)
-            //logInfo("in search searchFeature3, termQuery:" + termQuery.toString())
+            //logInfo('in search searchFeature3, termQuery:' + termQuery.toString())
         }
     }
     combQuery.add(featureQuery.build(), featuresRequired)
 }
 
 if (searcher) {
-    logInfo("in search searchFeature3, combQuery:" + combQuery.toString())
+    logInfo('in search searchFeature3, combQuery:' + combQuery)
     TopScoreDocCollector collector = TopScoreDocCollector.create(100, 100) //defaulting to 100 results
     searcher.search(combQuery.build(), collector)
     ScoreDoc[] hits = collector.topDocs().scoreDocs
-    logInfo("in search, hits:" + collector.getTotalHits())
+    logInfo('in search, hits:' + collector.getTotalHits())
 
     contentList = [] as ArrayList
     hitSet = [:] as HashSet
     for (int start = 0; start < collector.getTotalHits(); start++) {
         Document doc = searcher.doc(hits[start].doc)
-        contentId = doc.get("contentId")
-        content = from("Content").where("contentId", contentId).cache(true).queryOne()
+        contentId = doc.get('contentId')
+        content = from('Content').where('contentId', contentId).cache().queryOne()
         if (!hitSet.contains(contentId)) {
-            contentList.add(content)
-            hitSet.add(contentId)
+            contentList << content
+            hitSet << contentId
         }
     }
     context.queryResults = contentList

@@ -18,68 +18,60 @@
 */
 package org.apache.ofbiz.webpos.cart
 
-import org.apache.ofbiz.base.util.UtilValidate;
-import org.apache.ofbiz.webpos.WebPosEvents;
-import org.apache.ofbiz.webpos.session.WebPosSession;
+import org.apache.ofbiz.webpos.WebPosEvents
 
-webPosSession = WebPosEvents.getWebPosSession(request, null);
+webPosSession = WebPosEvents.getWebPosSession(request, null)
 if (webPosSession) {
-    shoppingCart = webPosSession.getCart();
-    context.isManager = webPosSession.isManagerLoggedIn();
-    context.transactionId = webPosSession.getCurrentTransaction().getTransactionId();
-    context.userLoginId = webPosSession.getUserLoginId();
-    context.drawerNumber = webPosSession.getCurrentTransaction().getDrawerNumber();
-    context.totalDue = webPosSession.getCurrentTransaction().getTotalDue();
-    context.totalQuantity = webPosSession.getCurrentTransaction().getTotalQuantity();
-    context.isOpen = webPosSession.getCurrentTransaction().isOpen();
-    
-    context.person = null;
+    shoppingCart = webPosSession.getCart()
+    context.isManager = webPosSession.isManagerLoggedIn()
+    context.transactionId = webPosSession.getCurrentTransaction().getTransactionId()
+    context.userLoginId = webPosSession.getUserLoginId()
+    context.drawerNumber = webPosSession.getCurrentTransaction().getDrawerNumber()
+    context.totalDue = webPosSession.getCurrentTransaction().getTotalDue()
+    context.totalQuantity = webPosSession.getCurrentTransaction().getTotalQuantity()
+    context.isOpen = webPosSession.getCurrentTransaction().isOpen()
+
+    context.person = null
     if (shoppingCart) {
-        placingCustomerParty = from("PartyAndPerson").where("partyId", shoppingCart.getPlacingCustomerPartyId()).queryOne();
+        placingCustomerParty = from('PartyAndPerson').where('partyId', shoppingCart.getPlacingCustomerPartyId()).queryOne()
         if (placingCustomerParty) {
-            context.person = placingCustomerParty.lastName + " " + placingCustomerParty.firstName;
+            context.person = placingCustomerParty.lastName + ' ' + placingCustomerParty.firstName
         }
     }
 } else {
-    shoppingCart = null;
+    shoppingCart = null
 }
 
-context.cashAmount = BigDecimal.ZERO;
-context.checkAmount = BigDecimal.ZERO;
-context.giftAmount = BigDecimal.ZERO;
-context.creditAmount = BigDecimal.ZERO;
-context.totalPay = BigDecimal.ZERO;
+context.cashAmount = BigDecimal.ZERO
+context.checkAmount = BigDecimal.ZERO
+context.giftAmount = BigDecimal.ZERO
+context.creditAmount = BigDecimal.ZERO
+context.totalPay = BigDecimal.ZERO
 
 if (shoppingCart) {
-    context.shoppingCartSize = shoppingCart.size();
-    payments = shoppingCart.selectedPayments();
+    context.shoppingCartSize = shoppingCart.size()
+    payments = shoppingCart.selectedPayments()
     for (i = 0; i < payments; i++) {
-        paymentInfo = shoppingCart.getPaymentInfo(i);
+        paymentInfo = shoppingCart.getPaymentInfo(i)
         if (paymentInfo.amount != null) {
-            amount = paymentInfo.amount;
-            if (paymentInfo.paymentMethodTypeId != null) {
-                if ("CASH".equals(paymentInfo.paymentMethodTypeId)) {
-                    context.cashAmount = new BigDecimal((context.cashAmount).add(amount));
+            amount = paymentInfo.amount
+            if (paymentInfo.paymentMethodTypeId) {
+                switch (paymentInfo.paymentMethodTypeId) {
+                    case 'CASH' -> context.cashAmount = new BigDecimal((context.cashAmount).add(amount))
+                    case 'PERSONAL_CHECK' -> context.checkAmount = new BigDecimal((context.checkAmount).add(amount))
+                    case 'GIFT_CARD' -> context.giftAmount = new BigDecimal((context.giftAmount).add(amount))
+                    case 'CREDIT_CARD' -> context.creditAmount = new BigDecimal((context.creditAmount).add(amount))
                 }
-                else if ("PERSONAL_CHECK".equals(paymentInfo.paymentMethodTypeId)) {
-                    context.checkAmount = new BigDecimal((context.checkAmount).add(amount));
-                }
-                else if ("GIFT_CARD".equals(paymentInfo.paymentMethodTypeId)) {
-                    context.giftAmount = new BigDecimal((context.giftAmount).add(amount));
-                }
-                else if ("CREDIT_CARD".equals(paymentInfo.paymentMethodTypeId)) {
-                    context.creditAmount = new BigDecimal((context.creditAmount).add(amount));
-                }
-                context.totalPay = new BigDecimal((context.totalPay).add(amount));
+                context.totalPay = new BigDecimal((context.totalPay).add(amount))
             }
         }
     }
-    context.shoppingCart = shoppingCart;
+    context.shoppingCart = shoppingCart
 } else {
-    context.shoppingCartSize = 0;
+    context.shoppingCartSize = 0
 }
 
-context.paymentCash   = from("PaymentMethodType").where("paymentMethodTypeId" : "CASH").cache(true).queryOne();
-context.paymentCheck  = from("PaymentMethodType").where("paymentMethodTypeId" : "PERSONAL_CHECK").cache(true).queryOne();
-context.paymentGift   = from("PaymentMethodType").where("paymentMethodTypeId" : "GIFT_CARD").cache(true).queryOne();
-context.paymentCredit = from("PaymentMethodType").where("paymentMethodTypeId" : "CREDIT_CARD").cache(true).queryOne();
+context.paymentCash = from('PaymentMethodType').where('paymentMethodTypeId': 'CASH').cache().queryOne()
+context.paymentCheck = from('PaymentMethodType').where('paymentMethodTypeId': 'PERSONAL_CHECK').cache().queryOne()
+context.paymentGift = from('PaymentMethodType').where('paymentMethodTypeId': 'GIFT_CARD').cache().queryOne()
+context.paymentCredit = from('PaymentMethodType').where('paymentMethodTypeId': 'CREDIT_CARD').cache().queryOne()

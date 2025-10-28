@@ -18,35 +18,25 @@
 */
 package org.apache.ofbiz.lucene.content
 
-
-import org.apache.ofbiz.content.search.ProductDocument
 import org.apache.ofbiz.content.search.DocumentIndexer
+import org.apache.ofbiz.content.search.ProductDocument
 import org.apache.ofbiz.entity.transaction.TransactionUtil
-import org.apache.ofbiz.entity.util.EntityListIterator
 
 DocumentIndexer pi = DocumentIndexer.getInstance(delegator, 'products')
 if (pi) {
     productsCounter = 0
     beganTransaction = TransactionUtil.begin()
-    EntityListIterator products
     try {
-        products = select("productId").from("Product").queryIterator()
-        while (product = products.next()) {
-            pi.queue(new ProductDocument(product.productId))
+        select('productId').from('Product').queryList().each {
+            pi.queue(new ProductDocument(it.productId))
             productsCounter++
         }
-    } catch(Exception e) {
+    } catch (Exception e) {
         TransactionUtil.rollback(beganTransaction, e.getMessage(), e)
         return error(e.getMessage())
-   } finally {
-        if (products != null) {
-            try {
-                products.close()
-            } catch (Exception exc) {}
-        }
+    } finally {
         TransactionUtil.commit(beganTransaction)
     }
-    return success("Submitted for indexing $productsCounter products")
-} else {
-    return error()
+    return success('Submitted for indexing $productsCounter products')
 }
+return error()

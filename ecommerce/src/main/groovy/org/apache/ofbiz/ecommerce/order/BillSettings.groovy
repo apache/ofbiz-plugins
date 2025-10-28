@@ -18,18 +18,16 @@
 */
 package org.apache.ofbiz.ecommerce.order
 
-import org.apache.ofbiz.entity.*
-import org.apache.ofbiz.entity.util.*
-import org.apache.ofbiz.base.util.*
-import org.apache.ofbiz.accounting.payment.*
-import org.apache.ofbiz.order.shoppingcart.*
-import org.apache.ofbiz.party.contact.*
+import org.apache.ofbiz.accounting.payment.BillingAccountWorker
+import org.apache.ofbiz.base.util.UtilHttp
+import org.apache.ofbiz.entity.GenericValue
+import org.apache.ofbiz.entity.util.EntityUtil
 
-cart = session.getAttribute("shoppingCart")
+cart = session.getAttribute('shoppingCart')
 currencyUomId = cart.getCurrency()
 payType = parameters.paymentMethodType
 if (!payType && parameters.useGc) {
-    payType = "GC"
+    payType = 'GC'
 }
 context.cart = cart
 context.paymentMethodType = payType
@@ -38,17 +36,16 @@ partyId = cart.getPartyId() ?: userLogin.partyId
 context.partyId = partyId
 
 // nuke the event messages
-request.removeAttribute("_EVENT_MESSAGE_")
+request.removeAttribute('_EVENT_MESSAGE_')
 
-if (partyId && !"_NA_".equals(partyId)) {
-    party = from("Party").where("partyId", partyId).queryOne()
-    person = party.getRelatedOne("Person", false)
+if (partyId && partyId != '_NA_') {
+    GenericValue party = from('Party').where('partyId', partyId).cache().queryOne()
     context.party = party
-    context.person = person
+    context.person = party.getRelatedOne('Person', true)
     if (party) {
-        context.paymentMethodList = EntityUtil.filterByDate(party.getRelated("PaymentMethod", null, null, false))
+        context.paymentMethodList = EntityUtil.filterByDate(party.getRelated('PaymentMethod', null, null, false))
 
-        billingAccountList = BillingAccountWorker.makePartyBillingAccountList(userLogin, currencyUomId, partyId, delegator, dispatcher)
+        List billingAccountList = BillingAccountWorker.makePartyBillingAccountList(userLogin, currencyUomId, partyId, delegator, dispatcher)
         if (billingAccountList) {
             context.selectedBillingAccountId = cart.getBillingAccountId()
             context.billingAccountList = billingAccountList
@@ -57,49 +54,55 @@ if (partyId && !"_NA_".equals(partyId)) {
 }
 
 if (parameters.useShipAddr && cart.getShippingContactMechId()) {
-    shippingContactMech = cart.getShippingContactMechId()
-    postalAddress = from("PostalAddress").where("contactMechId", shippingContactMech).queryOne()
-    context.useEntityFields = "Y"
+    GenericValue postalAddress = from('PostalAddress').where(contactMechId: cart.getShippingContactMechId()).queryOne()
+    context.useEntityFields = 'Y'
     context.postalFields = postalAddress
 
     if (postalAddress && partyId) {
-        partyContactMech = from("PartyContactMech").where("partyId", partyId, "contactMechId", postalAddress.contactMechId).orderBy("-fromDate").filterByDate().queryFirst()
-        context.partyContactMech = partyContactMech
+        context.partyContactMech = from('PartyContactMech')
+                .where(partyId: partyId, contactMechId: postalAddress.contactMechId)
+                .orderBy('-fromDate')
+                .filterByDate()
+                .queryFirst()
     }
 } else {
     context.postalFields = UtilHttp.getParameterMap(request)
 }
 
 if (cart && !parameters.singleUsePayment) {
-    if (cart.getPaymentMethodIds() ) {
-        checkOutPaymentId = cart.getPaymentMethodIds()[0]
+    if (cart.getPaymentMethodIds()) {
+        String checkOutPaymentId = cart.getPaymentMethodIds().first()
         context.checkOutPaymentId = checkOutPaymentId
-        paymentMethod = from("PaymentMethod").where("paymentMethodId", checkOutPaymentId).queryOne()
-        account = null
+        GenericValue paymentMethod = from('PaymentMethod').where('paymentMethodId', checkOutPaymentId).queryOne()
+        GenericValue account = null
 
-        if ("CREDIT_CARD".equals(paymentMethod.paymentMethodTypeId)) {
-            account = paymentMethod.getRelatedOne("CreditCard", false)
-            context.creditCard = account
-            context.paymentMethodType = "CC"
-        } else if ("EFT_ACCOUNT".equals(paymentMethod.paymentMethodTypeId)) {
-            account = paymentMethod.getRelatedOne("EftAccount", false)
-            context.eftAccount = account
-            context.paymentMethodType = "EFT"
-        } else if ("GIFT_CARD".equals(paymentMethod.paymentMethodTypeId)) {
-            account = paymentMethod.getRelatedOne("GiftCard", false)
-            context.giftCard = account
-            context.paymentMethodType = "GC"
-        } else {
-            context.paymentMethodType = "offline"
+        switch (paymentMethod.paymentMethodTypeId) {
+            case 'CREDIT_CARD':
+                account = paymentMethod.getRelatedOne('CreditCard', false)
+                context.creditCard = account
+                context.paymentMethodType = 'CC'
+                break
+            case 'EFT_ACCOUNT':
+                account = paymentMethod.getRelatedOne('EftAccount', false)
+                context.eftAccount = account
+                context.paymentMethodType = 'EFT'
+                break
+            case 'GIFT_CARD':
+                account = paymentMethod.getRelatedOne('GiftCard', false)
+                context.giftCard = account
+                context.paymentMethodType = 'GC'
+                break
+            default:
+                context.paymentMethodType = 'offline'
+                break
         }
         if (account && parameters.useShipAddr) {
-            address = account.getRelatedOne("PostalAddress", false)
+            GenericValue address = account.getRelatedOne('PostalAddress', false)
             context.postalAddress = address
             context.postalFields = address
         }
     } else if (cart.getPaymentMethodTypeIds()) {
-        checkOutPaymentId = cart.getPaymentMethodTypeIds()[0]
-        context.checkOutPaymentId = checkOutPaymentId
+        context.checkOutPaymentId = cart.getPaymentMethodTypeIds().first()
     }
 }
 

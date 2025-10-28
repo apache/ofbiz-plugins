@@ -18,17 +18,14 @@
 */
 package org.apache.ofbiz.ecommerce.customer
 
-import org.apache.ofbiz.product.store.*
+import org.apache.ofbiz.product.store.ProductStoreWorker
 
-processResult = parameters.processResult
-if (processResult != null) {
-   if (!processResult) {
-       request.setAttribute("_ERROR_MESSAGE_", "<li>There was a problem linking your cards. Please check the numbers and try again.</li>")
-       request.removeAttribute("_EVENT_MESSAGE_")
-   } else {
-       request.setAttribute("_EVENT_MESSAGE_", "<li>Thank-you. Your gift card account is now linked.</li>")
-   }
+if (parameters.processResult) {
+    request.setAttribute('_EVENT_MESSAGE_', '<li>Thank-you. Your gift card account is now linked.</li>')
+} else {
+    request.setAttribute('_ERROR_MESSAGE_', '<li>There was a problem linking your cards. Please check the numbers and try again.</li>')
+    request.removeAttribute('_EVENT_MESSAGE_')
 }
 
 context.userLogin = userLogin
-context.paymentProperties = ProductStoreWorker.getProductStorePaymentProperties(request, "GIFT_CARD", null, true)
+context.paymentProperties = ProductStoreWorker.getProductStorePaymentProperties(request, 'GIFT_CARD', null, true)

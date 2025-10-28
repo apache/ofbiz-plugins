@@ -18,43 +18,28 @@
 */
 package org.apache.ofbiz.ecommerce.customer
 
-import java.lang.*
-import java.util.*
-import org.apache.ofbiz.base.util.*
-import org.apache.ofbiz.entity.*
-import org.apache.ofbiz.entity.util.*
-import org.apache.ofbiz.entity.condition.*
-import org.apache.ofbiz.party.contact.ContactMechWorker
-import org.apache.ofbiz.product.store.ProductStoreWorker
+import org.apache.ofbiz.entity.GenericValue
 import org.apache.ofbiz.webapp.website.WebSiteWorker
-import org.apache.ofbiz.accounting.payment.PaymentWorker
 
-/*publicEmailContactLists = delegator.findByAnd("ContactList", [isPublic : "Y", contactMechTypeId : "EMAIL_ADDRESS"], ["contactListName"], false)
-context.publicEmailContactLists = publicEmailContactLists;*/
+List webSiteContactList = from('WebSiteContactList')
+        .where(webSiteId: WebSiteWorker.getWebSiteId(request))
+        .filterByDate()
+        .queryList()
 
-webSiteId = WebSiteWorker.getWebSiteId(request)
-exprList = []
-exprListThruDate = []
-exprList.add(EntityCondition.makeCondition("webSiteId", EntityOperator.EQUALS, webSiteId))
-exprListThruDate.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null))
-exprListThruDate.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()))
-orCond = EntityCondition.makeCondition(exprListThruDate, EntityOperator.OR)
-exprList.add(orCond)
-webSiteContactList = from("WebSiteContactList").where(exprList).queryList()
-
-publicEmailContactLists = []
-webSiteContactList.each { webSiteContactList ->
-    contactList = webSiteContactList.getRelatedOne("ContactList", false)
-    contactListType = contactList.getRelatedOne("ContactListType", false)
-    temp = [:]
-    temp.contactList = contactList
-    temp.contactListType = contactListType
-    publicEmailContactLists.add(temp)
+List publicEmailContactLists = []
+webSiteContactList.each {
+    GenericValue contactList = it.getRelatedOne('ContactList', false)
+    GenericValue contactListType = contactList.getRelatedOne('ContactListType', true)
+    publicEmailContactLists << [contactList: contactList,
+                                contactListType: contactListType]
 }
 context.publicEmailContactLists = publicEmailContactLists
 
 if (userLogin) {
-    partyAndContactMechList = from("PartyAndContactMech").where("partyId", partyId, "contactMechTypeId", "EMAIL_ADDRESS").orderBy("-fromDate").filterByDate().queryList()
-    context.partyAndContactMechList = partyAndContactMechList
+    context.partyAndContactMechList = from('PartyAndContactMech')
+            .where(partyId: partyId, contactMechTypeId: 'EMAIL_ADDRESS')
+            .orderBy('-fromDate')
+            .filterByDate()
+            .queryList()
 }
 

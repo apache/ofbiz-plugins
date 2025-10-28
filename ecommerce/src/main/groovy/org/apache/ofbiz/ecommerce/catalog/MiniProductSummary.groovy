@@ -18,61 +18,61 @@
 */
 package org.apache.ofbiz.ecommerce.catalog
 
-import java.math.BigDecimal
-import java.util.Map
-
-import org.apache.ofbiz.base.util.*
-import org.apache.ofbiz.entity.*
-import org.apache.ofbiz.service.*
-import org.apache.ofbiz.product.product.ProductContentWrapper
+import org.apache.ofbiz.order.shoppingcart.ShoppingCartEvents
+import org.apache.ofbiz.product.catalog.CatalogWorker
 import org.apache.ofbiz.product.config.ProductConfigWorker
-import org.apache.ofbiz.product.catalog.*
-import org.apache.ofbiz.product.store.*
-import org.apache.ofbiz.order.shoppingcart.*
+import org.apache.ofbiz.product.product.ProductContentWrapper
+import org.apache.ofbiz.product.store.ProductStoreWorker
 import org.apache.ofbiz.webapp.website.WebSiteWorker
 
-miniProduct = request.getAttribute("miniProduct")
-optProductId = request.getAttribute("optProductId")
+miniProduct = request.getAttribute('miniProduct')
+optProductId = request.getAttribute('optProductId')
 webSiteId = WebSiteWorker.getWebSiteId(request)
 prodCatalogId = CatalogWorker.getCurrentCatalogId(request)
 productStoreId = ProductStoreWorker.getProductStoreId(request)
 cart = ShoppingCartEvents.getCartObject(request)
-context.remove("totalPrice")
+context.remove('totalPrice')
 
 if (optProductId) {
-    miniProduct = from("Product").where("productId", optProductId).queryOne()
+    miniProduct = from('Product').where('productId', optProductId).queryOne()
 }
 
-if (miniProduct && productStoreId && prodCatalogId ) {
-    // calculate the "your" price
-    priceParams = [product : miniProduct,
-                   prodCatalogId : prodCatalogId,
-                   webSiteId : webSiteId,
-                   currencyUomId : cart.getCurrency(),
-                   autoUserLogin : autoUserLogin,
-                   productStoreId : productStoreId]
-    if (userLogin) priceParams.partyId = userLogin.partyId
-    priceResult = runService('calculateProductPrice', priceParams)
+if (miniProduct && productStoreId && prodCatalogId) {
+    // calculate the 'your' price
+    priceParams = [product: miniProduct,
+                   prodCatalogId: prodCatalogId,
+                   webSiteId: webSiteId,
+                   currencyUomId: cart.getCurrency(),
+                   autoUserLogin: autoUserLogin,
+                   productStoreId: productStoreId]
+    if (userLogin) {
+        priceParams.partyId = userLogin.partyId
+    }
+    priceResult = run service: 'calculateProductPrice', with: priceParams
     // returns: isSale, price, orderItemPriceInfos
     context.priceResult = priceResult
     // Check if Price has to be displayed with tax
-    if ("Y".equals(productStore.get("showPricesWithVatTax"))) {
-        Map priceMap = runService('calcTaxForDisplay', ["basePrice": priceResult.get("price"), "locale": locale, "productId": optProductId, "productStoreId": productStoreId])
-        context.price = priceMap.get("priceWithTax")
+    if (productStore.showPricesWithVatTax == 'Y') {
+        Map priceMap = run service: 'calcTaxForDisplay', with: [basePrice: priceResult.price,
+                                                                productId: optProductId,
+                                                                productStoreId: productStoreId]
+        context.price = priceMap.priceWithTax
     } else {
-        context.price = priceResult.get("price")
+        context.price = priceResult.price
     }
 
     // get aggregated product totalPrice
-    if ("AGGREGATED".equals(miniProduct.productTypeId) || "AGGREGATED_SERVICE".equals(miniProduct.productTypeId)) {
+    if (['AGGREGATED', 'AGGREGATED_SERVICE'].contains(miniProduct.productTypeId)) {
         configWrapper = ProductConfigWorker.getProductConfigWrapper(optProductId, cart.getCurrency(), request)
         if (configWrapper) {
             configWrapper.setDefaultConfig()
             // Check if Config Price has to be displayed with tax
-            if ("Y".equals(productStore.get("showPricesWithVatTax"))) {
+            if (productStore.showPricesWithVatTax == 'Y') {
                 BigDecimal totalPriceNoTax = configWrapper.getTotalPrice()
-                Map totalPriceMap = runService('calcTaxForDisplay', ["basePrice": totalPriceNoTax, "locale": locale, "productId": optProductId, "productStoreId": productStoreId])
-                context.totalPrice = totalPriceMap.get("priceWithTax")
+                Map totalPriceMap = run service: 'calcTaxForDisplay', [basePrice: totalPriceNoTax,
+                                                                       productId: optProductId,
+                                                                       productStoreId: productStoreId]
+                context.totalPrice = totalPriceMap.priceWithTax
             } else {
                 context.totalPrice = configWrapper.getTotalPrice()
             }
@@ -82,11 +82,10 @@ if (miniProduct && productStoreId && prodCatalogId ) {
     context.miniProduct = miniProduct
     context.nowTimeLong = nowTimestamp.getTime()
 
-    context.miniProdFormName = request.getAttribute("miniProdFormName")
-    context.miniProdQuantity = request.getAttribute("miniProdQuantity")
+    context.miniProdFormName = request.getAttribute('miniProdFormName')
+    context.miniProdQuantity = request.getAttribute('miniProdQuantity')
 
     // make the miniProductContentWrapper
     ProductContentWrapper miniProductContentWrapper = new ProductContentWrapper(miniProduct, request)
     context.miniProductContentWrapper = miniProductContentWrapper
-
 }

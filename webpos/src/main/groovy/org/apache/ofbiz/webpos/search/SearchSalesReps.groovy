@@ -18,9 +18,9 @@
 */
 package org.apache.ofbiz.webpos.search
 
-context.salesReps = from("PartyRoleNameDetail").where("roleTypeId", "SALES_REP").orderBy("lastName", "firstName").queryList()
+context.salesReps = from('PartyRoleNameDetail').where('roleTypeId', 'SALES_REP').orderBy('lastName', 'firstName').queryList()
 
-shoppingCart = session.getAttribute("shoppingCart")
+shoppingCart = session.getAttribute('shoppingCart')
 if (shoppingCart) {
     context.cartSalesReps = shoppingCart.getAdditionalPartyRoleMap().SALES_REP
 }

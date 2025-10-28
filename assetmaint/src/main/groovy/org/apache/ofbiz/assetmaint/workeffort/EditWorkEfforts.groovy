@@ -22,52 +22,37 @@ maintHistSeqId = context.maintHistSeqId
 fixedAssetId = context.fixedAssetId
 workEffortId = context.workEffortId
 
-if (!maintHistSeqId) {
-    maintHistSeqId = parameters.maintHistSeqId
-}
-if (!fixedAssetId) {
-    fixedAssetId = parameters.fixedAssetId
-}
-if (!workEffortId) {
-    workEffortId = parameters.workEffortId
-}
-
 fixedAssetMaint = null
 workEffort = null
 fixedAsset = null
 rootWorkEffortId = null
 
 if (workEffortId) {
-    workEffort = from("WorkEffort").where("workEffortId", workEffortId).queryOne()
+    workEffort = from('WorkEffort').where('workEffortId', workEffortId).queryOne()
     if (workEffort) {
-        if (!fixedAssetId) {
-            fixedAssetId = workEffort.fixedAssetId
-        }
-        // If this is a child workeffort, locate the "root" workeffort
-        parentWorkEffort = from("WorkEffortAssoc").where("workEffortIdTo", workEffortId).queryFirst()
+        fixedAssetId = fixedAssetId ?: workEffort.fixedAssetId
+
+        // If this is a child workeffort, locate the 'root' workeffort
+        parentWorkEffort = from('WorkEffortAssoc').where('workEffortIdTo', workEffortId).queryFirst()
         while (parentWorkEffort) {
             rootWorkEffortId = parentWorkEffort.workEffortIdFrom
-            parentWorkEffort = from("WorkEffortAssoc").where("workEffortIdTo", rootWorkEffortId).queryFirst()
+            parentWorkEffort = from('WorkEffortAssoc').where('workEffortIdTo', rootWorkEffortId).queryFirst()
         }
     }
 }
 
-if (!rootWorkEffortId) {
-    rootWorkEffortId = workEffortId
-}
+rootWorkEffortId = rootWorkEffortId ?: workEffortId
 
 if (rootWorkEffortId) {
-    fixedAssetMaint = from("FixedAssetMaint").where("scheduleWorkEffortId", rootWorkEffortId).queryFirst()
+    fixedAssetMaint = from('FixedAssetMaint').where('scheduleWorkEffortId', rootWorkEffortId).queryFirst()
     if (fixedAssetMaint) {
         maintHistSeqId = fixedAssetMaint.maintHistSeqId
-        if (!fixedAssetId) {
-            fixedAssetId = fixedAssetMaint.fixedAssetId
-        }
+        fixedAssetId = fixedAssetId ?: fixedAssetMaint.fixedAssetId
     }
 }
 
 if (fixedAssetId) {
-    fixedAsset = from("FixedAsset").where("fixedAssetId", fixedAssetId).queryOne()
+    fixedAsset = from('FixedAsset').where('fixedAssetId', fixedAssetId).queryOne()
 }
 
 context.fixedAssetMaint = fixedAssetMaint

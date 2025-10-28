@@ -18,18 +18,17 @@
 */
 package org.apache.ofbiz.ecommerce
 
-import org.apache.ofbiz.base.util.*
-import org.apache.ofbiz.common.CommonWorkers
-import org.apache.ofbiz.webapp.control.*
+import org.apache.ofbiz.base.util.UtilHttp
+import org.apache.ofbiz.webapp.control.LoginWorker
 
-context.autoUserLogin = session.getAttribute("autoUserLogin")
-context.autoLogoutUrl = LoginWorker.makeLoginUrl(request, "autoLogout")
+context.autoUserLogin = session.getAttribute('autoUserLogin')
+context.autoLogoutUrl = LoginWorker.makeLoginUrl(request, 'autoLogout')
 
-previousParams = session.getAttribute("_PREVIOUS_PARAMS_")
+previousParams = session.getAttribute('_PREVIOUS_PARAMS_')
 if (previousParams) {
-    previousParams = UtilHttp.stripNamedParamsFromQueryString(previousParams, ["USERNAME", "PASSWORD"])
-    previousParams = "?" + previousParams
+    previousParams = UtilHttp.stripNamedParamsFromQueryString(previousParams, ['USERNAME', 'PASSWORD'])
+    previousParams = '?' + previousParams
 } else {
-    previousParams = ""
+    previousParams = ''
 }
 context.previousParams = previousParams

@@ -18,12 +18,17 @@
 */
 package org.apache.ofbiz.projectmgr
 
-allProjects = select("workEffortId").from("WorkEffortAndPartyAssign").where("workEffortTypeId", "PROJECT", "partyId", parameters.partyId).orderBy("workEffortName").cache(true).queryList()
+allProjects = select('workEffortId')
+        .from('WorkEffortAndPartyAssign')
+        .where('workEffortTypeId', 'PROJECT', 'partyId', parameters.partyId)
+        .orderBy('workEffortName')
+        .cache()
+        .queryList()
 
 projects = []
 allProjects.each { project ->
-    result = runService('getProject', ["userLogin" : parameters.userLogin, "projectId" : project.workEffortId, partyId : parameters.partyId])
-    projects.add(result.projectInfo)
+    result = run service: 'getProject', with: [projectId: project.workEffortId, partyId: parameters.partyId]
+    projects << result.projectInfo
 }
 if (projects) {
     context.billingList = projects

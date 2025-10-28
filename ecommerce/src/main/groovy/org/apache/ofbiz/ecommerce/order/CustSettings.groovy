@@ -18,47 +18,29 @@
 */
 package org.apache.ofbiz.ecommerce.order
 
-import org.apache.ofbiz.base.util.*
-import org.apache.ofbiz.entity.util.EntityUtil
+import org.apache.ofbiz.entity.GenericValue
 
-partyId = null
-
-if (userLogin) {
-    partyId = userLogin.partyId
-}
-
-if (!partyId && parameters.partyId) {
-    partyId = parameters.partyId
-}
-
+String partyId = userLogin
+        ? userLogin.partyId
+        : parameters.partyId
 if (partyId) {
     parameters.partyId = partyId
 
-    // NOTE: if there was an error, then don't look up and fill in all of this data, just use the values from the previous request (which will be in the parameters Map automagically)
-    if (!request.getAttribute("_ERROR_MESSAGE_") && !request.getAttribute("_ERROR_MESSAGE_LIST_")) {
-        person = from("Person").where("partyId", partyId).queryOne()
+    // NOTE: if there was an error, then don't look up and fill in all of this data,
+    // just use the values from the previous request (which will be in the parameters Map automagically)
+    if (!request.getAttribute('_ERROR_MESSAGE_') && !request.getAttribute('_ERROR_MESSAGE_LIST_')) {
+        GenericValue person = from('Person').where(partyId: partyId).queryOne()
         if (person) {
             context.callSubmitForm = true
             // should never be null for the anonymous checkout, but just in case
-            parameters.personalTitle = person.personalTitle
-            parameters.firstName = person.firstName
-            parameters.middleName = person.middleName
-            parameters.lastName = person.lastName
-            parameters.suffix = person.suffix
-
-            //Parameters not in use, Do we really need these here or should be removed.
-            parameters.residenceStatusEnumId = person.residenceStatusEnumId
-            parameters.maritalStatusEnumId = person.maritalStatusEnumId
-            parameters.employmentStatusEnumId = person.employmentStatusEnumId
-            parameters.occupation = person.occupation
-            parameters.yearsWithEmployer = person.yearsWithEmployer
-            parameters.monthsWithEmployer = person.monthsWithEmployer
-            parameters.existingCustomer = person.existingCustomer
+            ['personalTitle', 'firstName', 'middleName', 'lastName', 'suffix'].each {
+                parameters.(it) = person.partyId.(it)
+            }
 
             // birthDate -> birthDateDay, birthDateMonth, birthDateYear
-            birthDate = person.birthDate
+            Date birthDate = person.birthDate
             if (birthDate) {
-                // will be in the format "yyyy-mm-dd", like "2006-10-21"
+                // will be in the format 'yyyy-mm-dd', like '2006-10-21'
                 birthDateString = birthDate.toString()
                 parameters.birthDateDay = birthDateString.substring(8)
                 parameters.birthDateMonth = birthDateString.substring(5, 7)
@@ -69,7 +51,10 @@ if (partyId) {
         }
 
         // get the Email Address
-        emailPartyContactDetail = from("PartyContactDetailByPurpose").where("partyId", partyId, "contactMechPurposeTypeId", "PRIMARY_EMAIL").filterByDate().queryFirst()
+        GenericValue emailPartyContactDetail = from('PartyContactDetailByPurpose')
+                .where(partyId: partyId, contactMechPurposeTypeId: 'PRIMARY_EMAIL')
+                .filterByDate()
+                .queryFirst()
         if (emailPartyContactDetail) {
             parameters.emailContactMechId = emailPartyContactDetail.contactMechId
             parameters.emailAddress = emailPartyContactDetail.infoString
@@ -77,7 +62,10 @@ if (partyId) {
         }
 
         // get the Phone Numbers
-        homePhonePartyContactDetail = from("PartyContactDetailByPurpose").where("partyId", partyId, "contactMechPurposeTypeId", "PHONE_HOME").filterByDate().queryFirst()
+        GenericValue homePhonePartyContactDetail = from('PartyContactDetailByPurpose')
+                .where(partyId: partyId, contactMechPurposeTypeId: 'PHONE_HOME')
+                .filterByDate()
+                .queryFirst()
         if (homePhonePartyContactDetail) {
             parameters.homePhoneContactMechId = homePhonePartyContactDetail.contactMechId
             parameters.homeCountryCode = homePhonePartyContactDetail.countryCode
@@ -87,7 +75,10 @@ if (partyId) {
             parameters.homeSol = homePhonePartyContactDetail.allowSolicitation
         }
 
-        workPhonePartyContactDetail = from("PartyContactDetailByPurpose").where("partyId", partyId, "contactMechPurposeTypeId", "PHONE_WORK").filterByDate().queryFirst()
+        GenericValue workPhonePartyContactDetail = from('PartyContactDetailByPurpose')
+                .where(partyId: partyId, contactMechPurposeTypeId: 'PHONE_WORK')
+                .filterByDate()
+                .queryFirst()
         if (workPhonePartyContactDetail) {
             parameters.workPhoneContactMechId = workPhonePartyContactDetail.contactMechId
             parameters.workCountryCode = workPhonePartyContactDetail.countryCode

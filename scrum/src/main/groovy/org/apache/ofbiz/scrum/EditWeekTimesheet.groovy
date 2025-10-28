@@ -18,182 +18,183 @@
 */
 package org.apache.ofbiz.scrum
 
-import java.util.*
-import java.lang.*
-import org.apache.ofbiz.base.util.UtilProperties
 import org.apache.ofbiz.base.util.UtilDateTime
+import org.apache.ofbiz.base.util.UtilProperties
+import org.apache.ofbiz.entity.GenericValue
 import org.apache.ofbiz.entity.condition.EntityComparisonOperator
 import org.apache.ofbiz.entity.condition.EntityCondition
 import org.apache.ofbiz.entity.condition.EntityOperator
 import org.apache.ofbiz.entity.util.EntityUtil
 
-uiLabelMap = UtilProperties.getResourceBundleMap("scrumUiLabels", locale)
+uiLabelMap = UtilProperties.getResourceBundleMap('scrumUiLabels', locale)
 
-partyId = parameters.partyId
-if (!partyId) {
-    partyId = parameters.userLogin.partyId
-}
+partyId = parameters.partyId ?: parameters.userLogin.partyId
 
 // show the requested timesheet, otherwise the current , if not exist create
 timesheet = null
 timesheetId = parameters.timesheetId
 if (timesheetId) {
-    timesheet = from("Timesheet").where("timesheetId", timesheetId).queryOne()
+    timesheet = from('Timesheet').where(timesheetId: timesheetId).queryOne()
     partyId = timesheet.partyId // use the party from this timesheet
 } else {
     // make sure because of timezone changes, not a duplicate timesheet is created
-    midweek = UtilDateTime.addDaysToTimestamp(UtilDateTime.getWeekStart(UtilDateTime.nowTimestamp()),3)
+    midweek = UtilDateTime.addDaysToTimestamp(UtilDateTime.getWeekStart(UtilDateTime.nowTimestamp()), 3)
     entryExprs = EntityCondition.makeCondition([
-        EntityCondition.makeCondition("fromDate", EntityComparisonOperator.LESS_THAN, midweek),
-        EntityCondition.makeCondition("thruDate", EntityComparisonOperator.GREATER_THAN, midweek),
-        EntityCondition.makeCondition("partyId", EntityComparisonOperator.EQUALS, partyId)
-        ], EntityOperator.AND)
-    entryIterator = from("Timesheet").where(entryExprs).queryIterator()
+            EntityCondition.makeCondition('fromDate', EntityComparisonOperator.LESS_THAN, midweek),
+            EntityCondition.makeCondition('thruDate', EntityComparisonOperator.GREATER_THAN, midweek),
+            EntityCondition.makeCondition('partyId', EntityComparisonOperator.EQUALS, partyId)
+    ], EntityOperator.AND)
+    entryIterator = from('Timesheet').where(entryExprs).queryIterator()
     timesheet = entryIterator.next()
     entryIterator.close()
-    if (timesheet == null) {
-        result = runService('createProjectTimesheet', ["userLogin" : parameters.userLogin, "partyId" : partyId])
+    if (!timesheet) {
+        result = run servic: 'createProjectTimesheet', with: [partyId: partyId]
         if (result && result.timesheetId) {
-            timesheet = from("Timesheet").where("timesheetId", result.timesheetId).queryOne()
+            timesheet = from('Timesheet').where(timesheetId: result.timesheetId).queryOne()
         }
     }
 }
-if (!timesheet) return
+if (!timesheet) {
+    return
+}
 context.timesheet = timesheet
 context.weekNumber = UtilDateTime.weekNumber(timesheet.fromDate)
 
 // get the user names
-context.partyNameView = from("PartyNameView").where("partyId", partyId).queryOne()
+context.partyNameView = from('PartyNameView').where('partyId', partyId).queryOne()
 // get the default rate for this person
-rateTypes = from("PartyRate").where("partyId", partyId, "defaultRate", "Y").filterByDate().queryList()
+rateTypes = from('PartyRate').where('partyId', partyId, 'defaultRate', 'Y').filterByDate().queryList()
 if (rateTypes) {
     context.defaultRateTypeId = rateTypes[0].rateTypeId
 }
 
 entries = []
-entry = ["timesheetId" : timesheet.timesheetId]
+entry = [timesheetId: timesheet.timesheetId]
 taskTotal = 0.00
-day0Total = 0.00; day1Total=0.00; day2Total=0.00; day3Total=0.00; day4Total=0.00; day5Total=0.00; day6Total=0.00
+day0Total = 0.00
+day1Total = 0.00
+day2Total = 0.00
+day3Total = 0.00
+day4Total = 0.00
+day5Total = 0.00
+day6Total = 0.00
 pHours = 0.00
 timeEntry = null
 lastTimeEntry = null
 
 // retrieve work effort data when the workeffortId has changed.
 void retrieveWorkEffortData() {
-        // get the planned number of hours
-        entryWorkEffort = lastTimeEntry.getRelatedOne("WorkEffort", false)
-        if (entryWorkEffort) {
-            plannedHours = entryWorkEffort.getRelated("WorkEffortSkillStandard", null, null, false)
-            pHours = 0.00
-            plannedHours.each { plannedHour ->
-                if (plannedHour.estimatedDuration) {
-                    pHours += plannedHour.estimatedDuration
-                }
+    // get the planned number of hours
+    entryWorkEffort = lastTimeEntry.getRelatedOne('WorkEffort', false)
+    if (entryWorkEffort) {
+        plannedHours = entryWorkEffort.getRelated('WorkEffortSkillStandard', null, null, false)
+        pHours = 0.00
+        plannedHours.each { plannedHour ->
+            if (plannedHour.estimatedDuration) {
+                pHours += plannedHour.estimatedDuration
             }
-            entry.plannedHours = pHours
-            actualHours = entryWorkEffort.getRelated("TimeEntry", null, null, false)
-            aHours = 0.00
-            actualHours.each { actualHour ->
-                if (actualHour.hours) {
-                    aHours += actualHour.hours
-                }
-            }
-            entry.actualHours = aHours
-            // get party assignment data to be able to set the task to complete
-            workEffortPartyAssigns = EntityUtil.filterByDate(entryWorkEffort.getRelated("WorkEffortPartyAssignment", ["partyId" : partyId], null, false))
-            if (workEffortPartyAssigns) {
-                workEffortPartyAssign = workEffortPartyAssigns[0]
-                entry.fromDate = workEffortPartyAssign.getTimestamp("fromDate")
-                entry.roleTypeId = workEffortPartyAssign.roleTypeId
-                if ("PAS_COMPLETED".equals(workEffortPartyAssign.statusId)) {
-                    entry.checkComplete = "Y"
-                }
-            }
-
-            // get project/phase information
-            entry.workEffortId = entryWorkEffort.workEffortId
-            entry.workEffortName = entryWorkEffort.workEffortName
-            result = runService('getProjectIdAndNameFromTask', ["userLogin" : parameters.userLogin,"taskId" : entryWorkEffort.workEffortId])
-                entry.sprintId = result.phaseId
-                entry.sprintName = result.phaseName
-                entry.projectId = result.projectId
-                entry.projectName = result.projectName
-                entry.taskWbsId = result.taskWbsId
-
         }
-        entry.total = taskTotal
-        //Drop Down Lists
-        entries.add(entry)
-        // start new entry
-        taskTotal = 0.00
-        entry = ["timesheetId" : timesheet.timesheetId]
+        entry.plannedHours = pHours
+        actualHours = entryWorkEffort.getRelated('TimeEntry', null, null, false)
+        aHours = 0.00
+        actualHours.each { actualHour ->
+            if (actualHour.hours) {
+                aHours += actualHour.hours
+            }
+        }
+        entry.actualHours = aHours
+        // get party assignment data to be able to set the task to complete
+        GenericValue workEffortPartyAssign = EntityUtil.filterByDate(entryWorkEffort.getRelated('WorkEffortPartyAssignment',
+                [partyId: partyId], null, false))?.first()
+        if (workEffortPartyAssign) {
+            entry.fromDate = workEffortPartyAssign.fromDate
+            entry.roleTypeId = workEffortPartyAssign.roleTypeId
+            if (workEffortPartyAssign.statusId == 'PAS_COMPLETED') {
+                entry.checkComplete = 'Y'
+            }
+        }
+
+        // get project/phase information
+        entry.workEffortId = entryWorkEffort.workEffortId
+        entry.workEffortName = entryWorkEffort.workEffortName
+        Map result = run service: 'getProjectIdAndNameFromTask', with: [taskId: entryWorkEffort.workEffortId]
+        entry.phaseId = result.phaseId
+        entry.phaseName = result.phaseName
+        entry.projectId = result.projectId
+        entry.projectName = result.projectName
+        entry.taskWbsId = result.taskWbsId
+    }
+    entry.total = taskTotal
+    //Drop Down Lists
+    entries << entry
+    // start new entry
+    taskTotal = 0.00
+    entry = [timesheetId: timesheet.timesheetId]
 }
 
-timeEntries = timesheet.getRelated("TimeEntry", null, ["workEffortId", "rateTypeId", "fromDate"], false)
-te = timeEntries.iterator()
-while (te.hasNext()) {
-    // only fill lastTimeEntry when not the first time
-    if (timeEntry!=void) {
-        lastTimeEntry = timeEntry
-    }
-    timeEntry = te.next()
-
-    if (lastTimeEntry &&
-            (!lastTimeEntry.workEffortId.equals(timeEntry.workEffortId) ||
-            !lastTimeEntry.rateTypeId.equals(timeEntry.rateTypeId))) {
-            retrieveWorkEffortData()
+timesheet
+        .getRelated('TimeEntry', null, ['workEffortId', 'rateTypeId', 'fromDate'], false)
+        .each { timeEntry ->
+            if (lastTimeEntry &&
+                    (timeEntry.workEffortId != lastTimeEntry.workEffortId ||
+                            timeEntry.rateTypeId != lastTimeEntry.rateTypeId)) {
+                retrieveWorkEffortData()
+            }
+            if (timeEntry.hours) {
+                dayNumber = 'd' + (timeEntry.fromDate.getTime() - timesheet.fromDate.getTime()) / (24 * 60 * 60 * 1000)
+                hours = timeEntry.hours.doubleValue()
+                entry.(dayNumber) = hours
+                switch (dayNumber) {
+                    case 'd0' -> day0Total += hours
+                    case 'd1' -> day1Total += hours
+                    case 'd2' -> day2Total += hours
+                    case 'd3' -> day3Total += hours
+                    case 'd4' -> day4Total += hours
+                    case 'd5' -> day5Total += hours
+                    case 'd6' -> day6Total += hours
+                }
+                taskTotal += hours
+            }
+            entry.rateTypeId = timeEntry.rateTypeId
+            lastTimeEntry = timeEntry
         }
-    if (timeEntry.hours) {
-        dayNumber = "d" + (timeEntry.fromDate.getTime() - timesheet.fromDate.getTime()) / (24*60*60*1000)
-        hours = timeEntry.hours.doubleValue()
-        entry.put(String.valueOf(dayNumber), hours)
-        if ("d0".equals(dayNumber)) day0Total += hours
-        if ("d1".equals(dayNumber)) day1Total += hours
-        if ("d2".equals(dayNumber)) day2Total += hours
-        if ("d3".equals(dayNumber)) day3Total += hours
-        if ("d4".equals(dayNumber)) day4Total += hours
-        if ("d5".equals(dayNumber)) day5Total += hours
-        if ("d6".equals(dayNumber)) day6Total += hours
-        taskTotal += hours
-    }
-    entry.rateTypeId = timeEntry.rateTypeId
-}
 
 if (timeEntry) {
     lastTimeEntry = timeEntry
     retrieveWorkEffortData()
-    }
+}
 
 // add empty lines if timesheet not completed
-if (!"TIMESHEET_COMPLETED".equals(timesheet.statusId)) {
-    for (c=0; c < 3; c++) { // add empty lines
-        entries.add(["timesheetId" : timesheet.timesheetId])
+if (timesheet.statusId != 'TIMESHEET_COMPLETED') {
+    for (c = 0; c < 3; c++) { // add empty lines
+        entries << [timesheetId: timesheet.timesheetId]
     }
 }
 
 // add the totals line if at least one entry
 if (timeEntry) {
-    entry = ["timesheetId" : timesheet.timesheetId]
-    entry.d0 = day0Total
-    entry.d1 = day1Total
-    entry.d2 = day2Total
-    entry.d3 = day3Total
-    entry.d4 = day4Total
-    entry.d5 = day5Total
-    entry.d6 = day6Total
-    entry.phaseName = uiLabelMap.ScrumTotals
-    entry.workEffortId = "Totals"
-    entry.total = day0Total + day1Total + day2Total + day3Total + day4Total + day5Total + day6Total
-    entries.add(entry)
+    entry = [timesheetId: timesheet.timesheetId]
+    entry.with {
+        d0 = day0Total
+        d1 = day1Total
+        d2 = day2Total
+        d3 = day3Total
+        d4 = day4Total
+        d5 = day5Total
+        d6 = day6Total
+        phaseName = uiLabelMap.ProjectMgrTotals
+        workEffortId = 'Totals'
+        total = day0Total + day1Total + day2Total + day3Total + day4Total + day5Total + day6Total
+    }
+    entries << entry
 }
 context.timeEntries = entries
 // get all timesheets of this user, including the planned hours
-timesheetsDb = from("Timesheet").where("partyId", partyId).orderBy("fromDate DESC").queryList()
-timesheets = new LinkedList()
+timesheetsDb = from('Timesheet').where('partyId', partyId).orderBy('fromDate DESC').queryList()
+timesheets = []
 timesheetsDb.each { timesheetDb ->
-    timesheet = [:]
-    timesheet.putAll(timesheetDb)
-    entries = timesheetDb.getRelated("TimeEntry", null, null, false)
+    timesheet = [*: timesheetDb]
+    entries = timesheetDb.getRelated('TimeEntry', null, null, false)
     hours = 0.00
     entries.each { timeEntry ->
         if (timeEntry.hours) {
@@ -202,6 +203,6 @@ timesheetsDb.each { timesheetDb ->
     }
     timesheet.weekNumber = UtilDateTime.weekNumber(timesheetDb.fromDate)
     timesheet.hours = hours
-    timesheets.add(timesheet)
+    timesheets << timesheet
 }
 context.timesheets = timesheets

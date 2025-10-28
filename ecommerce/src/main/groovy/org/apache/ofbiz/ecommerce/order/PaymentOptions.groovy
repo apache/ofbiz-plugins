@@ -18,15 +18,15 @@
 */
 package org.apache.ofbiz.ecommerce.order
 
-import org.apache.ofbiz.order.shoppingcart.*
+import org.apache.ofbiz.order.shoppingcart.ShoppingCartEvents
 
 //Get the Cart
 cart = ShoppingCartEvents.getCartObject(request)
 paymentMethodTypeIds = cart.getPaymentMethodTypeIds()
 paymentMethodTypeIds.each { paymentMethodTypeId ->
     context.callSubmitForm = true
-    if ("GIFT_CARD".equals(paymentMethodTypeId)) {
-        context.addGiftCard = "Y"
+    if (paymentMethodTypeId == 'GIFT_CARD') {
+        context.addGiftCard = 'Y'
     } else {
         context.paymentMethodTypeId = paymentMethodTypeId
     }

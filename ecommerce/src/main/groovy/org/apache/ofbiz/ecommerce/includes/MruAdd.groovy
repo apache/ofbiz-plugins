@@ -18,41 +18,24 @@
 */
 package org.apache.ofbiz.ecommerce.includes
 
-import java.util.ArrayList
-import java.util.Collection
-import java.util.HashMap
-import java.util.Iterator
-import java.util.LinkedList
-import java.util.List
-import java.util.Map
-import java.util.Set
-import java.util.TreeSet
-
-import org.apache.ofbiz.base.util.*
-import org.apache.ofbiz.entity.*
-import org.apache.ofbiz.security.*
-import org.apache.ofbiz.service.*
-import org.apache.ofbiz.entity.model.*
+import org.apache.ofbiz.base.util.UtilHttp
+import org.apache.ofbiz.base.util.collections.LifoSet
 import org.apache.ofbiz.content.ContentManagementWorker
 import org.apache.ofbiz.content.content.ContentWorker
-import org.apache.ofbiz.base.util.collections.LifoSet
 
-import jakarta.servlet.*
-import jakarta.servlet.http.*
-
-lookupCaches = session.getAttribute("lookupCaches")
-//logInfo("entityName:" + entityName)
-//logInfo("in MruAdd.groovy, lookupCaches:" + lookupCaches)
+lookupCaches = session.getAttribute('lookupCaches')
+//logInfo('entityName:' + entityName)
+//logInfo('in MruAdd.groovy, lookupCaches:' + lookupCaches)
 
 if (!lookupCaches) {
     lookupCaches = [:]
-    session.setAttribute("lookupCaches", lookupCaches)
+    session.setAttribute('lookupCaches', lookupCaches)
 }
 
 cacheEntityName = entityName
-//logInfo("cacheEntityName:" + cacheEntityName)
+//logInfo('cacheEntityName:' + cacheEntityName)
 lifoSet = lookupCaches[cacheEntityName]
-//logInfo("lifoSet:" + lifoSet)
+//logInfo('lifoSet:' + lifoSet)
 if (!lifoSet) {
     lifoSet = new LifoSet(10)
     lookupCaches[cacheEntityName] = lifoSet
@@ -61,11 +44,11 @@ if (!lifoSet) {
 paramMap = UtilHttp.getParameterMap(request)
 contentId = paramMap.contentId
 contentAssocDataResourceViewFrom = ContentWorker.getSubContentCache(delegator, null, null, contentId, null, null, null, null, null)
-//logInfo("in mruadd, contentAssocDataResourceViewFrom :" + contentAssocDataResourceViewFrom )
+//logInfo('in mruadd, contentAssocDataResourceViewFrom :' + contentAssocDataResourceViewFrom )
 if (contentAssocDataResourceViewFrom) {
-    lookupCaches = session.getAttribute("lookupCaches")
+    lookupCaches = session.getAttribute('lookupCaches')
     viewPK = contentAssocDataResourceViewFrom.getPrimaryKey()
-    //logInfo("in mruadd, viewPK :" + viewPK )
+    //logInfo('in mruadd, viewPK :' + viewPK )
     if (viewPK) {
         ContentManagementWorker.mruAdd(session, viewPK)
     }

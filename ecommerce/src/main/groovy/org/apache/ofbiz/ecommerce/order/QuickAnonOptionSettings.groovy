@@ -18,14 +18,11 @@
 */
 package org.apache.ofbiz.ecommerce.order
 
-import org.apache.ofbiz.entity.*
-import org.apache.ofbiz.base.util.*
-import org.apache.ofbiz.order.shoppingcart.*
-import org.apache.ofbiz.order.shoppingcart.shipping.*
-import org.apache.ofbiz.party.contact.*
-import org.apache.ofbiz.product.store.*
+import org.apache.ofbiz.order.shoppingcart.shipping.ShippingEstimateWrapper
+import org.apache.ofbiz.party.contact.ContactHelper
+import org.apache.ofbiz.product.store.ProductStoreWorker
 
-shoppingCart = session.getAttribute("shoppingCart")
+shoppingCart = session.getAttribute('shoppingCart')
 context.shoppingCart = shoppingCart
 productStore = ProductStoreWorker.getProductStore(request)
 
@@ -36,16 +33,16 @@ if (shoppingCart) {
 }
 
 // nuke the event messages
-request.removeAttribute("_EVENT_MESSAGE_")
+request.removeAttribute('_EVENT_MESSAGE_')
 
 party = null
-partyId = session.getAttribute("orderPartyId")
+partyId = session.getAttribute('orderPartyId')
 if (partyId) {
-    party = from("Party").where("partyId", partyId).queryOne()
+    party = from('Party').where('partyId', partyId).queryOne()
     context.party = party
 }
 
-context.emailList = ContactHelper.getContactMechByType(party, "EMAIL_ADDRESS", false)
+context.emailList = ContactHelper.getContactMechByType(party, 'EMAIL_ADDRESS', false)
 
 if (shoppingCart?.getShipmentMethodTypeId() && shoppingCart.getCarrierPartyId()) {
     context.chosenShippingMethod = shoppingCart.getShipmentMethodTypeId() + '@' + shoppingCart.getCarrierPartyId()

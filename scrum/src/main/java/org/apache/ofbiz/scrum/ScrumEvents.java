@@ -75,7 +75,7 @@ public class ScrumEvents {
             List<GenericValue> partyRoleList = EntityQuery.use(delegator).from("PartyRole").where(exprAnds).queryList();
             if (UtilValidate.isNotEmpty(partyRoleList)) {
                 List<GenericValue> timesheetList = EntityQuery.use(delegator).from("Timesheet").where("partyId", partyId, "statusId",
-                        "TIMESHEET_IN_PROCESS").cache(true).queryList();
+                        "TIMESHEET_IN_PROCESS").cache().queryList();
                 if (UtilValidate.isNotEmpty(timesheetList)) {
                     for (GenericValue timesheetMap : timesheetList) {
                         String timesheetId = timesheetMap.getString("timesheetId");
@@ -91,7 +91,7 @@ public class ScrumEvents {
                                         "timesheetId", timesheetId, "fromDate", realTimeDate), null, false);
                                 //check EmplLeave
                                 List<GenericValue> emplLeaveList = EntityQuery.use(delegator).from("EmplLeave").where("partyId", partyId, "fromDate",
-                                        realTimeDate).cache(true).queryList();
+                                        realTimeDate).cache().queryList();
                                 if (UtilValidate.isEmpty(timeEntryList) && UtilValidate.isEmpty(emplLeaveList)) {
                                     Map<String, Object> noEntryMap = new HashMap<>();
                                     noEntryMap.put("timesheetId", timesheetId);

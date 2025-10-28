@@ -18,32 +18,34 @@
 */
 package org.apache.ofbiz.webpos.search
 
-import org.apache.ofbiz.base.util.UtilValidate
+import org.apache.ofbiz.entity.GenericValue
+import org.apache.ofbiz.order.shoppingcart.ShoppingCart
 import org.apache.ofbiz.webpos.WebPosEvents
+import org.apache.ofbiz.webpos.session.WebPosSession
 
-webPosSession = WebPosEvents.getWebPosSession(request, null)
+WebPosSession webPosSession = WebPosEvents.getWebPosSession(request, null)
 if (webPosSession) {
-    shoppingCart = webPosSession.getCart()
-    shipToCustomerPartyId = shoppingCart.getShipToCustomerPartyId()
+    ShoppingCart shoppingCart = webPosSession.getCart()
+    String shipToCustomerPartyId = shoppingCart.getShipToCustomerPartyId()
     if (shipToCustomerPartyId) {
-        context.personShipTo = from("Person").where("partyId", shipToCustomerPartyId).queryOne()
+        context.personShipTo = from('Person').where(partyId: shipToCustomerPartyId).cache().queryOne()
     }
-    shippingContactMechId = shoppingCart.getContactMech("SHIPPING_LOCATION")
+    String shippingContactMechId = shoppingCart.getContactMechId('SHIPPING_LOCATION')
     if (shippingContactMechId) {
-        contactMech = from("ContactMech").where("contactMechId", shippingContactMechId).queryOne()
-        if (contactMech && "POSTAL_ADDRESS".equals(contactMech.contactMechTypeId)) {
-            context.shippingPostalAddress = contactMech.getRelatedOne("PostalAddress", false)
+        GenericValue contactMech = from('ContactMech').where(contactMechId: shippingContactMechId).queryOne()
+        if (contactMech && contactMech.contactMechTypeId == 'POSTAL_ADDRESS') {
+            context.shippingPostalAddress = contactMech.getRelatedOne('PostalAddress', false)
         }
     }
-    billToCustomerPartyId = shoppingCart.getBillToCustomerPartyId()
+    String billToCustomerPartyId = shoppingCart.getBillToCustomerPartyId()
     if (billToCustomerPartyId) {
-        context.personBillTo = from("Person").where("partyId", billToCustomerPartyId).queryOne()
+        context.personBillTo = from('Person').where('partyId', billToCustomerPartyId).cache().queryOne()
     }
-    billingContactMechId = shoppingCart.getContactMech("BILLING_LOCATION")
+    String billingContactMechId = shoppingCart.getContactMechId('BILLING_LOCATION')
     if (billingContactMechId) {
-        contactMech = from("ContactMech").where("contactMechId", billingContactMechId).queryOne()
-        if (contactMech && "POSTAL_ADDRESS".equals(contactMech.contactMechTypeId)) {
-            context.billingPostalAddress = contactMech.getRelatedOne("PostalAddress", false)
+        GenericValue contactMech = from('ContactMech').where('contactMechId', billingContactMechId).queryOne()
+        if (contactMech && contactMech.contactMechTypeId == 'POSTAL_ADDRESS') {
+            context.billingPostalAddress = contactMech.getRelatedOne('PostalAddress', false)
         }
     }
 }

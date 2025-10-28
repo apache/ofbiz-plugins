@@ -26,25 +26,25 @@ package org.apache.ofbiz.webpos.catalog
 import org.apache.ofbiz.product.catalog.CatalogWorker
 import org.apache.ofbiz.product.category.CategoryContentWrapper
 
-detailScreen = "categorydetail"
+detailScreen = 'categorydetail'
 catalogName = CatalogWorker.getCatalogName(request)
 
 productCategoryId = parameters.productCategoryId
-if (!(productCategoryId) && request.getAttribute("topCategoryId")) {
-    productCategoryId = request.getAttribute("topCategoryId")
+if (!(productCategoryId) && request.getAttribute('topCategoryId')) {
+    productCategoryId = request.getAttribute('topCategoryId')
 }
 
-category = from("ProductCategory").where("productCategoryId", productCategoryId).cache(true).queryOne()
+category = from('ProductCategory').where('productCategoryId', productCategoryId).cache().queryOne()
 if (category) {
     if (category.detailScreen) {
         detailScreen = category.detailScreen
     }
     categoryContentWrapper = new CategoryContentWrapper(category, request)
-    context.title = categoryContentWrapper.get("CATEGORY_NAME", "html")
-    categoryDescription = categoryContentWrapper.get("DESCRIPTION", "html")
+    context.title = categoryContentWrapper.get('CATEGORY_NAME', 'html')
+    categoryDescription = categoryContentWrapper.get('DESCRIPTION', 'html')
     if (categoryDescription) {
         context.metaDescription = categoryDescription
-        context.metaKeywords = categoryDescription + ", " + catalogName
+        context.metaKeywords = categoryDescription + ', ' + catalogName
     } else {
         context.metaKeywords = catalogName
     }
@@ -58,6 +58,6 @@ if (templatePathPrefix) {
 }
 context.detailScreen = detailScreen
 
-request.setAttribute("productCategoryId", productCategoryId)
-request.setAttribute("defaultViewSize", 10)
-request.setAttribute("limitView", true)
+request.setAttribute('productCategoryId', productCategoryId)
+request.setAttribute('defaultViewSize', 10)
+request.setAttribute('limitView', true)

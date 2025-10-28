@@ -24,6 +24,7 @@ import java.util.List;
 public class ModelResource {
 
     private List<ModelOperation> operations;
+    private List<ModelResource> subResources = new ArrayList<>();
     private String name;
     private String path;
     private String displayName;
@@ -161,6 +162,21 @@ public class ModelResource {
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    /**
+     * Adds a sub-resource to this resource.
+     * @param resource the child resource to add
+     */
+    public void addSubResource(ModelResource resource) {
+        this.subResources.add(resource);
+    }
+
+    /**
+     * @return the list of sub-resources
+     */
+    public List<ModelResource> getSubResources() {
+        return subResources;
     }
 
     /**

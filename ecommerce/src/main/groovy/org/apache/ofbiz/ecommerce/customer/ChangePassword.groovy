@@ -18,21 +18,15 @@
 */
 package org.apache.ofbiz.ecommerce.customer
 
-import java.util.HashMap
 import org.apache.ofbiz.base.util.UtilHttp
 
-tryEntity = true
-errorMessage = parameters._ERROR_MESSAGE_
-if (errorMessage) {
-    tryEntity = false
-}
-
-donePage = parameters.DONE_PAGE ?: "viewprofile"
+boolean tryEntity = !parameters._ERROR_MESSAGE_
 
 userLoginData = userLogin
-if (!tryEntity) userLoginData = UtilHttp.getParameterMap(request)
-if (!userLoginData) userLoginData = [:]
+if (!tryEntity) {
+    userLoginData = UtilHttp.getParameterMap(request)
+}
 
-context.donePage = donePage
-context.userLoginData = userLoginData
+context.donePage = parameters.DONE_PAGE ?: 'viewprofile'
+context.userLoginData = userLoginData ?: [:]
 

@@ -26,7 +26,7 @@ maintHistSeqId = parameters.maintHistSeqId
 workEffortId = parameters.workEffortId
 
 if (!maintHistSeqId && workEffortId) {
-    fixedAssetMaint = from("FixedAssetMaint").where("scheduleWorkEffortId", workEffortId).queryFirst()
+    fixedAssetMaint = from('FixedAssetMaint').where('scheduleWorkEffortId', workEffortId).queryFirst()
     if (fixedAssetMaint) {
         parameters.fixedAssetId = fixedAssetMaint.fixedAssetId
         parameters.maintHistSeqId = fixedAssetMaint.maintHistSeqId
