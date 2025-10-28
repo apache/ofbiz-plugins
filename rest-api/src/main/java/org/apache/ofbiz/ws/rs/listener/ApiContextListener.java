@@ -25,9 +25,6 @@ import jakarta.servlet.ServletContextListener;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.DelegatorFactory;
-//import org.apache.ofbiz.security.Security;
-//import org.apache.ofbiz.security.SecurityConfigurationException;
-//import org.apache.ofbiz.security.SecurityFactory;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceContainer;
 
@@ -43,18 +40,9 @@ public class ApiContextListener implements ServletContextListener {
         servletContext = sce.getServletContext();
         Delegator delegator = DelegatorFactory.getDelegator(servletContext.getInitParameter("entityDelegatorName"));
         LocalDispatcher dispatcher = ServiceContainer.getLocalDispatcher(servletContext.getInitParameter("localDispatcherName"), delegator);
-        /*
-        Security security = null;
-        try {
-            security = SecurityFactory.getInstance(delegator);
-        } catch (SecurityConfigurationException e) {
-            Debug.logError(e, "Unable to obtain an instance of the security object.", MODULE);
-        }
-        */
         Debug.logInfo("Api Jersey Context initialized, delegator " + delegator + ", dispatcher", MODULE);
         servletContext.setAttribute("delegator", delegator);
         servletContext.setAttribute("dispatcher", dispatcher);
-        //servletContext.setAttribute("security", security);
     }
 
     /**
@@ -64,7 +52,6 @@ public class ApiContextListener implements ServletContextListener {
         Debug.logInfo("Api Jersey Context destroyed, removing delegator and dispatcher ", MODULE);
         context.removeAttribute("delegator");
         context.removeAttribute("dispatcher");
-        //context.removeAttribute("security");
         context = null;
     }
 
