@@ -142,14 +142,14 @@ public class ScrumServices {
             if (UtilValidate.isNotEmpty(repository) && UtilValidate.isNotEmpty(revision)
                     && UtilValidate.isValidUrl(repository) && UtilValidate.isInteger(revision)) {
                 String logline = null;
-                Process logProcess = Runtime.getRuntime().exec(new String[]{"svn",},
+                Process logProcess = Runtime.getRuntime().exec(new String[]{"svn"},
                         new String[]{"log", "-r", revision, repository});
                 BufferedReader logIn = new BufferedReader(new InputStreamReader(logProcess.getInputStream()));
                 while ((logline = logIn.readLine()) != null) {
                     logMessage.append(logline).append("\n");
                 }
                 String diffline = null;
-                Process diffProcess = Runtime.getRuntime().exec(new String[]{"svn",},
+                Process diffProcess = Runtime.getRuntime().exec(new String[]{"svn"},
                         new String[]{"diff", "-r", StringUtil.addToNumberString(revision.trim(), -1) + ":" + revision, repository});
                 BufferedReader diffIn = new BufferedReader(new InputStreamReader(diffProcess.getInputStream()));
                 while ((diffline = diffIn.readLine()) != null) {
@@ -189,7 +189,7 @@ public class ScrumServices {
                 for (int i = 1; i <= revision; i++) {
                     String logline = null;
                     List<String> logMessageList = new LinkedList<>();
-                    Process logProcess = Runtime.getRuntime().exec(new String[]{"svn",},
+                    Process logProcess = Runtime.getRuntime().exec(new String[]{"svn"},
                             new String[]{"log", "-r", String.valueOf(i), repositoryRoot});
                     BufferedReader logIn = new BufferedReader(new InputStreamReader(logProcess.getInputStream()));
                     while ((logline = logIn.readLine()) != null) {
