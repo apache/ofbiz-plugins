@@ -18,6 +18,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+<!--ecommerce-notification-tests needs order-tests-data-load so you can't use ecommerce-notification-tests alone -->
+
 <test-suite suite-name="ecommercetests"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/test-suite.xsd">
