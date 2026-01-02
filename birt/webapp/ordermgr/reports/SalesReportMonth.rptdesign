@@ -18,7 +18,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.20" id="1">
-    <property name="comments">Copyright (c) 2007 &lt;&lt;Your Company Name here>></property>
+    <property name="comments">Copyright (c) 2026 &lt;&lt;Your Company Name here>></property>
     <property name="createdBy">Eclipse BIRT Designer Version 3.7.1.v20110905 Build &lt;3.7.1.v20110913-1734></property>
     <html-property name="description">Creates a blank report with no predefined content.</html-property>
     <list-property name="userProperties">
