@@ -17,6 +17,8 @@
  * under the License.
  */
 
+/* - Commented out because qs.js has a transitive issue due to request.js. See https://issues.apache.org/jira/browse/OFBIZ-13339 for details
+
 const ganttItemsJson = document.getElementById("ofbizGantItemsJson").value;
 const ganttItems = JSON.parse(ganttItemsJson);
 
@@ -38,3 +40,4 @@ for (t of ganttItems) {
 }
 
 g.Draw();
+*/
