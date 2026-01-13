@@ -22,5 +22,8 @@ under the License.
 
 <input id="ofbizGantItemsJson" type="hidden" value="${phaseTaskListJson}"/>
 
+<#-- Commented out because qs.js has a transitive issue due to request.js. See https://issues.apache.org/jira/browse/OFBIZ-13339 for details
 <script type="text/javascript" src="/projectmgr/node_modules/jsgantt-improved/dist/jsgantt.js"></script>
 <script type="text/javascript" src="/projectmgr/static/projectmgr.js"></script>
+-->
+This has for now been Commented out because qs.js has a transitive issue due to request.js. See https://issues.apache.org/jira/browse/OFBIZ-13339 for details
