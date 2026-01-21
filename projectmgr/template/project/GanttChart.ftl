@@ -22,8 +22,29 @@ under the License.
 
 <input id="ofbizGantItemsJson" type="hidden" value="${phaseTaskListJson}"/>
 
-<#-- Commented out because qs.js has a transitive issue due to request.js. See https://issues.apache.org/jira/browse/OFBIZ-13339 for details
+<#-- Commented out because qs.js has a transitive vulnerability due to request.js. See https://issues.apache.org/jira/browse/OFBIZ-13339 for details
 <script type="text/javascript" src="/projectmgr/node_modules/jsgantt-improved/dist/jsgantt.js"></script>
 <script type="text/javascript" src="/projectmgr/static/projectmgr.js"></script>
 -->
-This has for now been Commented out because qs.js has a transitive issue due to request.js. See https://issues.apache.org/jira/browse/OFBIZ-13339 for details
+This has for now been Commented out because qs.js has a transitive vulnerability due to request.js.
+<br>
+See <a href="https://issues.apache.org/jira/browse/OFBIZ-13339 for details">https://issues.apache.org/jira/browse/OFBIZ-13339 for details</a>
+<br><br>
+The latest possible version that can be installed is 6.5.3 because of the following conflicting dependencies:
+<br>
+jsgantt-improved@2.8.9 requires qs@~6.5.2 via a transitive dependency on request@2.88.2
+<br>
+No patched version available for qs
+<br>
+The earliest fixed version is 6.14.1.
+<br><br>
+For details see.
+<br>
+<a href="https://github.com/advisories/GHSA-6rw7-vpxm-498p">https://github.com/advisories/GHSA-6rw7-vpxm-498p</a>
+<br>
+<a href="https://github.com/apache/ofbiz-plugins/network/updates/1194761905">https://github.com/apache/ofbiz-plugins/network/updates/1194761905</a>
+<br>
+<a href="https://github.com/jsGanttImproved/jsgantt-improved/issues/384">https://github.com/jsGanttImproved/jsgantt-improved/issues/384</a>
+<br>
+<br>
+If you feel it's ok with you (e.g. totally secured Internet access, or rather no access at all which is safer!) you may uncomment and use.
