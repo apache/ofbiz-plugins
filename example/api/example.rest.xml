@@ -35,10 +35,11 @@ under the License.
             <service name="createExample"/>
         </operation>
 
-        <operation verb="delete" description="delete Example"
+        <operation verb="delete" description="Delete Example"
                    consumes="application/json">
             <service name="deleteExample"/>
         </operation>
+
         <operation verb="put" description="Update Example"
                    consumes="application/json">
             <service name="updateExample"/>

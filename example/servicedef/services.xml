@@ -26,7 +26,7 @@ under the License.
 
     <!-- Example & Related Services -->
     <service name="createExample" default-entity-name="Example" engine="entity-auto" invoke="create" auth="true">
-        <description>Create a Example</description>
+        <description>Create an Example</description>
         <permission-service service-name="exampleGenericPermission" main-action="CREATE"/>
         <auto-attributes include="pk" mode="OUT" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
@@ -35,16 +35,17 @@ under the License.
         <override name="exampleName" optional="false"/>
     </service>
     <service name="updateExample" default-entity-name="Example" engine="entity-auto" invoke="update" auth="true">
-        <description>Update a Example</description>
+        <description>Update an Example</description>
         <permission-service service-name="exampleGenericPermission" main-action="UPDATE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <attribute name="oldStatusId" type="String" mode="OUT" optional="false"/>
     </service>
-    <service name="deleteExample" default-entity-name="Example" engine="entity-auto" invoke="delete" auth="true">
-        <description>Delete a Example</description>
+    <service name="deleteExample" default-entity-name="Example" engine="groovy"
+            location="component://example/src/main/groovy/org/apache/ofbiz/example/ExampleAdditionalServices.groovy" invoke="deleteExample" auth="true">
+        <description>Delete an Example</description>
         <permission-service service-name="exampleGenericPermission" main-action="DELETE"/>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
     </service>
     <service name="createExampleStatus" default-entity-name="ExampleStatus" engine="simple"
             location="component://example/minilang/example/ExampleServices.xml" invoke="createExampleStatus" auth="true">
