@@ -20,6 +20,8 @@ package org.apache.ofbiz.example
 
 import org.apache.ofbiz.entity.GenericValue
 
+import org.apache.ofbiz.entity.util.EntityQuery
+
 Map deleteExample() {
     Map result = success()
 
@@ -37,6 +39,30 @@ Map deleteExample() {
     }
 
     result.exampleId = exampleId
+
+    return result
+}
+
+Map findExampleById() {
+    Map result = success()
+    List exampleList = []
+
+    String exampleId = parameters.exampleId
+
+    if (exampleId) {
+        exampleList = EntityQuery.use(delegator)
+                                 .from('Example')
+                                 .select('exampleId', 'exampleTypeId', 'exampleName')
+                                 .where('exampleId', exampleId)
+                                 .queryList()
+    } else {
+        exampleList = EntityQuery.use(delegator)
+                                 .from('Example')
+                                 .select('exampleId', 'exampleTypeId', 'exampleName')
+                                 .orderBy('exampleId')
+                                 .queryList()
+    }
+    result.exampleList = exampleList
 
     return result
 }

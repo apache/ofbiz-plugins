@@ -47,6 +47,12 @@ under the License.
         <permission-service service-name="exampleGenericPermission" main-action="DELETE"/>
         <auto-attributes include="pk" mode="INOUT" optional="false"/>
     </service>
+    <service name="findExampleById" default-entity-name="Example" engine="groovy"
+            location="component://example/src/main/groovy/org/apache/ofbiz/example/ExampleAdditionalServices.groovy" invoke="findExampleById" auth="true">
+        <description>Find Example by ID</description>
+        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <attribute name="exampleList" mode="OUT" optional="true" type="List"/>
+    </service>
     <service name="createExampleStatus" default-entity-name="ExampleStatus" engine="simple"
             location="component://example/minilang/example/ExampleServices.xml" invoke="createExampleStatus" auth="true">
         <description>Create a ExampleStatus</description>

@@ -44,5 +44,10 @@ under the License.
                    consumes="application/json">
             <service name="updateExample"/>
         </operation>
+
+        <operation verb="get" description="Find Example by ID"
+                   consumes="application/json">
+            <service name="findExampleById"/>
+        </operation>
     </resource>
 </api>
