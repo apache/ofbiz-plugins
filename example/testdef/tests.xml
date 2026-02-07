@@ -31,4 +31,10 @@ under the License.
     <test-case case-name="testCreateExampleService Direct Simple Method">
         <simple-method-test location="component://example/minilang/example/ExampleServices.xml" name="testCreateExampleService"/>
     </test-case>
+    <test-case case-name="load-example-test-data">
+        <entity-xml action="load" entity-xml-url="component://example/testdef/data/ExampleTestData.xml"/>
+    </test-case>
+    <test-case case-name="example-tests-groovy">
+        <junit-test-suite class-name="org.apache.ofbiz.example.ExampleTests"/>
+    </test-case>
 </test-suite>
