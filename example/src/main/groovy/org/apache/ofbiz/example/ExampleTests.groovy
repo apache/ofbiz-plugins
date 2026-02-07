@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.ofbiz.example
 
 import org.apache.ofbiz.entity.GenericValue
@@ -24,33 +23,35 @@ import org.apache.ofbiz.service.ServiceUtil
 import org.apache.ofbiz.service.testtools.OFBizTestCase
 
 class ExampleTests extends OFBizTestCase {
+
     public ExampleTests(String name) {
         super(name)
     }
 
     void testUpdateExample() {
         Map<String, Object> serviceCtx = [:]
-        serviceCtx.exampleId = "TestExampleUpdate"
-        serviceCtx.exampleName = "Updated Test Example Name"
+        serviceCtx.exampleId = 'TestExampleUpdate'
+        serviceCtx.exampleName = 'Updated Test Example Name'
         serviceCtx.userLogin = userLogin
 
-        Map<String, Object> serviceResult = dispatcher.runSync("updateExample", serviceCtx)
+        Map<String, Object> serviceResult = dispatcher.runSync('updateExample', serviceCtx)
         assert ServiceUtil.isSuccess(serviceResult)
 
-        GenericValue example = from("Example").where("exampleId", "TestExampleUpdate").queryOne()
+        GenericValue example = from('Example').where('exampleId', 'TestExampleUpdate').queryOne()
         assert example != null
-        assert "Updated Test Example Name".equals(example.exampleName)
+        assert (Updated Test Example Name == (example.exampleName))
     }
 
     void testDeleteExample() {
         Map<String, Object> serviceCtx = [:]
-        serviceCtx.exampleId = "TestExampleDelete"
+        serviceCtx.exampleId = 'TestExampleDelete'
         serviceCtx.userLogin = userLogin
 
-        Map<String, Object> serviceResult = dispatcher.runSync("deleteExample", serviceCtx)
+        Map<String, Object> serviceResult = dispatcher.runSync('deleteExample', serviceCtx)
         assert ServiceUtil.isSuccess(serviceResult)
 
-        GenericValue example = from("Example").where("exampleId", "TestExampleDelete").queryOne()
+        GenericValue example = from('Example').where('exampleId', 'TestExampleDelete').queryOne()
         assert example == null
     }
+
 }
