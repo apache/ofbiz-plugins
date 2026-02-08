@@ -21,7 +21,6 @@ package org.apache.ofbiz.example
 import org.apache.ofbiz.entity.GenericValue
 import org.apache.ofbiz.service.ServiceUtil
 import org.apache.ofbiz.service.testtools.OFBizTestCase
-import org.junit.Test
 
 class ExampleTests extends OFBizTestCase {
 
@@ -40,7 +39,7 @@ class ExampleTests extends OFBizTestCase {
 
         GenericValue example = from('Example').where('exampleId', 'TestExampleUpdate').queryOne()
         assert example != null
-        assert ("Updated Test Example Name" == (example.exampleName))
+        assert example.exampleName == 'Updated Test Example Name'
     }
 
     void testDeleteExample() {
