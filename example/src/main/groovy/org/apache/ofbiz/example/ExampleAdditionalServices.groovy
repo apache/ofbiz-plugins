@@ -18,9 +18,8 @@
  */
 package org.apache.ofbiz.example
 
+import org.apache.ofbiz.base.util.UtilDateTime
 import org.apache.ofbiz.entity.GenericValue
-
-import org.apache.ofbiz.entity.util.EntityQuery
 
 Map deleteExample() {
     Map result = success()
@@ -50,19 +49,42 @@ Map findExampleById() {
     String exampleId = parameters.exampleId
 
     if (exampleId) {
-        exampleList = EntityQuery.use(delegator)
-                                 .from('Example')
+        exampleList = from('Example')
                                  .select('exampleId', 'exampleTypeId', 'exampleName')
                                  .where('exampleId', exampleId)
                                  .queryList()
     } else {
-        exampleList = EntityQuery.use(delegator)
-                                 .from('Example')
+        exampleList = from('Example')
                                  .select('exampleId', 'exampleTypeId', 'exampleName')
                                  .orderBy('exampleId')
                                  .queryList()
     }
     result.exampleList = exampleList
+
+    return result
+}
+
+Map createExampleStatus() {
+    Map result = success()
+    nowTimestamp = UtilDateTime.nowTimestamp()
+
+    // find the most recent status record and set the statusEndDate
+    GenericValue oldExampleStatus = from('ExampleStatus')
+            .where('exampleId', parameters.exampleId)
+            .orderBy('-statusDate')
+            .queryFirst()
+
+    if (oldExampleStatus) {
+        oldExampleStatus.statusEndDate = nowTimestamp
+        oldExampleStatus.store()
+    }
+
+    GenericValue newEntity = makeValue('ExampleStatus')
+    newEntity.setPKFields(parameters)
+    newEntity.setNonPKFields(parameters)
+    newEntity.statusDate = nowTimestamp
+    newEntity.changeByUserLoginId = userLogin.userLoginId
+    newEntity.create()
 
     return result
 }
