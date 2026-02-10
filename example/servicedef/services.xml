@@ -53,8 +53,8 @@ under the License.
         <auto-attributes include="pk" mode="IN" optional="true"/>
         <attribute name="exampleList" mode="OUT" optional="true" type="List"/>
     </service>
-    <service name="createExampleStatus" default-entity-name="ExampleStatus" engine="simple"
-            location="component://example/minilang/example/ExampleServices.xml" invoke="createExampleStatus" auth="true">
+    <service name="createExampleStatus" default-entity-name="ExampleStatus" engine="groovy"
+            location="component://example/src/main/groovy/org/apache/ofbiz/example/ExampleAdditionalServices.groovy" invoke="createExampleStatus" auth="true">
         <description>Create a ExampleStatus</description>
         <permission-service service-name="exampleGenericPermission" main-action="CREATE"/>
         <auto-attributes include="all" mode="IN" optional="false">
@@ -124,16 +124,12 @@ under the License.
     </service>
 
     <!-- Permission Services -->
-    <service name="exampleGenericPermission" engine="simple"
-             location="component://example/minilang/ExamplePermissionServices.xml" invoke="exampleGenericPermission">
+    <service name="exampleGenericPermission" engine="groovy"
+             location="component://example/src/main/groovy/org/apache/ofbiz/example/ExamplePermissionServices.groovy" invoke="exampleGenericPermission">
         <implements service="permissionInterface"/>
     </service>
 
-    <!-- Example ServiceTest Service -->
-    <service name="testCreateExampleService" engine="simple"
-             location="component://example/minilang/example/ExampleServices.xml" invoke="testCreateExampleService">
-        <implements service="testServiceInterface"/>
-    </service>
+
     <!-- Send push notification service -->
     <service name="sendExamplePushNotifications" engine="java"
                 location="org.apache.ofbiz.example.ExampleServices" invoke="sendExamplePushNotifications" auth="true">

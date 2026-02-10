@@ -24,11 +24,31 @@ import org.apache.ofbiz.service.testtools.OFBizTestCase
 
 class ExampleTests extends OFBizTestCase {
 
-    public ExampleTests(String name) {
+    ExampleTests(String name) {
         super(name)
     }
 
+    void testCreateExample() {
+        GenericValue userLogin = from('UserLogin').where('userLoginId', 'system').queryOne()
+        Map<String, Object> serviceCtx = [:]
+        serviceCtx.exampleTypeId = 'CONTRIVED'
+        serviceCtx.exampleName = 'Test Example'
+        serviceCtx.statusId = 'EXST_IN_DESIGN'
+        serviceCtx.userLogin = userLogin
+
+        Map<String, Object> serviceResult = dispatcher.runSync('createExample', serviceCtx)
+        assert ServiceUtil.isSuccess(serviceResult)
+        String exampleId = serviceResult.exampleId
+
+        GenericValue example = from('Example').where('exampleId', exampleId).queryOne()
+        assert example != null
+        assert example.exampleTypeId == 'CONTRIVED'
+        assert example.exampleName == 'Test Example'
+        assert example.statusId == 'EXST_IN_DESIGN'
+    }
+
     void testUpdateExample() {
+        GenericValue userLogin = from('UserLogin').where('userLoginId', 'system').queryOne()
         Map<String, Object> serviceCtx = [:]
         serviceCtx.exampleId = 'TestExampleUpdate'
         serviceCtx.exampleName = 'Updated Test Example Name'
@@ -43,6 +63,7 @@ class ExampleTests extends OFBizTestCase {
     }
 
     void testDeleteExample() {
+        GenericValue userLogin = from('UserLogin').where('userLoginId', 'system').queryOne()
         Map<String, Object> serviceCtx = [:]
         serviceCtx.exampleId = 'TestExampleDelete'
         serviceCtx.userLogin = userLogin

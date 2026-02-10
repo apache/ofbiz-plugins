@@ -19,6 +19,15 @@ under the License.
 -->
 
 <entity-engine-xml>
+    <SecurityGroup groupId="FULLADMIN" description="Full Admin Group"/>
+    <SecurityPermission description="ALL operations in the Example Management Screens." permissionId="EXAMPLE_ADMIN"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="FULLADMIN" permissionId="EXAMPLE_ADMIN"/>
+    <UserLogin userLoginId="system" enabled="N" isSystem="Y"/>
+    <UserLoginSecurityGroup groupId="FULLADMIN" userLoginId="system" fromDate="2001-05-13 12:00:00.0"/>
+
+    <StatusType description="Example" statusTypeId="EXAMPLE_STATUS" hasTable="N"/>
+    <StatusItem description="In Design" sequenceId="01" statusCode="IN_DESIGN" statusId="EXST_IN_DESIGN" statusTypeId="EXAMPLE_STATUS"/>
+    <ExampleType exampleTypeId="CONTRIVED" description="Contrived Example Type"/>
     <Example exampleId="TestExampleUpdate" exampleTypeId="CONTRIVED" statusId="EXST_IN_DESIGN" exampleName="Test Example for Update"/>
     <Example exampleId="TestExampleDelete" exampleTypeId="CONTRIVED" statusId="EXST_IN_DESIGN" exampleName="Test Example for Delete"/>
 </entity-engine-xml>
