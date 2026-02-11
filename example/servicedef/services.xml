@@ -42,19 +42,19 @@ under the License.
         <attribute name="oldStatusId" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="deleteExample" default-entity-name="Example" engine="groovy"
-            location="component://example/src/main/groovy/org/apache/ofbiz/example/ExampleAdditionalServices.groovy" invoke="deleteExample" auth="true">
+            location="component://example/src/main/groovy/org/apache/ofbiz/example/ExampleServicesScript.groovy" invoke="deleteExample" auth="true">
         <description>Delete an Example</description>
         <permission-service service-name="exampleGenericPermission" main-action="DELETE"/>
         <auto-attributes include="pk" mode="INOUT" optional="false"/>
     </service>
     <service name="findExampleById" default-entity-name="Example" engine="groovy"
-            location="component://example/src/main/groovy/org/apache/ofbiz/example/ExampleAdditionalServices.groovy" invoke="findExampleById" auth="true">
+            location="component://example/src/main/groovy/org/apache/ofbiz/example/ExampleServicesScript.groovy" invoke="findExampleById" auth="true">
         <description>Find Example by ID</description>
         <auto-attributes include="pk" mode="IN" optional="true"/>
         <attribute name="exampleList" mode="OUT" optional="true" type="List"/>
     </service>
     <service name="createExampleStatus" default-entity-name="ExampleStatus" engine="groovy"
-            location="component://example/src/main/groovy/org/apache/ofbiz/example/ExampleAdditionalServices.groovy" invoke="createExampleStatus" auth="true">
+            location="component://example/src/main/groovy/org/apache/ofbiz/example/ExampleServicesScript.groovy" invoke="createExampleStatus" auth="true">
         <description>Create a ExampleStatus</description>
         <permission-service service-name="exampleGenericPermission" main-action="CREATE"/>
         <auto-attributes include="all" mode="IN" optional="false">
