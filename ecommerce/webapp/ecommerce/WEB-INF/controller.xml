@@ -1359,13 +1359,17 @@ under the License.
         <response name="error" type="view" value="AddForumThread"/>
     </request-map>
 
+    <!--
+    TODO: persistContentAndAssoc is not safe to call on untrusted input,
+    need to add a service that only updates the content and associations
+    we want to allow updated for forum messages and call that instead
     <request-map uri="updateForumMessage">
         <security https="true" auth="true"/>
         <event type="service" invoke="persistContentAndAssoc"/>
         <response name="success" type="view" value="Showforum"/>
         <response name="error" type="view" value="AddForumThread"/>
     </request-map>
-
+    -->
 
     <!-- used in blog -->
     <request-map uri="MainBlog">
@@ -1453,10 +1457,12 @@ under the License.
         <security https="true" auth="false"/>
         <response name="success" type="view" value="showcontenttree"/>
     </request-map>
+    <!--
     <request-map uri="viewcontent">
         <security https="true" auth="false"/>
         <response name="success" type="view" value="viewcontent"/>
     </request-map>
+    -->
     <request-map uri="img">
         <security auth="false" https="false"/>
         <event type="java" path="org.apache.ofbiz.content.data.DataEvents" invoke="serveImage"/>
@@ -1828,6 +1834,7 @@ under the License.
         <response name="error" type="view" value="main"/>
     </request-map>
 
+    <!--
     <request-map uri="stream">
         <security https="true" auth="true"/>
         <event type="java" path="org.apache.ofbiz.content.data.DataEvents" invoke="serveObjectData"/>
@@ -1835,6 +1842,7 @@ under the License.
         <response name="error" type="view" value="error"/>
         <response name="io-error" type="none"/>
     </request-map>
+    -->
 
      <request-map uri="showShoppingList">
         <security https="false" auth="false"/>
@@ -1962,7 +1970,9 @@ under the License.
     <!-- Content Views -->
     <view-map name="defaultcontent" type="screen" page="component://ecommerce/widget/ContentScreens.xml#defaultcontent" auth="false"/>
     <view-map name="showcontenttree" type="screen" page="component://ecommerce/widget/ContentScreens.xml#showcontenttree" auth="false"/>
+    <!--
     <view-map name="viewcontent" type="screen" page="component://ecommerce/widget/ContentScreens.xml#viewcontent" auth="false"/>
+    -->
     <view-map name="searchContent" type="screen" page="component://ecommerce/widget/ContentScreens.xml#searchContent" auth="false"/>
 
     <!-- Forum Views -->
