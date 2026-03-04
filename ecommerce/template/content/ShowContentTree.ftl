@@ -95,10 +95,13 @@ under the License.
     <#assign dummy=Static["org.apache.ofbiz.base.util.Debug"]
         .logInfo("in showcontenttree, nodeTrailCsv(1):" + nodeTrailCsv, "")/>
     <#local thisCsv=thisNodeTrailCsv + "," + subContentId />
+    <#--
     <a class="tabButton"
         href="<@ofbizUrl>viewcontent?contentId=${subContentId!}&nodeTrailCsv=${thisCsv}</@ofbizUrl>">
       ${uiLabelMap.CommonView}
-    </a>  ${content.description!}
+    </a>
+    -->
+      ${content.description!}
     <br/>
   </@loopSubContent>
 
