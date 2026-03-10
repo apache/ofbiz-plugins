@@ -1,0 +1,61 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
+
+def ofbizRoot = project.file('../../').toPath()
+def skillsDir = project.file('.').toPath()
+
+task syncAgentSkills {
+    group = 'AI Agents'
+    description = 'Syncs skills to agent directories. Usage: ./gradlew syncAgentSkills -Pagent=claude,gemini,github,cursor,agents,all (default is agents)'
+    doLast {
+        def agentsArg = project.hasProperty('agent') ? project.getProperty('agent') : 'agents'
+        def selectedAgents = agentsArg.split(',').collect { it.trim().toLowerCase() }
+        def supportedAgents = ['agents', 'gemini', 'claude', 'github', 'cursor']
+        
+        def targetsToSync = selectedAgents.contains('all') ? supportedAgents : selectedAgents
+        
+        targetsToSync.each { agent ->
+            if (!supportedAgents.contains(agent)) {
+                println "⚠️ Unknown agent: ${agent}. Supported options are: ${supportedAgents.join(', ')}, all"
+                return
+            }
+            
+            def targetDirPath = ".${agent}/skills"
+            def targetDir = ofbizRoot.resolve(targetDirPath)
+            targetDir.toFile().mkdirs()
+            
+            copy {
+                from skillsDir.toFile()
+                into targetDir.toFile()
+                exclude "build"
+                exclude ".gradle"
+                exclude "build.gradle"
+                exclude "ofbiz-component.xml"
+                exclude "README.md"
+                exclude "SKILLS_SUMMARY.md"
+            }
+            println "✅ Copied skills to ${targetDirPath}"
+        }
+    }
+}
+
