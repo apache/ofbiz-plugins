@@ -31,6 +31,6 @@ under the License.
     </test-case>
 
     <test-case case-name="example-tests-groovy">
-        <junit-test-suite class-name="org.apache.ofbiz.example.ExampleTests"/>
+        <junit-test-suite class-name="org.apache.ofbiz.example.test.ExampleTests"/>
     </test-case>
 </test-suite>
