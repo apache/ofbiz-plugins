@@ -83,14 +83,6 @@
                 &quot;projectId&quot;, projectId));
                 return result.get(&quot;hasPermission&quot;); }" type="Boolean"/>
         </actions>
-        <menu-item name="ganttchart" title="${uiLabelMap.ProjectMgrGanttChart}">
-            <condition>
-                <if-compare field="hasViewPermission" operator="equals" value="true"/>
-            </condition>
-            <link target="ganttChart">
-                <parameter param-name="projectId"/>
-            </link>
-        </menu-item>
         <menu-item name="projectView" title="${uiLabelMap.ProjectMgrProjectSummary}">
             <condition>
                 <if-compare field="hasViewPermission" operator="equals" value="true"/>
