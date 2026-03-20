@@ -833,18 +833,6 @@
         <value xml:lang="zh">项目账单</value>
         <value xml:lang="zh-TW">專案帳單</value>
     </property>
-    <property key="PageTitleProjectGanttChart">
-        <value xml:lang="de">Projekt Gantt Chart</value>
-        <value xml:lang="en">Project Gantt Chart</value>
-        <value xml:lang="fr">Graphe Gantt du projet</value>
-        <value xml:lang="it">Progetto grafico gantt</value>
-        <value xml:lang="ja">プロジェクトガントチャート</value>
-        <value xml:lang="nl">Gant chart</value>
-        <value xml:lang="th">แผนผังคุมการกำหนดโปรเจค</value>
-        <value xml:lang="vi">Biểu đồ CHUNG của dự án</value>
-        <value xml:lang="zh">项目甘特图</value>
-        <value xml:lang="zh-TW">專案甘特圖</value>
-    </property>
     <property key="PageTitleProjectInformation">
         <value xml:lang="de">Projektinformationen</value>
         <value xml:lang="en">Project Information</value>
@@ -1505,18 +1493,6 @@
         <value xml:lang="vi">Thứ sáu</value>
         <value xml:lang="zh">周五</value>
         <value xml:lang="zh-TW">週五</value>
-    </property>
-    <property key="ProjectMgrGanttChart">
-        <value xml:lang="de">Gantt Chart</value>
-        <value xml:lang="en">Gantt Chart</value>
-        <value xml:lang="fr">Diagramme de Gantt</value>
-        <value xml:lang="it">Grafico gantt</value>
-        <value xml:lang="ja">ガントチャート</value>
-        <value xml:lang="nl">GANT chart</value>
-        <value xml:lang="th">แผนผังคุมการกำหนดงาน</value>
-        <value xml:lang="vi">Biểu đồ CHUNG</value>
-        <value xml:lang="zh">甘特图</value>
-        <value xml:lang="zh-TW">甘特圖</value>
     </property>
     <property key="ProjectMgrListMailingList">
         <value xml:lang="de">Liste Mailing-List auf</value>
