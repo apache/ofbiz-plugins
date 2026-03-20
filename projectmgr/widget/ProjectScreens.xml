@@ -419,31 +419,6 @@ under the License.
             </widgets>
         </section>
     </screen>
-    <screen name="ganttChart">
-        <section>
-            <actions>
-                <set field="titleProperty" value="ProjectMgrGanttChart"/>
-                <set field="tabButtonItem" value="ganttchart"/>
-                <!-- Commented out because qs.js has a transitive vulnerabily due to request.js. See https://issues.apache.org/jira/browse/OFBIZ-13339 for details
-                <set field="layoutSettings.styleSheets[]" value="/projectmgr/node_modules/jsgantt-improved/dist/jsgantt.css" global="true"/>
-                 -->
-                <set field="layoutSettings.styleSheets[]" value="/projectmgr/static/projectmgr.css" global="true"/>
-                <script location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/GanttChart.groovy"/>
-            </actions>
-            <widgets>
-                <label text="${project}"/>
-                <decorator-screen name="CommonProjectDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleProjectGanttChart}">
-                            <platform-specific>
-                                <html><html-template multi-block="true" location="component://projectmgr/template/project/GanttChart.ftl"/></html>
-                            </platform-specific>
-                        </screenlet>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
     <screen name="SubProjectsInfo">
         <section>
             <actions>
@@ -982,10 +957,6 @@ under the License.
         <section>
             <actions>
                 <property-map resource="ProjectMgrUiLabels" map-name="uiLabelMap" global="true"/>
-                <!-- - Commented out because qs.js has a transitive vulnerabily due to request.js. See https://issues.apache.org/jira/browse/OFBIZ-13339 for details
-                <set field="layoutSettings.styleSheets[]" value="/projectmgr/node_modules/jsgantt-improved/dist/jsgantt.css" global="true"/>
-                 -->
-                <set field="layoutSettings.styleSheets[]" value="/projectmgr/static/projectmgr.css" global="true"/>
                 <entity-condition entity-name="WorkEffortPartyAssignByGroup" list="projects" filter-by-date="true">
                     <condition-list combine="and">
                         <condition-expr field-name="partyId" from-field="userLogin.partyId"/>
@@ -1003,7 +974,6 @@ under the License.
                         <actions>
                             <set field="projectId" from-field="project.workEffortId"/>
                             <set field="parameters.projectId" from-field="project.workEffortId"/>
-                            <script location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/GanttChart.groovy"/>
                             <service service-name="getProject" result-map="result">
                                 <field-map field-name="projectId" from-field="projectId"/>
                             </service>
@@ -1046,12 +1016,6 @@ under the License.
                                     </widgets>
                                 </section>
                             </container>
-                            <container style="clear"/>
-                            <screenlet title="${uiLabelMap.PageTitleProjectGanttChart}">
-                                <platform-specific>
-                                    <html><html-template multi-block="true" location="component://projectmgr/template/project/GanttChart.ftl"/></html>
-                                </platform-specific>
-                            </screenlet>
                         </widgets>
                     </section>
                 </iterate-section>
