@@ -13,7 +13,6 @@ The Project Management application enables organisations to manage their interna
     Resource assignement to projects
     Resource allocation to tasks
     Approval of time spent on tasks
-    Gantt charts for projects, phases and tasks
     Time registration with different rates
     Generate invoice from a project
     Project copy
