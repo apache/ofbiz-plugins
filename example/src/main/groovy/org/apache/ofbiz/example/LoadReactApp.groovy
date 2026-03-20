@@ -52,11 +52,11 @@ String reactAppUrlPath = "${contextUrlPath}/${reactAppDirectory}/"
 //    ],
 //    "file": "assets/index-e5a516b1.js",
 // ...
-Path assetManifestPath = Path.of(contextFilesystemPath, reactAppDirectory, 'manifest.json')
+Path assetManifestPath = Path.of(contextFilesystemPath, reactAppDirectory, '.vite', 'manifest.json')
 
 // Extract the URL paths to the index javascript and css files from the manifest file.
 Object assetManifest = new JsonSlurper().parse(assetManifestPath.toFile())
-String stylesheetDistRelativePath = assetManifest.'index.css'.file
+String stylesheetDistRelativePath = assetManifest.'index.html'.css[0]
 String javascriptDistRelativePath = assetManifest.'index.html'.file
 
 // Return the stylesheet and javascript paths for use by the screen.

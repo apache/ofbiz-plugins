@@ -36,7 +36,7 @@ const ApiContext = React.createContext<IApiContext>({
   get: invalidFunction,
 });
 
-const ApiContextProvider = ({ children }: { children: JSX.Element }) => {
+const ApiContextProvider = ({ children }: { children: React.JSX.Element }) => {
   const [apiKey] = useState<string>(() =>
     document
       ? (document.getElementById("ofbizRestApiToken") as HTMLInputElement).value
