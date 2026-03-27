@@ -21,6 +21,13 @@
 version: 2
 updates:
   - package-ecosystem: "npm"
-    directory: "example/vite-react-app" # Location of package manifests
+    directory: "example/vite-react-app"
     schedule:
       interval: "daily"
+
+  - package-ecosystem: "npm"
+    directory: "example/vite-react-app"
+    target-branch: "release24.09"
+    schedule:
+      interval: "daily"
+
