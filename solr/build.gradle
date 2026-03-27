@@ -21,15 +21,15 @@ dependencies {
     // 2. luceneMatchVersion should be updated in solrconfig.xml
     // 3. Also Solr et Lucene should use the same version,
     // TODO : upgrade when jakarte update has been done ?
-    pluginLibsCompile 'org.apache.solr:solr-core:9.8.0'
+    pluginLibsCompile 'org.apache.solr:solr-core:9.10.1'
 //    pluginLibsCompile 'org.apache.solr:solr-core:8.11.3'
-    pluginLibsCompile 'com.google.guava:guava:28.0-jre'
+    pluginLibsCompile 'com.google.guava:guava:28.2-jre'
 }
 
 configurations.all {
     resolutionStrategy {
       dependencySubstitution {
-          substitute module('com.google.guava:guava') using module('com.google.guava:guava:28.0-jre')
+          substitute module('com.google.guava:guava') using module('com.google.guava:guava:28.2-jre')
       }
     }
 }
