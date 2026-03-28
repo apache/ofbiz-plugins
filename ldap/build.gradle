@@ -35,14 +35,7 @@ configurations.all {
     exclude group: 'javax.xml.bind', module: 'jsr173_api'
     exclude group: 'javax.xml.bind', module: 'jaxb-api'
     exclude group: 'geronimo-spec', module: 'geronimo-spec-jta'
-    
-}
-
-configurations.all {
-    exclude group: 'javax.xml.parsers', module: 'jsr173_api'
-    exclude group: 'javax.xml.namespace', module: 'jsr173_api'
-    exclude group: 'javax.xml.bind', module: 'jsr173_api'
-    exclude group: 'javax.xml.bind', module: 'jaxb-api'
-    exclude group: 'geronimo-spec', module: 'geronimo-spec-jta'
-    
+    // pac4j-saml is a transitive dependency of cas-server-support-ldap-core but not needed for LDAP auth;
+    // its transitive dep net.shibboleth.tool:xmlsectool is not available in any configured repository
+    exclude group: 'org.pac4j', module: 'pac4j-saml'
 }
