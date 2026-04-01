@@ -26,7 +26,7 @@
 //                LdapEntry entry = new LdapEntry(username);
 //                                                ^
 dependencies {
-    pluginLibsCompile 'org.apereo.cas:cas-server-support-ldap-core:6.6.15' // 7.x+ requires Java 21
+    pluginLibsCompile 'org.apereo.cas:cas-server-support-ldap-core:6.6.15.2' // 7.x+ requires Java 21
 }
 
 configurations.all {
