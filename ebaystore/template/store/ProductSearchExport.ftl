@@ -582,35 +582,9 @@ under the License.
                                 <table cellspacing="0">
                                   <tr>
                                     <td>
-                                      <script
-                                              src="<@ofbizContentUrl>/common/js/jquery/plugins/elrte-1.3/js/elrte.min.js</@ofbizContentUrl>"
-                                              type="text/javascript">
-                                      </script>
-                                      <#if language?has_content && language != "en">
-                                        <script
-                                                src="<@ofbizContentUrl>/common/js/jquery/plugins/elrte-1.3/js/i18n/elrte.${language!"en"}.js</@ofbizContentUrl>"
-                                                type="text/javascript">
-                                        </script>
-                                        <#rt/>
-                                      </#if>
-                                      <link href="<@ofbizContentUrl>/common/js/jquery/plugins/elrte-1.3/css/elrte.min.css</@ofbizContentUrl>"
-                                              rel="stylesheet" type="text/css">
-                                      <script type="text/javascript">
-                                          var opts = {
-                                              cssClass: 'el-rte',
-                                              lang: '${language}',
-                                              toolbar: 'maxi',
-                                              doctype: '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">',
-                                              //'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">',
-                                              cssfiles: ['/common/js/jquery/plugins/elrte-1.3/css/elrte-inner.css']
-                                          }
-                                      </script>
                                       <textarea id="description" name="description" style="width:800px; height:300px">
                                         <#if item.getDescription()??>description<#else>${item.getDescription()!}</#if>
                                       </textarea>
-                                      <script type="text/javascript">
-                                          jQuery('#description').elrte(opts);
-                                      </script>
                                     </td>
                                   </tr>
                                 </table>
