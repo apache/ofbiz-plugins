@@ -34,11 +34,6 @@
         <response name="success" type="view" value="main"/>
     </request-map>
 
-    <request-map uri="ganttChart">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ganttChart"/>
-    </request-map>
-
     <request-map uri="ListSubProjects">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListSubProjects"/>
@@ -112,8 +107,8 @@
     <request-map uri="scheduleProject">
         <security https="true" auth="true"/>
         <event type="service" invoke="scheduleProject"/>
-        <response name="success" type="view" value="ganttChart"/>
-        <response name="error" type="view" value="ganttChart"/>
+        <response name="success" type="view" value="projectView"/>
+        <response name="error" type="view" value="projectView"/>
     </request-map>
     <request-map uri="FindResource">
         <security https="true" auth="true"/>
@@ -697,7 +692,6 @@
     <view-map name="EditPartyRates" type="screen" page="component://projectmgr/widget/ResourceScreens.xml#EditPartyRates"/>
 
     <view-map name="main" type="screen" page="component://projectmgr/widget/CommonScreens.xml#Main"/>
-    <view-map name="ganttChart" type="screen" page="component://projectmgr/widget/ProjectScreens.xml#ganttChart"/>
     <view-map name="ListSubProjects" type="screen" page="component://projectmgr/widget/ProjectScreens.xml#ListSubProjects"/>
     <view-map name="FindResource" type="screen" page="component://projectmgr/widget/ResourceScreens.xml#FindResource"/>
     <view-map name="FindProject" type="screen" page="component://projectmgr/widget/ProjectScreens.xml#FindProject"/>
