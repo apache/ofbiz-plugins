@@ -74,3 +74,7 @@ updates:
     schedule:
       interval: "daily"
 
+  - package-ecosystem: "projectmgr" # See documentation for possible values
+    directory: "projectmgr/webapp/projectmgr" # Location of package manifests
+    schedule:
+      interval: "daily"
