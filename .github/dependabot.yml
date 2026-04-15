@@ -74,7 +74,13 @@ updates:
     schedule:
       interval: "daily"
 
-  - package-ecosystem: "projectmgr" # See documentation for possible values
-    directory: "projectmgr/webapp/projectmgr" # Location of package manifests
+  - package-ecosystem: "npm"
+    directory: "projectmgr/webapp/projectmgr"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "npm"
+    directory: "projectmgr/webapp/projectmgr"
+    target-branch: "release24.09"
     schedule:
       interval: "daily"
