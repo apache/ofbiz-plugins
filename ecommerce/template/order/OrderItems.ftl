@@ -33,6 +33,7 @@ under the License.
           <form name="addCommonToCartForm" action="<@ofbizUrl>addordertocart/orderstatus</@ofbizUrl>" method="post">
         <input type="hidden" name="add_all" value="false" />    
             <input type="hidden" name="orderId" value="${orderHeader.orderId}" />
+            <input type="hidden" name="orderItemSeqId" value="" />
     </#if>
   <div class="card-header">
     <strong>
@@ -268,9 +269,8 @@ under the License.
             </td>
             <td>
               <a
-                href="javascript:document.addCommonToCartForm.action='<@ofbizUrl>cancelOrderItem</@ofbizUrl>';document.addCommonToCartForm.submit()"
+                href="javascript:document.addCommonToCartForm.action='<@ofbizUrl>cancelOrderItem</@ofbizUrl>';document.addCommonToCartForm.orderItemSeqId.value='${orderItem.orderItemSeqId}';document.addCommonToCartForm.submit()"
                 class="d-inline-block mt-2">${uiLabelMap.CommonCancel}</a>
-              <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
             </td>
           </tr>
         </#if>
