@@ -19,4 +19,7 @@ under the License.
 -->
 <entity-engine-xml>
     <SecurityGroup description="Customer user of ECOMMERCE Limited access to own account" groupId="ECOMMERCE_CUSTOMER"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="ECOMMERCE_CUSTOMER" permissionId="ORDERMGR_ROLE_VIEW"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="ECOMMERCE_CUSTOMER" permissionId="ORDERMGR_ROLE_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="ECOMMERCE_CUSTOMER" permissionId="ORDERMGR_ROLE_UPDATE"/>
 </entity-engine-xml>
