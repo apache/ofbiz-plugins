@@ -79,8 +79,8 @@ updates:
     schedule:
       interval: "daily"
 
-  #- package-ecosystem: "npm"
-  #  directory: "projectmgr/webapp/projectmgr"
-  #  target-branch: "release24.09"
-  #  schedule:
-  #    interval: "daily"
+  - package-ecosystem: "npm"
+    directory: "projectmgr/webapp/projectmgr"
+    target-branch: "release24.09"
+    schedule:
+      interval: "daily"
