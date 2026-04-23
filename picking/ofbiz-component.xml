@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ofbiz-component name="picking"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/ofbiz-component.xsd">
+    <resource-loader name="main" type="component"/>
+    <classpath type="dir" location="config"/>
+    <classpath type="dir" location="src/main/groovy"/>
+
+    <service-resource type="model" loader="main" location="servicedef/services.xml"/>
+</ofbiz-component>

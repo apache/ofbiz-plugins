@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/services.xsd">
+    <description>Picking PWA Services</description>
+
+    <!-- Retrieves orders available for picking -->
+    <service name="getOrdersToPick" engine="groovy"
+             location="component://picking/src/main/groovy/org/apache/ofbiz/picking/PickingServices.groovy" invoke="getOrdersToPick" auth="true" export="true" action="GET">
+        <description>Wrapper for findOrdersToPickMove to retrieve pickable orders.</description>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderList" type="List" mode="OUT" optional="true"/>
+    </service>
+
+    <!-- Creates a picklist from a list of orderIds -->
+    <service name="createPicklist" engine="groovy"
+             location="component://picking/src/main/groovy/org/apache/ofbiz/picking/PickingServices.groovy" invoke="createPicklist" auth="true" export="true" action="POST">
+        <description>Wrapper for createPicklistFromOrders to group orders into a picklist.</description>
+        <attribute name="orderIds" type="List" mode="IN" optional="false"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="true"/>
+        <attribute name="picklistId" type="String" mode="OUT" optional="true"/>
+    </service>
+
+    <!-- Retrieves detailed picklist info sorted by walking path -->
+    <service name="getPicklistDetails" engine="groovy"
+             location="component://picking/src/main/groovy/org/apache/ofbiz/picking/PickingServices.groovy" invoke="getPicklistDetails" auth="true" export="true" action="GET">
+        <description>Wrapper for getPickAndPackReportInfo to retrieve details for a specific picklist.</description>
+        <attribute name="picklistId" type="String" mode="IN" optional="false"/>
+        <attribute name="picklistDetails" type="Map" mode="OUT" optional="true"/>
+    </service>
+
+    <!-- Records a pick for a specific item -->
+    <service name="recordPick" engine="groovy"
+             location="component://picking/src/main/groovy/org/apache/ofbiz/picking/PickingServices.groovy" invoke="recordPick" auth="true" export="true" action="POST">
+        <description>Wrapper for setPicklistItemToComplete to record a pick and transition status via existing SECA.</description>
+        <attribute name="picklistBinId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="inventoryItemId" type="String" mode="IN" optional="true"/>
+        <attribute name="quantity" type="BigDecimal" mode="IN" optional="false"/>
+    </service>
+
+</services>
