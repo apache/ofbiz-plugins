@@ -44,9 +44,7 @@ if (timesheetId) {
             EntityCondition.makeCondition('thruDate', EntityComparisonOperator.GREATER_THAN, midweek),
             EntityCondition.makeCondition('partyId', EntityComparisonOperator.EQUALS, partyId)
     ], EntityOperator.AND)
-    entryIterator = from('Timesheet').where(entryExprs).queryIterator()
-    timesheet = entryIterator.next()
-    entryIterator.close()
+    timesheet = from('Timesheet').where(entryExprs).queryFirst()
     if (!timesheet) {
         result = run servic: 'createProjectTimesheet', with: [partyId: partyId]
         if (result && result.timesheetId) {
