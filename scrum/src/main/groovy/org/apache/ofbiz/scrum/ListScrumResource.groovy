@@ -29,20 +29,8 @@ performFindInMap = [entityName: 'ScrumMemberUserLoginAndSecurityGroup',
 if (parameters.sortField) {
     performFindInMap.orderBy = 'lastName'
 }
-performFindResults = run service: 'performFind', with: performFindInMap
-try {
-    resultList = performFindResults.listIt.getCompleteList()
-} catch (GenericEntityException e) {
-    logError(e)
-} finally {
-    if (performFindResults.listIt != null) {
-        try {
-            performFindResults.listIt.close()
-        } catch (GenericEntityException e) {
-            logError(e)
-        }
-    }
-}
+performFindResults = run service: 'performFindList', with: performFindInMap
+resultList = performFindResults.list
 
 resultList.each { result ->
     if (result.enabled != 'N') {

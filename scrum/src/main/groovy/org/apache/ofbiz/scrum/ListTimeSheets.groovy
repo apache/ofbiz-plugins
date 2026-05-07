@@ -30,24 +30,12 @@ inputFields = [:]
 
 parameters.noConditionFind = parameters.noConditionFind ?: 'N'
 inputFields.putAll(parameters)
-performFindResults = run service: 'performFind', with: [entityName: 'Timesheet',
+performFindResults = run service: 'performFindList', with: [entityName: 'Timesheet',
                                                         inputFields: inputFields,
                                                         orderBy: 'fromDate DESC']
 if (performFindResults.listSize > 0) {
-    try {
-        timesheetsDb = performFindResults.listIt.getCompleteList()
-    } catch (GenericEntityException e) {
-        logError(e, 'Failure in ' + module)
-    } finally {
-        if (performFindResults.listIt != null) {
-            try {
-                performFindResults.listIt.close()
-            } catch (GenericEntityException e) {
-                logError(e)
-            }
-        }
-    }
-
+    timesheetsDb = performFindResults.list
+}
     timesheetsDb.each { timesheetDb ->
         //get hours from EmplLeave
         leaveHours = 0.00
