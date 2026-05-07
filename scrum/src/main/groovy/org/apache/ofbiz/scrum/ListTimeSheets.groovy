@@ -35,7 +35,6 @@ performFindResults = run service: 'performFindList', with: [entityName: 'Timeshe
                                                         orderBy: 'fromDate DESC']
 if (performFindResults.listSize > 0) {
     timesheetsDb = performFindResults.list
-}
     timesheetsDb.each { timesheetDb ->
         //get hours from EmplLeave
         leaveHours = 0.00
