@@ -29,13 +29,7 @@ under the License.
 
                 <set field="layoutSettings.companyName" from-field="uiLabelMap.InventoryCycleCountCompanyName" global="true"/>
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.InventoryCycleCountCompanySubtitle" global="true"/>
-                <!-- layoutSettings.headerImageUrl can be used to specify an application specific logo; if not set,
-                    then the global layoutSettings.commonHeaderImageUrl (specified in GlobalDecorator) will be used. -->
-                <!--<set field="layoutSettings.headerImageUrl" value="/images/ofbiz_logo.png" global="true"/>-->
 
-                <!-- <set field="layoutSettings.headerMiddleBackgroundUrl" value="" global="true"/> -->
-                <!-- <set field="layoutSettings.headerRightBackgroundUrl" value="" global="true"/> -->
-                <!-- TODO: Use transform to specify component URI -->
 
                 <set field="activeApp" value="inventory-cycle-count" global="true"/>
                 <set field="applicationMenuName" value="MainAppBar" global="true"/>

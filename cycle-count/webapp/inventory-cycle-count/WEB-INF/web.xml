@@ -22,11 +22,7 @@ under the License.
     <display-name>Apache OFBiz - InventoryCycleCount Component</display-name>
     <description>InventoryCycleCount Component of the Apache OFBiz Project</description>
 
-    <!-- context-param>
-        <param-name>webSiteId</param-name>
-        <param-value>inventory-cycle-countSite</param-value>
-        <description>A unique ID used to look up the WebSite entity. Only for component using a WebSite entity, like ecommerce</description>
-    </context-param-->
+
     <context-param>
         <description>A unique name used to identify/recognize the local dispatcher for the Service Engine</description>
         <param-name>localDispatcherName</param-name><param-value>inventory-cycle-count</param-value>
@@ -72,8 +68,6 @@ under the License.
 
     <listener><listener-class>org.apache.ofbiz.webapp.control.ControlEventListener</listener-class></listener>
     <listener><listener-class>org.apache.ofbiz.webapp.control.LoginEventListener</listener-class></listener>
-    <!-- NOTE: not all app servers support mounting implementations of the HttpSessionActivationListener interface -->
-    <!-- <listener><listener-class>org.apache.ofbiz.webapp.control.ControlActivationEventListener</listener-class></listener> -->
 
     <servlet>
         <description>Main Control Servlet</description>
