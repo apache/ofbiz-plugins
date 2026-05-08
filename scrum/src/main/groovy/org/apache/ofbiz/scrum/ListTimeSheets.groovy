@@ -19,7 +19,6 @@
 package org.apache.ofbiz.scrum
 
 import org.apache.ofbiz.base.util.UtilDateTime
-import org.apache.ofbiz.entity.GenericEntityException
 import org.apache.ofbiz.entity.condition.EntityCondition
 import org.apache.ofbiz.entity.condition.EntityOperator
 import org.apache.ofbiz.entity.util.EntityFindOptions

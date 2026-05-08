@@ -19,7 +19,6 @@
 package org.apache.ofbiz.scrum
 
 import org.apache.ofbiz.base.util.UtilMisc
-import org.apache.ofbiz.entity.GenericEntityException
 import org.apache.ofbiz.entity.GenericValue
 import org.apache.ofbiz.entity.condition.EntityCondition
 import org.apache.ofbiz.entity.condition.EntityConditionBuilder

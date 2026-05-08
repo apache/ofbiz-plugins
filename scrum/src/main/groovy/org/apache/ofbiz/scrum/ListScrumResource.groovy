@@ -18,8 +18,6 @@
 */
 package org.apache.ofbiz.scrum
 
-import org.apache.ofbiz.entity.GenericEntityException
-
 outputList = []
 performFindInMap = [entityName: 'ScrumMemberUserLoginAndSecurityGroup',
                     noConditionFind: 'Y',
