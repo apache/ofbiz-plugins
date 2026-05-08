@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<entity-engine-xml>
+
+    <!-- =========================================================
+         Inventory Count Status Type and Lifecycle
+         ========================================================= -->
+    <StatusType statusTypeId="ICC_COUNT_STATUS" description="Inventory Count Status"/>
+
+    <StatusItem statusId="SESSION_CREATED"   statusTypeId="ICC_COUNT_STATUS" description="Created"   sequenceId="01"/>
+    <StatusItem statusId="SESSION_ASSIGNED"  statusTypeId="ICC_COUNT_STATUS" description="Assigned"  sequenceId="02"/>
+    <StatusItem statusId="SESSION_SUBMITTED" statusTypeId="ICC_COUNT_STATUS" description="Submitted" sequenceId="03"/>
+    <StatusItem statusId="SESSION_APPROVED"  statusTypeId="ICC_COUNT_STATUS" description="Approved"  sequenceId="04"/>
+    <StatusItem statusId="SESSION_VOIDED"    statusTypeId="ICC_COUNT_STATUS" description="Voided"    sequenceId="99"/>
+
+    <!-- Valid lifecycle transitions -->
+    <StatusValidChange statusId="SESSION_CREATED"   statusIdTo="SESSION_ASSIGNED"  transitionName="Assign"/>
+    <StatusValidChange statusId="SESSION_ASSIGNED"  statusIdTo="SESSION_SUBMITTED" transitionName="Submit"/>
+    <StatusValidChange statusId="SESSION_SUBMITTED" statusIdTo="SESSION_APPROVED"  transitionName="Approve"/>
+    <StatusValidChange statusId="SESSION_CREATED"   statusIdTo="SESSION_VOIDED"    transitionName="Void"/>
+    <StatusValidChange statusId="SESSION_ASSIGNED"  statusIdTo="SESSION_VOIDED"    transitionName="Void"/>
+    <StatusValidChange statusId="SESSION_SUBMITTED" statusIdTo="SESSION_VOIDED"    transitionName="Void"/>
+
+    <!-- Item Statuses -->
+    <StatusType statusTypeId="ICC_ITEM_STATUS" description="Inventory Count Item Status"/>
+    <StatusItem statusId="ICC_ITEM_SCANNED"   statusTypeId="ICC_ITEM_STATUS" description="Scanned"   sequenceId="01"/>
+    <StatusItem statusId="ICC_ITEM_VERIFIED"  statusTypeId="ICC_ITEM_STATUS" description="Verified"  sequenceId="02"/>
+    <StatusItem statusId="ICC_ITEM_ADJUSTED"  statusTypeId="ICC_ITEM_STATUS" description="Adjusted"  sequenceId="03"/>
+    <StatusItem statusId="ICC_ITEM_VOIDED"    statusTypeId="ICC_ITEM_STATUS" description="Voided"    sequenceId="99"/>
+
+</entity-engine-xml>

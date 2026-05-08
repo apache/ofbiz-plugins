@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<entity-engine-xml>
+
+    <!-- Demo Inventory Counts -->
+    
+    <!-- 1. Created Status - Not yet assigned -->
+    <InventoryCount inventoryCountId="DEMO_COUNT_01" countName="General Warehouse A1" statusId="SESSION_CREATED" 
+                    facilityId="WebStoreWarehouse" createdDate="2026-03-30 08:00:00" />
+
+    <!-- 2. Assigned Status - Counter in progress -->
+    <InventoryCount inventoryCountId="DEMO_COUNT_02" countName="Slow Movers Review" statusId="SESSION_ASSIGNED" 
+                    facilityId="WebStoreWarehouse" assignedUserLoginId="admin" createdDate="2026-03-30 09:00:00" />
+
+    <!-- 3. Submitted Status - Pending review -->
+    <InventoryCount inventoryCountId="DEMO_COUNT_03" countName="Weekly Bin Count" statusId="SESSION_SUBMITTED" 
+                    facilityId="WebStoreWarehouse" assignedUserLoginId="admin" createdDate="2026-03-30 10:00:00" />
+
+    <!-- Demo Count Items for DEMO_COUNT_02 (Assigned/InProgress) -->
+    <InventoryCountItem inventoryCountId="DEMO_COUNT_02" countItemSeqId="00001" productId="GZ-1006" productIdentifier="890123456789"
+                        locationSeqId="TL-01" quantity="15" systemQuantity="15" statusId="ICC_ITEM_SCANNED"
+                        createdDate="2026-03-30 09:45:00" />
+
+    <!-- Demo Count Items for DEMO_COUNT_03 (Submitted - with discrepancies) -->
+    <!-- Case 1: Perfect match -->
+    <InventoryCountItem inventoryCountId="DEMO_COUNT_03" countItemSeqId="00001" productId="GZ-1006" productIdentifier="890123456789"
+                        locationSeqId="TL-01" quantity="10" systemQuantity="10" statusId="ICC_ITEM_VERIFIED"
+                        createdDate="2026-03-30 10:15:00" />
+    
+    <!-- Case 2: Variance found (Expected 5, found 7) -->
+    <InventoryCountItem inventoryCountId="DEMO_COUNT_03" countItemSeqId="00002" productId="GZ-1005" productIdentifier="789012345678"
+                        locationSeqId="TL-01" quantity="7" systemQuantity="5" statusId="ICC_ITEM_VERIFIED"
+                        createdDate="2026-03-30 10:20:00" />
+
+    <InventoryCountVariance inventoryCountId="DEMO_COUNT_03" countItemSeqId="00002" varianceSeqId="00001"
+                            varianceQty="2.0" varianceReasonId="VAR_FOUND" comments="Found extra in back of bin"
+                            createdDate="2026-03-30 10:30:00" createdByUserLoginId="admin" />
+
+    <!-- Case 3: Damaged Stock (Expected 2, found 2 but 1 damaged) -->
+    <InventoryCountItem inventoryCountId="DEMO_COUNT_03" countItemSeqId="00003" productId="GZ-1001" productIdentifier="123456789012"
+                        locationSeqId="TL-02" quantity="2" systemQuantity="2" statusId="ICC_ITEM_VERIFIED"
+                        createdDate="2026-03-30 10:25:00" />
+                        
+    <InventoryCountVariance inventoryCountId="DEMO_COUNT_03" countItemSeqId="00003" varianceSeqId="00001"
+                            varianceQty="0.0" varianceReasonId="VAR_DAMAGED" comments="Box soaked in water"
+                            createdDate="2026-03-30 10:30:00" createdByUserLoginId="admin" />
+
+    <!-- Status History for Demo Counts -->
+    <InventoryCountStatus inventoryCountStatusId="DS01" inventoryCountId="DEMO_COUNT_01" statusId="SESSION_CREATED" statusDate="2026-03-30 08:00:00" />
+    
+    <InventoryCountStatus inventoryCountStatusId="DS02" inventoryCountId="DEMO_COUNT_02" statusId="SESSION_CREATED" statusDate="2026-03-30 09:00:00" />
+    <InventoryCountStatus inventoryCountStatusId="DS03" inventoryCountId="DEMO_COUNT_02" statusId="SESSION_ASSIGNED" statusDate="2026-03-30 09:30:00" />
+
+    <InventoryCountStatus inventoryCountStatusId="DS04" inventoryCountId="DEMO_COUNT_03" statusId="SESSION_CREATED" statusDate="2026-03-30 10:00:00" />
+    <InventoryCountStatus inventoryCountStatusId="DS05" inventoryCountId="DEMO_COUNT_03" statusId="SESSION_ASSIGNED" statusDate="2026-03-30 10:05:00" />
+    <InventoryCountStatus inventoryCountStatusId="DS06" inventoryCountId="DEMO_COUNT_03" statusId="SESSION_SUBMITTED" statusDate="2026-03-30 10:30:00" />
+
+</entity-engine-xml>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/entitymodel.xsd">
+
+    <title>Inventory Cycle Count Entities</title>
+    <description>Data model for the Inventory Cycle Count (ICC) plugin.</description>
+    <copyright>Apache Software Foundation</copyright>
+    <version>1.0</version>
+
+    <!-- =========================================================
+         InventoryCount
+         One record per user/device counting session.
+         workEffortId is optional – links to a count run when used.
+         ========================================================= -->
+    <entity entity-name="InventoryCount"
+            package-name="org.apache.ofbiz.icc"
+            title="Inventory Count">
+        <field name="inventoryCountId"        type="id"/>
+        <field name="countName"               type="name"/>
+        <field name="statusId"                type="id"/>
+        <field name="facilityId"              type="id"/>
+        <field name="workEffortId"            type="id"/>       <!-- optional – future: link to a count run -->
+        <field name="assignedUserLoginId"     type="short-varchar"/>
+        <field name="parentInventoryCountId"  type="id"/>       <!-- optional – for sub-counts -->
+        <field name="createdDate"             type="date-time"/>
+        <field name="dueDate"                 type="date-time"/>
+        <field name="approvedDate"            type="date-time"/> <!-- set on SESSION_APPROVED transition -->
+        <field name="comments"               type="comment"/>
+        <prim-key field="inventoryCountId"/>
+        <relation type="one" rel-entity-name="StatusItem">
+            <key-map field-name="statusId"/>
+        </relation>
+        <relation type="one" rel-entity-name="Facility" fk-name="INV_CNT_FAC">
+            <key-map field-name="facilityId"/>
+        </relation>
+
+        <relation type="one-nofk" rel-entity-name="UserLogin">
+            <key-map field-name="assignedUserLoginId" rel-field-name="userLoginId"/>
+        </relation>
+        <relation type="one-nofk" rel-entity-name="WorkEffort">
+            <key-map field-name="workEffortId"/>
+        </relation>
+        <relation type="one-nofk" rel-entity-name="InventoryCount" title="Parent">
+            <key-map field-name="parentInventoryCountId" rel-field-name="inventoryCountId"/>
+        </relation>
+    </entity>
+
+    <!-- =========================================================
+          InventoryCountItem
+          Snapshot of a physical count event. Records what was
+          found (quantity) vs what the system expected (systemQuantity)
+          at a specific location/lot point-in-time.
+          ========================================================= -->
+    <entity entity-name="InventoryCountItem"
+            package-name="org.apache.ofbiz.icc"
+            title="Inventory Count Item">
+        <field name="inventoryCountId"      type="id"/>
+        <field name="countItemSeqId"        type="id"/>
+        <field name="productId"             type="id"/>
+        <field name="inventoryItemId"      type="id"/>
+        <field name="productIdentifier"     type="short-varchar"/> <!-- barcode or external ID scanned -->
+        <field name="locationSeqId"         type="id"/>
+        <field name="quantity"              type="floating-point"/>
+        <field name="systemQuantity"        type="floating-point"/> <!-- snapshot of expected qty at scan time -->
+        <field name="statusId"              type="id"/>            <!-- Per-item status (e.g. Scanned, Verified) -->
+        <field name="isRequested"           type="indicator"/>     <!-- Y = part of directed count set -->
+        <field name="countedByUserLoginId"  type="short-varchar"/>
+        <field name="createdDate"           type="date-time"/>
+        <field name="createdByUserLoginId"  type="short-varchar"/>
+        <prim-key field="inventoryCountId"/>
+        <prim-key field="countItemSeqId"/>
+        <relation type="one" rel-entity-name="InventoryCount">
+            <key-map field-name="inventoryCountId"/>
+        </relation>
+        <relation type="one-nofk" rel-entity-name="Product">
+            <key-map field-name="productId"/>
+        </relation>
+        <relation type="one-nofk" rel-entity-name="InventoryItem">
+            <key-map field-name="inventoryItemId"/>
+        </relation>
+        <relation type="one" rel-entity-name="StatusItem">
+            <key-map field-name="statusId"/>
+        </relation>
+    </entity>
+
+    <!-- =========================================================
+         InventoryCountVariance
+         Stores discrepancies found during reconciliation.
+         Linking to countItem allows multiple reason codes per scan line.
+         ========================================================= -->
+    <entity entity-name="InventoryCountVariance"
+            package-name="org.apache.ofbiz.icc"
+            title="Inventory Count Variance">
+        <field name="inventoryCountId"      type="id"/>
+        <field name="countItemSeqId"        type="id"/>
+        <field name="varianceSeqId"         type="id"/>
+        <field name="varianceQty"           type="floating-point"/>
+        <field name="varianceReasonId"      type="id"/>
+        <field name="comments"              type="comment"/>
+        <field name="createdDate"           type="date-time"/>
+        <field name="createdByUserLoginId"  type="short-varchar"/>
+        <prim-key field="inventoryCountId"/>
+        <prim-key field="countItemSeqId"/>
+        <prim-key field="varianceSeqId"/>
+        <relation type="one" rel-entity-name="InventoryCountItem">
+            <key-map field-name="inventoryCountId"/>
+            <key-map field-name="countItemSeqId"/>
+        </relation>
+        <relation type="one-nofk" rel-entity-name="VarianceReason">
+            <key-map field-name="varianceReasonId"/>
+        </relation>
+    </entity>
+
+    <!-- =========================================================
+         InventoryCountStatus
+         Append-only history of InventoryCount lifecycle transitions.
+         Never updated; a new row is inserted on each transition.
+         ========================================================= -->
+    <entity entity-name="InventoryCountStatus"
+            package-name="org.apache.ofbiz.icc"
+            title="Inventory Count Status History">
+        <field name="inventoryCountStatusId"  type="id"/>
+        <field name="inventoryCountId"        type="id"/>
+        <field name="statusId"                type="id"/>
+        <field name="statusDate"              type="date-time"/>
+        <field name="changeByUserLoginId"     type="short-varchar"/>
+        <prim-key field="inventoryCountStatusId"/>
+        <relation type="one" rel-entity-name="InventoryCount">
+            <key-map field-name="inventoryCountId"/>
+        </relation>
+        <relation type="one" rel-entity-name="StatusItem">
+            <key-map field-name="statusId"/>
+        </relation>
+        <relation type="one-nofk" rel-entity-name="UserLogin">
+            <key-map field-name="changeByUserLoginId" rel-field-name="userLoginId"/>
+        </relation>
+    </entity>
+
+</entitymodel>
