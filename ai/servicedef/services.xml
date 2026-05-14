@@ -18,4 +18,22 @@ under the License.
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:noNamespaceSchemaLocation=
           "https://ofbiz.apache.org/dtds/services.xsd">
+
+    <service name="ai.generate" engine="java"
+             location="org.apache.ofbiz.ai.AiServices" invoke="generate">
+        <description>Generate a text response from an AI model</description>
+        <attribute name="messages" mode="IN" type="List" optional="false"/>
+        <attribute name="configName" mode="IN" type="String" optional="true"/>
+        <attribute name="response" mode="OUT" type="String" optional="false"/>
+    </service>
+
+    <service name="ai.generateStructured" engine="java"
+             location="org.apache.ofbiz.ai.AiServices" invoke="generateStructured">
+        <description>Generate a structured Map response from an AI model</description>
+        <attribute name="messages" mode="IN" type="List" optional="false"/>
+        <attribute name="schema" mode="IN" type="Map" optional="false"/>
+        <attribute name="configName" mode="IN" type="String" optional="true"/>
+        <attribute name="result" mode="OUT" type="Map" optional="false"/>
+    </service>
+
 </services>
