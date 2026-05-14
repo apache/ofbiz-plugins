@@ -36,4 +36,10 @@ under the License.
         <attribute name="result" mode="OUT" type="Map" optional="false"/>
     </service>
 
+    <service name="ai.smokeTest" engine="groovy"
+             location="component://ai/groovyScripts/AiTest.groovy"
+             invoke="">
+        <description>Smoke test for the AI plugin — calls ai.generate with a test message</description>
+    </service>
+
 </services>
