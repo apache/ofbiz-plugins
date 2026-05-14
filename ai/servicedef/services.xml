@@ -19,7 +19,7 @@ under the License.
           xsi:noNamespaceSchemaLocation=
           "https://ofbiz.apache.org/dtds/services.xsd">
 
-    <service name="ai.generate" engine="java"
+    <service name="aiGenerate" engine="java"
              location="org.apache.ofbiz.ai.AiServices" invoke="generate">
         <description>Generate a text response from an AI model</description>
         <attribute name="messages" mode="IN" type="List" optional="false"/>
@@ -27,7 +27,7 @@ under the License.
         <attribute name="response" mode="OUT" type="String" optional="false"/>
     </service>
 
-    <service name="ai.generateStructured" engine="java"
+    <service name="aiGenerateStructured" engine="java"
              location="org.apache.ofbiz.ai.AiServices" invoke="generateStructured">
         <description>Generate a structured Map response from an AI model</description>
         <attribute name="messages" mode="IN" type="List" optional="false"/>
@@ -36,10 +36,10 @@ under the License.
         <attribute name="result" mode="OUT" type="Map" optional="false"/>
     </service>
 
-    <service name="ai.smokeTest" engine="groovy"
+    <service name="aiSmokeTest" engine="groovy"
              location="component://ai/groovyScripts/AiTest.groovy"
              invoke="">
-        <description>Smoke test for the AI plugin — calls ai.generate with a test message</description>
+        <description>Smoke test for the AI plugin — calls aiGenerate with a test message</description>
     </service>
 
 </services>

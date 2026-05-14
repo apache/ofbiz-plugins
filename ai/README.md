@@ -7,8 +7,8 @@ Apache JIRA: https://issues.apache.org/jira/browse/OFBIZ-13408
 ## What this plugin does
 
 The AI plugin connects OFBiz to any OpenAI-compatible chat model via LangChain4j 1.8.0.
-It provides two callable OFBiz services — `ai.generate` for free-text responses and
-`ai.generateStructured` for JSON-schema-constrained structured output — that any other
+It provides two callable OFBiz services — `aiGenerate` for free-text responses and
+`aiGenerateStructured` for JSON-schema-constrained structured output — that any other
 service or Groovy script can call without depending on LangChain4j directly.
 
 ## Architecture
@@ -107,19 +107,19 @@ Both methods throw `GeneralException` on failure; callers should catch it and re
 
 | Service | IN | OUT | Description |
 |---|---|---|---|
-| `ai.generate` | `messages` (List, required)<br>`configName` (String, optional) | `response` (String) | Free-text generation |
-| `ai.generateStructured` | `messages` (List, required)<br>`schema` (Map, required)<br>`configName` (String, optional) | `result` (Map) | Structured JSON output |
+| `aiGenerate` | `messages` (List, required)<br>`configName` (String, optional) | `response` (String) | Free-text generation |
+| `aiGenerateStructured` | `messages` (List, required)<br>`schema` (Map, required)<br>`configName` (String, optional) | `result` (Map) | Structured JSON output |
 
 Each message in the `messages` list is a `Map` with keys `role` (`system`, `user`, or `assistant`) and `content` (String).
 
 ## Smoke test
 
-With OFBiz running and a valid API key configured, invoke `ai.smokeTest` from the
+With OFBiz running and a valid API key configured, invoke `aiSmokeTest` from the
 webtools service runner:
 
 ```
 https://localhost:8443/webtools/control/main
-→ Service Engine → Run Service → ai.smokeTest
+→ Service Engine → Run Service → aiSmokeTest
 ```
 
 A successful run logs:
