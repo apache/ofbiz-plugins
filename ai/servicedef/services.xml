@@ -42,4 +42,10 @@ under the License.
         <description>Smoke test for the AI plugin — calls aiGenerate with a test message</description>
     </service>
 
+    <service name="aiSmokeTestStructured" engine="groovy"
+             location="component://ai/groovyScripts/AiStructuredTest.groovy"
+             invoke="">
+        <description>Smoke test for generateStructured — expects Map with word key</description>
+    </service>
+
 </services>
