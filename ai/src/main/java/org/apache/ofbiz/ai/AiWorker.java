@@ -43,6 +43,7 @@ import dev.langchain4j.model.chat.request.json.JsonSchema;
 import dev.langchain4j.model.chat.request.json.JsonSchemaElement;
 import dev.langchain4j.model.chat.request.json.JsonStringSchema;
 
+import org.apache.ofbiz.ai.container.AiContainer;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.GeneralException;
 import org.apache.ofbiz.base.util.UtilGenerics;
@@ -64,9 +65,12 @@ public final class AiWorker {
 
     public static String generate(DispatchContext dctx,
             List<Map<String, Object>> messages) throws GeneralException {
+        var chatModel = AiContainer.getChatModel();
+        if (chatModel == null) {
+            return "AI service is not available. Check ai.properties configuration.";
+        }
         try {
             List<ChatMessage> chatMessages = toChatMessages(messages);
-            var chatModel = AiFactory.getChatModel();
             var request = ChatRequest.builder().messages(chatMessages).build();
             var response = chatModel.chat(request);
             return response.aiMessage().text();
@@ -79,6 +83,11 @@ public final class AiWorker {
     public static Map<String, Object> generateStructured(DispatchContext dctx,
             List<Map<String, Object>> messages,
             Map<String, Object> schema) throws GeneralException {
+        var chatModel = AiContainer.getChatModel();
+        if (chatModel == null) {
+            throw new GeneralException(
+                    "AI service is not available. Check ai.properties configuration.");
+        }
         try {
             List<ChatMessage> chatMessages = toChatMessages(messages);
             JsonObjectSchema jsonObjectSchema = buildJsonObjectSchema(schema);
@@ -86,7 +95,6 @@ public final class AiWorker {
                     .name("response").rootElement(jsonObjectSchema).build();
             ResponseFormat responseFormat = ResponseFormat.builder()
                     .type(ResponseFormatType.JSON).jsonSchema(jsonSchema).build();
-            var chatModel = AiFactory.getChatModel();
             var request = ChatRequest.builder()
                     .messages(chatMessages).responseFormat(responseFormat).build();
             var response = chatModel.chat(request);

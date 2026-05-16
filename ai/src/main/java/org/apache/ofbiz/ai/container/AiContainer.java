@@ -21,10 +21,11 @@ package org.apache.ofbiz.ai.container;
 import java.time.Duration;
 import java.util.List;
 
+import dev.langchain4j.model.anthropic.AnthropicChatModel;
 import dev.langchain4j.model.chat.ChatModel;
+import dev.langchain4j.model.ollama.OllamaChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 
-import org.apache.ofbiz.ai.AiFactory;
 import org.apache.ofbiz.base.container.Container;
 import org.apache.ofbiz.base.container.ContainerException;
 import org.apache.ofbiz.base.start.StartupCommand;
@@ -35,6 +36,8 @@ import org.apache.ofbiz.base.util.UtilValidate;
 public class AiContainer implements Container {
 
     private static final String MODULE = AiContainer.class.getName();
+
+    private static ChatModel chatModel;
 
     private String name;
     private String configFile;
@@ -59,39 +62,68 @@ public class AiContainer implements Container {
             timeoutSecs = 60;
         }
 
-        if (UtilValidate.isEmpty(apiKey) || "REPLACE_WITH_YOUR_API_KEY".equals(apiKey)) {
-            Debug.logError("AI plugin: ai.apiKey is not configured in ai.properties", MODULE);
-            return false;
+        ChatModel chatModel = buildChatModel(provider, model, apiKey, baseUrl, timeoutSecs);
+        if (chatModel == null) {
+            Debug.logWarning("AI plugin disabled - check ai.properties", MODULE);
+            return true;
         }
-
-        ChatModel chatModel;
-        // Additional providers (anthropic, ollama native, bedrock)
-        // can be added here with their respective LangChain4j builders
-        switch (provider) {
-            case "openai":
-            default:
-                var builder = OpenAiChatModel.builder()
-                        .apiKey(apiKey)
-                        .modelName(model)
-                        .timeout(Duration.ofSeconds(timeoutSecs));
-                if (UtilValidate.isNotEmpty(baseUrl)) {
-                    builder.baseUrl(baseUrl);
-                }
-                chatModel = builder.build();
-        }
-
-        AiFactory.setChatModel(chatModel);
+        AiContainer.chatModel = chatModel;
         Debug.logInfo("AI plugin initialized: provider=" + provider + " model=" + model, MODULE);
         return true;
     }
 
+    private static ChatModel buildChatModel(String provider, String model, String apiKey,
+            String baseUrl, int timeoutSecs) throws ContainerException {
+        if ("anthropic".equals(provider)) {
+            if (UtilValidate.isEmpty(apiKey) || "REPLACE_WITH_YOUR_API_KEY".equals(apiKey)) {
+                Debug.logWarning("AI plugin: ai.apiKey is required for provider 'anthropic'", MODULE);
+                return null;
+            }
+            var builder = AnthropicChatModel.builder()
+                    .apiKey(apiKey)
+                    .modelName(model)
+                    .timeout(Duration.ofSeconds(timeoutSecs));
+            if (UtilValidate.isNotEmpty(baseUrl)) {
+                builder.baseUrl(baseUrl);
+            }
+            return builder.build();
+        } else if ("ollama".equals(provider)) {
+            return OllamaChatModel.builder()
+                    .baseUrl(UtilValidate.isNotEmpty(baseUrl) ? baseUrl : "http://localhost:11434")
+                    .modelName(model)
+                    .timeout(Duration.ofSeconds(timeoutSecs))
+                    .build();
+        } else if ("openai".equals(provider)) {
+            if (UtilValidate.isEmpty(apiKey) || "REPLACE_WITH_YOUR_API_KEY".equals(apiKey)) {
+                Debug.logWarning("AI plugin: ai.apiKey is required for provider 'openai'", MODULE);
+                return null;
+            }
+            var builder = OpenAiChatModel.builder()
+                    .apiKey(apiKey)
+                    .modelName(model)
+                    .timeout(Duration.ofSeconds(timeoutSecs));
+            if (UtilValidate.isNotEmpty(baseUrl)) {
+                builder.baseUrl(baseUrl);
+            }
+            return builder.build();
+        } else {
+            Debug.logWarning("AI plugin: unsupported provider '" + provider
+                    + "'. Supported providers: openai, anthropic, ollama", MODULE);
+            return null;
+        }
+    }
+
     @Override
     public void stop() throws ContainerException {
-        AiFactory.destroy();
+        chatModel = null;
     }
 
     @Override
     public String getName() {
         return name;
+    }
+
+    public static ChatModel getChatModel() {
+        return chatModel;
     }
 }

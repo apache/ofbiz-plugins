@@ -3,3 +3,4 @@ bin/
 node_modules/
 ai/config/ai.properties
 ai/CLAUDE.md
+ai/docs/
