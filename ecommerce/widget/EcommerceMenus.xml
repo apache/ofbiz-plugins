@@ -24,7 +24,6 @@
             <condition>
                 <or>
                     <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
-                    <if-entity-permission entity-id="${blog.contentId}" entity-name="Content" target-operation="CONTENT_UPDATE"/>
                 </or>
             </condition>
             <link text="${uiLabelMap.CommonEdit}" target="EditBlogArticle">
