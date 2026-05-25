@@ -19,138 +19,145 @@
 package org.apache.ofbiz.ai;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import dev.langchain4j.data.message.AiMessage;
-import dev.langchain4j.data.message.ChatMessage;
-import dev.langchain4j.data.message.SystemMessage;
-import dev.langchain4j.data.message.UserMessage;
-import dev.langchain4j.model.chat.request.ChatRequest;
-import dev.langchain4j.model.chat.request.ResponseFormat;
-import dev.langchain4j.model.chat.request.ResponseFormatType;
-import dev.langchain4j.model.chat.request.json.JsonArraySchema;
-import dev.langchain4j.model.chat.request.json.JsonBooleanSchema;
-import dev.langchain4j.model.chat.request.json.JsonIntegerSchema;
-import dev.langchain4j.model.chat.request.json.JsonNumberSchema;
-import dev.langchain4j.model.chat.request.json.JsonObjectSchema;
-import dev.langchain4j.model.chat.request.json.JsonSchema;
-import dev.langchain4j.model.chat.request.json.JsonSchemaElement;
-import dev.langchain4j.model.chat.request.json.JsonStringSchema;
-
+import org.apache.ofbiz.ai.agent.AiChatClient;
+import org.apache.ofbiz.ai.agent.AiHttpClient;
+import org.apache.ofbiz.ai.agent.ProviderConfig;
 import org.apache.ofbiz.ai.container.AiContainer;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.GeneralException;
-import org.apache.ofbiz.base.util.UtilGenerics;
+import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.service.DispatchContext;
 
+/**
+ * Utility class providing simple LLM call helpers used by the
+ * {@code ai.generate} and {@code ai.generateStructured} OFBiz services.
+ *
+ * <p>Both methods locate an available provider from {@link AiContainer},
+ * delegate to {@link AiHttpClient} for the actual HTTP call, and return
+ * the parsed result.  No LangChain4j types are used here.
+ */
 public final class AiWorker {
 
     private static final String MODULE = AiWorker.class.getName();
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    private static final Map<String, Supplier<JsonSchemaElement>> TYPE_BUILDERS = new HashMap<>();
-    static {
-        TYPE_BUILDERS.put("string", JsonStringSchema::new);
-        TYPE_BUILDERS.put("number", JsonNumberSchema::new);
-        TYPE_BUILDERS.put("integer", JsonIntegerSchema::new);
-        TYPE_BUILDERS.put("boolean", JsonBooleanSchema::new);
-    }
+    private static final String DEFAULT_PROVIDER = "openai-default";
 
     private AiWorker() { }
 
+    /**
+     * Sends a chat request to the default configured provider and returns the
+     * assistant's text response.
+     *
+     * <p>Provider lookup order:
+     * <ol>
+     *   <li>Provider named {@value #DEFAULT_PROVIDER} in {@code ai.properties}.</li>
+     *   <li>First available provider if {@value #DEFAULT_PROVIDER} is not configured.</li>
+     * </ol>
+     *
+     * @param dctx     the dispatch context (unused directly, retained for API symmetry)
+     * @param messages ordered list of role/content message maps
+     * @return the assistant's text, or a human-readable error string if the AI
+     *         service is not configured
+     * @throws GeneralException if the HTTP request fails or the response cannot be parsed
+     */
     public static String generate(DispatchContext dctx,
             List<Map<String, Object>> messages) throws GeneralException {
-        var chatModel = AiContainer.getChatModel();
-        if (chatModel == null) {
+        ProviderConfig provider = resolveProvider();
+        if (provider == null) {
             return "AI service is not available. Check ai.properties configuration.";
         }
-        try {
-            List<ChatMessage> chatMessages = toChatMessages(messages);
-            var request = ChatRequest.builder().messages(chatMessages).build();
-            var response = chatModel.chat(request);
-            return response.aiMessage().text();
-        } catch (Exception e) {
-            Debug.logError(e, "AI generate failed", MODULE);
-            throw new GeneralException("AI generate failed: " + e.getMessage(), e);
-        }
+        AiChatClient client = new AiHttpClient();
+        AiChatClient.ChatResponse response = client.chat(messages,
+                Collections.emptyList(), null, provider);
+        return response.getContent();
     }
 
+    /**
+     * Sends a chat request instructing the LLM to respond with JSON matching the
+     * supplied schema, then parses and returns that JSON as a {@link Map}.
+     *
+     * <p>The schema instruction is appended as an additional system message so
+     * that providers without native structured-output support can still fulfil
+     * the request via prompt guidance.
+     *
+     * @param dctx     the dispatch context (unused directly, retained for API symmetry)
+     * @param messages ordered list of role/content message maps
+     * @param schema   the expected response schema expressed as a {@code Map} whose
+     *                 values are JSON-serialisable descriptors
+     * @return the parsed JSON object returned by the LLM
+     * @throws GeneralException if the AI service is not configured, the HTTP
+     *                          request fails, or the response is not valid JSON
+     */
     public static Map<String, Object> generateStructured(DispatchContext dctx,
             List<Map<String, Object>> messages,
             Map<String, Object> schema) throws GeneralException {
-        var chatModel = AiContainer.getChatModel();
-        if (chatModel == null) {
+        ProviderConfig provider = resolveProvider();
+        if (provider == null) {
             throw new GeneralException(
                     "AI service is not available. Check ai.properties configuration.");
         }
+
+        // Build schema instruction message
+        String schemaJson;
         try {
-            List<ChatMessage> chatMessages = toChatMessages(messages);
-            JsonObjectSchema jsonObjectSchema = buildJsonObjectSchema(schema);
-            JsonSchema jsonSchema = JsonSchema.builder()
-                    .name("response").rootElement(jsonObjectSchema).build();
-            ResponseFormat responseFormat = ResponseFormat.builder()
-                    .type(ResponseFormatType.JSON).jsonSchema(jsonSchema).build();
-            var request = ChatRequest.builder()
-                    .messages(chatMessages).responseFormat(responseFormat).build();
-            var response = chatModel.chat(request);
-            return OBJECT_MAPPER.readValue(response.aiMessage().text(),
+            schemaJson = OBJECT_MAPPER.writeValueAsString(schema);
+        } catch (Exception e) {
+            Debug.logWarning("AiWorker: could not serialise schema map: " + e.getMessage(), MODULE);
+            schemaJson = schema.toString();
+        }
+
+        List<Map<String, Object>> augmentedMessages = new ArrayList<>(messages);
+        Map<String, Object> schemaInstruction = new java.util.LinkedHashMap<>();
+        schemaInstruction.put("role", "system");
+        schemaInstruction.put("content",
+                "Respond with a JSON object matching this schema: " + schemaJson);
+        augmentedMessages.add(schemaInstruction);
+
+        AiChatClient client = new AiHttpClient();
+        AiChatClient.ChatResponse response = client.chat(augmentedMessages,
+                Collections.emptyList(), null, provider);
+
+        String content = response.getContent();
+        if (UtilValidate.isEmpty(content)) {
+            throw new GeneralException("AiWorker: LLM returned empty content for generateStructured.");
+        }
+
+        try {
+            return OBJECT_MAPPER.readValue(content,
                     new TypeReference<Map<String, Object>>() { });
         } catch (Exception e) {
-            Debug.logError(e, "AI generateStructured failed", MODULE);
-            throw new GeneralException("AI generateStructured failed: " + e.getMessage(), e);
+            Debug.logError(e, "AiWorker: generateStructured failed to parse LLM response as JSON", MODULE);
+            throw new GeneralException(
+                    "AI generateStructured failed: response was not valid JSON. " + e.getMessage(), e);
         }
     }
 
-    private static List<ChatMessage> toChatMessages(List<Map<String, Object>> messages) {
-        List<ChatMessage> chatMessages = new ArrayList<>();
-        for (Map<String, Object> msg : messages) {
-            String role = (String) msg.get("role");
-            String content = (String) msg.get("content");
-            if ("system".equals(role)) {
-                chatMessages.add(SystemMessage.from(content));
-            } else if ("assistant".equals(role)) {
-                chatMessages.add(AiMessage.from(content));
-            } else {
-                chatMessages.add(UserMessage.from(content));
-            }
-        }
-        return chatMessages;
-    }
+    // ---------------------------------------------------------------------------
+    // Private helpers
+    // ---------------------------------------------------------------------------
 
-    private static JsonObjectSchema buildJsonObjectSchema(Map<String, Object> schemaMap) {
-        JsonObjectSchema.Builder builder = JsonObjectSchema.builder();
-        for (Map.Entry<String, Object> entry : schemaMap.entrySet()) {
-            builder.addProperty(entry.getKey(), buildSchemaElement(entry.getValue()));
+    /**
+     * Resolves the provider to use for simple generate calls.
+     * Returns {@code null} if no providers are configured.
+     */
+    private static ProviderConfig resolveProvider() {
+        if (AiContainer.getProviderRegistry() == null) {
+            return null;
         }
-        return builder.build();
-    }
-
-    private static JsonSchemaElement buildSchemaElement(Object descriptor) {
-        if (descriptor instanceof String type) {
-            if ("array".equals(type)) return JsonArraySchema.builder().build();
-            if ("object".equals(type)) return JsonObjectSchema.builder().build();
-            return TYPE_BUILDERS.getOrDefault(type, JsonStringSchema::new).get();
+        ProviderConfig provider = AiContainer.getProviderRegistry().getProvider(DEFAULT_PROVIDER);
+        if (provider == null && !AiContainer.getProviderRegistry().getProviderNames().isEmpty()) {
+            String firstName = AiContainer.getProviderRegistry().getProviderNames().iterator().next();
+            provider = AiContainer.getProviderRegistry().getProvider(firstName);
+            Debug.logInfo("AiWorker: '" + DEFAULT_PROVIDER
+                    + "' not configured; falling back to provider '" + firstName + "'.", MODULE);
         }
-        if (descriptor instanceof Map) {
-            Map<String, Object> descMap = UtilGenerics.cast(descriptor);
-            String type = (String) descMap.get("type");
-            if ("array".equals(type)) {
-                JsonArraySchema.Builder ab = JsonArraySchema.builder();
-                if (descMap.containsKey("items")) ab.items(buildSchemaElement(descMap.get("items")));
-                return ab.build();
-            }
-            if ("object".equals(type)) {
-                Object props = descMap.get("properties");
-                if (props instanceof Map) return buildJsonObjectSchema(UtilGenerics.cast(props));
-                return JsonObjectSchema.builder().build();
-            }
-            if (type != null) return TYPE_BUILDERS.getOrDefault(type, JsonStringSchema::new).get();
-        }
-        return new JsonStringSchema();
+        return provider;
     }
 }

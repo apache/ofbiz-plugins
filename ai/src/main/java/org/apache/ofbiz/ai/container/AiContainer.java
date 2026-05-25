@@ -18,104 +18,81 @@
  *******************************************************************************/
 package org.apache.ofbiz.ai.container;
 
-import java.time.Duration;
 import java.util.List;
 
-import dev.langchain4j.model.anthropic.AnthropicChatModel;
-import dev.langchain4j.model.chat.ChatModel;
-import dev.langchain4j.model.ollama.OllamaChatModel;
-import dev.langchain4j.model.openai.OpenAiChatModel;
-
+import org.apache.ofbiz.ai.agent.AgentRegistry;
+import org.apache.ofbiz.ai.agent.ProviderRegistry;
+import org.apache.ofbiz.ai.agent.ToolCatalog;
 import org.apache.ofbiz.base.container.Container;
 import org.apache.ofbiz.base.container.ContainerException;
 import org.apache.ofbiz.base.start.StartupCommand;
 import org.apache.ofbiz.base.util.Debug;
-import org.apache.ofbiz.base.util.UtilProperties;
-import org.apache.ofbiz.base.util.UtilValidate;
+import org.apache.ofbiz.entity.Delegator;
+import org.apache.ofbiz.entity.DelegatorFactory;
+import org.apache.ofbiz.service.LocalDispatcher;
+import org.apache.ofbiz.service.ServiceContainer;
 
+/**
+ * OFBiz container that bootstraps the AI agent framework at server startup.
+ *
+ * <p>On {@link #start()} this container:
+ * <ol>
+ *   <li>Obtains the default OFBiz {@link LocalDispatcher}.</li>
+ *   <li>Constructs a {@link ProviderRegistry} from {@code ai.properties}.</li>
+ *   <li>Constructs a {@link ToolCatalog} by scanning component {@code ai/} directories.</li>
+ *   <li>Constructs an {@link AgentRegistry} by scanning component {@code ai/} directories.</li>
+ * </ol>
+ *
+ * <p>The three registries are held as static fields so that service Groovy scripts and
+ * {@link org.apache.ofbiz.ai.agent.AgentRunner} can access them via the static getters
+ * without requiring a container reference.
+ */
 public class AiContainer implements Container {
 
     private static final String MODULE = AiContainer.class.getName();
 
-    private static ChatModel chatModel;
+    private static ToolCatalog toolCatalog;
+    private static AgentRegistry agentRegistry;
+    private static ProviderRegistry providerRegistry;
 
     private String name;
-    private String configFile;
 
     @Override
-    public void init(List<StartupCommand> ofbizCommands, String name, String configFile) throws ContainerException {
+    public void init(List<StartupCommand> ofbizCommands, String name, String configFile)
+            throws ContainerException {
         this.name = name;
-        this.configFile = configFile;
     }
 
     @Override
     public boolean start() throws ContainerException {
-        String provider = UtilProperties.getPropertyValue("ai", "ai.provider", "openai");
-        String model = UtilProperties.getPropertyValue("ai", "ai.model", "gpt-4o-mini");
-        String apiKey = UtilProperties.getPropertyValue("ai", "ai.apiKey");
-        String baseUrl = UtilProperties.getPropertyValue("ai", "ai.baseUrl", "");
-        int timeoutSecs;
-        try {
-            timeoutSecs = Integer.parseInt(
-                    UtilProperties.getPropertyValue("ai", "ai.timeout", "60"));
-        } catch (NumberFormatException e) {
-            timeoutSecs = 60;
-        }
-
-        ChatModel chatModel = buildChatModel(provider, model, apiKey, baseUrl, timeoutSecs);
-        if (chatModel == null) {
-            Debug.logWarning("AI plugin disabled - check ai.properties", MODULE);
+        Delegator delegator = DelegatorFactory.getDelegator("default");
+        if (delegator == null) {
+            Debug.logWarning("AiContainer: delegator not available, AI plugin disabled.", MODULE);
             return true;
         }
-        AiContainer.chatModel = chatModel;
-        Debug.logInfo("AI plugin initialized: provider=" + provider + " model=" + model, MODULE);
-        return true;
-    }
-
-    private static ChatModel buildChatModel(String provider, String model, String apiKey,
-            String baseUrl, int timeoutSecs) throws ContainerException {
-        if ("anthropic".equals(provider)) {
-            if (UtilValidate.isEmpty(apiKey) || "REPLACE_WITH_YOUR_API_KEY".equals(apiKey)) {
-                Debug.logWarning("AI plugin: ai.apiKey is required for provider 'anthropic'", MODULE);
-                return null;
-            }
-            var builder = AnthropicChatModel.builder()
-                    .apiKey(apiKey)
-                    .modelName(model)
-                    .timeout(Duration.ofSeconds(timeoutSecs));
-            if (UtilValidate.isNotEmpty(baseUrl)) {
-                builder.baseUrl(baseUrl);
-            }
-            return builder.build();
-        } else if ("ollama".equals(provider)) {
-            return OllamaChatModel.builder()
-                    .baseUrl(UtilValidate.isNotEmpty(baseUrl) ? baseUrl : "http://localhost:11434")
-                    .modelName(model)
-                    .timeout(Duration.ofSeconds(timeoutSecs))
-                    .build();
-        } else if ("openai".equals(provider)) {
-            if (UtilValidate.isEmpty(apiKey) || "REPLACE_WITH_YOUR_API_KEY".equals(apiKey)) {
-                Debug.logWarning("AI plugin: ai.apiKey is required for provider 'openai'", MODULE);
-                return null;
-            }
-            var builder = OpenAiChatModel.builder()
-                    .apiKey(apiKey)
-                    .modelName(model)
-                    .timeout(Duration.ofSeconds(timeoutSecs));
-            if (UtilValidate.isNotEmpty(baseUrl)) {
-                builder.baseUrl(baseUrl);
-            }
-            return builder.build();
-        } else {
-            Debug.logWarning("AI plugin: unsupported provider '" + provider
-                    + "'. Supported providers: openai, anthropic, ollama", MODULE);
-            return null;
+        LocalDispatcher dispatcher = ServiceContainer.getLocalDispatcher("default", delegator);
+        if (dispatcher == null) {
+            Debug.logWarning("AiContainer: dispatcher not available, AI plugin disabled.", MODULE);
+            return true;
         }
+        var dctx = dispatcher.getDispatchContext();
+        try {
+            providerRegistry = new ProviderRegistry(dctx);
+            toolCatalog = new ToolCatalog(dctx);
+            agentRegistry = new AgentRegistry(toolCatalog, providerRegistry, dctx);
+        } catch (Exception e) {
+            throw new ContainerException("AiContainer failed to start: " + e.getMessage(), e);
+        }
+        Debug.logInfo("AiContainer started: providers=" + providerRegistry.getProviderNames()
+                + " agents=" + agentRegistry.getAgentNames(), MODULE);
+        return true;
     }
 
     @Override
     public void stop() throws ContainerException {
-        chatModel = null;
+        toolCatalog = null;
+        agentRegistry = null;
+        providerRegistry = null;
     }
 
     @Override
@@ -123,7 +100,33 @@ public class AiContainer implements Container {
         return name;
     }
 
-    public static ChatModel getChatModel() {
-        return chatModel;
+    /**
+     * Returns the {@link ToolCatalog} built at startup, or {@code null} if the
+     * container has not been started yet.
+     *
+     * @return tool catalog
+     */
+    public static ToolCatalog getToolCatalog() {
+        return toolCatalog;
+    }
+
+    /**
+     * Returns the {@link AgentRegistry} built at startup, or {@code null} if the
+     * container has not been started yet.
+     *
+     * @return agent registry
+     */
+    public static AgentRegistry getAgentRegistry() {
+        return agentRegistry;
+    }
+
+    /**
+     * Returns the {@link ProviderRegistry} built at startup, or {@code null} if
+     * the container has not been started yet.
+     *
+     * @return provider registry
+     */
+    public static ProviderRegistry getProviderRegistry() {
+        return providerRegistry;
     }
 }
