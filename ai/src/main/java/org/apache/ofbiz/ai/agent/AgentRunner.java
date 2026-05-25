@@ -546,15 +546,14 @@ public final class AgentRunner {
                 thread.store();
             }
 
-            // Get the current max sequence number
-            List<GenericValue> existing = EntityQuery.use(delegator)
+            // Get the current max sequence number — fetch only the most recent row
+            GenericValue latest = EntityQuery.use(delegator)
                     .from("AiConversationMessage")
                     .where("threadId", threadId)
                     .orderBy("-sequenceNum")
-                    .queryList();
-            long nextSeq = existing.isEmpty() ? 1L
-                    : (existing.get(0).getLong("sequenceNum") != null
-                            ? existing.get(0).getLong("sequenceNum") + 2L : 1L);
+                    .queryFirst();
+            long nextSeq = (latest != null && latest.getLong("sequenceNum") != null)
+                    ? latest.getLong("sequenceNum") + 1L : 1L;
 
             // Save user message
             GenericValue userMsg = delegator.makeValue("AiConversationMessage");

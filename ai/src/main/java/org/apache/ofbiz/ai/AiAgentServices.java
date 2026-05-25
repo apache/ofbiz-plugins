@@ -83,6 +83,9 @@ public class AiAgentServices {
             Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         String threadId = (String) context.get("threadId");
+        if (UtilValidate.isEmpty(threadId)) {
+            return ServiceUtil.returnError("threadId is required");
+        }
         try {
             GenericValue thread = EntityQuery.use(delegator)
                     .from("AiConversationThread")
