@@ -36,16 +36,19 @@ public final class ToolDescriptor {
     private final String description;
     private final Set<String> hiddenParams;
     private final String requiredPermission;
+    private final boolean requiresApproval;
     private final ObjectNode jsonSchema;
 
     public ToolDescriptor(String name, String serviceName, String description,
-            Set<String> hiddenParams, String requiredPermission, ObjectNode jsonSchema) {
+            Set<String> hiddenParams, String requiredPermission, boolean requiresApproval,
+            ObjectNode jsonSchema) {
         this.name = name;
         this.serviceName = serviceName;
         this.description = description;
         this.hiddenParams = Collections.unmodifiableSet(
                 new LinkedHashSet<>(hiddenParams != null ? hiddenParams : Collections.emptySet()));
         this.requiredPermission = requiredPermission;
+        this.requiresApproval = requiresApproval;
         this.jsonSchema = jsonSchema;
     }
 
@@ -68,6 +71,11 @@ public final class ToolDescriptor {
     /** Returns the required permission string, or {@code null} if none is required. */
     public String getRequiredPermission() {
         return requiredPermission;
+    }
+
+    /** Returns {@code true} if this tool requires human approval before execution. */
+    public boolean isRequiresApproval() {
+        return requiresApproval;
     }
 
     public ObjectNode getJsonSchema() {

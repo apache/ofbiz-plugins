@@ -148,6 +148,8 @@ public final class ToolCatalog {
         if (UtilValidate.isEmpty(requiredPermission)) {
             requiredPermission = null;
         }
+        boolean requiresApproval = "true".equalsIgnoreCase(
+                toolEl.getAttribute("requires-approval"));
 
         if (UtilValidate.isEmpty(name)) {
             Debug.logWarning("ToolCatalog: <tool> in '" + sourceFile
@@ -196,7 +198,8 @@ public final class ToolCatalog {
         ObjectNode jsonSchema = buildJsonSchema(name, description, modelService, hiddenParams);
 
         loaded.put(name, new ToolDescriptor(
-                name, serviceName, description, hiddenParams, requiredPermission, jsonSchema));
+                name, serviceName, description, hiddenParams, requiredPermission,
+                requiresApproval, jsonSchema));
         Debug.logInfo("ToolCatalog: registered tool '" + name
                 + "' -> service '" + serviceName + "'.", MODULE);
     }
