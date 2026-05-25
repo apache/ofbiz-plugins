@@ -44,4 +44,12 @@ under the License.
     <StatusItem statusId="AI_TOOL_FAILED"    statusTypeId="AI_TOOL_CALL"
                 statusCode="FAILED"    description="Failed"    sequenceId="02"/>
 
+    <!-- AiProviderCost rows — prices in USD per 1M tokens (as of 2026-05) -->
+    <AiProviderCost modelId="gpt-4o"                    effectiveDate="2026-01-01 00:00:00.000" inputCostPerMillion="2.50"  outputCostPerMillion="10.00" currencyUomId="USD"/>
+    <AiProviderCost modelId="gpt-4o-mini"               effectiveDate="2026-01-01 00:00:00.000" inputCostPerMillion="0.15"  outputCostPerMillion="0.60"  currencyUomId="USD"/>
+    <AiProviderCost modelId="gpt-4.1"                   effectiveDate="2026-01-01 00:00:00.000" inputCostPerMillion="2.00"  outputCostPerMillion="8.00"  currencyUomId="USD"/>
+    <AiProviderCost modelId="claude-opus-4-5"           effectiveDate="2026-01-01 00:00:00.000" inputCostPerMillion="15.00" outputCostPerMillion="75.00" currencyUomId="USD"/>
+    <AiProviderCost modelId="claude-sonnet-4-5"         effectiveDate="2026-01-01 00:00:00.000" inputCostPerMillion="3.00"  outputCostPerMillion="15.00" currencyUomId="USD"/>
+    <AiProviderCost modelId="claude-3-5-haiku-20241022" effectiveDate="2026-01-01 00:00:00.000" inputCostPerMillion="0.80"  outputCostPerMillion="4.00"  currencyUomId="USD"/>
+
 </entity-engine-xml>

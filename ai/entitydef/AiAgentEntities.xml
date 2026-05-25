@@ -58,4 +58,16 @@ under the License.
         </relation>
     </entity>
 
+    <!-- AiProviderCost: per-model token pricing (seed data, updated as prices change) -->
+    <entity entity-name="AiProviderCost" package-name="org.apache.ofbiz.ai"
+            title="AI Provider Cost">
+        <field name="modelId"              type="id-long"        not-null="true"/>
+        <field name="effectiveDate"        type="date-time"      not-null="true"/>
+        <field name="inputCostPerMillion"  type="currency-amount"/>
+        <field name="outputCostPerMillion" type="currency-amount"/>
+        <field name="currencyUomId"        type="id"             default-value="USD"/>
+        <prim-key field="modelId"/>
+        <prim-key field="effectiveDate"/>
+    </entity>
+
 </entitymodel>

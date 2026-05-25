@@ -59,4 +59,18 @@ under the License.
         <attribute name="iterationsUsed" mode="OUT" type="Integer" optional="false"/>
     </service>
 
+    <service name="getUsageSummary" engine="java"
+             location="org.apache.ofbiz.ai.AiAgentServices" invoke="getUsageSummary"
+             auth="true">
+        <description>Query AI agent run history and estimate token cost for a date range</description>
+        <attribute name="agentName"          mode="IN"  type="String"     optional="true"/>
+        <attribute name="userLoginId"        mode="IN"  type="String"     optional="true"/>
+        <attribute name="fromDate"           mode="IN"  type="Timestamp"  optional="true"/>
+        <attribute name="thruDate"           mode="IN"  type="Timestamp"  optional="true"/>
+        <attribute name="totalRuns"          mode="OUT" type="Long"       optional="false"/>
+        <attribute name="totalInputTokens"   mode="OUT" type="Long"       optional="false"/>
+        <attribute name="totalOutputTokens"  mode="OUT" type="Long"       optional="false"/>
+        <attribute name="estimatedCostUsd"   mode="OUT" type="BigDecimal" optional="true"/>
+    </service>
+
 </services>

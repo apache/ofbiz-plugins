@@ -37,6 +37,7 @@ import org.apache.ofbiz.base.util.UtilDateTime;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
+import org.apache.ofbiz.security.Security;
 import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.ServiceUtil;
 
@@ -331,6 +332,19 @@ public final class AgentRunner {
             Debug.logWarning("AgentRunner: could not parse tool args JSON for tool '"
                     + descriptor.getName() + "': " + e.getMessage(), MODULE);
             parsedArgs = new HashMap<>();
+        }
+
+        // Permission check — enforce before dispatching the service
+        String requiredPermission = descriptor.getRequiredPermission();
+        if (requiredPermission != null && userLogin != null && dctx != null) {
+            Security security = dctx.getSecurity();
+            if (!security.hasPermission(requiredPermission, userLogin)) {
+                String permDenied = "{\"error\": \"Permission denied: requires "
+                        + requiredPermission + "\"}";
+                persistToolCall(delegator, runId, descriptor.getName(), toolArgsJson,
+                        permDenied, true);
+                return permDenied;
+            }
         }
 
         // Build service context — omit hidden params, always include userLogin
