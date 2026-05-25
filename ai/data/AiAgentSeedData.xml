@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<entity-engine-xml>
+
+    <!-- StatusType for AI Agent Run -->
+    <StatusType statusTypeId="AI_AGENT_RUN"
+                description="AI Agent Run Status"
+                parentTypeId=""/>
+
+    <!-- StatusItem rows for AiAgentRun -->
+    <StatusItem statusId="AI_RUN_STARTED"   statusTypeId="AI_AGENT_RUN"
+                statusCode="STARTED"   description="Started"   sequenceId="01"/>
+    <StatusItem statusId="AI_RUN_COMPLETED" statusTypeId="AI_AGENT_RUN"
+                statusCode="COMPLETED" description="Completed" sequenceId="02"/>
+    <StatusItem statusId="AI_RUN_FAILED"    statusTypeId="AI_AGENT_RUN"
+                statusCode="FAILED"    description="Failed"    sequenceId="03"/>
+
+    <!-- StatusType for AI Tool Call -->
+    <StatusType statusTypeId="AI_TOOL_CALL"
+                description="AI Agent Tool Call Status"
+                parentTypeId=""/>
+
+    <!-- StatusItem rows for AiAgentToolCall -->
+    <StatusItem statusId="AI_TOOL_COMPLETED" statusTypeId="AI_TOOL_CALL"
+                statusCode="COMPLETED" description="Completed" sequenceId="01"/>
+    <StatusItem statusId="AI_TOOL_FAILED"    statusTypeId="AI_TOOL_CALL"
+                statusCode="FAILED"    description="Failed"    sequenceId="02"/>
+
+</entity-engine-xml>

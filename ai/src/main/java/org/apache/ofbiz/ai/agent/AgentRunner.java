@@ -33,6 +33,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.ofbiz.ai.container.AiContainer;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.GeneralException;
+import org.apache.ofbiz.base.util.UtilDateTime;
+import org.apache.ofbiz.entity.Delegator;
+import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.ServiceUtil;
@@ -66,6 +69,11 @@ public final class AgentRunner {
     // Non-final to allow Phase 2 test seam injection
     private AiChatClient chatClient = new AiHttpClient();
 
+    // Package-private fields used only by the test constructor (null in production)
+    private AgentDefinition testAgentDef;
+    private ProviderConfig testProvider;
+    private Map<String, ToolDescriptor> testTools;
+
     /**
      * Constructs a runner for one agent invocation.
      *
@@ -80,6 +88,30 @@ public final class AgentRunner {
         this.userMessage = userMessage;
         this.userLogin = userLogin;
         this.dctx = dctx;
+    }
+
+    /**
+     * Package-private constructor for unit tests — bypasses {@link AiContainer} registries.
+     * Pass {@code null} for {@code dctx} when the test tool allow-list is empty and
+     * {@link #invokeToolService} will never be called.
+     *
+     * @param agentDef       agent definition to use instead of registry lookup
+     * @param provider       provider config to use instead of registry lookup
+     * @param toolDescriptors list of tools available to this agent
+     * @param userMessage    the user's input message
+     * @param userLogin      authenticated user (may be {@code null} in tests)
+     * @param dctx           dispatch context (may be {@code null} when no tools are invoked)
+     */
+    AgentRunner(AgentDefinition agentDef, ProviderConfig provider,
+            List<ToolDescriptor> toolDescriptors,
+            String userMessage, GenericValue userLogin, DispatchContext dctx) {
+        this.agentName = agentDef.getName();
+        this.userMessage = userMessage;
+        this.userLogin = userLogin;
+        this.dctx = dctx;
+        this.testAgentDef = agentDef;
+        this.testProvider = provider;
+        this.testTools = buildToolMap(toolDescriptors);
     }
 
     /**
@@ -106,28 +138,37 @@ public final class AgentRunner {
      */
     public RunResult run() throws GeneralException {
 
-        // 1. Load agent definition
-        AgentDefinition agent = AiContainer.getAgentRegistry().getAgent(agentName);
+        // 1. Load agent definition — use test seam if available
+        AgentDefinition agent = testAgentDef != null
+                ? testAgentDef
+                : AiContainer.getAgentRegistry().getAgent(agentName);
         if (agent == null) {
             throw new GeneralException("Unknown agent: " + agentName);
         }
 
-        // 2. Load provider config
-        ProviderConfig provider = AiContainer.getProviderRegistry().getProvider(agent.getProviderName());
+        // 2. Load provider config — use test seam if available
+        ProviderConfig provider = testProvider != null
+                ? testProvider
+                : AiContainer.getProviderRegistry().getProvider(agent.getProviderName());
         if (provider == null) {
             throw new GeneralException("Unconfigured provider: " + agent.getProviderName());
         }
 
-        // 3. Resolve tool allow-list
-        ToolCatalog toolCatalog = AiContainer.getToolCatalog();
-        Map<String, ToolDescriptor> allowedTools = new LinkedHashMap<>();
-        for (String toolName : agent.getToolAllowList()) {
-            ToolDescriptor descriptor = toolCatalog.getTool(toolName);
-            if (descriptor == null) {
-                throw new GeneralException("Agent '" + agentName
-                        + "' references unknown tool '" + toolName + "'");
+        // 3. Resolve tool allow-list — use test seam if available
+        Map<String, ToolDescriptor> allowedTools;
+        if (testTools != null) {
+            allowedTools = testTools;
+        } else {
+            ToolCatalog toolCatalog = AiContainer.getToolCatalog();
+            allowedTools = new LinkedHashMap<>();
+            for (String toolName : agent.getToolAllowList()) {
+                ToolDescriptor descriptor = toolCatalog.getTool(toolName);
+                if (descriptor == null) {
+                    throw new GeneralException("Agent '" + agentName
+                            + "' references unknown tool '" + toolName + "'");
+                }
+                allowedTools.put(toolName, descriptor);
             }
-            allowedTools.put(toolName, descriptor);
         }
 
         // 4. Build tool schemas list
@@ -148,20 +189,46 @@ public final class AgentRunner {
         userMsg.put("content", userMessage);
         messages.add(userMsg);
 
-        // 6. Agent loop
+        // 6. Persistence — create run record (skip when delegator is unavailable, e.g. unit tests)
+        Delegator delegator = dctx != null ? dctx.getDelegator() : null;
+        String runId = null;
+        GenericValue runRecord = null;
+        if (delegator != null) {
+            runId = delegator.getNextSeqId("AiAgentRun");
+            runRecord = delegator.makeValue("AiAgentRun");
+            runRecord.set("runId", runId);
+            runRecord.set("agentName", agentName);
+            runRecord.set("userLoginId", userLogin != null ? userLogin.getString("userLoginId") : null);
+            runRecord.set("startedAt", UtilDateTime.nowTimestamp());
+            runRecord.set("userMessage", userMessage);
+            runRecord.set("statusId", "AI_RUN_STARTED");
+            try {
+                delegator.create(runRecord);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "AgentRunner: failed to create AiAgentRun record", MODULE);
+            }
+        }
+
+        // 7. Agent loop
         String modelToUse = agent.getModelOverride();
         int maxIterations = agent.getMaxIterations();
         AiChatClient.ChatResponse lastResponse = null;
+        long totalInputTokens = 0L;
+        long totalOutputTokens = 0L;
+        RunResult loopResult = null;
 
         for (int iteration = 0; iteration < maxIterations; iteration++) {
             AiChatClient.ChatResponse response = chatClient.chat(
                     Collections.unmodifiableList(messages), toolSchemas, modelToUse, provider);
             lastResponse = response;
+            totalInputTokens += response.getInputTokens();
+            totalOutputTokens += response.getOutputTokens();
 
             String finishReason = response.getFinishReason();
 
             if ("stop".equals(finishReason)) {
-                return new RunResult(response.getContent(), "stop", iteration + 1);
+                loopResult = new RunResult(response.getContent(), "stop", iteration + 1);
+                break;
             }
 
             if ("tool_calls".equals(finishReason)) {
@@ -194,7 +261,7 @@ public final class AgentRunner {
                         continue;
                     }
 
-                    String resultJson = invokeToolService(descriptor, toolArgsJson);
+                    String resultJson = invokeToolService(descriptor, toolArgsJson, runId, delegator);
 
                     Map<String, Object> toolResultMsg = new LinkedHashMap<>();
                     toolResultMsg.put("role", "tool");
@@ -207,14 +274,36 @@ public final class AgentRunner {
                 // Unexpected finish reason — exit loop
                 Debug.logWarning("AgentRunner: unexpected finish_reason '" + finishReason
                         + "' for agent '" + agentName + "'; stopping loop.", MODULE);
-                String content = lastResponse != null ? lastResponse.getContent() : null;
-                return new RunResult(content, finishReason, iteration + 1);
+                String content = lastResponse.getContent();
+                loopResult = new RunResult(content, finishReason, iteration + 1);
+                break;
             }
         }
 
-        // 7. Loop exhausted without stop
-        String lastContent = lastResponse != null ? lastResponse.getContent() : null;
-        return new RunResult(lastContent, "max_iterations", maxIterations);
+        // 8. Loop exhausted without stop
+        if (loopResult == null) {
+            String lastContent = lastResponse != null ? lastResponse.getContent() : null;
+            loopResult = new RunResult(lastContent, "max_iterations", maxIterations);
+        }
+
+        // 9. Persistence — update run record with completion data
+        if (delegator != null && runRecord != null) {
+            runRecord.set("endedAt", UtilDateTime.nowTimestamp());
+            runRecord.set("assistantMessage", loopResult.getAssistantMessage());
+            runRecord.set("iterationsUsed", (long) loopResult.getIterationsUsed());
+            runRecord.set("inputTokens", totalInputTokens);
+            runRecord.set("outputTokens", totalOutputTokens);
+            boolean failed = "max_iterations".equals(loopResult.getStopReason())
+                    || (!"stop".equals(loopResult.getStopReason()));
+            runRecord.set("statusId", failed ? "AI_RUN_FAILED" : "AI_RUN_COMPLETED");
+            try {
+                runRecord.store();
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "AgentRunner: failed to update AiAgentRun record for runId=" + runId, MODULE);
+            }
+        }
+
+        return loopResult;
     }
 
     // ---------------------------------------------------------------------------
@@ -223,12 +312,16 @@ public final class AgentRunner {
 
     /**
      * Invokes the OFBiz service backing a tool and serialises the result to JSON.
+     * Persists an {@code AiAgentToolCall} row when {@code delegator} is non-null.
      *
-     * @param descriptor  the tool descriptor
+     * @param descriptor   the tool descriptor
      * @param toolArgsJson the JSON string of arguments from the LLM
+     * @param runId        the parent run identifier (may be {@code null} in tests)
+     * @param delegator    the entity delegator for persistence (may be {@code null} in tests)
      * @return serialised service result (capped at {@value #TOOL_RESULT_MAX_CHARS} chars)
      */
-    private String invokeToolService(ToolDescriptor descriptor, String toolArgsJson) {
+    private String invokeToolService(ToolDescriptor descriptor, String toolArgsJson,
+            String runId, Delegator delegator) {
         // Parse tool arguments JSON string to Map
         Map<String, Object> parsedArgs;
         try {
@@ -251,30 +344,91 @@ public final class AgentRunner {
 
         // Invoke the service
         Map<String, Object> serviceResult;
+        boolean callFailed = false;
+        String resultJson;
         try {
             serviceResult = dctx.getDispatcher().runSync(descriptor.getServiceName(), ctx);
         } catch (Exception e) {
             Debug.logError(e, "AgentRunner: service invocation failed for tool '"
                     + descriptor.getName() + "'", MODULE);
+            callFailed = true;
+            persistToolCall(delegator, runId, descriptor.getName(), toolArgsJson,
+                    "Error invoking service: " + e.getMessage(), callFailed);
             return "Error invoking service: " + e.getMessage();
         }
 
         // If service returned an error, surface that as the tool result
         if (ServiceUtil.isError(serviceResult)) {
-            return ServiceUtil.getErrorMessage(serviceResult);
+            callFailed = true;
+            String errorMsg = ServiceUtil.getErrorMessage(serviceResult);
+            persistToolCall(delegator, runId, descriptor.getName(), toolArgsJson, errorMsg, callFailed);
+            return errorMsg;
         }
 
         // Serialise result map to JSON string
         try {
-            String resultJson = MAPPER.writeValueAsString(serviceResult);
+            resultJson = MAPPER.writeValueAsString(serviceResult);
             if (resultJson.length() > TOOL_RESULT_MAX_CHARS) {
                 resultJson = resultJson.substring(0, TOOL_RESULT_MAX_CHARS) + "...[truncated]";
             }
-            return resultJson;
         } catch (JsonProcessingException e) {
             Debug.logWarning("AgentRunner: could not serialise result for tool '"
                     + descriptor.getName() + "': " + e.getMessage(), MODULE);
-            return "Error serialising result: " + e.getMessage();
+            callFailed = true;
+            resultJson = "Error serialising result: " + e.getMessage();
+        }
+
+        persistToolCall(delegator, runId, descriptor.getName(), toolArgsJson, resultJson, callFailed);
+        return resultJson;
+    }
+
+    /**
+     * Builds a {@link Map} from tool name to {@link ToolDescriptor} from a list.
+     * Used by the package-private test constructor.
+     *
+     * @param descriptors list of tool descriptors
+     * @return ordered map keyed by tool name
+     */
+    private static Map<String, ToolDescriptor> buildToolMap(List<ToolDescriptor> descriptors) {
+        Map<String, ToolDescriptor> map = new LinkedHashMap<>();
+        if (descriptors != null) {
+            for (ToolDescriptor d : descriptors) {
+                map.put(d.getName(), d);
+            }
+        }
+        return map;
+    }
+
+    /**
+     * Persists one {@code AiAgentToolCall} row.  Errors are logged but never re-thrown
+     * so that a persistence failure cannot abort a completed LLM interaction.
+     *
+     * @param delegator    entity delegator (no-op when {@code null})
+     * @param runId        parent run identifier
+     * @param toolName     name of the tool that was called
+     * @param callArguments raw JSON arguments string from the LLM
+     * @param callResult   serialised result (or error message)
+     * @param callFailed   whether the tool invocation failed
+     */
+    private void persistToolCall(Delegator delegator, String runId, String toolName,
+            String callArguments, String callResult, boolean callFailed) {
+        if (delegator == null) {
+            return;
+        }
+        try {
+            String callId = delegator.getNextSeqId("AiAgentToolCall");
+            GenericValue callRecord = delegator.makeValue("AiAgentToolCall");
+            callRecord.set("callId", callId);
+            callRecord.set("runId", runId);
+            callRecord.set("toolName", toolName);
+            callRecord.set("callArguments", callArguments);
+            callRecord.set("callResult", callResult);
+            callRecord.set("calledAt", UtilDateTime.nowTimestamp());
+            callRecord.set("statusId", callFailed ? "AI_TOOL_FAILED" : "AI_TOOL_COMPLETED");
+            delegator.create(callRecord);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "AgentRunner: failed to persist AiAgentToolCall for tool '"
+                    + toolName + "' in run " + runId, MODULE);
         }
     }
 
