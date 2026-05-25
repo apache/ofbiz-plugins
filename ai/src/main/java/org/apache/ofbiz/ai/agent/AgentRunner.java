@@ -180,6 +180,10 @@ public final class AgentRunner {
 
                     @SuppressWarnings("unchecked")
                     Map<String, Object> functionMap = (Map<String, Object>) toolCall.get("function");
+                    if (functionMap == null) {
+                        Debug.logWarning("AgentRunner: tool call missing 'function' field; skipping.", MODULE);
+                        continue;
+                    }
                     String toolName = (String) functionMap.get("name");
                     String toolArgsJson = (String) functionMap.get("arguments");
 
@@ -203,7 +207,7 @@ public final class AgentRunner {
                 // Unexpected finish reason — exit loop
                 Debug.logWarning("AgentRunner: unexpected finish_reason '" + finishReason
                         + "' for agent '" + agentName + "'; stopping loop.", MODULE);
-                String content = lastResponse.getContent();
+                String content = lastResponse != null ? lastResponse.getContent() : null;
                 return new RunResult(content, finishReason, iteration + 1);
             }
         }
