@@ -29,11 +29,27 @@ under the License.
     <request-map uri="FindAiAgentRun"><security https="true" auth="true"/><response name="success" type="view" value="FindAiAgentRun"/></request-map>
     <request-map uri="AiAgentRunDetail"><security https="true" auth="true"/><response name="success" type="view" value="AiAgentRunDetail"/></request-map>
     <request-map uri="AiUsageDashboard"><security https="true" auth="true"/><response name="success" type="view" value="AiUsageDashboard"/></request-map>
+    <request-map uri="FindAiAgentProposal"><security https="true" auth="true"/><response name="success" type="view" value="FindAiAgentProposal"/></request-map>
+    <request-map uri="RejectProposalForm"><security https="true" auth="true"/><response name="success" type="view" value="RejectProposalForm"/></request-map>
+    <request-map uri="approveProposal">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="approveAgentProposal"/>
+        <response name="success" type="request-redirect" value="FindAiAgentProposal"/>
+        <response name="error" type="view" value="FindAiAgentProposal"/>
+    </request-map>
+    <request-map uri="rejectProposal">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="rejectAgentProposal"/>
+        <response name="success" type="request-redirect" value="FindAiAgentProposal"/>
+        <response name="error" type="view" value="RejectProposalForm"/>
+    </request-map>
 
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://ai/widget/ai/CommonScreens.xml#main"/>
     <view-map name="FindAiAgentRun" type="screen" page="component://ai/widget/ai/AiScreens.xml#FindAiAgentRun"/>
     <view-map name="AiAgentRunDetail" type="screen" page="component://ai/widget/ai/AiScreens.xml#AiAgentRunDetail"/>
     <view-map name="AiUsageDashboard" type="screen" page="component://ai/widget/ai/AiScreens.xml#AiUsageDashboard"/>
+    <view-map name="FindAiAgentProposal" type="screen" page="component://ai/widget/ai/AiScreens.xml#FindAiAgentProposal"/>
+    <view-map name="RejectProposalForm" type="screen" page="component://ai/widget/ai/AiScreens.xml#RejectProposalForm"/>
 
 </site-conf>

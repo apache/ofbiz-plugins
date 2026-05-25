@@ -142,4 +142,73 @@ under the License.
         </field>
     </form>
 
+
+    <form name="FindAiAgentProposals" type="single" target="FindAiAgentProposal"
+            default-map-name="parameters">
+        <field name="noConditionFind"><hidden value="Y"/></field>
+        <field name="agentName" title="${uiLabelMap.AiAgentName}">
+            <text-find ignore-case="true"/>
+        </field>
+        <field name="statusId" title="${uiLabelMap.AiStatus}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="StatusItem" key-field-name="statusId" description="${description}">
+                    <entity-constraint name="statusTypeId" value="AI_AGENT_PROPOSAL"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <form name="ListAiAgentProposals" type="list" list-name="listIt" target=""
+            paginate-target="FindAiAgentProposal" odd-row-style="alternate-row"
+            default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="AiAgentProposal"/>
+                <field-map field-name="orderBy" value="runId DESC"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="proposalId" title="${uiLabelMap.AiProposalId}"><display/></field>
+        <field name="runId" title="${uiLabelMap.AiRunId}">
+            <hyperlink description="${runId}" target="AiAgentRunDetail">
+                <parameter param-name="runId"/>
+            </hyperlink>
+        </field>
+        <field name="agentName" title="${uiLabelMap.AiAgentName}"><display/></field>
+        <field name="userLoginId" title="${uiLabelMap.AiUserLoginId}"><display/></field>
+        <field name="statusId" title="${uiLabelMap.AiStatus}">
+            <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
+        </field>
+        <field name="approveLink" title="${uiLabelMap.AiApprove}" widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.AiApprove}" target="approveProposal"
+                    also-hidden="false">
+                <parameter param-name="proposalId"/>
+                <auto-attributes include="all"/>
+            </hyperlink>
+        </field>
+        <field name="rejectLink" title="${uiLabelMap.AiReject}" widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.AiReject}" target="RejectProposalForm"
+                    also-hidden="false">
+                <parameter param-name="proposalId"/>
+            </hyperlink>
+        </field>
+    </form>
+
+    <form name="RejectProposal" type="single" target="rejectProposal"
+            default-map-name="parameters">
+        <field name="proposalId"><hidden/></field>
+        <field name="rejectionReason" title="${uiLabelMap.AiRejectionReason}">
+            <textarea rows="5" cols="60"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.AiReject}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
 </forms>
