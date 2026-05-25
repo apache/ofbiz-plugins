@@ -17,7 +17,7 @@
  * under the License.
  */
 
-Map<String, Object> serviceCtx = [threadId: parameters.threadId]
+Map<String, Object> serviceCtx = [userLogin: userLogin, threadId: parameters.threadId]
 Map<String, Object> result = dispatcher.runSync('getConversationHistory', serviceCtx)
 if (org.apache.ofbiz.service.ServiceUtil.isError(result)) {
     context.errorMessage = org.apache.ofbiz.service.ServiceUtil.getErrorMessage(result)

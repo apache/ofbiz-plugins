@@ -17,7 +17,7 @@
  * under the License.
  */
 
-Map<String, Object> serviceCtx = [:]
+Map<String, Object> serviceCtx = [userLogin: userLogin]
 if (parameters.agentName) {
     serviceCtx.agentName = parameters.agentName
 }
