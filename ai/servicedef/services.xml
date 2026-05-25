@@ -48,4 +48,15 @@ under the License.
         <description>Smoke test for generateStructured — expects Map with word key</description>
     </service>
 
+    <service name="agentRun" engine="java"
+             location="org.apache.ofbiz.ai.AiAgentServices" invoke="agentRun"
+             auth="true">
+        <description>Run a named AI agent with a user message and return the assistant response</description>
+        <attribute name="agentName" mode="IN" type="String" optional="false"/>
+        <attribute name="userMessage" mode="IN" type="String" optional="false"/>
+        <attribute name="assistantMessage" mode="OUT" type="String" optional="false"/>
+        <attribute name="stopReason" mode="OUT" type="String" optional="false"/>
+        <attribute name="iterationsUsed" mode="OUT" type="Integer" optional="false"/>
+    </service>
+
 </services>

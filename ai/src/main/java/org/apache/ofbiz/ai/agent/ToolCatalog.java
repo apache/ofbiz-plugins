@@ -257,26 +257,26 @@ public final class ToolCatalog {
             return "string";
         }
         switch (ofbizType) {
-            case "String":
-            case "java.lang.String":
-                return "string";
-            case "Integer":
-            case "java.lang.Integer":
-            case "Long":
-            case "java.lang.Long":
-                return "integer";
-            case "Double":
-            case "java.lang.Double":
-            case "Float":
-            case "java.lang.Float":
-            case "BigDecimal":
-            case "java.math.BigDecimal":
-                return "number";
-            case "Boolean":
-            case "java.lang.Boolean":
-                return "boolean";
-            default:
-                return "string";
+        case "String":
+        case "java.lang.String":
+            return "string";
+        case "Integer":
+        case "java.lang.Integer":
+        case "Long":
+        case "java.lang.Long":
+            return "integer";
+        case "Double":
+        case "java.lang.Double":
+        case "Float":
+        case "java.lang.Float":
+        case "BigDecimal":
+        case "java.math.BigDecimal":
+            return "number";
+        case "Boolean":
+        case "java.lang.Boolean":
+            return "boolean";
+        default:
+            return "string";
         }
     }
 
