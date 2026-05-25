@@ -116,4 +116,30 @@ under the License.
         <field name="callResult" title="${uiLabelMap.AiCallResult}"><display/></field>
     </form>
 
+
+    <form name="UsageDashboardFilter" type="single" target="AiUsageDashboard"
+            default-map-name="parameters">
+        <field name="agentName" title="${uiLabelMap.AiAgentName}"><text/></field>
+        <field name="fromDate" title="${uiLabelMap.AiFromDate}"><date-time type="date-time"/></field>
+        <field name="thruDate" title="${uiLabelMap.AiThruDate}"><date-time type="date-time"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <form name="UsageSummaryResults" type="single">
+        <field name="totalRuns" title="${uiLabelMap.AiTotalRuns}">
+            <display description="${totalRuns}"/>
+        </field>
+        <field name="totalInputTokens" title="${uiLabelMap.AiTotalInputTokens}">
+            <display description="${totalInputTokens}"/>
+        </field>
+        <field name="totalOutputTokens" title="${uiLabelMap.AiTotalOutputTokens}">
+            <display description="${totalOutputTokens}"/>
+        </field>
+        <field name="estimatedCostUsd" title="${uiLabelMap.AiEstimatedCostUsd}">
+            <display description="${estimatedCostUsd}"/>
+        </field>
+    </form>
+
 </forms>
