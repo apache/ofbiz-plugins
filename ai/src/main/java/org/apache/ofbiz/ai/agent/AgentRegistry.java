@@ -73,6 +73,15 @@ public final class AgentRegistry {
         Map<String, AgentDefinition> loaded = new LinkedHashMap<>();
 
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        try {
+            dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            dbf.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            dbf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+        } catch (javax.xml.parsers.ParserConfigurationException e) {
+            Debug.logWarning("AgentRegistry: could not set XML security features: " + e.getMessage(), MODULE);
+        }
+        dbf.setXIncludeAware(false);
+        dbf.setExpandEntityReferences(false);
         dbf.setNamespaceAware(false);
 
         for (ComponentConfig cc : ComponentConfig.getAllComponents()) {
@@ -115,7 +124,13 @@ public final class AgentRegistry {
             return;
         }
 
-        doc.getDocumentElement().normalize();
+        Element docRoot = doc.getDocumentElement();
+        if (docRoot == null) {
+            Debug.logWarning("AgentRegistry: file '" + file.getAbsolutePath()
+                    + "' has no root element, skipping.", MODULE);
+            return;
+        }
+        docRoot.normalize();
         NodeList agentNodes = doc.getElementsByTagName("agent");
 
         for (int i = 0; i < agentNodes.getLength(); i++) {
@@ -209,6 +224,10 @@ public final class AgentRegistry {
             if (UtilValidate.isNotEmpty(location)) {
                 location = location.trim();
                 Path promptPath = componentRoot.resolve(Paths.get(location)).normalize();
+                if (!promptPath.startsWith(componentRoot.normalize())) {
+                    throw new IllegalStateException("AgentRegistry: system-prompt-location '"
+                            + location + "' attempts to traverse outside component root");
+                }
                 try {
                     return new String(Files.readAllBytes(promptPath)).trim();
                 } catch (IOException e) {

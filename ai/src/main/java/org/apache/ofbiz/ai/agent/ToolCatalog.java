@@ -73,6 +73,15 @@ public final class ToolCatalog {
         int componentCount = 0;
 
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        try {
+            dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            dbf.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            dbf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+        } catch (javax.xml.parsers.ParserConfigurationException e) {
+            Debug.logWarning("ToolCatalog: could not set XML security features: " + e.getMessage(), MODULE);
+        }
+        dbf.setXIncludeAware(false);
+        dbf.setExpandEntityReferences(false);
         dbf.setNamespaceAware(false);
 
         for (ComponentConfig cc : ComponentConfig.getAllComponents()) {
@@ -115,7 +124,13 @@ public final class ToolCatalog {
             return;
         }
 
-        doc.getDocumentElement().normalize();
+        Element docRoot = doc.getDocumentElement();
+        if (docRoot == null) {
+            Debug.logWarning("ToolCatalog: file '" + file.getAbsolutePath()
+                    + "' has no root element, skipping.", MODULE);
+            return;
+        }
+        docRoot.normalize();
         NodeList toolNodes = doc.getElementsByTagName("tool");
 
         for (int i = 0; i < toolNodes.getLength(); i++) {

@@ -119,10 +119,10 @@ public final class ProviderRegistry {
             if (UtilValidate.isNotEmpty(extraHeadersRaw)) {
                 for (String pair : extraHeadersRaw.split(",")) {
                     pair = pair.trim();
-                    int colon = pair.indexOf(':');
-                    if (colon > 0) {
-                        String hKey = pair.substring(0, colon).trim();
-                        String hVal = pair.substring(colon + 1).trim();
+                    String[] parts = pair.split(":", 2);
+                    if (parts.length == 2) {
+                        String hKey = parts[0].trim();
+                        String hVal = parts[1].trim();
                         if (UtilValidate.isNotEmpty(hKey)) {
                             extraHeaders.put(hKey, hVal);
                         }
