@@ -327,7 +327,8 @@ public final class AgentRunner {
 
         // 10. Conversation memory — persist user + assistant messages when threadId is set
         if (threadId != null && delegatorForThread != null) {
-            saveThreadMessages(threadId, agentName, userMessage,
+            String userLoginId = userLogin != null ? userLogin.getString("userLoginId") : null;
+            saveThreadMessages(threadId, agentName, userLoginId, userMessage,
                     loopResult.getAssistantMessage(), delegatorForThread);
         }
 
@@ -523,7 +524,7 @@ public final class AgentRunner {
      * @param delegator        entity delegator for database access
      */
     private static void saveThreadMessages(String threadId, String agentName,
-            String userMessage, String assistantMessage, Delegator delegator) {
+            String userLoginId, String userMessage, String assistantMessage, Delegator delegator) {
         try {
             java.sql.Timestamp now = UtilDateTime.nowTimestamp();
 
@@ -536,6 +537,7 @@ public final class AgentRunner {
                 thread = delegator.makeValue("AiConversationThread");
                 thread.set("threadId", threadId);
                 thread.set("agentName", agentName);
+                thread.set("userLoginId", userLoginId);
                 thread.set("createdAt", now);
                 thread.set("statusId", "AI_THREAD_ACTIVE");
                 delegator.create(thread);
