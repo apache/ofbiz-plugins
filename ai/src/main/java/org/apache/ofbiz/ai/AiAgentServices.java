@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,6 +52,8 @@ public class AiAgentServices {
         String userMessage = (String) context.get("userMessage");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
+        String threadId = (String) context.get("threadId");
+
         if (UtilValidate.isEmpty(agentName)) {
             return ServiceUtil.returnError("agentName is required");
         }
@@ -60,14 +63,66 @@ public class AiAgentServices {
 
         try {
             AgentRunner runner = new AgentRunner(agentName, userMessage, userLogin, dctx);
+            if (threadId != null) {
+                runner.setThreadId(threadId);
+            }
             AgentRunner.RunResult result = runner.run();
             Map<String, Object> serviceResult = ServiceUtil.returnSuccess();
             serviceResult.put("assistantMessage", result.getAssistantMessage());
             serviceResult.put("stopReason", result.getStopReason());
             serviceResult.put("iterationsUsed", result.getIterationsUsed());
+            serviceResult.put("threadId", threadId);
             return serviceResult;
         } catch (GeneralException e) {
             Debug.logError(e, "agentRun failed: " + e.getMessage(), MODULE);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+    }
+
+    public static Map<String, Object> archiveConversationThread(DispatchContext dctx,
+            Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        String threadId = (String) context.get("threadId");
+        try {
+            GenericValue thread = EntityQuery.use(delegator)
+                    .from("AiConversationThread")
+                    .where("threadId", threadId)
+                    .queryOne();
+            if (thread == null) {
+                return ServiceUtil.returnError("Thread not found: " + threadId);
+            }
+            thread.set("statusId", "AI_THREAD_ARCHIVED");
+            thread.store();
+            return ServiceUtil.returnSuccess();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "archiveConversationThread failed", MODULE);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+    }
+
+    public static Map<String, Object> getConversationHistory(DispatchContext dctx,
+            Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        String threadId = (String) context.get("threadId");
+        try {
+            List<GenericValue> rows = EntityQuery.use(delegator)
+                    .from("AiConversationMessage")
+                    .where("threadId", threadId)
+                    .orderBy("sequenceNum")
+                    .queryList();
+            List<Map<String, Object>> messages = new ArrayList<>();
+            for (GenericValue row : rows) {
+                Map<String, Object> msg = new LinkedHashMap<>();
+                msg.put("role", row.getString("role"));
+                msg.put("content", row.getString("content"));
+                msg.put("sequenceNum", row.getLong("sequenceNum"));
+                messages.add(msg);
+            }
+            Map<String, Object> result = ServiceUtil.returnSuccess();
+            result.put("messages", messages);
+            return result;
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "getConversationHistory failed", MODULE);
             return ServiceUtil.returnError(e.getMessage());
         }
     }

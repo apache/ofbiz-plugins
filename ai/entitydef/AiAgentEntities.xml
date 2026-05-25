@@ -70,4 +70,34 @@ under the License.
         <prim-key field="effectiveDate"/>
     </entity>
 
+    <!-- AiConversationThread: named context container for multi-turn conversations -->
+    <entity entity-name="AiConversationThread" package-name="org.apache.ofbiz.ai"
+            title="AI Conversation Thread">
+        <field name="threadId"      type="id"            not-null="true"/>
+        <field name="agentName"     type="short-varchar" not-null="true"/>
+        <field name="userLoginId"   type="id-long"/>
+        <field name="createdAt"     type="date-time"     not-null="true"/>
+        <field name="lastActiveAt"  type="date-time"/>
+        <field name="statusId"      type="id"/>
+        <prim-key field="threadId"/>
+        <relation type="one-nofk" rel-entity-name="StatusItem">
+            <key-map field-name="statusId"/>
+        </relation>
+    </entity>
+
+    <!-- AiConversationMessage: one row per user/assistant message in a thread -->
+    <entity entity-name="AiConversationMessage" package-name="org.apache.ofbiz.ai"
+            title="AI Conversation Message" dependent-on="AiConversationThread">
+        <field name="messageId"   type="id"            not-null="true"/>
+        <field name="threadId"    type="id"            not-null="true"/>
+        <field name="role"        type="short-varchar" not-null="true"/>
+        <field name="content"     type="very-long"     not-null="true"/>
+        <field name="sequenceNum" type="numeric"       not-null="true"/>
+        <field name="createdAt"   type="date-time"     not-null="true"/>
+        <prim-key field="messageId"/>
+        <relation type="one" fk-name="AI_MSG_THREAD" rel-entity-name="AiConversationThread">
+            <key-map field-name="threadId"/>
+        </relation>
+    </entity>
+
 </entitymodel>

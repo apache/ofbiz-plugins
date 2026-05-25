@@ -37,6 +37,7 @@ import org.apache.ofbiz.base.util.UtilDateTime;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
+import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.security.Security;
 import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.ServiceUtil;
@@ -69,6 +70,9 @@ public final class AgentRunner {
 
     // Non-final to allow Phase 2 test seam injection
     private AiChatClient chatClient = new AiHttpClient();
+
+    // Optional thread id for multi-turn conversation memory
+    private String threadId;
 
     // Package-private fields used only by the test constructor (null in production)
     private AgentDefinition testAgentDef;
@@ -123,6 +127,17 @@ public final class AgentRunner {
      */
     void setChatClient(AiChatClient client) {
         this.chatClient = client;
+    }
+
+    /**
+     * Sets the conversation thread id for multi-turn memory.  When set, the runner
+     * will load prior messages from {@code AiConversationThread} / {@code AiConversationMessage}
+     * before the loop and persist the new exchange after the loop completes.
+     *
+     * @param threadId the thread identifier, or {@code null} to disable persistence
+     */
+    public void setThreadId(String threadId) {
+        this.threadId = threadId;
     }
 
     // ---------------------------------------------------------------------------
@@ -189,6 +204,12 @@ public final class AgentRunner {
         userMsg.put("role", "user");
         userMsg.put("content", userMessage);
         messages.add(userMsg);
+
+        // 5b. Load prior conversation history when a threadId is supplied
+        Delegator delegatorForThread = dctx != null ? dctx.getDelegator() : null;
+        if (threadId != null && delegatorForThread != null) {
+            loadThreadHistory(messages, threadId, delegatorForThread, agent.getSystemPrompt());
+        }
 
         // 6. Persistence — create run record (skip when delegator is unavailable, e.g. unit tests)
         Delegator delegator = dctx != null ? dctx.getDelegator() : null;
@@ -304,6 +325,12 @@ public final class AgentRunner {
             }
         }
 
+        // 10. Conversation memory — persist user + assistant messages when threadId is set
+        if (threadId != null && delegatorForThread != null) {
+            saveThreadMessages(threadId, agentName, userMessage,
+                    loopResult.getAssistantMessage(), delegatorForThread);
+        }
+
         return loopResult;
     }
 
@@ -411,6 +438,147 @@ public final class AgentRunner {
             }
         }
         return map;
+    }
+
+    /**
+     * Loads prior conversation messages for the given thread into {@code messages}.
+     * Messages are inserted between the system prompt (index 0) and the current user
+     * message (last entry), oldest first.  If the thread does not exist, is archived,
+     * or the history would exceed the token budget, oldest pairs are trimmed until it fits.
+     *
+     * @param messages     the message list being built (must contain [system, user] already)
+     * @param threadId     the conversation thread identifier
+     * @param delegator    entity delegator for database access
+     * @param systemPrompt the agent's system prompt text (used for token budget estimation)
+     */
+    private static void loadThreadHistory(List<Map<String, Object>> messages,
+            String threadId, Delegator delegator, String systemPrompt) {
+        try {
+            // Check thread exists and is not archived
+            GenericValue thread = EntityQuery.use(delegator)
+                    .from("AiConversationThread")
+                    .where("threadId", threadId)
+                    .queryOne();
+            if (thread == null || "AI_THREAD_ARCHIVED".equals(thread.getString("statusId"))) {
+                return; // No history to load
+            }
+
+            // Load messages ordered by sequenceNum
+            List<GenericValue> history = EntityQuery.use(delegator)
+                    .from("AiConversationMessage")
+                    .where("threadId", threadId)
+                    .orderBy("sequenceNum")
+                    .queryList();
+
+            // Estimate token budget — rough heuristic: 1 token ≈ 4 chars
+            // Budget: 80,000 tokens (reserve space for system prompt + user message + LLM response)
+            int tokenBudget = 80000;
+            int systemPromptTokens = systemPrompt != null ? systemPrompt.length() / 4 : 0;
+            int remaining = tokenBudget - systemPromptTokens;
+
+            // Build history message list
+            List<Map<String, Object>> historyMsgs = new ArrayList<>();
+            for (GenericValue msg : history) {
+                String role = msg.getString("role");
+                String content = msg.getString("content");
+                if (content == null) {
+                    content = "";
+                }
+                Map<String, Object> m = new LinkedHashMap<>();
+                m.put("role", role);
+                m.put("content", content);
+                historyMsgs.add(m);
+            }
+
+            // Trim oldest message pairs until within budget
+            int totalChars = historyMsgs.stream()
+                    .mapToInt(m -> ((String) m.get("content")).length()).sum();
+            while (totalChars > remaining * 4 && historyMsgs.size() >= 2) {
+                // Drop first user + assistant pair (2 messages)
+                int pair0Chars = ((String) historyMsgs.get(0).get("content")).length();
+                int pair1Chars = ((String) historyMsgs.get(1).get("content")).length();
+                historyMsgs.remove(0);
+                historyMsgs.remove(0);
+                totalChars -= (pair0Chars + pair1Chars);
+            }
+
+            // Insert history after system prompt (index 1), before current user message (last)
+            // messages currently: [system, user]
+            // After insert:       [system, <history...>, user]
+            messages.addAll(1, historyMsgs);
+        } catch (GenericEntityException e) {
+            Debug.logWarning("AgentRunner: failed to load thread history for '"
+                    + threadId + "': " + e.getMessage(), MODULE);
+        }
+    }
+
+    /**
+     * Persists the user message and assistant response as {@code AiConversationMessage} rows.
+     * If the thread record does not exist it is created; otherwise {@code lastActiveAt} is updated.
+     *
+     * @param threadId         the conversation thread identifier
+     * @param agentName        agent name stored on a new thread record
+     * @param userMessage      the user's input text
+     * @param assistantMessage the LLM's response text (may be {@code null})
+     * @param delegator        entity delegator for database access
+     */
+    private static void saveThreadMessages(String threadId, String agentName,
+            String userMessage, String assistantMessage, Delegator delegator) {
+        try {
+            java.sql.Timestamp now = UtilDateTime.nowTimestamp();
+
+            // Upsert the thread record
+            GenericValue thread = EntityQuery.use(delegator)
+                    .from("AiConversationThread")
+                    .where("threadId", threadId)
+                    .queryOne();
+            if (thread == null) {
+                thread = delegator.makeValue("AiConversationThread");
+                thread.set("threadId", threadId);
+                thread.set("agentName", agentName);
+                thread.set("createdAt", now);
+                thread.set("statusId", "AI_THREAD_ACTIVE");
+                delegator.create(thread);
+            } else {
+                thread.set("lastActiveAt", now);
+                thread.store();
+            }
+
+            // Get the current max sequence number
+            List<GenericValue> existing = EntityQuery.use(delegator)
+                    .from("AiConversationMessage")
+                    .where("threadId", threadId)
+                    .orderBy("-sequenceNum")
+                    .queryList();
+            long nextSeq = existing.isEmpty() ? 1L
+                    : (existing.get(0).getLong("sequenceNum") != null
+                            ? existing.get(0).getLong("sequenceNum") + 2L : 1L);
+
+            // Save user message
+            GenericValue userMsg = delegator.makeValue("AiConversationMessage");
+            userMsg.set("messageId", delegator.getNextSeqId("AiConversationMessage"));
+            userMsg.set("threadId", threadId);
+            userMsg.set("role", "user");
+            userMsg.set("content", userMessage);
+            userMsg.set("sequenceNum", nextSeq);
+            userMsg.set("createdAt", now);
+            delegator.create(userMsg);
+
+            // Save assistant message if present
+            if (assistantMessage != null) {
+                GenericValue assistMsg = delegator.makeValue("AiConversationMessage");
+                assistMsg.set("messageId", delegator.getNextSeqId("AiConversationMessage"));
+                assistMsg.set("threadId", threadId);
+                assistMsg.set("role", "assistant");
+                assistMsg.set("content", assistantMessage);
+                assistMsg.set("sequenceNum", nextSeq + 1L);
+                assistMsg.set("createdAt", now);
+                delegator.create(assistMsg);
+            }
+        } catch (GenericEntityException e) {
+            Debug.logWarning("AgentRunner: failed to save thread messages for '"
+                    + threadId + "': " + e.getMessage(), MODULE);
+        }
     }
 
     /**

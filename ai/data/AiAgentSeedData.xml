@@ -44,6 +44,15 @@ under the License.
     <StatusItem statusId="AI_TOOL_FAILED"    statusTypeId="AI_TOOL_CALL"
                 statusCode="FAILED"    description="Failed"    sequenceId="02"/>
 
+    <!-- StatusType and StatusItem for conversation threads -->
+    <StatusType statusTypeId="AI_CONV_THREAD"
+                description="AI Conversation Thread Status"
+                parentTypeId=""/>
+    <StatusItem statusId="AI_THREAD_ACTIVE"   statusTypeId="AI_CONV_THREAD"
+                statusCode="ACTIVE"   description="Active"   sequenceId="01"/>
+    <StatusItem statusId="AI_THREAD_ARCHIVED" statusTypeId="AI_CONV_THREAD"
+                statusCode="ARCHIVED" description="Archived" sequenceId="02"/>
+
     <!-- AiProviderCost rows — prices in USD per 1M tokens (as of 2026-05) -->
     <AiProviderCost modelId="gpt-4o"                    effectiveDate="2026-01-01 00:00:00.000" inputCostPerMillion="2.50"  outputCostPerMillion="10.00" currencyUomId="USD"/>
     <AiProviderCost modelId="gpt-4o-mini"               effectiveDate="2026-01-01 00:00:00.000" inputCostPerMillion="0.15"  outputCostPerMillion="0.60"  currencyUomId="USD"/>

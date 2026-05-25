@@ -54,9 +54,25 @@ under the License.
         <description>Run a named AI agent with a user message and return the assistant response</description>
         <attribute name="agentName" mode="IN" type="String" optional="false"/>
         <attribute name="userMessage" mode="IN" type="String" optional="false"/>
+        <attribute name="threadId" mode="INOUT" type="String" optional="true"/>
         <attribute name="assistantMessage" mode="OUT" type="String" optional="false"/>
         <attribute name="stopReason" mode="OUT" type="String" optional="false"/>
         <attribute name="iterationsUsed" mode="OUT" type="Integer" optional="false"/>
+    </service>
+
+    <service name="archiveConversationThread" engine="java"
+             location="org.apache.ofbiz.ai.AiAgentServices"
+             invoke="archiveConversationThread" auth="true">
+        <description>Archive a conversation thread so future agentRun calls with the same threadId start fresh</description>
+        <attribute name="threadId" mode="IN" type="String" optional="false"/>
+    </service>
+
+    <service name="getConversationHistory" engine="java"
+             location="org.apache.ofbiz.ai.AiAgentServices"
+             invoke="getConversationHistory" auth="true">
+        <description>Return message history for a conversation thread</description>
+        <attribute name="threadId"  mode="IN"  type="String" optional="false"/>
+        <attribute name="messages"  mode="OUT" type="List"   optional="false"/>
     </service>
 
     <service name="getUsageSummary" engine="java"
