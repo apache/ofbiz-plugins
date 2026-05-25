@@ -34,6 +34,9 @@ under the License.
         <menu-item name="AiConversationThreads" title="${uiLabelMap.AiConversationThreads}">
             <link target="FindAiConversationThread"/>
         </menu-item>
+        <menu-item name="AiAgentList" title="${uiLabelMap.AiAgentList}">
+            <link target="FindAiAgents"/>
+        </menu-item>
     </menu>
 
 </menus>

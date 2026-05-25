@@ -286,4 +286,54 @@ under the License.
         <field name="content" title="${uiLabelMap.AiContent}"><display/></field>
     </form>
 
+    <form name="ListAiAgents" type="list" list-name="agents" paginate="false"
+            odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="name" title="${uiLabelMap.AiAgentName}">
+            <hyperlink description="${name}" target="RunAgentForm">
+                <parameter param-name="agentName" from-field="name"/>
+            </hyperlink>
+        </field>
+        <field name="providerName" title="${uiLabelMap.AiProvider}"><display/></field>
+        <field name="modelDisplay" title="${uiLabelMap.AiModelDisplay}"><display/></field>
+        <field name="maxIterations" title="${uiLabelMap.AiMaxIterations}"><display/></field>
+        <field name="toolCount" title="${uiLabelMap.AiToolCount}"><display/></field>
+        <field name="runButton" title="${uiLabelMap.AiRunAgent}" widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.AiRunAgent}" target="RunAgentForm">
+                <parameter param-name="agentName" from-field="name"/>
+            </hyperlink>
+        </field>
+    </form>
+
+    <form name="RunAgentForm" type="single" target="submitRunAgent"
+            default-map-name="parameters">
+        <field name="agentName" title="${uiLabelMap.AiAgentName}"><display/></field>
+        <field name="agentName"><hidden/></field>
+        <field name="threadId" title="${uiLabelMap.AiThreadId}"><text size="40"/></field>
+        <field name="userMessage" title="${uiLabelMap.AiUserMessage}">
+            <textarea rows="6" cols="80"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.AiSubmitRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <form name="RunAgentResult" type="single" default-map-name="parameters">
+        <field name="agentName" title="${uiLabelMap.AiAgentName}"><display/></field>
+        <field name="assistantMessage" title="${uiLabelMap.AiAssistantMessage}"><display/></field>
+        <field name="stopReason" title="${uiLabelMap.AiStopReason}"><display/></field>
+        <field name="iterationsUsed" title="${uiLabelMap.AiIterations}"><display/></field>
+    </form>
+
+    <form name="ContinueAgentForm" type="single" target="submitRunAgent"
+            default-map-name="parameters">
+        <field name="agentName"><hidden/></field>
+        <field name="threadId"><hidden/></field>
+        <field name="userMessage" title="${uiLabelMap.AiUserMessage}">
+            <textarea rows="4" cols="80"/>
+        </field>
+        <field name="continueButton" title="${uiLabelMap.AiContinueThread}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
 </forms>

@@ -91,4 +91,21 @@ under the License.
     <property key="AiConfirmArchive"><value xml:lang="en">Confirm Archive</value></property>
     <property key="AiThreadDetail"><value xml:lang="en">Thread Detail</value></property>
 
+    <!-- Agent List and Run -->
+    <property key="AiAgentList"><value xml:lang="en">Agents</value></property>
+    <property key="PageTitleFindAiAgents"><value xml:lang="en">Available AI Agents</value></property>
+    <property key="AiProvider"><value xml:lang="en">Provider</value></property>
+    <property key="AiModelDisplay"><value xml:lang="en">Model</value></property>
+    <property key="AiMaxIterations"><value xml:lang="en">Max Iterations</value></property>
+    <property key="AiToolCount"><value xml:lang="en">Tools</value></property>
+    <property key="AiRunAgent"><value xml:lang="en">Run</value></property>
+    <property key="PageTitleRunAgent"><value xml:lang="en">Run Agent</value></property>
+    <property key="PageTitleRunAgentResult"><value xml:lang="en">Agent Response</value></property>
+    <property key="AiAgentResponse"><value xml:lang="en">Agent Response</value></property>
+    <property key="AiStopReason"><value xml:lang="en">Stop Reason</value></property>
+    <property key="AiApprovalRequired"><value xml:lang="en">This agent is awaiting approval to proceed.</value></property>
+    <property key="AiContinueThread"><value xml:lang="en">Continue Thread</value></property>
+    <property key="AiNewConversation"><value xml:lang="en">New Conversation</value></property>
+    <property key="AiSubmitRun"><value xml:lang="en">Send</value></property>
+
 </resource>

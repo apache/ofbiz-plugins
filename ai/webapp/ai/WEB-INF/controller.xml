@@ -51,6 +51,15 @@ under the License.
         <response name="success" type="request-redirect" value="FindAiConversationThread"/>
         <response name="error" type="view" value="FindAiConversationThread"/>
     </request-map>
+    <request-map uri="FindAiAgents"><security https="true" auth="true"/><response name="success" type="view" value="FindAiAgents"/></request-map>
+    <request-map uri="RunAgentForm"><security https="true" auth="true"/><response name="success" type="view" value="RunAgentForm"/></request-map>
+    <request-map uri="submitRunAgent">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="agentRun"/>
+        <response name="success" type="view" value="RunAgentResult"/>
+        <response name="error" type="view" value="RunAgentForm"/>
+    </request-map>
+    <request-map uri="RunAgentResult"><security https="true" auth="true"/><response name="success" type="view" value="RunAgentResult"/></request-map>
 
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://ai/widget/ai/CommonScreens.xml#main"/>
@@ -61,5 +70,8 @@ under the License.
     <view-map name="RejectProposalForm" type="screen" page="component://ai/widget/ai/AiScreens.xml#RejectProposalForm"/>
     <view-map name="FindAiConversationThread" type="screen" page="component://ai/widget/ai/AiScreens.xml#FindAiConversationThread"/>
     <view-map name="AiThreadDetail" type="screen" page="component://ai/widget/ai/AiScreens.xml#AiThreadDetail"/>
+    <view-map name="FindAiAgents" type="screen" page="component://ai/widget/ai/AiScreens.xml#FindAiAgents"/>
+    <view-map name="RunAgentForm" type="screen" page="component://ai/widget/ai/AiScreens.xml#RunAgentForm"/>
+    <view-map name="RunAgentResult" type="screen" page="component://ai/widget/ai/AiScreens.xml#RunAgentResult"/>
 
 </site-conf>

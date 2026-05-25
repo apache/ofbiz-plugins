@@ -250,4 +250,109 @@ under the License.
         </section>
     </screen>
 
+    <screen name="FindAiAgents">
+        <section>
+            <actions>
+                <set field="headerItem" value="AiAgentList"/>
+                <set field="titleProperty" value="PageTitleFindAiAgents"/>
+                <script location="component://ai/groovyScripts/GetAgentList.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="OFBTOOLS" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.AiAgentList}">
+                                    <include-form name="ListAiAgents" location="component://ai/widget/ai/AiForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.AiViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="RunAgentForm">
+        <section>
+            <actions>
+                <set field="headerItem" value="AiAgentList"/>
+                <set field="titleProperty" value="PageTitleRunAgent"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="OFBTOOLS" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.PageTitleRunAgent}">
+                                    <include-form name="RunAgentForm" location="component://ai/widget/ai/AiForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.AiViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="RunAgentResult">
+        <section>
+            <actions>
+                <set field="headerItem" value="AiAgentList"/>
+                <set field="titleProperty" value="PageTitleRunAgentResult"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="OFBTOOLS" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.AiAgentResponse}">
+                                    <include-form name="RunAgentResult" location="component://ai/widget/ai/AiForms.xml"/>
+                                </screenlet>
+                                <section>
+                                    <condition>
+                                        <not><if-empty field="proposalId"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <screenlet title="${uiLabelMap.AiApprovalRequired}">
+                                            <container style="button-bar">
+                                                <link target="approveProposal" text="${uiLabelMap.AiApprove}" style="buttontext">
+                                                    <parameter param-name="proposalId"/>
+                                                </link>
+                                                <link target="RejectProposalForm" text="${uiLabelMap.AiReject}" style="buttontext">
+                                                    <parameter param-name="proposalId"/>
+                                                </link>
+                                            </container>
+                                        </screenlet>
+                                    </widgets>
+                                </section>
+                                <screenlet title="${uiLabelMap.AiContinueThread}">
+                                    <include-form name="ContinueAgentForm" location="component://ai/widget/ai/AiForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.AiViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
 </screens>
