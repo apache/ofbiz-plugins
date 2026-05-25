@@ -22,18 +22,23 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ofbiz.ai.agent.AgentDefinition;
 import org.apache.ofbiz.ai.agent.AgentRunner;
+import org.apache.ofbiz.ai.agent.AiChatClient;
+import org.apache.ofbiz.ai.agent.AiHttpClient;
 import org.apache.ofbiz.ai.agent.ProviderConfig;
 import org.apache.ofbiz.ai.agent.ToolCatalog;
 import org.apache.ofbiz.ai.agent.ToolDescriptor;
 import org.apache.ofbiz.ai.container.AiContainer;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.GeneralException;
+import org.apache.ofbiz.base.util.UtilDateTime;
 import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
@@ -44,9 +49,18 @@ import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.ServiceUtil;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 public class AiAgentServices {
 
     private static final String MODULE = AiAgentServices.class.getName();
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final TypeReference<List<Map<String, Object>>> MSG_LIST_TYPE =
+            new TypeReference<List<Map<String, Object>>>() { };
+    private static final TypeReference<Map<String, Object>> MAP_TYPE =
+            new TypeReference<Map<String, Object>>() { };
 
     public static Map<String, Object> agentRun(DispatchContext dctx,
             Map<String, ? extends Object> context) {
@@ -111,16 +125,12 @@ public class AiAgentServices {
             proposal.set("statusId", "AI_PROPOSAL_APPROVED");
             proposal.set("reviewedByUserLoginId",
                     userLogin != null ? userLogin.getString("userLoginId") : null);
-            proposal.set("reviewedAt", org.apache.ofbiz.base.util.UtilDateTime.nowTimestamp());
+            proposal.set("reviewedAt", UtilDateTime.nowTimestamp());
             proposal.store();
 
             // Deserialize messages
-            com.fasterxml.jackson.databind.ObjectMapper mapper =
-                    new com.fasterxml.jackson.databind.ObjectMapper();
-            List<Map<String, Object>> messages = mapper.readValue(
-                    proposal.getString("messagesJson"),
-                    new com.fasterxml.jackson.core.type.TypeReference<
-                            List<Map<String, Object>>>() { });
+            List<Map<String, Object>> messages = OBJECT_MAPPER.readValue(
+                    proposal.getString("messagesJson"), MSG_LIST_TYPE);
 
             // Load and execute pending tool calls, append results
             List<GenericValue> propTools = EntityQuery.use(delegator)
@@ -140,42 +150,47 @@ public class AiAgentServices {
                 if (toolDesc == null) {
                     Debug.logWarning("approveAgentProposal: tool '" + toolName
                             + "' not found in catalog, skipping", MODULE);
-                    Map<String, Object> skipMsg = new java.util.LinkedHashMap<>();
-                    skipMsg.put("role", "tool");
-                    skipMsg.put("tool_call_id", toolCallId);
-                    skipMsg.put("content", "{\"error\": \"tool not found in catalog: " + toolName + "\"}");
-                    messages.add(skipMsg);
+                    ObjectNode errNode = OBJECT_MAPPER.createObjectNode();
+                    errNode.put("error", "tool not found in catalog: " + toolName);
+                    messages.add(toolRoleMessage(toolCallId, errNode.toString()));
                     continue;
                 }
 
                 Map<String, Object> parsedArgs;
                 try {
-                    parsedArgs = mapper.readValue(callArgsJson,
-                            new com.fasterxml.jackson.core.type.TypeReference<
-                                    Map<String, Object>>() { });
+                    parsedArgs = OBJECT_MAPPER.readValue(callArgsJson, MAP_TYPE);
                 } catch (Exception e) {
-                    parsedArgs = new java.util.HashMap<>();
+                    parsedArgs = new HashMap<>();
                 }
-                Map<String, Object> ctx = new java.util.HashMap<>(parsedArgs);
+                Map<String, Object> ctx = new HashMap<>(parsedArgs);
                 ctx.put("userLogin", userLogin);
 
                 String resultJson;
                 try {
                     Map<String, Object> toolResult = dctx.getDispatcher()
                             .runSync(toolDesc.getServiceName(), ctx);
-                    resultJson = mapper.writeValueAsString(toolResult);
-                    if (resultJson.length() > 8000) {
-                        resultJson = resultJson.substring(0, 8000) + "...[truncated]";
+                    if (ServiceUtil.isError(toolResult)) {
+                        String errMsg = ServiceUtil.getErrorMessage(toolResult);
+                        Debug.logWarning("approveAgentProposal: tool '" + toolName
+                                + "' returned service error: " + errMsg, MODULE);
+                        ObjectNode errNode = OBJECT_MAPPER.createObjectNode();
+                        errNode.put("error", errMsg);
+                        resultJson = errNode.toString();
+                    } else {
+                        resultJson = OBJECT_MAPPER.writeValueAsString(toolResult);
+                        if (resultJson.length() > 8000) {
+                            resultJson = resultJson.substring(0, 8000) + "...[truncated]";
+                        }
                     }
                 } catch (Exception e) {
-                    resultJson = "{\"error\": \"" + e.getMessage() + "\"}";
+                    Debug.logError(e, "approveAgentProposal: tool '" + toolName
+                            + "' dispatch failed", MODULE);
+                    ObjectNode errNode = OBJECT_MAPPER.createObjectNode();
+                    errNode.put("error", e.getMessage() != null ? e.getMessage() : "tool dispatch failed");
+                    resultJson = errNode.toString();
                 }
 
-                Map<String, Object> toolResultMsg = new java.util.LinkedHashMap<>();
-                toolResultMsg.put("role", "tool");
-                toolResultMsg.put("tool_call_id", toolCallId);
-                toolResultMsg.put("content", resultJson);
-                messages.add(toolResultMsg);
+                messages.add(toolRoleMessage(toolCallId, resultJson));
             }
 
             // Resume the agent loop
@@ -225,23 +240,19 @@ public class AiAgentServices {
             proposal.set("statusId", "AI_PROPOSAL_REJECTED");
             proposal.set("reviewedByUserLoginId",
                     userLogin != null ? userLogin.getString("userLoginId") : null);
-            proposal.set("reviewedAt", org.apache.ofbiz.base.util.UtilDateTime.nowTimestamp());
+            proposal.set("reviewedAt", UtilDateTime.nowTimestamp());
             if (UtilValidate.isNotEmpty(rejectionReason)) {
                 proposal.set("rejectionReason", rejectionReason);
             }
             proposal.store();
 
             // Deserialize messages and append rejection
-            com.fasterxml.jackson.databind.ObjectMapper mapper =
-                    new com.fasterxml.jackson.databind.ObjectMapper();
-            List<Map<String, Object>> messages = mapper.readValue(
-                    proposal.getString("messagesJson"),
-                    new com.fasterxml.jackson.core.type.TypeReference<
-                            List<Map<String, Object>>>() { });
+            List<Map<String, Object>> messages = OBJECT_MAPPER.readValue(
+                    proposal.getString("messagesJson"), MSG_LIST_TYPE);
 
             String reason = UtilValidate.isNotEmpty(rejectionReason)
                     ? rejectionReason : "No reason provided.";
-            Map<String, Object> rejectionMsg = new java.util.LinkedHashMap<>();
+            Map<String, Object> rejectionMsg = new LinkedHashMap<>();
             rejectionMsg.put("role", "user");
             rejectionMsg.put("content",
                     "The proposed actions have been rejected by a human reviewer. Reason: "
@@ -266,11 +277,10 @@ public class AiAgentServices {
                 return ServiceUtil.returnError("Provider not configured: " + agentDef.getProviderName());
             }
 
-            org.apache.ofbiz.ai.agent.AiChatClient client =
-                    new org.apache.ofbiz.ai.agent.AiHttpClient();
-            org.apache.ofbiz.ai.agent.AiChatClient.ChatResponse response = client.chat(
-                    java.util.Collections.unmodifiableList(messages),
-                    java.util.Collections.emptyList(),
+            AiChatClient client = new AiHttpClient();
+            AiChatClient.ChatResponse response = client.chat(
+                    Collections.unmodifiableList(messages),
+                    Collections.emptyList(),
                     agentDef.getModelOverride(),
                     provider);
 
@@ -445,5 +455,13 @@ public class AiAgentServices {
             Debug.logError(e, "getUsageSummary failed", MODULE);
             return ServiceUtil.returnError(e.getMessage());
         }
+    }
+
+    private static Map<String, Object> toolRoleMessage(String toolCallId, String content) {
+        Map<String, Object> msg = new LinkedHashMap<>();
+        msg.put("role", "tool");
+        msg.put("tool_call_id", toolCallId);
+        msg.put("content", content);
+        return msg;
     }
 }
