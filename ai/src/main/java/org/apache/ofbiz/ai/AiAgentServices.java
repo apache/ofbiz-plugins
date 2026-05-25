@@ -29,6 +29,8 @@ import java.util.Map;
 import org.apache.ofbiz.ai.agent.AgentDefinition;
 import org.apache.ofbiz.ai.agent.AgentRunner;
 import org.apache.ofbiz.ai.agent.ProviderConfig;
+import org.apache.ofbiz.ai.agent.ToolCatalog;
+import org.apache.ofbiz.ai.agent.ToolDescriptor;
 import org.apache.ofbiz.ai.container.AiContainer;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.GeneralException;
@@ -124,12 +126,27 @@ public class AiAgentServices {
             List<GenericValue> propTools = EntityQuery.use(delegator)
                     .from("AiAgentProposalTool")
                     .where("proposalId", proposalId)
+                    .orderBy("proposalToolId")
                     .queryList();
+
+            ToolCatalog toolCatalog = AiContainer.getToolCatalog();
 
             for (GenericValue propTool : propTools) {
                 String toolCallId = propTool.getString("toolCallId");
                 String toolName = propTool.getString("toolName");
                 String callArgsJson = propTool.getString("callArguments");
+
+                ToolDescriptor toolDesc = toolCatalog != null ? toolCatalog.getTool(toolName) : null;
+                if (toolDesc == null) {
+                    Debug.logWarning("approveAgentProposal: tool '" + toolName
+                            + "' not found in catalog, skipping", MODULE);
+                    Map<String, Object> skipMsg = new java.util.LinkedHashMap<>();
+                    skipMsg.put("role", "tool");
+                    skipMsg.put("tool_call_id", toolCallId);
+                    skipMsg.put("content", "{\"error\": \"tool not found in catalog: " + toolName + "\"}");
+                    messages.add(skipMsg);
+                    continue;
+                }
 
                 Map<String, Object> parsedArgs;
                 try {
@@ -144,7 +161,8 @@ public class AiAgentServices {
 
                 String resultJson;
                 try {
-                    Map<String, Object> toolResult = dctx.getDispatcher().runSync(toolName, ctx);
+                    Map<String, Object> toolResult = dctx.getDispatcher()
+                            .runSync(toolDesc.getServiceName(), ctx);
                     resultJson = mapper.writeValueAsString(toolResult);
                     if (resultJson.length() > 8000) {
                         resultJson = resultJson.substring(0, 8000) + "...[truncated]";
