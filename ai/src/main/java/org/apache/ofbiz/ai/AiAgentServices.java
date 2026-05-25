@@ -162,6 +162,12 @@ public class AiAgentServices {
                 }
             }
 
+            if (estimatedCostUsd == null && totalRuns > 0) {
+                Debug.logWarning("getUsageSummary: " + totalRuns + " run(s) found but cost could not"
+                        + " be estimated — agent/provider/model not resolved or not in AiProviderCost",
+                        MODULE);
+            }
+
             Map<String, Object> result = ServiceUtil.returnSuccess();
             result.put("totalRuns", totalRuns);
             result.put("totalInputTokens", totalInputTokens);
