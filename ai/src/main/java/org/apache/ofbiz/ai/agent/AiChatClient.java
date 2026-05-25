@@ -18,6 +18,8 @@
  *******************************************************************************/
 package org.apache.ofbiz.ai.agent;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -75,7 +77,9 @@ public interface AiChatClient {
                 int inputTokens, int outputTokens) {
             this.finishReason = finishReason;
             this.content = content;
-            this.toolCalls = toolCalls;
+            this.toolCalls = toolCalls != null
+                    ? Collections.unmodifiableList(new ArrayList<>(toolCalls))
+                    : null;
             this.inputTokens = inputTokens;
             this.outputTokens = outputTokens;
         }
