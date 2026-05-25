@@ -18,8 +18,4 @@
  */
 
 dependencies {
-    pluginLibsCompile 'dev.langchain4j:langchain4j:1.8.0'
-    pluginLibsCompile 'dev.langchain4j:langchain4j-anthropic:1.8.0'
-    pluginLibsCompile 'dev.langchain4j:langchain4j-ollama:1.8.0'
-    pluginLibsCompile 'dev.langchain4j:langchain4j-open-ai:1.8.0'
 }
