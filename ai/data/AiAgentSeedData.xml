@@ -32,6 +32,8 @@ under the License.
                 statusCode="COMPLETED" description="Completed" sequenceId="02"/>
     <StatusItem statusId="AI_RUN_FAILED"    statusTypeId="AI_AGENT_RUN"
                 statusCode="FAILED"    description="Failed"    sequenceId="03"/>
+    <StatusItem statusId="AI_RUN_SUSPENDED" statusTypeId="AI_AGENT_RUN"
+                statusCode="SUSPENDED" description="Suspended — awaiting human approval" sequenceId="04"/>
 
     <!-- StatusType for AI Tool Call -->
     <StatusType statusTypeId="AI_TOOL_CALL"

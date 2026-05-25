@@ -265,13 +265,18 @@ public final class AgentRunner {
      * appending their results to {@code messagesWithToolResults} before
      * calling this method.
      *
-     * @param agentName              name of the agent
+     * <p>If any tool encountered during the resumed loop also has
+     * {@code requires-approval="true"}, the loop will suspend again and return
+     * a new result with stop reason {@code "approval_required"}.
+     *
+     * @param agentName              name of the agent declared in an {@code *.agent.xml} file
      * @param messagesWithToolResults conversation messages including tool results for the approved calls
-     * @param userLogin              the authenticated user
-     * @param dctx                   dispatch context for subsequent tool calls
-     * @param existingRunId          run ID of the original AiAgentRun to update
+     * @param userLogin              the authenticated user for subsequent tool invocations
+     * @param dctx                   dispatch context used to run OFBiz services as tools
+     * @param existingRunId          run ID of the original {@code AiAgentRun} record to update
      * @return the final run result
-     * @throws GeneralException if the agent or provider is not configured
+     * @throws GeneralException if the agent or provider is not configured, or if the
+     *                          framework container is not started
      */
     public static RunResult continueFromApproval(
             String agentName,
@@ -280,9 +285,15 @@ public final class AgentRunner {
             DispatchContext dctx,
             String existingRunId) throws GeneralException {
 
+        if (AiContainer.getAgentRegistry() == null) {
+            throw new GeneralException("AgentRegistry is not available — AiContainer may not be started");
+        }
         AgentDefinition agent = AiContainer.getAgentRegistry().getAgent(agentName);
         if (agent == null) {
             throw new GeneralException("Unknown agent: " + agentName);
+        }
+        if (AiContainer.getProviderRegistry() == null) {
+            throw new GeneralException("ProviderRegistry is not available — AiContainer may not be started");
         }
         ProviderConfig provider = AiContainer.getProviderRegistry().getProvider(agent.getProviderName());
         if (provider == null) {
@@ -472,10 +483,16 @@ public final class AgentRunner {
             runRecord.set("iterationsUsed", (long) loopResult.getIterationsUsed());
             runRecord.set("inputTokens", totalInputTokens);
             runRecord.set("outputTokens", totalOutputTokens);
-            boolean failed = "max_iterations".equals(loopResult.getStopReason())
-                    || (!"stop".equals(loopResult.getStopReason())
-                            && !"approval_required".equals(loopResult.getStopReason()));
-            runRecord.set("statusId", failed ? "AI_RUN_FAILED" : "AI_RUN_COMPLETED");
+            String stopReason = loopResult.getStopReason();
+            String runStatus;
+            if ("stop".equals(stopReason)) {
+                runStatus = "AI_RUN_COMPLETED";
+            } else if ("approval_required".equals(stopReason)) {
+                runStatus = "AI_RUN_SUSPENDED";
+            } else {
+                runStatus = "AI_RUN_FAILED";
+            }
+            runRecord.set("statusId", runStatus);
             try {
                 runRecord.store();
             } catch (GenericEntityException e) {
