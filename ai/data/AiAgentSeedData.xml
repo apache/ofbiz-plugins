@@ -61,4 +61,15 @@ under the License.
     <AiProviderCost modelId="claude-sonnet-4-5"         effectiveDate="2026-01-01 00:00:00.000" inputCostPerMillion="3.00"  outputCostPerMillion="15.00" currencyUomId="USD"/>
     <AiProviderCost modelId="claude-3-5-haiku-20241022" effectiveDate="2026-01-01 00:00:00.000" inputCostPerMillion="0.80"  outputCostPerMillion="4.00"  currencyUomId="USD"/>
 
+    <!-- StatusType and StatusItems for AI Agent Proposals -->
+    <StatusType statusTypeId="AI_AGENT_PROPOSAL"
+                description="AI Agent Proposal Status"
+                parentTypeId=""/>
+    <StatusItem statusId="AI_PROPOSAL_PENDING"  statusTypeId="AI_AGENT_PROPOSAL"
+                statusCode="PENDING"  description="Pending"  sequenceId="01"/>
+    <StatusItem statusId="AI_PROPOSAL_APPROVED" statusTypeId="AI_AGENT_PROPOSAL"
+                statusCode="APPROVED" description="Approved" sequenceId="02"/>
+    <StatusItem statusId="AI_PROPOSAL_REJECTED" statusTypeId="AI_AGENT_PROPOSAL"
+                statusCode="REJECTED" description="Rejected" sequenceId="03"/>
+
 </entity-engine-xml>

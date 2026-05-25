@@ -100,4 +100,39 @@ under the License.
         </relation>
     </entity>
 
+    <!-- AiAgentProposal: suspended run awaiting human approval -->
+    <entity entity-name="AiAgentProposal" package-name="org.apache.ofbiz.ai"
+            title="AI Agent Proposal" dependent-on="AiAgentRun">
+        <field name="proposalId"            type="id"            not-null="true"/>
+        <field name="runId"                 type="id"            not-null="true"/>
+        <field name="agentName"             type="short-varchar" not-null="true"/>
+        <field name="userLoginId"           type="id-long"/>
+        <field name="messagesJson"          type="very-long"     not-null="true"/>
+        <field name="statusId"              type="id"/>
+        <field name="reviewedByUserLoginId" type="id-long"/>
+        <field name="reviewedAt"            type="date-time"/>
+        <field name="rejectionReason"       type="very-long"/>
+        <prim-key field="proposalId"/>
+        <relation type="one" fk-name="AI_PROP_RUN" rel-entity-name="AiAgentRun">
+            <key-map field-name="runId"/>
+        </relation>
+        <relation type="one-nofk" rel-entity-name="StatusItem">
+            <key-map field-name="statusId"/>
+        </relation>
+    </entity>
+
+    <!-- AiAgentProposalTool: one row per pending tool call in a proposal -->
+    <entity entity-name="AiAgentProposalTool" package-name="org.apache.ofbiz.ai"
+            title="AI Agent Proposal Tool Call" dependent-on="AiAgentProposal">
+        <field name="proposalToolId" type="id"            not-null="true"/>
+        <field name="proposalId"     type="id"            not-null="true"/>
+        <field name="toolCallId"     type="short-varchar" not-null="true"/>
+        <field name="toolName"       type="short-varchar" not-null="true"/>
+        <field name="callArguments"  type="very-long"/>
+        <prim-key field="proposalToolId"/>
+        <relation type="one" fk-name="AI_PROP_TOOL" rel-entity-name="AiAgentProposal">
+            <key-map field-name="proposalId"/>
+        </relation>
+    </entity>
+
 </entitymodel>
