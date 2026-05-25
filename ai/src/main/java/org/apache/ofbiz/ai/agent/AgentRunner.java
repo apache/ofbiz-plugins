@@ -74,6 +74,9 @@ public final class AgentRunner {
     // Optional thread id for multi-turn conversation memory
     private String threadId;
 
+    // When true, any tool_calls batch triggers human approval suspension
+    private boolean approvalRequired = false;
+
     // Package-private fields used only by the test constructor (null in production)
     private AgentDefinition testAgentDef;
     private ProviderConfig testProvider;
@@ -138,6 +141,17 @@ public final class AgentRunner {
      */
     public void setThreadId(String threadId) {
         this.threadId = threadId;
+    }
+
+    /**
+     * When set to {@code true}, any tool_calls batch returned by the LLM will cause
+     * the agent loop to suspend and return a {@link RunResult} with stop reason
+     * {@code "approval_required"} rather than executing the tools immediately.
+     *
+     * @param approvalRequired {@code true} to enable human approval gating
+     */
+    public void setApprovalRequired(boolean approvalRequired) {
+        this.approvalRequired = approvalRequired;
     }
 
     // ---------------------------------------------------------------------------
@@ -231,6 +245,117 @@ public final class AgentRunner {
             }
         }
 
+        // 7–9. Execute the agent loop
+        RunResult loopResult = runLoop(messages, toolSchemas, agent, provider,
+                allowedTools, runId, runRecord);
+
+        // 10. Conversation memory — persist user + assistant messages when threadId is set
+        if (threadId != null && delegatorForThread != null) {
+            String userLoginId = userLogin != null ? userLogin.getString("userLoginId") : null;
+            saveThreadMessages(threadId, agentName, userLoginId, userMessage,
+                    loopResult.getAssistantMessage(), delegatorForThread);
+        }
+
+        return loopResult;
+    }
+
+    /**
+     * Resumes the agent loop after a human has approved a proposal.
+     * The caller is responsible for executing the pending tool calls and
+     * appending their results to {@code messagesWithToolResults} before
+     * calling this method.
+     *
+     * @param agentName              name of the agent
+     * @param messagesWithToolResults conversation messages including tool results for the approved calls
+     * @param userLogin              the authenticated user
+     * @param dctx                   dispatch context for subsequent tool calls
+     * @param existingRunId          run ID of the original AiAgentRun to update
+     * @return the final run result
+     * @throws GeneralException if the agent or provider is not configured
+     */
+    public static RunResult continueFromApproval(
+            String agentName,
+            List<Map<String, Object>> messagesWithToolResults,
+            GenericValue userLogin,
+            DispatchContext dctx,
+            String existingRunId) throws GeneralException {
+
+        AgentDefinition agent = AiContainer.getAgentRegistry().getAgent(agentName);
+        if (agent == null) {
+            throw new GeneralException("Unknown agent: " + agentName);
+        }
+        ProviderConfig provider = AiContainer.getProviderRegistry().getProvider(agent.getProviderName());
+        if (provider == null) {
+            throw new GeneralException("Unconfigured provider: " + agent.getProviderName());
+        }
+
+        ToolCatalog toolCatalog = AiContainer.getToolCatalog();
+        Map<String, ToolDescriptor> allowedTools = new LinkedHashMap<>();
+        for (String toolName : agent.getToolAllowList()) {
+            ToolDescriptor d = toolCatalog.getTool(toolName);
+            if (d != null) {
+                allowedTools.put(toolName, d);
+            }
+        }
+
+        List<ObjectNode> toolSchemas = new ArrayList<>();
+        for (ToolDescriptor d : allowedTools.values()) {
+            toolSchemas.add(d.getJsonSchema());
+        }
+
+        // Load the existing run record so runLoop can update it
+        Delegator delegator = dctx != null ? dctx.getDelegator() : null;
+        GenericValue runRecord = null;
+        if (delegator != null && existingRunId != null) {
+            try {
+                runRecord = EntityQuery.use(delegator)
+                        .from("AiAgentRun").where("runId", existingRunId).queryOne();
+            } catch (GenericEntityException e) {
+                Debug.logWarning("AgentRunner: could not load run record for continuation: "
+                        + e.getMessage(), MODULE);
+            }
+        }
+
+        AgentRunner runner = new AgentRunner(agentName, "", userLogin, dctx);
+        return runner.runLoop(new ArrayList<>(messagesWithToolResults),
+                toolSchemas, agent, provider, allowedTools, existingRunId, runRecord);
+    }
+
+    // ---------------------------------------------------------------------------
+    // Private helpers
+    // ---------------------------------------------------------------------------
+
+    /**
+     * Executes the agent loop (steps 7–9): iterates up to {@code maxIterations},
+     * calling the LLM and dispatching tool calls, then updates the run record.
+     * Returns a {@link RunResult} describing how the loop terminated.
+     *
+     * <p>When {@link #approvalRequired} is {@code true}, or when any tool in a
+     * tool_calls batch has {@link ToolDescriptor#isRequiresApproval()} set, the
+     * loop suspends immediately — persisting a proposal record — and returns a
+     * result with stop reason {@code "approval_required"}.
+     *
+     * @param messages     the conversation message list (mutated in place)
+     * @param toolSchemas  JSON schemas for the tools available to this agent
+     * @param agent        the resolved agent definition
+     * @param provider     the resolved provider configuration
+     * @param allowedTools map of tool name to descriptor for this agent
+     * @param runId        the identifier of the {@code AiAgentRun} record
+     * @param runRecord    the {@code AiAgentRun} GenericValue to update on completion
+     * @return the loop result
+     * @throws GeneralException if a chat request fails
+     */
+    private RunResult runLoop(
+            List<Map<String, Object>> messages,
+            List<ObjectNode> toolSchemas,
+            AgentDefinition agent,
+            ProviderConfig provider,
+            Map<String, ToolDescriptor> allowedTools,
+            String runId,
+            GenericValue runRecord) throws GeneralException {
+
+        Delegator delegator = dctx != null ? dctx.getDelegator() : null;
+
         // 7. Agent loop
         String modelToUse = agent.getModelOverride();
         int maxIterations = agent.getMaxIterations();
@@ -255,6 +380,38 @@ public final class AgentRunner {
 
             if ("tool_calls".equals(finishReason)) {
                 List<Map<String, Object>> toolCalls = response.getToolCalls();
+
+                // Check if human approval is required for any tool in this batch
+                boolean needsApproval = this.approvalRequired;
+                if (!needsApproval) {
+                    for (Map<String, Object> tc : toolCalls) {
+                        @SuppressWarnings("unchecked")
+                        Map<String, Object> fnCheck = (Map<String, Object>) tc.get("function");
+                        if (fnCheck != null) {
+                            ToolDescriptor tdCheck = allowedTools.get((String) fnCheck.get("name"));
+                            if (tdCheck != null && tdCheck.isRequiresApproval()) {
+                                needsApproval = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (needsApproval) {
+                    // Append the assistant tool_calls message before suspending
+                    Map<String, Object> assistantSuspendMsg = new LinkedHashMap<>();
+                    assistantSuspendMsg.put("role", "assistant");
+                    assistantSuspendMsg.put("content", null);
+                    assistantSuspendMsg.put("tool_calls", toolCalls);
+                    messages.add(assistantSuspendMsg);
+
+                    String proposalId = null;
+                    if (delegator != null && runId != null) {
+                        proposalId = persistProposal(delegator, runId, toolCalls, messages);
+                    }
+                    loopResult = new RunResult(null, "approval_required", iteration + 1, proposalId);
+                    break;
+                }
 
                 // Append the assistant message with tool_calls BEFORE tool results
                 Map<String, Object> assistantMsg = new LinkedHashMap<>();
@@ -316,7 +473,8 @@ public final class AgentRunner {
             runRecord.set("inputTokens", totalInputTokens);
             runRecord.set("outputTokens", totalOutputTokens);
             boolean failed = "max_iterations".equals(loopResult.getStopReason())
-                    || (!"stop".equals(loopResult.getStopReason()));
+                    || (!"stop".equals(loopResult.getStopReason())
+                            && !"approval_required".equals(loopResult.getStopReason()));
             runRecord.set("statusId", failed ? "AI_RUN_FAILED" : "AI_RUN_COMPLETED");
             try {
                 runRecord.store();
@@ -325,19 +483,58 @@ public final class AgentRunner {
             }
         }
 
-        // 10. Conversation memory — persist user + assistant messages when threadId is set
-        if (threadId != null && delegatorForThread != null) {
-            String userLoginId = userLogin != null ? userLogin.getString("userLoginId") : null;
-            saveThreadMessages(threadId, agentName, userLoginId, userMessage,
-                    loopResult.getAssistantMessage(), delegatorForThread);
-        }
-
         return loopResult;
     }
 
-    // ---------------------------------------------------------------------------
-    // Private helpers
-    // ---------------------------------------------------------------------------
+    /**
+     * Persists an {@code AiAgentProposal} and associated {@code AiAgentProposalTool} rows
+     * for a suspended tool_calls batch awaiting human approval.
+     *
+     * @param delegator  entity delegator for database access
+     * @param runId      the parent run identifier
+     * @param toolCalls  the tool call batch to persist
+     * @param messages   the full conversation message list at time of suspension
+     * @return the generated proposal identifier, or {@code null} if persistence failed
+     */
+    private String persistProposal(Delegator delegator, String runId,
+            List<Map<String, Object>> toolCalls, List<Map<String, Object>> messages) {
+        try {
+            String proposalId = delegator.getNextSeqId("AiAgentProposal");
+            String messagesJson = MAPPER.writeValueAsString(messages);
+
+            GenericValue proposal = delegator.makeValue("AiAgentProposal");
+            proposal.set("proposalId", proposalId);
+            proposal.set("runId", runId);
+            proposal.set("agentName", agentName);
+            proposal.set("userLoginId", userLogin != null ? userLogin.getString("userLoginId") : null);
+            proposal.set("messagesJson", messagesJson);
+            proposal.set("statusId", "AI_PROPOSAL_PENDING");
+            delegator.create(proposal);
+
+            for (Map<String, Object> tc : toolCalls) {
+                String toolCallId = (String) tc.get("id");
+                @SuppressWarnings("unchecked")
+                Map<String, Object> fn = (Map<String, Object>) tc.get("function");
+                if (fn == null) {
+                    continue;
+                }
+                String toolName = (String) fn.get("name");
+                String callArgs = (String) fn.get("arguments");
+
+                GenericValue propTool = delegator.makeValue("AiAgentProposalTool");
+                propTool.set("proposalToolId", delegator.getNextSeqId("AiAgentProposalTool"));
+                propTool.set("proposalId", proposalId);
+                propTool.set("toolCallId", toolCallId);
+                propTool.set("toolName", toolName);
+                propTool.set("callArguments", callArgs);
+                delegator.create(propTool);
+            }
+            return proposalId;
+        } catch (Exception e) {
+            Debug.logError(e, "AgentRunner: failed to persist proposal for run " + runId, MODULE);
+            return null;
+        }
+    }
 
     /**
      * Invokes the OFBiz service backing a tool and serialises the result to JSON.
@@ -627,6 +824,7 @@ public final class AgentRunner {
         private final String assistantMessage;
         private final String stopReason;
         private final int iterationsUsed;
+        private final String proposalId;  // null when no suspension
 
         /**
          * Constructs a run result.
@@ -638,9 +836,26 @@ public final class AgentRunner {
          * @param iterationsUsed   number of loop iterations consumed
          */
         public RunResult(String assistantMessage, String stopReason, int iterationsUsed) {
+            this(assistantMessage, stopReason, iterationsUsed, null);
+        }
+
+        /**
+         * Constructs a run result with an optional proposal identifier.
+         *
+         * @param assistantMessage the final text response from the assistant, or
+         *                         {@code null} if the loop ended without a stop
+         * @param stopReason       one of {@code "stop"}, {@code "max_iterations"},
+         *                         {@code "approval_required"}, or an unexpected finish reason string
+         * @param iterationsUsed   number of loop iterations consumed
+         * @param proposalId       the proposal identifier when stopReason is
+         *                         {@code "approval_required"}, or {@code null} otherwise
+         */
+        public RunResult(String assistantMessage, String stopReason,
+                int iterationsUsed, String proposalId) {
             this.assistantMessage = assistantMessage;
             this.stopReason = stopReason;
             this.iterationsUsed = iterationsUsed;
+            this.proposalId = proposalId;
         }
 
         /**
@@ -670,6 +885,16 @@ public final class AgentRunner {
          */
         public int getIterationsUsed() {
             return iterationsUsed;
+        }
+
+        /**
+         * Returns the proposal identifier when stopReason is {@code "approval_required"},
+         * or {@code null} otherwise.
+         *
+         * @return proposal identifier, or {@code null}
+         */
+        public String getProposalId() {
+            return proposalId;
         }
     }
 }
