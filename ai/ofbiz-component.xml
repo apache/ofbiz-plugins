@@ -34,4 +34,8 @@ under the License.
 
     <container name="ai-container" loaders="main" class="org.apache.ofbiz.ai.container.AiContainer"/>
 
+    <webapp name="ai" title="AI Admin" server="default-server"
+            location="webapp/ai" mount-point="/ai"
+            base-permission="OFBTOOLS" menu-name="secondary" position="30"/>
+
 </ofbiz-component>

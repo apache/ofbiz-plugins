@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
+
+    <!-- Core -->
+    <property key="AiApplication"><value xml:lang="en">AI Admin</value></property>
+    <property key="AiCompanyName"><value xml:lang="en">OFBiz AI</value></property>
+    <property key="AiCompanySubtitle"><value xml:lang="en">AI Agent Administration</value></property>
+    <property key="AiViewPermissionError"><value xml:lang="en">You do not have permission to view this page.</value></property>
+
+    <!-- Run History -->
+    <property key="AiAgentRuns"><value xml:lang="en">Agent Runs</value></property>
+    <property key="PageTitleFindAiAgentRun"><value xml:lang="en">Find AI Agent Runs</value></property>
+    <property key="AiRunId"><value xml:lang="en">Run ID</value></property>
+    <property key="AiAgentName"><value xml:lang="en">Agent Name</value></property>
+    <property key="AiUserLoginId"><value xml:lang="en">User</value></property>
+    <property key="AiStartedAt"><value xml:lang="en">Started At</value></property>
+    <property key="AiEndedAt"><value xml:lang="en">Ended At</value></property>
+    <property key="AiIterations"><value xml:lang="en">Iterations</value></property>
+    <property key="AiFromDate"><value xml:lang="en">From Date</value></property>
+    <property key="AiThruDate"><value xml:lang="en">Thru Date</value></property>
+    <property key="AiStatus"><value xml:lang="en">Status</value></property>
+
+    <!-- Run Detail -->
+    <property key="PageTitleAiAgentRunDetail"><value xml:lang="en">AI Agent Run Detail</value></property>
+    <property key="AiAgentRunDetail"><value xml:lang="en">Agent Run Detail</value></property>
+    <property key="AiToolCalls"><value xml:lang="en">Tool Calls</value></property>
+    <property key="AiCallId"><value xml:lang="en">Call ID</value></property>
+    <property key="AiToolName"><value xml:lang="en">Tool Name</value></property>
+    <property key="AiCalledAt"><value xml:lang="en">Called At</value></property>
+    <property key="AiCallArguments"><value xml:lang="en">Arguments</value></property>
+    <property key="AiCallResult"><value xml:lang="en">Result</value></property>
+    <property key="AiInputTokens"><value xml:lang="en">Input Tokens</value></property>
+    <property key="AiOutputTokens"><value xml:lang="en">Output Tokens</value></property>
+    <property key="AiUserMessage"><value xml:lang="en">User Message</value></property>
+    <property key="AiAssistantMessage"><value xml:lang="en">Assistant Message</value></property>
+
+    <!-- Usage Dashboard -->
+    <property key="AiUsageDashboard"><value xml:lang="en">Usage Dashboard</value></property>
+    <property key="PageTitleAiUsageDashboard"><value xml:lang="en">AI Usage Dashboard</value></property>
+    <property key="AiUsageDashboardFilter"><value xml:lang="en">Filter</value></property>
+    <property key="AiUsageSummary"><value xml:lang="en">Usage Summary</value></property>
+    <property key="AiTotalRuns"><value xml:lang="en">Total Runs</value></property>
+    <property key="AiTotalInputTokens"><value xml:lang="en">Total Input Tokens</value></property>
+    <property key="AiTotalOutputTokens"><value xml:lang="en">Total Output Tokens</value></property>
+    <property key="AiEstimatedCostUsd"><value xml:lang="en">Estimated Cost (USD)</value></property>
+
+    <!-- Proposals -->
+    <property key="AiProposalReview"><value xml:lang="en">Proposal Review</value></property>
+    <property key="PageTitleFindAiAgentProposal"><value xml:lang="en">Find AI Agent Proposals</value></property>
+    <property key="AiProposalId"><value xml:lang="en">Proposal ID</value></property>
+    <property key="AiApprove"><value xml:lang="en">Approve</value></property>
+    <property key="AiReject"><value xml:lang="en">Reject</value></property>
+    <property key="AiConfirmApprove"><value xml:lang="en">Confirm Approve</value></property>
+    <property key="AiRejectProposal"><value xml:lang="en">Reject Proposal</value></property>
+    <property key="AiRejectionReason"><value xml:lang="en">Rejection Reason</value></property>
+    <property key="AiReviewedBy"><value xml:lang="en">Reviewed By</value></property>
+    <property key="AiReviewedAt"><value xml:lang="en">Reviewed At</value></property>
+
+    <!-- Threads -->
+    <property key="AiConversationThreads"><value xml:lang="en">Conversation Threads</value></property>
+    <property key="PageTitleFindAiConversationThread"><value xml:lang="en">Find AI Conversation Threads</value></property>
+    <property key="PageTitleAiThreadDetail"><value xml:lang="en">AI Thread Detail</value></property>
+    <property key="AiThreadId"><value xml:lang="en">Thread ID</value></property>
+    <property key="AiMessages"><value xml:lang="en">Messages</value></property>
+    <property key="AiSequenceNum"><value xml:lang="en">Seq #</value></property>
+    <property key="AiRole"><value xml:lang="en">Role</value></property>
+    <property key="AiContent"><value xml:lang="en">Content</value></property>
+    <property key="AiCreatedAt"><value xml:lang="en">Created At</value></property>
+    <property key="AiLastActiveAt"><value xml:lang="en">Last Active At</value></property>
+    <property key="AiArchive"><value xml:lang="en">Archive</value></property>
+    <property key="AiConfirmArchive"><value xml:lang="en">Confirm Archive</value></property>
+    <property key="AiThreadDetail"><value xml:lang="en">Thread Detail</value></property>
+
+</resource>
