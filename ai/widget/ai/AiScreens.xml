@@ -182,4 +182,72 @@ under the License.
         </section>
     </screen>
 
+
+    <screen name="FindAiConversationThread">
+        <section>
+            <actions>
+                <set field="headerItem" value="AiConversationThreads"/>
+                <set field="titleProperty" value="PageTitleFindAiConversationThread"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="OFBTOOLS" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="search-options">
+                                        <include-form name="FindAiConversationThreads" location="component://ai/widget/ai/AiForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                        <include-form name="ListAiConversationThreads" location="component://ai/widget/ai/AiForms.xml"/>
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.AiViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="AiThreadDetail">
+        <section>
+            <actions>
+                <set field="headerItem" value="AiConversationThreads"/>
+                <set field="titleProperty" value="PageTitleAiThreadDetail"/>
+                <set field="threadId" from-field="parameters.threadId"/>
+                <entity-one entity-name="AiConversationThread" value-field="thread"/>
+                <script location="component://ai/groovyScripts/GetConversationHistory.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="OFBTOOLS" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.AiThreadDetail}">
+                                    <include-form name="ViewAiConversationThread" location="component://ai/widget/ai/AiForms.xml"/>
+                                </screenlet>
+                                <screenlet title="${uiLabelMap.AiMessages}">
+                                    <include-form name="ListAiConversationMessages" location="component://ai/widget/ai/AiForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.AiViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
 </screens>

@@ -211,4 +211,79 @@ under the License.
         </field>
     </form>
 
+
+    <form name="FindAiConversationThreads" type="single" target="FindAiConversationThread"
+            default-map-name="parameters">
+        <field name="noConditionFind"><hidden value="Y"/></field>
+        <field name="agentName" title="${uiLabelMap.AiAgentName}">
+            <text-find ignore-case="true"/>
+        </field>
+        <field name="userLoginId" title="${uiLabelMap.AiUserLoginId}">
+            <text-find ignore-case="true"/>
+        </field>
+        <field name="statusId" title="${uiLabelMap.AiStatus}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="StatusItem" key-field-name="statusId" description="${description}">
+                    <entity-constraint name="statusTypeId" value="AI_CONV_THREAD"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <form name="ListAiConversationThreads" type="list" list-name="listIt" target=""
+            paginate-target="FindAiConversationThread" odd-row-style="alternate-row"
+            default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="AiConversationThread"/>
+                <field-map field-name="orderBy" value="lastActiveAt DESC"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="threadId" title="${uiLabelMap.AiThreadId}">
+            <hyperlink description="${threadId}" target="AiThreadDetail">
+                <parameter param-name="threadId"/>
+            </hyperlink>
+        </field>
+        <field name="agentName" title="${uiLabelMap.AiAgentName}"><display/></field>
+        <field name="userLoginId" title="${uiLabelMap.AiUserLoginId}"><display/></field>
+        <field name="statusId" title="${uiLabelMap.AiStatus}">
+            <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
+        </field>
+        <field name="createdAt" title="${uiLabelMap.AiCreatedAt}"><display/></field>
+        <field name="lastActiveAt" title="${uiLabelMap.AiLastActiveAt}"><display/></field>
+        <field name="archiveLink" title="${uiLabelMap.AiArchive}" widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.AiArchive}" target="archiveThread"
+                    also-hidden="false">
+                <parameter param-name="threadId"/>
+            </hyperlink>
+        </field>
+    </form>
+
+    <form name="ViewAiConversationThread" type="single" default-map-name="thread">
+        <field name="threadId" title="${uiLabelMap.AiThreadId}"><display/></field>
+        <field name="agentName" title="${uiLabelMap.AiAgentName}"><display/></field>
+        <field name="userLoginId" title="${uiLabelMap.AiUserLoginId}"><display/></field>
+        <field name="statusId" title="${uiLabelMap.AiStatus}">
+            <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
+        </field>
+        <field name="createdAt" title="${uiLabelMap.AiCreatedAt}"><display/></field>
+        <field name="lastActiveAt" title="${uiLabelMap.AiLastActiveAt}"><display/></field>
+    </form>
+
+    <form name="ListAiConversationMessages" type="list" list-name="threadMessages"
+            paginate="false" odd-row-style="alternate-row"
+            default-table-style="basic-table hover-bar">
+        <field name="sequenceNum" title="${uiLabelMap.AiSequenceNum}"><display/></field>
+        <field name="role" title="${uiLabelMap.AiRole}"><display/></field>
+        <field name="createdAt" title="${uiLabelMap.AiCreatedAt}"><display/></field>
+        <field name="content" title="${uiLabelMap.AiContent}"><display/></field>
+    </form>
+
 </forms>
