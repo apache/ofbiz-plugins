@@ -58,6 +58,27 @@ under the License.
         <attribute name="assistantMessage" mode="OUT" type="String" optional="false"/>
         <attribute name="stopReason" mode="OUT" type="String" optional="false"/>
         <attribute name="iterationsUsed" mode="OUT" type="Integer" optional="false"/>
+        <attribute name="approvalRequired" mode="IN"  type="Boolean" optional="true"/>
+        <attribute name="proposalId"       mode="OUT" type="String"  optional="true"/>
+    </service>
+
+    <service name="approveAgentProposal" engine="java"
+             location="org.apache.ofbiz.ai.AiAgentServices"
+             invoke="approveAgentProposal" auth="true">
+        <description>Execute a pending agent proposal and resume the agent loop to completion</description>
+        <attribute name="proposalId"       mode="IN"  type="String"  optional="false"/>
+        <attribute name="assistantMessage" mode="OUT" type="String"  optional="false"/>
+        <attribute name="stopReason"       mode="OUT" type="String"  optional="false"/>
+        <attribute name="iterationsUsed"   mode="OUT" type="Integer" optional="false"/>
+    </service>
+
+    <service name="rejectAgentProposal" engine="java"
+             location="org.apache.ofbiz.ai.AiAgentServices"
+             invoke="rejectAgentProposal" auth="true">
+        <description>Reject a pending agent proposal and obtain a graceful LLM acknowledgment</description>
+        <attribute name="proposalId"       mode="IN"  type="String"  optional="false"/>
+        <attribute name="rejectionReason"  mode="IN"  type="String"  optional="true"/>
+        <attribute name="assistantMessage" mode="OUT" type="String"  optional="false"/>
     </service>
 
     <service name="archiveConversationThread" engine="java"

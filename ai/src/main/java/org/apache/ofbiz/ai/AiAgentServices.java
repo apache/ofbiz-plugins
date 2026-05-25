@@ -53,6 +53,7 @@ public class AiAgentServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
         String threadId = (String) context.get("threadId");
+        Boolean approvalRequired = (Boolean) context.get("approvalRequired");
 
         if (UtilValidate.isEmpty(agentName)) {
             return ServiceUtil.returnError("agentName is required");
@@ -66,15 +67,204 @@ public class AiAgentServices {
             if (threadId != null) {
                 runner.setThreadId(threadId);
             }
+            if (Boolean.TRUE.equals(approvalRequired)) {
+                runner.setApprovalRequired(true);
+            }
             AgentRunner.RunResult result = runner.run();
             Map<String, Object> serviceResult = ServiceUtil.returnSuccess();
             serviceResult.put("assistantMessage", result.getAssistantMessage());
             serviceResult.put("stopReason", result.getStopReason());
             serviceResult.put("iterationsUsed", result.getIterationsUsed());
             serviceResult.put("threadId", threadId);
+            serviceResult.put("proposalId", result.getProposalId());
             return serviceResult;
         } catch (GeneralException e) {
             Debug.logError(e, "agentRun failed: " + e.getMessage(), MODULE);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+    }
+
+    public static Map<String, Object> approveAgentProposal(DispatchContext dctx,
+            Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        String proposalId = (String) context.get("proposalId");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+
+        if (UtilValidate.isEmpty(proposalId)) {
+            return ServiceUtil.returnError("proposalId is required");
+        }
+        try {
+            // Load and verify proposal is pending
+            GenericValue proposal = EntityQuery.use(delegator)
+                    .from("AiAgentProposal").where("proposalId", proposalId).queryOne();
+            if (proposal == null) {
+                return ServiceUtil.returnError("Proposal not found: " + proposalId);
+            }
+            if (!"AI_PROPOSAL_PENDING".equals(proposal.getString("statusId"))) {
+                return ServiceUtil.returnError("Proposal is not pending: current status is "
+                        + proposal.getString("statusId"));
+            }
+
+            // Mark approved
+            proposal.set("statusId", "AI_PROPOSAL_APPROVED");
+            proposal.set("reviewedByUserLoginId",
+                    userLogin != null ? userLogin.getString("userLoginId") : null);
+            proposal.set("reviewedAt", org.apache.ofbiz.base.util.UtilDateTime.nowTimestamp());
+            proposal.store();
+
+            // Deserialize messages
+            com.fasterxml.jackson.databind.ObjectMapper mapper =
+                    new com.fasterxml.jackson.databind.ObjectMapper();
+            List<Map<String, Object>> messages = mapper.readValue(
+                    proposal.getString("messagesJson"),
+                    new com.fasterxml.jackson.core.type.TypeReference<
+                            List<Map<String, Object>>>() { });
+
+            // Load and execute pending tool calls, append results
+            List<GenericValue> propTools = EntityQuery.use(delegator)
+                    .from("AiAgentProposalTool")
+                    .where("proposalId", proposalId)
+                    .queryList();
+
+            for (GenericValue propTool : propTools) {
+                String toolCallId = propTool.getString("toolCallId");
+                String toolName = propTool.getString("toolName");
+                String callArgsJson = propTool.getString("callArguments");
+
+                Map<String, Object> parsedArgs;
+                try {
+                    parsedArgs = mapper.readValue(callArgsJson,
+                            new com.fasterxml.jackson.core.type.TypeReference<
+                                    Map<String, Object>>() { });
+                } catch (Exception e) {
+                    parsedArgs = new java.util.HashMap<>();
+                }
+                Map<String, Object> ctx = new java.util.HashMap<>(parsedArgs);
+                ctx.put("userLogin", userLogin);
+
+                String resultJson;
+                try {
+                    Map<String, Object> toolResult = dctx.getDispatcher().runSync(toolName, ctx);
+                    resultJson = mapper.writeValueAsString(toolResult);
+                    if (resultJson.length() > 8000) {
+                        resultJson = resultJson.substring(0, 8000) + "...[truncated]";
+                    }
+                } catch (Exception e) {
+                    resultJson = "{\"error\": \"" + e.getMessage() + "\"}";
+                }
+
+                Map<String, Object> toolResultMsg = new java.util.LinkedHashMap<>();
+                toolResultMsg.put("role", "tool");
+                toolResultMsg.put("tool_call_id", toolCallId);
+                toolResultMsg.put("content", resultJson);
+                messages.add(toolResultMsg);
+            }
+
+            // Resume the agent loop
+            String agentName = proposal.getString("agentName");
+            String runId = proposal.getString("runId");
+            AgentRunner.RunResult result = AgentRunner.continueFromApproval(
+                    agentName, messages, userLogin, dctx, runId);
+
+            Map<String, Object> serviceResult = ServiceUtil.returnSuccess();
+            serviceResult.put("assistantMessage", result.getAssistantMessage());
+            serviceResult.put("stopReason", result.getStopReason());
+            serviceResult.put("iterationsUsed", result.getIterationsUsed());
+            return serviceResult;
+
+        } catch (GeneralException e) {
+            Debug.logError(e, "approveAgentProposal failed", MODULE);
+            return ServiceUtil.returnError(e.getMessage());
+        } catch (Exception e) {
+            Debug.logError(e, "approveAgentProposal unexpected error", MODULE);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+    }
+
+    public static Map<String, Object> rejectAgentProposal(DispatchContext dctx,
+            Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        String proposalId = (String) context.get("proposalId");
+        String rejectionReason = (String) context.get("rejectionReason");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+
+        if (UtilValidate.isEmpty(proposalId)) {
+            return ServiceUtil.returnError("proposalId is required");
+        }
+        try {
+            // Load and verify proposal is pending
+            GenericValue proposal = EntityQuery.use(delegator)
+                    .from("AiAgentProposal").where("proposalId", proposalId).queryOne();
+            if (proposal == null) {
+                return ServiceUtil.returnError("Proposal not found: " + proposalId);
+            }
+            if (!"AI_PROPOSAL_PENDING".equals(proposal.getString("statusId"))) {
+                return ServiceUtil.returnError("Proposal is not pending: current status is "
+                        + proposal.getString("statusId"));
+            }
+
+            // Mark rejected
+            proposal.set("statusId", "AI_PROPOSAL_REJECTED");
+            proposal.set("reviewedByUserLoginId",
+                    userLogin != null ? userLogin.getString("userLoginId") : null);
+            proposal.set("reviewedAt", org.apache.ofbiz.base.util.UtilDateTime.nowTimestamp());
+            if (UtilValidate.isNotEmpty(rejectionReason)) {
+                proposal.set("rejectionReason", rejectionReason);
+            }
+            proposal.store();
+
+            // Deserialize messages and append rejection
+            com.fasterxml.jackson.databind.ObjectMapper mapper =
+                    new com.fasterxml.jackson.databind.ObjectMapper();
+            List<Map<String, Object>> messages = mapper.readValue(
+                    proposal.getString("messagesJson"),
+                    new com.fasterxml.jackson.core.type.TypeReference<
+                            List<Map<String, Object>>>() { });
+
+            String reason = UtilValidate.isNotEmpty(rejectionReason)
+                    ? rejectionReason : "No reason provided.";
+            Map<String, Object> rejectionMsg = new java.util.LinkedHashMap<>();
+            rejectionMsg.put("role", "user");
+            rejectionMsg.put("content",
+                    "The proposed actions have been rejected by a human reviewer. Reason: "
+                    + reason + " Please acknowledge and provide a helpful response.");
+            messages.add(rejectionMsg);
+
+            // Single LLM call for acknowledgment
+            if (AiContainer.getAgentRegistry() == null) {
+                return ServiceUtil.returnError("AgentRegistry not available");
+            }
+            AgentDefinition agentDef = AiContainer.getAgentRegistry()
+                    .getAgent(proposal.getString("agentName"));
+            if (agentDef == null) {
+                return ServiceUtil.returnError("Agent not found: " + proposal.getString("agentName"));
+            }
+            if (AiContainer.getProviderRegistry() == null) {
+                return ServiceUtil.returnError("ProviderRegistry not available");
+            }
+            ProviderConfig provider = AiContainer.getProviderRegistry()
+                    .getProvider(agentDef.getProviderName());
+            if (provider == null) {
+                return ServiceUtil.returnError("Provider not configured: " + agentDef.getProviderName());
+            }
+
+            org.apache.ofbiz.ai.agent.AiChatClient client =
+                    new org.apache.ofbiz.ai.agent.AiHttpClient();
+            org.apache.ofbiz.ai.agent.AiChatClient.ChatResponse response = client.chat(
+                    java.util.Collections.unmodifiableList(messages),
+                    java.util.Collections.emptyList(),
+                    agentDef.getModelOverride(),
+                    provider);
+
+            Map<String, Object> serviceResult = ServiceUtil.returnSuccess();
+            serviceResult.put("assistantMessage", response.getContent());
+            return serviceResult;
+
+        } catch (GeneralException e) {
+            Debug.logError(e, "rejectAgentProposal failed", MODULE);
+            return ServiceUtil.returnError(e.getMessage());
+        } catch (Exception e) {
+            Debug.logError(e, "rejectAgentProposal unexpected error", MODULE);
             return ServiceUtil.returnError(e.getMessage());
         }
     }
