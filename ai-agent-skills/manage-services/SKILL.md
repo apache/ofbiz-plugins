@@ -49,6 +49,7 @@ Define and implement business logic as reusable, transactional, and securely enf
 ### 2. Service Definition & Registration
 - **Naming**: Use `verbNoun` format for all service names (e.g., `updateExample`, `createOrder`).
 - **In/Out Parameters**: Use `<attribute name="..." mode="IN|OUT|INOUT" type="..." optional="true|false"/>`. NEVER bypass attribute validation by casually omitting them or making them wrongly optional.
+- **Native Contract Types**: Backend/data services should keep OFBiz-native service types such as `Timestamp` and `BigDecimal` in IN/OUT attributes and returned maps.
 - **Auth & Security**: Set `auth="true"` for protected services. ALWAYS implement permission checks (e.g., `<permission-service>`).
 - **Export & REST**: Set `export="true"` to expose the service to external callers. Set `action="GET|POST|PUT|DELETE"` to automatically export the service as a REST API endpoint.
 - **Service Overrides**: Use `<implements service="..." />` to inherit attributes from an existing service.
@@ -76,6 +77,7 @@ Define and implement business logic as reusable, transactional, and securely enf
 
 ### 1. View vs. Business Logic Separation
 - Services must remain completely agnostic of the View layer. NEVER put HTML encoding, FreeMarker syntax, or UI formatting into a core backend service.
+- Do not stringify dates, timestamps, quantities, or money in backend data services unless the service is explicitly a presentation/export formatting service.
 - Error Messages: Use properties from `uiLabelMap` for user-facing error messages to support internationalization.
 
 ### 2. Error Handling Integrity

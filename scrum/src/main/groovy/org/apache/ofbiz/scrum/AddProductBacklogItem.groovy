@@ -19,7 +19,6 @@
 package org.apache.ofbiz.scrum
 
 import org.apache.ofbiz.base.util.UtilMisc
-import org.apache.ofbiz.entity.GenericEntityException
 import org.apache.ofbiz.entity.GenericValue
 import org.apache.ofbiz.entity.condition.EntityCondition
 import org.apache.ofbiz.entity.condition.EntityConditionBuilder
@@ -30,23 +29,11 @@ List<GenericValue> custRequestAndItems = []
 if (parameters.statusId == 'Any') {
     parameters.statusId = ''
 }
-Map performFindResults = run service: 'performFind', with: [entityName: 'CustRequestAndCustRequestItem',
+Map performFindResults = run service: 'performFindList', with: [entityName: 'CustRequestAndCustRequestItem',
                                                                inputFields: [*: parameters,
                                                                              custRequestTypeId: 'RF_PROD_BACKLOG'],
                                                                orderBy: 'custSequenceNum']
-try {
-    custRequestAndItems = performFindResults.listIt.getCompleteList()
-} catch (GenericEntityException e) {
-    logError(e.toString())
-} finally {
-    if (performFindResults.listIt) {
-        try {
-            performFindResults.listIt.close()
-        } catch (GenericEntityException e) {
-            logError(e.toString())
-        }
-    }
-}
+custRequestAndItems = performFindResults.list
 
 // prepare cust request item list [cust request and item Map]
 int countSequence = 1

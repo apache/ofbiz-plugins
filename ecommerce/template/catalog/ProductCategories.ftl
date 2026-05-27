@@ -36,16 +36,14 @@
     <#if (rootCat?has_content)>
       <#list rootCat?sort_by("productCategoryId") as root>
       {
-        "data": {
-          "title": unescapeHtmlText(
-              "<#if root.categoryName??>${root.categoryName?js_string}<#elseif root.categoryDescription??>${root.categoryDescription?js_string}<#else>${root.productCategoryId?js_string}</#if>"),
-          "attr": {
-            "href": "javascript: void(0);",
-            "onClick": "callDocument('${root.productCategoryId}', '${root.parentCategoryId}')",
-            "class": "${root.cssClass!}"
-          }
-        },
-        "attr": {"id": "${root.productCategoryId}"}
+        "id": "${root.productCategoryId}",
+        "text": unescapeHtmlText(
+            "<#if root.categoryName??>${root.categoryName?js_string}<#elseif root.categoryDescription??>${root.categoryDescription?js_string}<#else>${root.productCategoryId?js_string}</#if>"),
+        "a_attr": {
+          "href": "javascript: void(0);",
+          "onClick": "callDocument('${root.productCategoryId}', '${root.parentCategoryId}')",
+          "class": "${root.cssClass!}"
+        }
         <#if root.child?has_content>
           , "children": [
           <@fillTree rootCat=root.child/>]
@@ -69,23 +67,18 @@
 
   <#-------------------------------------------------------------------------------------create Tree-->
   function createTree() {
-    importLibrary(["/common/js/jquery/ui/js/jquery.cookie-1.4.0.js"], function(){
-      importLibrary(["/common/js/jquery/plugins/jsTree/jquery.jstree.js"], function(){
-        jQuery(function () {
-          jQuery("#tree").jstree({
+    importLibrary(["/common/js/node_modules/jstree/dist/jstree.min.js"], function(){
+      jQuery(function () {
+        jQuery("#tree").jstree({
+          "core": {
             "themes": {
-              "theme": "classic",
-              "url": "/common/js/jquery/plugins/jsTree/themes/classic/style.css",
-              "icons": false
-            },
-            "cookies": {
-              "cookie_options": {path: '/'}
-            },
-            "plugins": ["themes", "json_data", "cookies"],
-            "json_data": {
-              "data": rawdata
-            }
-          });
+                        "url": "/common/js/node_modules/jstree/dist/themes/default/style.min.css",
+                        "icons": false
+                    },
+            "data": rawdata,
+          },
+          "state": {"key": "ec_categories_tree"},
+          "plugins": ["themes", "state"]
         });
       });
     });

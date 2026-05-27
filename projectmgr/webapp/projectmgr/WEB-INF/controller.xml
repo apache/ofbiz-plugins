@@ -112,8 +112,8 @@
     <request-map uri="scheduleProject">
         <security https="true" auth="true"/>
         <event type="service" invoke="scheduleProject"/>
-        <response name="success" type="view" value="ganttChart"/>
-        <response name="error" type="view" value="ganttChart"/>
+        <response name="success" type="view" value="projectView"/>
+        <response name="error" type="view" value="projectView"/>
     </request-map>
     <request-map uri="FindResource">
         <security https="true" auth="true"/>

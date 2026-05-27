@@ -31,7 +31,7 @@ import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.search.TopScoreDocCollector;
+import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.ofbiz.base.util.Debug;
@@ -92,9 +92,8 @@ public class LuceneTests extends OFBizTestCase {
         combQueryBuilder.add(query, BooleanClause.Occur.MUST);
         BooleanQuery combQuery = combQueryBuilder.build();
 
-        TopScoreDocCollector collector = TopScoreDocCollector.create(10, 10);
-        searcher.search(combQuery, collector);
+        TopDocs topDocs = searcher.search(combQuery, 10);
 
-        assertEquals("Only 1 result expected from the testdata", 1, collector.getTotalHits());
+        assertEquals("Only 1 result expected from the testdata", 1, (int) topDocs.totalHits.value);
     }
 }
