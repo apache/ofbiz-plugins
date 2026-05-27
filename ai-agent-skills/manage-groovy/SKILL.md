@@ -74,6 +74,7 @@ Implement business logic, complex data transformations, and data preparation scr
   // Fetch one
   GenericValue product = from("Product").where("productId", productId).queryOne()
   ```
+- **Domain Helpers First**: Before writing direct entity queries, look for existing OFBiz or component helper methods that encode business semantics. Direct or batched entity queries are still appropriate for enrichment, projections, or avoiding N+1 lookups once the helper behavior is understood.
 - **Advanced Querying**: Use `EntityCondition` for complex filters:
   ```groovy
   import org.apache.ofbiz.entity.condition.EntityCondition
@@ -114,6 +115,7 @@ String newId = result.newProductId
 - **Direct SQL**: **NEVER** write raw JDBC/SQL in Groovy. Always use the Entity Engine (DSL or Delegator).
 - **Hardcoding Strings**: Hardcoding error messages instead of UI Labels, or hardcoding IDs (like `partyId`).
 - **Legacy Entity APIs**: **DO NOT** use legacy Delegator APIs like `delegator.findList(...)`. Always use the modern Entity DSL `from("Entity").where(...).queryList()`.
+- **Custom Conversion Helpers**: Avoid local helper methods for conversions that OFBiz already provides. Prefer existing utilities such as `ObjectType.simpleTypeOrObjectConvert(...)` at service/input boundaries and `UtilMisc.toIntegerObject(...)` for integer conversion.
 
 ### Database Querying:
 - **Unconstrained Queries**: **NEVER** query a table without a `.where(...)` condition unless explicitly fetching a tiny bounded list (like enumerated `StatusItem`).

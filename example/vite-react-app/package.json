@@ -18,11 +18,11 @@
     "node": ">=20.19.0"
   },
   "devDependencies": {
-    "@types/react": "^19.2.14",
+    "@types/react": "^19.2.15",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.1",
+    "@vitejs/plugin-react": "^6.0.2",
     "prettier": "^3.8.3",
     "typescript": "^6.0.3",
-    "vite": "^8.0.10"
+    "vite": "^8.0.14"
   }
 }

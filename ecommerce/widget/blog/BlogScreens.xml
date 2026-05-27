@@ -365,7 +365,6 @@
                                 <or>
                                     <if-compare field="content.statusId" operator="equals" value="CTNT_INITIAL_DRAFT"/>
                                     <and>
-                                        <if-entity-permission entity-id="${content.contentId}" entity-name="Content" target-operation="CONTENT_UPDATE"/>
                                         <if-compare field="parameters.edit" operator="equals" value="Y"/>
                                     </and>
                                 </or>

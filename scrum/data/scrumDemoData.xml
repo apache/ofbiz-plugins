@@ -87,16 +87,16 @@ under the License.
     <Person partyId="DemoStakeholder" firstName="Demo Stakeholder" lastName="Scrum"/>
     <Person partyId="SCRUMADMIN" firstName="Scrum Admin" lastName="Scrum"/>
 
-    <UserLogin userLoginId="productowner" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a" requirePasswordChange="N" partyId="DemoCustomer-1"/>
-    <UserLogin userLoginId="scrummaster" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a" requirePasswordChange="N" partyId="SCRUMASTER"/>
-    <UserLogin userLoginId="scrumteam1" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a" requirePasswordChange="N" partyId="SCRUMTEAM-1"/>
-    <UserLogin userLoginId="scrumteam2" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a" requirePasswordChange="N"  partyId="SCRUMTEAM-2"/>
-    <UserLogin userLoginId="scrumteam3" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a" requirePasswordChange="N"  partyId="SCRUMTEAM-3"/>
-    <UserLogin userLoginId="scrumteam4" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a" requirePasswordChange="N"  partyId="SCRUMTEAM-4"/>
-    <UserLogin userLoginId="testadmin" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a" requirePasswordChange="N"  partyId="SCRUMTESTADMIN"/>
-    <UserLogin userLoginId="productowner2" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a" requirePasswordChange="N" partyId="DemoCustomer-2"/>
-    <UserLogin userLoginId="DemoStakeholder" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a" requirePasswordChange="N" partyId="DemoStakeholder"/>
-    <UserLogin userLoginId="scrumadmin" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a" requirePasswordChange="N" partyId="SCRUMADMIN"/>
+    <UserLogin userLoginId="productowner" userFullName="Product Owner Scrum" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a" requirePasswordChange="N" partyId="DemoCustomer-1"/>
+    <UserLogin userLoginId="scrummaster" userFullName="Scrum Master" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a" requirePasswordChange="N" partyId="SCRUMASTER"/>
+    <UserLogin userLoginId="scrumteam1" userFullName="Scrum Team 1" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a" requirePasswordChange="N" partyId="SCRUMTEAM-1"/>
+    <UserLogin userLoginId="scrumteam2" userFullName="Scrum Team 2" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a" requirePasswordChange="N"  partyId="SCRUMTEAM-2"/>
+    <UserLogin userLoginId="scrumteam3" userFullName="Scrum Team 3" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a" requirePasswordChange="N"  partyId="SCRUMTEAM-3"/>
+    <UserLogin userLoginId="scrumteam4" userFullName="Scrum Team 4" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a" requirePasswordChange="N"  partyId="SCRUMTEAM-4"/>
+    <UserLogin userLoginId="testadmin" userFullName="Scrum Test Administrator" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a" requirePasswordChange="N"  partyId="SCRUMTESTADMIN"/>
+    <UserLogin userLoginId="productowner2" userFullName="Product Owner 2 Scrum" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a" requirePasswordChange="N" partyId="DemoCustomer-2"/>
+    <UserLogin userLoginId="DemoStakeholder" userFullName="Demo Stakeholder Scrum" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a" requirePasswordChange="N" partyId="DemoStakeholder"/>
+    <UserLogin userLoginId="scrumadmin" userFullName="Scrum Admin" currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a" requirePasswordChange="N" partyId="SCRUMADMIN"/>
     
     <UserLoginSecurityGroup userLoginId="productowner" groupId="SCRUM_PRODUCT_OWNER" fromDate="2010-08-09 11:44:08.418"/>
     <UserLoginSecurityGroup userLoginId="scrummaster" groupId="SCRUM_MASTER" fromDate="2010-08-09 11:44:08.418"/>

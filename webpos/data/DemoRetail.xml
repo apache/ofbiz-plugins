@@ -19,8 +19,8 @@
     under the License.
 -->
 <entity-engine-xml>
-    <UserLogin userLoginId="1" partyId="admin" currentPassword="356a192b7913cf4c54574d18bdf24699395428d4" passwordHint="The Number One, Yeah, Literally"/>
-    <UserLogin userLoginId="2" partyId="ltdadmin" currentPassword="a54bed37c5b3b28ee30760b5c8d1bbd735ef10cf" passwordHint="The Number Two, Yeah, Literally"/>
+    <UserLogin userLoginId="1" userFullName="THE ADMINISTRATOR 1" partyId="admin" currentPassword="356a192b7913cf4c54574d18bdf24699395428d4" passwordHint="The Number One, Yeah, Literally"/>
+    <UserLogin userLoginId="2" userFullName="Limited Administrator - 1" partyId="ltdadmin" currentPassword="a54bed37c5b3b28ee30760b5c8d1bbd735ef10cf" passwordHint="The Number Two, Yeah, Literally"/>
     <UserLoginSecurityGroup groupId="POSCLERK" userLoginId="1" fromDate="2001-01-01 12:00:00.0"/>
     <UserLoginSecurityGroup groupId="POSCLERK" userLoginId="2" fromDate="2001-01-01 12:00:00.0"/>
     <Facility facilityId="MyRetailStore" ownerPartyId="Company" facilityTypeId="RETAIL_STORE" facilityName="My Retail Store" description="Example Retail (POS) Store"/>
