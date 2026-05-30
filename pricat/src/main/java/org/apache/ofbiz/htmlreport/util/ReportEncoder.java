@@ -81,7 +81,7 @@ public final class ReportEncoder {
      * in the given charset are contained as chars, whereas all other non-displayable
      * characters are converted to HTML entities.<p>
      * Just calls {@link #decodeHtmlEntities(String, String)} first and feeds the result
-     * to {@link #encodeHtmlEntities(String, String)}. <p>
+     * to {@link #encodeHtmlEntities(String, String)}.
      * @param input the input to adjust the HTML encoding for
      * @param encoding the charset to encode the result with\
      * @return the input with the decoded/encoded HTML entities
@@ -385,7 +385,7 @@ public final class ReportEncoder {
      * Escapes special characters in a HTML-String with their number-based
      * entity representation, for example &amp; becomes &amp;#38;.<p>
      * A character <code>num</code> is replaced if<br>
-     * <code>((ch != 32) &amp;&amp; ((ch &gt; 122) || (ch &lt; 48) || (ch == 60) || (ch == 62)))</code><p>
+     * <code>((ch != 32) &amp;&amp; ((ch &gt; 122) || (ch &lt; 48) || (ch == 60) || (ch == 62)))</code>
      * @param source the String to escape
      * @return String the escaped String
      * @see #escapeXml(String)
@@ -426,7 +426,7 @@ public final class ReportEncoder {
      * Escapes non ASCII characters in a HTML-String with their number-based
      * entity representation, for example &amp; becomes &amp;#38;.<p>
      * A character <code>num</code> is replaced if<br>
-     * <code>(ch &gt; 255)</code><p>
+     * <code>(ch &gt; 255)</code>
      * @param source the String to escape
      * @return String the escaped String
      * @see #escapeXml(String)
@@ -489,7 +489,7 @@ public final class ReportEncoder {
      * <li><b>&gt;</b> with &amp;gt;
      * <li><b>&amp;</b> with &amp;amp;
      * <li><b>&quot;</b> with &amp;quot;
-     * </ul><p>
+     * </ul>
      * @param source the string to escape
      * @return the escaped string
      * @see #escapeHtml(String)
@@ -508,7 +508,7 @@ public final class ReportEncoder {
      * <li><b>&gt;</b> with &amp;gt;
      * <li><b>&amp;</b> with &amp;amp;
      * <li><b>&quot;</b> with &amp;quot;
-     * </ul><p>
+     * </ul>
      * @param source the string to escape
      * @param doubleEscape if <code>false</code>, all entities that already are escaped are left untouched
      * @return the escaped string
