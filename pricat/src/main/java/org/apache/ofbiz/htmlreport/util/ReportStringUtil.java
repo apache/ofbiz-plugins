@@ -135,7 +135,7 @@ public final class ReportStringUtil {
     /**
      * Escapes a String so it may be used as a Perl5 regular expression.<p>
      * This method replaces the following characters in a String:<br>
-     * <code>{}[]()\$^.*+/</code><p>
+     * <code>{}[]()\$^.*+/</code>
      * @param source the string to escape
      * @return the escaped string
      */
