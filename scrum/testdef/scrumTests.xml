@@ -35,7 +35,7 @@ under the License.
             <junit-test-suite class-name="org.apache.ofbiz.scrum.test.ScrumTests"/>
         </test-group>
         <test-group case-name="productBacklog-tests">
-            <simple-method-test location="component://scrum/minilang/test/ProductBacklogTest.xml"/>
+            <junit-test-suite class-name="org.apache.ofbiz.scrum.test.ProductBacklogTests"/>
         </test-group>
         <test-group case-name="scrumProject-tests">
             <junit-test-suite class-name="org.apache.ofbiz.scrum.test.ScrumProjectTests"/>
@@ -50,7 +50,7 @@ under the License.
             <junit-test-suite class-name="org.apache.ofbiz.scrum.test.DailyMeetingMinuteTests"/>
         </test-group>
         <test-group case-name="product-tests">
-            <simple-method-test location="component://scrum/minilang/test/ProductTest.xml"/>
+            <junit-test-suite class-name="org.apache.ofbiz.scrum.test.ProductTests"/>
         </test-group>
         <test-group case-name="task-test">
             <junit-test-suite class-name="org.apache.ofbiz.scrum.test.TaskTests"/>
