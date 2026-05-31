@@ -20,40 +20,6 @@ under the License.
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/test-suite.xsd">
 
-        <test-case case-name="scrum-tests">
-            <simple-method-test location="component://scrum/minilang/test/ScrumTests.xml"/>
-        </test-case>
-        <test-case case-name="productBacklog-tests">
-             <simple-method-test location="component://scrum/minilang/test/ProductBacklogTest.xml"/>
-        </test-case>
-        <test-case case-name="scrumProject-tests">
-             <simple-method-test location="component://scrum/minilang/test/ScrumProjectTests.xml"/>
-        </test-case>
-        <test-case case-name="sprint-tests">
-             <simple-method-test location="component://scrum/minilang/test/SprintTests.xml"/>
-        </test-case>
-        <test-case case-name="sprintBacklog-tests">
-             <simple-method-test location="component://scrum/minilang/test/SprintBacklogTests.xml"/>
-        </test-case>
-        <test-case case-name="dailyMeetingMinute-tests">
-             <simple-method-test location="component://scrum/minilang/test/DailyMeetingMinuteTests.xml"/>
-        </test-case>
-        <test-case case-name="product-tests">
-             <simple-method-test location="component://scrum/minilang/test/ProductTest.xml"/>
-        </test-case>
-        <test-case case-name="task-test">
-            <simple-method-test location="component://scrum/minilang/test/TaskTests.xml"/>
-        </test-case>
-        <test-case case-name="myWork-test">
-            <simple-method-test location="component://scrum/minilang/test/MyWorkTests.xml"/>
-        </test-case>
-        <test-case case-name="timesheet-test">
-            <simple-method-test location="component://scrum/minilang/test/TimesheetTests.xml"/>
-        </test-case>
-        <!-- test-case case-name="qa-tests">
-             <simple-method-test location="component://scrum/minilang/test/QATests.xml"/>
-        </test-case-->
-        
         <!-- Tests data load -->
         <test-case case-name="scrum-type-data">
             <entity-xml action="load" entity-xml-url="component://scrum/data/scrumTypeData.xml"/>
@@ -64,4 +30,35 @@ under the License.
         <test-case case-name="scrum-demo-data">
             <entity-xml action="load" entity-xml-url="component://scrum/data/scrumDemoData.xml"/>
         </test-case>
+
+        <test-group case-name="scrum-tests">
+            <junit-test-suite class-name="org.apache.ofbiz.scrum.test.ScrumTests"/>
+        </test-group>
+        <test-group case-name="productBacklog-tests">
+            <simple-method-test location="component://scrum/minilang/test/ProductBacklogTest.xml"/>
+        </test-group>
+        <test-group case-name="scrumProject-tests">
+            <junit-test-suite class-name="org.apache.ofbiz.scrum.test.ScrumProjectTests"/>
+        </test-group>
+        <test-group case-name="sprint-tests">
+            <junit-test-suite class-name="org.apache.ofbiz.scrum.test.SprintTests"/>
+        </test-group>
+        <test-group case-name="sprintBacklog-tests">
+            <junit-test-suite class-name="org.apache.ofbiz.scrum.test.SprintBacklogTests"/>
+        </test-group>
+        <test-group case-name="dailyMeetingMinute-tests">
+            <junit-test-suite class-name="org.apache.ofbiz.scrum.test.DailyMeetingMinuteTests"/>
+        </test-group>
+        <test-group case-name="product-tests">
+            <simple-method-test location="component://scrum/minilang/test/ProductTest.xml"/>
+        </test-group>
+        <test-group case-name="task-test">
+            <junit-test-suite class-name="org.apache.ofbiz.scrum.test.TaskTests"/>
+        </test-group>
+        <test-group case-name="myWork-test">
+            <junit-test-suite class-name="org.apache.ofbiz.scrum.test.MyWorkTests"/>
+        </test-group>
+        <test-group case-name="timesheet-test">
+            <junit-test-suite class-name="org.apache.ofbiz.scrum.test.TimesheetTests"/>
+        </test-group>
 </test-suite>

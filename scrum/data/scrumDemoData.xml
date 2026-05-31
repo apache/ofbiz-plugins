@@ -266,6 +266,9 @@ under the License.
     <Timesheet timesheetId="DEMO-TIMESHEET2" partyId="SCRUMTEAM-1" fromDate="2010-10-25 00:00:00.000" thruDate="2010-10-31 23:59:59.000" statusId="TIMESHEET_IN_PROCESS" />
     <Timesheet timesheetId="DEMO-TIMESHEET3" partyId="SCRUMTEAM-1" fromDate="2010-10-18 00:00:00.000" thruDate="2010-10-24 23:59:59.000" statusId="TIMESHEET_COMPLETED" />
     
+    <!-- Rate Amounts -->
+    <RateAmount rateTypeId="STANDARD" rateCurrencyUomId="USD" periodTypeId="RATE_HOUR" workEffortId="_NA_" partyId="SCRUMTEAM-1" emplPositionTypeId="_NA_" fromDate="2010-01-01 00:00:00.000" rateAmount="100.0"/>
+    
     <!-- Time Entry -->
     <TimeEntry timeEntryId="DEMO-TIMEENTRY1" partyId="SCRUMTEAM-1" fromDate="2010-10-19 00:00:00.000" rateTypeId="STANDARD" workEffortId="DEMO-TASK-3" timesheetId="DEMO-TIMESHEET3" hours="8" planHours="8"/>
     <TimeEntry timeEntryId="DEMO-TIMEENTRY2" partyId="SCRUMTEAM-1" fromDate="2010-10-20 00:00:00.000" rateTypeId="STANDARD" workEffortId="DEMO-TASK-4" timesheetId="DEMO-TIMESHEET3" hours="8" planHours="8"/>
