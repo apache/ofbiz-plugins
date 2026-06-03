@@ -12,7 +12,7 @@
   "dependencies": {
     "fp-ts": "^2.13.1",
     "react": "^19.2.6",
-    "react-dom": "^19.2.6"
+    "react-dom": "^19.2.7"
   },
   "engines": {
     "node": ">=20.19.0"
