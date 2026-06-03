@@ -165,8 +165,6 @@ under the License.
     <service name="createAiAgentDef" engine="entity-auto" invoke="create"
              default-entity-name="AiAgentDef" auth="true">
         <description>Create a new AI Agent Definition</description>
-        <permission-service service-name="genericBasePermissionCheck"
-                main-action="CREATE"/>
         <auto-attributes mode="IN" include="nonpk" optional="false"/>
         <attribute name="agentName" mode="IN" type="String" optional="false"/>
         <override name="statusId" optional="true" default-value="AI_AGENT_ACTIVE"/>
@@ -178,8 +176,6 @@ under the License.
     <service name="updateAiAgentDef" engine="entity-auto" invoke="update"
              default-entity-name="AiAgentDef" auth="true">
         <description>Update an AI Agent Definition</description>
-        <permission-service service-name="genericBasePermissionCheck"
-                main-action="UPDATE"/>
         <auto-attributes mode="IN" include="all" optional="true"/>
         <override name="agentName" optional="false"/>
     </service>
@@ -187,16 +183,12 @@ under the License.
     <service name="createAiAgentToolGrant" engine="entity-auto" invoke="create"
              default-entity-name="AiAgentToolGrant" auth="true">
         <description>Grant a tool to an AI Agent</description>
-        <permission-service service-name="genericBasePermissionCheck"
-                main-action="CREATE"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
 
     <service name="deleteAiAgentToolGrant" engine="entity-auto" invoke="delete"
              default-entity-name="AiAgentToolGrant" auth="true">
         <description>Revoke a tool grant from an AI Agent</description>
-        <permission-service service-name="genericBasePermissionCheck"
-                main-action="DELETE"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
 
