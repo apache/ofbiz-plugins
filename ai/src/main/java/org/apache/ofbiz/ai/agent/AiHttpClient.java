@@ -155,7 +155,14 @@ public final class AiHttpClient implements AiChatClient {
             for (ObjectNode schema : toolSchemas) {
                 ObjectNode toolNode = MAPPER.createObjectNode();
                 toolNode.put("type", "function");
-                toolNode.set("function", schema);
+                // ToolCatalog stores the schema with Anthropic-style "input_schema".
+                // OpenAI-compatible endpoints expect "parameters" instead.
+                ObjectNode functionNode = schema.deepCopy();
+                JsonNode inputSchema = functionNode.remove("input_schema");
+                if (inputSchema != null) {
+                    functionNode.set("parameters", inputSchema);
+                }
+                toolNode.set("function", functionNode);
                 toolsArray.add(toolNode);
             }
             root.set("tools", toolsArray);
