@@ -143,6 +143,7 @@ under the License.
         <field name="modelName"     type="short-varchar"/>
         <field name="systemPrompt"  type="very-long"/>
         <field name="maxIterations" type="numeric"/>
+        <field name="responseSchema" type="very-long"/>
         <field name="statusId"      type="id"/>
         <prim-key field="agentName"/>
         <relation type="one-nofk" rel-entity-name="StatusItem">

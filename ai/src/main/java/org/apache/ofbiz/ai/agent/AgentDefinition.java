@@ -35,9 +35,11 @@ public final class AgentDefinition {
     private final int maxIterations;
     private final String systemPrompt;
     private final List<String> toolAllowList;
+    private final String responseSchema;
 
     public AgentDefinition(String name, String providerName, String modelOverride,
-            int maxIterations, String systemPrompt, List<String> toolAllowList) {
+            int maxIterations, String systemPrompt, List<String> toolAllowList,
+            String responseSchema) {
         this.name = name;
         this.providerName = providerName;
         this.modelOverride = modelOverride;
@@ -45,6 +47,7 @@ public final class AgentDefinition {
         this.systemPrompt = systemPrompt;
         this.toolAllowList = Collections.unmodifiableList(
                 new ArrayList<>(toolAllowList != null ? toolAllowList : Collections.emptyList()));
+        this.responseSchema = responseSchema;
     }
 
     public String getName() {
@@ -70,5 +73,9 @@ public final class AgentDefinition {
 
     public List<String> getToolAllowList() {
         return toolAllowList;
+    }
+
+    public String getResponseSchema() {
+        return responseSchema;
     }
 }

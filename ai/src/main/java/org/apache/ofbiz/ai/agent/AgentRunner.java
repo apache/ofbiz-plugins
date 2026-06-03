@@ -711,7 +711,8 @@ public final class AgentRunner {
                     modelOverride,
                     (int) maxIterLong,
                     row.getString("systemPrompt"),
-                    toolAllowList);
+                    toolAllowList,
+                    row.getString("responseSchema"));
         } catch (GenericEntityException e) {
             throw new GeneralException("Failed to load agent '" + name + "' from database", e);
         }

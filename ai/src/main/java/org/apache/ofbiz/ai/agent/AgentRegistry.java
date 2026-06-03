@@ -204,7 +204,7 @@ public final class AgentRegistry {
         }
 
         loaded.put(name, new AgentDefinition(
-                name, providerName, modelOverride, maxIterations, systemPrompt, toolAllowList));
+                name, providerName, modelOverride, maxIterations, systemPrompt, toolAllowList, null));
         Debug.logInfo("AgentRegistry: registered agent '" + name
                 + "' (provider=" + providerName + ", tools=" + toolAllowList.size() + ").", MODULE);
     }
