@@ -408,8 +408,8 @@ under the License.
         <field name="agentName"><hidden/></field>
         <field name="toolName" title="${uiLabelMap.AiToolName}">
             <drop-down allow-empty="true">
-                <list-options list-name="availableToolNames" key-name="toolName"
-                              description="${toolName}"/>
+                <list-options list-name="availableToolNames" list-entry-name="toolName"
+                              key-name="toolName" description="${toolName}"/>
             </drop-down>
         </field>
         <field name="submitButton" title="${uiLabelMap.AiAddTool}" widget-style="smallSubmit">
