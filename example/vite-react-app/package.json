@@ -11,14 +11,14 @@
   },
   "dependencies": {
     "fp-ts": "^2.13.1",
-    "react": "^19.2.6",
+    "react": "^19.2.7",
     "react-dom": "^19.2.6"
   },
   "engines": {
     "node": ">=20.19.0"
   },
   "devDependencies": {
-    "@types/react": "^19.2.15",
+    "@types/react": "^19.2.16",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.2",
     "prettier": "^3.8.3",
