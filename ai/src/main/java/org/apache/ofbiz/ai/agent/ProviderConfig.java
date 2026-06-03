@@ -34,9 +34,11 @@ public final class ProviderConfig {
     private final String model;
     private final int timeoutSeconds;
     private final Map<String, String> extraHeaders;
+    private final String providerType;
 
     public ProviderConfig(String name, String baseUrl, String apiKey,
-            String model, int timeoutSeconds, Map<String, String> extraHeaders) {
+            String model, int timeoutSeconds, Map<String, String> extraHeaders,
+            String providerType) {
         this.name = name;
         this.baseUrl = baseUrl;
         this.apiKey = apiKey;
@@ -44,6 +46,7 @@ public final class ProviderConfig {
         this.timeoutSeconds = timeoutSeconds;
         this.extraHeaders = Collections.unmodifiableMap(
                 new LinkedHashMap<>(extraHeaders != null ? extraHeaders : Collections.emptyMap()));
+        this.providerType = (providerType != null && !providerType.isBlank()) ? providerType : "openai";
     }
 
     public String getName() {
@@ -68,5 +71,9 @@ public final class ProviderConfig {
 
     public Map<String, String> getExtraHeaders() {
         return extraHeaders;
+    }
+
+    public String getProviderType() {
+        return providerType;
     }
 }

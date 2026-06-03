@@ -130,7 +130,12 @@ public final class ProviderRegistry {
                 }
             }
 
-            loaded.put(name, new ProviderConfig(name, baseUrl, apiKey, model, timeout, extraHeaders));
+            String providerType = props.getProperty(pfx + "type", "openai").trim();
+            if (providerType.isEmpty()) {
+                providerType = "openai";
+            }
+
+            loaded.put(name, new ProviderConfig(name, baseUrl, apiKey, model, timeout, extraHeaders, providerType));
             Debug.logInfo("ProviderRegistry: loaded provider '" + name + "' (model=" + model + ").", MODULE);
         }
 
