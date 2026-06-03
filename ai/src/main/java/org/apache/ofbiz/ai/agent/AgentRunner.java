@@ -956,7 +956,9 @@ public final class AgentRunner {
             this.stopReason = stopReason;
             this.iterationsUsed = iterationsUsed;
             this.proposalId = proposalId;
-            this.structuredResult = structuredResult;
+            this.structuredResult = structuredResult != null
+                    ? Collections.unmodifiableMap(new LinkedHashMap<>(structuredResult))
+                    : null;
         }
 
         /**
