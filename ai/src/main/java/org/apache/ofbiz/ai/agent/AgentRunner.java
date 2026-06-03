@@ -34,6 +34,7 @@ import org.apache.ofbiz.ai.container.AiContainer;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.GeneralException;
 import org.apache.ofbiz.base.util.UtilDateTime;
+import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
@@ -168,12 +169,15 @@ public final class AgentRunner {
      */
     public RunResult run() throws GeneralException {
 
-        // 1. Load agent definition — use test seam if available
-        AgentDefinition agent = testAgentDef != null
-                ? testAgentDef
-                : AiContainer.getAgentRegistry().getAgent(agentName);
-        if (agent == null) {
-            throw new GeneralException("Unknown agent: " + agentName);
+        // 1. Load agent definition — use test seam if available, otherwise query DB
+        AgentDefinition agent;
+        if (testAgentDef != null) {
+            agent = testAgentDef;
+        } else if (dctx != null) {
+            agent = loadAgentFromDb(agentName, dctx.getDelegator());
+        } else {
+            throw new GeneralException("Unknown agent: " + agentName
+                    + " (no delegator available for DB lookup)");
         }
 
         // 2. Load provider config — use test seam if available
@@ -285,16 +289,10 @@ public final class AgentRunner {
             DispatchContext dctx,
             String existingRunId) throws GeneralException {
 
-        if (AiContainer.getAgentRegistry() == null) {
-            throw new GeneralException("AgentRegistry is not available — AiContainer may not be started");
-        }
-        AgentDefinition agent = AiContainer.getAgentRegistry().getAgent(agentName);
-        if (agent == null) {
-            throw new GeneralException("Unknown agent: " + agentName);
-        }
         if (AiContainer.getProviderRegistry() == null) {
             throw new GeneralException("ProviderRegistry is not available — AiContainer may not be started");
         }
+        AgentDefinition agent = loadAgentFromDb(agentName, dctx.getDelegator());
         ProviderConfig provider = AiContainer.getProviderRegistry().getProvider(agent.getProviderName());
         if (provider == null) {
             throw new GeneralException("Unconfigured provider: " + agent.getProviderName());
@@ -653,6 +651,50 @@ public final class AgentRunner {
             }
         }
         return map;
+    }
+
+    /**
+     * Loads an {@link AgentDefinition} from the {@code AiAgentDef} database
+     * entity and its associated {@code AiAgentToolGrant} rows.
+     *
+     * @param name      agent name to look up
+     * @param delegator OFBiz delegator for DB access
+     * @return the populated {@link AgentDefinition}
+     * @throws GeneralException if the agent is not found, is disabled, or a DB error occurs
+     */
+    private static AgentDefinition loadAgentFromDb(String name, Delegator delegator)
+            throws GeneralException {
+        try {
+            GenericValue row = EntityQuery.use(delegator)
+                    .from("AiAgentDef").where("agentName", name).queryOne();
+            if (row == null) {
+                throw new GeneralException("Unknown agent: " + name);
+            }
+            if ("AI_AGENT_DISABLED".equals(row.getString("statusId"))) {
+                throw new GeneralException("Agent '" + name + "' is disabled.");
+            }
+            List<GenericValue> grants = EntityQuery.use(delegator)
+                    .from("AiAgentToolGrant").where("agentName", name).queryList();
+            List<String> toolAllowList = new ArrayList<>();
+            for (GenericValue grant : grants) {
+                toolAllowList.add(grant.getString("toolName"));
+            }
+            String modelOverride = row.getString("modelName");
+            if (UtilValidate.isEmpty(modelOverride)) {
+                modelOverride = null;
+            }
+            long maxIterLong = row.getLong("maxIterations") != null
+                    ? row.getLong("maxIterations") : 6L;
+            return new AgentDefinition(
+                    name,
+                    row.getString("providerName"),
+                    modelOverride,
+                    (int) maxIterLong,
+                    row.getString("systemPrompt"),
+                    toolAllowList);
+        } catch (GenericEntityException e) {
+            throw new GeneralException("Failed to load agent '" + name + "' from database", e);
+        }
     }
 
     /**

@@ -16,19 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import org.apache.ofbiz.ai.container.AiContainer
 
-def registry = AiContainer.getAgentRegistry()
-if (!registry) {
-    context.agents = []
-    return
-}
+List agentDefs = from("AiAgentDef").orderBy("agentName").queryList()
 
-context.agents = registry.agentNames.collect { agentName ->
-    def agentDef = registry.getAgent(agentName)
-    [name         : agentDef.name,
-     providerName : agentDef.providerName,
-     modelDisplay : agentDef.modelOverride ?: '(default)',
-     maxIterations: agentDef.maxIterations,
-     toolCount    : agentDef.toolAllowList.size()]
+context.agents = agentDefs.collect { def agentDef ->
+    int toolCount = (int) from("AiAgentToolGrant")
+            .where("agentName", agentDef.getString("agentName"))
+            .queryCount()
+    [
+        name         : agentDef.getString("agentName"),
+        providerName : agentDef.getString("providerName"),
+        modelDisplay : agentDef.getString("modelName") ?: '(default)',
+        maxIterations: agentDef.getLong("maxIterations") ?: 6L,
+        toolCount    : toolCount,
+        statusId     : agentDef.getString("statusId")
+    ]
 }
