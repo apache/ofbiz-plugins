@@ -135,4 +135,31 @@ under the License.
         </relation>
     </entity>
 
+    <!-- AiAgentDef: one row per agent — created by admins at runtime -->
+    <entity entity-name="AiAgentDef" package-name="org.apache.ofbiz.ai"
+            title="AI Agent Definition">
+        <field name="agentName"     type="short-varchar" not-null="true"/>
+        <field name="providerName"  type="short-varchar" not-null="true"/>
+        <field name="modelName"     type="short-varchar"/>
+        <field name="systemPrompt"  type="very-long"/>
+        <field name="maxIterations" type="numeric"/>
+        <field name="statusId"      type="id"/>
+        <prim-key field="agentName"/>
+        <relation type="one-nofk" rel-entity-name="StatusItem">
+            <key-map field-name="statusId"/>
+        </relation>
+    </entity>
+
+    <!-- AiAgentToolGrant: grants one tool to one agent -->
+    <entity entity-name="AiAgentToolGrant" package-name="org.apache.ofbiz.ai"
+            title="AI Agent Tool Grant" dependent-on="AiAgentDef">
+        <field name="agentName" type="short-varchar" not-null="true"/>
+        <field name="toolName"  type="short-varchar" not-null="true"/>
+        <prim-key field="agentName"/>
+        <prim-key field="toolName"/>
+        <relation type="one" fk-name="AI_GRANT_AGENT" rel-entity-name="AiAgentDef">
+            <key-map field-name="agentName"/>
+        </relation>
+    </entity>
+
 </entitymodel>

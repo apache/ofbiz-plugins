@@ -74,4 +74,13 @@ under the License.
     <StatusItem statusId="AI_PROPOSAL_REJECTED" statusTypeId="AI_AGENT_PROPOSAL"
                 statusCode="REJECTED" description="Rejected" sequenceId="03"/>
 
+    <!-- StatusType and StatusItems for AI Agent Definitions -->
+    <StatusType statusTypeId="AI_AGENT_DEF"
+                description="AI Agent Definition Status"
+                parentTypeId=""/>
+    <StatusItem statusId="AI_AGENT_ACTIVE"   statusTypeId="AI_AGENT_DEF"
+                statusCode="ACTIVE"   description="Active"   sequenceId="01"/>
+    <StatusItem statusId="AI_AGENT_DISABLED" statusTypeId="AI_AGENT_DEF"
+                statusCode="DISABLED" description="Disabled" sequenceId="02"/>
+
 </entity-engine-xml>
