@@ -71,9 +71,10 @@ public final class AiHttpClient implements AiChatClient {
     public ChatResponse chat(List<Map<String, Object>> messages,
             List<ObjectNode> toolSchemas,
             String model,
-            ProviderConfig provider) throws GeneralException {
+            ProviderConfig provider,
+            String responseSchema) throws GeneralException {
 
-        String requestBody = buildRequestBody(messages, toolSchemas, model, provider);
+        String requestBody = buildRequestBody(messages, toolSchemas, model, provider, responseSchema);
 
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
                 .uri(URI.create(provider.getBaseUrl() + "/chat/completions"))
@@ -111,7 +112,7 @@ public final class AiHttpClient implements AiChatClient {
                     + ": " + snippet);
         }
 
-        return parseResponse(responseBody);
+        return parseResponse(responseBody, responseSchema);
     }
 
     // ---------------------------------------------------------------------------
@@ -121,7 +122,8 @@ public final class AiHttpClient implements AiChatClient {
     private String buildRequestBody(List<Map<String, Object>> messages,
             List<ObjectNode> toolSchemas,
             String model,
-            ProviderConfig provider) throws GeneralException {
+            ProviderConfig provider,
+            String responseSchema) throws GeneralException {
 
         ObjectNode root = MAPPER.createObjectNode();
         root.put("model", UtilValidate.isNotEmpty(model) ? model : provider.getModel());
@@ -169,6 +171,23 @@ public final class AiHttpClient implements AiChatClient {
             root.put("tool_choice", "auto");
         }
 
+        if (responseSchema != null && !responseSchema.isBlank()) {
+            try {
+                ObjectNode jsonSchemaNode = (ObjectNode) MAPPER.readTree(responseSchema);
+                ObjectNode responseFormat = MAPPER.createObjectNode();
+                responseFormat.put("type", "json_schema");
+                ObjectNode jsonSchemaWrapper = MAPPER.createObjectNode();
+                jsonSchemaWrapper.put("name", "agent_response");
+                jsonSchemaWrapper.set("schema", jsonSchemaNode);
+                jsonSchemaWrapper.put("strict", true);
+                responseFormat.set("json_schema", jsonSchemaWrapper);
+                root.set("response_format", responseFormat);
+            } catch (Exception e) {
+                Debug.logWarning("AiHttpClient: could not parse responseSchema for "
+                        + "response_format, sending without it: " + e.getMessage(), MODULE);
+            }
+        }
+
         try {
             return MAPPER.writeValueAsString(root);
         } catch (JsonProcessingException e) {
@@ -177,7 +196,7 @@ public final class AiHttpClient implements AiChatClient {
         }
     }
 
-    private ChatResponse parseResponse(String responseBody) throws GeneralException {
+    private ChatResponse parseResponse(String responseBody, String responseSchema) throws GeneralException {
         JsonNode root;
         try {
             root = MAPPER.readTree(responseBody);
@@ -214,7 +233,20 @@ public final class AiHttpClient implements AiChatClient {
         int inputTokens = root.path("usage").path("prompt_tokens").asInt(0);
         int outputTokens = root.path("usage").path("completion_tokens").asInt(0);
 
-        return new ChatResponse(finishReason, content, toolCalls, inputTokens, outputTokens);
+        Map<String, Object> structuredResult = null;
+        if (responseSchema != null && content != null && !content.isBlank()) {
+            try {
+                structuredResult = MAPPER.readValue(content,
+                        new com.fasterxml.jackson.core.type.TypeReference<
+                                java.util.Map<String, Object>>() { });
+            } catch (Exception e) {
+                Debug.logWarning("AiHttpClient: structured output response is not valid JSON, "
+                        + "returning as text: " + e.getMessage(), MODULE);
+            }
+        }
+
+        return new ChatResponse(finishReason, content, toolCalls,
+                inputTokens, outputTokens, structuredResult);
     }
 
     private Map<String, Object> toolCallToMap(JsonNode tc) {
