@@ -33,6 +33,8 @@ import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.GeneralException;
 import org.apache.ofbiz.base.util.UtilValidate;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -237,8 +239,7 @@ public final class AiHttpClient implements AiChatClient {
         if (responseSchema != null && content != null && !content.isBlank()) {
             try {
                 structuredResult = MAPPER.readValue(content,
-                        new com.fasterxml.jackson.core.type.TypeReference<
-                                java.util.Map<String, Object>>() { });
+                        new TypeReference<Map<String, Object>>() { });
             } catch (Exception e) {
                 Debug.logWarning("AiHttpClient: structured output response is not valid JSON, "
                         + "returning as text: " + e.getMessage(), MODULE);
