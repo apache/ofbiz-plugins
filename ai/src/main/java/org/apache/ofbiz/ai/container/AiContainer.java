@@ -21,6 +21,7 @@ package org.apache.ofbiz.ai.container;
 import java.util.List;
 
 import org.apache.ofbiz.ai.agent.AgentRegistry;
+import org.apache.ofbiz.ai.agent.AiAgentXmlSeeder;
 import org.apache.ofbiz.ai.agent.ProviderRegistry;
 import org.apache.ofbiz.ai.agent.ToolCatalog;
 import org.apache.ofbiz.base.container.Container;
@@ -80,6 +81,7 @@ public class AiContainer implements Container {
             providerRegistry = new ProviderRegistry(dctx);
             toolCatalog = new ToolCatalog(dctx);
             agentRegistry = new AgentRegistry(toolCatalog, providerRegistry, dctx);
+            new AiAgentXmlSeeder(toolCatalog, providerRegistry).seed(delegator);
         } catch (Exception e) {
             throw new ContainerException("AiContainer failed to start: " + e.getMessage(), e);
         }
