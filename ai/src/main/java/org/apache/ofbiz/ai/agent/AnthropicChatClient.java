@@ -74,7 +74,7 @@ public final class AnthropicChatClient implements AiChatClient {
                 .uri(URI.create(provider.getBaseUrl() + "/messages"))
                 .timeout(Duration.ofSeconds(provider.getTimeoutSeconds()))
                 .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer " + provider.getApiKey())
+                .header("x-api-key", provider.getApiKey())
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody));
 
         for (Map.Entry<String, String> header : provider.getExtraHeaders().entrySet()) {
