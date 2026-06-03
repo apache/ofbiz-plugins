@@ -60,6 +60,46 @@ under the License.
         <response name="error" type="view" value="RunAgentForm"/>
     </request-map>
     <request-map uri="RunAgentResult"><security https="true" auth="true"/><response name="success" type="view" value="RunAgentResult"/></request-map>
+    <request-map uri="CreateAiAgentDefForm">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateAiAgentDefForm"/>
+    </request-map>
+    <request-map uri="createAiAgentDef">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createAiAgentDef"/>
+        <response name="success" type="request-redirect-noparam" value="EditAiAgentDef">
+            <redirect-parameter name="agentName"/>
+        </response>
+        <response name="error" type="view" value="CreateAiAgentDefForm"/>
+    </request-map>
+    <request-map uri="EditAiAgentDef">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditAiAgentDef"/>
+    </request-map>
+    <request-map uri="updateAiAgentDef">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateAiAgentDef"/>
+        <response name="success" type="request-redirect-noparam" value="EditAiAgentDef">
+            <redirect-parameter name="agentName"/>
+        </response>
+        <response name="error" type="view" value="EditAiAgentDef"/>
+    </request-map>
+    <request-map uri="createAiAgentToolGrant">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createAiAgentToolGrant"/>
+        <response name="success" type="request-redirect-noparam" value="EditAiAgentDef">
+            <redirect-parameter name="agentName"/>
+        </response>
+        <response name="error" type="view" value="EditAiAgentDef"/>
+    </request-map>
+    <request-map uri="deleteAiAgentToolGrant">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteAiAgentToolGrant"/>
+        <response name="success" type="request-redirect-noparam" value="EditAiAgentDef">
+            <redirect-parameter name="agentName"/>
+        </response>
+        <response name="error" type="view" value="EditAiAgentDef"/>
+    </request-map>
 
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://ai/widget/ai/CommonScreens.xml#main"/>
@@ -73,5 +113,7 @@ under the License.
     <view-map name="FindAiAgents" type="screen" page="component://ai/widget/ai/AiScreens.xml#FindAiAgents"/>
     <view-map name="RunAgentForm" type="screen" page="component://ai/widget/ai/AiScreens.xml#RunAgentForm"/>
     <view-map name="RunAgentResult" type="screen" page="component://ai/widget/ai/AiScreens.xml#RunAgentResult"/>
+    <view-map name="CreateAiAgentDefForm" type="screen" page="component://ai/widget/ai/AiScreens.xml#CreateAiAgentDefForm"/>
+    <view-map name="EditAiAgentDef" type="screen" page="component://ai/widget/ai/AiScreens.xml#EditAiAgentDef"/>
 
 </site-conf>

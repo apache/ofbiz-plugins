@@ -268,6 +268,11 @@ under the License.
                                 <screenlet title="${uiLabelMap.AiAgentList}">
                                     <include-form name="ListAiAgents" location="component://ai/widget/ai/AiForms.xml"/>
                                 </screenlet>
+                                <container style="button-bar">
+                                    <link target="CreateAiAgentDefForm"
+                                          text="${uiLabelMap.AiCreateAgent}"
+                                          style="buttontext"/>
+                                </container>
                             </widgets>
                             <fail-widgets>
                                 <label style="h3">${uiLabelMap.AiViewPermissionError}</label>
@@ -343,6 +348,69 @@ under the License.
                                 </section>
                                 <screenlet title="${uiLabelMap.AiContinueThread}">
                                     <include-form name="ContinueAgentForm" location="component://ai/widget/ai/AiForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.AiViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="CreateAiAgentDefForm">
+        <section>
+            <actions>
+                <set field="headerItem" value="AiAgentList"/>
+                <set field="titleProperty" value="AiCreateAgent"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="OFBTOOLS" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.AiCreateAgent}">
+                                    <include-form name="CreateAiAgentDef" location="component://ai/widget/ai/AiForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.AiViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="EditAiAgentDef">
+        <section>
+            <actions>
+                <set field="headerItem" value="AiAgentList"/>
+                <set field="titleProperty" value="AiEditAgent"/>
+                <set field="agentName" from-field="parameters.agentName"/>
+                <entity-one entity-name="AiAgentDef" value-field="agentDef"/>
+                <script location="component://ai/groovyScripts/GetAvailableTools.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="OFBTOOLS" action="_UPDATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.AiEditAgent}">
+                                    <include-form name="EditAiAgentDef" location="component://ai/widget/ai/AiForms.xml"/>
+                                </screenlet>
+                                <screenlet title="${uiLabelMap.AiToolGrants}">
+                                    <include-form name="ListAiAgentToolGrants" location="component://ai/widget/ai/AiForms.xml"/>
+                                    <include-form name="AddAiAgentToolGrant" location="component://ai/widget/ai/AiForms.xml"/>
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
