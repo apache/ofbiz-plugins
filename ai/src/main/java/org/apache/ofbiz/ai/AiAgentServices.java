@@ -95,8 +95,21 @@ public class AiAgentServices {
             serviceResult.put("proposalId", result.getProposalId());
             return serviceResult;
         } catch (GeneralException e) {
-            Debug.logError(e, "agentRun failed: " + e.getMessage(), MODULE);
-            return ServiceUtil.returnError(e.getMessage());
+            Debug.logError(e, "agentRun failed for agent '" + agentName + "'", MODULE);
+            return ServiceUtil.returnError(safeMessage(e, "Agent run failed"));
+        } catch (Exception e) {
+            Debug.logError(e, "agentRun unexpected error for agent '" + agentName + "'", MODULE);
+            return ServiceUtil.returnError(safeMessage(e, "Agent run failed unexpectedly"));
+        }
+    }
+
+    /** Returns e.getMessage() safely; falls back to the provided default if getMessage() itself throws. */
+    private static String safeMessage(Exception e, String fallback) {
+        try {
+            String msg = e.getMessage();
+            return UtilValidate.isNotEmpty(msg) ? msg : fallback;
+        } catch (Exception ignored) {
+            return fallback + " (" + e.getClass().getSimpleName() + ")";
         }
     }
 

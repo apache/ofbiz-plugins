@@ -32,7 +32,7 @@ def getProductInventorySummary() {
 
     BigDecimal total = BigDecimal.ZERO
     List lines = []
-    for (GenericValue pf : facilities) {
+    for (def pf : facilities) {
         BigDecimal atp = pf.getBigDecimal("lastInventoryCount") ?: BigDecimal.ZERO
         total = total.add(atp)
         lines << "${pf.facilityId}: ${atp}"

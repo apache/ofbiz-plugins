@@ -55,7 +55,7 @@ def getRecentOrderActivity() {
     BigDecimal qtyTotal = BigDecimal.ZERO
     BigDecimal revTotal = BigDecimal.ZERO
     Set seenOrders = []
-    for (GenericValue item : items) {
+    for (def item : items) {
         BigDecimal qty   = item.getBigDecimal("quantity")  ?: BigDecimal.ZERO
         BigDecimal price = item.getBigDecimal("unitPrice") ?: BigDecimal.ZERO
         qtyTotal = qtyTotal.add(qty)

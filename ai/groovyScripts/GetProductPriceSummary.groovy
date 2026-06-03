@@ -21,7 +21,7 @@ def getProductPriceSummary() {
     String productId = parameters.productId
     if (!productId) return error("productId is required")
 
-    GenericValue product = from("Product").where("productId", productId).queryOne()
+    def product = from("Product").where("productId", productId).queryOne()
     if (!product) return error("Product not found: ${productId}")
 
     List prices = from("ProductPrice")
@@ -33,7 +33,7 @@ def getProductPriceSummary() {
             .queryList()
 
     Map byType = [:]
-    for (GenericValue p : prices) {
+    for (def p : prices) {
         byType[p.productPriceTypeId] = p.getBigDecimal("price")
     }
 

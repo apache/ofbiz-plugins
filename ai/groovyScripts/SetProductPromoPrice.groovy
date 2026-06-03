@@ -30,14 +30,14 @@ def setProductPromoPrice() {
         return error("promoPrice must be a positive value")
     }
 
-    GenericValue product = from("Product").where("productId", productId).queryOne()
+    def product = from("Product").where("productId", productId).queryOne()
     if (!product) return error("Product not found: ${productId}")
 
     Timestamp fromDate = UtilDateTime.nowTimestamp()
     Timestamp thruDate = new Timestamp(fromDate.time + (durationDays * 24L * 60 * 60 * 1000))
     String loginId = userLogin?.getString("userLoginId") ?: "system"
 
-    GenericValue priceRecord = delegator.makeValue("ProductPrice")
+    def priceRecord = delegator.makeValue("ProductPrice")
     priceRecord.set("productId",               productId)
     priceRecord.set("productPriceTypeId",      "SPECIAL_PROMO_PRICE")
     priceRecord.set("productPricePurposeId",   "PURCHASE")
