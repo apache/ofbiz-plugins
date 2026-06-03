@@ -66,9 +66,10 @@ public final class AnthropicChatClient implements AiChatClient {
     public ChatResponse chat(List<Map<String, Object>> messages,
             List<ObjectNode> toolSchemas,
             String model,
-            ProviderConfig provider) throws GeneralException {
+            ProviderConfig provider,
+            String responseSchema) throws GeneralException {
 
-        String requestBody = buildRequestBody(messages, toolSchemas, model, provider);
+        String requestBody = buildRequestBody(messages, toolSchemas, model, provider, responseSchema);
 
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
                 .uri(URI.create(provider.getBaseUrl() + "/messages"))
@@ -103,7 +104,7 @@ public final class AnthropicChatClient implements AiChatClient {
                     + statusCode + ": " + snippet);
         }
 
-        return parseResponse(responseBody);
+        return parseResponse(responseBody, responseSchema);
     }
 
     // ---------------------------------------------------------------------------
@@ -113,7 +114,8 @@ public final class AnthropicChatClient implements AiChatClient {
     private String buildRequestBody(List<Map<String, Object>> messages,
             List<ObjectNode> toolSchemas,
             String model,
-            ProviderConfig provider) throws GeneralException {
+            ProviderConfig provider,
+            String responseSchema) throws GeneralException {
 
         ObjectNode root = MAPPER.createObjectNode();
         root.put("model", (model != null && !model.isBlank()) ? model : provider.getModel());
@@ -132,8 +134,16 @@ public final class AnthropicChatClient implements AiChatClient {
                 nonSystemMessages.add(msg);
             }
         }
-        if (systemPrompt != null) {
-            root.put("system", systemPrompt);
+        String effectiveSystemPrompt = systemPrompt;
+        if (responseSchema != null && !responseSchema.isBlank()) {
+            String jsonInstruction = "\n\nYou MUST respond with valid JSON only."
+                    + " No explanation, no markdown, no code fences — only raw JSON"
+                    + " matching this schema:\n" + responseSchema;
+            effectiveSystemPrompt = (effectiveSystemPrompt != null
+                    ? effectiveSystemPrompt : "") + jsonInstruction;
+        }
+        if (effectiveSystemPrompt != null) {
+            root.put("system", effectiveSystemPrompt);
         }
 
         // Convert remaining messages to Anthropic format
@@ -240,7 +250,7 @@ public final class AnthropicChatClient implements AiChatClient {
     // Response parsing
     // ---------------------------------------------------------------------------
 
-    private ChatResponse parseResponse(String responseBody) throws GeneralException {
+    private ChatResponse parseResponse(String responseBody, String responseSchema) throws GeneralException {
         JsonNode root;
         try {
             root = MAPPER.readTree(responseBody);
@@ -279,7 +289,26 @@ public final class AnthropicChatClient implements AiChatClient {
         int inputTokens = root.path("usage").path("input_tokens").asInt(0);
         int outputTokens = root.path("usage").path("output_tokens").asInt(0);
 
-        return new ChatResponse(finishReason, textContent, toolCalls, inputTokens, outputTokens);
+        Map<String, Object> structuredResult = null;
+        if (responseSchema != null && textContent != null && !textContent.isBlank()) {
+            try {
+                // Strip markdown code fences if the LLM wrapped the JSON
+                String jsonText = textContent.trim();
+                if (jsonText.startsWith("```")) {
+                    jsonText = jsonText.replaceAll("(?s)^```[a-z]*\\n?", "")
+                                       .replaceAll("```\\s*$", "").trim();
+                }
+                structuredResult = MAPPER.readValue(jsonText,
+                        new com.fasterxml.jackson.core.type.TypeReference<
+                                java.util.Map<String, Object>>() { });
+            } catch (Exception e) {
+                Debug.logWarning("AnthropicChatClient: structured output response is not "
+                        + "valid JSON, returning as text: " + e.getMessage(), MODULE);
+            }
+        }
+
+        return new ChatResponse(finishReason, textContent, toolCalls,
+                inputTokens, outputTokens, structuredResult);
     }
 
     /**
