@@ -331,6 +331,7 @@ under the License.
         <field name="assistantMessage" title="${uiLabelMap.AiAssistantMessage}"><display/></field>
         <field name="stopReason" title="${uiLabelMap.AiStopReason}"><display/></field>
         <field name="iterationsUsed" title="${uiLabelMap.AiIterations}"><display/></field>
+        <field name="structuredResult" title="Structured Result"><display/></field>
     </form>
 
     <form name="ContinueAgentForm" type="single" target="submitRunAgent"

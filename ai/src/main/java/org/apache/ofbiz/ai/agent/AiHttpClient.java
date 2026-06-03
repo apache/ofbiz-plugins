@@ -181,7 +181,11 @@ public final class AiHttpClient implements AiChatClient {
                 ObjectNode jsonSchemaWrapper = MAPPER.createObjectNode();
                 jsonSchemaWrapper.put("name", "agent_response");
                 jsonSchemaWrapper.set("schema", jsonSchemaNode);
-                jsonSchemaWrapper.put("strict", true);
+                // strict=false keeps OpenAI lenient: it accepts any user-authored JSON
+                // Schema without requiring additionalProperties:false on every object or
+                // every property to be listed in "required". Output is still constrained
+                // to valid JSON matching the schema. This matches the Anthropic path.
+                jsonSchemaWrapper.put("strict", false);
                 responseFormat.set("json_schema", jsonSchemaWrapper);
                 root.set("response_format", responseFormat);
             } catch (Exception e) {
