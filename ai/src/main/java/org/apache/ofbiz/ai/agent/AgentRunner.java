@@ -188,6 +188,11 @@ public final class AgentRunner {
             throw new GeneralException("Unconfigured provider: " + agent.getProviderName());
         }
 
+        // Select chat client based on provider type (skip when test seam is active)
+        if (testProvider == null) {
+            this.chatClient = createChatClientForProvider(provider);
+        }
+
         // 3. Resolve tool allow-list — use test seam if available
         Map<String, ToolDescriptor> allowedTools;
         if (testTools != null) {
@@ -326,6 +331,7 @@ public final class AgentRunner {
         }
 
         AgentRunner runner = new AgentRunner(agentName, "", userLogin, dctx);
+        runner.chatClient = createChatClientForProvider(provider);
         return runner.runLoop(new ArrayList<>(messagesWithToolResults),
                 toolSchemas, agent, provider, allowedTools, existingRunId, runRecord);
     }
@@ -634,6 +640,20 @@ public final class AgentRunner {
 
         persistToolCall(delegator, runId, descriptor.getName(), toolArgsJson, resultJson, callFailed);
         return resultJson;
+    }
+
+    /**
+     * Returns the appropriate {@link AiChatClient} implementation for the given provider.
+     * Defaults to {@link AiHttpClient} (OpenAI-compatible) for any unrecognised type.
+     *
+     * @param provider the resolved provider configuration
+     * @return a new chat client instance
+     */
+    private static AiChatClient createChatClientForProvider(ProviderConfig provider) {
+        if ("anthropic".equals(provider.getProviderType())) {
+            return new AnthropicChatClient();
+        }
+        return new AiHttpClient();
     }
 
     /**
