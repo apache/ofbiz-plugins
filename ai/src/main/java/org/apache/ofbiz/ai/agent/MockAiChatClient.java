@@ -52,7 +52,8 @@ public class MockAiChatClient implements AiChatClient {
 
     @Override
     public AiChatClient.ChatResponse chat(List<Map<String, Object>> messages,
-            List<ObjectNode> toolSchemas, String model, ProviderConfig provider)
+            List<ObjectNode> toolSchemas, String model, ProviderConfig provider,
+            String responseSchema)
             throws GeneralException {
         AiChatClient.ChatResponse next = responses.poll();
         if (next == null) {

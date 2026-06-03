@@ -20,6 +20,7 @@ package org.apache.ofbiz.ai.agent;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,23 +39,26 @@ public interface AiChatClient {
     /**
      * Send a chat request to the LLM provider and return the parsed response.
      *
-     * @param messages    ordered list of message objects; each map must contain
-     *                    at minimum {@code "role"} and {@code "content"} keys
-     * @param toolSchemas list of pre-built JSON Schema {@link ObjectNode}s that
-     *                    describe the tools available to the LLM in this turn;
-     *                    may be empty but never {@code null}
-     * @param model       model identifier to use for this request; when
-     *                    {@code null} the implementation falls back to the model
-     *                    declared on the {@code provider}
-     * @param provider    provider configuration (base URL, API key, timeout, etc.)
-     * @return            a non-null {@link ChatResponse}
+     * @param messages        ordered list of message objects; each map must contain
+     *                        at minimum {@code "role"} and {@code "content"} keys
+     * @param toolSchemas     list of pre-built JSON Schema {@link ObjectNode}s that
+     *                        describe the tools available to the LLM in this turn;
+     *                        may be empty but never {@code null}
+     * @param model           model identifier to use for this request; when
+     *                        {@code null} the implementation falls back to the model
+     *                        declared on the {@code provider}
+     * @param provider        provider configuration (base URL, API key, timeout, etc.)
+     * @param responseSchema  JSON Schema string constraining the response structure;
+     *                        {@code null} means free-text response (existing behaviour)
+     * @return                a non-null {@link ChatResponse}
      * @throws GeneralException if the HTTP request fails or the response cannot
      *                          be parsed
      */
     ChatResponse chat(List<Map<String, Object>> messages,
                       List<ObjectNode> toolSchemas,
                       String model,
-                      ProviderConfig provider) throws GeneralException;
+                      ProviderConfig provider,
+                      String responseSchema) throws GeneralException;
 
     /**
      * Immutable value object returned by {@link AiChatClient#chat}.
@@ -71,10 +75,18 @@ public interface AiChatClient {
         private final List<Map<String, Object>> toolCalls;
         private final int inputTokens;
         private final int outputTokens;
+        private final Map<String, Object> structuredResult;
 
         public ChatResponse(String finishReason, String content,
                 List<Map<String, Object>> toolCalls,
                 int inputTokens, int outputTokens) {
+            this(finishReason, content, toolCalls, inputTokens, outputTokens, null);
+        }
+
+        public ChatResponse(String finishReason, String content,
+                List<Map<String, Object>> toolCalls,
+                int inputTokens, int outputTokens,
+                Map<String, Object> structuredResult) {
             this.finishReason = finishReason;
             this.content = content;
             this.toolCalls = toolCalls != null
@@ -82,6 +94,9 @@ public interface AiChatClient {
                     : null;
             this.inputTokens = inputTokens;
             this.outputTokens = outputTokens;
+            this.structuredResult = structuredResult != null
+                    ? Collections.unmodifiableMap(new LinkedHashMap<>(structuredResult))
+                    : null;
         }
 
         /** Returns {@code "stop"} or {@code "tool_calls"}. */
@@ -105,6 +120,11 @@ public interface AiChatClient {
 
         public int getOutputTokens() {
             return outputTokens;
+        }
+
+        /** Returns the parsed structured result when the agent ran in structured mode; {@code null} otherwise. */
+        public Map<String, Object> getStructuredResult() {
+            return structuredResult;
         }
     }
 }

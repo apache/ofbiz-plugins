@@ -905,6 +905,7 @@ public final class AgentRunner {
         private final String stopReason;
         private final int iterationsUsed;
         private final String proposalId;  // null when no suspension
+        private final Map<String, Object> structuredResult;
 
         /**
          * Constructs a run result.
@@ -932,10 +933,30 @@ public final class AgentRunner {
          */
         public RunResult(String assistantMessage, String stopReason,
                 int iterationsUsed, String proposalId) {
+            this(assistantMessage, stopReason, iterationsUsed, proposalId, null);
+        }
+
+        /**
+         * Constructs a run result with an optional proposal identifier and structured result.
+         *
+         * @param assistantMessage  the final text response from the assistant, or
+         *                          {@code null} if the loop ended without a stop
+         * @param stopReason        one of {@code "stop"}, {@code "max_iterations"},
+         *                          {@code "approval_required"}, or an unexpected finish reason string
+         * @param iterationsUsed    number of loop iterations consumed
+         * @param proposalId        the proposal identifier when stopReason is
+         *                          {@code "approval_required"}, or {@code null} otherwise
+         * @param structuredResult  parsed structured output when the agent ran in structured mode;
+         *                          {@code null} otherwise
+         */
+        public RunResult(String assistantMessage, String stopReason,
+                int iterationsUsed, String proposalId,
+                Map<String, Object> structuredResult) {
             this.assistantMessage = assistantMessage;
             this.stopReason = stopReason;
             this.iterationsUsed = iterationsUsed;
             this.proposalId = proposalId;
+            this.structuredResult = structuredResult;
         }
 
         /**
@@ -975,6 +996,16 @@ public final class AgentRunner {
          */
         public String getProposalId() {
             return proposalId;
+        }
+
+        /**
+         * Returns the parsed structured result when the agent ran in structured mode,
+         * or {@code null} otherwise.
+         *
+         * @return structured result map, or {@code null}
+         */
+        public Map<String, Object> getStructuredResult() {
+            return structuredResult;
         }
     }
 }
