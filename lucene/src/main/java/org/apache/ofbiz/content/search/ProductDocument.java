@@ -193,10 +193,12 @@ public class ProductDocument implements LuceneDocument {
                         } else if (thruDate != null) {
                             nextReIndex = checkSetNextReIndex(thruDate, nextReIndex);
                         }
-                        doc.add(new StringField("productFeatureId", productFeatureAndAppl.getString("productFeatureId"), Field.Store.NO));
-                        doc.add(new StringField("productFeatureCategoryId", productFeatureAndAppl.getString("productFeatureCategoryId"),
-                                Field.Store.NO));
-                        doc.add(new StringField("productFeatureTypeId", productFeatureAndAppl.getString("productFeatureTypeId"), Field.Store.NO));
+                        String featureId = checkValue(productFeatureAndAppl.getString("productFeatureId"));
+                        doc.add(new StringField("productFeatureId", featureId, Field.Store.NO));
+                        String featureCategoryId = checkValue(productFeatureAndAppl.getString("productFeatureCategoryId"));
+                        doc.add(new StringField("productFeatureCategoryId", featureCategoryId, Field.Store.NO));
+                        String featureTypeId = checkValue(productFeatureAndAppl.getString("productFeatureTypeId"));
+                        doc.add(new StringField("productFeatureTypeId", featureTypeId, Field.Store.NO));
                         addTextField(doc, "featureDescription", productFeatureAndAppl.getString("description"), false, "fullText", delegator);
                         addTextField(doc, "featureAbbreviation", productFeatureAndAppl.getString("abbrev"), false, "fullText", delegator);
                         addTextField(doc, "featureCode", productFeatureAndAppl.getString("idCode"), false, "fullText", delegator);
