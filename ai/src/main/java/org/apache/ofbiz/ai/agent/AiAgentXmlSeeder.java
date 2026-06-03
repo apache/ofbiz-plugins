@@ -241,7 +241,8 @@ public final class AiAgentXmlSeeder {
                     return "";
                 }
                 try {
-                    return new String(Files.readAllBytes(promptPath)).trim();
+                    return new String(Files.readAllBytes(promptPath),
+                            java.nio.charset.StandardCharsets.UTF_8).trim();
                 } catch (IOException e) {
                     Debug.logWarning("AiAgentXmlSeeder: cannot read system-prompt-location for '"
                             + agentName + "': " + e.getMessage(), MODULE);
