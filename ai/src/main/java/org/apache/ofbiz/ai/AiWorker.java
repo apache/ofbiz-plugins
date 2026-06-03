@@ -75,7 +75,7 @@ public final class AiWorker {
         }
         AiChatClient client = new AiHttpClient();
         AiChatClient.ChatResponse response = client.chat(messages,
-                Collections.emptyList(), null, provider);
+                Collections.emptyList(), null, provider, null);
         return response.getContent();
     }
 
@@ -122,7 +122,7 @@ public final class AiWorker {
 
         AiChatClient client = new AiHttpClient();
         AiChatClient.ChatResponse response = client.chat(augmentedMessages,
-                Collections.emptyList(), null, provider);
+                Collections.emptyList(), null, provider, null);
 
         String content = response.getContent();
         if (UtilValidate.isEmpty(content)) {

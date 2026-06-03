@@ -60,6 +60,7 @@ under the License.
         <attribute name="iterationsUsed" mode="OUT" type="Integer" optional="false"/>
         <attribute name="approvalRequired" mode="IN"  type="Boolean" optional="true"/>
         <attribute name="proposalId"       mode="OUT" type="String"  optional="true"/>
+        <attribute name="structuredResult" mode="OUT" type="Map"     optional="true"/>
     </service>
 
     <service name="approveAgentProposal" engine="java"

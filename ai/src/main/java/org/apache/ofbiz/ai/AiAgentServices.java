@@ -93,6 +93,7 @@ public class AiAgentServices {
             serviceResult.put("iterationsUsed", result.getIterationsUsed());
             serviceResult.put("threadId", threadId);
             serviceResult.put("proposalId", result.getProposalId());
+            serviceResult.put("structuredResult", result.getStructuredResult());
             return serviceResult;
         } catch (GeneralException e) {
             Debug.logError(e, "agentRun failed for agent '" + agentName + "'", MODULE);
@@ -295,7 +296,8 @@ public class AiAgentServices {
                     Collections.unmodifiableList(messages),
                     Collections.emptyList(),
                     agentDef.getModelOverride(),
-                    provider);
+                    provider,
+                    null);
 
             Map<String, Object> serviceResult = ServiceUtil.returnSuccess();
             serviceResult.put("assistantMessage", response.getContent());

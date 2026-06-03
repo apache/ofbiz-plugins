@@ -256,7 +256,7 @@ public final class AgentRunner {
 
         // 7–9. Execute the agent loop
         RunResult loopResult = runLoop(messages, toolSchemas, agent, provider,
-                allowedTools, runId, runRecord);
+                allowedTools, runId, runRecord, agent.getResponseSchema());
 
         // 10. Conversation memory — persist user + assistant messages when threadId is set
         if (threadId != null && delegatorForThread != null) {
@@ -333,7 +333,8 @@ public final class AgentRunner {
         AgentRunner runner = new AgentRunner(agentName, "", userLogin, dctx);
         runner.chatClient = createChatClientForProvider(provider);
         return runner.runLoop(new ArrayList<>(messagesWithToolResults),
-                toolSchemas, agent, provider, allowedTools, existingRunId, runRecord);
+                toolSchemas, agent, provider, allowedTools, existingRunId, runRecord,
+                agent.getResponseSchema());
     }
 
     // ---------------------------------------------------------------------------
@@ -367,7 +368,8 @@ public final class AgentRunner {
             ProviderConfig provider,
             Map<String, ToolDescriptor> allowedTools,
             String runId,
-            GenericValue runRecord) throws GeneralException {
+            GenericValue runRecord,
+            String responseSchema) throws GeneralException {
 
         Delegator delegator = dctx != null ? dctx.getDelegator() : null;
 
@@ -381,7 +383,8 @@ public final class AgentRunner {
 
         for (int iteration = 0; iteration < maxIterations; iteration++) {
             AiChatClient.ChatResponse response = chatClient.chat(
-                    Collections.unmodifiableList(messages), toolSchemas, modelToUse, provider);
+                    Collections.unmodifiableList(messages), toolSchemas, modelToUse, provider,
+                    responseSchema);
             lastResponse = response;
             totalInputTokens += response.getInputTokens();
             totalOutputTokens += response.getOutputTokens();
@@ -389,7 +392,8 @@ public final class AgentRunner {
             String finishReason = response.getFinishReason();
 
             if ("stop".equals(finishReason)) {
-                loopResult = new RunResult(response.getContent(), "stop", iteration + 1);
+                loopResult = new RunResult(response.getContent(), "stop", iteration + 1,
+                        null, response.getStructuredResult());
                 break;
             }
 
