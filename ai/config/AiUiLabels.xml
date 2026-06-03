@@ -112,6 +112,7 @@ under the License.
     <property key="AiCreateAgent"><value xml:lang="en">Create Agent</value></property>
     <property key="AiEditAgent"><value xml:lang="en">Edit Agent</value></property>
     <property key="AiSystemPrompt"><value xml:lang="en">System Prompt</value></property>
+    <property key="AiResponseSchema"><value xml:lang="en">Response Schema (JSON)</value></property>
     <property key="AiToolGrants"><value xml:lang="en">Tool Grants</value></property>
     <property key="AiAddTool"><value xml:lang="en">Add Tool</value></property>
 

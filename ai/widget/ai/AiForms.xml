@@ -353,6 +353,9 @@ under the License.
             <textarea rows="10" cols="80"/>
         </field>
         <field name="maxIterations" title="${uiLabelMap.AiMaxIterations}"><text size="5"/></field>
+        <field name="responseSchema" title="${uiLabelMap.AiResponseSchema}">
+            <textarea rows="8" cols="80"/>
+        </field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
@@ -368,6 +371,9 @@ under the License.
             <textarea rows="12" cols="80"/>
         </field>
         <field name="maxIterations" title="${uiLabelMap.AiMaxIterations}"><text size="5"/></field>
+        <field name="responseSchema" title="${uiLabelMap.AiResponseSchema}">
+            <textarea rows="8" cols="80"/>
+        </field>
         <field name="statusId" title="${uiLabelMap.AiStatus}">
             <drop-down allow-empty="false">
                 <entity-options entity-name="StatusItem" key-field-name="statusId" description="${description}">
