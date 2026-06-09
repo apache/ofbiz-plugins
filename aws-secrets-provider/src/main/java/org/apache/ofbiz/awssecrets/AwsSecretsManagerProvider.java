@@ -25,6 +25,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.ofbiz.base.crypto.ConfigCryptoUtil;
 import org.apache.ofbiz.base.lang.ThreadSafe;
 import org.apache.ofbiz.base.secret.SecretProvider;
 import org.apache.ofbiz.base.util.Debug;
@@ -121,6 +122,8 @@ public final class AwsSecretsManagerProvider implements SecretProvider {
         if (secretValue == null || secretValue.isEmpty()) {
             throw new GeneralException("Secret '" + secretName + "' resolved to an empty value");
         }
+
+        secretValue = ConfigCryptoUtil.decryptIfEncrypted(secretValue, secretName);
 
         cache.put(key, new CacheEntry(secretValue, cacheTtlMs));
         return secretValue;

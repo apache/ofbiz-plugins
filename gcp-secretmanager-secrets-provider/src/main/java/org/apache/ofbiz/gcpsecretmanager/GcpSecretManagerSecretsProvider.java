@@ -27,6 +27,8 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.secretmanager.v1.SecretManagerServiceClient;
 import com.google.cloud.secretmanager.v1.SecretManagerServiceSettings;
 
+import org.apache.ofbiz.base.crypto.ConfigCryptoUtil;
+
 import org.apache.ofbiz.base.lang.ThreadSafe;
 import org.apache.ofbiz.base.secret.SecretProvider;
 import org.apache.ofbiz.base.util.Debug;
@@ -131,6 +133,8 @@ public final class GcpSecretManagerSecretsProvider implements SecretProvider {
             throw new GeneralException(
                     "GCP Secret Manager returned empty value for '" + resourceName + "'");
         }
+
+        value = ConfigCryptoUtil.decryptIfEncrypted(value, key);
 
         cache.put(key, new CacheEntry(value, cacheTtlMs));
         return value;

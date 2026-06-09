@@ -28,6 +28,8 @@ import io.github.jopenlibs.vault.Vault;
 import io.github.jopenlibs.vault.VaultConfig;
 import io.github.jopenlibs.vault.VaultException;
 
+import org.apache.ofbiz.base.crypto.ConfigCryptoUtil;
+
 import org.apache.ofbiz.base.lang.ThreadSafe;
 import org.apache.ofbiz.base.secret.SecretProvider;
 import org.apache.ofbiz.base.util.Debug;
@@ -107,6 +109,7 @@ public final class HashicorpVaultSecretsProvider implements SecretProvider {
 
         String path = kvMount + "/" + secretNamePrefix + key;
         String value = readFromVault(path);
+        value = ConfigCryptoUtil.decryptIfEncrypted(value, key);
 
         cache.put(key, new CacheEntry(value, cacheTtlMs));
         return value;

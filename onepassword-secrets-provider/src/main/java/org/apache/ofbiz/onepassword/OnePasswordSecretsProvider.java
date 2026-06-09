@@ -31,6 +31,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.ofbiz.base.crypto.ConfigCryptoUtil;
 import org.apache.ofbiz.base.lang.ThreadSafe;
 import org.apache.ofbiz.base.secret.SecretProvider;
 import org.apache.ofbiz.base.util.Debug;
@@ -119,6 +120,7 @@ public final class OnePasswordSecretsProvider implements SecretProvider {
 
         String title = secretNamePrefix + key;
         String value = fetchFromConnect(title);
+        value = ConfigCryptoUtil.decryptIfEncrypted(value, key);
 
         cache.put(key, new CacheEntry(value, cacheTtlMs));
         return value;

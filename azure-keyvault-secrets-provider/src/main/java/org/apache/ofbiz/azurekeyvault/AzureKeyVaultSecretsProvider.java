@@ -26,6 +26,8 @@ import com.azure.identity.DefaultAzureCredentialBuilder;
 import com.azure.security.keyvault.secrets.SecretClient;
 import com.azure.security.keyvault.secrets.SecretClientBuilder;
 
+import org.apache.ofbiz.base.crypto.ConfigCryptoUtil;
+
 import org.apache.ofbiz.base.lang.ThreadSafe;
 import org.apache.ofbiz.base.secret.SecretProvider;
 import org.apache.ofbiz.base.util.Debug;
@@ -120,6 +122,8 @@ public final class AzureKeyVaultSecretsProvider implements SecretProvider {
             throw new GeneralException(
                     "Azure Key Vault returned empty value for secret '" + secretName + "'");
         }
+
+        value = ConfigCryptoUtil.decryptIfEncrypted(value, secretName);
 
         cache.put(key, new CacheEntry(value, cacheTtlMs));
         return value;
