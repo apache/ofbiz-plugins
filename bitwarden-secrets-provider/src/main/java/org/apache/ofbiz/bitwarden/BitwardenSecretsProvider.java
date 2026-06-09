@@ -50,31 +50,23 @@ import org.apache.ofbiz.base.util.UtilProperties;
  *
  * <h2>Authentication</h2>
  * <p>Uses a machine account <em>access token</em> (created in the Bitwarden SM console).
- * The token has the format {@code 0.<serviceAccountId>.<clientSecret>:<base64EncKey>}.
+ * The token has the format {@code 0.<serviceAccountId>.<clientSecret>:<base64SealingKey>}.
  * The provider parses the token to extract OAuth credentials for the identity service
- * and the 64-byte symmetric key for client-side decryption.</p>
+ * and a 16-byte sealing key used to derive the org symmetric key.</p>
+ *
+ * <h2>Key derivation</h2>
+ * <p>The 16-byte sealing key from the token is expanded to a 64-byte derived key via:
+ * <ol>
+ *   <li>{@code PRK = HMAC-SHA256(key="bitwarden-accesstoken", msg=sealingKey)}</li>
+ *   <li>{@code key64 = HKDF-Expand(PRK, info="sm-access-token", length=64)}</li>
+ * </ol>
+ * This derived key decrypts the {@code encrypted_payload} field returned by the OAuth endpoint.
+ * The payload contains a JSON object {@code {"encryptionKey": "<base64>"}} whose value is the
+ * 64-byte org symmetric key used for all subsequent secret decryption.</p>
  *
  * <h2>End-to-end encryption</h2>
- * <p>Bitwarden SM encrypts all data at rest and in transit. Secret <em>keys</em> (names)
- * and <em>values</em> are returned from the API in encrypted form. This provider decrypts
- * them using AES-256-CBC with HMAC-SHA256 integrity verification before returning the
- * plaintext to OFBiz. No plaintext ever leaves the JVM.</p>
- *
- * <h2>Cipher format</h2>
- * <p>Encrypted strings use Bitwarden's type-2 cipher format:
- * {@code 2.<iv_base64>|<ciphertext_base64>|<hmac_base64>}</p>
- * <ul>
- *   <li>MAC key (bytes 32–63 of the 64-byte symmetric key) verifies integrity via
- *       HMAC-SHA256 over {@code IV || ciphertext}.</li>
- *   <li>Enc key (bytes 0–31) decrypts with AES-256-CBC after MAC is verified.</li>
- * </ul>
- *
- * <h2>API flow per lookup</h2>
- * <ol>
- *   <li>POST to identity service to exchange client credentials for a bearer token.</li>
- *   <li>GET the organization's secret list; decrypt each secret key to find the match.</li>
- *   <li>GET the matched secret by ID; decrypt and return the value.</li>
- * </ol>
+ * <p>Secret <em>keys</em> (names) and <em>values</em> are returned from the API in encrypted form.
+ * This provider decrypts them using AES-256-CBC with HMAC-SHA256 integrity verification.</p>
  *
  * <p>Configure via {@code plugins/bitwarden-secrets-provider/config/bitwarden-secrets.properties}.</p>
  */
@@ -95,8 +87,11 @@ public final class BitwardenSecretsProvider implements SecretProvider {
     // Parsed from the access token — never stored in config
     private final String oauthClientId;
     private final String oauthClientSecret;
-    private final byte[] encKey; // bytes  0-31 of the 64-byte symmetric key
-    private final byte[] macKey; // bytes 32-63
+    // 16-byte sealing key from token; used to derive the org enc/mac keys after first OAuth call
+    private final byte[] sealingKey;
+    // Org symmetric key halves — null until first successful OAuth + payload decryption
+    private volatile byte[] encKey;
+    private volatile byte[] macKey;
 
     // Cached OAuth bearer token + its expiry
     private volatile String bearerToken = null;
@@ -144,6 +139,7 @@ public final class BitwardenSecretsProvider implements SecretProvider {
         this.cacheTtlMs = cacheTtlMs;
         this.oauthClientId = clientId;
         this.oauthClientSecret = clientSecret;
+        this.sealingKey = null; // not needed when enc/mac keys are injected directly
         this.encKey = encKey;
         this.macKey = macKey;
     }
@@ -159,14 +155,14 @@ public final class BitwardenSecretsProvider implements SecretProvider {
         this.secretNamePrefix = secretNamePrefix;
         this.cacheTtlMs = cacheTtlMs;
 
-        // Parse: "0.<serviceAccountId>.<clientSecret>:<base64EncKey>"
+        // Parse: "0.<serviceAccountId>.<clientSecret>:<base64SealingKey>"
         int colonIdx = rawAccessToken.lastIndexOf(':');
         if (colonIdx < 0) {
             throw new GeneralException(
                     "Invalid Bitwarden access token format — missing ':' separator");
         }
         String identityPart = rawAccessToken.substring(0, colonIdx);
-        String encKeyBase64 = rawAccessToken.substring(colonIdx + 1);
+        String sealingKeyBase64 = rawAccessToken.substring(colonIdx + 1);
 
         String[] dotParts = identityPart.split("\\.");
         if (dotParts.length != 3 || !"0".equals(dotParts[0])) {
@@ -176,21 +172,24 @@ public final class BitwardenSecretsProvider implements SecretProvider {
         String serviceAccountId = dotParts[1];
         String clientSecretPart = dotParts[2];
 
-        this.oauthClientId = "service-account." + serviceAccountId;
+        // client_id is the service account UUID directly (not "service-account.<uuid>")
+        this.oauthClientId = serviceAccountId;
         this.oauthClientSecret = clientSecretPart;
 
         byte[] keyBytes;
         try {
-            keyBytes = Base64.getDecoder().decode(encKeyBase64);
+            keyBytes = Base64.getDecoder().decode(sealingKeyBase64);
         } catch (IllegalArgumentException e) {
-            throw new GeneralException("Invalid Bitwarden access token — enc key is not valid base64", e);
+            throw new GeneralException("Invalid Bitwarden access token — sealing key is not valid base64", e);
         }
-        if (keyBytes.length != 64) {
-            throw new GeneralException("Invalid Bitwarden access token — enc key must be 64 bytes, got "
+        if (keyBytes.length != 16) {
+            throw new GeneralException("Invalid Bitwarden access token — sealing key must be 16 bytes, got "
                     + keyBytes.length);
         }
-        this.encKey = Arrays.copyOfRange(keyBytes, 0, 32);
-        this.macKey = Arrays.copyOfRange(keyBytes, 32, 64);
+        this.sealingKey = keyBytes;
+        // encKey and macKey are null until derived from the OAuth encrypted_payload
+        this.encKey = null;
+        this.macKey = null;
 
         Debug.logInfo("BitwardenSecretsProvider: initialized api=" + apiUrl
                 + " org=" + organizationId, MODULE);
@@ -257,11 +256,65 @@ public final class BitwardenSecretsProvider implements SecretProvider {
             long expiresIn = expiresNode != null ? expiresNode.asLong(3600L) : 3600L;
             // Subtract 60 s to renew slightly before expiry
             bearerTokenExpiresAt = System.currentTimeMillis() + (expiresIn - 60L) * 1000L;
+
+            // Derive and store the org enc/mac keys from the encrypted_payload (first call only)
+            if (encKey == null) {
+                JsonNode payloadNode = root.get("encrypted_payload");
+                if (payloadNode != null && !payloadNode.isNull()) {
+                    deriveAndStoreOrgKey(payloadNode.asText());
+                }
+            }
+
             return bearerToken;
         } catch (GeneralException e) {
             throw e;
         } catch (Exception e) {
             throw new GeneralException("Failed to parse Bitwarden identity response: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Derives the org symmetric key from the sealing key and the OAuth encrypted_payload,
+     * then stores the result in {@link #encKey} and {@link #macKey}.
+     *
+     * <p>Algorithm (matches Bitwarden SDK {@code derive_shareable_key}):</p>
+     * <ol>
+     *   <li>{@code PRK = HMAC-SHA256(key="bitwarden-accesstoken", msg=sealingKey)}</li>
+     *   <li>{@code key64 = HKDF-Expand(PRK, info="sm-access-token", length=64)}</li>
+     *   <li>Decrypt {@code encrypted_payload} (type-2 cipher) with key64.</li>
+     *   <li>Parse JSON {@code {"encryptionKey":"<base64>"}} → 64-byte org key.</li>
+     * </ol>
+     */
+    private void deriveAndStoreOrgKey(String encryptedPayload) throws GeneralException {
+        // Step 1 & 2: derive 64-byte key from the 16-byte sealing key
+        byte[] prk = hmacSha256("bitwarden-accesstoken".getBytes(StandardCharsets.UTF_8), sealingKey);
+        byte[] key64 = hkdfExpand(prk, "sm-access-token".getBytes(StandardCharsets.UTF_8), 64);
+        byte[] derivedEnc = Arrays.copyOfRange(key64, 0, 32);
+        byte[] derivedMac = Arrays.copyOfRange(key64, 32, 64);
+
+        // Step 3: decrypt the encrypted_payload to get the org key JSON
+        byte[] payloadBytes = decryptCipherBytes(encryptedPayload, derivedEnc, derivedMac);
+
+        // Step 4: parse {"encryptionKey": "<base64>"} and extract the 64-byte org key
+        try {
+            JsonNode root = JSON.readTree(payloadBytes);
+            JsonNode encKeyNode = root.get("encryptionKey");
+            if (encKeyNode == null || encKeyNode.isNull()) {
+                throw new GeneralException("Bitwarden encrypted_payload missing 'encryptionKey' field");
+            }
+            byte[] orgKey = Base64.getDecoder().decode(encKeyNode.asText());
+            if (orgKey.length != 64) {
+                throw new GeneralException(
+                        "Bitwarden org key must be 64 bytes, got " + orgKey.length);
+            }
+            this.encKey = Arrays.copyOfRange(orgKey, 0, 32);
+            this.macKey = Arrays.copyOfRange(orgKey, 32, 64);
+            Debug.logInfo("BitwardenSecretsProvider: org encryption key derived successfully", MODULE);
+        } catch (GeneralException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new GeneralException(
+                    "Failed to parse Bitwarden encrypted_payload JSON: " + e.getMessage(), e);
         }
     }
 
@@ -277,9 +330,9 @@ public final class BitwardenSecretsProvider implements SecretProvider {
 
         try {
             JsonNode root = JSON.readTree(responseJson);
-            JsonNode data = root.get("data");
+            JsonNode data = root.get("secrets");
             if (data == null || !data.isArray()) {
-                throw new GeneralException("Bitwarden secrets list response missing 'data' array");
+                throw new GeneralException("Bitwarden secrets list response missing 'secrets' array");
             }
 
             for (JsonNode item : data) {
@@ -334,15 +387,27 @@ public final class BitwardenSecretsProvider implements SecretProvider {
     }
 
     /**
-     * Decrypts a Bitwarden type-2 cipher string.
+     * Decrypts a Bitwarden type-2 cipher string using the instance's org enc/mac keys.
      *
      * <p>Format: {@code 2.<iv_b64>|<ciphertext_b64>|<hmac_b64>}</p>
-     * <ul>
-     *   <li>HMAC-SHA256 is verified over {@code IV || ciphertext} using {@code macKey}.</li>
-     *   <li>AES-256-CBC decryption uses {@code encKey} and the extracted IV.</li>
-     * </ul>
      */
     String decrypt(String cipherString) throws GeneralException {
+        try {
+            return new String(decryptCipherBytes(cipherString, encKey, macKey), StandardCharsets.UTF_8);
+        } catch (GeneralException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new GeneralException("Bitwarden decryption failed: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Core AES-256-CBC + HMAC-SHA256 decryption for a Bitwarden type-2 cipher string.
+     * Accepts explicit enc/mac keys so it can be used both for the org key derivation
+     * (with the derived keys) and for secret decryption (with the org keys).
+     */
+    private static byte[] decryptCipherBytes(String cipherString, byte[] encKey, byte[] macKey)
+            throws GeneralException {
         if (!cipherString.startsWith("2.")) {
             throw new GeneralException(
                     "Unsupported Bitwarden cipher type — expected type 2 (AES-CBC-256-HMAC-SHA256)");
@@ -378,12 +443,52 @@ public final class BitwardenSecretsProvider implements SecretProvider {
             cipher.init(Cipher.DECRYPT_MODE,
                     new SecretKeySpec(encKey, "AES"),
                     new IvParameterSpec(iv));
-            return new String(cipher.doFinal(ciphertext), StandardCharsets.UTF_8);
+            return cipher.doFinal(ciphertext);
 
         } catch (GeneralException e) {
             throw e;
         } catch (Exception e) {
             throw new GeneralException("Bitwarden decryption failed: " + e.getMessage(), e);
+        }
+    }
+
+    /** HMAC-SHA256(key, data). */
+    private static byte[] hmacSha256(byte[] key, byte[] data) throws GeneralException {
+        try {
+            Mac mac = Mac.getInstance("HmacSHA256");
+            mac.init(new SecretKeySpec(key, "HmacSHA256"));
+            return mac.doFinal(data);
+        } catch (Exception e) {
+            throw new GeneralException("HMAC-SHA256 failed: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * HKDF-Expand (RFC 5869) using HMAC-SHA256.
+     * Produces {@code length} bytes of output keying material from {@code prk} and {@code info}.
+     */
+    private static byte[] hkdfExpand(byte[] prk, byte[] info, int length) throws GeneralException {
+        try {
+            byte[] result = new byte[length];
+            byte[] prev = new byte[0];
+            int offset = 0;
+            int counter = 1;
+
+            while (offset < length) {
+                Mac mac = Mac.getInstance("HmacSHA256");
+                mac.init(new SecretKeySpec(prk, "HmacSHA256"));
+                mac.update(prev);
+                mac.update(info);
+                mac.update((byte) counter++);
+                prev = mac.doFinal();
+
+                int toCopy = Math.min(prev.length, length - offset);
+                System.arraycopy(prev, 0, result, offset, toCopy);
+                offset += toCopy;
+            }
+            return result;
+        } catch (Exception e) {
+            throw new GeneralException("HKDF-Expand failed: " + e.getMessage(), e);
         }
     }
 
