@@ -33,14 +33,14 @@ public class GcpSecretManagerSecretsProviderTest {
     // -- Happy path --
 
     @Test
-    public void getSecret_returnsSecretValue() throws GeneralException {
+    public void getSecretReturnsSecretValue() throws GeneralException {
         GcpSecretReader reader = fixedReader(
                 "projects/my-project/secrets/mykey/versions/latest", "s3cr3t");
         assertEquals("s3cr3t", provider(reader, "", "-").getSecret("mykey"));
     }
 
     @Test
-    public void getSecret_sanitizesDotInKey() throws GeneralException {
+    public void getSecretSanitizesDotInKey() throws GeneralException {
         // OFBiz key "jdbc-password.mysql-ofbiz" → GCP name "jdbc-password-mysql-ofbiz"
         GcpSecretReader reader = fixedReader(
                 "projects/my-project/secrets/jdbc-password-mysql-ofbiz/versions/latest", "dbpass");
@@ -48,14 +48,14 @@ public class GcpSecretManagerSecretsProviderTest {
     }
 
     @Test
-    public void getSecret_appliesPrefixAfterSanitizing() throws GeneralException {
+    public void getSecretAppliesPrefixAfterSanitizing() throws GeneralException {
         GcpSecretReader reader = fixedReader(
                 "projects/my-project/secrets/prod-jdbc-password-mydb/versions/latest", "prodpass");
         assertEquals("prodpass", provider(reader, "prod-", "-").getSecret("jdbc-password.mydb"));
     }
 
     @Test
-    public void getSecret_usesConfiguredVersion() throws GeneralException {
+    public void getSecretUsesConfiguredVersion() throws GeneralException {
         GcpSecretReader reader = fixedReader(
                 "projects/my-project/secrets/mykey/versions/3", "v3val");
         GcpSecretManagerSecretsProvider p = new GcpSecretManagerSecretsProvider(
@@ -64,7 +64,7 @@ public class GcpSecretManagerSecretsProviderTest {
     }
 
     @Test
-    public void getSecret_cachePreventsDuplicateReaderCall() throws GeneralException {
+    public void getSecretCachePreventsDuplicateReaderCall() throws GeneralException {
         AtomicInteger calls = new AtomicInteger();
         GcpSecretReader reader = resourceName -> {
             calls.incrementAndGet();
@@ -79,7 +79,7 @@ public class GcpSecretManagerSecretsProviderTest {
     }
 
     @Test
-    public void invalidateCache_forcesRefetchOnNextCall() throws GeneralException {
+    public void invalidateCacheForcesRefetchOnNextCall() throws GeneralException {
         AtomicInteger calls = new AtomicInteger();
         GcpSecretReader reader = resourceName -> {
             calls.incrementAndGet();
@@ -95,7 +95,7 @@ public class GcpSecretManagerSecretsProviderTest {
     }
 
     @Test
-    public void getSecret_expiredCacheTriggersRefetch() throws GeneralException {
+    public void getSecretExpiredCacheTriggersRefetch() throws GeneralException {
         AtomicInteger calls = new AtomicInteger();
         GcpSecretReader reader = resourceName -> {
             calls.incrementAndGet();
@@ -112,7 +112,7 @@ public class GcpSecretManagerSecretsProviderTest {
     }
 
     @Test
-    public void getSecret_dotReplacementDisabled_keepsDotsInName() throws GeneralException {
+    public void getSecretDotReplacementDisabledKeepsDotsInName() throws GeneralException {
         // dot.replacement="" → no sanitization
         GcpSecretReader reader = fixedReader(
                 "projects/my-project/secrets/my.key/versions/latest", "val");
@@ -122,13 +122,15 @@ public class GcpSecretManagerSecretsProviderTest {
     // -- Error handling --
 
     @Test(expected = GeneralException.class)
-    public void getSecret_throwsOnReaderException() throws GeneralException {
-        GcpSecretReader reader = resourceName -> { throw new Exception("NOT_FOUND"); };
+    public void getSecretThrowsOnReaderException() throws GeneralException {
+        GcpSecretReader reader = resourceName -> {
+            throw new Exception("NOT_FOUND");
+        };
         provider(reader, "", "-").getSecret("missing");
     }
 
     @Test(expected = GeneralException.class)
-    public void getSecret_throwsOnEmptyValue() throws GeneralException {
+    public void getSecretThrowsOnEmptyValue() throws GeneralException {
         GcpSecretReader reader = resourceName -> "";
         provider(reader, "", "-").getSecret("mykey");
     }

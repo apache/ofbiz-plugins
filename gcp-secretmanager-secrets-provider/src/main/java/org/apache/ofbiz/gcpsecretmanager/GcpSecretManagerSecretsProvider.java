@@ -76,12 +76,16 @@ public final class GcpSecretManagerSecretsProvider implements SecretProvider {
     private final ConcurrentHashMap<String, CacheEntry> cache = new ConcurrentHashMap<>();
 
     private static final class CacheEntry {
-        final String value;
-        final long expiresAt;
+        private final String value;
+        private final long expiresAt;
 
         CacheEntry(String value, long ttlMs) {
             this.value = value;
             this.expiresAt = System.currentTimeMillis() + ttlMs;
+        }
+
+        String getValue() {
+            return value;
         }
 
         boolean isExpired() {
@@ -114,7 +118,7 @@ public final class GcpSecretManagerSecretsProvider implements SecretProvider {
     public String getSecret(String key) throws GeneralException {
         CacheEntry cached = cache.get(key);
         if (cached != null && !cached.isExpired()) {
-            return cached.value;
+            return cached.getValue();
         }
 
         String sanitizedKey = dotReplacement.isEmpty() ? key : key.replace(".", dotReplacement);
@@ -167,7 +171,8 @@ public final class GcpSecretManagerSecretsProvider implements SecretProvider {
     private static SecretManagerServiceClient buildClient() throws GeneralException {
         String credentialsFile = prop("gcp.credentials.file", "");
         try {
-            SecretManagerServiceSettings.Builder builder = SecretManagerServiceSettings.newBuilder();
+            // HTTP/JSON transport avoids gRPC/Netty entirely — no --add-opens JVM flags needed on Java 17
+            SecretManagerServiceSettings.Builder builder = SecretManagerServiceSettings.newHttpJsonBuilder();
 
             if (!credentialsFile.isEmpty()) {
                 try (FileInputStream fis = new FileInputStream(credentialsFile)) {
