@@ -32,6 +32,7 @@ import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.GeneralException;
 import org.apache.ofbiz.base.util.UtilProperties;
 
+import software.amazon.awssdk.core.exception.SdkException;
 import software.amazon.awssdk.http.urlconnection.UrlConnectionHttpClient;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
@@ -39,7 +40,6 @@ import software.amazon.awssdk.services.secretsmanager.SecretsManagerClientBuilde
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
 import software.amazon.awssdk.services.secretsmanager.model.ResourceNotFoundException;
-import software.amazon.awssdk.services.secretsmanager.model.SecretsManagerException;
 
 /**
  * {@link SecretProvider} implementation backed by AWS Secrets Manager.
@@ -162,7 +162,7 @@ public final class AwsSecretsManagerProvider implements SecretProvider {
             return value;
         } catch (ResourceNotFoundException e) {
             throw new GeneralException("Secret '" + secretName + "' not found in AWS Secrets Manager", e);
-        } catch (SecretsManagerException e) {
+        } catch (SdkException e) {
             throw new GeneralException("AWS Secrets Manager error for '" + secretName + "': " + e.getMessage(), e);
         }
     }
