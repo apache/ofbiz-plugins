@@ -135,6 +135,11 @@ public final class OnePasswordSecretsProvider implements SecretProvider {
         Debug.logInfo("OnePasswordSecretsProvider: secret cache invalidated", MODULE);
     }
 
+    @Override
+    public boolean isFallbackEnabled() {
+        return Boolean.parseBoolean(prop("op.fallback.enabled", "true"));
+    }
+
     // -- private helpers --
 
     private String fetchFromConnect(String title) throws GeneralException {

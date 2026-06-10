@@ -153,6 +153,11 @@ public final class GcpSecretManagerSecretsProvider implements SecretProvider {
         Debug.logInfo("GcpSecretManagerSecretsProvider: secret cache invalidated", MODULE);
     }
 
+    @Override
+    public boolean isFallbackEnabled() {
+        return Boolean.parseBoolean(prop("gcp.fallback.enabled", "true"));
+    }
+
     // -- private helpers --
 
     private static GcpSecretReader readerFrom(SecretManagerServiceClient client) {

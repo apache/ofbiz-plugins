@@ -138,6 +138,11 @@ public final class AzureKeyVaultSecretsProvider implements SecretProvider {
         Debug.logInfo("AzureKeyVaultSecretsProvider: secret cache invalidated", MODULE);
     }
 
+    @Override
+    public boolean isFallbackEnabled() {
+        return Boolean.parseBoolean(prop("azure.fallback.enabled", "true"));
+    }
+
     // -- private helpers --
 
     private static AzureKeyVaultReader readerFrom(SecretClient client) {

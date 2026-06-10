@@ -44,12 +44,12 @@ import org.apache.ofbiz.base.util.UtilProperties;
  * in config, while the secret_id is injected at deploy time via an environment
  * variable or a secrets bootstrap mechanism.</p>
  *
- * <p>Both KV v1 and KV v2 engines are supported via the {@code vault.kv.version}
+ * <p>Both KV v1 and KV v2 engines are supported via the {@code hashicorp.vault.kv.version}
  * property. The driver handles the {@code /data/} path rewrite for KV v2
  * automatically when {@code engineVersion(2)} is configured.</p>
  *
  * <p>Resolved secret values are cached in memory for the TTL configured by
- * {@code vault.cache.ttl.seconds} (default 1 hour).</p>
+ * {@code hashicorp.vault.cache.ttl.seconds} (default 1 hour).</p>
  *
  * <p>Configure via {@code plugins/hashicorp-vault-secrets-provider/config/hashicorp-vault-secrets.properties}.</p>
  */
@@ -84,9 +84,9 @@ public final class HashicorpVaultSecretsProvider implements SecretProvider {
     /** Public no-arg constructor required by {@link java.util.ServiceLoader}. */
     public HashicorpVaultSecretsProvider() {
         this(readerFrom(buildVault()),
-                prop("vault.kv.mount", "secret"),
-                prop("vault.secret.name.prefix", ""),
-                prop("vault.field", "password"),
+                prop("hashicorp.vault.kv.mount", "secret"),
+                prop("hashicorp.vault.secret.name.prefix", ""),
+                prop("hashicorp.vault.field", "password"),
                 readTtlMs());
     }
 
@@ -124,6 +124,11 @@ public final class HashicorpVaultSecretsProvider implements SecretProvider {
         Debug.logInfo("HashicorpVaultSecretsProvider: secret cache invalidated", MODULE);
     }
 
+    @Override
+    public boolean isFallbackEnabled() {
+        return Boolean.parseBoolean(prop("hashicorp.vault.fallback.enabled", "true"));
+    }
+
     // -- private helpers --
 
     private String readFromVault(String path) throws GeneralException {
@@ -152,7 +157,7 @@ public final class HashicorpVaultSecretsProvider implements SecretProvider {
         }
 
         throw new GeneralException("Secret at '" + path + "' has " + data.size()
-                + " fields — set vault.field to select one");
+                + " fields — set hashicorp.vault.field to select one");
     }
 
     private static HashicorpVaultReader readerFrom(Vault vault) {
@@ -163,18 +168,18 @@ public final class HashicorpVaultSecretsProvider implements SecretProvider {
     }
 
     private static Vault buildVault() {
-        String address = prop("vault.address", "http://127.0.0.1:8200");
-        String authMethod = prop("vault.auth.method", "token");
-        int kvVersion = parseKvVersion(prop("vault.kv.version", "2"));
-        boolean sslVerify = Boolean.parseBoolean(prop("vault.ssl.verify", "true"));
+        String address = prop("hashicorp.vault.address", "http://127.0.0.1:8200");
+        String authMethod = prop("hashicorp.vault.auth.method", "token");
+        int kvVersion = parseKvVersion(prop("hashicorp.vault.kv.version", "2"));
+        boolean sslVerify = Boolean.parseBoolean(prop("hashicorp.vault.ssl.verify", "true"));
 
         try {
             SslConfig ssl = new SslConfig().verify(sslVerify).build();
             String token;
 
             if ("approle".equalsIgnoreCase(authMethod)) {
-                String roleId = prop("vault.approle.role_id", "");
-                String secretId = prop("vault.approle.secret_id", "");
+                String roleId = prop("hashicorp.vault.approle.role_id", "");
+                String secretId = prop("hashicorp.vault.approle.secret_id", "");
                 VaultConfig bootConfig = new VaultConfig()
                         .address(address)
                         .engineVersion(kvVersion)
@@ -185,7 +190,7 @@ public final class HashicorpVaultSecretsProvider implements SecretProvider {
                         .loginByAppRole(roleId, secretId)
                         .getAuthClientToken();
             } else {
-                token = prop("vault.token", "");
+                token = prop("hashicorp.vault.token", "");
             }
 
             VaultConfig config = new VaultConfig()
@@ -209,16 +214,16 @@ public final class HashicorpVaultSecretsProvider implements SecretProvider {
             int v = Integer.parseInt(raw.trim());
             if (v == 1 || v == 2) return v;
         } catch (NumberFormatException ignored) { }
-        Debug.logWarning("Invalid vault.kv.version '" + raw + "', defaulting to 2", MODULE);
+        Debug.logWarning("Invalid hashicorp.vault.kv.version '" + raw + "', defaulting to 2", MODULE);
         return 2;
     }
 
     private static long readTtlMs() {
-        String raw = prop("vault.cache.ttl.seconds", "3600");
+        String raw = prop("hashicorp.vault.cache.ttl.seconds", "3600");
         try {
             return Long.parseLong(raw.trim()) * 1000L;
         } catch (NumberFormatException e) {
-            Debug.logWarning("Invalid vault.cache.ttl.seconds '" + raw + "', defaulting to 3600s", MODULE);
+            Debug.logWarning("Invalid hashicorp.vault.cache.ttl.seconds '" + raw + "', defaulting to 3600s", MODULE);
             return 3_600_000L;
         }
     }

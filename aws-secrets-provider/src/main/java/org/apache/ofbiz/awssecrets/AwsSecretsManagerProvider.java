@@ -92,8 +92,8 @@ public final class AwsSecretsManagerProvider implements SecretProvider {
     /** Public no-arg constructor required by {@link java.util.ServiceLoader}. */
     public AwsSecretsManagerProvider() {
         this(buildClient(), readTtlMs(),
-                UtilProperties.getPropertyValue(CONFIG_RESOURCE, "aws.secretsmanager.secret.name.prefix", ""),
-                UtilProperties.getPropertyValue(CONFIG_RESOURCE, "aws.secretsmanager.json.field", ""));
+                prop("aws.secretsmanager.secret.name.prefix", ""),
+                prop("aws.secretsmanager.json.field", ""));
     }
 
     /** Package-private constructor used by unit tests to inject a mock client. */
@@ -139,7 +139,16 @@ public final class AwsSecretsManagerProvider implements SecretProvider {
         Debug.logInfo("AwsSecretsManagerProvider: secret cache invalidated", MODULE);
     }
 
+    @Override
+    public boolean isFallbackEnabled() {
+        return Boolean.parseBoolean(prop("aws.secretsmanager.fallback.enabled", "true"));
+    }
+
     // -- private helpers --
+
+    private static String prop(String key, String defaultValue) {
+        return UtilProperties.getPropertyValue(CONFIG_RESOURCE, key, defaultValue);
+    }
 
     private String fetchFromAws(String secretName) throws GeneralException {
         try {
@@ -177,9 +186,8 @@ public final class AwsSecretsManagerProvider implements SecretProvider {
     }
 
     private static SecretsManagerClient buildClient() {
-        String region = UtilProperties.getPropertyValue(CONFIG_RESOURCE, "aws.secretsmanager.region", "");
-        String endpointOverride = UtilProperties.getPropertyValue(CONFIG_RESOURCE,
-                "aws.secretsmanager.endpoint.override", "");
+        String region = prop("aws.secretsmanager.region", "");
+        String endpointOverride = prop("aws.secretsmanager.endpoint.override", "");
 
         SecretsManagerClientBuilder builder = SecretsManagerClient.builder()
                 .httpClient(UrlConnectionHttpClient.builder().build());
@@ -197,8 +205,7 @@ public final class AwsSecretsManagerProvider implements SecretProvider {
     }
 
     private static long readTtlMs() {
-        String raw = UtilProperties.getPropertyValue(CONFIG_RESOURCE,
-                "aws.secretsmanager.cache.ttl.seconds", "3600");
+        String raw = prop("aws.secretsmanager.cache.ttl.seconds", "3600");
         try {
             return Long.parseLong(raw.trim()) * 1000L;
         } catch (NumberFormatException e) {

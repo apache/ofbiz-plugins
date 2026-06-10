@@ -219,6 +219,11 @@ public final class BitwardenSecretsProvider implements SecretProvider {
         Debug.logInfo("BitwardenSecretsProvider: secret cache invalidated", MODULE);
     }
 
+    @Override
+    public boolean isFallbackEnabled() {
+        return Boolean.parseBoolean(prop("bitwarden.fallback.enabled", "true"));
+    }
+
     // -- private helpers --
 
     private String fetchFromBitwarden(String secretName) throws GeneralException {
