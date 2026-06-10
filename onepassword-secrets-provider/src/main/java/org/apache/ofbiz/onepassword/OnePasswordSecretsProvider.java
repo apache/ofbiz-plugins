@@ -46,13 +46,13 @@ import org.apache.ofbiz.base.util.UtilProperties;
  * field (default {@code "password"}) is returned as the secret.</p>
  *
  * <p>Authentication uses a static Connect Server access token configured in
- * {@code op.connect.token}. Inject this token at deploy time — do not commit it.</p>
+ * {@code onepassword.connect.token}. Inject this token at deploy time — do not commit it.</p>
  *
  * <p>API flow per lookup:</p>
  * <ol>
  *   <li>{@code GET /v1/vaults/{vaultId}/items?filter=title eq "{title}"} — find the item UUID</li>
  *   <li>{@code GET /v1/vaults/{vaultId}/items/{itemId}} — fetch the full item with field values</li>
- *   <li>Scan {@code fields[]} for the entry whose {@code label} matches {@code op.field}</li>
+ *   <li>Scan {@code fields[]} for the entry whose {@code label} matches {@code onepassword.field}</li>
  * </ol>
  *
  * <p>Configure via {@code plugins/onepassword-secrets-provider/config/onepassword.properties}.</p>
@@ -91,11 +91,11 @@ public final class OnePasswordSecretsProvider implements SecretProvider {
     /** Public no-arg constructor required by {@link java.util.ServiceLoader}. */
     public OnePasswordSecretsProvider() {
         this(buildHttpClient(),
-                prop("op.connect.url", "http://localhost:8080").replaceAll("/+$", ""),
-                prop("op.connect.token", ""),
-                prop("op.vault.id", ""),
-                prop("op.field", "password"),
-                prop("op.secret.name.prefix", ""),
+                prop("onepassword.connect.url", "http://localhost:8080").replaceAll("/+$", ""),
+                prop("onepassword.connect.token", ""),
+                prop("onepassword.vault.id", ""),
+                prop("onepassword.field", "password"),
+                prop("onepassword.secret.name.prefix", ""),
                 readTtlMs());
     }
 
@@ -137,7 +137,7 @@ public final class OnePasswordSecretsProvider implements SecretProvider {
 
     @Override
     public boolean isFallbackEnabled() {
-        return Boolean.parseBoolean(prop("op.fallback.enabled", "true"));
+        return Boolean.parseBoolean(prop("onepassword.fallback.enabled", "true"));
     }
 
     // -- private helpers --
@@ -223,14 +223,14 @@ public final class OnePasswordSecretsProvider implements SecretProvider {
     }
 
     private static OnePasswordHttpClient buildHttpClient() {
-        int connectTimeout = parseSeconds(prop("op.connect.timeout.seconds", "5"));
-        int readTimeout = parseSeconds(prop("op.read.timeout.seconds", "10"));
+        int connectTimeout = parseSeconds(prop("onepassword.connect.timeout.seconds", "5"));
+        int readTimeout = parseSeconds(prop("onepassword.read.timeout.seconds", "10"));
 
         HttpClient javaClient = HttpClient.newBuilder()
                 .connectTimeout(Duration.ofSeconds(connectTimeout))
                 .build();
 
-        Debug.logInfo("OnePasswordSecretsProvider: initialized connect-url=" + prop("op.connect.url", ""),
+        Debug.logInfo("OnePasswordSecretsProvider: initialized connect-url=" + prop("onepassword.connect.url", ""),
                 MODULE);
 
         return (url, bearerToken) -> {
@@ -267,11 +267,11 @@ public final class OnePasswordSecretsProvider implements SecretProvider {
     }
 
     private static long readTtlMs() {
-        String raw = prop("op.cache.ttl.seconds", "3600");
+        String raw = prop("onepassword.cache.ttl.seconds", "3600");
         try {
             return Long.parseLong(raw.trim()) * 1000L;
         } catch (NumberFormatException e) {
-            Debug.logWarning("Invalid op.cache.ttl.seconds '" + raw + "', defaulting to 3600s", MODULE);
+            Debug.logWarning("Invalid onepassword.cache.ttl.seconds '" + raw + "', defaulting to 3600s", MODULE);
             return 3_600_000L;
         }
     }

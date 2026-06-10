@@ -32,6 +32,8 @@ import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.GeneralException;
 import org.apache.ofbiz.base.util.UtilProperties;
 
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.exception.SdkException;
 import software.amazon.awssdk.http.urlconnection.UrlConnectionHttpClient;
 import software.amazon.awssdk.regions.Region;
@@ -188,6 +190,8 @@ public final class AwsSecretsManagerProvider implements SecretProvider {
     private static SecretsManagerClient buildClient() {
         String region = prop("aws.secretsmanager.region", "");
         String endpointOverride = prop("aws.secretsmanager.endpoint.override", "");
+        String accessKeyId = prop("aws.secretsmanager.access.key.id", "");
+        String secretAccessKey = prop("aws.secretsmanager.secret.access.key", "");
 
         SecretsManagerClientBuilder builder = SecretsManagerClient.builder()
                 .httpClient(UrlConnectionHttpClient.builder().build());
@@ -197,6 +201,19 @@ public final class AwsSecretsManagerProvider implements SecretProvider {
         }
         if (!endpointOverride.isEmpty()) {
             builder.endpointOverride(URI.create(endpointOverride));
+        }
+        if (!accessKeyId.isEmpty() && !secretAccessKey.isEmpty()) {
+            try {
+                secretAccessKey = ConfigCryptoUtil.decryptIfEncrypted(
+                        secretAccessKey, "aws.secretsmanager.secret.access.key");
+            } catch (GeneralException e) {
+                throw new IllegalStateException(
+                        "Failed to decrypt aws.secretsmanager.secret.access.key: " + e.getMessage(), e);
+            }
+            builder.credentialsProvider(StaticCredentialsProvider.create(
+                    AwsBasicCredentials.create(accessKeyId, secretAccessKey)));
+            Debug.logInfo("AwsSecretsManagerProvider: using static credentials from "
+                    + "aws-secrets-manager.properties", MODULE);
         }
 
         Debug.logInfo("AwsSecretsManagerProvider: initialized"
