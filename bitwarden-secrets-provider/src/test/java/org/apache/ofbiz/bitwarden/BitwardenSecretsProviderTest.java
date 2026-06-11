@@ -152,7 +152,7 @@ public class BitwardenSecretsProviderTest {
         BitwardenHttpClient client = mock(BitwardenHttpClient.class);
         when(client.post(anyString(), anyString())).thenReturn(BEARER_TOKEN_RESPONSE);
         when(client.get(contains("/organizations/"), anyString()))
-                .thenReturn("{\"data\":[]}"); // empty list
+                .thenReturn("{\"secrets\":[]}"); // empty list
 
         provider(client).getSecret("missing");
     }
@@ -190,7 +190,7 @@ public class BitwardenSecretsProviderTest {
         BitwardenHttpClient client = mock(BitwardenHttpClient.class);
         when(client.post(anyString(), anyString())).thenReturn(BEARER_TOKEN_RESPONSE);
         when(client.get(contains("/organizations/"), eq("test-bearer")))
-                .thenReturn("{\"data\":[{\"id\":\"" + secretId + "\",\"key\":\""
+                .thenReturn("{\"secrets\":[{\"id\":\"" + secretId + "\",\"key\":\""
                         + encryptedKey + "\"}]}");
         when(client.get(contains("/secrets/" + secretId), eq("test-bearer")))
                 .thenReturn("{\"id\":\"" + secretId + "\",\"key\":\"" + encryptedKey
