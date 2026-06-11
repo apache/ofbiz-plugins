@@ -37,7 +37,7 @@ public class HashicorpVaultSecretsProviderTest {
     // -- Happy path --
 
     @Test
-    public void getSecret_returnsSingleFieldSecret() throws GeneralException {
+    public void getSecretReturnsSingleFieldSecret() throws GeneralException {
         HashicorpVaultReader reader = fixedReader("secret/mykey", singleEntry("value", "s3cr3t"));
         HashicorpVaultSecretsProvider provider = provider(reader, "", "");
 
@@ -45,7 +45,7 @@ public class HashicorpVaultSecretsProviderTest {
     }
 
     @Test
-    public void getSecret_extractsNamedField() throws GeneralException {
+    public void getSecretExtractsNamedField() throws GeneralException {
         HashicorpVaultReader reader = fixedReader("secret/mykey", twoEntry("username", "user", "password", "s3cr3t"));
         HashicorpVaultSecretsProvider provider = provider(reader, "", "password");
 
@@ -53,7 +53,7 @@ public class HashicorpVaultSecretsProviderTest {
     }
 
     @Test
-    public void getSecret_appliesKvMountAndPrefix() throws GeneralException {
+    public void getSecretAppliesKvMountAndPrefix() throws GeneralException {
         HashicorpVaultReader reader = fixedReader("kv/prod/jdbc-password.ofbiz", singleEntry("value", "dbpass"));
         HashicorpVaultSecretsProvider provider = new HashicorpVaultSecretsProvider(reader, "kv", "prod/", "", ONE_HOUR_MS);
 
@@ -61,7 +61,7 @@ public class HashicorpVaultSecretsProviderTest {
     }
 
     @Test
-    public void getSecret_cachePreventsDuplicateReaderCall() throws GeneralException {
+    public void getSecretCachePreventsDuplicateReaderCall() throws GeneralException {
         AtomicInteger calls = new AtomicInteger();
         HashicorpVaultReader reader = path -> {
             calls.incrementAndGet();
@@ -76,7 +76,7 @@ public class HashicorpVaultSecretsProviderTest {
     }
 
     @Test
-    public void invalidateCache_forcesRefetchOnNextCall() throws GeneralException {
+    public void invalidateCacheForcesRefetchOnNextCall() throws GeneralException {
         AtomicInteger calls = new AtomicInteger();
         HashicorpVaultReader reader = path -> {
             calls.incrementAndGet();
@@ -92,7 +92,7 @@ public class HashicorpVaultSecretsProviderTest {
     }
 
     @Test
-    public void getSecret_expiredCacheEntryTriggersRefetch() throws GeneralException {
+    public void getSecretExpiredCacheEntryTriggersRefetch() throws GeneralException {
         AtomicInteger calls = new AtomicInteger();
         HashicorpVaultReader reader = path -> {
             calls.incrementAndGet();
@@ -110,25 +110,25 @@ public class HashicorpVaultSecretsProviderTest {
     // -- Error handling --
 
     @Test(expected = GeneralException.class)
-    public void getSecret_throwsWhenDataIsEmpty() throws GeneralException {
+    public void getSecretThrowsWhenDataIsEmpty() throws GeneralException {
         HashicorpVaultReader reader = path -> Collections.emptyMap();
         provider(reader, "", "").getSecret("missing");
     }
 
     @Test(expected = GeneralException.class)
-    public void getSecret_throwsWhenFieldMissing() throws GeneralException {
+    public void getSecretThrowsWhenFieldMissing() throws GeneralException {
         HashicorpVaultReader reader = fixedReader("secret/mykey", singleEntry("username", "dbuser"));
         provider(reader, "", "password").getSecret("mykey"); // "password" field not present
     }
 
     @Test(expected = GeneralException.class)
-    public void getSecret_throwsWhenMultiFieldAndNoFieldConfigured() throws GeneralException {
+    public void getSecretThrowsWhenMultiFieldAndNoFieldConfigured() throws GeneralException {
         HashicorpVaultReader reader = fixedReader("secret/mykey", twoEntry("username", "u", "password", "p"));
         provider(reader, "", "").getSecret("mykey"); // ambiguous — 2 fields, no field config
     }
 
     @Test(expected = GeneralException.class)
-    public void getSecret_throwsOnVaultException() throws GeneralException {
+    public void getSecretThrowsOnVaultException() throws GeneralException {
         HashicorpVaultReader reader = path -> { throw new VaultException("connection refused", 503); };
         provider(reader, "", "").getSecret("mykey");
     }

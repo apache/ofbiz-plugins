@@ -72,7 +72,7 @@ public class BitwardenSecretsProviderTest {
     // -- Decryption unit tests (no HTTP, pure crypto) --
 
     @Test
-    public void decrypt_roundTrip() throws Exception {
+    public void decryptRoundTrip() throws Exception {
         String plaintext = "my-secret-password";
         String cipherString = encrypt(plaintext);
 
@@ -81,13 +81,13 @@ public class BitwardenSecretsProviderTest {
     }
 
     @Test(expected = GeneralException.class)
-    public void decrypt_throwsOnWrongCipherType() throws Exception {
+    public void decryptThrowsOnWrongCipherType() throws Exception {
         BitwardenSecretsProvider provider = provider(mock(BitwardenHttpClient.class));
         provider.decrypt("1.abc|def|ghi"); // type 1, not 2
     }
 
     @Test(expected = GeneralException.class)
-    public void decrypt_throwsOnTamperedCiphertext() throws Exception {
+    public void decryptThrowsOnTamperedCiphertext() throws Exception {
         String cipherString = encrypt("secret");
         // Flip a byte in the ciphertext part
         String[] parts = cipherString.substring(2).split("\\|");
@@ -102,7 +102,7 @@ public class BitwardenSecretsProviderTest {
     // -- Full flow tests (with mock HTTP) --
 
     @Test
-    public void getSecret_fetchesAndDecryptsSecret() throws Exception {
+    public void getSecretFetchesAndDecryptsSecret() throws Exception {
         String secretValue = "db-password-123";
         BitwardenHttpClient client = mockHttpForSecret("jdbc-password.mydb", secretValue);
         BitwardenSecretsProvider provider = provider(client);
@@ -111,7 +111,7 @@ public class BitwardenSecretsProviderTest {
     }
 
     @Test
-    public void getSecret_appliesSecretNamePrefix() throws Exception {
+    public void getSecretAppliesSecretNamePrefix() throws Exception {
         String secretValue = "dbpass";
         BitwardenHttpClient client = mockHttpForSecret("prod/jdbc-password.mydb", secretValue);
         BitwardenSecretsProvider provider = providerWithPrefix(client, "prod/");
@@ -120,7 +120,7 @@ public class BitwardenSecretsProviderTest {
     }
 
     @Test
-    public void getSecret_cachePreventsSecondApiCall() throws Exception {
+    public void getSecretCachePreventsSecondApiCall() throws Exception {
         BitwardenHttpClient client = mockHttpForSecret("mykey", "val");
         BitwardenSecretsProvider provider = provider(client);
 
@@ -134,7 +134,7 @@ public class BitwardenSecretsProviderTest {
     }
 
     @Test
-    public void invalidateCache_forcesRefetch() throws Exception {
+    public void invalidateCacheForcesRefetch() throws Exception {
         BitwardenHttpClient client = mockHttpForSecret("mykey", "val");
         BitwardenSecretsProvider provider = provider(client);
 
@@ -148,7 +148,7 @@ public class BitwardenSecretsProviderTest {
     }
 
     @Test(expected = GeneralException.class)
-    public void getSecret_throwsWhenSecretNotFound() throws Exception {
+    public void getSecretThrowsWhenSecretNotFound() throws Exception {
         BitwardenHttpClient client = mock(BitwardenHttpClient.class);
         when(client.post(anyString(), anyString())).thenReturn(BEARER_TOKEN_RESPONSE);
         when(client.get(contains("/organizations/"), anyString()))
@@ -158,7 +158,7 @@ public class BitwardenSecretsProviderTest {
     }
 
     @Test(expected = GeneralException.class)
-    public void getSecret_throwsOnHttpError() throws Exception {
+    public void getSecretThrowsOnHttpError() throws Exception {
         BitwardenHttpClient client = mock(BitwardenHttpClient.class);
         when(client.post(anyString(), anyString())).thenThrow(new IOException("connection refused"));
 

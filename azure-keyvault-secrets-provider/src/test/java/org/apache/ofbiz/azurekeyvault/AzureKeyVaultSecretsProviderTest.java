@@ -32,26 +32,26 @@ public class AzureKeyVaultSecretsProviderTest {
     // -- Happy path --
 
     @Test
-    public void getSecret_returnsSecretValue() throws GeneralException {
+    public void getSecretReturnsSecretValue() throws GeneralException {
         AzureKeyVaultReader reader = fixedReader("mykey", "s3cr3t");
         assertEquals("s3cr3t", provider(reader, "", "-").getSecret("mykey"));
     }
 
     @Test
-    public void getSecret_sanitizesDotInKey() throws GeneralException {
+    public void getSecretSanitizesDotInKey() throws GeneralException {
         // OFBiz key "jdbc-password.mysql-ofbiz" → Azure name "jdbc-password-mysql-ofbiz"
         AzureKeyVaultReader reader = fixedReader("jdbc-password-mysql-ofbiz", "dbpass");
         assertEquals("dbpass", provider(reader, "", "-").getSecret("jdbc-password.mysql-ofbiz"));
     }
 
     @Test
-    public void getSecret_appliesPrefixAfterSanitizing() throws GeneralException {
+    public void getSecretAppliesPrefixAfterSanitizing() throws GeneralException {
         AzureKeyVaultReader reader = fixedReader("prod-jdbc-password-mydb", "prodpass");
         assertEquals("prodpass", provider(reader, "prod-", "-").getSecret("jdbc-password.mydb"));
     }
 
     @Test
-    public void getSecret_cachePreventsDuplicateReaderCall() throws GeneralException {
+    public void getSecretCachePreventsDuplicateReaderCall() throws GeneralException {
         AtomicInteger calls = new AtomicInteger();
         AzureKeyVaultReader reader = secretName -> {
             calls.incrementAndGet();
@@ -66,7 +66,7 @@ public class AzureKeyVaultSecretsProviderTest {
     }
 
     @Test
-    public void invalidateCache_forcesRefetchOnNextCall() throws GeneralException {
+    public void invalidateCacheForcesRefetchOnNextCall() throws GeneralException {
         AtomicInteger calls = new AtomicInteger();
         AzureKeyVaultReader reader = secretName -> {
             calls.incrementAndGet();
@@ -82,7 +82,7 @@ public class AzureKeyVaultSecretsProviderTest {
     }
 
     @Test
-    public void getSecret_expiredCacheTriggersRefetch() throws GeneralException {
+    public void getSecretExpiredCacheTriggersRefetch() throws GeneralException {
         AtomicInteger calls = new AtomicInteger();
         AzureKeyVaultReader reader = secretName -> {
             calls.incrementAndGet();
@@ -99,7 +99,7 @@ public class AzureKeyVaultSecretsProviderTest {
     }
 
     @Test
-    public void getSecret_dotReplacementDisabled_keepsDotsInName() throws GeneralException {
+    public void getSecretDotReplacementDisabledKeepsDotsInName() throws GeneralException {
         AzureKeyVaultReader reader = fixedReader("my.key", "val");
         assertEquals("val", provider(reader, "", "").getSecret("my.key"));
     }
@@ -107,13 +107,13 @@ public class AzureKeyVaultSecretsProviderTest {
     // -- Error handling --
 
     @Test(expected = GeneralException.class)
-    public void getSecret_throwsOnReaderException() throws GeneralException {
+    public void getSecretThrowsOnReaderException() throws GeneralException {
         AzureKeyVaultReader reader = secretName -> { throw new RuntimeException("SecretNotFound"); };
         provider(reader, "", "-").getSecret("missing");
     }
 
     @Test(expected = GeneralException.class)
-    public void getSecret_throwsOnEmptyValue() throws GeneralException {
+    public void getSecretThrowsOnEmptyValue() throws GeneralException {
         AzureKeyVaultReader reader = secretName -> "";
         provider(reader, "", "-").getSecret("mykey");
     }

@@ -42,19 +42,19 @@ public class OnePasswordSecretsProviderTest {
     // -- Happy path --
 
     @Test
-    public void getSecret_returnsFieldValue() throws Exception {
+    public void getSecretReturnsFieldValue() throws Exception {
         OnePasswordHttpClient client = buildMockClient("jdbc-password.mydb", ITEM_ID, "s3cr3t");
         assertEquals("s3cr3t", provider(client, "password", "").getSecret("jdbc-password.mydb"));
     }
 
     @Test
-    public void getSecret_appliesSecretNamePrefix() throws Exception {
+    public void getSecretAppliesSecretNamePrefix() throws Exception {
         OnePasswordHttpClient client = buildMockClient("prod/jdbc-password.mydb", ITEM_ID, "dbpass");
         assertEquals("dbpass", provider(client, "password", "prod/").getSecret("jdbc-password.mydb"));
     }
 
     @Test
-    public void getSecret_cachePreventsSecondHttpCall() throws Exception {
+    public void getSecretCachePreventsSecondHttpCall() throws Exception {
         OnePasswordHttpClient client = buildMockClient("mykey", ITEM_ID, "val");
         OnePasswordSecretsProvider p = provider(client, "password", "");
 
@@ -66,7 +66,7 @@ public class OnePasswordSecretsProviderTest {
     }
 
     @Test
-    public void invalidateCache_forcesRefetch() throws Exception {
+    public void invalidateCacheForcesRefetch() throws Exception {
         OnePasswordHttpClient client = buildMockClient("mykey", ITEM_ID, "val");
         OnePasswordSecretsProvider p = provider(client, "password", "");
 
@@ -79,7 +79,7 @@ public class OnePasswordSecretsProviderTest {
     }
 
     @Test
-    public void getSecret_expiredCacheEntryTriggersRefetch() throws Exception {
+    public void getSecretExpiredCacheEntryTriggersRefetch() throws Exception {
         OnePasswordHttpClient client = buildMockClient("mykey", ITEM_ID, "val");
         OnePasswordSecretsProvider p = provider(client, "password", "", -1L); // instant expiry
 
@@ -92,7 +92,7 @@ public class OnePasswordSecretsProviderTest {
     // -- Error handling --
 
     @Test(expected = GeneralException.class)
-    public void getSecret_throwsWhenItemNotFound() throws Exception {
+    public void getSecretThrowsWhenItemNotFound() throws Exception {
         OnePasswordHttpClient client = mock(OnePasswordHttpClient.class);
         when(client.get(anyString(), anyString())).thenReturn("[]");
 
@@ -100,14 +100,14 @@ public class OnePasswordSecretsProviderTest {
     }
 
     @Test(expected = GeneralException.class)
-    public void getSecret_throwsWhenFieldNotPresent() throws Exception {
+    public void getSecretThrowsWhenFieldNotPresent() throws Exception {
         // Item exists but has no "password" field — only "username"
         OnePasswordHttpClient client = buildMockClient("mykey", ITEM_ID, "username", "dbuser", "password");
         provider(client, "password", "").getSecret("mykey");
     }
 
     @Test(expected = GeneralException.class)
-    public void getSecret_throwsOnHttpError() throws Exception {
+    public void getSecretThrowsOnHttpError() throws Exception {
         OnePasswordHttpClient client = mock(OnePasswordHttpClient.class);
         when(client.get(anyString(), anyString())).thenThrow(new IOException("connection refused"));
 
