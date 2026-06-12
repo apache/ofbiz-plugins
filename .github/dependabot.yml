@@ -23,11 +23,17 @@ updates:
   - package-ecosystem: "gradle"
     directories:
       - "/ai-agent-skills"
+      - "/aws-secrets-provider"
+      - "/azure-keyvault-secrets-provider"
       - "/birt"
+      - "/bitwarden-secrets-provider"
       - "/example"
       - "/firstdatapaymentgateway"
+      - "/gcp-secretmanager-secrets-provider"
+      - "/hashicorp-vault-secrets-provider"
       - "/ldap"
       - "/lucene"
+      - "/onepassword-secrets-provider"
       - "/pricat"
       - "/rest-api"
     schedule:
