@@ -29,7 +29,6 @@ updates:
       - "/ldap"
       - "/lucene"
       - "/pricat"
-      - "/rest-api"
     schedule:
       interval: "daily"
     #groups:
@@ -50,7 +49,6 @@ updates:
       - "/ldap"
       - "/lucene"
       - "/pricat"
-      - "/rest-api"
     target-branch: "release24.09"
     schedule:
       interval: "daily"
