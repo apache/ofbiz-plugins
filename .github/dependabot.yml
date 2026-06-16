@@ -49,6 +49,7 @@ updates:
       - "/ldap"
       - "/lucene"
       - "/pricat"
+      - "/rest-api"
     target-branch: "release24.09"
     schedule:
       interval: "daily"
