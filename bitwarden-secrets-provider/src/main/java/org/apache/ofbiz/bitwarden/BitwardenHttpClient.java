@@ -46,4 +46,12 @@ interface BitwardenHttpClient {
      * @throws IOException if the request fails or the server returns a non-2xx status
      */
     String post(String url, String formBody) throws IOException;
+
+    /**
+     * Releases any resources held by the underlying HTTP client (e.g. connection pools).
+     * Implementations backed by {@link java.net.http.HttpClient} should close it here;
+     * {@link java.net.http.HttpClient} became {@link AutoCloseable} in Java 21.
+     * The default no-op is safe for mock implementations used in tests.
+     */
+    default void close() { }
 }

@@ -130,6 +130,7 @@ public final class OnePasswordSecretsProvider implements SecretProvider {
      * Clears the in-memory cache, forcing the next {@link #getSecret(String)} call
      * to re-fetch from the Connect Server. Useful after a secret update in 1Password.
      */
+    @Override
     public void invalidateCache() {
         cache.clear();
         Debug.logInfo("OnePasswordSecretsProvider: secret cache invalidated", MODULE);
@@ -138,6 +139,11 @@ public final class OnePasswordSecretsProvider implements SecretProvider {
     @Override
     public boolean isFallbackEnabled() {
         return Boolean.parseBoolean(prop("onepassword.fallback.enabled", "true"));
+    }
+
+    @Override
+    public void close() {
+        httpClient.close();
     }
 
     // -- private helpers --
@@ -233,28 +239,40 @@ public final class OnePasswordSecretsProvider implements SecretProvider {
         Debug.logInfo("OnePasswordSecretsProvider: initialized connect-url=" + prop("onepassword.connect.url", ""),
                 MODULE);
 
-        return (url, bearerToken) -> {
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .header("Authorization", "Bearer " + bearerToken)
-                    .header("Accept", "application/json")
-                    .timeout(Duration.ofSeconds(readTimeout))
-                    .GET()
-                    .build();
+        return new OnePasswordHttpClient() {
+            @Override
+            public String get(String url, String bearerToken) throws IOException {
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(url))
+                        .header("Authorization", "Bearer " + bearerToken)
+                        .header("Accept", "application/json")
+                        .timeout(Duration.ofSeconds(readTimeout))
+                        .GET()
+                        .build();
 
-            HttpResponse<String> response;
-            try {
-                response = javaClient.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new IOException("HTTP request interrupted", e);
+                HttpResponse<String> response;
+                try {
+                    response = javaClient.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new IOException("HTTP request interrupted", e);
+                }
+
+                int status = response.statusCode();
+                if (status < 200 || status >= 300) {
+                    throw new IOException("1Password Connect returned HTTP " + status + " for " + url);
+                }
+                return response.body();
             }
 
-            int status = response.statusCode();
-            if (status < 200 || status >= 300) {
-                throw new IOException("1Password Connect returned HTTP " + status + " for " + url);
+            @Override
+            public void close() {
+                if (javaClient instanceof AutoCloseable) {
+                    try {
+                        ((AutoCloseable) javaClient).close();
+                    } catch (Exception ignored) { }
+                }
             }
-            return response.body();
         };
     }
 

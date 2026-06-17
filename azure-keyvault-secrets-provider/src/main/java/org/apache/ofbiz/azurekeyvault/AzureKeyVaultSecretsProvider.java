@@ -133,6 +133,7 @@ public final class AzureKeyVaultSecretsProvider implements SecretProvider {
      * Clears the in-memory cache, forcing the next {@link #getSecret(String)} call
      * to re-fetch from Azure Key Vault. Useful after a secret rotation.
      */
+    @Override
     public void invalidateCache() {
         cache.clear();
         Debug.logInfo("AzureKeyVaultSecretsProvider: secret cache invalidated", MODULE);
@@ -141,6 +142,11 @@ public final class AzureKeyVaultSecretsProvider implements SecretProvider {
     @Override
     public boolean isFallbackEnabled() {
         return Boolean.parseBoolean(prop("azure.fallback.enabled", "true"));
+    }
+
+    @Override
+    public void close() {
+        // Azure SecretClient does not implement Closeable; connection resources are managed by the Azure SDK.
     }
 
     // -- private helpers --

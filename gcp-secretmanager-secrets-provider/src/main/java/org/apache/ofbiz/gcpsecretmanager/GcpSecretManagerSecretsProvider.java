@@ -67,6 +67,7 @@ public final class GcpSecretManagerSecretsProvider implements SecretProvider {
     private static final String CONFIG_RESOURCE = "gcp-secret-manager";
 
     private final GcpSecretReader secretReader;
+    private final SecretManagerServiceClient gcpClient; // null when injected via test constructor
     private final String projectId;
     private final String secretNamePrefix;
     private final String version;
@@ -95,18 +96,21 @@ public final class GcpSecretManagerSecretsProvider implements SecretProvider {
 
     /** Public no-arg constructor required by {@link java.util.ServiceLoader}. */
     public GcpSecretManagerSecretsProvider() throws GeneralException {
-        this(readerFrom(buildClient()),
-                prop("gcp.project.id", ""),
-                prop("gcp.secret.name.prefix", ""),
-                prop("gcp.secret.version", "latest"),
-                prop("gcp.secret.name.dot.replacement", "-"),
-                readTtlMs());
+        SecretManagerServiceClient client = buildClient();
+        this.secretReader = readerFrom(client);
+        this.gcpClient = client;
+        this.projectId = prop("gcp.project.id", "");
+        this.secretNamePrefix = prop("gcp.secret.name.prefix", "");
+        this.version = prop("gcp.secret.version", "latest");
+        this.dotReplacement = prop("gcp.secret.name.dot.replacement", "-");
+        this.cacheTtlMs = readTtlMs();
     }
 
     /** Package-private constructor used by unit tests to inject a {@link GcpSecretReader} lambda. */
     GcpSecretManagerSecretsProvider(GcpSecretReader secretReader, String projectId,
             String secretNamePrefix, String version, String dotReplacement, long cacheTtlMs) {
         this.secretReader = secretReader;
+        this.gcpClient = null;
         this.projectId = projectId;
         this.secretNamePrefix = secretNamePrefix;
         this.version = version;
@@ -148,9 +152,19 @@ public final class GcpSecretManagerSecretsProvider implements SecretProvider {
      * Clears the in-memory cache, forcing the next {@link #getSecret(String)} call
      * to re-fetch from GCP. Useful after a secret rotation.
      */
+    @Override
     public void invalidateCache() {
         cache.clear();
         Debug.logInfo("GcpSecretManagerSecretsProvider: secret cache invalidated", MODULE);
+    }
+
+    /** Closes the underlying {@link SecretManagerServiceClient} and releases its gRPC channel. */
+    @Override
+    public void close() {
+        if (gcpClient != null) {
+            gcpClient.close();
+            Debug.logInfo("GcpSecretManagerSecretsProvider: SecretManagerServiceClient closed", MODULE);
+        }
     }
 
     @Override

@@ -36,4 +36,7 @@ interface OnePasswordHttpClient {
      * @throws IOException if the request fails or the server returns a non-2xx status
      */
     String get(String url, String bearerToken) throws IOException;
+
+    /** Releases any underlying HTTP connection pool resources. No-op by default. */
+    default void close() { }
 }

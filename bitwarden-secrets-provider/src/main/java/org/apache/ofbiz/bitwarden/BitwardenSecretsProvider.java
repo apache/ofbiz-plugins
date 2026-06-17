@@ -214,6 +214,7 @@ public final class BitwardenSecretsProvider implements SecretProvider {
      * Clears the in-memory cache, forcing the next {@link #getSecret(String)} call
      * to re-fetch and re-decrypt from Bitwarden SM.
      */
+    @Override
     public void invalidateCache() {
         cache.clear();
         Debug.logInfo("BitwardenSecretsProvider: secret cache invalidated", MODULE);
@@ -222,6 +223,11 @@ public final class BitwardenSecretsProvider implements SecretProvider {
     @Override
     public boolean isFallbackEnabled() {
         return Boolean.parseBoolean(prop("bitwarden.fallback.enabled", "true"));
+    }
+
+    @Override
+    public void close() {
+        httpClient.close();
     }
 
     // -- private helpers --
@@ -506,6 +512,18 @@ public final class BitwardenSecretsProvider implements SecretProvider {
                 .build();
 
         return new BitwardenHttpClient() {
+            @Override
+            public void close() {
+                // HttpClient became AutoCloseable in Java 21; safe to ignore on earlier versions.
+                if (javaClient instanceof AutoCloseable) {
+                    try {
+                        ((AutoCloseable) javaClient).close();
+                    } catch (Exception e) {
+                        // Nothing meaningful to do during shutdown.
+                    }
+                }
+            }
+
             @Override
             public String get(String url, String bearerToken) throws IOException {
                 HttpRequest request = HttpRequest.newBuilder()

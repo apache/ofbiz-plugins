@@ -119,6 +119,7 @@ public final class HashicorpVaultSecretsProvider implements SecretProvider {
      * Clears the in-memory cache, forcing the next {@link #getSecret(String)} call
      * for each key to re-fetch from Vault. Useful after a secret rotation.
      */
+    @Override
     public void invalidateCache() {
         cache.clear();
         Debug.logInfo("HashicorpVaultSecretsProvider: secret cache invalidated", MODULE);
@@ -127,6 +128,12 @@ public final class HashicorpVaultSecretsProvider implements SecretProvider {
     @Override
     public boolean isFallbackEnabled() {
         return Boolean.parseBoolean(prop("hashicorp.vault.fallback.enabled", "true"));
+    }
+
+    @Override
+    public void close() {
+        // The Vault Java driver does not expose a close() method on the Vault client;
+        // connection resources are managed internally by the library.
     }
 
     // -- private helpers --

@@ -136,9 +136,17 @@ public final class AwsSecretsManagerProvider implements SecretProvider {
      * for each key to re-fetch from AWS Secrets Manager. Useful after a manual
      * secret rotation to pick up the new value without restarting OFBiz.
      */
+    @Override
     public void invalidateCache() {
         cache.clear();
         Debug.logInfo("AwsSecretsManagerProvider: secret cache invalidated", MODULE);
+    }
+
+    /** Closes the underlying {@link SecretsManagerClient} and releases its connection pool. */
+    @Override
+    public void close() {
+        client.close();
+        Debug.logInfo("AwsSecretsManagerProvider: SecretsManagerClient closed", MODULE);
     }
 
     @Override
