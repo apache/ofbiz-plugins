@@ -1,0 +1,47 @@
+# This is a Gradle generated file for dependency locking.
+# Manual edits can break the build and are not advised.
+# This file is expected to be part of source control.
+commons-codec:commons-codec:1.17.1=pluginLibsCompile
+io.netty:netty-buffer:4.1.112.Final=pluginLibsCompile
+io.netty:netty-codec-http2:4.1.112.Final=pluginLibsCompile
+io.netty:netty-codec-http:4.1.112.Final=pluginLibsCompile
+io.netty:netty-codec:4.1.112.Final=pluginLibsCompile
+io.netty:netty-common:4.1.112.Final=pluginLibsCompile
+io.netty:netty-handler:4.1.112.Final=pluginLibsCompile
+io.netty:netty-resolver:4.1.112.Final=pluginLibsCompile
+io.netty:netty-transport-classes-epoll:4.1.112.Final=pluginLibsCompile
+io.netty:netty-transport-native-unix-common:4.1.112.Final=pluginLibsCompile
+io.netty:netty-transport:4.1.112.Final=pluginLibsCompile
+org.apache.httpcomponents:httpclient:4.5.13=pluginLibsCompile
+org.apache.httpcomponents:httpcore:4.4.16=pluginLibsCompile
+org.reactivestreams:reactive-streams:1.0.4=pluginLibsCompile
+org.slf4j:slf4j-api:1.7.36=pluginLibsCompile
+software.amazon.awssdk:annotations:2.26.31=pluginLibsCompile
+software.amazon.awssdk:apache-client:2.26.31=pluginLibsCompile
+software.amazon.awssdk:auth:2.26.31=pluginLibsCompile
+software.amazon.awssdk:aws-core:2.26.31=pluginLibsCompile
+software.amazon.awssdk:aws-json-protocol:2.26.31=pluginLibsCompile
+software.amazon.awssdk:checksums-spi:2.26.31=pluginLibsCompile
+software.amazon.awssdk:checksums:2.26.31=pluginLibsCompile
+software.amazon.awssdk:endpoints-spi:2.26.31=pluginLibsCompile
+software.amazon.awssdk:http-auth-aws-eventstream:2.26.31=pluginLibsCompile
+software.amazon.awssdk:http-auth-aws:2.26.31=pluginLibsCompile
+software.amazon.awssdk:http-auth-spi:2.26.31=pluginLibsCompile
+software.amazon.awssdk:http-auth:2.26.31=pluginLibsCompile
+software.amazon.awssdk:http-client-spi:2.26.31=pluginLibsCompile
+software.amazon.awssdk:identity-spi:2.26.31=pluginLibsCompile
+software.amazon.awssdk:json-utils:2.26.31=pluginLibsCompile
+software.amazon.awssdk:metrics-spi:2.26.31=pluginLibsCompile
+software.amazon.awssdk:netty-nio-client:2.26.31=pluginLibsCompile
+software.amazon.awssdk:profiles:2.26.31=pluginLibsCompile
+software.amazon.awssdk:protocol-core:2.26.31=pluginLibsCompile
+software.amazon.awssdk:regions:2.26.31=pluginLibsCompile
+software.amazon.awssdk:retries-spi:2.26.31=pluginLibsCompile
+software.amazon.awssdk:retries:2.26.31=pluginLibsCompile
+software.amazon.awssdk:sdk-core:2.26.31=pluginLibsCompile
+software.amazon.awssdk:secretsmanager:2.26.31=pluginLibsCompile
+software.amazon.awssdk:third-party-jackson-core:2.26.31=pluginLibsCompile
+software.amazon.awssdk:url-connection-client:2.26.31=pluginLibsCompile
+software.amazon.awssdk:utils:2.26.31=pluginLibsCompile
+software.amazon.eventstream:eventstream:1.0.1=pluginLibsCompile
+empty=pluginLibsCompileOnly,pluginLibsRuntime

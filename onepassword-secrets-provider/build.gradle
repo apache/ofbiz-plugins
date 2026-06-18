@@ -21,3 +21,7 @@
 // Uses Java's built-in java.net.http.HttpClient (Java 11+) and OFBiz's
 // bundled jackson-databind for JSON parsing.
 dependencies {}
+
+dependencyLocking {
+    lockAllConfigurations()
+}

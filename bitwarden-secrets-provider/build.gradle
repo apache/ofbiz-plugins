@@ -25,3 +25,7 @@
 // embedded in the machine account access token is used to decrypt secret names
 // and values client-side.
 dependencies {}
+
+dependencyLocking {
+    lockAllConfigurations()
+}
