@@ -26,9 +26,9 @@ description: Define and integrate REST and SOAP APIs in OFBiz.
 
 Integration patterns for exposing OFBiz services via REST and SOAP, and handling JSON responses.
 
-## REST API (rest-api plugin)
+## REST API (rest-api)
 
-OFBiz uses the `rest-api` plugin (based on Jersey) to declaratively expose services.
+OFBiz uses the `rest-api` (based on Jersey) to declaratively expose services.
 
 ### REST API Definitions
 

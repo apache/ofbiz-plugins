@@ -29,7 +29,6 @@ updates:
       - "/ldap"
       - "/lucene"
       - "/pricat"
-      - "/rest-api"
     schedule:
       interval: "daily"
     #groups:
