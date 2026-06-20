@@ -16,7 +16,7 @@ This phase implements the high-performance picking interface with scanning suppo
 - Automatic focus management to ensure scanning works without manual tap.
 
 ### [Integration] Pick Recording
-Implement the link to the `POST /api/picking/picklist/bin/item/pick` API to update the backend as items are scanned or manually confirmed.
+Implement the link to the `POST /rest/services/recordPick` API to update the backend as items are scanned or manually confirmed.
 - Handle optimistic UI updates for a "fast feel".
 
 ## Verification Plan

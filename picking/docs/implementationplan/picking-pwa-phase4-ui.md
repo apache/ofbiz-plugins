@@ -8,12 +8,12 @@ This phase implements the screens for browsing orders and managing the active pi
 Implementation of core components in `picking-app/src/screens/`.
 
 #### [NEW] [OrderQueue.jsx](file:///Users/arun/personal/arun/ofbiz_dev/picking-app/src/screens/OrderQueue.jsx)
-- Display a list of orders ready for picking (using `GET /api/picking/orders`).
+- Display a list of orders ready for picking (using `GET /rest/services/getOrdersToPick`).
 - Multi-select functionality to group orders.
-- "Create Picklist" button triggering `POST /api/picking/picklist/create`.
+- "Create Picklist" button triggering `POST /rest/services/createPicklist`.
 
 #### [NEW] [ActivePicklist.jsx](file:///Users/arun/personal/arun/ofbiz_dev/picking-app/src/screens/ActivePicklist.jsx)
-- Displays the items of a specific picklist (using `GET /api/picking/picklist/{picklistId}`).
+- Displays the items of a specific picklist (using `GET /rest/services/getPicklistDetails`).
 - Grouping by Warehouse Aisle/Location for optimal picking.
 - Visual status indicators (To Pick, In Progress, Completed).
 - "Complete Run" button (appears when all items picked) navigating to Phase 6 flow.

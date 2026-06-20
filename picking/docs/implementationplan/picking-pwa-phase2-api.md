@@ -5,32 +5,30 @@ This phase focuses on making the backend services accessible to the frontend PWA
 ## Proposed Changes
 
 ### [Backend] API Exposure
-We will map the services defined in Phase 1 to REST endpoints.
+Instead of creating custom REST route mappings, the services defined in Phase 1 will be automatically exposed via OFBiz's generic dynamic REST API by setting `export="true"` on their service definitions in [services.xml](file:///Users/arun/personal/arun/ofbiz_dev/ofbiz-framework/plugins/picking/servicedef/services.xml).
 
-#### [MODIFY] [rest-api config](file:///Users/arun/personal/arun/ofbiz_dev/ofbiz-framework/plugins/rest-api/...) 
-(Exact file depends on the `rest-api` plugin implementation, usually a mapping XML or Java configuration).
-- Map `picking.getOrdersToPick` -> `GET /api/picking/orders`
-- Map `picking.createPicklist` -> `POST /api/picking/picklist/create`
-- Map `picking.getPicklistForPicking` -> `GET /api/picking/picklist/{picklistId}`
-- Map `picking.recordPick` -> `POST /api/picking/picklist/bin/item/pick`
-- Map `picking.completePicklist` -> `POST /api/picking/picklist/{picklistId}/complete`
+The corresponding endpoints will be:
+- **Get Orders to Pick**: `GET /rest/services/getOrdersToPick`
+- **Create Picklist**: `POST /rest/services/createPicklist`
+- **Get Picklist Details**: `GET /rest/services/getPicklistDetails`
+- **Record Pick**: `POST /rest/services/recordPick`
 
 ### [Backend] Security & CORS
-#### [MODIFY] [url.properties](file:///Users/arun/personal/arun/ofbiz_dev/ofbiz-framework/framework/webapp/config/url.properties) (or equivalent component config)
-- Configure `allowed-origins`: `http://localhost:5173` (Vite Default).
-- Set `Access-Control-Allow-Methods` and `Access-Control-Allow-Headers` required for JWT and JSON payloads.
+#### [MODIFY] [security.properties](file:///Users/arun/personal/arun/ofbiz_dev/ofbiz-framework/framework/security/config/security.properties)
+Configure the allowed origins list to support cross-origin requests from the standalone frontend PWA (running on Vite):
+- Add `cors.origins.allowed=http://localhost:5173`
 
 #### [Auth] JWT Integration
-- Ensure the `rest-api` uses `generateAuthToken` for session management.
-- Validate that the PWA can exchange user credentials for a token.
+- Authenticate requests using the standard `rest-api` JWT session mechanism.
+- Validate that the PWA can fetch and exchange user credentials for a token via the `POST /rest/auth/token` endpoint.
 
 ## Verification Plan
 
 ### Automated Tests
 - Postman or `curl` test collection verifying that:
-    - Root API is accessible.
-    - Protected endpoints return `401 Unauthorized` without a token.
-    - Valid JWT allows service execution.
+    - Root API endpoints (e.g. `GET /rest/services/getOrdersToPick`) are accessible when authorized.
+    - Protected endpoints return `401 Unauthorized` without a valid token.
+    - Valid JWT allows successful service execution.
 
 ### Manual Verification
-- Verify CORS "Pre-flight" OPTIONS request from a browser console (simulating the PWA origin).
+- Verify CORS "Pre-flight" OPTIONS request from a browser console (simulating the PWA origin `http://localhost:5173`).
