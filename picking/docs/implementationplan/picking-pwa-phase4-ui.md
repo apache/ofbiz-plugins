@@ -10,7 +10,7 @@ Implementation of core components in `picking-app/src/screens/`.
 #### [NEW] [OrderQueue.jsx](file:///Users/arun/personal/arun/ofbiz_dev/picking-app/src/screens/OrderQueue.jsx)
 - Display a list of orders ready for picking (using `GET /rest/services/getOrdersToPick`).
 - Multi-select functionality to group orders.
-- "Create Picklist" button triggering `POST /rest/services/createPicklist`.
+- "Create Picklist" button triggering `POST /rest/services/createPickingPicklist`.
 
 #### [NEW] [ActivePicklist.jsx](file:///Users/arun/personal/arun/ofbiz_dev/picking-app/src/screens/ActivePicklist.jsx)
 - Displays the items of a specific picklist (using `GET /rest/services/getPicklistDetails`).

@@ -1,4 +1,4 @@
-# Picking PWA - Phase 5: Scanning & Recording
+# Picking PWA - Phase 6: Scanning & Recording
 
 This phase implements the high-performance picking interface with scanning support.
 

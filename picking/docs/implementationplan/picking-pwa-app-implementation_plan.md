@@ -21,11 +21,11 @@ Defines the component and its services. No `webapp` will be defined here for the
 
 #### [NEW] [services.xml](file:///Users/arun/personal/arun/ofbiz_dev/ofbiz-framework/plugins/picking/servicedef/services.xml)
 Definition of business services for the picking process:
-- `picking.getOrdersToPick`: Returns a list of orders ready for picking.
-- `picking.createPicklist`: Groups selected orders into a new Picklist.
-- `picking.getPicklistForPicking`: Returns detailed picklist data (items, locations, quantities) optimized for the PWA.
-- `picking.recordPick`: Updates the status and quantity of a picklist item.
-- `picking.completePicklist`: Finalizes the picklist.
+- `getOrdersToPick`: Returns a list of orders ready for picking.
+- `createPickingPicklist`: Groups selected orders into a new Picklist.
+- `getPickingPicklists`: Returns a list of active and history picklists for a facility with summary counts.
+- `getPicklistDetails`: Returns detailed picklist data (items, locations, quantities) optimized for the PWA.
+- `recordPick`: Updates the status and quantity of a picklist item.
 
 #### [NEW] [PickingServices.groovy](file:///Users/arun/personal/arun/ofbiz_dev/ofbiz-framework/plugins/picking/src/main/groovy/org/apache/ofbiz/picking/PickingServices.groovy)
 Implementation of the above services using standard OFBiz entity and service patterns.
@@ -44,12 +44,13 @@ A modern React-based PWA located in `/Users/arun/personal/arun/ofbiz_dev/picking
 #### [NEW] [UI Screens]
 1. **Facility Selection**: Choose target warehouse.
 2. **Order Picking Queue**: List and select orders to create a picklist.
-3. **Active Picklist**: Sorted list of items by location.
-4. **Picking Interface**: Advanced scanning support:
+3. **Picklist Management**: Browse and search active/completed picklists, with progress indicators.
+4. **Active Picklist**: Sorted list of items by location (Picklist Detail).
+5. **Picking Interface**: Advanced scanning support:
     - **Camera Scan**: Integrated via `html5-qrcode` or similar for mobile camera use.
     - **Hardware Scan**: Global listener for keyboard emulation (Bluetooth/USB scanners) with automated input focus.
     - Manual quantity entry and confirmation.
-5. **Success Summary**: Confirmation and picklist completion.
+6. **Success Summary**: Confirmation and picklist completion.
 
 ### [Design Mockup]
 
@@ -75,5 +76,5 @@ A modern React-based PWA located in `/Users/arun/personal/arun/ofbiz_dev/picking
 - Mocked API tests for frontend components.
 
 ### Manual Verification
-- end-to-end flow: Find Orders -> Create Picklist -> Pick All Items -> Complete.
+- end-to-end flow: Find Orders -> Create Picking Picklist -> Pick All Items -> Complete.
 - Verify inventory updates (if applicable) and picklist status changes in the backend.

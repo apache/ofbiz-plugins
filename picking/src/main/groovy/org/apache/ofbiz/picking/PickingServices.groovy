@@ -15,16 +15,25 @@ def getOrdersToPick() {
         return findResult
     }
     
-    // Transform orderHeaders to a simpler list for the PWA
+    // Transform pickMoveInfoList to a simpler list for the PWA
     List orderList = []
-    if (findResult.orderHeaders) {
-        findResult.orderHeaders.each { orderHeader ->
-            orderList << [
-                orderId: orderHeader.orderId,
-                orderDate: orderHeader.orderDate,
-                statusId: orderHeader.statusId,
-                grandTotal: orderHeader.grandTotal
-            ]
+    if (findResult.pickMoveInfoList) {
+        findResult.pickMoveInfoList.each { pickMoveInfo ->
+            if (pickMoveInfo.orderReadyToPickInfoList) {
+                pickMoveInfo.orderReadyToPickInfoList.each { orderReadyInfo ->
+                    def orderHeader = orderReadyInfo.orderHeader
+                    if (orderHeader) {
+                        if (!orderList.any { it.orderId == orderHeader.orderId }) {
+                            orderList << [
+                                orderId: orderHeader.orderId,
+                                orderDate: orderHeader.orderDate,
+                                statusId: orderHeader.statusId,
+                                grandTotal: orderHeader.grandTotal
+                            ]
+                        }
+                    }
+                }
+            }
         }
     }
     
@@ -36,9 +45,9 @@ def getOrdersToPick() {
  * Creates a picklist from a list of orderIds.
  * Wraps existing createPicklistFromOrders service.
  */
-def createPicklist() {
+def createPickingPicklist() {
     Map serviceResult = runService("createPicklistFromOrders", [
-        orderIds: context.orderIds, 
+        orderIdList: context.orderIds, 
         facilityId: context.facilityId, 
         userLogin: context.userLogin
     ])
@@ -47,7 +56,9 @@ def createPicklist() {
         return serviceResult
     }
     
-    return ServiceUtil.returnSuccess(null, [picklistId: serviceResult.picklistId])
+    Map result = ServiceUtil.returnSuccess()
+    result.picklistId = serviceResult.picklistId
+    return result
 }
 
 /**
@@ -72,22 +83,25 @@ def getPicklistDetails() {
     picklistDetails.picklistId = context.picklistId
     
     List items = []
-    if (reportResult.picklistBinInfoList) {
-        reportResult.picklistBinInfoList.each { binInfo ->
-            if (binInfo.picklistBinItemInfoList) {
-                binInfo.picklistBinItemInfoList.each { itemInfo ->
+    if (reportResult.picklistInfo && reportResult.picklistInfo.picklistBinInfoList) {
+        reportResult.picklistInfo.picklistBinInfoList.each { binInfo ->
+            if (binInfo.picklistItemInfoList) {
+                binInfo.picklistItemInfoList.each { itemInfo ->
                     items << [
-                        picklistBinId: binInfo.picklistBin.picklistBinId,
-                        orderId: itemInfo.orderHeader.orderId,
-                        orderItemSeqId: itemInfo.orderItem.orderItemSeqId,
-                        productId: itemInfo.product.productId,
-                        productName: itemInfo.product.internalName,
-                        quantity: itemInfo.picklistItem.quantity,
-                        locationSeqId: itemInfo.inventoryItem?.locationSeqId,
-                        area: itemInfo.facilityLocation?.areaId,
-                        aisle: itemInfo.facilityLocation?.aisleId,
-                        section: itemInfo.facilityLocation?.sectionId,
-                        level: itemInfo.facilityLocation?.levelId
+                        picklistBinId: binInfo.picklistBin?.picklistBinId,
+                        orderId: itemInfo.orderItem?.orderId,
+                        orderItemSeqId: itemInfo.orderItem?.orderItemSeqId,
+                        shipGroupSeqId: itemInfo.picklistItem?.shipGroupSeqId,
+                        inventoryItemId: itemInfo.picklistItem?.inventoryItemId,
+                        itemStatusId: itemInfo.picklistItem?.itemStatusId,
+                        productId: itemInfo.product?.productId,
+                        productName: itemInfo.product?.internalName,
+                        quantity: itemInfo.picklistItem?.quantity,
+                        locationSeqId: itemInfo.inventoryItemAndLocation?.locationSeqId,
+                        area: itemInfo.inventoryItemAndLocation?.areaId,
+                        aisle: itemInfo.inventoryItemAndLocation?.aisleId,
+                        section: itemInfo.inventoryItemAndLocation?.sectionId,
+                        level: itemInfo.inventoryItemAndLocation?.levelId
                     ]
                 }
             }
@@ -104,7 +118,8 @@ def getPicklistDetails() {
  * Wraps setPicklistItemToComplete which internally calls updatePicklistItem.
  */
 def recordPick() {
-    Map serviceCtx = context.subMap(["picklistBinId", "orderItemSeqId", "orderId", "inventoryItemId", "quantity"])
+    Map serviceCtx = context.subMap(["picklistBinId", "orderItemSeqId", "orderId", "inventoryItemId", "shipGroupSeqId", "quantity"])
+    serviceCtx.itemStatusId = "PICKITEM_COMPLETED"
     serviceCtx.userLogin = context.userLogin
     
     Map serviceResult = runService("setPicklistItemToComplete", serviceCtx)

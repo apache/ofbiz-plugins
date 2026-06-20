@@ -9,7 +9,7 @@ Instead of creating custom REST route mappings, the services defined in Phase 1 
 
 The corresponding endpoints will be:
 - **Get Orders to Pick**: `GET /rest/services/getOrdersToPick`
-- **Create Picklist**: `POST /rest/services/createPicklist`
+- **Create Picklist**: `POST /rest/services/createPickingPicklist`
 - **Get Picklist Details**: `GET /rest/services/getPicklistDetails`
 - **Record Pick**: `POST /rest/services/recordPick`
 

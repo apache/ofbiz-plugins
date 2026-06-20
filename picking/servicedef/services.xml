@@ -12,8 +12,8 @@
     </service>
 
     <!-- Creates a picklist from a list of orderIds -->
-    <service name="createPicklist" engine="groovy"
-             location="component://picking/src/main/groovy/org/apache/ofbiz/picking/PickingServices.groovy" invoke="createPicklist" auth="true" export="true" action="POST">
+    <service name="createPickingPicklist" engine="groovy"
+             location="component://picking/src/main/groovy/org/apache/ofbiz/picking/PickingServices.groovy" invoke="createPickingPicklist" auth="true" export="true" action="POST">
         <description>Wrapper for createPicklistFromOrders to group orders into a picklist.</description>
         <attribute name="orderIds" type="List" mode="IN" optional="false"/>
         <attribute name="facilityId" type="String" mode="IN" optional="true"/>
@@ -35,7 +35,8 @@
         <attribute name="picklistBinId" type="String" mode="IN" optional="false"/>
         <attribute name="orderItemSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
-        <attribute name="inventoryItemId" type="String" mode="IN" optional="true"/>
+        <attribute name="shipGroupSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
         <attribute name="quantity" type="BigDecimal" mode="IN" optional="false"/>
     </service>
 

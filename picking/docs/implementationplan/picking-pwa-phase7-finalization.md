@@ -1,4 +1,4 @@
-# Picking PWA - Phase 6: PWA Finalization
+# Picking PWA - Phase 7: PWA Finalization
 
 This final phase prepares the application for production use and mobile installation.
 
