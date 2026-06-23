@@ -1,27 +1,27 @@
 package org.apache.ofbiz.picking
 
-import org.apache.ofbiz.base.util.UtilMisc
+import org.apache.ofbiz.entity.GenericValue
 import org.apache.ofbiz.service.ServiceUtil
 
 /**
  * Retrieves a list of orders available to be picked for a given facility.
  * Wraps existing findOrdersToPickMove service.
  */
-def getOrdersToPick() {
+Map getOrdersToPick() {
     Map result = ServiceUtil.returnSuccess()
-    
-    Map findResult = runService("findOrdersToPickMove", [facilityId: context.facilityId, userLogin: context.userLogin])
+
+    Map findResult = runService('findOrdersToPickMove', [facilityId: context.facilityId, userLogin: context.userLogin])
     if (ServiceUtil.isError(findResult)) {
         return findResult
     }
-    
+
     // Transform pickMoveInfoList to a simpler list for the PWA
     List orderList = []
     if (findResult.pickMoveInfoList) {
         findResult.pickMoveInfoList.each { pickMoveInfo ->
             if (pickMoveInfo.orderReadyToPickInfoList) {
                 pickMoveInfo.orderReadyToPickInfoList.each { orderReadyInfo ->
-                    def orderHeader = orderReadyInfo.orderHeader
+                    GenericValue orderHeader = orderReadyInfo.orderHeader
                     if (orderHeader) {
                         if (!orderList.any { it.orderId == orderHeader.orderId }) {
                             orderList << [
@@ -36,7 +36,7 @@ def getOrdersToPick() {
             }
         }
     }
-    
+
     result.orderList = orderList
     return result
 }
@@ -45,17 +45,17 @@ def getOrdersToPick() {
  * Creates a picklist from a list of orderIds.
  * Wraps existing createPicklistFromOrders service.
  */
-def createPickingPicklist() {
-    Map serviceResult = runService("createPicklistFromOrders", [
-        orderIdList: context.orderIds, 
-        facilityId: context.facilityId, 
+Map createPickingPicklist() {
+    Map serviceResult = runService('createPicklistFromOrders', [
+        orderIdList: context.orderIds,
+        facilityId: context.facilityId,
         userLogin: context.userLogin
     ])
-    
+
     if (ServiceUtil.isError(serviceResult)) {
         return serviceResult
     }
-    
+
     Map result = ServiceUtil.returnSuccess()
     result.picklistId = serviceResult.picklistId
     return result
@@ -65,23 +65,23 @@ def createPickingPicklist() {
  * Retrieves details of a specific picklist, including items sorted by location.
  * Wraps existing getPickAndPackReportInfo service.
  */
-def getPicklistDetails() {
+Map getPicklistDetails() {
     Map result = ServiceUtil.returnSuccess()
-    
-    Map reportResult = runService("getPickAndPackReportInfo", [
-        picklistId: context.picklistId, 
+
+    Map reportResult = runService('getPickAndPackReportInfo', [
+        picklistId: context.picklistId,
         userLogin: context.userLogin
     ])
-    
+
     if (ServiceUtil.isError(reportResult)) {
         return reportResult
     }
-    
+
     // The reportResult contains a complex structure of picklistBins and their items.
     // We will extract and flatten this for the PWA.
     Map picklistDetails = [:]
     picklistDetails.picklistId = context.picklistId
-    
+
     List items = []
     if (reportResult.picklistInfo && reportResult.picklistInfo.picklistBinInfoList) {
         reportResult.picklistInfo.picklistBinInfoList.each { binInfo ->
@@ -107,7 +107,7 @@ def getPicklistDetails() {
             }
         }
     }
-    
+
     result.picklistDetails = picklistDetails
     result.picklistDetails.items = items
     return result
@@ -117,16 +117,16 @@ def getPicklistDetails() {
  * Records a pick for a specific picklist item.
  * Wraps setPicklistItemToComplete which internally calls updatePicklistItem.
  */
-def recordPick() {
-    Map serviceCtx = context.subMap(["picklistBinId", "orderItemSeqId", "orderId", "inventoryItemId", "shipGroupSeqId", "quantity"])
-    serviceCtx.itemStatusId = "PICKITEM_COMPLETED"
+Map recordPick() {
+    Map serviceCtx = context.subMap(['picklistBinId', 'orderItemSeqId', 'orderId', 'inventoryItemId', 'shipGroupSeqId', 'quantity'])
+    serviceCtx.itemStatusId = 'PICKITEM_COMPLETED'
     serviceCtx.userLogin = context.userLogin
-    
-    Map serviceResult = runService("setPicklistItemToComplete", serviceCtx)
-    
+
+    Map serviceResult = runService('setPicklistItemToComplete', serviceCtx)
+
     if (ServiceUtil.isError(serviceResult)) {
         return serviceResult
     }
-    
+
     return ServiceUtil.returnSuccess()
 }
