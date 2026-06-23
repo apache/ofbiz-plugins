@@ -1,30 +1,28 @@
 # Picking PWA - Phase 1: Backend Foundation
 
-This phase focuses on setting up the `picking` component and implementing the core business services required for the picking process.
+This phase focuses on extending the standard `product` component and implementing/exposing the services required for the picking process.
 
 ## Proposed Changes
 
-### [Backend] Picking Component Setup
-We will initialize the component structure and define the necessary services.
+### [Backend] Product Component Extension
 
-#### [NEW] [ofbiz-component.xml](file:///Users/arun/personal/arun/ofbiz_dev/ofbiz-framework/plugins/picking/ofbiz-component.xml)
-Defines the component metadata and resource paths for services.
+We will modify standard files to implement and expose the necessary endpoints:
 
-#### [NEW] [services.xml](file:///Users/arun/personal/arun/ofbiz_dev/ofbiz-framework/plugins/picking/servicedef/services.xml)
-Definition of business services:
-- **`getOrdersToPick`**: Wraps `findOrdersToPickMove`. `action="GET"`, `export="true"`.
-- **`createPicklist`**: Wraps `createPicklistFromOrders`. `action="POST"`, `export="true"`.
-- **`getPicklistDetails`**: Wraps `getPickAndPackReportInfo`. `action="GET"`, `export="true"`.
-- **`recordPick`**: Wraps `setPicklistItemToComplete`. `action="POST"`, `export="true"`.
+#### [MODIFY] [services_picklist.xml](file:///Users/arun/personal/arun/ofbiz_dev/ofbiz-framework/applications/product/servicedef/services_picklist.xml)
+REST-enable and define services:
+- **`createPicklistFromOrders`**: Standard service exposed via `export="true"`, `action="POST"`.
+- **`setPicklistItemToComplete`**: Standard service exposed via `export="true"`, `action="POST"`, with `itemStatusId` overridden to be optional.
+- **`getOrdersToPick`**: Custom wrapper service added. `action="GET"`, `export="true"`.
+- **`getPicklistDetails`**: Custom wrapper service added. `action="GET"`, `export="true"`.
 
 > [!IMPORTANT]
-> **Status Transitions**: We are not creating a custom `completePicklist` service. The transition of the `Picklist` to `PICKLIST_PICKED` status will be handled by the **existing SECA** (`checkPicklistBinItemStatuses`) which triggers automatically when all items in a bin are marked completed.
+> **Status Transitions**: The transition of the `Picklist` to `PICKLIST_PICKED` status is handled by the **existing SECA** (`checkPicklistBinItemStatuses`) which triggers automatically when all items in a bin are marked completed (via `setPicklistItemToComplete`).
 
-#### [NEW] [PickingServices.groovy](file:///Users/arun/personal/arun/ofbiz_dev/ofbiz-framework/plugins/picking/src/main/groovy/org/apache/ofbiz/picking/PickingServices.groovy)
-Implementation of the logic using Groovy DSL:
-- **Logic Consistency**: Every custom service MUST call the corresponding `runService("existingService", ...)` to ensure transactions, reservations, and business rules remain unchanged.
-- **Data Transformation**: The main responsibility of these Groovy services is to "flatten" the complex Map structures returned by standard OFBiz into simple, flat JSON-serializable Lists and Maps for the PWA.
-- **Business Validation**: Ensuring orders aren't already on a picklist and validating picked quantities against available reservations.
+#### [MODIFY] [PicklistServices.groovy](file:///Users/arun/personal/arun/ofbiz_dev/ofbiz-framework/applications/product/src/main/groovy/org/apache/ofbiz/product/shipment/PicklistServices.groovy)
+Append the two wrapper services:
+- **`getOrdersToPick`**: Transforms `pickMoveInfoList` structure from standard `findOrdersToPickMove` to a flat, simple `orderList` for the PWA.
+- **`getPicklistDetails`**: Flattens `picklistInfo.picklistBinInfoList` structure from standard `getPickAndPackReportInfo` to a flat `items` list for the PWA.
+
 
 ## Verification Plan
 

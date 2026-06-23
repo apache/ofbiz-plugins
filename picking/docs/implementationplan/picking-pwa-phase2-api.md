@@ -5,13 +5,14 @@ This phase focuses on making the backend services accessible to the frontend PWA
 ## Proposed Changes
 
 ### [Backend] API Exposure
-Instead of creating custom REST route mappings, the services defined in Phase 1 will be automatically exposed via OFBiz's generic dynamic REST API by setting `export="true"` on their service definitions in [services.xml](file:///Users/arun/personal/arun/ofbiz_dev/ofbiz-framework/plugins/picking/servicedef/services.xml).
+Instead of creating custom REST route mappings, the services defined in Phase 1 will be automatically exposed via OFBiz's generic dynamic REST API by setting `export="true"` and the correct `action` attribute on their service definitions in [services_picklist.xml](file:///Users/arun/personal/arun/ofbiz_dev/ofbiz-framework/applications/product/servicedef/services_picklist.xml).
 
 The corresponding endpoints will be:
-- **Get Orders to Pick**: `GET /rest/services/getOrdersToPick`
-- **Create Picklist**: `POST /rest/services/createPickingPicklist`
-- **Get Picklist Details**: `GET /rest/services/getPicklistDetails`
-- **Record Pick**: `POST /rest/services/recordPick`
+- **Get Orders to Pick**: `GET /rest/services/getOrdersToPick` (wrapper service)
+- **Create Picklist**: `POST /rest/services/createPicklistFromOrders` (standard service)
+- **Get Picklist Details**: `GET /rest/services/getPicklistDetails` (wrapper service)
+- **Record Pick**: `POST /rest/services/setPicklistItemToComplete` (standard service)
+
 
 ### [Backend] Security & CORS
 #### [MODIFY] [security.properties](file:///Users/arun/personal/arun/ofbiz_dev/ofbiz-framework/framework/security/config/security.properties)

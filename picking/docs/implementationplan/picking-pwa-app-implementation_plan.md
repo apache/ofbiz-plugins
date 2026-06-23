@@ -12,23 +12,20 @@ The goal is to provide a modern, mobile-first Progressive Web App (PWA) for ware
 
 ## Proposed Changes
 
-### [Backend] Picking Component
+### [Backend] Product Component Extensions
 
-We will create a new component `plugins/picking` to house all picking-related logic and the PWA itself.
+We will extend the standard `product` application component to support the picking PWA:
+- Add wrapper/data-formatting services to standard `services_picklist.xml` and `PicklistServices.groovy` in `applications/product`.
+- Expose the necessary standard services directly on the REST API.
 
-#### [NEW] [ofbiz-component.xml](file:///Users/arun/personal/arun/ofbiz_dev/ofbiz-framework/plugins/picking/ofbiz-component.xml)
-Defines the component and its services. No `webapp` will be defined here for the picking app.
+#### [MODIFY] [services_picklist.xml](file:///Users/arun/personal/arun/ofbiz_dev/ofbiz-framework/applications/product/servicedef/services_picklist.xml)
+- **`createPicklistFromOrders`**: Standard service exposed via `export="true"` and `action="POST"`.
+- **`setPicklistItemToComplete`**: Standard service exposed via `export="true"`, `action="POST"`, and `itemStatusId` set to optional (internally sets it to `PICKITEM_COMPLETED`).
+- **`getOrdersToPick`**: Custom wrapper service added with `engine="groovy"`, `export="true"`, `action="GET"`.
+- **`getPicklistDetails`**: Custom wrapper service added with `engine="groovy"`, `export="true"`, `action="GET"`.
 
-#### [NEW] [services.xml](file:///Users/arun/personal/arun/ofbiz_dev/ofbiz-framework/plugins/picking/servicedef/services.xml)
-Definition of business services for the picking process:
-- `getOrdersToPick`: Returns a list of orders ready for picking.
-- `createPickingPicklist`: Groups selected orders into a new Picklist.
-- `getPickingPicklists`: Returns a list of active and history picklists for a facility with summary counts.
-- `getPicklistDetails`: Returns detailed picklist data (items, locations, quantities) optimized for the PWA.
-- `recordPick`: Updates the status and quantity of a picklist item.
-
-#### [NEW] [PickingServices.groovy](file:///Users/arun/personal/arun/ofbiz_dev/ofbiz-framework/plugins/picking/src/main/groovy/org/apache/ofbiz/picking/PickingServices.groovy)
-Implementation of the above services using standard OFBiz entity and service patterns.
+#### [MODIFY] [PicklistServices.groovy](file:///Users/arun/personal/arun/ofbiz_dev/ofbiz-framework/applications/product/src/main/groovy/org/apache/ofbiz/product/shipment/PicklistServices.groovy)
+Implementation of `getOrdersToPick` and `getPicklistDetails` to format/flatten the outputs of standard `findOrdersToPickMove` and `getPickAndPackReportInfo` services.
 
 ---
 
