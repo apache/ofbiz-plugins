@@ -66,15 +66,6 @@ under the License.
       <li class="list-inline-item disabled" id="onePageCheckoutDisabled" style="display:none">
         [${uiLabelMap.EcommerceOnePageCheckout}]
       </li>
-      <#if shoppingCart?has_content && (shoppingCart.getGrandTotal() > 0)>
-        <li class="list-inline-item" id="microCartPayPalCheckout">
-          <a href="<@ofbizUrl>setPayPalCheckout</@ofbizUrl>">
-            <img src="https://www.paypal.com/${initialLocaleComplete}/i/btn/btn_xpressCheckout.gif"
-                alt="[PayPal Express Checkout]"
-                onError="this.onerror=null;this.src='https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif'"/>
-          </a>
-        </li>
-      </#if>
     <#else>
       <li class="list-inline-item disabled">[${uiLabelMap.OrderCheckoutQuick}]</li>
       <li class="list-inline-item disabled">[${uiLabelMap.EcommerceOnePageCheckout}]</li>
