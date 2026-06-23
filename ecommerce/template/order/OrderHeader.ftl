@@ -314,7 +314,6 @@ under the License.
           <#if trackingNumber?has_content || orderShipmentInfoSummaryList?has_content>
             <li>
               ${uiLabelMap.OrderTrackingNumber}
-              <#-- TODO: add links to UPS/FEDEX/etc based on carrier partyId  -->
               <#if shipGroup.trackingNumber?has_content>
                 ${shipGroup.trackingNumber}
               </#if>
