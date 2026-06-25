@@ -20,6 +20,7 @@ package org.apache.ofbiz.azurekeyvault;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.ofbiz.base.util.GeneralException;
@@ -102,6 +103,26 @@ public class AzureKeyVaultSecretsProviderTest {
     public void getSecretDotReplacementDisabledKeepsDotsInName() throws GeneralException {
         AzureKeyVaultReader reader = fixedReader("my.key", "val");
         assertEquals("val", provider(reader, "", "").getSecret("my.key"));
+    }
+
+    // -- Key aliasing --
+
+    @Test
+    public void getSecretUsesAliasedNameInsteadOfDotReplacement() throws GeneralException {
+        AzureKeyVaultReader reader = fixedReader("prod-ofbiz-mysql-db-password", "dbpass");
+        AzureKeyVaultSecretsProvider p = new AzureKeyVaultSecretsProvider(reader, "", "-", ONE_HOUR_MS,
+                Map.of("jdbc-password.mysql-ofbiz", "prod-ofbiz-mysql-db-password"));
+
+        assertEquals("dbpass", p.getSecret("jdbc-password.mysql-ofbiz"));
+    }
+
+    @Test
+    public void getSecretFallsBackToDotReplacementWhenNoAliasConfigured() throws GeneralException {
+        AzureKeyVaultReader reader = fixedReader("jdbc-password-mysql-ofbiz", "dbpass");
+        AzureKeyVaultSecretsProvider p = new AzureKeyVaultSecretsProvider(reader, "", "-", ONE_HOUR_MS,
+                Map.of("some.other.key", "some-other-alias"));
+
+        assertEquals("dbpass", p.getSecret("jdbc-password.mysql-ofbiz"));
     }
 
     // -- Error handling --

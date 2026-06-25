@@ -28,7 +28,7 @@ import java.security.MessageDigest;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Base64;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
 
 import javax.crypto.Cipher;
 import javax.crypto.Mac;
@@ -41,6 +41,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.ofbiz.base.crypto.ConfigCryptoUtil;
 import org.apache.ofbiz.base.lang.ThreadSafe;
 import org.apache.ofbiz.base.secret.SecretProvider;
+import org.apache.ofbiz.base.secret.SecretProviderUtil;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.GeneralException;
 import org.apache.ofbiz.base.util.UtilProperties;
@@ -68,6 +69,12 @@ import org.apache.ofbiz.base.util.UtilProperties;
  * <p>Secret <em>keys</em> (names) and <em>values</em> are returned from the API in encrypted form.
  * This provider decrypts them using AES-256-CBC with HMAC-SHA256 integrity verification.</p>
  *
+ * <h2>Per-key naming overrides</h2>
+ * <p>Secrets are looked up by matching the OFBiz key (with prefix) against the secret's
+ * <em>title</em> in Bitwarden. If a specific key needs a different title, set
+ * {@code key.alias.<logicalKey>=<secretTitle>}. The alias is checked first; keys with no
+ * alias entry use the logical key unchanged.</p>
+ *
  * <p>Configure via {@code plugins/bitwarden-secrets-provider/config/bitwarden-secrets.properties}.</p>
  */
 @ThreadSafe
@@ -83,6 +90,7 @@ public final class BitwardenSecretsProvider implements SecretProvider {
     private final String organizationId;
     private final String secretNamePrefix;
     private final long cacheTtlMs;
+    private final Map<String, String> keyAliases;
 
     // Parsed from the access token — never stored in config
     private final String oauthClientId;
@@ -97,21 +105,7 @@ public final class BitwardenSecretsProvider implements SecretProvider {
     private volatile String bearerToken = null;
     private volatile long bearerTokenExpiresAt = 0L;
 
-    private final ConcurrentHashMap<String, CacheEntry> cache = new ConcurrentHashMap<>();
-
-    private static final class CacheEntry {
-        final String value;
-        final long expiresAt;
-
-        CacheEntry(String value, long ttlMs) {
-            this.value = value;
-            this.expiresAt = System.currentTimeMillis() + ttlMs;
-        }
-
-        boolean isExpired() {
-            return System.currentTimeMillis() >= expiresAt;
-        }
-    }
+    private final SecretProviderUtil.Cache<String, String> cache = new SecretProviderUtil.Cache<>();
 
     /** Public no-arg constructor required by {@link java.util.ServiceLoader}. */
     public BitwardenSecretsProvider() throws GeneralException {
@@ -120,8 +114,9 @@ public final class BitwardenSecretsProvider implements SecretProvider {
                 prop("bitwarden.identity.url", "https://identity.bitwarden.com").replaceAll("/+$", ""),
                 prop("bitwarden.organization.id", ""),
                 prop("bitwarden.secret.name.prefix", ""),
-                readTtlMs(),
-                prop("bitwarden.access.token", ""));
+                SecretProviderUtil.readTtlMs(CONFIG_RESOURCE, "bitwarden.cache.ttl.seconds", 3600, MODULE),
+                prop("bitwarden.access.token", ""),
+                SecretProviderUtil.loadKeyAliases(CONFIG_RESOURCE));
     }
 
     /**
@@ -131,6 +126,18 @@ public final class BitwardenSecretsProvider implements SecretProvider {
     BitwardenSecretsProvider(BitwardenHttpClient httpClient, String apiUrl, String identityUrl,
             String organizationId, String secretNamePrefix, long cacheTtlMs,
             String clientId, String clientSecret, byte[] encKey, byte[] macKey) {
+        this(httpClient, apiUrl, identityUrl, organizationId, secretNamePrefix, cacheTtlMs,
+                clientId, clientSecret, encKey, macKey, Map.of());
+    }
+
+    /**
+     * Package-private constructor used by unit tests to inject mock HTTP client, pre-parsed
+     * key material, and key aliases.
+     */
+    BitwardenSecretsProvider(BitwardenHttpClient httpClient, String apiUrl, String identityUrl,
+            String organizationId, String secretNamePrefix, long cacheTtlMs,
+            String clientId, String clientSecret, byte[] encKey, byte[] macKey,
+            Map<String, String> keyAliases) {
         this.httpClient = httpClient;
         this.apiUrl = apiUrl;
         this.identityUrl = identityUrl;
@@ -142,18 +149,20 @@ public final class BitwardenSecretsProvider implements SecretProvider {
         this.sealingKey = null; // not needed when enc/mac keys are injected directly
         this.encKey = encKey;
         this.macKey = macKey;
+        this.keyAliases = keyAliases;
     }
 
     /** Full constructor called by the public no-arg constructor after parsing the token. */
     private BitwardenSecretsProvider(BitwardenHttpClient httpClient, String apiUrl, String identityUrl,
             String organizationId, String secretNamePrefix, long cacheTtlMs,
-            String rawAccessToken) throws GeneralException {
+            String rawAccessToken, Map<String, String> keyAliases) throws GeneralException {
         this.httpClient = httpClient;
         this.apiUrl = apiUrl;
         this.identityUrl = identityUrl;
         this.organizationId = organizationId;
         this.secretNamePrefix = secretNamePrefix;
         this.cacheTtlMs = cacheTtlMs;
+        this.keyAliases = keyAliases;
 
         // Parse: "0.<serviceAccountId>.<clientSecret>:<base64SealingKey>"
         int colonIdx = rawAccessToken.lastIndexOf(':');
@@ -197,16 +206,17 @@ public final class BitwardenSecretsProvider implements SecretProvider {
 
     @Override
     public String getSecret(String key) throws GeneralException {
-        CacheEntry cached = cache.get(key);
-        if (cached != null && !cached.isExpired()) {
-            return cached.value;
+        String cached = cache.get(key);
+        if (cached != null) {
+            return cached;
         }
 
-        String secretName = secretNamePrefix + key;
+        String physicalKey = keyAliases.getOrDefault(key, key);
+        String secretName = secretNamePrefix + physicalKey;
         String value = fetchFromBitwarden(secretName);
         value = ConfigCryptoUtil.decryptIfEncrypted(value, key);
 
-        cache.put(key, new CacheEntry(value, cacheTtlMs));
+        cache.put(key, value, cacheTtlMs);
         return value;
     }
 
@@ -575,17 +585,9 @@ public final class BitwardenSecretsProvider implements SecretProvider {
         }
     }
 
-    private static long readTtlMs() {
-        String raw = prop("bitwarden.cache.ttl.seconds", "3600");
-        try {
-            return Long.parseLong(raw.trim()) * 1000L;
-        } catch (NumberFormatException e) {
-            Debug.logWarning("Invalid bitwarden.cache.ttl.seconds '" + raw + "', defaulting to 3600s", MODULE);
-            return 3_600_000L;
-        }
-    }
 
     private static String prop(String key, String defaultValue) {
         return UtilProperties.getPropertyValue(CONFIG_RESOURCE, key, defaultValue);
     }
+
 }

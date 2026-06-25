@@ -107,6 +107,28 @@ public class HashicorpVaultSecretsProviderTest {
         assertEquals(2, calls.get());
     }
 
+    // -- Key aliasing --
+
+    @Test
+    public void getSecretUsesAliasedPathSegment() throws GeneralException {
+        HashicorpVaultReader reader = fixedReader("secret/prod/ofbiz/mysql_db_password",
+                singleEntry("value", "dbpass"));
+        HashicorpVaultSecretsProvider provider = new HashicorpVaultSecretsProvider(reader, "secret", "", "",
+                ONE_HOUR_MS, Map.of("jdbc-password.mysql-ofbiz", "prod/ofbiz/mysql_db_password"));
+
+        assertEquals("dbpass", provider.getSecret("jdbc-password.mysql-ofbiz"));
+    }
+
+    @Test
+    public void getSecretFallsBackToLogicalKeyWhenNoAliasConfigured() throws GeneralException {
+        HashicorpVaultReader reader = fixedReader("secret/jdbc-password.mysql-ofbiz",
+                singleEntry("value", "dbpass"));
+        HashicorpVaultSecretsProvider provider = new HashicorpVaultSecretsProvider(reader, "secret", "", "",
+                ONE_HOUR_MS, Map.of("some.other.key", "some/other/alias"));
+
+        assertEquals("dbpass", provider.getSecret("jdbc-password.mysql-ofbiz"));
+    }
+
     // -- Error handling --
 
     @Test(expected = GeneralException.class)

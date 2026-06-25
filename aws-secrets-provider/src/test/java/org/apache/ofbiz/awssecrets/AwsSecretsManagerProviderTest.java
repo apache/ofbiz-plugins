@@ -25,6 +25,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Map;
+
 import org.apache.ofbiz.base.util.GeneralException;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -114,6 +116,47 @@ public class AwsSecretsManagerProviderTest {
         provider.getSecret("jdbc-password.mydb"); // cache entry is expired — must re-fetch
 
         verify(client, times(2)).getSecretValue(any(GetSecretValueRequest.class));
+    }
+
+    // -- Key aliasing --
+
+    @Test
+    public void getSecretUsesAliasedNameWhenConfigured() throws GeneralException {
+        SecretsManagerClient client = mock(SecretsManagerClient.class);
+        ArgumentCaptor<GetSecretValueRequest> captor = ArgumentCaptor.forClass(GetSecretValueRequest.class);
+        when(client.getSecretValue(captor.capture())).thenReturn(response("val"));
+
+        AwsSecretsManagerProvider provider = new AwsSecretsManagerProvider(client, ONE_HOUR_MS, "", "",
+                Map.of("jdbc-password.mysql-ofbiz", "prod/ofbiz/mysql_db_password"));
+        provider.getSecret("jdbc-password.mysql-ofbiz");
+
+        assertEquals("prod/ofbiz/mysql_db_password", captor.getValue().secretId());
+    }
+
+    @Test
+    public void getSecretCachesByLogicalKeyNotAliasedName() throws GeneralException {
+        SecretsManagerClient client = mock(SecretsManagerClient.class);
+        when(client.getSecretValue(any(GetSecretValueRequest.class))).thenReturn(response("val"));
+
+        AwsSecretsManagerProvider provider = new AwsSecretsManagerProvider(client, ONE_HOUR_MS, "", "",
+                Map.of("jdbc-password.mysql-ofbiz", "prod/ofbiz/mysql_db_password"));
+        provider.getSecret("jdbc-password.mysql-ofbiz");
+        provider.getSecret("jdbc-password.mysql-ofbiz"); // second call — should hit cache
+
+        verify(client, times(1)).getSecretValue(any(GetSecretValueRequest.class));
+    }
+
+    @Test
+    public void getSecretFallsBackToLogicalKeyWhenNoAliasConfigured() throws GeneralException {
+        SecretsManagerClient client = mock(SecretsManagerClient.class);
+        ArgumentCaptor<GetSecretValueRequest> captor = ArgumentCaptor.forClass(GetSecretValueRequest.class);
+        when(client.getSecretValue(captor.capture())).thenReturn(response("val"));
+
+        AwsSecretsManagerProvider provider = new AwsSecretsManagerProvider(client, ONE_HOUR_MS, "", "",
+                Map.of("some.other.key", "some/other/alias"));
+        provider.getSecret("jdbc-password.mysql-ofbiz");
+
+        assertEquals("jdbc-password.mysql-ofbiz", captor.getValue().secretId());
     }
 
     // -- Error handling --

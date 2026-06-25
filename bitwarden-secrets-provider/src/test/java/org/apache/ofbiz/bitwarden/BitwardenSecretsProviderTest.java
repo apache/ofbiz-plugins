@@ -32,6 +32,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Map;
 
 import javax.crypto.Cipher;
 import javax.crypto.Mac;
@@ -147,6 +148,28 @@ public class BitwardenSecretsProviderTest {
         verify(client, times(2)).get(contains("/secrets/"), anyString());
     }
 
+    // -- Key aliasing --
+
+    @Test
+    public void getSecretUsesAliasedTitle() throws Exception {
+        String secretValue = "dbpass";
+        BitwardenHttpClient client = mockHttpForSecret("prod-ofbiz-mysql-db-password", secretValue);
+        BitwardenSecretsProvider provider = providerWithAliases(client, "",
+                Map.of("jdbc-password.mysql-ofbiz", "prod-ofbiz-mysql-db-password"));
+
+        assertEquals(secretValue, provider.getSecret("jdbc-password.mysql-ofbiz"));
+    }
+
+    @Test
+    public void getSecretFallsBackToLogicalKeyWhenNoAliasConfigured() throws Exception {
+        String secretValue = "dbpass";
+        BitwardenHttpClient client = mockHttpForSecret("jdbc-password.mysql-ofbiz", secretValue);
+        BitwardenSecretsProvider provider = providerWithAliases(client, "",
+                Map.of("some.other.key", "some-other-alias"));
+
+        assertEquals(secretValue, provider.getSecret("jdbc-password.mysql-ofbiz"));
+    }
+
     @Test(expected = GeneralException.class)
     public void getSecretThrowsWhenSecretNotFound() throws Exception {
         BitwardenHttpClient client = mock(BitwardenHttpClient.class);
@@ -176,6 +199,13 @@ public class BitwardenSecretsProviderTest {
         return new BitwardenSecretsProvider(client, API_URL, IDENTITY_URL,
                 ORG_ID, prefix, ONE_HOUR_MS,
                 "service-account.test-id", "test-secret", TEST_ENC_KEY, TEST_MAC_KEY);
+    }
+
+    private BitwardenSecretsProvider providerWithAliases(BitwardenHttpClient client, String prefix,
+            Map<String, String> keyAliases) throws GeneralException {
+        return new BitwardenSecretsProvider(client, API_URL, IDENTITY_URL,
+                ORG_ID, prefix, ONE_HOUR_MS,
+                "service-account.test-id", "test-secret", TEST_ENC_KEY, TEST_MAC_KEY, keyAliases);
     }
 
     /**

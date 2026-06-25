@@ -18,7 +18,7 @@
  *******************************************************************************/
 package org.apache.ofbiz.azurekeyvault;
 
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
 
 import com.azure.core.credential.TokenCredential;
 import com.azure.identity.ClientSecretCredentialBuilder;
@@ -30,6 +30,7 @@ import org.apache.ofbiz.base.crypto.ConfigCryptoUtil;
 
 import org.apache.ofbiz.base.lang.ThreadSafe;
 import org.apache.ofbiz.base.secret.SecretProvider;
+import org.apache.ofbiz.base.secret.SecretProviderUtil;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.GeneralException;
 import org.apache.ofbiz.base.util.UtilProperties;
@@ -54,6 +55,12 @@ import org.apache.ofbiz.base.util.UtilProperties;
  * Set {@code azure.secret.name.dot.replacement=-} (the default) to replace dots with
  * hyphens, so the key maps to {@code jdbc-password-mysql-ofbiz} in the vault.</p>
  *
+ * <h2>Per-key naming overrides</h2>
+ * <p>If even the dot-replacement convention above doesn't produce an acceptable name for a
+ * specific key, set {@code key.alias.<logicalKey>=<vaultSecretName>} to store that one key
+ * under an explicit name instead. The alias is checked first; only keys with no alias entry
+ * fall through to the dot-replacement convention.</p>
+ *
  * <p>Configure via {@code plugins/azure-keyvault-secrets-provider/config/azure-keyvault.properties}.</p>
  */
 @ThreadSafe
@@ -66,48 +73,45 @@ public final class AzureKeyVaultSecretsProvider implements SecretProvider {
     private final String secretNamePrefix;
     private final String dotReplacement;
     private final long cacheTtlMs;
+    private final Map<String, String> keyAliases;
 
-    private final ConcurrentHashMap<String, CacheEntry> cache = new ConcurrentHashMap<>();
-
-    private static final class CacheEntry {
-        final String value;
-        final long expiresAt;
-
-        CacheEntry(String value, long ttlMs) {
-            this.value = value;
-            this.expiresAt = System.currentTimeMillis() + ttlMs;
-        }
-
-        boolean isExpired() {
-            return System.currentTimeMillis() >= expiresAt;
-        }
-    }
+    private final SecretProviderUtil.Cache<String, String> cache = new SecretProviderUtil.Cache<>();
 
     /** Public no-arg constructor required by {@link java.util.ServiceLoader}. */
     public AzureKeyVaultSecretsProvider() {
         this(readerFrom(buildClient()),
                 prop("azure.secret.name.prefix", ""),
                 prop("azure.secret.name.dot.replacement", "-"),
-                readTtlMs());
+                SecretProviderUtil.readTtlMs(CONFIG_RESOURCE, "azure.cache.ttl.seconds", 3600, MODULE),
+                SecretProviderUtil.loadKeyAliases(CONFIG_RESOURCE));
     }
 
     /** Package-private constructor used by unit tests to inject an {@link AzureKeyVaultReader} lambda. */
     AzureKeyVaultSecretsProvider(AzureKeyVaultReader vaultReader, String secretNamePrefix,
             String dotReplacement, long cacheTtlMs) {
+        this(vaultReader, secretNamePrefix, dotReplacement, cacheTtlMs, Map.of());
+    }
+
+    /** Package-private constructor used by unit tests to inject a vault reader and key aliases. */
+    AzureKeyVaultSecretsProvider(AzureKeyVaultReader vaultReader, String secretNamePrefix,
+            String dotReplacement, long cacheTtlMs, Map<String, String> keyAliases) {
         this.vaultReader = vaultReader;
         this.secretNamePrefix = secretNamePrefix;
         this.dotReplacement = dotReplacement;
         this.cacheTtlMs = cacheTtlMs;
+        this.keyAliases = keyAliases;
     }
 
     @Override
     public String getSecret(String key) throws GeneralException {
-        CacheEntry cached = cache.get(key);
-        if (cached != null && !cached.isExpired()) {
-            return cached.value;
+        String cached = cache.get(key);
+        if (cached != null) {
+            return cached;
         }
 
-        String sanitizedKey = dotReplacement.isEmpty() ? key : key.replace(".", dotReplacement);
+        String physicalKey = keyAliases.get(key);
+        String sanitizedKey = physicalKey != null ? physicalKey
+                : dotReplacement.isEmpty() ? key : key.replace(".", dotReplacement);
         String secretName = secretNamePrefix + sanitizedKey;
 
         String value;
@@ -125,7 +129,7 @@ public final class AzureKeyVaultSecretsProvider implements SecretProvider {
 
         value = ConfigCryptoUtil.decryptIfEncrypted(value, secretName);
 
-        cache.put(key, new CacheEntry(value, cacheTtlMs));
+        cache.put(key, value, cacheTtlMs);
         return value;
     }
 
@@ -177,16 +181,6 @@ public final class AzureKeyVaultSecretsProvider implements SecretProvider {
                 .vaultUrl(vaultUrl)
                 .credential(credential)
                 .buildClient();
-    }
-
-    private static long readTtlMs() {
-        String raw = prop("azure.cache.ttl.seconds", "3600");
-        try {
-            return Long.parseLong(raw.trim()) * 1000L;
-        } catch (NumberFormatException e) {
-            Debug.logWarning("Invalid azure.cache.ttl.seconds '" + raw + "', defaulting to 3600s", MODULE);
-            return 3_600_000L;
-        }
     }
 
     private static String prop(String key, String defaultValue) {

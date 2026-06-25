@@ -19,17 +19,23 @@
 package org.apache.ofbiz.onepassword;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 import org.apache.ofbiz.base.util.GeneralException;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 
 public class OnePasswordSecretsProviderTest {
 
@@ -89,6 +95,32 @@ public class OnePasswordSecretsProviderTest {
         verify(client, times(4)).get(anyString(), anyString());
     }
 
+    // -- Key aliasing --
+
+    @Test
+    public void getSecretUsesAliasedTitle() throws Exception {
+        String aliasedTitle = "prod-ofbiz-mysql-db-password";
+        OnePasswordHttpClient client = buildMockClient(aliasedTitle, ITEM_ID, "dbpass");
+        OnePasswordSecretsProvider p = providerWithAliases(client, "password", "",
+                Map.of("jdbc-password.mysql-ofbiz", aliasedTitle));
+
+        assertEquals("dbpass", p.getSecret("jdbc-password.mysql-ofbiz"));
+
+        ArgumentCaptor<String> urlCaptor = ArgumentCaptor.forClass(String.class);
+        verify(client, atLeastOnce()).get(urlCaptor.capture(), eq(TOKEN));
+        String expectedFilter = URLEncoder.encode("title eq \"" + aliasedTitle + "\"", StandardCharsets.UTF_8);
+        assertTrue(urlCaptor.getAllValues().stream().anyMatch(u -> u.contains(expectedFilter)));
+    }
+
+    @Test
+    public void getSecretFallsBackToLogicalKeyWhenNoAliasConfigured() throws Exception {
+        OnePasswordHttpClient client = buildMockClient("jdbc-password.mysql-ofbiz", ITEM_ID, "dbpass");
+        OnePasswordSecretsProvider p = providerWithAliases(client, "password", "",
+                Map.of("some.other.key", "some-other-alias"));
+
+        assertEquals("dbpass", p.getSecret("jdbc-password.mysql-ofbiz"));
+    }
+
     // -- Error handling --
 
     @Test(expected = GeneralException.class)
@@ -123,6 +155,12 @@ public class OnePasswordSecretsProviderTest {
     private static OnePasswordSecretsProvider provider(OnePasswordHttpClient client, String field,
             String prefix, long ttlMs) {
         return new OnePasswordSecretsProvider(client, BASE_URL, TOKEN, VAULT_ID, field, prefix, ttlMs);
+    }
+
+    private static OnePasswordSecretsProvider providerWithAliases(OnePasswordHttpClient client, String field,
+            String prefix, Map<String, String> keyAliases) {
+        return new OnePasswordSecretsProvider(client, BASE_URL, TOKEN, VAULT_ID, field, prefix, ONE_HOUR_MS,
+                keyAliases);
     }
 
     /**

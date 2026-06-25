@@ -18,10 +18,8 @@
  *******************************************************************************/
 package org.apache.ofbiz.hashicorpvault;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import java.util.Collections;
+import java.util.Map;
 
 import io.github.jopenlibs.vault.SslConfig;
 import io.github.jopenlibs.vault.Vault;
@@ -32,6 +30,7 @@ import org.apache.ofbiz.base.crypto.ConfigCryptoUtil;
 
 import org.apache.ofbiz.base.lang.ThreadSafe;
 import org.apache.ofbiz.base.secret.SecretProvider;
+import org.apache.ofbiz.base.secret.SecretProviderUtil;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.GeneralException;
 import org.apache.ofbiz.base.util.UtilProperties;
@@ -51,6 +50,12 @@ import org.apache.ofbiz.base.util.UtilProperties;
  * <p>Resolved secret values are cached in memory for the TTL configured by
  * {@code hashicorp.vault.cache.ttl.seconds} (default 1 hour).</p>
  *
+ * <h2>Per-key naming overrides</h2>
+ * <p>Vault KV paths generally accept the dot-separated OFBiz key verbatim, but if a specific
+ * mount or policy requires a different path segment, set
+ * {@code key.alias.<logicalKey>=<vaultPathSegment>} to override that one key. The alias is
+ * checked first; keys with no alias entry use the logical key unchanged.</p>
+ *
  * <p>Configure via {@code plugins/hashicorp-vault-secrets-provider/config/hashicorp-vault-secrets.properties}.</p>
  */
 @ThreadSafe
@@ -64,22 +69,9 @@ public final class HashicorpVaultSecretsProvider implements SecretProvider {
     private final String secretNamePrefix;
     private final String field;
     private final long cacheTtlMs;
+    private final Map<String, String> keyAliases;
 
-    private final ConcurrentHashMap<String, CacheEntry> cache = new ConcurrentHashMap<>();
-
-    private static final class CacheEntry {
-        final String value;
-        final long expiresAt;
-
-        CacheEntry(String value, long ttlMs) {
-            this.value = value;
-            this.expiresAt = System.currentTimeMillis() + ttlMs;
-        }
-
-        boolean isExpired() {
-            return System.currentTimeMillis() >= expiresAt;
-        }
-    }
+    private final SecretProviderUtil.Cache<String, String> cache = new SecretProviderUtil.Cache<>();
 
     /** Public no-arg constructor required by {@link java.util.ServiceLoader}. */
     public HashicorpVaultSecretsProvider() {
@@ -87,31 +79,40 @@ public final class HashicorpVaultSecretsProvider implements SecretProvider {
                 prop("hashicorp.vault.kv.mount", "secret"),
                 prop("hashicorp.vault.secret.name.prefix", ""),
                 prop("hashicorp.vault.field", "password"),
-                readTtlMs());
+                SecretProviderUtil.readTtlMs(CONFIG_RESOURCE, "hashicorp.vault.cache.ttl.seconds", 3600, MODULE),
+                SecretProviderUtil.loadKeyAliases(CONFIG_RESOURCE));
     }
 
     /** Package-private constructor used by unit tests to inject a {@link HashicorpVaultReader} lambda. */
     HashicorpVaultSecretsProvider(HashicorpVaultReader vaultReader, String kvMount, String secretNamePrefix,
             String field, long cacheTtlMs) {
+        this(vaultReader, kvMount, secretNamePrefix, field, cacheTtlMs, Map.of());
+    }
+
+    /** Package-private constructor used by unit tests to inject a vault reader and key aliases. */
+    HashicorpVaultSecretsProvider(HashicorpVaultReader vaultReader, String kvMount, String secretNamePrefix,
+            String field, long cacheTtlMs, Map<String, String> keyAliases) {
         this.vaultReader = vaultReader;
         this.kvMount = kvMount;
         this.secretNamePrefix = secretNamePrefix;
         this.field = field;
         this.cacheTtlMs = cacheTtlMs;
+        this.keyAliases = keyAliases;
     }
 
     @Override
     public String getSecret(String key) throws GeneralException {
-        CacheEntry cached = cache.get(key);
-        if (cached != null && !cached.isExpired()) {
-            return cached.value;
+        String cached = cache.get(key);
+        if (cached != null) {
+            return cached;
         }
 
-        String path = kvMount + "/" + secretNamePrefix + key;
+        String physicalKey = keyAliases.getOrDefault(key, key);
+        String path = kvMount + "/" + secretNamePrefix + physicalKey;
         String value = readFromVault(path);
         value = ConfigCryptoUtil.decryptIfEncrypted(value, key);
 
-        cache.put(key, new CacheEntry(value, cacheTtlMs));
+        cache.put(key, value, cacheTtlMs);
         return value;
     }
 
@@ -225,17 +226,8 @@ public final class HashicorpVaultSecretsProvider implements SecretProvider {
         return 2;
     }
 
-    private static long readTtlMs() {
-        String raw = prop("hashicorp.vault.cache.ttl.seconds", "3600");
-        try {
-            return Long.parseLong(raw.trim()) * 1000L;
-        } catch (NumberFormatException e) {
-            Debug.logWarning("Invalid hashicorp.vault.cache.ttl.seconds '" + raw + "', defaulting to 3600s", MODULE);
-            return 3_600_000L;
-        }
-    }
-
     private static String prop(String key, String defaultValue) {
         return UtilProperties.getPropertyValue(CONFIG_RESOURCE, key, defaultValue);
     }
+
 }

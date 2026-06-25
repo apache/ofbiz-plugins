@@ -26,7 +26,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,6 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.ofbiz.base.crypto.ConfigCryptoUtil;
 import org.apache.ofbiz.base.lang.ThreadSafe;
 import org.apache.ofbiz.base.secret.SecretProvider;
+import org.apache.ofbiz.base.secret.SecretProviderUtil;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.GeneralException;
 import org.apache.ofbiz.base.util.UtilProperties;
@@ -55,6 +56,12 @@ import org.apache.ofbiz.base.util.UtilProperties;
  *   <li>Scan {@code fields[]} for the entry whose {@code label} matches {@code onepassword.field}</li>
  * </ol>
  *
+ * <h2>Per-key naming overrides</h2>
+ * <p>Items are looked up by matching the OFBiz key (with prefix) against the item's
+ * <em>title</em> in 1Password. If a specific key needs a different title, set
+ * {@code key.alias.<logicalKey>=<itemTitle>}. The alias is checked first; keys with no
+ * alias entry use the logical key unchanged.</p>
+ *
  * <p>Configure via {@code plugins/onepassword-secrets-provider/config/onepassword.properties}.</p>
  */
 @ThreadSafe
@@ -71,22 +78,9 @@ public final class OnePasswordSecretsProvider implements SecretProvider {
     private final String field;
     private final String secretNamePrefix;
     private final long cacheTtlMs;
+    private final Map<String, String> keyAliases;
 
-    private final ConcurrentHashMap<String, CacheEntry> cache = new ConcurrentHashMap<>();
-
-    private static final class CacheEntry {
-        final String value;
-        final long expiresAt;
-
-        CacheEntry(String value, long ttlMs) {
-            this.value = value;
-            this.expiresAt = System.currentTimeMillis() + ttlMs;
-        }
-
-        boolean isExpired() {
-            return System.currentTimeMillis() >= expiresAt;
-        }
-    }
+    private final SecretProviderUtil.Cache<String, String> cache = new SecretProviderUtil.Cache<>();
 
     /** Public no-arg constructor required by {@link java.util.ServiceLoader}. */
     public OnePasswordSecretsProvider() {
@@ -96,12 +90,20 @@ public final class OnePasswordSecretsProvider implements SecretProvider {
                 prop("onepassword.vault.id", ""),
                 prop("onepassword.field", "password"),
                 prop("onepassword.secret.name.prefix", ""),
-                readTtlMs());
+                SecretProviderUtil.readTtlMs(CONFIG_RESOURCE, "onepassword.cache.ttl.seconds", 3600, MODULE),
+                SecretProviderUtil.loadKeyAliases(CONFIG_RESOURCE));
     }
 
     /** Package-private constructor used by unit tests to inject a mock HTTP client. */
     OnePasswordSecretsProvider(OnePasswordHttpClient httpClient, String connectUrl, String token,
             String vaultId, String field, String secretNamePrefix, long cacheTtlMs) {
+        this(httpClient, connectUrl, token, vaultId, field, secretNamePrefix, cacheTtlMs, Map.of());
+    }
+
+    /** Package-private constructor used by unit tests to inject a mock HTTP client and key aliases. */
+    OnePasswordSecretsProvider(OnePasswordHttpClient httpClient, String connectUrl, String token,
+            String vaultId, String field, String secretNamePrefix, long cacheTtlMs,
+            Map<String, String> keyAliases) {
         this.httpClient = httpClient;
         this.connectUrl = connectUrl;
         this.token = token;
@@ -109,20 +111,21 @@ public final class OnePasswordSecretsProvider implements SecretProvider {
         this.field = field;
         this.secretNamePrefix = secretNamePrefix;
         this.cacheTtlMs = cacheTtlMs;
+        this.keyAliases = keyAliases;
     }
 
     @Override
     public String getSecret(String key) throws GeneralException {
-        CacheEntry cached = cache.get(key);
-        if (cached != null && !cached.isExpired()) {
-            return cached.value;
+        String cached = cache.get(key);
+        if (cached != null) {
+            return cached;
         }
 
-        String title = secretNamePrefix + key;
+        String title = secretNamePrefix + keyAliases.getOrDefault(key, key);
         String value = fetchFromConnect(title);
         value = ConfigCryptoUtil.decryptIfEncrypted(value, key);
 
-        cache.put(key, new CacheEntry(value, cacheTtlMs));
+        cache.put(key, value, cacheTtlMs);
         return value;
     }
 
@@ -284,17 +287,8 @@ public final class OnePasswordSecretsProvider implements SecretProvider {
         }
     }
 
-    private static long readTtlMs() {
-        String raw = prop("onepassword.cache.ttl.seconds", "3600");
-        try {
-            return Long.parseLong(raw.trim()) * 1000L;
-        } catch (NumberFormatException e) {
-            Debug.logWarning("Invalid onepassword.cache.ttl.seconds '" + raw + "', defaulting to 3600s", MODULE);
-            return 3_600_000L;
-        }
-    }
-
     private static String prop(String key, String defaultValue) {
         return UtilProperties.getPropertyValue(CONFIG_RESOURCE, key, defaultValue);
     }
+
 }

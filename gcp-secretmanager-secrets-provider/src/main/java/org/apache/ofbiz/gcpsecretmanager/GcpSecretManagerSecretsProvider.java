@@ -20,7 +20,7 @@ package org.apache.ofbiz.gcpsecretmanager;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
 
 import com.google.api.gax.core.FixedCredentialsProvider;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -31,6 +31,7 @@ import org.apache.ofbiz.base.crypto.ConfigCryptoUtil;
 
 import org.apache.ofbiz.base.lang.ThreadSafe;
 import org.apache.ofbiz.base.secret.SecretProvider;
+import org.apache.ofbiz.base.secret.SecretProviderUtil;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.GeneralException;
 import org.apache.ofbiz.base.util.UtilProperties;
@@ -58,6 +59,12 @@ import org.apache.ofbiz.base.util.UtilProperties;
  * <p>Built as:
  * {@code projects/{projectId}/secrets/{prefix}{sanitizedKey}/versions/{version}}</p>
  *
+ * <h2>Per-key naming overrides</h2>
+ * <p>If even the dot-replacement convention above doesn't produce an acceptable name for a
+ * specific key, set {@code key.alias.<logicalKey>=<vaultSecretName>} to store that one key
+ * under an explicit name instead. The alias is checked first; only keys with no alias entry
+ * fall through to the dot-replacement convention.</p>
+ *
  * <p>Configure via {@code plugins/gcp-secretmanager-secrets-provider/config/gcp-secret-manager.properties}.</p>
  */
 @ThreadSafe
@@ -73,26 +80,9 @@ public final class GcpSecretManagerSecretsProvider implements SecretProvider {
     private final String version;
     private final String dotReplacement;
     private final long cacheTtlMs;
+    private final Map<String, String> keyAliases;
 
-    private final ConcurrentHashMap<String, CacheEntry> cache = new ConcurrentHashMap<>();
-
-    private static final class CacheEntry {
-        private final String value;
-        private final long expiresAt;
-
-        CacheEntry(String value, long ttlMs) {
-            this.value = value;
-            this.expiresAt = System.currentTimeMillis() + ttlMs;
-        }
-
-        String getValue() {
-            return value;
-        }
-
-        boolean isExpired() {
-            return System.currentTimeMillis() >= expiresAt;
-        }
-    }
+    private final SecretProviderUtil.Cache<String, String> cache = new SecretProviderUtil.Cache<>();
 
     /** Public no-arg constructor required by {@link java.util.ServiceLoader}. */
     public GcpSecretManagerSecretsProvider() throws GeneralException {
@@ -103,12 +93,20 @@ public final class GcpSecretManagerSecretsProvider implements SecretProvider {
         this.secretNamePrefix = prop("gcp.secret.name.prefix", "");
         this.version = prop("gcp.secret.version", "latest");
         this.dotReplacement = prop("gcp.secret.name.dot.replacement", "-");
-        this.cacheTtlMs = readTtlMs();
+        this.cacheTtlMs = SecretProviderUtil.readTtlMs(CONFIG_RESOURCE, "gcp.cache.ttl.seconds", 3600, MODULE);
+        this.keyAliases = SecretProviderUtil.loadKeyAliases(CONFIG_RESOURCE);
     }
 
     /** Package-private constructor used by unit tests to inject a {@link GcpSecretReader} lambda. */
     GcpSecretManagerSecretsProvider(GcpSecretReader secretReader, String projectId,
             String secretNamePrefix, String version, String dotReplacement, long cacheTtlMs) {
+        this(secretReader, projectId, secretNamePrefix, version, dotReplacement, cacheTtlMs, Map.of());
+    }
+
+    /** Package-private constructor used by unit tests to inject a reader and key aliases. */
+    GcpSecretManagerSecretsProvider(GcpSecretReader secretReader, String projectId,
+            String secretNamePrefix, String version, String dotReplacement, long cacheTtlMs,
+            Map<String, String> keyAliases) {
         this.secretReader = secretReader;
         this.gcpClient = null;
         this.projectId = projectId;
@@ -116,16 +114,19 @@ public final class GcpSecretManagerSecretsProvider implements SecretProvider {
         this.version = version;
         this.dotReplacement = dotReplacement;
         this.cacheTtlMs = cacheTtlMs;
+        this.keyAliases = keyAliases;
     }
 
     @Override
     public String getSecret(String key) throws GeneralException {
-        CacheEntry cached = cache.get(key);
-        if (cached != null && !cached.isExpired()) {
-            return cached.getValue();
+        String cached = cache.get(key);
+        if (cached != null) {
+            return cached;
         }
 
-        String sanitizedKey = dotReplacement.isEmpty() ? key : key.replace(".", dotReplacement);
+        String physicalKey = keyAliases.get(key);
+        String sanitizedKey = physicalKey != null ? physicalKey
+                : dotReplacement.isEmpty() ? key : key.replace(".", dotReplacement);
         String secretName = secretNamePrefix + sanitizedKey;
         String resourceName = "projects/" + projectId + "/secrets/" + secretName + "/versions/" + version;
 
@@ -144,7 +145,7 @@ public final class GcpSecretManagerSecretsProvider implements SecretProvider {
 
         value = ConfigCryptoUtil.decryptIfEncrypted(value, key);
 
-        cache.put(key, new CacheEntry(value, cacheTtlMs));
+        cache.put(key, value, cacheTtlMs);
         return value;
     }
 
@@ -213,17 +214,8 @@ public final class GcpSecretManagerSecretsProvider implements SecretProvider {
         }
     }
 
-    private static long readTtlMs() {
-        String raw = prop("gcp.cache.ttl.seconds", "3600");
-        try {
-            return Long.parseLong(raw.trim()) * 1000L;
-        } catch (NumberFormatException e) {
-            Debug.logWarning("Invalid gcp.cache.ttl.seconds '" + raw + "', defaulting to 3600s", MODULE);
-            return 3_600_000L;
-        }
-    }
-
     private static String prop(String key, String defaultValue) {
         return UtilProperties.getPropertyValue(CONFIG_RESOURCE, key, defaultValue);
     }
+
 }

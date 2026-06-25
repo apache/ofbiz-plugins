@@ -20,6 +20,7 @@ package org.apache.ofbiz.gcpsecretmanager;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.ofbiz.base.util.GeneralException;
@@ -117,6 +118,30 @@ public class GcpSecretManagerSecretsProviderTest {
         GcpSecretReader reader = fixedReader(
                 "projects/my-project/secrets/my.key/versions/latest", "val");
         assertEquals("val", provider(reader, "", "").getSecret("my.key"));
+    }
+
+    // -- Key aliasing --
+
+    @Test
+    public void getSecretUsesAliasedNameInsteadOfDotReplacement() throws GeneralException {
+        GcpSecretReader reader = fixedReader(
+                "projects/my-project/secrets/prod-ofbiz-mysql-db-password/versions/latest", "dbpass");
+        GcpSecretManagerSecretsProvider p = new GcpSecretManagerSecretsProvider(
+                reader, PROJECT, "", "latest", "-", ONE_HOUR_MS,
+                Map.of("jdbc-password.mysql-ofbiz", "prod-ofbiz-mysql-db-password"));
+
+        assertEquals("dbpass", p.getSecret("jdbc-password.mysql-ofbiz"));
+    }
+
+    @Test
+    public void getSecretFallsBackToDotReplacementWhenNoAliasConfigured() throws GeneralException {
+        GcpSecretReader reader = fixedReader(
+                "projects/my-project/secrets/jdbc-password-mysql-ofbiz/versions/latest", "dbpass");
+        GcpSecretManagerSecretsProvider p = new GcpSecretManagerSecretsProvider(
+                reader, PROJECT, "", "latest", "-", ONE_HOUR_MS,
+                Map.of("some.other.key", "some-other-alias"));
+
+        assertEquals("dbpass", p.getSecret("jdbc-password.mysql-ofbiz"));
     }
 
     // -- Error handling --

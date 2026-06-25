@@ -19,7 +19,7 @@
 package org.apache.ofbiz.awssecrets;
 
 import java.net.URI;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.ofbiz.base.crypto.ConfigCryptoUtil;
 import org.apache.ofbiz.base.lang.ThreadSafe;
 import org.apache.ofbiz.base.secret.SecretProvider;
+import org.apache.ofbiz.base.secret.SecretProviderUtil;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.GeneralException;
 import org.apache.ofbiz.base.util.UtilProperties;
@@ -70,51 +71,44 @@ public final class AwsSecretsManagerProvider implements SecretProvider {
     private final long cacheTtlMs;
     private final String secretNamePrefix;
     private final String jsonField;
+    private final Map<String, String> keyAliases;
 
-    private final ConcurrentHashMap<String, CacheEntry> cache = new ConcurrentHashMap<>();
-
-    private static final class CacheEntry {
-        private final String value;
-        private final long expiresAt;
-
-        CacheEntry(String value, long ttlMs) {
-            this.value = value;
-            this.expiresAt = System.currentTimeMillis() + ttlMs;
-        }
-
-        String getValue() {
-            return value;
-        }
-
-        boolean isExpired() {
-            return System.currentTimeMillis() >= expiresAt;
-        }
-    }
+    private final SecretProviderUtil.Cache<String, String> cache = new SecretProviderUtil.Cache<>();
 
     /** Public no-arg constructor required by {@link java.util.ServiceLoader}. */
     public AwsSecretsManagerProvider() {
-        this(buildClient(), readTtlMs(),
+        this(buildClient(),
+                SecretProviderUtil.readTtlMs(CONFIG_RESOURCE, "aws.secretsmanager.cache.ttl.seconds", 3600, MODULE),
                 prop("aws.secretsmanager.secret.name.prefix", ""),
-                prop("aws.secretsmanager.json.field", ""));
+                prop("aws.secretsmanager.json.field", ""),
+                SecretProviderUtil.loadKeyAliases(CONFIG_RESOURCE));
     }
 
     /** Package-private constructor used by unit tests to inject a mock client. */
     AwsSecretsManagerProvider(SecretsManagerClient client, long cacheTtlMs,
             String secretNamePrefix, String jsonField) {
+        this(client, cacheTtlMs, secretNamePrefix, jsonField, Map.of());
+    }
+
+    /** Package-private constructor used by unit tests to inject a mock client and key aliases. */
+    AwsSecretsManagerProvider(SecretsManagerClient client, long cacheTtlMs,
+            String secretNamePrefix, String jsonField, Map<String, String> keyAliases) {
         this.client = client;
         this.cacheTtlMs = cacheTtlMs;
         this.secretNamePrefix = secretNamePrefix;
         this.jsonField = jsonField;
+        this.keyAliases = keyAliases;
     }
 
     @Override
     public String getSecret(String key) throws GeneralException {
-        CacheEntry cached = cache.get(key);
-        if (cached != null && !cached.isExpired()) {
-            return cached.getValue();
+        String cached = cache.get(key);
+        if (cached != null) {
+            return cached;
         }
 
-        String secretName = secretNamePrefix + key;
+        String physicalKey = keyAliases.getOrDefault(key, key);
+        String secretName = secretNamePrefix + physicalKey;
         String secretValue = fetchFromAws(secretName);
 
         if (!jsonField.isEmpty()) {
@@ -127,7 +121,7 @@ public final class AwsSecretsManagerProvider implements SecretProvider {
 
         secretValue = ConfigCryptoUtil.decryptIfEncrypted(secretValue, secretName);
 
-        cache.put(key, new CacheEntry(secretValue, cacheTtlMs));
+        cache.put(key, secretValue, cacheTtlMs);
         return secretValue;
     }
 
@@ -229,14 +223,4 @@ public final class AwsSecretsManagerProvider implements SecretProvider {
         return builder.build();
     }
 
-    private static long readTtlMs() {
-        String raw = prop("aws.secretsmanager.cache.ttl.seconds", "3600");
-        try {
-            return Long.parseLong(raw.trim()) * 1000L;
-        } catch (NumberFormatException e) {
-            Debug.logWarning("Invalid aws.secretsmanager.cache.ttl.seconds '" + raw
-                    + "', defaulting to 3600s", MODULE);
-            return 3_600_000L;
-        }
-    }
 }
