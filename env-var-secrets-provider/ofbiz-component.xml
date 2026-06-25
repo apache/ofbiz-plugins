@@ -18,13 +18,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<ofbiz-component name="envvar-secrets-provider" enabled="false"
+<ofbiz-component name="env-var-secrets-provider" enabled="false"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/ofbiz-component.xsd">
 
     <resource-loader name="main" type="component"/>
 
-    <!-- Puts config/ on the classpath so envvar-secrets.properties is found by UtilProperties -->
+    <!-- Puts config/ on the classpath so env-var-secrets.properties is found by UtilProperties -->
     <classpath type="dir" location="config"/>
 
 </ofbiz-component>

@@ -50,7 +50,7 @@ import org.apache.ofbiz.base.util.UtilValidate;
  * <pre>
  *   jdbc-password.mysql-ofbiz  -&gt;  OFBIZ_JDBC_PASSWORD_MYSQL_OFBIZ
  * </pre>
- * <p>This transform is fixed by default — see {@code config/envvar-secrets.properties}
+ * <p>This transform is fixed by default — see {@code config/env-var-secrets.properties}
  * — so any external tool can predict the expected env var name without reading OFBiz
  * source. A deployment that needs a specific key to resolve to a different env var name
  * (e.g. a name collision with something else already in its environment) may set
@@ -66,7 +66,7 @@ import org.apache.ofbiz.base.util.UtilValidate;
 public final class EnvVarSecretProvider implements SecretProvider {
 
     private static final String MODULE = EnvVarSecretProvider.class.getName();
-    private static final String CONFIG_RESOURCE = "envvar-secrets";
+    private static final String CONFIG_RESOURCE = "env-var-secrets";
 
     private final EnvVarReader reader;
     private final String namePrefix;
