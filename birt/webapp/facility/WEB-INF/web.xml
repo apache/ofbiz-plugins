@@ -93,20 +93,9 @@ under the License.
         <servlet-class>org.apache.ofbiz.webapp.control.ControlServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
-    <servlet>
-        <description>Mock USPS Webtools API Servlet</description>
-        <display-name>ShippingAPI</display-name>
-        <servlet-name>ShippingAPI</servlet-name>
-        <servlet-class>org.apache.ofbiz.shipment.thirdparty.usps.UspsMockApiServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
     <servlet-mapping>
         <servlet-name>ControlServlet</servlet-name>
         <url-pattern>/control/*</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ShippingAPI</servlet-name>
-        <url-pattern>/ShippingAPI.dll</url-pattern>
     </servlet-mapping>
 
     <welcome-file-list>
