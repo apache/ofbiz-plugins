@@ -18,6 +18,7 @@ under the License.
 **/
 package org.apache.ofbiz.assetmaint;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -83,7 +84,7 @@ public class FixedAssetMaintServices {
             EntityConditionList<EntityExpr> ecl = EntityCondition.makeCondition(UtilMisc.toList(
                     EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId),
                     EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId),
-                    EntityCondition.makeCondition("availableToPromiseTotal", EntityOperator.GREATER_THAN, "0")),
+                    EntityCondition.makeCondition("availableToPromiseTotal", EntityOperator.GREATER_THAN, BigDecimal.ZERO)),
                     EntityOperator.AND);
             List<GenericValue> inventoryItems = EntityQuery.use(delegator).from("InventoryItem").where(ecl).queryList();   //&& inventoryItems.size
             // () > 0
