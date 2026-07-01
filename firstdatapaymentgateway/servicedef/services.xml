@@ -24,10 +24,19 @@ under the License.
     <vendor></vendor>
     <version>1.0</version>
 
+    <service name="createPaymentGatewayFirstData" default-entity-name="PaymentGatewayFirstData" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a PaymentGatewayFirstData</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
     <service name="updatePaymentGatewayFirstData" default-entity-name="PaymentGatewayFirstData" engine="entity-auto" invoke="update" auth="true">
-        <description>Update a PaymentGatwayFirstData</description>
+        <description>Update a PaymentGatewayFirstData</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deletePaymentGatewayFirstData" default-entity-name="PaymentGatewayFirstData" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a PaymentGatewayFirstData</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
     <!-- First Data Implementations -->
