@@ -20,7 +20,7 @@ under the License.
 
 <entity-engine-xml>
     <PaymentGatewayConfig paymentGatewayConfigId="FIRST_DATA_CONFIG" paymentGatewayConfigTypeId="PAY_GATWY_FIRSTDATA" />
-    <PaymentGatewayFirstData paymentGatewayConfigId="FIRST_DATA_CONFIG" appName="[AppName]" appId="[AppID]" apiKey="[ApiKey]" apiSecret="[ApiSecret]" transactionUrl="[TransactionUrl]" enableDataVault="N" />
+    <PaymentGatewayFirstData paymentGatewayConfigId="FIRST_DATA_CONFIG" appName="[AppName]" apiKey="[ApiKey]" apiSecret="[ApiSecret]" transactionUrl="[TransactionUrl]" enableDataVault="N" />
 
     <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="" paymentCustomMethodId="CC_AUTH_FD" paymentGatewayConfigId="FIRST_DATA_CONFIG"/>
     <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_CAPTURE" paymentService="" paymentCustomMethodId="CC_CAPTURE_FD" paymentGatewayConfigId="FIRST_DATA_CONFIG"/>
