@@ -95,8 +95,8 @@ public final class HotSwapAgent {
         attrs.put(new Attributes.Name("Can-Retransform-Classes"), "true");
 
         try (InputStream in = HotSwapAgent.class.getClassLoader().getResourceAsStream(resource);
-             OutputStream fos = Files.newOutputStream(jar);
-             JarOutputStream jos = new JarOutputStream(fos, manifest)) {
+                OutputStream fos = Files.newOutputStream(jar);
+                JarOutputStream jos = new JarOutputStream(fos, manifest)) {
             if (in == null) {
                 throw new IOException("Could not locate compiled class on classpath: " + resource);
             }

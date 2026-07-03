@@ -765,9 +765,9 @@ public class DevReloadContainer implements Container {
 
     private static String suffixFor(PollKind kind) {
         return switch (kind) {
-            case SOURCE_JAVA -> ".java";
-            case COMPILED_CLASSES -> ".class";
-            case SERVICEDEF_XML -> ".xml";
+        case SOURCE_JAVA -> ".java";
+        case COMPILED_CLASSES -> ".class";
+        case SERVICEDEF_XML -> ".xml";
         };
     }
 
@@ -830,9 +830,9 @@ public class DevReloadContainer implements Container {
 
     private void dispatchPolledChange(Path file, PollKind kind) {
         switch (kind) {
-            case SOURCE_JAVA -> scheduleCompile(file);
-            case COMPILED_CLASSES -> scheduleReload(file);
-            case SERVICEDEF_XML -> scheduleServiceXmlReload(file);
+        case SOURCE_JAVA -> scheduleCompile(file);
+        case COMPILED_CLASSES -> scheduleReload(file);
+        case SERVICEDEF_XML -> scheduleServiceXmlReload(file);
         }
     }
 
