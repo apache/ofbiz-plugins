@@ -19,6 +19,9 @@
 package org.apache.ofbiz.devreload;
 
 import java.io.IOException;
+import java.lang.instrument.ClassDefinition;
+import java.lang.instrument.Instrumentation;
+import java.lang.management.ManagementFactory;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.ClosedWatchServiceException;
@@ -32,17 +35,19 @@ import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
 import javax.tools.JavaCompiler;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
@@ -57,54 +62,70 @@ import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.cache.UtilCache;
 
 /**
- * Development-only container that watches the Gradle build output directory for
- * changed {@code .class} files and hot-reloads them without restarting OFBiz.
+ * Development-only container that watches Java sources/classes and {@code services.xml}
+ * files and applies changes to a running OFBiz instance without a restart.
  *
  * <h2>Activation</h2>
- * Add {@code -Dofbiz.hotreload=true} to your JVM arguments, then start OFBiz
- * normally (or run {@code ./gradlew ofbizDev}, provided by this plugin). In a
- * second terminal run {@code ./gradlew -t classes} so Gradle continuously
- * recompiles on every file save — or rely on this container's own in-process
- * compiler, which kicks in automatically when a JDK (not just a JRE) is used.
+ * Add {@code -Dofbiz.hotreload=true -Djdk.attach.allowAttachSelf=true} to your JVM
+ * arguments, then start OFBiz normally (or run {@code ./gradlew ofbizDev}, provided by
+ * this plugin, which sets both automatically).
  *
- * <h2>How it works</h2>
+ * <h2>How Java hot-reload works</h2>
  * <ol>
- *   <li>A {@link WatchService} thread monitors {@code build/classes/java/main/}
- *       recursively for {@code ENTRY_CREATE} and {@code ENTRY_MODIFY} events.</li>
- *   <li>Changes are debounced for 300 ms so that a single Gradle compile run
- *       (which may write several {@code .class} files) is handled as one batch.</li>
- *   <li>A fresh {@link HotReloadClassLoader} is created for the batch. It uses
- *       child-first delegation for the changed class names, so the new bytecode
- *       from the build output directory is used instead of the JVM's cached
- *       version. Callers (e.g. OFBiz's {@code StandardJavaEngine} and
- *       {@code JavaEventHandler}) pick this up via a small reflective hook so
- *       that core framework code has no compile-time dependency on this
- *       plugin.</li>
- *   <li>{@link UtilCache} entries for service definitions are cleared so newly
- *       added/changed services are discovered.</li>
+ *   <li>At startup this container self-attaches {@link HotSwapAgent} to the current JVM
+ *       via the Attach API, obtaining a live {@link Instrumentation} instance — no
+ *       {@code -javaagent} flag needed.</li>
+ *   <li>A {@link WatchService} thread monitors every component's {@code src/main/java}
+ *       directory. On save, changed {@code .java} files are compiled in-process (a JDK,
+ *       not just a JRE, is required) into {@code build/classes/java/main/}. Running
+ *       {@code ./gradlew -t classes} externally in a second terminal works too — the
+ *       same WatchService also monitors that output directory directly for
+ *       externally-produced {@code .class} files.</li>
+ *   <li>Changes are debounced for 300 ms so a single compile run is handled as one batch.
+ *       Each changed class already loaded in the JVM is updated in place via
+ *       {@link Instrumentation#redefineClasses}, the same mechanism an IDE debugger uses
+ *       for HotSwap. Because the {@link Class} object's identity never changes, every
+ *       existing reference to it — including caches inside {@code JavaEventHandler} and
+ *       {@code StandardJavaEngine} — automatically executes the new method bodies on the
+ *       next call. No framework code needs to know this plugin exists.</li>
+ *   <li>Brand-new classes need no special handling at all: they simply get loaded
+ *       normally, from the same build output directory, the first time something
+ *       references them.</li>
  * </ol>
  *
+ * <h2>Structural changes</h2>
+ * On a stock JVM, {@code redefineClasses} can only replace method bodies and static
+ * initializers of a class that is already loaded — adding/removing methods or fields,
+ * changing a method signature, or changing the class hierarchy still requires a restart.
+ * Running on a JetBrains Runtime with {@code -XX:+AllowEnhancedClassRedefinition} (see
+ * {@code ./gradlew ofbizDevEnhanced}) lifts that restriction transparently: this class
+ * calls the exact same {@code redefineClasses} API either way, so structural changes
+ * just work when that flag is detected, with no code path change here.
+ *
+ * <h2>How services.xml changes are handled</h2>
+ * Every component's {@code servicedef/} directory is also watched; on change, the
+ * {@code service.ModelServiceMapByModel} {@link UtilCache} entry is cleared directly, so
+ * the new/edited definition is re-read on the next service call.
+ *
  * <h2>Scope</h2>
- * This container is intentionally dev-only. It has no effect when the system
- * property is absent, so it is safe to leave the registration in this
- * component's {@code ofbiz-component.xml} for all environments.
+ * This container is intentionally dev-only. It has no effect when the system property is
+ * absent, so it is safe to leave the registration in this component's
+ * {@code ofbiz-component.xml} for all environments.
  */
 public class DevReloadContainer implements Container {
 
     private static final String MODULE = DevReloadContainer.class.getName();
-
-    /** Classloader created on each reload; {@code null} when hot-reload is off. */
-    private static final AtomicReference<HotReloadClassLoader> ACTIVE_LOADER = new AtomicReference<>();
+    private static final String SERVICE_MODEL_CACHE_NAME = "service.ModelServiceMapByModel";
 
     private String name;
     private WatchService watchService;
     private Thread watchThread;
     private ScheduledExecutorService debouncer;
+    private Instrumentation instrumentation;
 
     // guarded by synchronized(this)
     private ScheduledFuture<?> pendingReload;
     private final Set<String> pendingChanges = new HashSet<>();
-    private final Set<String> allChangedClasses = new HashSet<>();
 
     // guarded by synchronized(this)
     private ScheduledFuture<?> pendingXmlReload;
@@ -122,29 +143,45 @@ public class DevReloadContainer implements Container {
      */
     private long lastCompileFinishedAt = 0;
 
+    // Counts across registerServicedefDirs()/registerSourceDirs()/registerAll(), so
+    // start() can emit one aggregated warning instead of leaving individual failures
+    // scattered in the log where they're easy to miss.
+    private int watchDirsAttempted = 0;
+    private int watchDirsFailed = 0;
+
     private Path classesDir;
     // Populated in start() before the watch thread launches; read-only after that.
     private final Set<Path> servicedefDirs = new HashSet<>();
     private final Set<Path> sourceRootDirs = new HashSet<>();
 
-    // -------------------------------------------------------------------------
-    // Static API used by other subsystems (via reflection; see DevReloadHook)
-    // -------------------------------------------------------------------------
+    /**
+     * Directories that could not get a real {@link WatchService} registration (e.g.
+     * macOS's kqueue-per-directory watch cost exhausting the process's practical watch
+     * ceiling, well under a typical {@code ulimit -n}) and are polled every
+     * {@link #POLL_INTERVAL_MS} instead, keyed by what kind of files under that
+     * directory matter. This is the fallback of last resort: {@link #registerAll} tries
+     * a real watch for every directory first and only falls here on failure, so nothing
+     * is ever silently left unwatched — it just degrades from instant to
+     * {@link #POLL_INTERVAL_MS}-latency for whichever directories didn't fit.
+     */
+    private final Map<Path, PollKind> pollDirs = new ConcurrentHashMap<>();
+    private final Map<Path, FileTime> pollMTimes = new ConcurrentHashMap<>();
+    private static final long POLL_INTERVAL_MS = 2000L;
+    private ScheduledFuture<?> pollTask;
+
+    /** Which kind of files under a {@link #pollDirs} entry matter, and how to react to one changing. */
+    private enum PollKind { SOURCE_JAVA, COMPILED_CLASSES, SERVICEDEF_XML }
 
     /**
-     * Returns the active {@link HotReloadClassLoader}, or {@code null} when
-     * hot-reload is disabled or has not fired yet.
-     *
-     * <p>Callers should fall back to the normal context classloader when this
-     * returns {@code null}.
+     * Component names to watch, from {@code -Dofbiz.hotreload.components}; {@code null}
+     * means watch every component. Scoping is a performance optimization, not a
+     * correctness requirement: even unscoped, {@link #pollDirs} guarantees nothing is
+     * silently missed. Scoping just keeps everything on the fast, instant, event-driven
+     * path instead of some directories falling back to polling. Set this property to a
+     * comma-separated list of component names to scope watching to just the ones being
+     * worked on.
      */
-    public static ClassLoader getActiveLoader() {
-        return ACTIVE_LOADER.get();
-    }
-
-    // -------------------------------------------------------------------------
-    // Container lifecycle
-    // -------------------------------------------------------------------------
+    private Set<String> allowedComponents;
 
     @Override
     public void init(List<StartupCommand> ofbizCommands, String name, String configFile) throws ContainerException {
@@ -153,6 +190,34 @@ public class DevReloadContainer implements Container {
         if (!"true".equalsIgnoreCase(System.getProperty("ofbiz.hotreload"))) {
             Debug.logInfo("DevReloadContainer is disabled. Use -Dofbiz.hotreload=true to enable.", MODULE);
             return;
+        }
+
+        String componentsProperty = System.getProperty("ofbiz.hotreload.components");
+        if (componentsProperty != null && !componentsProperty.isBlank()) {
+            allowedComponents = Arrays.stream(componentsProperty.split(","))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .collect(java.util.stream.Collectors.toSet());
+            Debug.logInfo("Hot-reload: scoped to components " + allowedComponents
+                    + " (set via -Dofbiz.hotreload.components)", MODULE);
+        }
+
+        try {
+            instrumentation = HotSwapAgent.install();
+            Debug.logInfo("Hot-reload: self-attached HotSwapAgent — Java class redefinition is available.", MODULE);
+            if (enhancedRedefinitionRequested()) {
+                Debug.logInfo("Hot-reload: -XX:+AllowEnhancedClassRedefinition detected — running on a JVM "
+                        + "(e.g. JetBrains Runtime) that can also hot-swap structural changes (added/removed "
+                        + "methods or fields, changed signatures), not just method bodies.", MODULE);
+            } else {
+                Debug.logInfo("Hot-reload: structural changes (added/removed methods or fields, changed "
+                        + "signatures) will require a restart on this JVM. Run './gradlew ofbizDevEnhanced' "
+                        + "on a JetBrains Runtime to hot-swap those too.", MODULE);
+            }
+        } catch (Exception e) {
+            Debug.logWarning("Hot-reload: could not self-attach HotSwapAgent (" + e.getMessage()
+                    + "). Add -Djdk.attach.allowAttachSelf=true to JVM args. "
+                    + "Java class changes will require a restart; services.xml auto-reload still works.", MODULE);
         }
 
         classesDir = Paths.get("build/classes/java/main");
@@ -164,9 +229,17 @@ public class DevReloadContainer implements Container {
 
         try {
             watchService = classesDir.getFileSystem().newWatchService();
-            registerAll(classesDir);
         } catch (IOException e) {
             throw new ContainerException("DevReloadContainer: failed to initialise WatchService", e);
+        }
+
+        try {
+            registerAll(classesDir);
+        } catch (IOException e) {
+            // registerAll() already falls back to polling per-directory for individual
+            // register() failures; reaching here means something more fundamental broke
+            // walking the tree at all (e.g. can't even list classesDir).
+            Debug.logWarning("Hot-reload: could not fully walk " + classesDir + ": " + e.getMessage(), MODULE);
         }
 
         debouncer = Executors.newSingleThreadScheduledExecutor(r -> {
@@ -185,9 +258,21 @@ public class DevReloadContainer implements Container {
         }
         registerServicedefDirs();
         registerSourceDirs();
+        if (watchDirsFailed > 0) {
+            Debug.logWarning("Hot-reload: " + watchDirsFailed + " of " + watchDirsAttempted + " directory watch "
+                    + "registrations hit file-descriptor/watch exhaustion (see warnings above for which ones) "
+                    + "and are now polled every " + POLL_INTERVAL_MS + "ms instead of instantly. Java or "
+                    + "services.xml changes there still hot-reload, just with a few seconds of extra latency. "
+                    + "Scope hot-reload to just the components you're working on with "
+                    + "-Dofbiz.hotreload.components=compA,compB (or -Photreload.components=compA,compB with "
+                    + "the ofbizDev/ofbizDevEnhanced Gradle tasks) to keep everything on the fast, instant "
+                    + "path instead.", MODULE);
+        }
         watchThread = new Thread(this::watchLoop, "ofbiz-hot-reload-watcher");
         watchThread.setDaemon(true);
         watchThread.start();
+        pollTask = debouncer.scheduleWithFixedDelay(
+                this::pollFallbackDirs, POLL_INTERVAL_MS, POLL_INTERVAL_MS, TimeUnit.MILLISECONDS);
         Debug.logInfo("DevReloadContainer started. Edit any Java or services.xml file and changes go live without a restart.", MODULE);
         return true;
     }
@@ -199,6 +284,9 @@ public class DevReloadContainer implements Container {
      */
     private void registerServicedefDirs() {
         for (ComponentConfig.ServiceResourceInfo sri : ComponentConfig.getAllServiceResourceInfos("model")) {
+            if (allowedComponents != null && !allowedComponents.contains(sri.getComponentConfig().getComponentName())) {
+                continue;
+            }
             try {
                 URL url = sri.createResourceHandler().getURL();
                 if (!"file".equals(url.getProtocol())) {
@@ -206,12 +294,17 @@ public class DevReloadContainer implements Container {
                 }
                 Path dir = Paths.get(new URI(url.toString())).getParent();
                 if (dir != null && Files.isDirectory(dir) && servicedefDirs.add(dir)) {
-                    dir.register(watchService,
-                            StandardWatchEventKinds.ENTRY_CREATE,
-                            StandardWatchEventKinds.ENTRY_MODIFY);
-                    Debug.logInfo("Hot-reload: watching servicedef directory " + dir, MODULE);
+                    watchDirsAttempted++;
+                    try {
+                        dir.register(watchService,
+                                StandardWatchEventKinds.ENTRY_CREATE,
+                                StandardWatchEventKinds.ENTRY_MODIFY);
+                        Debug.logInfo("Hot-reload: watching servicedef directory " + dir, MODULE);
+                    } catch (IOException e) {
+                        fallBackToPolling(dir, PollKind.SERVICEDEF_XML, e);
+                    }
                 }
-            } catch (GenericConfigException | IOException | java.net.URISyntaxException e) {
+            } catch (GenericConfigException | java.net.URISyntaxException e) {
                 Debug.logWarning("Hot-reload: could not register servicedef dir for "
                         + sri.getLocation() + ": " + e.getMessage(), MODULE);
             }
@@ -232,13 +325,17 @@ public class DevReloadContainer implements Container {
         }
         for (ComponentConfig cc : ComponentConfig.getAllComponents()) {
             if (cc.rootLocation() == null) continue;
+            if (allowedComponents != null && !allowedComponents.contains(cc.getComponentName())) continue;
             Path srcDir = cc.rootLocation().resolve("src/main/java");
             if (Files.isDirectory(srcDir) && sourceRootDirs.add(srcDir)) {
                 try {
                     registerAll(srcDir);
                     Debug.logInfo("Hot-reload: watching source directory " + srcDir, MODULE);
                 } catch (IOException e) {
-                    Debug.logWarning("Hot-reload: could not watch source dir " + srcDir + ": " + e.getMessage(), MODULE);
+                    // registerAll() already falls back to polling per-directory for
+                    // individual register() failures; reaching here means something more
+                    // fundamental broke walking the tree at all (e.g. can't list srcDir).
+                    Debug.logWarning("Hot-reload: could not walk source dir " + srcDir + ": " + e.getMessage(), MODULE);
                 }
             }
         }
@@ -306,7 +403,7 @@ public class DevReloadContainer implements Container {
                         && changed.toString().endsWith(".class")) {
                     // Only react to written/updated class files. Ignore ENTRY_DELETE so
                     // that removing a source file (and its .class output) does not cause
-                    // HotReloadClassLoader to attempt loading a non-existent class.
+                    // a redefinition attempt against a now-missing file.
                     scheduleReload(changed);
                 } else if ((kind == StandardWatchEventKinds.ENTRY_CREATE || kind == StandardWatchEventKinds.ENTRY_MODIFY)
                         && changed.toString().endsWith(".xml")
@@ -383,37 +480,78 @@ public class DevReloadContainer implements Container {
 
         Set<String> batch = new HashSet<>(pendingChanges);
         pendingChanges.clear();
-        // Grow the cumulative set so the new loader covers all changes from this
-        // session, not just the latest batch. This prevents a second reload of a
-        // different file from making the first file's changes invisible again.
-        allChangedClasses.addAll(batch);
 
         Debug.logInfo("Hot-reload: detected changes in " + batch, MODULE);
 
+        if (instrumentation == null) {
+            Debug.logWarning("Hot-reload: HotSwapAgent not attached — " + batch
+                    + " compiled but not applied to the running JVM. Restart to pick it up.", MODULE);
+            return;
+        }
+
+        List<ClassDefinition> defs = new ArrayList<>();
+        for (String className : batch) {
+            Path classFile = classesDir.resolve(className.replace('.', '/') + ".class");
+            try {
+                Class<?> loaded = findLoadedClass(className);
+                if (loaded == null) {
+                    // Never loaded yet in this JVM — nothing to redefine. It will simply
+                    // load fresh, with the new bytecode, the first time something
+                    // references it. No special handling needed.
+                    continue;
+                }
+                defs.add(new ClassDefinition(loaded, Files.readAllBytes(classFile)));
+            } catch (IOException e) {
+                Debug.logError(e, "Hot-reload: failed to read class file for " + className, MODULE);
+            }
+        }
+
+        if (defs.isEmpty()) {
+            Debug.logInfo("Hot-reload: nothing already loaded to redefine for " + batch, MODULE);
+            return;
+        }
+
         try {
-            URL url = classesDir.toUri().toURL();
-            // Use the defining classloader of DevReloadContainer (AppClassLoader) as
-            // the HRL parent — deterministic and immune to TCCL mutation by Tomcat or
-            // component initializers. TCCL of the debouncer thread would work today but
-            // is an implicit invariant that could silently break if startup order changes.
-            HotReloadClassLoader loader = new HotReloadClassLoader(
-                    new URL[]{url},
-                    DevReloadContainer.class.getClassLoader(),
-                    allChangedClasses);
-
-            ACTIVE_LOADER.set(loader);
-
+            instrumentation.redefineClasses(defs.toArray(new ClassDefinition[0]));
             // Clear service definition cache so newly added service methods are discovered.
             // We deliberately do NOT clear webapp.Controller caches here — controller.xml
             // has not changed, only .class files have, and clearing those caches triggers
             // Groovy re-compilation of screen expressions which can fail unexpectedly.
-            UtilCache.clearCache("service.ModelServiceMapByModel");
-
+            UtilCache.clearCache(SERVICE_MODEL_CACHE_NAME);
             Debug.logInfo("Hot-reload complete for: " + batch, MODULE);
-
+        } catch (UnsupportedOperationException e) {
+            // Thrown when a change adds/removes a method or field, changes a method
+            // signature, or changes the class hierarchy — the plain JVM redefinition API
+            // cannot apply that without a restart, the same limit IDE debugger HotSwap has.
+            Debug.logWarning("Hot-reload: " + batch + " contains a structural change (added/removed "
+                    + "method or field, changed signature, changed hierarchy) that the JVM cannot "
+                    + "hot-swap. Restart OFBiz to pick it up. (" + e.getMessage() + ")", MODULE);
         } catch (Throwable e) {
-            Debug.logError(e, "Hot-reload failed", MODULE);
+            Debug.logError(e, "Hot-reload failed for " + batch, MODULE);
         }
+    }
+
+    /**
+     * Best-effort detection of whether this JVM was launched with
+     * {@code -XX:+AllowEnhancedClassRedefinition} (e.g. a JetBrains Runtime), which is
+     * what allows {@link Instrumentation#redefineClasses} to also apply structural
+     * changes instead of just method bodies. Purely informational — the actual
+     * capability is exercised (and, if absent, reported) when a redefinition is
+     * attempted in {@link #applyReload()}.
+     */
+    private static boolean enhancedRedefinitionRequested() {
+        return ManagementFactory.getRuntimeMXBean().getInputArguments().stream()
+                .anyMatch(arg -> arg.contains("AllowEnhancedClassRedefinition"));
+    }
+
+    /** Searches classes already loaded in the JVM for one matching {@code className}. */
+    private Class<?> findLoadedClass(String className) {
+        for (Class<?> c : instrumentation.getAllLoadedClasses()) {
+            if (c.getName().equals(className)) {
+                return c;
+            }
+        }
+        return null;
     }
 
     private synchronized void scheduleServiceXmlReload(Path xmlFile) {
@@ -437,7 +575,7 @@ public class DevReloadContainer implements Container {
 
         Debug.logInfo("Hot-reload: service XML changed " + batch + " — clearing service model cache", MODULE);
         try {
-            UtilCache.clearCache("service.ModelServiceMapByModel");
+            UtilCache.clearCache(SERVICE_MODEL_CACHE_NAME);
             Debug.logInfo("Hot-reload: service model cache cleared; definitions will be re-read on next service call", MODULE);
         } catch (Throwable e) {
             Debug.logError(e, "Hot-reload: failed to clear service model cache", MODULE);
@@ -486,9 +624,8 @@ public class DevReloadContainer implements Container {
                     // Collect all .class files produced by this compilation round.
                     // Each source file can produce multiple .class files when it contains
                     // inner or anonymous classes (e.g. Foo$Bar.class, Foo$1.class).
-                    // All of them must be added to allChangedClasses so HotReloadClassLoader
-                    // uses child-first delegation for inner classes too — otherwise the inner
-                    // class still resolves through AppClassLoader's stale cached version.
+                    // All of them must be redefined too — otherwise the inner class still
+                    // resolves through its stale, previously-loaded bytecode.
                     List<Path> compiledRelative = new ArrayList<>();
                     for (Path src : batch) {
                         Path cf = sourceToClassFile(src); // relative path for the outer class
@@ -568,16 +705,135 @@ public class DevReloadContainer implements Container {
     // Helpers
     // -------------------------------------------------------------------------
 
+    /**
+     * Recursively registers every directory under {@code start} with the WatchService.
+     * A directory whose registration fails (e.g. watch/descriptor exhaustion) falls back
+     * to polling via {@link #fallBackToPolling} instead of aborting the whole walk, so
+     * one overloaded directory never leaves the rest of the tree unwatched.
+     */
     private void registerAll(Path start) throws IOException {
         Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
             @Override
-            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                dir.register(watchService,
-                        StandardWatchEventKinds.ENTRY_CREATE,
-                        StandardWatchEventKinds.ENTRY_MODIFY);
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
+                watchDirsAttempted++;
+                try {
+                    dir.register(watchService,
+                            StandardWatchEventKinds.ENTRY_CREATE,
+                            StandardWatchEventKinds.ENTRY_MODIFY);
+                } catch (IOException e) {
+                    fallBackToPolling(dir, kindOf(dir), e);
+                }
                 return FileVisitResult.CONTINUE;
             }
         });
+    }
+
+    /** Classifies a directory so poll fallback knows which file suffix and reload path apply. */
+    private PollKind kindOf(Path dir) {
+        return dir.startsWith(classesDir) ? PollKind.COMPILED_CLASSES : PollKind.SOURCE_JAVA;
+    }
+
+    // -------------------------------------------------------------------------
+    // Poll fallback (for directories that couldn't get a real WatchService registration)
+    // -------------------------------------------------------------------------
+
+    /**
+     * Records {@code dir} as needing to be polled instead of watched, seeds a baseline of
+     * its current files' mtimes (so the very first poll tick doesn't treat every
+     * pre-existing file as "changed"), and logs why.
+     */
+    private void fallBackToPolling(Path dir, PollKind kind, IOException cause) {
+        watchDirsFailed++;
+        pollDirs.put(dir, kind);
+        try (var entries = Files.list(dir)) {
+            String suffix = suffixFor(kind);
+            entries.filter(p -> p.toString().endsWith(suffix)).forEach(p -> {
+                try {
+                    pollMTimes.put(p, Files.getLastModifiedTime(p));
+                } catch (IOException ignored) {
+                    // Best-effort baseline; a missed entry just means its first real
+                    // change gets dispatched once even if unchanged, which is harmless.
+                }
+            });
+        } catch (IOException e) {
+            Debug.logWarning("Hot-reload: could not seed poll baseline for " + dir + ": " + e.getMessage(), MODULE);
+        }
+        Debug.logWarning("Hot-reload: could not watch " + dir + " (" + cause.getMessage() + ") -- polling it "
+                + "every " + POLL_INTERVAL_MS + "ms instead, so changes there are still noticed, just not "
+                + "instantly.", MODULE);
+    }
+
+    private static String suffixFor(PollKind kind) {
+        return switch (kind) {
+            case SOURCE_JAVA -> ".java";
+            case COMPILED_CLASSES -> ".class";
+            case SERVICEDEF_XML -> ".xml";
+        };
+    }
+
+    /**
+     * Runs every {@link #POLL_INTERVAL_MS} on {@link #debouncer}. For each directory in
+     * {@link #pollDirs}, lists its direct children: changed files matching that
+     * directory's {@link PollKind} feed into the same debounced reload pipeline a real
+     * WatchService event would; newly-appeared subdirectories get a real registration
+     * attempt via {@link #registerAll}, which itself falls back to polling again if that
+     * still doesn't fit -- so the poll set only ever covers exactly what doesn't fit.
+     */
+    private void pollFallbackDirs() {
+        if (pollDirs.isEmpty()) {
+            return;
+        }
+        for (Map.Entry<Path, PollKind> entry : pollDirs.entrySet()) {
+            Path dir = entry.getKey();
+            PollKind kind = entry.getValue();
+            if (!Files.isDirectory(dir)) {
+                pollDirs.remove(dir); // deleted; nothing left to poll here
+                continue;
+            }
+            String suffix = suffixFor(kind);
+            try (var entries = Files.list(dir)) {
+                entries.forEach(child -> {
+                    if (Files.isDirectory(child)) {
+                        if (!pollDirs.containsKey(child)) {
+                            try {
+                                registerAll(child);
+                            } catch (IOException e) {
+                                Debug.logWarning("Hot-reload: poll fallback could not register new directory "
+                                        + child + ": " + e.getMessage(), MODULE);
+                            }
+                        }
+                        return;
+                    }
+                    if (!child.toString().endsWith(suffix)) {
+                        return;
+                    }
+                    try {
+                        FileTime mtime = Files.getLastModifiedTime(child);
+                        FileTime previous = pollMTimes.put(child, mtime);
+                        // previous == null means this file was never seen before -- either
+                        // it's brand new (must be dispatched, same as a WatchService
+                        // ENTRY_CREATE would) or fallBackToPolling()'s seed pass somehow
+                        // missed it. Either way, treating "never seen" as "changed" is the
+                        // only way a poll-fallback directory doesn't silently miss new files.
+                        if (previous == null || !previous.equals(mtime)) {
+                            dispatchPolledChange(child, kind);
+                        }
+                    } catch (IOException ignored) {
+                        // Transient stat failure (e.g. file removed mid-scan); skip this tick.
+                    }
+                });
+            } catch (IOException e) {
+                Debug.logWarning("Hot-reload: poll fallback could not list " + dir + ": " + e.getMessage(), MODULE);
+            }
+        }
+    }
+
+    private void dispatchPolledChange(Path file, PollKind kind) {
+        switch (kind) {
+            case SOURCE_JAVA -> scheduleCompile(file);
+            case COMPILED_CLASSES -> scheduleReload(file);
+            case SERVICEDEF_XML -> scheduleServiceXmlReload(file);
+        }
     }
 
     /**
