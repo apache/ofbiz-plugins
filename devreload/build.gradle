@@ -28,6 +28,18 @@ static List<String> hotreloadComponentArgs(Project project) {
     return components ? ["-Dofbiz.hotreload.components=${components}".toString()] : []
 }
 
+// Optional -Photreload.watchBuildOutput=true, forwarded as
+// -Dofbiz.hotreload.watchBuildOutput to DevReloadContainer. Off by default: watching
+// build/classes/java/main only matters for picking up externally-produced .class files
+// (e.g. `./gradlew -t classes` running in a second terminal) -- in-process compiles hot-swap
+// directly and never need it -- and unlike source/servicedef watching, that tree isn't
+// narrowed by -Photreload.components, so on a full checkout it roughly doubles the total
+// directories watched for no benefit to the common (in-process-only) workflow.
+static List<String> hotreloadWatchBuildOutputArgs(Project project) {
+    Object watchBuildOutput = project.findProperty('hotreload.watchBuildOutput')
+    return watchBuildOutput ? ["-Dofbiz.hotreload.watchBuildOutput=${watchBuildOutput}".toString()] : []
+}
+
 // Convenience task: `./gradlew ofbizDev` starts OFBiz with hot-reload enabled
 // (-Dofbiz.hotreload=true), plus the JVM flag DevReloadContainer's self-attaching
 // HotSwapAgent needs (-Djdk.attach.allowAttachSelf=true). Registered on the root
@@ -37,12 +49,15 @@ rootProject.tasks.register('ofbizDev', JavaExec) {
     dependsOn rootProject.tasks.named('classes')
     group = 'OFBiz Server Commands'
     description = 'Start OFBiz with hot-reload. Java source + services.xml changes reload without a restart. ' +
-            'Optionally scope to specific components with -Photreload.components=compA,compB.'
+            'Optionally scope to specific components with -Photreload.components=compA,compB, or watch ' +
+            'build/classes/java/main too (for externally-produced .class files) with ' +
+            '-Photreload.watchBuildOutput=true.'
     classpath = rootProject.sourceSets.main.runtimeClasspath
     mainClass = rootProject.application.mainClass
     jvmArgs(rootProject.application.applicationDefaultJvmArgs
             + ['-Dofbiz.hotreload=true', '-Djdk.attach.allowAttachSelf=true']
-            + hotreloadComponentArgs(project))
+            + hotreloadComponentArgs(project)
+            + hotreloadWatchBuildOutputArgs(project))
 }
 
 // Locates a JetBrains Runtime `java` executable: an explicit -PjbrHome=... or JBR_HOME
@@ -90,7 +105,10 @@ rootProject.tasks.register('ofbizDevEnhanced', Exec) {
     description = 'Start OFBiz on a JetBrains Runtime with enhanced class redefinition -- structural ' +
             'Java changes (new/removed methods or fields) also reload without a restart, not just method ' +
             'bodies. Requires a JetBrains Runtime; set -PjbrHome=/path/to/jbr if not auto-detected. ' +
-            'Optionally scope to specific components with -Photreload.components=compA,compB.'
+            'Recommended: run with --no-watch-fs, e.g. \'./gradlew ofbizDevEnhanced --no-watch-fs\' ' +
+            '-- Gradle\'s own file-system watching competes with this plugin\'s for the same macOS ' +
+            'directory-watch ceiling on a full checkout (see the README\'s "At scale" section). ' +
+            'Optionally also scope to specific components with -Photreload.components=compA,compB.'
     doFirst {
         String jbrJava = resolveJbrJavaExecutable()
         if (!jbrJava) {
@@ -103,6 +121,7 @@ rootProject.tasks.register('ofbizDevEnhanced', Exec) {
         cmd.addAll(rootProject.application.applicationDefaultJvmArgs)
         cmd.addAll(['-Dofbiz.hotreload=true', '-Djdk.attach.allowAttachSelf=true', '-XX:+AllowEnhancedClassRedefinition'])
         cmd.addAll(hotreloadComponentArgs(project))
+        cmd.addAll(hotreloadWatchBuildOutputArgs(project))
         cmd.addAll(['-cp', rootProject.sourceSets.main.runtimeClasspath.asPath])
         cmd.add(rootProject.application.mainClass.get())
         commandLine = cmd

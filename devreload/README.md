@@ -21,14 +21,18 @@ or, to activate hot-reload with any other start command:
 -Dofbiz.hotreload=true -Djdk.attach.allowAttachSelf=true
 ```
 
-While OFBiz is running, either:
+While OFBiz is running, edit and save a `.java` file — this plugin compiles it in-process
+(requires running on a JDK, not a JRE) and hot-swaps the result. Edits to existing
+methods and `services.xml` changes go live within about 300ms, no restart needed.
 
-- edit and save a `.java` file — this plugin compiles it in-process (requires running
-  on a JDK, not a JRE) and hot-swaps the result, or
-- run `./gradlew -t classes` in a second terminal for continuous external compilation.
-
-Either way, edits to existing methods and `services.xml` changes go live within about
-300ms, no restart needed.
+Prefer compiling externally instead (e.g. running `./gradlew -t classes` in a second
+terminal)? Add `-Dofbiz.hotreload.watchBuildOutput=true` (or
+`-Photreload.watchBuildOutput=true` with the `ofbizDev`/`ofbizDevEnhanced` Gradle tasks)
+to also watch `build/classes/java/main` for externally-produced `.class` files. This is
+off by default: that tree isn't narrowed by `-Dofbiz.hotreload.components` the way
+source/servicedef watching is, so on a full checkout it roughly doubles the total
+directories watched for a workflow most people don't use — in-process compilation
+already hot-swaps directly and never needs it.
 
 ## How it works
 
@@ -73,8 +77,12 @@ way, **no plugin code depends on which JVM is running** — running on a JBR wit
 right flag is purely an environment choice:
 
 ```
-./gradlew ofbizDevEnhanced
+./gradlew ofbizDevEnhanced --no-watch-fs
 ```
+
+`--no-watch-fs` is recommended on every run of this task (see the callout right below for
+why) — plain `./gradlew ofbizDevEnhanced` without it also works, just with the caveat
+described there on a full checkout.
 
 This locates a JetBrains Runtime (auto-detects the one bundled with a local IntelliJ IDEA
 install, or point at one explicitly with `-PjbrHome=/path/to/jbr` or the `JBR_HOME` env
@@ -84,6 +92,25 @@ than baked into `ofbizDev`. `DevReloadContainer` logs at startup whether it dete
 flag, so you always know which mode you're in. Verified end-to-end: adding a brand-new
 method to an already-loaded class applied live, with zero restart, running this way.
 
+> **Why `--no-watch-fs`:** on an unscoped trunk checkout, `ofbizDevEnhanced` launched
+> through a normal, persistent Gradle daemon has been observed hitting macOS's
+> per-process kqueue directory-watch ceiling (see "At scale" below) *during startup
+> itself* — root-caused to Gradle's own file-system watching (`--watch-fs`, on by default
+> since Gradle 7+), which keeps its own persistent watches over this same project tree
+> for incremental-build purposes and competes with `DevReloadContainer`'s watches for
+> the same ceiling. This is purely a Gradle build-performance feature with no effect on
+> OFBiz itself or on any other terminal/invocation — disabling it here only affects this
+> one command's own file-change bookkeeping. Confirmed two independent ways to
+> avoid the collision entirely: launching the same JVM directly (bypassing the Gradle daemon
+> altogether) and passing `--no-watch-fs` to keep the daemon but disable its own
+> watching — both gave a fully healthy, unscoped startup with zero watch failures.
+> Raising `ulimit -n` does **not** fix it (tested well past the OS's own per-process
+> ceiling with no change), confirming this is kqueue's own internal watch-table limit,
+> not a file-descriptor problem. `-Photreload.components=...` scoping (below) still
+> works and remains useful for faster startup, but is no longer the only lever here. When
+> the ceiling is hit despite these mitigations, the affected directories are now (as of
+> the fix in `DevReloadContainer`) logged and skipped rather than crashing the whole JVM.
+
 ## At scale: nothing is ever silently missed
 
 Recursively watching every component's source tree does not scale indefinitely: macOS's
@@ -92,13 +119,26 @@ per-process ceiling well under a typical `ulimit -n` (observed around ~10-12k wa
 independent of the configured file-descriptor limit) — a checkout the size of OFBiz
 trunk (~50+ components) can exceed it.
 
+Two things narrow that count before it ever gets to the ceiling: `src/main/java` and
+`servicedef/` watching is scoped by `-Dofbiz.hotreload.components` (see below), and
+`build/classes/java/main` isn't watched at all unless you opt in with
+`-Dofbiz.hotreload.watchBuildOutput=true` — that tree mirrors every component's source
+tree but, unlike source/servicedef watching, isn't itself narrowed by component scoping
+(compiled output isn't organized per component the way source is), so leaving it off by
+default roughly halves the total directories watched for the common in-process-compile
+workflow, which never needed it in the first place.
+
 `registerAll` tries a real, instant, event-driven watch for every directory first. Any
 directory that fails that registration falls back to being polled every 2 seconds
 instead — so nothing is ever silently left unwatched; it just degrades from instant to a
 couple of seconds of latency for whichever directories didn't fit. New subdirectories
 discovered while polling get their own real-watch attempt too, falling back to polling
 again themselves if needed, so the poll set only ever covers exactly what doesn't fit.
-When this happens, `DevReloadContainer` logs a summary once at startup:
+When this happens, `DevReloadContainer` logs a summary once at startup. (The fallback
+path itself is guarded against throwing — a directory whose watch registration *and*
+poll-fallback setup both fail is logged and left unwatched/unpolled rather than being
+allowed to crash the whole container, which has been observed happening under heavy
+watch-ceiling pressure; see the `ofbizDevEnhanced` note above.)
 
 ```
 Hot-reload: N of M directory watch registrations hit file-descriptor/watch exhaustion
@@ -108,9 +148,12 @@ instantly. ...
 
 ### Scoping to specific components (optional, for speed)
 
-The poll fallback is a safety net, not something you need to reach for. If you'd rather
-keep everything on the fast, instant, event-driven path — or just want a quicker
-startup while working on a couple of components — scope the watch instead:
+The poll fallback above is enough of a safety net that scoping is purely optional — a
+nice-to-have for a quicker startup while working on a couple of components. For
+`ofbizDevEnhanced` on a full trunk-sized checkout specifically, `--no-watch-fs` (see the
+callout above) is the fix for the directory-watch ceiling; scoping is complementary on
+top of that, not a substitute for it. Scope to just the components you're actively
+working on:
 
 ```
 ./gradlew ofbizDev -Photreload.components=devreload,party

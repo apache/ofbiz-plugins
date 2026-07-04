@@ -183,6 +183,19 @@ public class DevReloadContainer implements Container {
      */
     private Set<String> allowedComponents;
 
+    /**
+     * Whether {@link #classesDir} ({@code build/classes/java/main}) itself is watched, from
+     * {@code -Dofbiz.hotreload.watchBuildOutput}; defaults to {@code false}. This tree mirrors
+     * every component's source tree and, unlike {@link #sourceRootDirs}, is <em>not</em>
+     * narrowed by {@link #allowedComponents} (compiled output isn't organized per component),
+     * so on a full checkout it roughly doubles the total directories watched. It only exists to
+     * pick up externally-produced {@code .class} files (e.g. running {@code ./gradlew -t
+     * classes} in a second terminal); in-process compiles hot-swap directly via
+     * {@link #directReload} and never need it. Off by default so unscoped runs need
+     * meaningfully fewer real watch registrations before falling back to polling.
+     */
+    private boolean watchBuildOutput;
+
     @Override
     public void init(List<StartupCommand> ofbizCommands, String name, String configFile) throws ContainerException {
         this.name = name;
@@ -201,6 +214,8 @@ public class DevReloadContainer implements Container {
             Debug.logInfo("Hot-reload: scoped to components " + allowedComponents
                     + " (set via -Dofbiz.hotreload.components)", MODULE);
         }
+
+        watchBuildOutput = "true".equalsIgnoreCase(System.getProperty("ofbiz.hotreload.watchBuildOutput"));
 
         try {
             instrumentation = HotSwapAgent.install();
@@ -233,13 +248,25 @@ public class DevReloadContainer implements Container {
             throw new ContainerException("DevReloadContainer: failed to initialise WatchService", e);
         }
 
-        try {
-            registerAll(classesDir);
-        } catch (IOException e) {
-            // registerAll() already falls back to polling per-directory for individual
-            // register() failures; reaching here means something more fundamental broke
-            // walking the tree at all (e.g. can't even list classesDir).
-            Debug.logWarning("Hot-reload: could not fully walk " + classesDir + ": " + e.getMessage(), MODULE);
+        if (watchBuildOutput) {
+            try {
+                registerAll(classesDir);
+            } catch (IOException e) {
+                // registerAll() already falls back to polling per-directory for individual
+                // register() failures; reaching here means something more fundamental broke
+                // walking the tree at all (e.g. can't even list classesDir).
+                Debug.logWarning("Hot-reload: could not fully walk " + classesDir + ": " + e.getMessage(), MODULE);
+            }
+            Debug.logInfo("Hot-reload: watching compiled-output directory " + classesDir.toAbsolutePath()
+                    + " for externally-produced .class files (set via -Dofbiz.hotreload.watchBuildOutput=true).",
+                    MODULE);
+        } else {
+            Debug.logInfo("Hot-reload: not watching " + classesDir.toAbsolutePath() + " (this tree isn't "
+                    + "narrowed by -Dofbiz.hotreload.components and roughly doubles the total directories "
+                    + "watched). In-process edits still hot-swap normally; running './gradlew -t classes' in a "
+                    + "second terminal will not be picked up unless you set "
+                    + "-Dofbiz.hotreload.watchBuildOutput=true (or -Photreload.watchBuildOutput=true with the "
+                    + "ofbizDev/ofbizDevEnhanced Gradle tasks).", MODULE);
         }
 
         debouncer = Executors.newSingleThreadScheduledExecutor(r -> {
@@ -248,7 +275,7 @@ public class DevReloadContainer implements Container {
             return t;
         });
 
-        Debug.logInfo("DevReloadContainer ready — watching " + classesDir.toAbsolutePath(), MODULE);
+        Debug.logInfo("DevReloadContainer ready — compiled output at " + classesDir.toAbsolutePath(), MODULE);
     }
 
     @Override
@@ -301,12 +328,25 @@ public class DevReloadContainer implements Container {
                                 StandardWatchEventKinds.ENTRY_MODIFY);
                         Debug.logInfo("Hot-reload: watching servicedef directory " + dir, MODULE);
                     } catch (IOException e) {
-                        fallBackToPolling(dir, PollKind.SERVICEDEF_XML, e);
+                        try {
+                            fallBackToPolling(dir, PollKind.SERVICEDEF_XML, e);
+                        } catch (Throwable t) {
+                            // See registerAll()'s equivalent guard: one directory's fallback
+                            // failing must not abort watching every remaining component.
+                            Debug.logError(t, "Hot-reload: could not fall back to polling for " + dir
+                                    + " -- this directory will not be watched or polled.", MODULE);
+                        }
                     }
                 }
             } catch (GenericConfigException | java.net.URISyntaxException e) {
                 Debug.logWarning("Hot-reload: could not register servicedef dir for "
                         + sri.getLocation() + ": " + e.getMessage(), MODULE);
+            } catch (Throwable t) {
+                // Defensive: a single component's servicedef registration must not be able
+                // to abort the loop and leave every subsequent component's servicedef
+                // directory unwatched.
+                Debug.logError(t, "Hot-reload: unexpected error registering servicedef dir for "
+                        + sri.getLocation(), MODULE);
             }
         }
     }
@@ -665,13 +705,17 @@ public class DevReloadContainer implements Container {
 
                     // Re-register class directories so external compilations (./gradlew classes
                     // run by a developer in a separate terminal) still reach the class watcher.
+                    // Only relevant if that watch is enabled in the first place (watchBuildOutput);
+                    // otherwise there is nothing registered under classesDir to refresh.
                     // Catch Exception (not just IOException) because ClosedWatchServiceException
                     // extends IllegalStateException, which is a RuntimeException — it can be
                     // thrown here if OFBiz is shutting down while a compile finishes.
-                    try {
-                        registerAll(classesDir);
-                    } catch (Exception e) {
-                        Debug.logWarning("Hot-reload: could not re-register class dirs: " + e.getMessage(), MODULE);
+                    if (watchBuildOutput) {
+                        try {
+                            registerAll(classesDir);
+                        } catch (Exception e) {
+                            Debug.logWarning("Hot-reload: could not re-register class dirs: " + e.getMessage(), MODULE);
+                        }
                     }
                 } else {
                     Debug.logWarning("Hot-reload: compilation failed — fix the error and save again", MODULE);
@@ -721,7 +765,23 @@ public class DevReloadContainer implements Container {
                             StandardWatchEventKinds.ENTRY_CREATE,
                             StandardWatchEventKinds.ENTRY_MODIFY);
                 } catch (IOException e) {
-                    fallBackToPolling(dir, kindOf(dir), e);
+                    try {
+                        fallBackToPolling(dir, kindOf(dir), e);
+                    } catch (Throwable t) {
+                        // fallBackToPolling()/kindOf() are not expected to throw, but this has
+                        // been observed to fail (e.g. a transient classloading error) under
+                        // heavy directory-watch exhaustion. Letting anything escape here -- even
+                        // an Error -- would propagate out of walkFileTree and crash container
+                        // startup entirely, which is strictly worse than leaving this one
+                        // directory unwatched and unpolled.
+                        Debug.logError(t, "Hot-reload: could not fall back to polling for " + dir
+                                + " -- this directory will not be watched or polled.", MODULE);
+                    }
+                } catch (Throwable t) {
+                    // Same reasoning: register() itself should only throw IOException, but
+                    // nothing here is worth crashing the whole startup over.
+                    Debug.logError(t, "Hot-reload: unexpected error registering watch for " + dir
+                            + " -- this directory will not be watched or polled.", MODULE);
                 }
                 return FileVisitResult.CONTINUE;
             }
