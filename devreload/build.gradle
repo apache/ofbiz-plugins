@@ -1,0 +1,129 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+// Optional -Photreload.components=compA,compB, forwarded as
+// -Dofbiz.hotreload.components to DevReloadContainer, which then only watches those
+// components' servicedef/source directories instead of every component in the checkout.
+// See DevReloadContainer's `allowedComponents` javadoc for why: macOS's WatchService has
+// a practical per-process ceiling on watched directories well under a typical ulimit,
+// and a checkout the size of OFBiz trunk (~50+ components) can exceed it.
+static List<String> hotreloadComponentArgs(Project project) {
+    String components = project.findProperty('hotreload.components')
+    return components ? ["-Dofbiz.hotreload.components=${components}".toString()] : []
+}
+
+// Optional -Photreload.watchBuildOutput=true, forwarded as
+// -Dofbiz.hotreload.watchBuildOutput to DevReloadContainer. Off by default: watching
+// build/classes/java/main only matters for picking up externally-produced .class files
+// (e.g. `./gradlew -t classes` running in a second terminal) -- in-process compiles hot-swap
+// directly and never need it -- and unlike source/servicedef watching, that tree isn't
+// narrowed by -Photreload.components, so on a full checkout it roughly doubles the total
+// directories watched for no benefit to the common (in-process-only) workflow.
+static List<String> hotreloadWatchBuildOutputArgs(Project project) {
+    Object watchBuildOutput = project.findProperty('hotreload.watchBuildOutput')
+    return watchBuildOutput ? ["-Dofbiz.hotreload.watchBuildOutput=${watchBuildOutput}".toString()] : []
+}
+
+// Convenience task: `./gradlew ofbizDev` starts OFBiz with hot-reload enabled
+// (-Dofbiz.hotreload=true), plus the JVM flag DevReloadContainer's self-attaching
+// HotSwapAgent needs (-Djdk.attach.allowAttachSelf=true). Registered on the root
+// project, mirroring the classpath/mainClass wiring of the built-in `ofbiz` command
+// task, so this plugin needs no change to the root build.gradle to be usable.
+rootProject.tasks.register('ofbizDev', JavaExec) {
+    dependsOn rootProject.tasks.named('classes')
+    group = 'OFBiz Server Commands'
+    description = 'Start OFBiz with hot-reload. Java source + services.xml changes reload without a restart. ' +
+            'Optionally scope to specific components with -Photreload.components=compA,compB, or watch ' +
+            'build/classes/java/main too (for externally-produced .class files) with ' +
+            '-Photreload.watchBuildOutput=true.'
+    classpath = rootProject.sourceSets.main.runtimeClasspath
+    mainClass = rootProject.application.mainClass
+    jvmArgs(rootProject.application.applicationDefaultJvmArgs
+            + ['-Dofbiz.hotreload=true', '-Djdk.attach.allowAttachSelf=true']
+            + hotreloadComponentArgs(project)
+            + hotreloadWatchBuildOutputArgs(project))
+}
+
+// Locates a JetBrains Runtime `java` executable: an explicit -PjbrHome=... or JBR_HOME
+// env var wins, otherwise this falls back to common per-OS locations for the JBR bundled
+// with a local IntelliJ IDEA install.
+def resolveJbrJavaExecutable = {
+    String override = project.findProperty('jbrHome') ?: System.getenv('JBR_HOME')
+    String userHome = System.getProperty('user.home')
+    String programFiles = System.getenv('ProgramFiles')
+    List<String> candidates = override ? [override] : [
+            '/Applications/IntelliJ IDEA.app/Contents/jbr/Contents/Home',
+            '/Applications/IntelliJ IDEA CE.app/Contents/jbr/Contents/Home',
+            "${userHome}/.local/share/JetBrains/Toolbox/apps/intellij-idea-ultimate/ch-0/jbr",
+            "${userHome}/.local/share/JetBrains/Toolbox/apps/intellij-idea-community-edition/ch-0/jbr",
+            programFiles ? "${programFiles}\\JetBrains\\IntelliJ IDEA\\jbr" : null,
+    ].findAll { it != null }
+    String exeName = org.gradle.internal.os.OperatingSystem.current().isWindows() ? 'java.exe' : 'java'
+    for (String home : candidates) {
+        File exe = new File(home, "bin/${exeName}")
+        if (exe.exists()) {
+            return exe.absolutePath
+        }
+    }
+    return null
+}
+
+// Convenience task: `./gradlew ofbizDevEnhanced` starts OFBiz on a JetBrains Runtime
+// (which bundles DCEVM's patches) with -XX:+AllowEnhancedClassRedefinition. That flag
+// makes the plain java.lang.instrument.Instrumentation#redefineClasses call
+// DevReloadContainer's HotSwapAgent already uses succeed for *structural* changes too
+// (added/removed methods or fields, changed signatures) -- not just method bodies.
+// No DevReloadContainer/HotSwapAgent code depends on which JVM is running underneath,
+// so this task needs no change on that side; it only needs a capable JVM to run on.
+//
+// Requires a JetBrains Runtime: point at one explicitly with -PjbrHome=/path/to/jbr
+// (the folder containing bin/java) or the JBR_HOME env var, or let this task find the
+// one bundled with a local IntelliJ IDEA install.
+// Plain Exec, not JavaExec: JavaExec's `javaLauncher` property is wired by Gradle to a
+// toolchain-derived convention that cannot be cleanly overridden once `executable` is
+// also set (they conflict). Exec has no such toolchain machinery, so it just runs the
+// JBR binary we resolve below with the classpath/args we already know from `application`.
+rootProject.tasks.register('ofbizDevEnhanced', Exec) {
+    dependsOn rootProject.tasks.named('classes')
+    group = 'OFBiz Server Commands'
+    description = 'Start OFBiz on a JetBrains Runtime with enhanced class redefinition -- structural ' +
+            'Java changes (new/removed methods or fields) also reload without a restart, not just method ' +
+            'bodies. Requires a JetBrains Runtime; set -PjbrHome=/path/to/jbr if not auto-detected. ' +
+            'Recommended: run with --no-watch-fs, e.g. \'./gradlew ofbizDevEnhanced --no-watch-fs\' ' +
+            '-- Gradle\'s own file-system watching competes with this plugin\'s for the same macOS ' +
+            'directory-watch ceiling on a full checkout (see the README\'s "At scale" section). ' +
+            'Optionally also scope to specific components with -Photreload.components=compA,compB.'
+    doFirst {
+        String jbrJava = resolveJbrJavaExecutable()
+        if (!jbrJava) {
+            throw new GradleException("Could not find a JetBrains Runtime. Set -PjbrHome=/path/to/jbr " +
+                    "(the folder containing bin/java) or the JBR_HOME env var. A JBR ships with IntelliJ " +
+                    "IDEA under '<IDE install>/jbr' (or '.../Contents/jbr' on macOS).")
+        }
+        logger.lifecycle("ofbizDevEnhanced: using JetBrains Runtime at ${jbrJava}")
+        List<String> cmd = [jbrJava]
+        cmd.addAll(rootProject.application.applicationDefaultJvmArgs)
+        cmd.addAll(['-Dofbiz.hotreload=true', '-Djdk.attach.allowAttachSelf=true', '-XX:+AllowEnhancedClassRedefinition'])
+        cmd.addAll(hotreloadComponentArgs(project))
+        cmd.addAll(hotreloadWatchBuildOutputArgs(project))
+        cmd.addAll(['-cp', rootProject.sourceSets.main.runtimeClasspath.asPath])
+        cmd.add(rootProject.application.mainClass.get())
+        commandLine = cmd
+    }
+}
