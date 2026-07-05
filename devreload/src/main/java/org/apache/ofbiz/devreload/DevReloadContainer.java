@@ -98,7 +98,7 @@ import org.apache.ofbiz.base.util.cache.UtilCache;
  * initializers of a class that is already loaded — adding/removing methods or fields,
  * changing a method signature, or changing the class hierarchy still requires a restart.
  * Running on a JetBrains Runtime with {@code -XX:+AllowEnhancedClassRedefinition} (see
- * {@code ./gradlew ofbizDevEnhanced}) lifts that restriction transparently: this class
+ * {@code ./gradlew ofbizDev -Photreload.enhanced=true}) lifts that restriction transparently: this class
  * calls the exact same {@code redefineClasses} API either way, so structural changes
  * just work when that flag is detected, with no code path change here.
  *
@@ -226,8 +226,8 @@ public class DevReloadContainer implements Container {
                         + "methods or fields, changed signatures), not just method bodies.", MODULE);
             } else {
                 Debug.logInfo("Hot-reload: structural changes (added/removed methods or fields, changed "
-                        + "signatures) will require a restart on this JVM. Run './gradlew ofbizDevEnhanced' "
-                        + "on a JetBrains Runtime to hot-swap those too.", MODULE);
+                        + "signatures) will require a restart on this JVM. Run './gradlew ofbizDev "
+                        + "-Photreload.enhanced=true' on a JetBrains Runtime to hot-swap those too.", MODULE);
             }
         } catch (Exception e) {
             Debug.logWarning("Hot-reload: could not self-attach HotSwapAgent (" + e.getMessage()
@@ -266,7 +266,7 @@ public class DevReloadContainer implements Container {
                     + "watched). In-process edits still hot-swap normally; running './gradlew -t classes' in a "
                     + "second terminal will not be picked up unless you set "
                     + "-Dofbiz.hotreload.watchBuildOutput=true (or -Photreload.watchBuildOutput=true with the "
-                    + "ofbizDev/ofbizDevEnhanced Gradle tasks).", MODULE);
+                    + "ofbizDev Gradle task).", MODULE);
         }
 
         debouncer = Executors.newSingleThreadScheduledExecutor(r -> {
@@ -292,7 +292,7 @@ public class DevReloadContainer implements Container {
                     + "services.xml changes there still hot-reload, just with a few seconds of extra latency. "
                     + "Scope hot-reload to just the components you're working on with "
                     + "-Dofbiz.hotreload.components=compA,compB (or -Photreload.components=compA,compB with "
-                    + "the ofbizDev/ofbizDevEnhanced Gradle tasks) to keep everything on the fast, instant "
+                    + "the ofbizDev Gradle task) to keep everything on the fast, instant "
                     + "path instead.", MODULE);
         }
         watchThread = new Thread(this::watchLoop, "ofbiz-hot-reload-watcher");
