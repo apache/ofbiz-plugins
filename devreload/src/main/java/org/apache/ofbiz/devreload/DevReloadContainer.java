@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.apache.ofbiz.devreload;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.instrument.ClassDefinition;
 import java.lang.instrument.Instrumentation;
@@ -53,6 +54,7 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.ofbiz.base.component.ComponentConfig;
 import org.apache.ofbiz.base.config.GenericConfigException;
 import org.apache.ofbiz.base.container.Container;
@@ -77,10 +79,21 @@ import org.apache.ofbiz.base.util.cache.UtilCache;
  *       {@code -javaagent} flag needed.</li>
  *   <li>A {@link WatchService} thread monitors every component's {@code src/main/java}
  *       directory. On save, changed {@code .java} files are compiled in-process (a JDK,
- *       not just a JRE, is required) into {@code build/classes/java/main/}. Running
- *       {@code ./gradlew -t classes} externally in a second terminal works too — the
- *       same WatchService also monitors that output directory directly for
- *       externally-produced {@code .class} files.</li>
+ *       not just a JRE, is required) into {@code build/devreload/classes/} — a directory
+ *       private to this plugin, deliberately <em>not</em> Gradle's own
+ *       {@code build/classes/java/main/}. Writing into Gradle's managed output would
+ *       leave its incremental-build cache unaware of the change: if a source file is
+ *       later reverted to content Gradle already has a snapshot for (e.g. via
+ *       {@code git checkout}) while no hot-reload session is watching, Gradle's next
+ *       {@code compileJava} would see matching input and skip recompiling, silently
+ *       leaving the stale hot-swapped {@code .class} file in place. This plugin's output
+ *       directory is cleared and recreated on every {@link #init}, so a fresh run never
+ *       inherits a previous session's bytecode, and is placed ahead of Gradle's own
+ *       output on the classpath (see {@code build.gradle}) so brand-new classes load the
+ *       live version too, not just already-loaded ones. Running {@code ./gradlew -t
+ *       classes} externally in a second terminal still works — the same WatchService
+ *       also monitors Gradle's own output directory directly for externally-produced
+ *       {@code .class} files, when {@code -Dofbiz.hotreload.watchBuildOutput=true}.</li>
  *   <li>Changes are debounced for 300 ms so a single compile run is handled as one batch.
  *       Each changed class already loaded in the JVM is updated in place via
  *       {@link Instrumentation#redefineClasses}, the same mechanism an IDE debugger uses
@@ -89,7 +102,7 @@ import org.apache.ofbiz.base.util.cache.UtilCache;
  *       {@code StandardJavaEngine} — automatically executes the new method bodies on the
  *       next call. No framework code needs to know this plugin exists.</li>
  *   <li>Brand-new classes need no special handling at all: they simply get loaded
- *       normally, from the same build output directory, the first time something
+ *       normally, from this plugin's build output directory, the first time something
  *       references them.</li>
  * </ol>
  *
@@ -149,7 +162,23 @@ public class DevReloadContainer implements Container {
     private int watchDirsAttempted = 0;
     private int watchDirsFailed = 0;
 
+    /** Gradle's own compiled-output directory, {@code build/classes/java/main}. Read-only
+     *  from this class's perspective: only ever watched (when {@code watchBuildOutput} is
+     *  on) for externally-produced {@code .class} files, never written to directly. */
     private Path classesDir;
+
+    /**
+     * This plugin's own compiled-output directory, {@code build/devreload/classes},
+     * deliberately separate from Gradle's {@link #classesDir}. In-process compiles
+     * (see {@link #applyCompile}) write here instead of into Gradle's managed output, so
+     * Gradle's incremental {@code compileJava} up-to-date check is never confused by
+     * writes it didn't make itself. Cleared and recreated fresh on every {@link #init},
+     * and placed ahead of Gradle's output on the runtime classpath (see
+     * {@code plugins/devreload/build.gradle}), so a class compiled here but never yet
+     * loaded in this JVM picks up the live version on its first load too.
+     */
+    private Path hotReloadOutputDir;
+
     // Populated in start() before the watch thread launches; read-only after that.
     private final Set<Path> servicedefDirs = new HashSet<>();
     private final Set<Path> sourceRootDirs = new HashSet<>();
@@ -242,6 +271,24 @@ public class DevReloadContainer implements Container {
             return;
         }
 
+        // build.gradle passes this down as -Dofbiz.hotreload.outputDir, computed from the
+        // same value it prepends to the classpath, so the path exists in exactly one place
+        // rather than being hardcoded independently here too. The literal default below is
+        // only a fallback for the (unsupported) case of starting this container without
+        // going through the ofbizDev Gradle task.
+        hotReloadOutputDir = Paths.get(System.getProperty("ofbiz.hotreload.outputDir", "build/devreload/classes"));
+        try {
+            FileUtils.deleteDirectory(hotReloadOutputDir.toFile());
+            Files.createDirectories(hotReloadOutputDir);
+        } catch (IOException e) {
+            // Without a writable output directory, in-process compilation cannot work at
+            // all -- disable the whole container up front instead of continuing to a
+            // misleading "ready" log, the same as the classesDir-missing check above.
+            Debug.logWarning("Hot-reload: could not prepare this plugin's own output directory "
+                    + hotReloadOutputDir.toAbsolutePath() + ": " + e.getMessage(), MODULE);
+            return;
+        }
+
         try {
             watchService = classesDir.getFileSystem().newWatchService();
         } catch (IOException e) {
@@ -275,7 +322,34 @@ public class DevReloadContainer implements Container {
             return t;
         });
 
-        Debug.logInfo("DevReloadContainer ready — compiled output at " + classesDir.toAbsolutePath(), MODULE);
+        Debug.logInfo("DevReloadContainer ready — compiled output at " + hotReloadOutputDir.toAbsolutePath(), MODULE);
+    }
+
+    /**
+     * Picks whichever of this plugin's own compiled output ({@code candidate}, under
+     * {@link #hotReloadOutputDir}) or Gradle's ({@code fallback}, under {@link #classesDir})
+     * is the right one to redefine from. Normally only one of the two exists for a given
+     * class -- in-process edits only ever land in {@code hotReloadOutputDir}, externally
+     * produced classes (from {@code ./gradlew -t classes}, only relevant when
+     * {@code watchBuildOutput} is on) only ever land in {@code classesDir}. If a class was
+     * touched by both mechanisms, the more recently written file wins rather than
+     * preferring one path unconditionally. Returns {@code null} if neither exists.
+     */
+    private static Path freshestClassFile(Path candidate, Path fallback) {
+        File candidateFile = candidate.toFile();
+        File fallbackFile = fallback.toFile();
+        boolean candidateExists = candidateFile.exists();
+        boolean fallbackExists = fallbackFile.exists();
+        if (candidateExists && fallbackExists) {
+            return FileUtils.isFileNewer(fallbackFile, candidateFile) ? fallback : candidate;
+        }
+        if (candidateExists) {
+            return candidate;
+        }
+        if (fallbackExists) {
+            return fallback;
+        }
+        return null;
     }
 
     @Override
@@ -498,7 +572,7 @@ public class DevReloadContainer implements Container {
      * macOS WatchService suppression window used by {@link #scheduleReload}.
      */
     private synchronized void directReload(Path classFile) {
-        String className = toClassName(classesDir, classFile);
+        String className = toClassName(hotReloadOutputDir, classFile);
         if (className == null) {
             return;
         }
@@ -531,13 +605,36 @@ public class DevReloadContainer implements Container {
 
         List<ClassDefinition> defs = new ArrayList<>();
         for (String className : batch) {
-            Path classFile = classesDir.resolve(className.replace('.', '/') + ".class");
+            Path relative = Paths.get(className.replace('.', '/') + ".class");
+            Path overlayFile = hotReloadOutputDir.resolve(relative);
+            Path gradleFile = classesDir.resolve(relative);
+            Path classFile = freshestClassFile(overlayFile, gradleFile);
+            if (classFile == null) {
+                Debug.logWarning("Hot-reload: detected a change for " + className
+                        + " but could not find its compiled output in either "
+                        + hotReloadOutputDir.toAbsolutePath() + " or " + classesDir.toAbsolutePath(), MODULE);
+                continue;
+            }
             try {
                 Class<?> loaded = findLoadedClass(className);
                 if (loaded == null) {
                     // Never loaded yet in this JVM — nothing to redefine. It will simply
                     // load fresh, with the new bytecode, the first time something
-                    // references it. No special handling needed.
+                    // references it. But hotReloadOutputDir sits ahead of classesDir on
+                    // the classpath (see build.gradle), so if classesDir's copy just won
+                    // the freshness check above, a stale copy left behind in
+                    // hotReloadOutputDir from an earlier edit would otherwise shadow it
+                    // on that first load -- remove it so classpath resolution picks up
+                    // whichever copy is actually freshest.
+                    if (classFile.equals(gradleFile) && Files.exists(overlayFile)) {
+                        try {
+                            Files.delete(overlayFile);
+                        } catch (IOException e) {
+                            Debug.logWarning("Hot-reload: could not remove stale overlay copy of "
+                                    + className + " at " + overlayFile.toAbsolutePath() + ": "
+                                    + e.getMessage(), MODULE);
+                        }
+                    }
                     continue;
                 }
                 defs.add(new ClassDefinition(loaded, Files.readAllBytes(classFile)));
@@ -649,7 +746,7 @@ public class DevReloadContainer implements Container {
             }
             try (StandardJavaFileManager fm = compiler.getStandardFileManager(null, null, null)) {
                 fm.setLocation(StandardLocation.CLASS_OUTPUT,
-                        List.of(classesDir.toAbsolutePath().toFile()));
+                        List.of(hotReloadOutputDir.toAbsolutePath().toFile()));
                 // Reuse the running JVM's classpath — it already contains all OFBiz jars.
                 List<String> options = Arrays.asList("-cp", System.getProperty("java.class.path"), "-proc:none");
                 var units = fm.getJavaFileObjectsFromPaths(batch);
@@ -683,11 +780,11 @@ public class DevReloadContainer implements Container {
                                                 || fn.startsWith(outerName + "$"));
                             }).forEach(absFile -> {
                                 // Convert absolute output path back to a relative path that
-                                // is rooted at CWD (same type as classesDir) so that
-                                // toClassName(classesDir, relPath) — which calls relativize —
-                                // does not throw IllegalArgumentException.
-                                Path rel = classesDir.resolve(
-                                        classesDir.toAbsolutePath().relativize(absFile));
+                                // is rooted at CWD (same type as hotReloadOutputDir) so that
+                                // toClassName(hotReloadOutputDir, relPath) — which calls
+                                // relativize — does not throw IllegalArgumentException.
+                                Path rel = hotReloadOutputDir.resolve(
+                                        hotReloadOutputDir.toAbsolutePath().relativize(absFile));
                                 compiledRelative.add(rel);
                             });
                         } catch (IOException e) {
@@ -728,8 +825,8 @@ public class DevReloadContainer implements Container {
 
     /**
      * Maps a {@code .java} source file to the corresponding {@code .class} output file
-     * under {@link #classesDir}. Returns {@code null} if the source file is not under
-     * any registered source root.
+     * under {@link #hotReloadOutputDir}. Returns {@code null} if the source file is not
+     * under any registered source root.
      */
     private Path sourceToClassFile(Path sourceFile) {
         for (Path srcRoot : sourceRootDirs) {
@@ -738,7 +835,7 @@ public class DevReloadContainer implements Container {
                 String name = relative.toString();
                 if (name.endsWith(".java")) {
                     String classRelative = name.substring(0, name.length() - ".java".length()) + ".class";
-                    return classesDir.resolve(classRelative);
+                    return hotReloadOutputDir.resolve(classRelative);
                 }
             }
         }

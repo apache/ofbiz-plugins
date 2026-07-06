@@ -40,6 +40,37 @@ static List<String> hotreloadWatchBuildOutputArgs(Project project) {
     return watchBuildOutput ? ["-Dofbiz.hotreload.watchBuildOutput=${watchBuildOutput}".toString()] : []
 }
 
+// Whether -Photreload.enhanced=true was passed. Checked by *value*, not just presence --
+// project.hasProperty() alone would also be true for -Photreload.enhanced=false (or any
+// other value), the opposite of the caller's intent, unlike the two functions above which
+// correctly check the property's value via findProperty().
+static boolean hotreloadEnhancedRequested(Project project) {
+    return 'true'.equalsIgnoreCase(project.findProperty('hotreload.enhanced')?.toString())
+}
+
+// DevReloadContainer's own in-process-compile output directory. Deliberately separate
+// from Gradle's own build/classes/java/main (see DevReloadContainer's hotReloadOutputDir
+// field javadoc for why) and placed ahead of the normal runtime classpath below, so a
+// class compiled here but never yet loaded in the running JVM picks up the live version
+// on its first load too, not just already-loaded ones. Passed down to the JVM as a system
+// property (see commonHotReloadJvmArgs) rather than hardcoded independently on the Java
+// side too, so this path exists as a single source of truth.
+static File hotReloadOutputDir(Project project) {
+    return new File(project.rootDir, 'build/devreload/classes')
+}
+
+// JVM args shared by both the default and enhanced ofbizDev variants: the hot-reload
+// activation flags, the output-directory location, and the optional component/watch
+// scoping args. Only -XX:+AllowEnhancedClassRedefinition differs between the two, so
+// callers add that themselves.
+static List<String> commonHotReloadJvmArgs(Project project) {
+    List<String> args = ['-Dofbiz.hotreload=true', '-Djdk.attach.allowAttachSelf=true',
+            "-Dofbiz.hotreload.outputDir=${hotReloadOutputDir(project).absolutePath}".toString()]
+    args += hotreloadComponentArgs(project)
+    args += hotreloadWatchBuildOutputArgs(project)
+    return args
+}
+
 // Locates a DCEVM-patched `java` executable: an explicit -PdcevmHome=... or DCEVM_HOME
 // env var wins, otherwise this falls back to common per-OS locations for the JBR (JetBrains
 // Runtime, which bundles DCEVM) that ships with a local IntelliJ IDEA install -- the most
@@ -80,61 +111,44 @@ def resolveDcevmJavaExecutable = {
 // underneath, so enabling this needs no change on that side; it only needs a capable
 // JVM to run on.
 //
-// The flag is read here, at configuration time, to decide which *task type* to
-// register: JavaExec's `javaLauncher` property is wired by Gradle to a
-// toolchain-derived convention that cannot be cleanly overridden once `executable` is
-// also set (they conflict), so pointing at a custom DCEVM-patched JVM binary can't be
-// done through JavaExec. The default (unflagged) path keeps JavaExec so it retains
-// Gradle's automatic classpath-argfile handling for very long classpaths (a real risk
-// on Windows, given how many jars are on OFBiz's runtime classpath) and --debug-jvm
-// wiring; only the enhanced path pays for building the whole command line by hand via
-// plain Exec, which has no such toolchain machinery to conflict with.
-if (project.hasProperty('hotreload.enhanced')) {
-    rootProject.tasks.register('ofbizDev', Exec) {
-        dependsOn rootProject.tasks.named('classes')
-        group = 'OFBiz Server Commands'
-        description = 'Start OFBiz with hot-reload on a DCEVM-patched JVM with enhanced class redefinition -- ' +
-                'structural Java changes (new/removed methods or fields) also reload without a restart, not ' +
-                'just method bodies. Requires a DCEVM-patched JVM (JetBrains Runtime is a convenient prebuilt ' +
-                'source); set -PdcevmHome=/path/to/jvm if not auto-detected. Recommended: run with ' +
-                '--no-watch-fs, e.g. \'./gradlew ofbizDev -Photreload.enhanced=true --no-watch-fs\' -- ' +
-                'Gradle\'s own file-system watching competes with this plugin\'s for the same macOS ' +
-                'directory-watch ceiling on a full checkout. Optionally also scope to specific components ' +
-                'with -Photreload.components=compA,compB.'
-        doFirst {
-            String dcevmJava = resolveDcevmJavaExecutable()
-            if (!dcevmJava) {
-                throw new GradleException("Could not find a DCEVM-patched JVM. Set -PdcevmHome=/path/to/jvm " +
-                        "(the folder containing bin/java) or the DCEVM_HOME env var. JetBrains Runtime, which " +
-                        "bundles DCEVM, ships with IntelliJ IDEA under '<IDE install>/jbr' (or " +
-                        "'.../Contents/jbr' on macOS) and is the easiest way to get one; standalone DCEVM " +
-                        "builds work too.")
-            }
-            logger.lifecycle("ofbizDev: enhanced mode, using DCEVM-patched JVM at ${dcevmJava}")
-            List<String> cmd = [dcevmJava]
-            cmd.addAll(rootProject.application.applicationDefaultJvmArgs)
-            cmd.addAll(['-Dofbiz.hotreload=true', '-Djdk.attach.allowAttachSelf=true', '-XX:+AllowEnhancedClassRedefinition'])
-            cmd.addAll(hotreloadComponentArgs(project))
-            cmd.addAll(hotreloadWatchBuildOutputArgs(project))
-            cmd.addAll(['-cp', rootProject.sourceSets.main.runtimeClasspath.asPath])
-            cmd.add(rootProject.application.mainClass.get())
-            commandLine = cmd
+// A single JavaExec task handles both modes: JavaExec's `executable` property can be
+// pointed at any java binary, including a DCEVM-patched one, without conflict -- no
+// toolchain is configured anywhere in this project for it to conflict with. This project
+// used to register a separate plain-Exec task for enhanced mode instead, on the theory
+// that `executable` and the toolchain-derived `javaLauncher` convention couldn't coexist;
+// confirmed by testing that setting `executable` on a JavaExec task fails with "Toolchain
+// from executable property does not match toolchain from javaLauncher property" ONLY when
+// set from a task action (e.g. inside doFirst, once javaLauncher's convention has already
+// been finalized for execution) -- setting it directly in the configuration block below,
+// before that convention finalizes, works cleanly. Using one task for both modes also
+// means the enhanced path now gets JavaExec's automatic classpath-argfile handling for
+// very long classpaths (a real risk on Windows, given how many jars are on OFBiz's
+// runtime classpath) and --debug-jvm wiring too, neither of which the previous separate
+// Exec-based task had.
+rootProject.tasks.register('ofbizDev', JavaExec) {
+    dependsOn rootProject.tasks.named('classes')
+    group = 'OFBiz Server Commands'
+    description = 'Start OFBiz with hot-reload. Java source + services.xml changes reload without a restart. ' +
+            'Optionally scope to specific components with -Photreload.components=compA,compB, or watch ' +
+            'build/classes/java/main too (for externally-produced .class files) with ' +
+            '-Photreload.watchBuildOutput=true. Pass -Photreload.enhanced=true to additionally hot-swap ' +
+            'structural changes (new/removed methods or fields) via a DCEVM-patched JVM; set ' +
+            '-PdcevmHome=/path/to/jvm if not auto-detected -- see README for the full comparison.'
+    classpath = rootProject.files(hotReloadOutputDir(project)) + rootProject.sourceSets.main.runtimeClasspath
+    mainClass = rootProject.application.mainClass
+    List<String> jvmArgsList = rootProject.application.applicationDefaultJvmArgs + commonHotReloadJvmArgs(project)
+    if (hotreloadEnhancedRequested(project)) {
+        jvmArgsList = jvmArgsList + ['-XX:+AllowEnhancedClassRedefinition']
+        String dcevmJava = resolveDcevmJavaExecutable()
+        if (!dcevmJava) {
+            throw new GradleException("Could not find a DCEVM-patched JVM. Set -PdcevmHome=/path/to/jvm " +
+                    "(the folder containing bin/java) or the DCEVM_HOME env var. JetBrains Runtime, which " +
+                    "bundles DCEVM, ships with IntelliJ IDEA under '<IDE install>/jbr' (or " +
+                    "'.../Contents/jbr' on macOS) and is the easiest way to get one; standalone DCEVM " +
+                    "builds work too.")
         }
+        logger.lifecycle("ofbizDev: enhanced mode, using DCEVM-patched JVM at ${dcevmJava}")
+        executable = dcevmJava
     }
-} else {
-    rootProject.tasks.register('ofbizDev', JavaExec) {
-        dependsOn rootProject.tasks.named('classes')
-        group = 'OFBiz Server Commands'
-        description = 'Start OFBiz with hot-reload. Java source + services.xml changes reload without a restart. ' +
-                'Optionally scope to specific components with -Photreload.components=compA,compB, or watch ' +
-                'build/classes/java/main too (for externally-produced .class files) with ' +
-                '-Photreload.watchBuildOutput=true. Pass -Photreload.enhanced=true to additionally hot-swap ' +
-                'structural changes (new/removed methods or fields) via a DCEVM-patched JVM -- see README.'
-        classpath = rootProject.sourceSets.main.runtimeClasspath
-        mainClass = rootProject.application.mainClass
-        jvmArgs(rootProject.application.applicationDefaultJvmArgs
-                + ['-Dofbiz.hotreload=true', '-Djdk.attach.allowAttachSelf=true']
-                + hotreloadComponentArgs(project)
-                + hotreloadWatchBuildOutputArgs(project))
-    }
+    jvmArgs(jvmArgsList)
 }

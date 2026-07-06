@@ -60,22 +60,22 @@ checkout the size of OFBiz trunk (~50+ components). Scoping with
 `-Photreload.components=...` reduces the plugin's own watch count and is often enough
 on its own.
 
-### Why one Gradle task, two different mechanisms underneath
+### One Gradle task, one mechanism, for both modes
 
-`ofbizDev` is registered as a different Gradle task *type* depending on whether
-`-Photreload.enhanced=true` is passed, because the two modes need fundamentally
-different ways of launching the JVM:
+`ofbizDev` is a single `JavaExec` task regardless of `-Photreload.enhanced=true` --
+`JavaExec`'s `executable` property is simply pointed at the resolved DCEVM JVM binary
+when enhanced mode is requested, leaving it unset (Gradle's normal default) otherwise.
+That keeps `JavaExec`'s built-in safety nets (automatic classpath-argfile handling for
+very long classpaths on Windows, `--debug-jvm` support) working in both modes, not just
+the default one.
 
-| Aspect | Default (`JavaExec`) | `-Photreload.enhanced=true` (`Exec`) |
-|---|---|---|
-| What it is | Gradle's Java-aware task type — you describe *what* to run (`classpath`, `mainClass`, `jvmArgs`) | Gradle's generic process-launch task type — you hand it the *exact* command line to run |
-| Which JVM runs it | Whatever JVM Gradle resolves by its own toolchain rules | A specific DCEVM-patched JVM binary this plugin locates itself |
-| Long classpaths (Windows) | Handled automatically — Gradle writes an argument file if the command line would exceed the OS length limit | Not handled — the full classpath is passed on the raw command line |
-| `--debug-jvm` support | Yes, built in | No |
-| Why used here | The plain path only needs "run this classpath + main class on a normal JVM" — exactly what `JavaExec` is for | `JavaExec`'s `executable` property (needed to point at the DCEVM JVM binary) conflicts with Gradle's toolchain-derived `javaLauncher` convention once both are set, so pointing at a custom JVM has to bypass `JavaExec` entirely and build the command line by hand |
-
-In short: `JavaExec` = "let Gradle be smart about running Java for you"; `Exec` = "get
-out of the way, here's the exact command." The default path keeps `JavaExec` so it loses
-none of Gradle's built-in safety nets; only the enhanced path pays the cost of manual
-command-line construction, because that's the only way to point at a non-default JVM
-binary.
+One non-obvious wrinkle: `executable` has to be set directly in the task's
+configuration block, not from a task action (e.g. inside `doFirst`). Doing it from a
+task action fails with `Toolchain from executable property does not match toolchain
+from javaLauncher property` -- by the time a task action runs, `javaLauncher`'s
+convention has already been finalized for execution, and overriding `executable` at
+that point conflicts with it. Setting it during configuration, before that convention
+finalizes, works cleanly. (No toolchain is actually configured anywhere in this
+project, so nothing else here depends on this distinction -- it's specifically a
+quirk of *when* `executable` is assigned relative to `javaLauncher`'s convention
+resolution.)
