@@ -97,7 +97,7 @@ import org.apache.ofbiz.base.util.cache.UtilCache;
  * On a stock JVM, {@code redefineClasses} can only replace method bodies and static
  * initializers of a class that is already loaded — adding/removing methods or fields,
  * changing a method signature, or changing the class hierarchy still requires a restart.
- * Running on a JetBrains Runtime with {@code -XX:+AllowEnhancedClassRedefinition} (see
+ * Running on a DCEVM-patched JVM with {@code -XX:+AllowEnhancedClassRedefinition} (see
  * {@code ./gradlew ofbizDev -Photreload.enhanced=true}) lifts that restriction transparently: this class
  * calls the exact same {@code redefineClasses} API either way, so structural changes
  * just work when that flag is detected, with no code path change here.
@@ -227,7 +227,7 @@ public class DevReloadContainer implements Container {
             } else {
                 Debug.logInfo("Hot-reload: structural changes (added/removed methods or fields, changed "
                         + "signatures) will require a restart on this JVM. Run './gradlew ofbizDev "
-                        + "-Photreload.enhanced=true' on a JetBrains Runtime to hot-swap those too.", MODULE);
+                        + "-Photreload.enhanced=true' on a DCEVM-patched JVM to hot-swap those too.", MODULE);
             }
         } catch (Exception e) {
             Debug.logWarning("Hot-reload: could not self-attach HotSwapAgent (" + e.getMessage()

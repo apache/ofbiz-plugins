@@ -40,11 +40,13 @@ static List<String> hotreloadWatchBuildOutputArgs(Project project) {
     return watchBuildOutput ? ["-Dofbiz.hotreload.watchBuildOutput=${watchBuildOutput}".toString()] : []
 }
 
-// Locates a JetBrains Runtime `java` executable: an explicit -PjbrHome=... or JBR_HOME
-// env var wins, otherwise this falls back to common per-OS locations for the JBR bundled
-// with a local IntelliJ IDEA install.
-def resolveJbrJavaExecutable = {
-    String override = project.findProperty('jbrHome') ?: System.getenv('JBR_HOME')
+// Locates a DCEVM-patched `java` executable: an explicit -PdcevmHome=... or DCEVM_HOME
+// env var wins, otherwise this falls back to common per-OS locations for the JBR (JetBrains
+// Runtime, which bundles DCEVM) that ships with a local IntelliJ IDEA install -- the most
+// convenient prebuilt source of a DCEVM JVM, though any standalone DCEVM build works too via
+// the explicit override.
+def resolveDcevmJavaExecutable = {
+    String override = project.findProperty('dcevmHome') ?: System.getenv('DCEVM_HOME')
     String userHome = System.getProperty('user.home')
     String programFiles = System.getenv('ProgramFiles')
     List<String> candidates = override ? [override] : [
@@ -71,7 +73,7 @@ def resolveJbrJavaExecutable = {
 // task, so this plugin needs no change to the root build.gradle to be usable.
 //
 // Plain invocation runs on a stock JDK and only hot-swaps method bodies and
-// services.xml. Passing -Photreload.enhanced=true switches to a JetBrains Runtime with
+// services.xml. Passing -Photreload.enhanced=true switches to a DCEVM-patched JVM with
 // -XX:+AllowEnhancedClassRedefinition, which additionally hot-swaps structural changes
 // (added/removed methods or fields, changed signatures) -- see README for the full
 // comparison. No DevReloadContainer/HotSwapAgent code depends on which JVM is running
@@ -81,7 +83,7 @@ def resolveJbrJavaExecutable = {
 // The flag is read here, at configuration time, to decide which *task type* to
 // register: JavaExec's `javaLauncher` property is wired by Gradle to a
 // toolchain-derived convention that cannot be cleanly overridden once `executable` is
-// also set (they conflict), so pointing at a custom JetBrains Runtime binary can't be
+// also set (they conflict), so pointing at a custom DCEVM-patched JVM binary can't be
 // done through JavaExec. The default (unflagged) path keeps JavaExec so it retains
 // Gradle's automatic classpath-argfile handling for very long classpaths (a real risk
 // on Windows, given how many jars are on OFBiz's runtime classpath) and --debug-jvm
@@ -91,22 +93,25 @@ if (project.hasProperty('hotreload.enhanced')) {
     rootProject.tasks.register('ofbizDev', Exec) {
         dependsOn rootProject.tasks.named('classes')
         group = 'OFBiz Server Commands'
-        description = 'Start OFBiz with hot-reload on a JetBrains Runtime with enhanced class redefinition -- ' +
+        description = 'Start OFBiz with hot-reload on a DCEVM-patched JVM with enhanced class redefinition -- ' +
                 'structural Java changes (new/removed methods or fields) also reload without a restart, not ' +
-                'just method bodies. Requires a JetBrains Runtime; set -PjbrHome=/path/to/jbr if not ' +
-                'auto-detected. Recommended: run with --no-watch-fs, e.g. ' +
-                '\'./gradlew ofbizDev -Photreload.enhanced=true --no-watch-fs\' -- Gradle\'s own file-system ' +
-                'watching competes with this plugin\'s for the same macOS directory-watch ceiling on a full ' +
-                'checkout. Optionally also scope to specific components with -Photreload.components=compA,compB.'
+                'just method bodies. Requires a DCEVM-patched JVM (JetBrains Runtime is a convenient prebuilt ' +
+                'source); set -PdcevmHome=/path/to/jvm if not auto-detected. Recommended: run with ' +
+                '--no-watch-fs, e.g. \'./gradlew ofbizDev -Photreload.enhanced=true --no-watch-fs\' -- ' +
+                'Gradle\'s own file-system watching competes with this plugin\'s for the same macOS ' +
+                'directory-watch ceiling on a full checkout. Optionally also scope to specific components ' +
+                'with -Photreload.components=compA,compB.'
         doFirst {
-            String jbrJava = resolveJbrJavaExecutable()
-            if (!jbrJava) {
-                throw new GradleException("Could not find a JetBrains Runtime. Set -PjbrHome=/path/to/jbr " +
-                        "(the folder containing bin/java) or the JBR_HOME env var. A JBR ships with IntelliJ " +
-                        "IDEA under '<IDE install>/jbr' (or '.../Contents/jbr' on macOS).")
+            String dcevmJava = resolveDcevmJavaExecutable()
+            if (!dcevmJava) {
+                throw new GradleException("Could not find a DCEVM-patched JVM. Set -PdcevmHome=/path/to/jvm " +
+                        "(the folder containing bin/java) or the DCEVM_HOME env var. JetBrains Runtime, which " +
+                        "bundles DCEVM, ships with IntelliJ IDEA under '<IDE install>/jbr' (or " +
+                        "'.../Contents/jbr' on macOS) and is the easiest way to get one; standalone DCEVM " +
+                        "builds work too.")
             }
-            logger.lifecycle("ofbizDev: enhanced mode, using JetBrains Runtime at ${jbrJava}")
-            List<String> cmd = [jbrJava]
+            logger.lifecycle("ofbizDev: enhanced mode, using DCEVM-patched JVM at ${dcevmJava}")
+            List<String> cmd = [dcevmJava]
             cmd.addAll(rootProject.application.applicationDefaultJvmArgs)
             cmd.addAll(['-Dofbiz.hotreload=true', '-Djdk.attach.allowAttachSelf=true', '-XX:+AllowEnhancedClassRedefinition'])
             cmd.addAll(hotreloadComponentArgs(project))
@@ -124,7 +129,7 @@ if (project.hasProperty('hotreload.enhanced')) {
                 'Optionally scope to specific components with -Photreload.components=compA,compB, or watch ' +
                 'build/classes/java/main too (for externally-produced .class files) with ' +
                 '-Photreload.watchBuildOutput=true. Pass -Photreload.enhanced=true to additionally hot-swap ' +
-                'structural changes (new/removed methods or fields) via a JetBrains Runtime -- see README.'
+                'structural changes (new/removed methods or fields) via a DCEVM-patched JVM -- see README.'
         classpath = rootProject.sourceSets.main.runtimeClasspath
         mainClass = rootProject.application.mainClass
         jvmArgs(rootProject.application.applicationDefaultJvmArgs
