@@ -25,9 +25,12 @@ method/field, a changed signature) — those still need a restart on a plain JDK
 
 Same command, with enhanced class redefinition turned on: it now runs on a
 DCEVM-patched JVM instead of a stock JDK and additionally hot-swaps structural changes
-live, with no restart. Requires a DCEVM-patched JVM — JetBrains Runtime (which bundles
-DCEVM) is auto-detected from a local IntelliJ IDEA install, or point at any DCEVM build
-explicitly with `-PdcevmHome=/path/to/jvm` or the `DCEVM_HOME` env var.
+live, with no restart. Requires a DCEVM-patched JVM, pointed at explicitly with
+`-PdcevmHome=/path/to/jvm` (the folder containing `bin/java`) or the `DCEVM_HOME` env
+var — this is not auto-detected, since IDE install locations vary too much across
+OS/Toolbox/version to guess reliably. JetBrains Runtime, which bundles DCEVM, ships
+with IntelliJ IDEA under `<IDE install>/jbr` (`.../Contents/jbr` on macOS) and is the
+easiest way to get one; standalone DCEVM builds work too.
 
 DCEVM stands for **Dynamic Code Evolution Virtual Machine**. It's a patch to the HotSpot
 JVM that lifts the stock class-redefinition restriction to method bodies only, so
@@ -45,7 +48,7 @@ Both also support scoping to specific components for a faster startup:
 
 | Aspect | Default | `-Photreload.enhanced=true` |
 |---|---|---|
-| JVM | stock JDK (whatever Gradle resolves normally) | DCEVM-patched JVM (JetBrains Runtime auto-detected, or any DCEVM build via `-PdcevmHome`/`DCEVM_HOME`) |
+| JVM | stock JDK (whatever Gradle resolves normally) | DCEVM-patched JVM, pointed at explicitly via `-PdcevmHome`/`DCEVM_HOME` |
 | Method body edits | hot-swapped live | hot-swapped live |
 | `services.xml` edits | hot-swapped live | hot-swapped live |
 | Structural changes (new/removed method or field, changed signature) | needs a restart | hot-swapped live |

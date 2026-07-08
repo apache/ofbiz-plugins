@@ -36,19 +36,17 @@ import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import javax.tools.JavaCompiler;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
@@ -89,11 +87,11 @@ import org.apache.ofbiz.base.util.cache.UtilCache;
  *       leaving the stale hot-swapped {@code .class} file in place. This plugin's output
  *       directory is cleared and recreated on every {@link #init}, so a fresh run never
  *       inherits a previous session's bytecode, and is placed ahead of Gradle's own
- *       output on the classpath (see {@code build.gradle}) so brand-new classes load the
- *       live version too, not just already-loaded ones. Running {@code ./gradlew -t
- *       classes} externally in a second terminal still works — the same WatchService
- *       also monitors Gradle's own output directory directly for externally-produced
- *       {@code .class} files, when {@code -Dofbiz.hotreload.watchBuildOutput=true}.</li>
+ *       output on the classpath (see {@code build.gradle}) so it always wins when a class
+ *       exists in both places. Running {@code ./gradlew -t classes} externally in a
+ *       second terminal still works — the same WatchService also monitors Gradle's own
+ *       output directory directly for externally-produced {@code .class} files, when
+ *       {@code -Dofbiz.hotreload.watchBuildOutput=true}.</li>
  *   <li>Changes are debounced for 300 ms so a single compile run is handled as one batch.
  *       Each changed class already loaded in the JVM is updated in place via
  *       {@link Instrumentation#redefineClasses}, the same mechanism an IDE debugger uses
@@ -120,6 +118,15 @@ import org.apache.ofbiz.base.util.cache.UtilCache;
  * {@code service.ModelServiceMapByModel} {@link UtilCache} entry is cleared directly, so
  * the new/edited definition is re-read on the next service call.
  *
+ * <h2>Directory watch limits</h2>
+ * The OS may refuse to watch a directory once a process-wide ceiling is reached (most
+ * commonly hit on macOS on a full checkout). This container does not try to work around
+ * that itself: a directory whose registration fails is simply left unwatched, with a
+ * warning naming it, rather than silently falling back to some slower alternate
+ * mechanism. Narrow the set of directories with {@code -Dofbiz.hotreload.components}
+ * (or {@code -Photreload.components=compA,compB} with the {@code ofbizDev} Gradle task)
+ * to fit under the ceiling — see this component's README for the full guidance.
+ *
  * <h2>Scope</h2>
  * This container is intentionally dev-only. It has no effect when the system property is
  * absent, so it is safe to leave the registration in this component's
@@ -136,25 +143,9 @@ public class DevReloadContainer implements Container {
     private ScheduledExecutorService debouncer;
     private Instrumentation instrumentation;
 
-    // guarded by synchronized(this)
-    private ScheduledFuture<?> pendingReload;
-    private final Set<String> pendingChanges = new HashSet<>();
-
-    // guarded by synchronized(this)
-    private ScheduledFuture<?> pendingXmlReload;
-    private final Set<Path> pendingXmlChanges = new HashSet<>();
-
-    // guarded by synchronized(this)
-    private ScheduledFuture<?> pendingCompile;
-    private final Set<Path> pendingCompileFiles = new HashSet<>();
-
-    /**
-     * Epoch-ms when the last in-process compilation finished; 0 if never compiled.
-     * Used together with {@link #scheduleReload} to suppress spurious macOS
-     * WatchService ENTRY_CREATE storms for 10 s after an in-process compile.
-     * In-process reloads bypass this via {@link #directReload}.
-     */
-    private long lastCompileFinishedAt = 0;
+    private final Debouncer<String> classReloadDebouncer = new Debouncer<>(this::applyReload);
+    private final Debouncer<Path> xmlReloadDebouncer = new Debouncer<>(this::applyServiceXmlReload);
+    private final Debouncer<Path> compileDebouncer = new Debouncer<>(this::applyCompile);
 
     // Counts across registerServicedefDirs()/registerSourceDirs()/registerAll(), so
     // start() can emit one aggregated warning instead of leaving individual failures
@@ -174,8 +165,8 @@ public class DevReloadContainer implements Container {
      * Gradle's incremental {@code compileJava} up-to-date check is never confused by
      * writes it didn't make itself. Cleared and recreated fresh on every {@link #init},
      * and placed ahead of Gradle's output on the runtime classpath (see
-     * {@code plugins/devreload/build.gradle}), so a class compiled here but never yet
-     * loaded in this JVM picks up the live version on its first load too.
+     * {@code plugins/devreload/build.gradle}) — so when a class exists in both
+     * directories, this one always wins (see {@link #resolveClassFile}).
      */
     private Path hotReloadOutputDir;
 
@@ -184,31 +175,10 @@ public class DevReloadContainer implements Container {
     private final Set<Path> sourceRootDirs = new HashSet<>();
 
     /**
-     * Directories that could not get a real {@link WatchService} registration (e.g.
-     * macOS's kqueue-per-directory watch cost exhausting the process's practical watch
-     * ceiling, well under a typical {@code ulimit -n}) and are polled every
-     * {@link #POLL_INTERVAL_MS} instead, keyed by what kind of files under that
-     * directory matter. This is the fallback of last resort: {@link #registerAll} tries
-     * a real watch for every directory first and only falls here on failure, so nothing
-     * is ever silently left unwatched — it just degrades from instant to
-     * {@link #POLL_INTERVAL_MS}-latency for whichever directories didn't fit.
-     */
-    private final Map<Path, PollKind> pollDirs = new ConcurrentHashMap<>();
-    private final Map<Path, FileTime> pollMTimes = new ConcurrentHashMap<>();
-    private static final long POLL_INTERVAL_MS = 2000L;
-    private ScheduledFuture<?> pollTask;
-
-    /** Which kind of files under a {@link #pollDirs} entry matter, and how to react to one changing. */
-    private enum PollKind { SOURCE_JAVA, COMPILED_CLASSES, SERVICEDEF_XML }
-
-    /**
      * Component names to watch, from {@code -Dofbiz.hotreload.components}; {@code null}
-     * means watch every component. Scoping is a performance optimization, not a
-     * correctness requirement: even unscoped, {@link #pollDirs} guarantees nothing is
-     * silently missed. Scoping just keeps everything on the fast, instant, event-driven
-     * path instead of some directories falling back to polling. Set this property to a
-     * comma-separated list of component names to scope watching to just the ones being
-     * worked on.
+     * means watch every component. Set this property to a comma-separated list of
+     * component names to keep the total number of watched directories under the OS's
+     * per-process ceiling on a large checkout.
      */
     private Set<String> allowedComponents;
 
@@ -219,9 +189,8 @@ public class DevReloadContainer implements Container {
      * narrowed by {@link #allowedComponents} (compiled output isn't organized per component),
      * so on a full checkout it roughly doubles the total directories watched. It only exists to
      * pick up externally-produced {@code .class} files (e.g. running {@code ./gradlew -t
-     * classes} in a second terminal); in-process compiles hot-swap directly via
-     * {@link #directReload} and never need it. Off by default so unscoped runs need
-     * meaningfully fewer real watch registrations before falling back to polling.
+     * classes} in a second terminal); in-process compiles hot-swap directly and never need it.
+     * Off by default so unscoped runs need meaningfully fewer real watch registrations.
      */
     private boolean watchBuildOutput;
 
@@ -299,9 +268,9 @@ public class DevReloadContainer implements Container {
             try {
                 registerAll(classesDir);
             } catch (IOException e) {
-                // registerAll() already falls back to polling per-directory for individual
-                // register() failures; reaching here means something more fundamental broke
-                // walking the tree at all (e.g. can't even list classesDir).
+                // registerAll() already logs a warning and skips individual directories
+                // that fail to register; reaching here means something more fundamental
+                // broke walking the tree at all (e.g. can't even list classesDir).
                 Debug.logWarning("Hot-reload: could not fully walk " + classesDir + ": " + e.getMessage(), MODULE);
             }
             Debug.logInfo("Hot-reload: watching compiled-output directory " + classesDir.toAbsolutePath()
@@ -326,27 +295,18 @@ public class DevReloadContainer implements Container {
     }
 
     /**
-     * Picks whichever of this plugin's own compiled output ({@code candidate}, under
+     * Picks whichever of this plugin's own compiled output ({@code overlay}, under
      * {@link #hotReloadOutputDir}) or Gradle's ({@code fallback}, under {@link #classesDir})
-     * is the right one to redefine from. Normally only one of the two exists for a given
-     * class -- in-process edits only ever land in {@code hotReloadOutputDir}, externally
-     * produced classes (from {@code ./gradlew -t classes}, only relevant when
-     * {@code watchBuildOutput} is on) only ever land in {@code classesDir}. If a class was
-     * touched by both mechanisms, the more recently written file wins rather than
-     * preferring one path unconditionally. Returns {@code null} if neither exists.
+     * is the right one to redefine from. {@code overlay} always wins when it exists,
+     * matching its position ahead of {@code fallback} on the runtime classpath (see
+     * {@code build.gradle}) — a class compiled here is always the one a caller would load.
+     * Returns {@code null} if neither exists.
      */
-    private static Path freshestClassFile(Path candidate, Path fallback) {
-        File candidateFile = candidate.toFile();
-        File fallbackFile = fallback.toFile();
-        boolean candidateExists = candidateFile.exists();
-        boolean fallbackExists = fallbackFile.exists();
-        if (candidateExists && fallbackExists) {
-            return FileUtils.isFileNewer(fallbackFile, candidateFile) ? fallback : candidate;
+    private Path resolveClassFile(Path overlay, Path fallback) {
+        if (Files.exists(overlay)) {
+            return overlay;
         }
-        if (candidateExists) {
-            return candidate;
-        }
-        if (fallbackExists) {
+        if (Files.exists(fallback)) {
             return fallback;
         }
         return null;
@@ -362,18 +322,14 @@ public class DevReloadContainer implements Container {
         if (watchDirsFailed > 0) {
             Debug.logWarning("Hot-reload: " + watchDirsFailed + " of " + watchDirsAttempted + " directory watch "
                     + "registrations hit file-descriptor/watch exhaustion (see warnings above for which ones) "
-                    + "and are now polled every " + POLL_INTERVAL_MS + "ms instead of instantly. Java or "
-                    + "services.xml changes there still hot-reload, just with a few seconds of extra latency. "
-                    + "Scope hot-reload to just the components you're working on with "
+                    + "and are NOT being watched — changes there will not hot-reload until you restart. Scope "
+                    + "hot-reload to just the components you're working on with "
                     + "-Dofbiz.hotreload.components=compA,compB (or -Photreload.components=compA,compB with "
-                    + "the ofbizDev Gradle task) to keep everything on the fast, instant "
-                    + "path instead.", MODULE);
+                    + "the ofbizDev Gradle task) to fit under the OS watch limit.", MODULE);
         }
         watchThread = new Thread(this::watchLoop, "ofbiz-hot-reload-watcher");
         watchThread.setDaemon(true);
         watchThread.start();
-        pollTask = debouncer.scheduleWithFixedDelay(
-                this::pollFallbackDirs, POLL_INTERVAL_MS, POLL_INTERVAL_MS, TimeUnit.MILLISECONDS);
         Debug.logInfo("DevReloadContainer started. Edit any Java or services.xml file and changes go live without a restart.", MODULE);
         return true;
     }
@@ -402,14 +358,7 @@ public class DevReloadContainer implements Container {
                                 StandardWatchEventKinds.ENTRY_MODIFY);
                         Debug.logInfo("Hot-reload: watching servicedef directory " + dir, MODULE);
                     } catch (IOException e) {
-                        try {
-                            fallBackToPolling(dir, PollKind.SERVICEDEF_XML, e);
-                        } catch (Throwable t) {
-                            // See registerAll()'s equivalent guard: one directory's fallback
-                            // failing must not abort watching every remaining component.
-                            Debug.logError(t, "Hot-reload: could not fall back to polling for " + dir
-                                    + " -- this directory will not be watched or polled.", MODULE);
-                        }
+                        warnUnwatched(dir, e);
                     }
                 }
             } catch (GenericConfigException | java.net.URISyntaxException e) {
@@ -446,9 +395,9 @@ public class DevReloadContainer implements Container {
                     registerAll(srcDir);
                     Debug.logInfo("Hot-reload: watching source directory " + srcDir, MODULE);
                 } catch (IOException e) {
-                    // registerAll() already falls back to polling per-directory for
-                    // individual register() failures; reaching here means something more
-                    // fundamental broke walking the tree at all (e.g. can't list srcDir).
+                    // registerAll() already logs a warning and skips individual directories
+                    // that fail to register; reaching here means something more fundamental
+                    // broke walking the tree at all (e.g. can't list srcDir).
                     Debug.logWarning("Hot-reload: could not walk source dir " + srcDir + ": " + e.getMessage(), MODULE);
                 }
             }
@@ -518,15 +467,15 @@ public class DevReloadContainer implements Container {
                     // Only react to written/updated class files. Ignore ENTRY_DELETE so
                     // that removing a source file (and its .class output) does not cause
                     // a redefinition attempt against a now-missing file.
-                    scheduleReload(changed);
+                    reloadClassFile(classesDir, changed);
                 } else if ((kind == StandardWatchEventKinds.ENTRY_CREATE || kind == StandardWatchEventKinds.ENTRY_MODIFY)
                         && changed.toString().endsWith(".xml")
                         && servicedefDirs.contains(dir)) {
-                    scheduleServiceXmlReload(changed);
+                    xmlReloadDebouncer.add(changed);
                 } else if ((kind == StandardWatchEventKinds.ENTRY_CREATE || kind == StandardWatchEventKinds.ENTRY_MODIFY)
                         && changed.toString().endsWith(".java")
                         && sourceRootDirs.stream().anyMatch(dir::startsWith)) {
-                    scheduleCompile(changed);
+                    compileDebouncer.add(changed);
                 }
             }
             if (!key.reset()) {
@@ -537,64 +486,60 @@ public class DevReloadContainer implements Container {
     }
 
     // -------------------------------------------------------------------------
-    // Debounced reload
+    // Debounced batching
     // -------------------------------------------------------------------------
 
-    private synchronized void scheduleReload(Path classFile) {
-        String className = toClassName(classesDir, classFile);
-        if (className == null) {
-            return;
-        }
-        // On macOS the WatchService fires ENTRY_CREATE for every .class file in the
-        // entire tree after the compiler writes one new file. Suppress ALL WatchService
-        // class-file events for 10 s after an in-process compile. In-process reloads
-        // use directReload() which bypasses this check, so no changes are missed.
-        // After 10 s the check expires and external compilations (./gradlew classes)
-        // flow through normally.
-        if (System.currentTimeMillis() - lastCompileFinishedAt < 10_000L) {
-            return;
-        }
-        pendingChanges.add(className);
-        if (pendingReload != null) {
-            pendingReload.cancel(false);
-        }
-        // Wait 300 ms after the last change so a single Gradle compile run
-        // (which writes multiple .class files) is handled as one batch.
-        try {
-            pendingReload = debouncer.schedule(this::applyReload, 300, TimeUnit.MILLISECONDS);
-        } catch (RejectedExecutionException e) {
-            // Container is shutting down; pending changes will not be applied.
-        }
-    }
-
     /**
-     * Schedules a class reload directly from the in-process compiler, bypassing the
-     * macOS WatchService suppression window used by {@link #scheduleReload}.
+     * Coalesces rapid-fire change notifications into one action, so a single compile run
+     * that touches many files (e.g. one with inner/anonymous classes, or a Gradle build
+     * writing several {@code .class} files at once) is handled as a single batch instead
+     * of one action per file. Shared by all three change pipelines (class reload,
+     * {@code services.xml} reload, Java compile) instead of each hand-rolling its own
+     * pending-set/cancel/reschedule bookkeeping.
      */
-    private synchronized void directReload(Path classFile) {
-        String className = toClassName(hotReloadOutputDir, classFile);
-        if (className == null) {
-            return;
+    private final class Debouncer<T> {
+        private final Set<T> pending = new HashSet<>();
+        private final Consumer<Set<T>> action;
+        private ScheduledFuture<?> scheduled;
+
+        Debouncer(Consumer<Set<T>> action) {
+            this.action = action;
         }
-        pendingChanges.add(className);
-        if (pendingReload != null) {
-            pendingReload.cancel(false);
+
+        synchronized void add(T item) {
+            pending.add(item);
+            if (scheduled != null) {
+                scheduled.cancel(false);
+            }
+            try {
+                // Wait 300 ms after the last change so a burst of related changes (e.g. a
+                // single Gradle compile run writing multiple .class files) is handled as
+                // one batch instead of one action per file.
+                scheduled = debouncer.schedule(this::fire, 300, TimeUnit.MILLISECONDS);
+            } catch (RejectedExecutionException e) {
+                // Container is shutting down; pending changes will not be applied.
+            }
         }
-        try {
-            pendingReload = debouncer.schedule(this::applyReload, 300, TimeUnit.MILLISECONDS);
-        } catch (RejectedExecutionException e) {
-            // Container is shutting down; pending changes will not be applied.
+
+        private synchronized void fire() {
+            if (pending.isEmpty()) {
+                return;
+            }
+            Set<T> batch = new HashSet<>(pending);
+            pending.clear();
+            action.accept(batch);
         }
     }
 
-    private synchronized void applyReload() {
-        if (pendingChanges.isEmpty()) {
-            return;
+    /** Resolves {@code changed} to a class name relative to {@code baseDir} and, if valid, queues it for reload. */
+    private void reloadClassFile(Path baseDir, Path changed) {
+        String className = toClassName(baseDir, changed);
+        if (className != null) {
+            classReloadDebouncer.add(className);
         }
+    }
 
-        Set<String> batch = new HashSet<>(pendingChanges);
-        pendingChanges.clear();
-
+    private void applyReload(Set<String> batch) {
         Debug.logInfo("Hot-reload: detected changes in " + batch, MODULE);
 
         if (instrumentation == null) {
@@ -608,7 +553,7 @@ public class DevReloadContainer implements Container {
             Path relative = Paths.get(className.replace('.', '/') + ".class");
             Path overlayFile = hotReloadOutputDir.resolve(relative);
             Path gradleFile = classesDir.resolve(relative);
-            Path classFile = freshestClassFile(overlayFile, gradleFile);
+            Path classFile = resolveClassFile(overlayFile, gradleFile);
             if (classFile == null) {
                 Debug.logWarning("Hot-reload: detected a change for " + className
                         + " but could not find its compiled output in either "
@@ -620,21 +565,8 @@ public class DevReloadContainer implements Container {
                 if (loaded == null) {
                     // Never loaded yet in this JVM — nothing to redefine. It will simply
                     // load fresh, with the new bytecode, the first time something
-                    // references it. But hotReloadOutputDir sits ahead of classesDir on
-                    // the classpath (see build.gradle), so if classesDir's copy just won
-                    // the freshness check above, a stale copy left behind in
-                    // hotReloadOutputDir from an earlier edit would otherwise shadow it
-                    // on that first load -- remove it so classpath resolution picks up
-                    // whichever copy is actually freshest.
-                    if (classFile.equals(gradleFile) && Files.exists(overlayFile)) {
-                        try {
-                            Files.delete(overlayFile);
-                        } catch (IOException e) {
-                            Debug.logWarning("Hot-reload: could not remove stale overlay copy of "
-                                    + className + " at " + overlayFile.toAbsolutePath() + ": "
-                                    + e.getMessage(), MODULE);
-                        }
-                    }
+                    // references it, from whichever directory resolveClassFile() would
+                    // pick (overlay first on the classpath too, see build.gradle).
                     continue;
                 }
                 defs.add(new ClassDefinition(loaded, Files.readAllBytes(classFile)));
@@ -674,7 +606,7 @@ public class DevReloadContainer implements Container {
      * what allows {@link Instrumentation#redefineClasses} to also apply structural
      * changes instead of just method bodies. Purely informational — the actual
      * capability is exercised (and, if absent, reported) when a redefinition is
-     * attempted in {@link #applyReload()}.
+     * attempted in {@link #applyReload}.
      */
     private static boolean enhancedRedefinitionRequested() {
         return ManagementFactory.getRuntimeMXBean().getInputArguments().stream()
@@ -691,25 +623,7 @@ public class DevReloadContainer implements Container {
         return null;
     }
 
-    private synchronized void scheduleServiceXmlReload(Path xmlFile) {
-        pendingXmlChanges.add(xmlFile);
-        if (pendingXmlReload != null) {
-            pendingXmlReload.cancel(false);
-        }
-        try {
-            pendingXmlReload = debouncer.schedule(this::applyServiceXmlReload, 300, TimeUnit.MILLISECONDS);
-        } catch (RejectedExecutionException e) {
-            // Container is shutting down; ignore.
-        }
-    }
-
-    private synchronized void applyServiceXmlReload() {
-        if (pendingXmlChanges.isEmpty()) {
-            return;
-        }
-        Set<Path> batch = new HashSet<>(pendingXmlChanges);
-        pendingXmlChanges.clear();
-
+    private void applyServiceXmlReload(Set<Path> batch) {
         Debug.logInfo("Hot-reload: service XML changed " + batch + " — clearing service model cache", MODULE);
         try {
             UtilCache.clearCache(SERVICE_MODEL_CACHE_NAME);
@@ -719,25 +633,7 @@ public class DevReloadContainer implements Container {
         }
     }
 
-    private synchronized void scheduleCompile(Path javaFile) {
-        pendingCompileFiles.add(javaFile);
-        if (pendingCompile != null) {
-            pendingCompile.cancel(false);
-        }
-        try {
-            pendingCompile = debouncer.schedule(this::applyCompile, 300, TimeUnit.MILLISECONDS);
-        } catch (RejectedExecutionException e) {
-            // shutting down
-        }
-    }
-
-    private synchronized void applyCompile() {
-        if (pendingCompileFiles.isEmpty()) {
-            return;
-        }
-        Set<Path> batch = new HashSet<>(pendingCompileFiles);
-        pendingCompileFiles.clear();
-
+    private void applyCompile(Set<Path> batch) {
         Debug.logInfo("Hot-reload: compiling " + batch, MODULE);
         try {
             JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
@@ -754,16 +650,11 @@ public class DevReloadContainer implements Container {
                 if (ok) {
                     Debug.logInfo("Hot-reload: compilation successful", MODULE);
 
-                    // Set the suppression timestamp BEFORE calling directReload so that
-                    // scheduleReload() (called by the WatchService) sees it immediately.
-                    lastCompileFinishedAt = System.currentTimeMillis();
-
                     // Collect all .class files produced by this compilation round.
                     // Each source file can produce multiple .class files when it contains
                     // inner or anonymous classes (e.g. Foo$Bar.class, Foo$1.class).
                     // All of them must be redefined too — otherwise the inner class still
                     // resolves through its stale, previously-loaded bytecode.
-                    List<Path> compiledRelative = new ArrayList<>();
                     for (Path src : batch) {
                         Path cf = sourceToClassFile(src); // relative path for the outer class
                         if (cf == null) {
@@ -785,19 +676,12 @@ public class DevReloadContainer implements Container {
                                 // relativize — does not throw IllegalArgumentException.
                                 Path rel = hotReloadOutputDir.resolve(
                                         hotReloadOutputDir.toAbsolutePath().relativize(absFile));
-                                compiledRelative.add(rel);
+                                reloadClassFile(hotReloadOutputDir, rel);
                             });
                         } catch (IOException e) {
                             // Output dir unreadable; fall back to the outer class only.
-                            compiledRelative.add(cf);
+                            reloadClassFile(hotReloadOutputDir, cf);
                         }
-                    }
-
-                    // Trigger reload via directReload() — not scheduleReload() — so these
-                    // classes bypass the 10-second WatchService suppression window that was
-                    // put in place to block the macOS mass-ENTRY_CREATE storm.
-                    for (Path rel : compiledRelative) {
-                        directReload(rel);
                     }
 
                     // Re-register class directories so external compilations (./gradlew classes
@@ -848,9 +732,9 @@ public class DevReloadContainer implements Container {
 
     /**
      * Recursively registers every directory under {@code start} with the WatchService.
-     * A directory whose registration fails (e.g. watch/descriptor exhaustion) falls back
-     * to polling via {@link #fallBackToPolling} instead of aborting the whole walk, so
-     * one overloaded directory never leaves the rest of the tree unwatched.
+     * A directory whose registration fails (e.g. watch/descriptor exhaustion) is logged
+     * and left unwatched via {@link #warnUnwatched} instead of aborting the whole walk,
+     * so one overloaded directory never leaves the rest of the tree unwatched.
      */
     private void registerAll(Path start) throws IOException {
         Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
@@ -862,135 +746,32 @@ public class DevReloadContainer implements Container {
                             StandardWatchEventKinds.ENTRY_CREATE,
                             StandardWatchEventKinds.ENTRY_MODIFY);
                 } catch (IOException e) {
-                    try {
-                        fallBackToPolling(dir, kindOf(dir), e);
-                    } catch (Throwable t) {
-                        // fallBackToPolling()/kindOf() are not expected to throw, but this has
-                        // been observed to fail (e.g. a transient classloading error) under
-                        // heavy directory-watch exhaustion. Letting anything escape here -- even
-                        // an Error -- would propagate out of walkFileTree and crash container
-                        // startup entirely, which is strictly worse than leaving this one
-                        // directory unwatched and unpolled.
-                        Debug.logError(t, "Hot-reload: could not fall back to polling for " + dir
-                                + " -- this directory will not be watched or polled.", MODULE);
-                    }
+                    warnUnwatched(dir, e);
                 } catch (Throwable t) {
-                    // Same reasoning: register() itself should only throw IOException, but
-                    // nothing here is worth crashing the whole startup over.
+                    // register() itself should only throw IOException, but nothing here is
+                    // worth crashing the whole startup over.
                     Debug.logError(t, "Hot-reload: unexpected error registering watch for " + dir
-                            + " -- this directory will not be watched or polled.", MODULE);
+                            + " -- this directory will not be watched.", MODULE);
                 }
                 return FileVisitResult.CONTINUE;
             }
         });
     }
 
-    /** Classifies a directory so poll fallback knows which file suffix and reload path apply. */
-    private PollKind kindOf(Path dir) {
-        return dir.startsWith(classesDir) ? PollKind.COMPILED_CLASSES : PollKind.SOURCE_JAVA;
-    }
-
-    // -------------------------------------------------------------------------
-    // Poll fallback (for directories that couldn't get a real WatchService registration)
-    // -------------------------------------------------------------------------
-
     /**
-     * Records {@code dir} as needing to be polled instead of watched, seeds a baseline of
-     * its current files' mtimes (so the very first poll tick doesn't treat every
-     * pre-existing file as "changed"), and logs why.
+     * Records that {@code dir} could not get a WatchService registration (most commonly
+     * the OS's per-process watch ceiling, e.g. macOS's kqueue-per-directory cost) and
+     * logs why. The directory is simply left unwatched: changes there require a restart
+     * (or {@code -Dofbiz.hotreload.components}/{@code -Photreload.components} to narrow
+     * the watched set below the ceiling) rather than falling back to some slower
+     * alternate mechanism.
      */
-    private void fallBackToPolling(Path dir, PollKind kind, IOException cause) {
+    private void warnUnwatched(Path dir, IOException cause) {
         watchDirsFailed++;
-        pollDirs.put(dir, kind);
-        try (var entries = Files.list(dir)) {
-            String suffix = suffixFor(kind);
-            entries.filter(p -> p.toString().endsWith(suffix)).forEach(p -> {
-                try {
-                    pollMTimes.put(p, Files.getLastModifiedTime(p));
-                } catch (IOException ignored) {
-                    // Best-effort baseline; a missed entry just means its first real
-                    // change gets dispatched once even if unchanged, which is harmless.
-                }
-            });
-        } catch (IOException e) {
-            Debug.logWarning("Hot-reload: could not seed poll baseline for " + dir + ": " + e.getMessage(), MODULE);
-        }
-        Debug.logWarning("Hot-reload: could not watch " + dir + " (" + cause.getMessage() + ") -- polling it "
-                + "every " + POLL_INTERVAL_MS + "ms instead, so changes there are still noticed, just not "
-                + "instantly.", MODULE);
-    }
-
-    private static String suffixFor(PollKind kind) {
-        return switch (kind) {
-        case SOURCE_JAVA -> ".java";
-        case COMPILED_CLASSES -> ".class";
-        case SERVICEDEF_XML -> ".xml";
-        };
-    }
-
-    /**
-     * Runs every {@link #POLL_INTERVAL_MS} on {@link #debouncer}. For each directory in
-     * {@link #pollDirs}, lists its direct children: changed files matching that
-     * directory's {@link PollKind} feed into the same debounced reload pipeline a real
-     * WatchService event would; newly-appeared subdirectories get a real registration
-     * attempt via {@link #registerAll}, which itself falls back to polling again if that
-     * still doesn't fit -- so the poll set only ever covers exactly what doesn't fit.
-     */
-    private void pollFallbackDirs() {
-        if (pollDirs.isEmpty()) {
-            return;
-        }
-        for (Map.Entry<Path, PollKind> entry : pollDirs.entrySet()) {
-            Path dir = entry.getKey();
-            PollKind kind = entry.getValue();
-            if (!Files.isDirectory(dir)) {
-                pollDirs.remove(dir); // deleted; nothing left to poll here
-                continue;
-            }
-            String suffix = suffixFor(kind);
-            try (var entries = Files.list(dir)) {
-                entries.forEach(child -> {
-                    if (Files.isDirectory(child)) {
-                        if (!pollDirs.containsKey(child)) {
-                            try {
-                                registerAll(child);
-                            } catch (IOException e) {
-                                Debug.logWarning("Hot-reload: poll fallback could not register new directory "
-                                        + child + ": " + e.getMessage(), MODULE);
-                            }
-                        }
-                        return;
-                    }
-                    if (!child.toString().endsWith(suffix)) {
-                        return;
-                    }
-                    try {
-                        FileTime mtime = Files.getLastModifiedTime(child);
-                        FileTime previous = pollMTimes.put(child, mtime);
-                        // previous == null means this file was never seen before -- either
-                        // it's brand new (must be dispatched, same as a WatchService
-                        // ENTRY_CREATE would) or fallBackToPolling()'s seed pass somehow
-                        // missed it. Either way, treating "never seen" as "changed" is the
-                        // only way a poll-fallback directory doesn't silently miss new files.
-                        if (previous == null || !previous.equals(mtime)) {
-                            dispatchPolledChange(child, kind);
-                        }
-                    } catch (IOException ignored) {
-                        // Transient stat failure (e.g. file removed mid-scan); skip this tick.
-                    }
-                });
-            } catch (IOException e) {
-                Debug.logWarning("Hot-reload: poll fallback could not list " + dir + ": " + e.getMessage(), MODULE);
-            }
-        }
-    }
-
-    private void dispatchPolledChange(Path file, PollKind kind) {
-        switch (kind) {
-        case SOURCE_JAVA -> scheduleCompile(file);
-        case COMPILED_CLASSES -> scheduleReload(file);
-        case SERVICEDEF_XML -> scheduleServiceXmlReload(file);
-        }
+        Debug.logWarning("Hot-reload: could not watch " + dir + " (" + cause.getMessage() + ") -- changes "
+                + "there will not be picked up until OFBiz is restarted. Narrow the watched set with "
+                + "-Dofbiz.hotreload.components=compA,compB (or -Photreload.components=compA,compB with the "
+                + "ofbizDev Gradle task) to fit under the OS watch limit.", MODULE);
     }
 
     /**
