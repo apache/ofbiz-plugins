@@ -247,7 +247,7 @@ under the License.
     <!-- ============================================================ -->
     <ProductFacility productId="DCGAPSOSR12" facilityId="MFG_PLANT" minimumStock="100.000000" reorderQuantity="1.000000"/>
     <ProductFacility productId="DCGAPSOSR13" facilityId="MFG_PLANT" minimumStock="100.000000" reorderQuantity="1.000000"/>
-    <ProductFacility productId="DSK15144-00" facilityId="MFG_PLANT" minimumStock="50.000000" reorderQuantity="1.000000"/>
+    <ProductFacility productId="DSK15144-00" facilityId="MFG_PLANT" minimumStock="50.000000"/>
     <ProductFacility productId="DRGAMBSK8II" facilityId="MFG_PLANT" minimumStock="1.000000" reorderQuantity="1.000000"/>
     <ProductFacility productId="DRVM52105036FAS" facilityId="MFG_PLANT" minimumStock="1.000000" reorderQuantity="1.000000"/>
     <ProductFacility productId="DRVM60361050XA" facilityId="MFG_PLANT" minimumStock="1.000000" reorderQuantity="1.000000"/>
