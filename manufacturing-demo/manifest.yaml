@@ -16,7 +16,7 @@ login:
   userLoginId: admin
   password: ofbiz
   group: FULLADMIN
-  grantedPermissions: [OFBTOOLS_VIEW, CATALOG_VIEW, MANUFACTURING_VIEW, MANUFACTURING_CREATE, MANUFACTURING_UPDATE, MANUFACTURING_DELETE, MANUFACTURING_ADMIN, WORKEFFORTMGR_ADMIN, ASSETMAINT_ADMIN]
+  grantedPermissions: [OFBTOOLS_VIEW, CATALOG_VIEW, CATALOG_ADMIN, MANUFACTURING_VIEW, MANUFACTURING_CREATE, MANUFACTURING_UPDATE, MANUFACTURING_DELETE, MANUFACTURING_ADMIN, WORKEFFORTMGR_ADMIN, ASSETMAINT_ADMIN]
   note: "Focused manufacturing-capable admin (manufacturing + the WorkEffort/AssetMaint families production runs require); not granted unrelated app permissions."
 facility:
   id: MFG_PLANT
@@ -25,6 +25,7 @@ facility:
 
 products:
   - { id: DCGAPSOSR12,     type: FINISHED_GOOD, name: "Skateboard Deck FG",           bomLevel: 0 }
+  - { id: DCGAPSOSR13,     type: FINISHED_GOOD, name: "Skateboard Deck FG Alt",       bomLevel: 0 }
   - { id: DSK15144-00,     type: SUBASSEMBLY,   name: "Skateboard Deck Sub Assembly", bomLevel: 1 }
   - { id: DRGAMBSK8II,     type: RAW_MATERIAL,  name: "Glue",                         bomLevel: 2 }
   - { id: DRVM52105036FAS, type: RAW_MATERIAL,  name: "veneer maple face",            bomLevel: 2 }
@@ -79,15 +80,15 @@ quickstartSteps:
   - { action: "Get OFBiz and plugins",            command: "git clone .../ofbiz-framework.git && ./gradlew pullAllPluginsSource", expectedResult: "plugins/manufacturing-demo/ exists" }
   - { action: "Load demo data",                   command: './gradlew "ofbiz --load-data readers=seed,seed-initial,manufacturingDemo"', expectedResult: "load completes; Company + admin login + MFG_PLANT exist" }
   - { action: "Start OFBiz",                       command: "./gradlew ofbiz", expectedResult: "server reachable; login admin/ofbiz" }
-  - { action: "See company and plant",            screen: "Manufacturing/Catalog app", expectedResult: "MFG_PLANT and 9 products visible" }
+  - { action: "See company and plant",            screen: "Manufacturing/Catalog app", expectedResult: "MFG_PLANT and 10 products visible" }
   - { action: "View multi-level BOM",             screen: "BOM for DCGAPSOSR12", expectedResult: "two-tier BOM (sub-assembly + finishing items)" }
   - { action: "View routing",                     screen: "Routing for DCGAPSOSR12", expectedResult: "tasks on machines AMC/LAM" }
   - { action: "Create standalone production run", screen: "Production run for DCGAPSOSR12 at MFG_PLANT", expectedResult: "run created; operations + component requirements generated" }
   - { action: "Confirm/schedule run",             screen: "Production run detail", expectedResult: "status transitions; tasks + material requirements visible" }
 
 verificationAnchors:
-  totalValues: 99   # rows the manufacturingDemo reader loads (EntitySaxReader "Finished N values")
-  products: 9
+  totalValues: 101  # rows the manufacturingDemo reader loads (EntitySaxReader "Finished N values")
+  products: 10
   bomLines: 8
   routings: 2
   routingTasks: 3
@@ -95,5 +96,5 @@ verificationAnchors:
   calendars: 2
   suppliers: 5
   supplierProducts: 3
-  securityGroupPermissions: 9   # FULLADMIN grants for the focused manufacturing-capable admin
+  securityGroupPermissions: 10  # FULLADMIN grants for the focused manufacturing-capable admin
   userLogins: 1

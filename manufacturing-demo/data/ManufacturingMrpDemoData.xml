@@ -81,6 +81,7 @@ under the License.
     <!-- Focused permission set for this demo (ids are defined in seed). -->
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="OFBTOOLS_VIEW" fromDate="2001-01-01 12:00:00.0"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="CATALOG_VIEW" fromDate="2001-01-01 12:00:00.0"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="CATALOG_ADMIN" fromDate="2001-01-01 12:00:00.0"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MANUFACTURING_VIEW" fromDate="2001-01-01 12:00:00.0"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MANUFACTURING_CREATE" fromDate="2001-01-01 12:00:00.0"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="MANUFACTURING_UPDATE" fromDate="2001-01-01 12:00:00.0"/>
@@ -105,6 +106,11 @@ under the License.
     <!-- Finished good -->
     <Product productId="DCGAPSOSR12" productTypeId="FINISHED_GOOD" internalName="Skateboard Deck FG"
             productName="Skateboard Deck FG" inventoryItemTypeId="NON_SERIAL_INV_ITEM"
+            isVirtual="N" isVariant="N" billOfMaterialLevel="0" inShippingBox="N"
+            lotIdFilledIn="Allowed" quantityUomId="WT_lb"/>
+    <!-- Alternate finished good kept BOM-free so it is a clean BOM copy target -->
+    <Product productId="DCGAPSOSR13" productTypeId="FINISHED_GOOD" internalName="Skateboard Deck FG Alt"
+            productName="Skateboard Deck FG Alt" inventoryItemTypeId="NON_SERIAL_INV_ITEM"
             isVirtual="N" isVariant="N" billOfMaterialLevel="0" inShippingBox="N"
             lotIdFilledIn="Allowed" quantityUomId="WT_lb"/>
     <!-- Sub-assembly (the glued/pressed deck blank) -->
@@ -240,6 +246,7 @@ under the License.
     <!-- Product-facility settings (MRP reorder parameters at plant)   -->
     <!-- ============================================================ -->
     <ProductFacility productId="DCGAPSOSR12" facilityId="MFG_PLANT" minimumStock="100.000000" reorderQuantity="1.000000"/>
+    <ProductFacility productId="DCGAPSOSR13" facilityId="MFG_PLANT" minimumStock="100.000000" reorderQuantity="1.000000"/>
     <ProductFacility productId="DSK15144-00" facilityId="MFG_PLANT" minimumStock="50.000000" reorderQuantity="1.000000"/>
     <ProductFacility productId="DRGAMBSK8II" facilityId="MFG_PLANT" minimumStock="1.000000" reorderQuantity="1.000000"/>
     <ProductFacility productId="DRVM52105036FAS" facilityId="MFG_PLANT" minimumStock="1.000000" reorderQuantity="1.000000"/>
