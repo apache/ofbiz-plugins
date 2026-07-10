@@ -69,7 +69,9 @@ import org.apache.ofbiz.base.util.cache.UtilCache;
  * <h2>Activation</h2>
  * Add {@code -Dofbiz.hotreload=true -Djdk.attach.allowAttachSelf=true} to your JVM
  * arguments, then start OFBiz normally (or run {@code ./gradlew ofbizDev}, provided by
- * this plugin, which sets both automatically).
+ * this plugin, which sets both automatically — the only supported command). That Gradle
+ * task requires a DCEVM-patched JVM and fails fast with setup instructions if none is
+ * resolvable; see "Structural changes" below for why.
  *
  * <h2>How Java hot-reload works</h2>
  * <ol>
@@ -109,10 +111,16 @@ import org.apache.ofbiz.base.util.cache.UtilCache;
  * On a stock JVM, {@code redefineClasses} can only replace method bodies and static
  * initializers of a class that is already loaded — adding/removing methods or fields,
  * changing a method signature, or changing the class hierarchy still requires a restart.
- * Running on a DCEVM-patched JVM with {@code -XX:+AllowEnhancedClassRedefinition} (see
- * {@code ./gradlew ofbizDev -Photreload.enhanced=true}) lifts that restriction transparently: this class
- * calls the exact same {@code redefineClasses} API either way, so structural changes
- * just work when that flag is detected, with no code path change here.
+ * This is a hard JVM limitation, not something this plugin can work around on a stock
+ * JVM. Running on a DCEVM-patched JVM with {@code -XX:+AllowEnhancedClassRedefinition}
+ * lifts that restriction transparently: this class calls the exact same
+ * {@code redefineClasses} API either way, so structural changes just work when that flag
+ * is present. Because a stock JVM would silently defer that surprise to whenever someone
+ * adds a method, {@code ./gradlew ofbizDev}'s build.gradle task treats a DCEVM-patched
+ * JVM as required, not optional: it resolves one via {@code -PdcevmHome}/
+ * {@code DCEVM_HOME}, launches with that flag automatically, and fails fast with setup
+ * instructions instead of starting OFBiz at all if none is resolvable. Plain stock-JDK
+ * operation is not a supported outcome of that command.
  *
  * <h2>How services.xml changes are handled</h2>
  * Every component's {@code servicedef/} directory is also watched; on change, the
@@ -252,9 +260,11 @@ public class DevReloadContainer implements Container {
                         + "(e.g. JetBrains Runtime) that can also hot-swap structural changes (added/removed "
                         + "methods or fields, changed signatures), not just method bodies.", MODULE);
             } else {
-                Debug.logInfo("Hot-reload: structural changes (added/removed methods or fields, changed "
-                        + "signatures) will require a restart on this JVM. Run './gradlew ofbizDev "
-                        + "-Photreload.enhanced=true' on a DCEVM-patched JVM to hot-swap those too.", MODULE);
+                Debug.logWarning("Hot-reload: structural changes (added/removed methods or fields, changed "
+                        + "signatures) will require a restart on this JVM. './gradlew ofbizDev' requires a "
+                        + "DCEVM-patched JVM and refuses to start without one, so you're most likely seeing "
+                        + "this because hot-reload was activated some other way on a stock JDK. See "
+                        + "plugins/devreload/README.md to set up DCEVM_HOME.", MODULE);
             }
         } catch (Exception e) {
             Debug.logWarning("Hot-reload: could not self-attach HotSwapAgent (" + e.getMessage()
@@ -643,9 +653,12 @@ public class DevReloadContainer implements Container {
             UtilCache.clearCache(SERVICE_MODEL_CACHE_NAME);
             Debug.logInfo("Hot-reload complete for: " + batch, MODULE);
         } catch (UnsupportedOperationException e) {
-            // Thrown when a change adds/removes a method or field, changes a method
-            // signature, or changes the class hierarchy — the plain JVM redefinition API
-            // cannot apply that without a restart, the same limit IDE debugger HotSwap has.
+            // ./gradlew ofbizDev only ever runs on a DCEVM-patched JVM (see build.gradle),
+            // which already lifts the plain-JVM restriction to method bodies only, so
+            // add/remove method-or-field and signature changes normally succeed here. This
+            // still fires for the narrower set of changes DCEVM itself can't apply either
+            // (e.g. a changed class hierarchy) -- the same remaining limit an IDE debugger's
+            // HotSwap has even on a capable JVM.
             Debug.logWarning("Hot-reload: " + batch + " contains a structural change (added/removed "
                     + "method or field, changed signature, changed hierarchy) that the JVM cannot "
                     + "hot-swap. Restart OFBiz to pick it up. (" + e.getMessage() + ")", MODULE);
