@@ -181,3 +181,7 @@ rootProject.tasks.register('ofbizDev', JavaExec) {
     }
     jvmArgs(jvmArgsList)
 }
+
+dependencyLocking {
+    lockAllConfigurations()
+}
