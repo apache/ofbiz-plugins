@@ -18,12 +18,12 @@
  *******************************************************************************/
 package org.apache.ofbiz.devreload;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.instrument.ClassDefinition;
 import java.lang.instrument.Instrumentation;
 import java.lang.management.ManagementFactory;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.ClosedWatchServiceException;
 import java.nio.file.FileVisitResult;
@@ -47,6 +47,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import javax.tools.JavaCompiler;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
@@ -140,7 +141,7 @@ public class DevReloadContainer implements Container {
     private String name;
     private WatchService watchService;
     private Thread watchThread;
-    private ScheduledExecutorService debouncer;
+    private ScheduledExecutorService debounceExecutor;
     private Instrumentation instrumentation;
 
     private final Debouncer<String> classReloadDebouncer = new Debouncer<>(this::applyReload);
@@ -203,18 +204,46 @@ public class DevReloadContainer implements Container {
             return;
         }
 
+        parseHotReloadProperties();
+        attachHotSwapAgent();
+
+        if (!prepareClassesDir()) {
+            return;
+        }
+        if (!prepareHotReloadOutputDir()) {
+            return;
+        }
+        createWatchService();
+        registerBuildOutputWatchIfEnabled();
+        startDebounceExecutor();
+
+        Debug.logInfo("DevReloadContainer ready — compiled output at " + hotReloadOutputDir.toAbsolutePath(), MODULE);
+    }
+
+    /**
+     * Reads {@code -Dofbiz.hotreload.components} and {@code -Dofbiz.hotreload.watchBuildOutput},
+     * populating {@link #allowedComponents} and {@link #watchBuildOutput}.
+     */
+    private void parseHotReloadProperties() {
         String componentsProperty = System.getProperty("ofbiz.hotreload.components");
         if (componentsProperty != null && !componentsProperty.isBlank()) {
             allowedComponents = Arrays.stream(componentsProperty.split(","))
                     .map(String::trim)
                     .filter(s -> !s.isEmpty())
-                    .collect(java.util.stream.Collectors.toSet());
+                    .collect(Collectors.toSet());
             Debug.logInfo("Hot-reload: scoped to components " + allowedComponents
                     + " (set via -Dofbiz.hotreload.components)", MODULE);
         }
 
         watchBuildOutput = "true".equalsIgnoreCase(System.getProperty("ofbiz.hotreload.watchBuildOutput"));
+    }
 
+    /**
+     * Self-attaches {@link HotSwapAgent} so Java class redefinition is available. Failure
+     * here is non-fatal and never aborts {@link #init}: Java hot-swap is simply disabled
+     * while {@code services.xml} auto-reload still works.
+     */
+    private void attachHotSwapAgent() {
         try {
             instrumentation = HotSwapAgent.install();
             Debug.logInfo("Hot-reload: self-attached HotSwapAgent — Java class redefinition is available.", MODULE);
@@ -232,14 +261,26 @@ public class DevReloadContainer implements Container {
                     + "). Add -Djdk.attach.allowAttachSelf=true to JVM args. "
                     + "Java class changes will require a restart; services.xml auto-reload still works.", MODULE);
         }
+    }
 
+    /** Sets {@link #classesDir}. Returns {@code false} (after logging) if it doesn't exist yet. */
+    private boolean prepareClassesDir() {
         classesDir = Paths.get("build/classes/java/main");
         if (!Files.exists(classesDir)) {
             Debug.logWarning("Hot-reload: classes directory not found at " + classesDir.toAbsolutePath()
                     + ". Run './gradlew classes' first, then restart.", MODULE);
-            return;
+            return false;
         }
+        return true;
+    }
 
+    /**
+     * Sets {@link #hotReloadOutputDir} and clears/recreates it. Returns {@code false} (after
+     * logging) if the directory could not be prepared -- without a writable output directory,
+     * in-process compilation cannot work at all, so the whole container is disabled up front
+     * instead of continuing to a misleading "ready" log.
+     */
+    private boolean prepareHotReloadOutputDir() {
         // build.gradle passes this down as -Dofbiz.hotreload.outputDir, computed from the
         // same value it prepends to the classpath, so the path exists in exactly one place
         // rather than being hardcoded independently here too. The literal default below is
@@ -249,21 +290,29 @@ public class DevReloadContainer implements Container {
         try {
             FileUtils.deleteDirectory(hotReloadOutputDir.toFile());
             Files.createDirectories(hotReloadOutputDir);
+            return true;
         } catch (IOException e) {
-            // Without a writable output directory, in-process compilation cannot work at
-            // all -- disable the whole container up front instead of continuing to a
-            // misleading "ready" log, the same as the classesDir-missing check above.
             Debug.logWarning("Hot-reload: could not prepare this plugin's own output directory "
                     + hotReloadOutputDir.toAbsolutePath() + ": " + e.getMessage(), MODULE);
-            return;
+            return false;
         }
+    }
 
+    /** Creates {@link #watchService} on {@link #classesDir}'s filesystem. */
+    private void createWatchService() throws ContainerException {
         try {
             watchService = classesDir.getFileSystem().newWatchService();
         } catch (IOException e) {
             throw new ContainerException("DevReloadContainer: failed to initialise WatchService", e);
         }
+    }
 
+    /**
+     * Registers {@link #classesDir} with the WatchService when {@link #watchBuildOutput} is
+     * on, so externally-produced {@code .class} files (e.g. {@code ./gradlew -t classes} in
+     * a second terminal) are picked up too.
+     */
+    private void registerBuildOutputWatchIfEnabled() {
         if (watchBuildOutput) {
             try {
                 registerAll(classesDir);
@@ -284,14 +333,15 @@ public class DevReloadContainer implements Container {
                     + "-Dofbiz.hotreload.watchBuildOutput=true (or -Photreload.watchBuildOutput=true with the "
                     + "ofbizDev Gradle task).", MODULE);
         }
+    }
 
-        debouncer = Executors.newSingleThreadScheduledExecutor(r -> {
+    /** Starts the daemon executor backing every {@link Debouncer}. */
+    private void startDebounceExecutor() {
+        debounceExecutor = Executors.newSingleThreadScheduledExecutor(r -> {
             Thread t = new Thread(r, "ofbiz-hot-reload-debouncer");
             t.setDaemon(true);
             return t;
         });
-
-        Debug.logInfo("DevReloadContainer ready — compiled output at " + hotReloadOutputDir.toAbsolutePath(), MODULE);
     }
 
     /**
@@ -361,7 +411,7 @@ public class DevReloadContainer implements Container {
                         warnUnwatched(dir, e);
                     }
                 }
-            } catch (GenericConfigException | java.net.URISyntaxException e) {
+            } catch (GenericConfigException | URISyntaxException e) {
                 Debug.logWarning("Hot-reload: could not register servicedef dir for "
                         + sri.getLocation() + ": " + e.getMessage(), MODULE);
             } catch (Throwable t) {
@@ -387,8 +437,12 @@ public class DevReloadContainer implements Container {
             return;
         }
         for (ComponentConfig cc : ComponentConfig.getAllComponents()) {
-            if (cc.rootLocation() == null) continue;
-            if (allowedComponents != null && !allowedComponents.contains(cc.getComponentName())) continue;
+            if (cc.rootLocation() == null) {
+                continue;
+            }
+            if (allowedComponents != null && !allowedComponents.contains(cc.getComponentName())) {
+                continue;
+            }
             Path srcDir = cc.rootLocation().resolve("src/main/java");
             if (Files.isDirectory(srcDir) && sourceRootDirs.add(srcDir)) {
                 try {
@@ -409,8 +463,8 @@ public class DevReloadContainer implements Container {
 
     @Override
     public void stop() throws ContainerException {
-        if (debouncer != null) {
-            debouncer.shutdownNow();
+        if (debounceExecutor != null) {
+            debounceExecutor.shutdownNow();
         }
         if (watchService != null) {
             try {
@@ -470,7 +524,7 @@ public class DevReloadContainer implements Container {
                     reloadClassFile(classesDir, changed);
                 } else if ((kind == StandardWatchEventKinds.ENTRY_CREATE || kind == StandardWatchEventKinds.ENTRY_MODIFY)
                         && changed.toString().endsWith(".xml")
-                        && servicedefDirs.contains(dir)) {
+                        && servicedefDirs.stream().anyMatch(dir::startsWith)) {
                     xmlReloadDebouncer.add(changed);
                 } else if ((kind == StandardWatchEventKinds.ENTRY_CREATE || kind == StandardWatchEventKinds.ENTRY_MODIFY)
                         && changed.toString().endsWith(".java")
@@ -515,7 +569,7 @@ public class DevReloadContainer implements Container {
                 // Wait 300 ms after the last change so a burst of related changes (e.g. a
                 // single Gradle compile run writing multiple .class files) is handled as
                 // one batch instead of one action per file.
-                scheduled = debouncer.schedule(this::fire, 300, TimeUnit.MILLISECONDS);
+                scheduled = debounceExecutor.schedule(this::fire, 300, TimeUnit.MILLISECONDS);
             } catch (RejectedExecutionException e) {
                 // Container is shutting down; pending changes will not be applied.
             }
