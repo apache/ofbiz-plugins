@@ -43,10 +43,9 @@ For low-level REST XML syntax, direct service export mechanics, SOAP integration
    - Use the runtime/JDK version required by the project build configuration.
    - If a full check is blocked by environment or unrelated project issues, run the narrowest equivalent verification and report that it was targeted.
 
-## Upstream Safety
-- Do not assume local-only framework helpers are available in upstream OFBiz just because they exist in a developer's local framework checkout.
-- Before using a helper for paging, partial-list slicing, case-insensitive parameter lookup, composite REST ID handling, or REST error shaping, confirm that the helper exists in the target repository/branch.
-- If a helper is not present upstream, prefer native `EntityQuery`, service engine typing/validation, and small local endpoint logic over referencing non-existent framework APIs.
+## Helper Availability
+- Before using a helper for paging, partial-list slicing, case-insensitive parameter lookup, composite REST ID handling, or REST error shaping, confirm that the helper already exists in the target codebase or is being introduced in the same change.
+- If a helper is not available yet, prefer native `EntityQuery`, service engine typing/validation, and small local endpoint logic over adding a dependency on a missing framework API.
 
 ## Wrapper Decision Rules
 Create or keep a wrapper when it:

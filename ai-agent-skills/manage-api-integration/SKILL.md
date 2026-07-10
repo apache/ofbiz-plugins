@@ -60,7 +60,7 @@ Parameter mapping from REST requests to OFBiz services is **implicit**. The fram
 
 All extracted parameters are aggregated into a single context. The `ServiceRequestHandler` then uses `dispatcher.getDispatchContext().makeValidContext()` to select only those parameters that are defined as IN parameters for the target service.
 
-When implementing endpoint logic, do not assume helper methods from a local `RestApiUtil` or similar framework utility exist in upstream OFBiz. Verify helper availability in the target branch before using it; otherwise prefer service typing, `EntityQuery`, and small local logic.
+When implementing endpoint logic, prefer framework helpers that already exist in the target codebase or are being introduced in the same change. If a helper is not available yet, prefer service typing, `EntityQuery`, and small local logic.
 
 ### Multi-Column Keys
 When a REST operation targets an OFBiz entity keyed by multiple columns, prefer sending the native key fields in the request body for create, update, and remove operations. This often allows the REST endpoint or client to call native OFBiz services directly instead of adding wrapper services only to decode a composite path ID.

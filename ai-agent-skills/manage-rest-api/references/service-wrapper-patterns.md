@@ -51,7 +51,7 @@ Good candidates:
 - Count/group rows by a selected field.
 - Build stable composite identifiers from key parts.
 
-When a candidate depends on helper methods that are only present in a local framework checkout, do not reference those helpers in upstream-targeted work unless the same change also introduces them upstream.
+When a candidate depends on helper methods that are not yet available in the target codebase, either introduce those helpers in the same change or keep the endpoint logic self-contained.
 
 Poor candidates:
 - Domain relationship queries.
