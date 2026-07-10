@@ -1,0 +1,187 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+// Optional -Photreload.components=compA,compB, forwarded as
+// -Dofbiz.hotreload.components to DevReloadContainer, which then only watches those
+// components' servicedef/source directories instead of every component in the checkout.
+// See DevReloadContainer's `allowedComponents` javadoc for why: macOS's WatchService has
+// a practical per-process ceiling on watched directories well under a typical ulimit,
+// and a checkout the size of OFBiz trunk (~50+ components) can exceed it.
+static List<String> hotreloadComponentArgs(Project project) {
+    String components = project.findProperty('hotreload.components')
+    return components ? ["-Dofbiz.hotreload.components=${components}".toString()] : []
+}
+
+// Optional -Photreload.watchBuildOutput=true, forwarded as
+// -Dofbiz.hotreload.watchBuildOutput to DevReloadContainer. Off by default: watching
+// build/classes/java/main only matters for picking up externally-produced .class files
+// (e.g. `./gradlew -t classes` running in a second terminal) -- in-process compiles hot-swap
+// directly and never need it -- and unlike source/servicedef watching, that tree isn't
+// narrowed by -Photreload.components, so on a full checkout it roughly doubles the total
+// directories watched for no benefit to the common (in-process-only) workflow.
+static List<String> hotreloadWatchBuildOutputArgs(Project project) {
+    Object watchBuildOutput = project.findProperty('hotreload.watchBuildOutput')
+    return watchBuildOutput ? ["-Dofbiz.hotreload.watchBuildOutput=${watchBuildOutput}".toString()] : []
+}
+
+// DevReloadContainer's own in-process-compile output directory. Deliberately separate
+// from Gradle's own build/classes/java/main (see DevReloadContainer's hotReloadOutputDir
+// field javadoc for why) and placed ahead of the normal runtime classpath below, so a
+// class compiled here but never yet loaded in the running JVM picks up the live version
+// on its first load too, not just already-loaded ones. Passed down to the JVM as a system
+// property (see commonHotReloadJvmArgs) rather than hardcoded independently on the Java
+// side too, so this path exists as a single source of truth.
+static File hotReloadOutputDir(Project project) {
+    return new File(project.rootDir, 'build/devreload/classes')
+}
+
+// Base JVM args for ofbizDev: the hot-reload activation flags, the output-directory
+// location, and the optional component/watch scoping args.
+// -XX:+AllowEnhancedClassRedefinition is added separately by the caller, once a
+// DCEVM-patched JVM has actually been resolved (required -- see below).
+static List<String> commonHotReloadJvmArgs(Project project) {
+    List<String> args = ['-Dofbiz.hotreload=true', '-Djdk.attach.allowAttachSelf=true',
+            "-Dofbiz.hotreload.outputDir=${hotReloadOutputDir(project).absolutePath}".toString()]
+    args += hotreloadComponentArgs(project)
+    args += hotreloadWatchBuildOutputArgs(project)
+    return args
+}
+
+// Locates a DCEVM-patched `java` executable from an explicit -PdcevmHome=... or
+// DCEVM_HOME env var -- deliberately not auto-detected by guessing per-OS IDE install
+// paths (IntelliJ's JBR bundles DCEVM and is a convenient source of one, but its
+// install location varies too much across OS/Toolbox/version to guess reliably). One
+// explicit way in is easier to reason about, document, and keep working than several
+// silent path guesses that can each go stale independently. `ofbizDev` below requires
+// this to resolve to something -- it fails fast with setup instructions otherwise.
+//
+// Two ways to set it once and forget it, so every future plain `./gradlew ofbizDev`
+// just works with no flag: export DCEVM_HOME in a shell profile (picked up via
+// System.getenv() below), or add a `dcevmHome=/path/to/jvm` line to
+// `~/.gradle/gradle.properties` (GRADLE_USER_HOME -- picked up via project.findProperty()
+// below, same as -PdcevmHome on the command line, just persisted instead of retyped).
+// The latter needs the Gradle property name `dcevmHome`, not `DCEVM_HOME` -- gradle.properties
+// holds Gradle properties, not env vars, so the two names aren't interchangeable there.
+def resolveDcevmJavaExecutable = {
+    String home = project.findProperty('dcevmHome') ?: System.getenv('DCEVM_HOME')
+    if (!home) {
+        return null
+    }
+    String exeName = org.gradle.internal.os.OperatingSystem.current().isWindows() ? 'java.exe' : 'java'
+    File exe = new File(home, "bin/${exeName}")
+    if (!exe.exists()) {
+        // macOS JDK/JBR app bundles nest an extra Contents/Home -- e.g. IntelliJ's bundled
+        // JetBrains Runtime lives at "<IDE install>/Contents/jbr/Contents/Home/bin/java",
+        // one level deeper than the jbr folder itself (which is what README/error-message
+        // guidance points DCEVM_HOME/-PdcevmHome at). Fall back to that layout before
+        // giving up, so the documented "point at <IDE install>/Contents/jbr" guidance
+        // actually resolves on macOS instead of silently finding nothing.
+        exe = new File(home, "Contents/Home/bin/${exeName}")
+    }
+    return exe.exists() ? exe.absolutePath : null
+}
+
+// Convenience task: `./gradlew ofbizDev` starts OFBiz with hot-reload enabled
+// (-Dofbiz.hotreload=true), plus the JVM flag DevReloadContainer's self-attaching
+// HotSwapAgent needs (-Djdk.attach.allowAttachSelf=true). Registered on the root
+// project, mirroring the classpath/mainClass wiring of the built-in `ofbiz` command
+// task, so this plugin needs no change to the root build.gradle to be usable.
+//
+// A DCEVM-patched JVM is required, not optional: stock-JDK hot-reload used to be a
+// supported fallback, but a stock JVM's redefineClasses can't hot-swap a new/removed
+// method or field anyway (see DevReloadContainer's class-level javadoc), so silently
+// running in that degraded mode just defers the surprise to whenever someone adds a
+// method. Simple by design: if DCEVM_HOME/-PdcevmHome resolves to a real JVM, this task
+// just runs -- no other flag, no mode to pick. If it doesn't resolve, running `ofbizDev`
+// fails immediately with setup instructions, before OFBiz attempts to boot -- but the
+// failure has to be raised from a doFirst task action, not directly in this
+// configuration block: this block runs whenever the project is evaluated, which in this
+// build happens on every `./gradlew <anything>` invocation, not just when `ofbizDev`
+// itself is requested (confirmed empirically -- even `./gradlew help` realizes this
+// task, most likely because the Develocity plugin applied in settings.gradle touches
+// every registered task for build-scan data). Throwing here unconditionally would break
+// every Gradle command whenever DCEVM isn't set up, which is exactly the "zero effect on
+// anyone not using it" guarantee this plugin promises everywhere else (see README).
+//
+// JavaExec's `executable` property is pointed at the resolved DCEVM JVM binary during
+// task configuration -- no toolchain is configured anywhere in this project for that to
+// conflict with. One non-obvious wrinkle: `executable` has to be set directly in the
+// task's configuration block, not from a task action (e.g. inside doFirst). Doing it
+// from a task action fails with "Toolchain from executable property does not match
+// toolchain from javaLauncher property" -- by the time a task action runs, javaLauncher's
+// convention has already been finalized for execution, and overriding executable at that
+// point conflicts with it. Setting it during configuration, before that convention
+// finalizes, works cleanly. That's also *why* the DCEVM lookup itself still has to happen
+// eagerly in this block (only the throw is deferred to doFirst): `executable` can't be
+// set any later.
+rootProject.tasks.register('ofbizDev', JavaExec) {
+    group = 'OFBiz Server Commands'
+    description = 'Start OFBiz with hot-reload (requires a DCEVM-patched JVM -- see README). Java source, ' +
+            'services.xml, and structural changes (new/removed methods or fields, changed signatures) all ' +
+            'reload live with no restart. Point -PdcevmHome=/path/to/jvm or set DCEVM_HOME to enable; fails ' +
+            'fast with setup instructions if neither resolves. Optionally scope to specific components with ' +
+            '-Photreload.components=compA,compB, or watch build/classes/java/main too (for externally-produced ' +
+            '.class files) with -Photreload.watchBuildOutput=true.'
+    classpath = rootProject.files(hotReloadOutputDir(project)) + rootProject.sourceSets.main.runtimeClasspath
+    mainClass = rootProject.application.mainClass
+    List<String> jvmArgsList = rootProject.application.applicationDefaultJvmArgs + commonHotReloadJvmArgs(project)
+    String dcevmJava = resolveDcevmJavaExecutable()
+    if (dcevmJava) {
+        // Only wired up when actually needed: compiling everything first just to fail in
+        // doFirst afterwards would make the "no DCEVM" error slow to reach on a cold build.
+        dependsOn rootProject.tasks.named('classes')
+        jvmArgsList = jvmArgsList + ['-XX:+AllowEnhancedClassRedefinition']
+        logger.lifecycle("ofbizDev: DCEVM-patched JVM resolved at ${dcevmJava}")
+        executable = dcevmJava
+    } else {
+        // Deferred to a task action (doFirst) instead of thrown directly here: this
+        // configuration block runs whenever this project is evaluated, which in this build
+        // happens for every `./gradlew <anything>` invocation, not just when `ofbizDev`
+        // itself is requested (confirmed empirically -- even `./gradlew help` realizes this
+        // task's configuration block, most likely due to the Develocity plugin applied in
+        // settings.gradle touching every registered task for build-scan data). Throwing here
+        // directly would break every Gradle command whenever DCEVM isn't set up, violating
+        // this plugin's "zero effect on anyone not using it" guarantee (see README). A
+        // doFirst block, by contrast, only actually runs when `ofbizDev` is the task Gradle
+        // is executing.
+        String attemptedHome = project.findProperty('dcevmHome') ?: System.getenv('DCEVM_HOME')
+        String detail = attemptedHome
+                ? "DCEVM_HOME/-PdcevmHome is set to '${attemptedHome}', but no 'bin/java' (or macOS " +
+                        "'Contents/Home/bin/java') was found there -- double-check the path."
+                : "Neither -PdcevmHome nor the DCEVM_HOME env var is set."
+        doFirst {
+            throw new GradleException(
+                    "ofbizDev requires a DCEVM-patched JVM -- plain stock-JDK hot-reload is not supported.\n\n" +
+                    "${detail}\n\n" +
+                    "To fix this:\n" +
+                    "  1. Get a DCEVM-patched JVM. The easiest source is JetBrains Runtime (JBR), which " +
+                    "bundles DCEVM and ships with IntelliJ IDEA under '<IDE install>/jbr' " +
+                    "('.../Contents/jbr' on macOS). Standalone DCEVM builds work too.\n" +
+                    "  2. Point at it -- set the DCEVM_HOME env var once (e.g. in your shell profile, so " +
+                    "every future run picks it up automatically) or pass -PdcevmHome=/path/to/jvm each " +
+                    "time.\n\n" +
+                    "See plugins/devreload/README.md for the full setup guide.")
+        }
+    }
+    jvmArgs(jvmArgsList)
+}
+
+dependencyLocking {
+    lockAllConfigurations()
+}
