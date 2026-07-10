@@ -56,7 +56,6 @@ Scope to specific components for a faster startup:
 ```
 
 ---
-
 # devreload — Dev Notes
 
 `devreload` is a development-only OFBiz plugin that removes the restart step
