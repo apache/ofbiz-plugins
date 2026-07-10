@@ -26,13 +26,15 @@ description: Define and integrate REST and SOAP APIs in OFBiz.
 
 Integration patterns for exposing OFBiz services via REST and SOAP, and handling JSON responses.
 
-## REST API (rest-api)
+## REST API (framework REST API support)
 
-OFBiz uses the `rest-api` (based on Jersey) to declaratively expose services.
+OFBiz uses framework REST API support to declaratively expose services.
+
+For REST API design/refactoring, wrapper decisions, contract safety, and PWA/API consumer compatibility, also read the `manage-rest-api` skill. This skill remains the broader integration guide for REST mechanics, SOAP integration, and controller JSON responses.
 
 ### REST API Definitions
 
-REST endpoints are defined in `*.rest.xml` files located in the `api/` directory of an OFBiz component. These files are automatically discovered and registered by the `rest-api` plugin; no explicit registration in `ofbiz-component.xml` is required.
+REST endpoints are defined in `*.rest.xml` files located in the `api/` directory of an OFBiz component. These files are discovered and registered by the framework REST API support; no explicit registration in `ofbiz-component.xml` is required.
 
 **Pattern for `*.rest.xml`:**
 ```xml
@@ -50,13 +52,20 @@ REST endpoints are defined in `*.rest.xml` files located in the `api/` directory
 
 ### Parameter Handling
 
-Parameter mapping from REST requests to OFBiz services is **implicit**. The `rest-api` plugin automatically extracts parameters from the request and maps them to service IN parameters whose names match.
+Parameter mapping from REST requests to OFBiz services is **implicit**. The framework REST request handler extracts parameters from the request and maps them to service IN parameters whose names match.
 
 *   **Path Parameters:** Extracted from the URI based on placeholders in the `path` attributes (e.g., `{exampleId}`).
 *   **Query Parameters:** Extracted from the request URL.
 *   **Request Body:** For `POST`, `PUT`, and `PATCH` requests with `Content-Type: application/json`, the JSON payload is automatically parsed into a map.
 
 All extracted parameters are aggregated into a single context. The `ServiceRequestHandler` then uses `dispatcher.getDispatchContext().makeValidContext()` to select only those parameters that are defined as IN parameters for the target service.
+
+When implementing endpoint logic, do not assume helper methods from a local `RestApiUtil` or similar framework utility exist in upstream OFBiz. Verify helper availability in the target branch before using it; otherwise prefer service typing, `EntityQuery`, and small local logic.
+
+### Multi-Column Keys
+When a REST operation targets an OFBiz entity keyed by multiple columns, prefer sending the native key fields in the request body for create, update, and remove operations. This often allows the REST endpoint or client to call native OFBiz services directly instead of adding wrapper services only to decode a composite path ID.
+
+Use a stable composite REST ID only when the API shape truly needs a single identifier segment, such as a list/detail link or a client-side row key. Keep composite ID encoding at the API edge and do not distort the underlying OFBiz entity or service model.
 
 ### Security and Response Handling
 *   **Authentication:** Controlled by the `auth="true|false"` attribute on the `<operation>` element.
@@ -72,7 +81,7 @@ OFBiz allows services to be exposed as REST APIs directly via attributes in the 
 
 ### Pattern:
 - **Attributes**: Set `export="true"` and `action="VERB"` (e.g., `action="GET"`).
-- **Result**: The service becomes reachable as a REST endpoint (e.g., `/rest/public/findProductById` or similar depending on the rest-api plugin configuration).
+- **Result**: The service becomes reachable as a REST endpoint (e.g., `/rest/public/findProductById` or similar depending on framework REST configuration).
 
 ```xml
 <service name="findProductById" engine="java" auth="true" export="true" action="GET" ...>
@@ -83,6 +92,7 @@ OFBiz allows services to be exposed as REST APIs directly via attributes in the 
 ### Key Considerations:
 - **Simplicity**: No need for separate `rest.xml` or controller mappings.
 - **Contract-first**: The service signature defines the API request/response.
+- **Native OFBiz Types**: Prefer `Timestamp`, `BigDecimal`, `Double`, `Long`, and similar native types in service attributes so the Service Engine performs coercion before service logic runs.
 - **Auth**: Inherits service engine authentication rules.
 
 ## JSON Responses
@@ -122,6 +132,6 @@ Use the `soap-engine` or `SOAPClientEngine`.
 
 ## Security & Data Mapping
 
-- **Authentication**: REST API typically uses JWT or API Keys (configured in `rest-api` common filters).
+- **Authentication**: REST API authentication depends on the framework REST configuration and the invoked service security.
 - **Permissions**: Every service invoked should have proper `permission-service` or `check-permission` logic.
 - **Data Mapping**: JSON/XML fields must precisely match service IN attributes for automatic mapping. Use `ServiceUtil.getAndValidateParameters` pattern in custom Java events if manual mapping is needed.

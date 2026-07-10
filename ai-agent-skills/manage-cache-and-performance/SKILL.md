@@ -107,6 +107,12 @@ When external systems or direct SQL modify the database, or when you bypass OFBi
 - Transaction-dependent data that must reflect real-time DB state. *(See Anti-Pattern 6: Treating Cache as Primary Storage)*
 - Data used for financial posting or accounting correctness.
 
+### 1b. Query Efficiency Before Caching
+- Before adding cache, first remove avoidable query overhead:
+- Use `.queryCount()` for existence checks instead of `queryList()`/`queryOne()`.
+- Push date-effective filtering into the database with `.filterByDate()` or `.filterByDate("fromField", "thruField")` instead of filtering fetched rows in memory.
+- Use `.select(...)` to avoid loading wide rows when only a few fields are needed.
+
 ### 2. Transaction and Async Stale Data Risks
 - **Uncommitted Data**: The Entity Engine cache may return uncommitted data within an active transaction. Relying on cache inside a transaction can produce confusing behavior and phantom reads.
 - **Async Services**: Async services run concurrently in new transactions. If an async service depends on cached data from the main transaction before it commits, it will see stale data.
