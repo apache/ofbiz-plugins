@@ -343,10 +343,7 @@ public class DevReloadContainer implements Container {
             try {
                 registerAll(classesDir);
             } catch (IOException e) {
-                // registerAll() already logs a warning and skips individual directories
-                // that fail to register; reaching here means something more fundamental
-                // broke walking the tree at all (e.g. can't even list classesDir).
-                Debug.logWarning("Hot-reload: could not fully walk " + classesDir + ": " + e.getMessage(), MODULE);
+                logWalkFailure(classesDir, e);
             }
             Debug.logInfo("Hot-reload: watching compiled-output directory " + classesDir.toAbsolutePath()
                     + " for externally-produced .class files (set via -Dofbiz.hotreload.watchBuildOutput=true).",
@@ -465,10 +462,7 @@ public class DevReloadContainer implements Container {
                     registerAll(srcDir);
                     Debug.logInfo("Hot-reload: watching source directory " + srcDir, MODULE);
                 } catch (IOException e) {
-                    // registerAll() already logs a warning and skips individual directories
-                    // that fail to register; reaching here means something more fundamental
-                    // broke walking the tree at all (e.g. can't list srcDir).
-                    Debug.logWarning("Hot-reload: could not walk source dir " + srcDir + ": " + e.getMessage(), MODULE);
+                    logWalkFailure(srcDir, e);
                 }
             }
         }
@@ -821,6 +815,16 @@ public class DevReloadContainer implements Container {
      */
     private void registerAll(Path start) throws IOException {
         walkAndRegister(start, false);
+    }
+
+    /**
+     * Logs that {@link #registerAll} itself failed for {@code dir} -- something more
+     * fundamental broke walking the tree at all (e.g. can't even list {@code dir}), as
+     * opposed to an individual directory failing to register, which {@code registerAll()}
+     * already logs and skips on its own via {@link #warnUnwatched}.
+     */
+    private void logWalkFailure(Path dir, IOException e) {
+        Debug.logWarning("Hot-reload: could not fully walk " + dir + ": " + e.getMessage(), MODULE);
     }
 
     /**
