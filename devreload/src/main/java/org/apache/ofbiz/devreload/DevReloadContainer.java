@@ -25,6 +25,7 @@ import java.lang.management.ManagementFactory;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.ClosedWatchServiceException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -52,7 +53,10 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
+import javax.tools.FileObject;
+import javax.tools.ForwardingJavaFileManager;
 import javax.tools.JavaCompiler;
+import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
@@ -525,32 +529,48 @@ public class DevReloadContainer implements Container {
                 Path changed = dir.resolve(((WatchEvent<Path>) event).context());
 
                 if (kind == StandardWatchEventKinds.ENTRY_CREATE && Files.isDirectory(changed)) {
-                    // New package directory created during compilation — register it.
+                    // New package directory (or a whole new subtree -- e.g. a `git checkout`
+                    // that adds a package, an IDE "extract to new package" refactor, or
+                    // unzipping a folder) -- register it AND dispatch any files already inside
+                    // it. The OS/JDK WatchService does not retroactively report CREATE events
+                    // for files that already existed before a directory was registered, so
+                    // without this seeding step, files that land here in the same operation
+                    // that created the directory would silently never compile until each one
+                    // is individually re-saved.
                     try {
-                        registerAll(changed);
+                        registerAllAndSeed(changed);
                     } catch (IOException e) {
                         Debug.logError(e, "DevReloadContainer: failed to register new directory: " + changed, MODULE);
                     }
-                } else if ((kind == StandardWatchEventKinds.ENTRY_CREATE || kind == StandardWatchEventKinds.ENTRY_MODIFY)
-                        && changed.toString().endsWith(".class")) {
-                    // Only react to written/updated class files. Ignore ENTRY_DELETE so
-                    // that removing a source file (and its .class output) does not cause
-                    // a redefinition attempt against a now-missing file.
-                    reloadClassFile(classesDir, changed);
-                } else if ((kind == StandardWatchEventKinds.ENTRY_CREATE || kind == StandardWatchEventKinds.ENTRY_MODIFY)
-                        && changed.toString().endsWith(".xml")
-                        && servicedefDirs.stream().anyMatch(dir::startsWith)) {
-                    xmlReloadDebouncer.add(changed);
-                } else if ((kind == StandardWatchEventKinds.ENTRY_CREATE || kind == StandardWatchEventKinds.ENTRY_MODIFY)
-                        && changed.toString().endsWith(".java")
-                        && sourceRootDirs.stream().anyMatch(dir::startsWith)) {
-                    compileDebouncer.add(changed);
+                } else if (kind == StandardWatchEventKinds.ENTRY_CREATE || kind == StandardWatchEventKinds.ENTRY_MODIFY) {
+                    // Ignore ENTRY_DELETE so that removing a source file (and its .class
+                    // output) does not cause a redefinition attempt against a now-missing file.
+                    dispatchChangedFile(dir, changed);
                 }
             }
             if (!key.reset()) {
                 Debug.logWarning("Hot-reload: watch key became invalid (directory deleted?): "
                         + key.watchable() + ". WatchService will no longer detect changes in that directory.", MODULE);
             }
+        }
+    }
+
+    /**
+     * Routes a single created/modified regular file through the correct reload pipeline --
+     * a {@code .class} file under {@link #classesDir}, a {@code .xml} file under a
+     * registered servicedef directory, or a {@code .java} file under a registered source
+     * root. Shared between {@link #watchLoop}'s live WatchService events and
+     * {@link #registerAllAndSeed}'s seeding of files that already existed when a new
+     * directory was first discovered.
+     */
+    private void dispatchChangedFile(Path dir, Path changed) {
+        String name = changed.toString();
+        if (name.endsWith(".class")) {
+            reloadClassFile(classesDir, changed);
+        } else if (name.endsWith(".xml") && servicedefDirs.stream().anyMatch(dir::startsWith)) {
+            xmlReloadDebouncer.add(changed);
+        } else if (name.endsWith(".java") && sourceRootDirs.stream().anyMatch(dir::startsWith)) {
+            compileDebouncer.add(changed);
         }
     }
 
@@ -769,48 +789,35 @@ public class DevReloadContainer implements Container {
                 return;
             }
             DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
-            try (StandardJavaFileManager fm = compiler.getStandardFileManager(diagnostics, null, null)) {
-                fm.setLocation(StandardLocation.CLASS_OUTPUT,
+            // Explicit UTF-8: the project's real compileJava forces options.encoding = 'UTF-8'
+            // (root build.gradle). Passing null here would fall back to Charset.defaultCharset(),
+            // which isn't guaranteed to be UTF-8 on every JVM/OS (notably pre-JDK18, or any JVM
+            // launched with an overridden -Dfile.encoding) and would silently decode source files
+            // containing non-ASCII characters differently than Gradle's own compile does.
+            try (StandardJavaFileManager standardFm =
+                    compiler.getStandardFileManager(diagnostics, null, StandardCharsets.UTF_8)) {
+                standardFm.setLocation(StandardLocation.CLASS_OUTPUT,
                         List.of(hotReloadOutputDir.toAbsolutePath().toFile()));
+                RecordingFileManager fm = new RecordingFileManager(standardFm);
                 // Reuse the running JVM's classpath — it already contains all OFBiz jars.
                 List<String> options = Arrays.asList("-cp", System.getProperty("java.class.path"), "-proc:none");
-                var units = fm.getJavaFileObjectsFromPaths(batch);
+                var units = standardFm.getJavaFileObjectsFromPaths(batch);
                 boolean ok = compiler.getTask(null, fm, diagnostics, options, null, units).call();
                 if (ok) {
                     Debug.logInfo("Hot-reload: compilation successful", MODULE);
 
-                    // Collect all .class files produced by this compilation round.
-                    // Each source file can produce multiple .class files when it contains
-                    // inner or anonymous classes (e.g. Foo$Bar.class, Foo$1.class).
-                    // All of them must be redefined too — otherwise the inner class still
-                    // resolves through its stale, previously-loaded bytecode.
-                    for (Path src : batch) {
-                        Path cf = sourceToClassFile(src); // relative path for the outer class
-                        if (cf == null) {
-                            continue;
-                        }
-                        String outerName = cf.getFileName().toString().replace(".class", "");
-                        Path absOutputDir = cf.toAbsolutePath().getParent();
-                        try (var dirStream = Files.list(absOutputDir)) {
-                            dirStream.filter(absFile -> {
-                                String fn = absFile.getFileName().toString();
-                                // Match Foo.class and Foo$Inner.class / Foo$1.class
-                                return fn.endsWith(".class")
-                                        && (fn.equals(outerName + ".class")
-                                                || fn.startsWith(outerName + "$"));
-                            }).forEach(absFile -> {
-                                // Convert absolute output path back to a relative path that
-                                // is rooted at CWD (same type as hotReloadOutputDir) so that
-                                // toClassName(hotReloadOutputDir, relPath) — which calls
-                                // relativize — does not throw IllegalArgumentException.
-                                Path rel = hotReloadOutputDir.resolve(
-                                        hotReloadOutputDir.toAbsolutePath().relativize(absFile));
-                                reloadClassFile(hotReloadOutputDir, rel);
-                            });
-                        } catch (IOException e) {
-                            // Output dir unreadable; fall back to the outer class only.
-                            reloadClassFile(hotReloadOutputDir, cf);
-                        }
+                    // Reload every .class file the compiler actually wrote for this batch, per
+                    // RecordingFileManager -- covers inner/anonymous classes (Foo$1.class) and,
+                    // unlike a name-based guess derived from the source file's own base name,
+                    // also a secondary top-level class in the same source file, or a lone
+                    // non-public top-level class named differently from its file (both legal
+                    // Java). A name-based guess would compile such a class to disk correctly
+                    // but never queue it for redefinition, leaving it silently running stale
+                    // bytecode.
+                    for (Path absFile : fm.outputFiles) {
+                        Path rel = hotReloadOutputDir.resolve(
+                                hotReloadOutputDir.toAbsolutePath().relativize(absFile));
+                        reloadClassFile(hotReloadOutputDir, rel);
                     }
 
                     // Re-register class directories so external compilations (./gradlew classes
@@ -837,6 +844,30 @@ public class DevReloadContainer implements Container {
         }
     }
 
+    /**
+     * Wraps the compiler's standard file manager to record the absolute path of every
+     * {@code .class} file it actually writes, so the post-compile reload step in
+     * {@link #applyCompile} can hot-swap exactly what the compiler produced instead of
+     * guessing from the source file's own base name -- a guess that misses a secondary
+     * top-level class declared in the same file, or a lone non-public top-level class
+     * named differently from its file.
+     */
+    private static final class RecordingFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {
+        private final List<Path> outputFiles = new ArrayList<>();
+
+        RecordingFileManager(StandardJavaFileManager fileManager) {
+            super(fileManager);
+        }
+
+        @Override
+        public JavaFileObject getJavaFileForOutput(JavaFileManager.Location location, String className,
+                JavaFileObject.Kind kind, FileObject sibling) throws IOException {
+            JavaFileObject file = super.getJavaFileForOutput(location, className, kind, sibling);
+            outputFiles.add(Paths.get(file.toUri()));
+            return file;
+        }
+    }
+
     /** Formats the error-level diagnostics from a failed compile, one per line, as {@code file:line: message}. */
     private static String formatErrors(DiagnosticCollector<JavaFileObject> diagnostics) {
         StringBuilder sb = new StringBuilder();
@@ -851,25 +882,6 @@ public class DevReloadContainer implements Container {
         return sb.toString();
     }
 
-    /**
-     * Maps a {@code .java} source file to the corresponding {@code .class} output file
-     * under {@link #hotReloadOutputDir}. Returns {@code null} if the source file is not
-     * under any registered source root.
-     */
-    private Path sourceToClassFile(Path sourceFile) {
-        for (Path srcRoot : sourceRootDirs) {
-            if (sourceFile.startsWith(srcRoot)) {
-                Path relative = srcRoot.relativize(sourceFile);
-                String name = relative.toString();
-                if (name.endsWith(".java")) {
-                    String classRelative = name.substring(0, name.length() - ".java".length()) + ".class";
-                    return hotReloadOutputDir.resolve(classRelative);
-                }
-            }
-        }
-        return null;
-    }
-
     // -------------------------------------------------------------------------
     // Helpers
     // -------------------------------------------------------------------------
@@ -881,6 +893,23 @@ public class DevReloadContainer implements Container {
      * so one overloaded directory never leaves the rest of the tree unwatched.
      */
     private void registerAll(Path start) throws IOException {
+        walkAndRegister(start, false);
+    }
+
+    /**
+     * Like {@link #registerAll}, but also dispatches every regular file already present
+     * under {@code start} through {@link #dispatchChangedFile}, as if a CREATE event had
+     * fired for each. Used only when a brand-new directory materializes mid-session (see
+     * {@link #watchLoop}) -- deliberately not used for the bulk registration done at
+     * startup or the periodic re-registration in {@link #applyCompile}, where
+     * re-dispatching every already-known file on every call would be both wasteful and
+     * cause spurious repeat reloads.
+     */
+    private void registerAllAndSeed(Path start) throws IOException {
+        walkAndRegister(start, true);
+    }
+
+    private void walkAndRegister(Path start, boolean seedExistingFiles) throws IOException {
         Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
@@ -896,6 +925,14 @@ public class DevReloadContainer implements Container {
                     // worth crashing the whole startup over.
                     Debug.logError(t, "Hot-reload: unexpected error registering watch for " + dir
                             + " -- this directory will not be watched.", MODULE);
+                }
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                if (seedExistingFiles) {
+                    dispatchChangedFile(file.getParent(), file);
                 }
                 return FileVisitResult.CONTINUE;
             }
