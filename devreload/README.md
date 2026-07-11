@@ -242,17 +242,18 @@ OFBiz.
 | `ofbizDev` task doesn't exist | `plugins/devreload` not present, or missing its `build.gradle` | `git clone` the plugin repo into `plugins/devreload` |
 | Log: "classes directory not found" | `./gradlew classes` not run yet | `ofbizDev` runs `classes` automatically via `dependsOn` |
 | Log: "JavaCompiler not available" | Running on a JRE, not a JDK | Install a JDK; use `./gradlew -t classes` in a second terminal as a fallback |
-| Log: "compilation failed — fix the error and save again" | Syntax/type error in the saved `.java` file | Fix the compile error; the reload fires automatically on the next save |
+| Log: "compilation failed — fix the error and save again" | Syntax/type error in the saved `.java` file | The log line is followed by the real compiler diagnostics (`file:line: message`); fix the reported error and save again — the reload fires automatically |
 | Log: "could not self-attach HotSwapAgent" | Missing `-Djdk.attach.allowAttachSelf=true` | Set automatically by `./gradlew ofbizDev`; add it explicitly if starting OFBiz another way |
 | `services.xml` change not picked up | OFBiz restarted without going through `ofbizDev` | Only works when `-Dofbiz.hotreload=true` is set |
 | A "just a method body" change still asks for a restart | Structural-change-only edit (new/removed method or field, changed signature) running on a stock JDK | Restart, or run on a DCEVM-patched JVM |
 | Could not find a DCEVM-patched JVM | Neither `-PdcevmHome` nor `DCEVM_HOME` is set | Point at a JetBrains Runtime (`<IDE install>/jbr`) or standalone DCEVM build explicitly — not auto-detected |
 | Same class keeps reporting a structural-change warning even after a pure method-body edit | Once a stock JVM rejects one structural change on a class, that class stays "stuck" until restart — every subsequent diff against its still-loaded old bytecode still includes the pending change | Expected JVM `redefineClasses` behavior, not a bug; restart to clear it |
+| Log: "batch redefinition rejected (...) -- retrying each class individually", but only some classes in the save show "Hot-reload complete" | One class in a debounced batch has a change the JVM can't apply; the others were only rejected as part of the same all-or-nothing batch call | Expected fallback behavior, not a bug — every class the JVM *can* apply still succeeds individually; only the named, rejected class needs a restart |
 | `<attribute>`/`<override>` schema warning (`cvc-complex-type.2.4.a`) repeats on every reload cycle | `<attribute>` elements must come before `<override>` per `services.xsd` | Reorder the elements in the edited `services.xml` |
 
 ---
 
-## 11. Top 20 bug fixes
+## 11. Top 22 bug fixes
 
 This component went through an earlier prototype design (a custom classloader
 approach, living directly in `framework/base`) before settling on the current
@@ -260,6 +261,9 @@ approach, living directly in `framework/base`) before settling on the current
 of the current, shipped design. Fixes 15-20 were lessons learned in the
 earlier prototype; most of the mechanisms they touched no longer exist in the
 current design (noted per row), but the underlying lesson is worth keeping.
+Fixes 21-22 were found via a later code-review pass on the current, shipped
+design, after real-world use surfaced edge cases the original test scenarios
+didn't happen to exercise.
 
 | # | Bug | Impact if unfixed | Fix |
 |---|---|---|---|
@@ -283,3 +287,5 @@ current design (noted per row), but the underlying lesson is worth keeping.
 | 18 | *(historical)* A code comment claimed `synchronized(DevReloadContainer.class)` while the actual code used `synchronized(this)` | A future developer trusting the comment could introduce a real data race | Comment/code mismatch fixed by reverting to a `private final` instance field with unambiguous `synchronized(this)` |
 | 19 | *(historical)* A single save produced two reload attempts for the same class — one direct call plus one from the WatchService event for the same `.class` file | Harmless but wasteful; duplicate "Hot-reload complete" log lines on every save | Originally patched with a timing-based suppression window; the current design's real fix is architectural (fix #10) — one shared debouncer per change type, so a duplicate at most causes one redundant, harmless redefinition |
 | 20 | *(historical)* Hardcoded, per-OS guesses at common IDE install paths to auto-detect a DCEVM-patched JVM (IntelliJ on macOS/Linux/Windows, JetBrains Toolbox, etc.) | Silently broke for any install layout not on the guessed list — a "works for some users, not others" pattern that grew another special case with every new packaging variant | Removed all guessing in favor of one explicit, always-honored input: `-PdcevmHome` or `DCEVM_HOME` |
+| 21 | A single unsupported structural change in a debounced batch caused `Instrumentation.redefineClasses` to reject the *entire* batch in one call, since every changed class's `ClassDefinition` was passed together | An unrelated, valid method-body edit that happened to land in the same ~300ms debounce window as a rejected class silently failed to apply too, with nothing in the log distinguishing it from the actual offender | `redefineWithPerClassFallback` tries the batch call first (the fast common path), and on `UnsupportedOperationException` retries each `ClassDefinition` individually — every class the JVM accepts is applied, and only the ones it genuinely rejects are named and left pending a restart |
+| 22 | `applyCompile()` passed a `null` `DiagnosticListener` to `javax.tools.JavaCompiler`, so a failed in-process compile produced no detail about what actually failed | The log's only output on a broken save was the generic "compilation failed — fix the error and save again", with no file, line number, or compiler message to act on | Pass a `DiagnosticCollector<JavaFileObject>` to the compiler task and log each `ERROR`-level diagnostic (`file:line: message`) alongside the existing warning |
