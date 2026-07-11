@@ -65,8 +65,9 @@ import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.cache.UtilCache;
 
 /**
- * Development-only container that watches Java sources/classes and {@code services.xml}
- * files and applies changes to a running OFBiz instance without a restart.
+ * Development-only container that watches Java sources/classes, {@code services.xml}
+ * files, and {@code entitydef} (entity/view-entity/entity-group) files, and applies
+ * changes to a running OFBiz instance without a restart.
  *
  * <h2>Activation</h2>
  * Add {@code -Dofbiz.hotreload=true -Djdk.attach.allowAttachSelf=true} to your JVM
@@ -129,6 +130,18 @@ import org.apache.ofbiz.base.util.cache.UtilCache;
  * {@code service.ModelServiceMapByModel} {@link UtilCache} entry is cleared directly, so
  * the new/edited definition is re-read on the next service call.
  *
+ * <h2>How entitydef changes are handled</h2>
+ * Every component's {@code entitydef/} directory is watched too, but this can't use the
+ * same "clear a cache looked up by name" trick as services.xml: every
+ * {@code GenericDelegator} grabs a direct object reference to a {@code ModelReader} at
+ * construction time and keeps it, so clearing {@code ModelReader}'s own lookup cache
+ * would only affect a brand-new delegator, never the one already serving traffic. See
+ * {@link EntityModelReloader}'s class javadoc for the full mechanism: it reflectively
+ * resets the already-running {@code ModelReader}/{@code ModelGroupReader} singleton's
+ * parsed-model field and eagerly rebuilds it in place, then clears delegator data
+ * caches. Optionally, with {@code -Dofbiz.hotreload.autoUpdateSchema=true}, it also
+ * creates any missing table/column a changed entity needs, non-destructively.
+ *
  * <h2>Directory watch limits</h2>
  * The OS may refuse to watch a directory once a process-wide ceiling is reached (most
  * commonly hit on macOS on a full checkout). This container does not try to work around
@@ -166,6 +179,7 @@ public class DevReloadContainer implements Container {
     private final Debouncer<String> classReloadDebouncer = new Debouncer<>(() -> debounceExecutor, this::applyReload);
     private final Debouncer<Path> xmlReloadDebouncer = new Debouncer<>(() -> debounceExecutor, this::applyServiceXmlReload);
     private final Debouncer<Path> compileDebouncer = new Debouncer<>(() -> debounceExecutor, this::applyCompile);
+    private final Debouncer<Path> entitydefReloadDebouncer = new Debouncer<>(() -> debounceExecutor, this::applyEntitydefReload);
 
     // Counts across registerServicedefDirs()/registerSourceDirs()/registerAll(), so
     // start() can emit one aggregated warning instead of leaving individual failures
@@ -195,6 +209,20 @@ public class DevReloadContainer implements Container {
     private final Set<Path> sourceRootDirs = new HashSet<>();
 
     /**
+     * Directories containing an {@code entity-resource type="model"} or
+     * {@code type="group"} file (an {@code entitydef/entitymodel*.xml} or
+     * {@code entitygroup*.xml}). Deliberately not split into two separate sets keyed by
+     * resource type: a save anywhere in one of these directories triggers both
+     * {@link EntityModelReloader#resetAndRebuildEntityModels()} and
+     * {@link EntityModelReloader#resetAndRebuildGroupModels()} (see
+     * {@code applyEntitydefReload}), same as this container already accepts some
+     * harmless redundant work elsewhere (e.g. a WatchService event storm re-triggering
+     * unrelated classes) in exchange for simpler bookkeeping -- both reload calls are
+     * cheap and a no-op in effect when nothing of that kind actually changed.
+     */
+    private final Set<Path> entitydefDirs = new HashSet<>();
+
+    /**
      * Component names to watch, from {@code -Dofbiz.hotreload.components}; {@code null}
      * means watch every component. Set this property to a comma-separated list of
      * component names to keep the total number of watched directories under the OS's
@@ -218,6 +246,18 @@ public class DevReloadContainer implements Container {
      * Off by default so unscoped runs need meaningfully fewer real watch registrations.
      */
     private boolean watchBuildOutput;
+
+    /**
+     * Whether an {@code entitydef} reload should also create any missing tables/columns
+     * the new/changed entities need, from {@code -Dofbiz.hotreload.autoUpdateSchema};
+     * defaults to {@code false}. Off by default because this is the one thing in this
+     * plugin that writes to the database automatically -- non-destructively (only
+     * creates missing tables/columns, exactly like webtools' "Update Database" screen;
+     * see {@link EntityModelReloader#syncMissingSchema}), but still a meaningfully
+     * bigger blast radius than reloading in-memory definitions, so it needs an explicit
+     * opt-in rather than being bundled into entitydef reload unconditionally.
+     */
+    private boolean autoUpdateSchema;
 
     @Override
     public void init(List<StartupCommand> ofbizCommands, String name, String configFile) throws ContainerException {
@@ -245,8 +285,9 @@ public class DevReloadContainer implements Container {
     }
 
     /**
-     * Reads {@code -Dofbiz.hotreload.components} and {@code -Dofbiz.hotreload.watchBuildOutput},
-     * populating {@link #allowedComponents} and {@link #watchBuildOutput}.
+     * Reads {@code -Dofbiz.hotreload.components}, {@code -Dofbiz.hotreload.watchBuildOutput},
+     * and {@code -Dofbiz.hotreload.autoUpdateSchema}, populating {@link #allowedComponents},
+     * {@link #watchBuildOutput}, and {@link #autoUpdateSchema}.
      */
     private void parseHotReloadProperties() {
         String componentsProperty = System.getProperty("ofbiz.hotreload.components");
@@ -260,6 +301,13 @@ public class DevReloadContainer implements Container {
         }
 
         watchBuildOutput = "true".equalsIgnoreCase(System.getProperty("ofbiz.hotreload.watchBuildOutput"));
+
+        autoUpdateSchema = "true".equalsIgnoreCase(System.getProperty("ofbiz.hotreload.autoUpdateSchema"));
+        if (autoUpdateSchema) {
+            Debug.logInfo("Hot-reload: schema auto-update enabled (set via -Dofbiz.hotreload.autoUpdateSchema) -- "
+                    + "an entitydef save will create any missing table/column it needs. This never alters or "
+                    + "drops anything that already exists.", MODULE);
+        }
     }
 
     /**
@@ -391,6 +439,7 @@ public class DevReloadContainer implements Container {
             return true; // disabled
         }
         registerServicedefDirs();
+        registerEntitydefDirs();
         registerSourceDirs();
         if (watchDirsFailed > 0) {
             Debug.logWarning("Hot-reload: " + watchDirsFailed + " of " + watchDirsAttempted + " directory watch "
@@ -401,7 +450,8 @@ public class DevReloadContainer implements Container {
         watchThread = new Thread(this::watchLoop, "ofbiz-hot-reload-watcher");
         watchThread.setDaemon(true);
         watchThread.start();
-        Debug.logInfo("DevReloadContainer started. Edit any Java or services.xml file and changes go live without a restart.", MODULE);
+        Debug.logInfo("DevReloadContainer started. Edit any Java, services.xml, or entitydef file and changes go "
+                + "live without a restart.", MODULE);
         return true;
     }
 
@@ -433,6 +483,50 @@ public class DevReloadContainer implements Container {
                 // directory unwatched.
                 Debug.logError(t, "Hot-reload: unexpected error registering servicedef dir for "
                         + sri.getLocation(), MODULE);
+            }
+        }
+    }
+
+    /**
+     * Registers every directory that contains a component entity-definition XML file
+     * ({@code entity-resource type="model"}, i.e. {@code entitymodel*.xml}, or
+     * {@code type="group"}, i.e. {@code entitygroup*.xml}) with the WatchService so that
+     * edits to those files are detected. Called once from {@link #start()}, before the
+     * watch thread launches. Deliberately does <em>not</em> watch {@code type="data"}/
+     * {@code "data-security"}/etc. resources that also live under a component's
+     * {@code entitydef/} directory -- those are seed/demo data, a different concern
+     * from schema, and out of scope here (see the design notes at
+     * {@code ENTITY_HOTRELOAD_DESIGN.md}).
+     */
+    private void registerEntitydefDirs() {
+        registerEntitydefResourceDirs("model");
+        registerEntitydefResourceDirs("group");
+    }
+
+    /** Shared by {@link #registerEntitydefDirs()} for both the "model" and "group" resource types. */
+    private void registerEntitydefResourceDirs(String type) {
+        for (ComponentConfig.EntityResourceInfo eri : ComponentConfig.getAllEntityResourceInfos(type)) {
+            if (!isAllowedComponent(eri.getComponentConfig().getComponentName())) {
+                continue;
+            }
+            try {
+                URL url = eri.createResourceHandler().getURL();
+                if (!"file".equals(url.getProtocol())) {
+                    continue; // skip non-filesystem resources (classpath jars, etc.)
+                }
+                Path dir = Paths.get(new URI(url.toString())).getParent();
+                if (dir != null && Files.isDirectory(dir) && entitydefDirs.add(dir) && registerWatch(dir)) {
+                    Debug.logInfo("Hot-reload: watching entitydef (" + type + ") directory " + dir, MODULE);
+                }
+            } catch (GenericConfigException | URISyntaxException e) {
+                Debug.logWarning("Hot-reload: could not register entitydef dir for "
+                        + eri.getLocation() + ": " + e.getMessage(), MODULE);
+            } catch (Throwable t) {
+                // Defensive: a single component's entitydef registration must not be able
+                // to abort the loop and leave every subsequent component's entitydef
+                // directory unwatched.
+                Debug.logError(t, "Hot-reload: unexpected error registering entitydef dir for "
+                        + eri.getLocation(), MODULE);
             }
         }
     }
@@ -549,10 +643,10 @@ public class DevReloadContainer implements Container {
     /**
      * Routes a single created/modified regular file through the correct reload pipeline --
      * a {@code .class} file under {@link #classesDir}, a {@code .xml} file under a
-     * registered servicedef directory, or a {@code .java} file under a registered source
-     * root. Shared between {@link #watchLoop}'s live WatchService events and
-     * {@link #registerAllAndSeed}'s seeding of files that already existed when a new
-     * directory was first discovered.
+     * registered servicedef directory, a {@code .xml} file under a registered entitydef
+     * directory, or a {@code .java} file under a registered source root. Shared between
+     * {@link #watchLoop}'s live WatchService events and {@link #registerAllAndSeed}'s
+     * seeding of files that already existed when a new directory was first discovered.
      */
     private void dispatchChangedFile(Path dir, Path changed) {
         String name = changed.toString();
@@ -560,6 +654,8 @@ public class DevReloadContainer implements Container {
             reloadClassFile(classesDir, changed);
         } else if (name.endsWith(".xml") && servicedefDirs.stream().anyMatch(dir::startsWith)) {
             xmlReloadDebouncer.add(changed);
+        } else if (name.endsWith(".xml") && entitydefDirs.stream().anyMatch(dir::startsWith)) {
+            entitydefReloadDebouncer.add(changed);
         } else if (name.endsWith(".java") && sourceRootDirs.stream().anyMatch(dir::startsWith)) {
             compileDebouncer.add(changed);
         }
@@ -714,6 +810,44 @@ public class DevReloadContainer implements Container {
     private static boolean enhancedRedefinitionRequested() {
         return ManagementFactory.getRuntimeMXBean().getInputArguments().stream()
                 .anyMatch(arg -> arg.contains("AllowEnhancedClassRedefinition"));
+    }
+
+    /**
+     * Reloads entity/view-entity and entity-group definitions after an
+     * {@code entitydef/*.xml} save. Unlike {@link #applyServiceXmlReload}, this can't
+     * just clear a {@code UtilCache} keyed by name -- see {@link EntityModelReloader}'s
+     * class javadoc for why entity definitions need to be reset on the already-running
+     * {@code ModelReader}/{@code ModelGroupReader} singletons directly instead.
+     *
+     * <p>Both {@link EntityModelReloader#resetAndRebuildEntityModels()} and
+     * {@link EntityModelReloader#resetAndRebuildGroupModels()} run on every entitydef
+     * save regardless of which specific file changed (see {@link #entitydefDirs}'s
+     * javadoc for why that's an acceptable simplification). Delegator data caches are
+     * only cleared if at least one of the two actually succeeded -- clearing them after
+     * a fully-failed reload would just discard still-good cached data for no benefit.
+     *
+     * <p>If {@link #autoUpdateSchema} is on, a successful entity-model rebuild is also
+     * followed by {@link EntityModelReloader#syncMissingSchema}, which creates any
+     * missing table/column the entities defined in {@code batch} need. Skipped entirely
+     * when {@code entityOk} is {@code false}: with a broken rebuild, there's no reliable
+     * new/changed model to check the database against yet.
+     */
+    private void applyEntitydefReload(Set<Path> batch) {
+        Debug.logInfo("Hot-reload: entitydef changed " + batch, MODULE);
+        boolean entityOk = EntityModelReloader.resetAndRebuildEntityModels();
+        boolean groupOk = EntityModelReloader.resetAndRebuildGroupModels();
+        if (entityOk || groupOk) {
+            EntityModelReloader.clearAllDelegatorCaches();
+        }
+        if (entityOk && autoUpdateSchema) {
+            EntityModelReloader.syncMissingSchema(batch);
+        }
+        if (entityOk && groupOk) {
+            Debug.logInfo("Hot-reload: entitydef reload complete for " + batch, MODULE);
+        } else {
+            Debug.logWarning("Hot-reload: entitydef reload for " + batch + " completed with errors -- see the "
+                    + "Hot-reload log lines above for which reader failed.", MODULE);
+        }
     }
 
     private void applyServiceXmlReload(Set<Path> batch) {
