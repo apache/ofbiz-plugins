@@ -40,6 +40,18 @@ static List<String> hotreloadWatchBuildOutputArgs(Project project) {
     return watchBuildOutput ? ["-Dofbiz.hotreload.watchBuildOutput=${watchBuildOutput}".toString()] : []
 }
 
+// Optional -Photreload.autoUpdateSchema=true, forwarded as
+// -Dofbiz.hotreload.autoUpdateSchema to DevReloadContainer. Off by default: unlike the
+// rest of entitydef reload (which only ever touches in-memory definitions), this
+// creates missing tables/columns in the actual dev database on every entitydef save --
+// non-destructively (see EntityModelReloader#syncMissingSchema), but still the one
+// thing in this plugin that writes to the database automatically, so it needs an
+// explicit opt-in rather than being bundled into entitydef reload unconditionally.
+static List<String> hotreloadAutoUpdateSchemaArgs(Project project) {
+    Object autoUpdateSchema = project.findProperty('hotreload.autoUpdateSchema')
+    return autoUpdateSchema ? ["-Dofbiz.hotreload.autoUpdateSchema=${autoUpdateSchema}".toString()] : []
+}
+
 // DevReloadContainer's own in-process-compile output directory. Deliberately separate
 // from Gradle's own build/classes/java/main (see DevReloadContainer's hotReloadOutputDir
 // field javadoc for why) and placed ahead of the normal runtime classpath below, so a
@@ -60,6 +72,7 @@ static List<String> commonHotReloadJvmArgs(Project project) {
             "-Dofbiz.hotreload.outputDir=${hotReloadOutputDir(project).absolutePath}".toString()]
     args += hotreloadComponentArgs(project)
     args += hotreloadWatchBuildOutputArgs(project)
+    args += hotreloadAutoUpdateSchemaArgs(project)
     return args
 }
 
@@ -133,11 +146,12 @@ def resolveDcevmJavaExecutable = {
 rootProject.tasks.register('ofbizDev', JavaExec) {
     group = 'OFBiz Server Commands'
     description = 'Start OFBiz with hot-reload (requires a DCEVM-patched JVM -- see README). Java source, ' +
-            'services.xml, and structural changes (new/removed methods or fields, changed signatures) all ' +
-            'reload live with no restart. Point -PdcevmHome=/path/to/jvm or set DCEVM_HOME to enable; fails ' +
-            'fast with setup instructions if neither resolves. Optionally scope to specific components with ' +
-            '-Photreload.components=compA,compB, or watch build/classes/java/main too (for externally-produced ' +
-            '.class files) with -Photreload.watchBuildOutput=true.'
+            'services.xml, entitydef, and structural changes (new/removed methods or fields, changed ' +
+            'signatures) all reload live with no restart. Point -PdcevmHome=/path/to/jvm or set DCEVM_HOME to ' +
+            'enable; fails fast with setup instructions if neither resolves. Optionally scope to specific ' +
+            'components with -Photreload.components=compA,compB, watch build/classes/java/main too (for ' +
+            'externally-produced .class files) with -Photreload.watchBuildOutput=true, or auto-create missing ' +
+            'tables/columns on an entitydef save with -Photreload.autoUpdateSchema=true.'
     classpath = rootProject.files(hotReloadOutputDir(project)) + rootProject.sourceSets.main.runtimeClasspath
     mainClass = rootProject.application.mainClass
     List<String> jvmArgsList = rootProject.application.applicationDefaultJvmArgs + commonHotReloadJvmArgs(project)
