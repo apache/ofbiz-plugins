@@ -134,11 +134,18 @@ compile producing several `.class` files) is handled as a single batch.
 |---|---|---|
 | Method body edit | ✅ Hot-swaps live | ✅ Hot-swaps live |
 | New/removed method or field, changed signature ("structural change") | ❌ Requires restart | ✅ Hot-swaps live |
-| Changed class hierarchy (superclass/interfaces) | ❌ Requires restart | ❌ Requires restart (rare edge case even DCEVM can't cover) |
+| Changed class hierarchy (superclass/interfaces) | ❌ Requires restart | ⚠️ Often hot-swaps live for classes with no existing instances (e.g. static-only service/event classes) — support varies by DCEVM build and isn't guaranteed; when the JVM can't apply it, that one class is rejected (see below), not silently broken |
 
 Because structural changes are common during real development, `./gradlew
 ofbizDev` **requires** a DCEVM-patched JVM and refuses to start without one —
 rather than silently running in a degraded mode that "mostly" works.
+
+Whether a given hierarchy change hot-swaps depends on the specific DCEVM build and
+on whether instances of the class already exist — OFBiz's service/event classes are
+static-only with no live instances, which is the case DCEVM handles best. When a
+class's redefinition genuinely can't be applied, only that class is rejected (logged
+by name); every other valid change saved in the same batch still applies. A rejected
+class stays "stuck" against that diff until OFBiz restarts.
 
 ---
 
@@ -150,7 +157,7 @@ rather than silently running in a degraded mode that "mostly" works.
 | New services / parameter changes in `services.xml` | `*UiLabels.xml` (loaded at startup) |
 | New/removed methods, fields, changed signatures (DCEVM only) | `web.xml`, `*.properties` files |
 | `controller.xml` (re-read every ~10s automatically — not tied to devreload at all) | `entitymodel*.xml` changes |
-| | Changed class hierarchy |
+| | Changed class hierarchy (unreliable — often works for static-only classes with no instances, but isn't guaranteed) |
 
 ---
 

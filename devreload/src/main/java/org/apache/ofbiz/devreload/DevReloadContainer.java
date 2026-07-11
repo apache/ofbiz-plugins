@@ -38,8 +38,10 @@ import java.nio.file.WatchService;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
@@ -48,7 +50,10 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import javax.tools.Diagnostic;
+import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
@@ -612,6 +617,8 @@ public class DevReloadContainer implements Container {
             return;
         }
 
+        Map<String, Class<?>> loadedByName = indexLoadedClasses(batch);
+
         List<ClassDefinition> defs = new ArrayList<>();
         for (String className : batch) {
             Path relative = Paths.get(className.replace('.', '/') + ".class");
@@ -624,15 +631,15 @@ public class DevReloadContainer implements Container {
                         + hotReloadOutputDir.toAbsolutePath() + " or " + classesDir.toAbsolutePath(), MODULE);
                 continue;
             }
+            Class<?> loaded = loadedByName.get(className);
+            if (loaded == null) {
+                // Never loaded yet in this JVM — nothing to redefine. It will simply
+                // load fresh, with the new bytecode, the first time something
+                // references it, from whichever directory resolveClassFile() would
+                // pick (overlay first on the classpath too, see build.gradle).
+                continue;
+            }
             try {
-                Class<?> loaded = findLoadedClass(className);
-                if (loaded == null) {
-                    // Never loaded yet in this JVM — nothing to redefine. It will simply
-                    // load fresh, with the new bytecode, the first time something
-                    // references it, from whichever directory resolveClassFile() would
-                    // pick (overlay first on the classpath too, see build.gradle).
-                    continue;
-                }
                 defs.add(new ClassDefinition(loaded, Files.readAllBytes(classFile)));
             } catch (IOException e) {
                 Debug.logError(e, "Hot-reload: failed to read class file for " + className, MODULE);
@@ -644,6 +651,36 @@ public class DevReloadContainer implements Container {
             return;
         }
 
+        redefineWithPerClassFallback(defs);
+    }
+
+    /**
+     * Builds a {@code className -> Class} map covering just the classes in {@code batch},
+     * scanning {@link Instrumentation#getAllLoadedClasses} once instead of once per class
+     * name — that array holds every class loaded in the JVM (routinely tens of thousands
+     * in a running OFBiz instance), so re-scanning it per class name in a batch made every
+     * save pay for an O(batchSize * totalLoadedClasses) walk.
+     */
+    private Map<String, Class<?>> indexLoadedClasses(Set<String> batch) {
+        Map<String, Class<?>> byName = new HashMap<>();
+        for (Class<?> c : instrumentation.getAllLoadedClasses()) {
+            if (batch.contains(c.getName())) {
+                byName.put(c.getName(), c);
+            }
+        }
+        return byName;
+    }
+
+    /**
+     * Redefines every class in {@code defs} in one {@link Instrumentation#redefineClasses}
+     * call when possible — the common, fast path. If the JVM rejects the whole batch
+     * because one class contains a structural change it can't apply
+     * ({@link UnsupportedOperationException}), falls back to redefining each class
+     * individually instead: otherwise, an unrelated valid method-body edit that happened
+     * to land in the same debounced batch as an unsupported structural change would
+     * silently fail to apply right along with it.
+     */
+    private void redefineWithPerClassFallback(List<ClassDefinition> defs) {
         try {
             instrumentation.redefineClasses(defs.toArray(new ClassDefinition[0]));
             // Clear service definition cache so newly added service methods are discovered.
@@ -651,20 +688,54 @@ public class DevReloadContainer implements Container {
             // has not changed, only .class files have, and clearing those caches triggers
             // Groovy re-compilation of screen expressions which can fail unexpectedly.
             UtilCache.clearCache(SERVICE_MODEL_CACHE_NAME);
-            Debug.logInfo("Hot-reload complete for: " + batch, MODULE);
+            Debug.logInfo("Hot-reload complete for: " + classNames(defs), MODULE);
+            return;
         } catch (UnsupportedOperationException e) {
+            Debug.logWarning("Hot-reload: batch redefinition rejected (" + e.getMessage()
+                    + ") -- retrying each class individually so other, valid changes in the "
+                    + "same save still apply.", MODULE);
+        } catch (Throwable e) {
+            Debug.logError(e, "Hot-reload failed for " + classNames(defs), MODULE);
+            return;
+        }
+
+        List<String> applied = new ArrayList<>();
+        List<String> rejected = new ArrayList<>();
+        for (ClassDefinition def : defs) {
+            String className = def.getDefinitionClass().getName();
+            try {
+                instrumentation.redefineClasses(def);
+                applied.add(className);
+            } catch (UnsupportedOperationException e) {
+                rejected.add(className);
+            } catch (Throwable e) {
+                Debug.logError(e, "Hot-reload failed for " + className, MODULE);
+                rejected.add(className);
+            }
+        }
+        if (!applied.isEmpty()) {
+            UtilCache.clearCache(SERVICE_MODEL_CACHE_NAME);
+            Debug.logInfo("Hot-reload complete for: " + applied, MODULE);
+        }
+        if (!rejected.isEmpty()) {
             // ./gradlew ofbizDev only ever runs on a DCEVM-patched JVM (see build.gradle),
             // which already lifts the plain-JVM restriction to method bodies only, so
             // add/remove method-or-field and signature changes normally succeed here. This
             // still fires for the narrower set of changes DCEVM itself can't apply either
             // (e.g. a changed class hierarchy) -- the same remaining limit an IDE debugger's
             // HotSwap has even on a capable JVM.
-            Debug.logWarning("Hot-reload: " + batch + " contains a structural change (added/removed "
+            Debug.logWarning("Hot-reload: " + rejected + " contain a structural change (added/removed "
                     + "method or field, changed signature, changed hierarchy) that the JVM cannot "
-                    + "hot-swap. Restart OFBiz to pick it up. (" + e.getMessage() + ")", MODULE);
-        } catch (Throwable e) {
-            Debug.logError(e, "Hot-reload failed for " + batch, MODULE);
+                    + "hot-swap. Restart OFBiz to pick it up.", MODULE);
         }
+    }
+
+    private static List<String> classNames(List<ClassDefinition> defs) {
+        List<String> names = new ArrayList<>();
+        for (ClassDefinition def : defs) {
+            names.add(def.getDefinitionClass().getName());
+        }
+        return names;
     }
 
     /**
@@ -678,16 +749,6 @@ public class DevReloadContainer implements Container {
     private static boolean enhancedRedefinitionRequested() {
         return ManagementFactory.getRuntimeMXBean().getInputArguments().stream()
                 .anyMatch(arg -> arg.contains("AllowEnhancedClassRedefinition"));
-    }
-
-    /** Searches classes already loaded in the JVM for one matching {@code className}. */
-    private Class<?> findLoadedClass(String className) {
-        for (Class<?> c : instrumentation.getAllLoadedClasses()) {
-            if (c.getName().equals(className)) {
-                return c;
-            }
-        }
-        return null;
     }
 
     private void applyServiceXmlReload(Set<Path> batch) {
@@ -707,13 +768,14 @@ public class DevReloadContainer implements Container {
             if (compiler == null) {
                 return;
             }
-            try (StandardJavaFileManager fm = compiler.getStandardFileManager(null, null, null)) {
+            DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
+            try (StandardJavaFileManager fm = compiler.getStandardFileManager(diagnostics, null, null)) {
                 fm.setLocation(StandardLocation.CLASS_OUTPUT,
                         List.of(hotReloadOutputDir.toAbsolutePath().toFile()));
                 // Reuse the running JVM's classpath — it already contains all OFBiz jars.
                 List<String> options = Arrays.asList("-cp", System.getProperty("java.class.path"), "-proc:none");
                 var units = fm.getJavaFileObjectsFromPaths(batch);
-                boolean ok = compiler.getTask(null, fm, null, options, null, units).call();
+                boolean ok = compiler.getTask(null, fm, diagnostics, options, null, units).call();
                 if (ok) {
                     Debug.logInfo("Hot-reload: compilation successful", MODULE);
 
@@ -766,12 +828,27 @@ public class DevReloadContainer implements Container {
                         }
                     }
                 } else {
-                    Debug.logWarning("Hot-reload: compilation failed — fix the error and save again", MODULE);
+                    Debug.logWarning("Hot-reload: compilation failed — fix the error and save again\n"
+                            + formatErrors(diagnostics), MODULE);
                 }
             }
         } catch (Throwable e) {
             Debug.logError(e, "Hot-reload: compilation error", MODULE);
         }
+    }
+
+    /** Formats the error-level diagnostics from a failed compile, one per line, as {@code file:line: message}. */
+    private static String formatErrors(DiagnosticCollector<JavaFileObject> diagnostics) {
+        StringBuilder sb = new StringBuilder();
+        for (Diagnostic<? extends JavaFileObject> d : diagnostics.getDiagnostics()) {
+            if (d.getKind() != Diagnostic.Kind.ERROR) {
+                continue;
+            }
+            String source = d.getSource() != null ? d.getSource().getName() : "?";
+            sb.append("  ").append(source).append(':').append(d.getLineNumber())
+                    .append(": ").append(d.getMessage(null)).append('\n');
+        }
+        return sb.toString();
     }
 
     /**
