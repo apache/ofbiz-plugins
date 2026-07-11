@@ -759,7 +759,7 @@ public class DevReloadContainer implements Container {
                     // Java). A name-based guess would compile such a class to disk correctly
                     // but never queue it for redefinition, leaving it silently running stale
                     // bytecode.
-                    for (Path absFile : fm.outputFiles) {
+                    for (Path absFile : fm.getOutputFiles()) {
                         Path rel = hotReloadOutputDir.resolve(
                                 hotReloadOutputDir.toAbsolutePath().relativize(absFile));
                         reloadClassFile(hotReloadOutputDir, rel);

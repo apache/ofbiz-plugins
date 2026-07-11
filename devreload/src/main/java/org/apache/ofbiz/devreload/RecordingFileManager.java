@@ -38,10 +38,14 @@ import javax.tools.StandardJavaFileManager;
  * from its file.
  */
 final class RecordingFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {
-    final List<Path> outputFiles = new ArrayList<>();
+    private final List<Path> outputFiles = new ArrayList<>();
 
     RecordingFileManager(StandardJavaFileManager fileManager) {
         super(fileManager);
+    }
+
+    List<Path> getOutputFiles() {
+        return outputFiles;
     }
 
     @Override
