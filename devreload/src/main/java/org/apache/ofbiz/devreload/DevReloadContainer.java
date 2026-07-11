@@ -148,6 +148,12 @@ public class DevReloadContainer implements Container {
     private static final String MODULE = DevReloadContainer.class.getName();
     private static final String SERVICE_MODEL_CACHE_NAME = "service.ModelServiceMapByModel";
 
+    // Shared by start()'s aggregated warning and warnUnwatched()'s per-directory warning,
+    // so the two can't silently drift apart if the property/flag names ever change.
+    private static final String SCOPE_HINT = "-Dofbiz.hotreload.components=compA,compB (or "
+            + "-Photreload.components=compA,compB with the ofbizDev Gradle task) to fit under "
+            + "the OS watch limit.";
+
     private String name;
     private WatchService watchService;
     private Thread watchThread;
@@ -393,9 +399,7 @@ public class DevReloadContainer implements Container {
             Debug.logWarning("Hot-reload: " + watchDirsFailed + " of " + watchDirsAttempted + " directory watch "
                     + "registrations hit file-descriptor/watch exhaustion (see warnings above for which ones) "
                     + "and are NOT being watched — changes there will not hot-reload until you restart. Scope "
-                    + "hot-reload to just the components you're working on with "
-                    + "-Dofbiz.hotreload.components=compA,compB (or -Photreload.components=compA,compB with "
-                    + "the ofbizDev Gradle task) to fit under the OS watch limit.", MODULE);
+                    + "hot-reload to just the components you're working on with " + SCOPE_HINT, MODULE);
         }
         watchThread = new Thread(this::watchLoop, "ofbiz-hot-reload-watcher");
         watchThread.setDaemon(true);
@@ -420,16 +424,8 @@ public class DevReloadContainer implements Container {
                     continue; // skip non-filesystem resources (classpath jars, etc.)
                 }
                 Path dir = Paths.get(new URI(url.toString())).getParent();
-                if (dir != null && Files.isDirectory(dir) && servicedefDirs.add(dir)) {
-                    watchDirsAttempted++;
-                    try {
-                        dir.register(watchService,
-                                StandardWatchEventKinds.ENTRY_CREATE,
-                                StandardWatchEventKinds.ENTRY_MODIFY);
-                        Debug.logInfo("Hot-reload: watching servicedef directory " + dir, MODULE);
-                    } catch (IOException e) {
-                        warnUnwatched(dir, e);
-                    }
+                if (dir != null && Files.isDirectory(dir) && servicedefDirs.add(dir) && registerWatch(dir)) {
+                    Debug.logInfo("Hot-reload: watching servicedef directory " + dir, MODULE);
                 }
             } catch (GenericConfigException | URISyntaxException e) {
                 Debug.logWarning("Hot-reload: could not register servicedef dir for "
@@ -844,19 +840,7 @@ public class DevReloadContainer implements Container {
         Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
-                watchDirsAttempted++;
-                try {
-                    dir.register(watchService,
-                            StandardWatchEventKinds.ENTRY_CREATE,
-                            StandardWatchEventKinds.ENTRY_MODIFY);
-                } catch (IOException e) {
-                    warnUnwatched(dir, e);
-                } catch (Throwable t) {
-                    // register() itself should only throw IOException, but nothing here is
-                    // worth crashing the whole startup over.
-                    Debug.logError(t, "Hot-reload: unexpected error registering watch for " + dir
-                            + " -- this directory will not be watched.", MODULE);
-                }
+                registerWatch(dir);
                 return FileVisitResult.CONTINUE;
             }
 
@@ -871,6 +855,31 @@ public class DevReloadContainer implements Container {
     }
 
     /**
+     * Registers {@code dir} with the WatchService for create/modify events, incrementing
+     * {@link #watchDirsAttempted} and calling {@link #warnUnwatched} on failure instead of
+     * letting it propagate. Shared by {@link #registerServicedefDirs} and
+     * {@link #walkAndRegister} so both directory-registration paths get the same specific
+     * failure handling instead of each hand-rolling its own copy.
+     *
+     * @return {@code true} if the registration succeeded.
+     */
+    private boolean registerWatch(Path dir) {
+        watchDirsAttempted++;
+        try {
+            dir.register(watchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY);
+            return true;
+        } catch (IOException e) {
+            warnUnwatched(dir, e);
+        } catch (Throwable t) {
+            // register() itself should only throw IOException, but nothing here is worth
+            // crashing the whole startup over.
+            Debug.logError(t, "Hot-reload: unexpected error registering watch for " + dir
+                    + " -- this directory will not be watched.", MODULE);
+        }
+        return false;
+    }
+
+    /**
      * Records that {@code dir} could not get a WatchService registration (most commonly
      * the OS's per-process watch ceiling, e.g. macOS's kqueue-per-directory cost) and
      * logs why. The directory is simply left unwatched: changes there require a restart
@@ -882,8 +891,7 @@ public class DevReloadContainer implements Container {
         watchDirsFailed++;
         Debug.logWarning("Hot-reload: could not watch " + dir + " (" + cause.getMessage() + ") -- changes "
                 + "there will not be picked up until OFBiz is restarted. Narrow the watched set with "
-                + "-Dofbiz.hotreload.components=compA,compB (or -Photreload.components=compA,compB with the "
-                + "ofbizDev Gradle task) to fit under the OS watch limit.", MODULE);
+                + SCOPE_HINT, MODULE);
     }
 
     /**
