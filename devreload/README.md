@@ -102,12 +102,14 @@ No restart, no re-login, no second terminal.
 
 ## 3. How it works (technical overview)
 
-Two small classes do all the work:
+Four small classes do all the work:
 
 | Class | Role |
 |---|---|
 | `DevReloadContainer` | Watches source/config directories, compiles changed Java in-process, and triggers reload |
 | `HotSwapAgent` | A tiny self-attaching Java agent that gives `DevReloadContainer` access to `Instrumentation.redefineClasses` — the same mechanism an IDE debugger uses for HotSwap |
+| `Debouncer<T>` | Coalesces rapid-fire change notifications (a burst of file-system events, or one compile producing several `.class` files) into a single batched action; shared by all three watch paths below |
+| `RecordingFileManager` | Wraps the in-process compiler's file manager to record exactly which `.class` files it wrote, so the reload step hot-swaps precisely what was compiled instead of guessing from the source file's name |
 
 At startup, `DevReloadContainer` self-attaches `HotSwapAgent` to the running
 JVM (via the Attach API — no `-javaagent` flag needed). This grants access to
@@ -210,7 +212,7 @@ Everything `devreload` reads or writes, in one place.
 
 | Repo | Contains | Why |
 |---|---|---|
-| `plugins/devreload` (a separate repo, dropped into a local checkout) | `DevReloadContainer.java`, `HotSwapAgent.java`, `ofbiz-component.xml`, `build.gradle` (the `ofbizDev` task), `README.md` — everything | OFBiz plugins are conventionally distributed as separate repos; `ofbiz-framework`'s `.gitignore` excludes `/plugins/` for exactly this reason |
+| `plugins/devreload` (a separate repo, dropped into a local checkout) | `DevReloadContainer.java`, `HotSwapAgent.java`, `Debouncer.java`, `RecordingFileManager.java`, `ofbiz-component.xml`, `build.gradle` (the `ofbizDev` task), `README.md` — everything | OFBiz plugins are conventionally distributed as separate repos; `ofbiz-framework`'s `.gitignore` excludes `/plugins/` for exactly this reason |
 | `ofbiz-framework` | Nothing — no files, no diffs | The current design redefines already-loaded `Class` objects in place, so no framework code ever needs to ask "is a fresher class available." (An earlier prototype *did* need a small reflective bridge into `framework/base` — see the historical entries in the bug-fix table below for why that approach was replaced.) |
 
 To use it in a checkout: `git clone <devreload-repo-url> plugins/devreload`,
