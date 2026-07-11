@@ -25,6 +25,7 @@ import java.lang.management.ManagementFactory;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.ClosedWatchServiceException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -38,17 +39,18 @@ import java.nio.file.WatchService;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executors;
-import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import javax.tools.Diagnostic;
+import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
@@ -146,15 +148,24 @@ public class DevReloadContainer implements Container {
     private static final String MODULE = DevReloadContainer.class.getName();
     private static final String SERVICE_MODEL_CACHE_NAME = "service.ModelServiceMapByModel";
 
+    // Shared by start()'s aggregated warning and warnUnwatched()'s per-directory warning,
+    // so the two can't silently drift apart if the property/flag names ever change.
+    private static final String SCOPE_HINT = "-Dofbiz.hotreload.components=compA,compB (or "
+            + "-Photreload.components=compA,compB with the ofbizDev Gradle task) to fit under "
+            + "the OS watch limit.";
+
     private String name;
     private WatchService watchService;
     private Thread watchThread;
     private ScheduledExecutorService debounceExecutor;
     private Instrumentation instrumentation;
 
-    private final Debouncer<String> classReloadDebouncer = new Debouncer<>(this::applyReload);
-    private final Debouncer<Path> xmlReloadDebouncer = new Debouncer<>(this::applyServiceXmlReload);
-    private final Debouncer<Path> compileDebouncer = new Debouncer<>(this::applyCompile);
+    // The executor is supplied lazily (a Supplier, not a direct reference) because these
+    // fields are initialized before startDebounceExecutor() creates debounceExecutor --
+    // see Debouncer's own javadoc.
+    private final Debouncer<String> classReloadDebouncer = new Debouncer<>(() -> debounceExecutor, this::applyReload);
+    private final Debouncer<Path> xmlReloadDebouncer = new Debouncer<>(() -> debounceExecutor, this::applyServiceXmlReload);
+    private final Debouncer<Path> compileDebouncer = new Debouncer<>(() -> debounceExecutor, this::applyCompile);
 
     // Counts across registerServicedefDirs()/registerSourceDirs()/registerAll(), so
     // start() can emit one aggregated warning instead of leaving individual failures
@@ -190,6 +201,11 @@ public class DevReloadContainer implements Container {
      * per-process ceiling on a large checkout.
      */
     private Set<String> allowedComponents;
+
+    /** {@code true} when {@code componentName} should be watched: no scoping set, or it's in the scoped set. */
+    private boolean isAllowedComponent(String componentName) {
+        return allowedComponents == null || allowedComponents.contains(componentName);
+    }
 
     /**
      * Whether {@link #classesDir} ({@code build/classes/java/main}) itself is watched, from
@@ -327,10 +343,7 @@ public class DevReloadContainer implements Container {
             try {
                 registerAll(classesDir);
             } catch (IOException e) {
-                // registerAll() already logs a warning and skips individual directories
-                // that fail to register; reaching here means something more fundamental
-                // broke walking the tree at all (e.g. can't even list classesDir).
-                Debug.logWarning("Hot-reload: could not fully walk " + classesDir + ": " + e.getMessage(), MODULE);
+                logWalkFailure(classesDir, e);
             }
             Debug.logInfo("Hot-reload: watching compiled-output directory " + classesDir.toAbsolutePath()
                     + " for externally-produced .class files (set via -Dofbiz.hotreload.watchBuildOutput=true).",
@@ -383,9 +396,7 @@ public class DevReloadContainer implements Container {
             Debug.logWarning("Hot-reload: " + watchDirsFailed + " of " + watchDirsAttempted + " directory watch "
                     + "registrations hit file-descriptor/watch exhaustion (see warnings above for which ones) "
                     + "and are NOT being watched — changes there will not hot-reload until you restart. Scope "
-                    + "hot-reload to just the components you're working on with "
-                    + "-Dofbiz.hotreload.components=compA,compB (or -Photreload.components=compA,compB with "
-                    + "the ofbizDev Gradle task) to fit under the OS watch limit.", MODULE);
+                    + "hot-reload to just the components you're working on with " + SCOPE_HINT, MODULE);
         }
         watchThread = new Thread(this::watchLoop, "ofbiz-hot-reload-watcher");
         watchThread.setDaemon(true);
@@ -401,7 +412,7 @@ public class DevReloadContainer implements Container {
      */
     private void registerServicedefDirs() {
         for (ComponentConfig.ServiceResourceInfo sri : ComponentConfig.getAllServiceResourceInfos("model")) {
-            if (allowedComponents != null && !allowedComponents.contains(sri.getComponentConfig().getComponentName())) {
+            if (!isAllowedComponent(sri.getComponentConfig().getComponentName())) {
                 continue;
             }
             try {
@@ -410,16 +421,8 @@ public class DevReloadContainer implements Container {
                     continue; // skip non-filesystem resources (classpath jars, etc.)
                 }
                 Path dir = Paths.get(new URI(url.toString())).getParent();
-                if (dir != null && Files.isDirectory(dir) && servicedefDirs.add(dir)) {
-                    watchDirsAttempted++;
-                    try {
-                        dir.register(watchService,
-                                StandardWatchEventKinds.ENTRY_CREATE,
-                                StandardWatchEventKinds.ENTRY_MODIFY);
-                        Debug.logInfo("Hot-reload: watching servicedef directory " + dir, MODULE);
-                    } catch (IOException e) {
-                        warnUnwatched(dir, e);
-                    }
+                if (dir != null && Files.isDirectory(dir) && servicedefDirs.add(dir) && registerWatch(dir)) {
+                    Debug.logInfo("Hot-reload: watching servicedef directory " + dir, MODULE);
                 }
             } catch (GenericConfigException | URISyntaxException e) {
                 Debug.logWarning("Hot-reload: could not register servicedef dir for "
@@ -450,7 +453,7 @@ public class DevReloadContainer implements Container {
             if (cc.rootLocation() == null) {
                 continue;
             }
-            if (allowedComponents != null && !allowedComponents.contains(cc.getComponentName())) {
+            if (!isAllowedComponent(cc.getComponentName())) {
                 continue;
             }
             Path srcDir = cc.rootLocation().resolve("src/main/java");
@@ -459,10 +462,7 @@ public class DevReloadContainer implements Container {
                     registerAll(srcDir);
                     Debug.logInfo("Hot-reload: watching source directory " + srcDir, MODULE);
                 } catch (IOException e) {
-                    // registerAll() already logs a warning and skips individual directories
-                    // that fail to register; reaching here means something more fundamental
-                    // broke walking the tree at all (e.g. can't list srcDir).
-                    Debug.logWarning("Hot-reload: could not walk source dir " + srcDir + ": " + e.getMessage(), MODULE);
+                    logWalkFailure(srcDir, e);
                 }
             }
         }
@@ -520,26 +520,23 @@ public class DevReloadContainer implements Container {
                 Path changed = dir.resolve(((WatchEvent<Path>) event).context());
 
                 if (kind == StandardWatchEventKinds.ENTRY_CREATE && Files.isDirectory(changed)) {
-                    // New package directory created during compilation — register it.
+                    // New package directory (or a whole new subtree -- e.g. a `git checkout`
+                    // that adds a package, an IDE "extract to new package" refactor, or
+                    // unzipping a folder) -- register it AND dispatch any files already inside
+                    // it. The OS/JDK WatchService does not retroactively report CREATE events
+                    // for files that already existed before a directory was registered, so
+                    // without this seeding step, files that land here in the same operation
+                    // that created the directory would silently never compile until each one
+                    // is individually re-saved.
                     try {
-                        registerAll(changed);
+                        registerAllAndSeed(changed);
                     } catch (IOException e) {
                         Debug.logError(e, "DevReloadContainer: failed to register new directory: " + changed, MODULE);
                     }
-                } else if ((kind == StandardWatchEventKinds.ENTRY_CREATE || kind == StandardWatchEventKinds.ENTRY_MODIFY)
-                        && changed.toString().endsWith(".class")) {
-                    // Only react to written/updated class files. Ignore ENTRY_DELETE so
-                    // that removing a source file (and its .class output) does not cause
-                    // a redefinition attempt against a now-missing file.
-                    reloadClassFile(classesDir, changed);
-                } else if ((kind == StandardWatchEventKinds.ENTRY_CREATE || kind == StandardWatchEventKinds.ENTRY_MODIFY)
-                        && changed.toString().endsWith(".xml")
-                        && servicedefDirs.stream().anyMatch(dir::startsWith)) {
-                    xmlReloadDebouncer.add(changed);
-                } else if ((kind == StandardWatchEventKinds.ENTRY_CREATE || kind == StandardWatchEventKinds.ENTRY_MODIFY)
-                        && changed.toString().endsWith(".java")
-                        && sourceRootDirs.stream().anyMatch(dir::startsWith)) {
-                    compileDebouncer.add(changed);
+                } else if (kind == StandardWatchEventKinds.ENTRY_CREATE || kind == StandardWatchEventKinds.ENTRY_MODIFY) {
+                    // Ignore ENTRY_DELETE so that removing a source file (and its .class
+                    // output) does not cause a redefinition attempt against a now-missing file.
+                    dispatchChangedFile(dir, changed);
                 }
             }
             if (!key.reset()) {
@@ -549,51 +546,28 @@ public class DevReloadContainer implements Container {
         }
     }
 
+    /**
+     * Routes a single created/modified regular file through the correct reload pipeline --
+     * a {@code .class} file under {@link #classesDir}, a {@code .xml} file under a
+     * registered servicedef directory, or a {@code .java} file under a registered source
+     * root. Shared between {@link #watchLoop}'s live WatchService events and
+     * {@link #registerAllAndSeed}'s seeding of files that already existed when a new
+     * directory was first discovered.
+     */
+    private void dispatchChangedFile(Path dir, Path changed) {
+        String name = changed.toString();
+        if (name.endsWith(".class")) {
+            reloadClassFile(classesDir, changed);
+        } else if (name.endsWith(".xml") && servicedefDirs.stream().anyMatch(dir::startsWith)) {
+            xmlReloadDebouncer.add(changed);
+        } else if (name.endsWith(".java") && sourceRootDirs.stream().anyMatch(dir::startsWith)) {
+            compileDebouncer.add(changed);
+        }
+    }
+
     // -------------------------------------------------------------------------
     // Debounced batching
     // -------------------------------------------------------------------------
-
-    /**
-     * Coalesces rapid-fire change notifications into one action, so a single compile run
-     * that touches many files (e.g. one with inner/anonymous classes, or a Gradle build
-     * writing several {@code .class} files at once) is handled as a single batch instead
-     * of one action per file. Shared by all three change pipelines (class reload,
-     * {@code services.xml} reload, Java compile) instead of each hand-rolling its own
-     * pending-set/cancel/reschedule bookkeeping.
-     */
-    private final class Debouncer<T> {
-        private final Set<T> pending = new HashSet<>();
-        private final Consumer<Set<T>> action;
-        private ScheduledFuture<?> scheduled;
-
-        Debouncer(Consumer<Set<T>> action) {
-            this.action = action;
-        }
-
-        synchronized void add(T item) {
-            pending.add(item);
-            if (scheduled != null) {
-                scheduled.cancel(false);
-            }
-            try {
-                // Wait 300 ms after the last change so a burst of related changes (e.g. a
-                // single Gradle compile run writing multiple .class files) is handled as
-                // one batch instead of one action per file.
-                scheduled = debounceExecutor.schedule(this::fire, 300, TimeUnit.MILLISECONDS);
-            } catch (RejectedExecutionException e) {
-                // Container is shutting down; pending changes will not be applied.
-            }
-        }
-
-        private synchronized void fire() {
-            if (pending.isEmpty()) {
-                return;
-            }
-            Set<T> batch = new HashSet<>(pending);
-            pending.clear();
-            action.accept(batch);
-        }
-    }
 
     /** Resolves {@code changed} to a class name relative to {@code baseDir} and, if valid, queues it for reload. */
     private void reloadClassFile(Path baseDir, Path changed) {
@@ -612,6 +586,8 @@ public class DevReloadContainer implements Container {
             return;
         }
 
+        Map<String, Class<?>> loadedByName = indexLoadedClasses(batch);
+
         List<ClassDefinition> defs = new ArrayList<>();
         for (String className : batch) {
             Path relative = Paths.get(className.replace('.', '/') + ".class");
@@ -624,15 +600,15 @@ public class DevReloadContainer implements Container {
                         + hotReloadOutputDir.toAbsolutePath() + " or " + classesDir.toAbsolutePath(), MODULE);
                 continue;
             }
+            Class<?> loaded = loadedByName.get(className);
+            if (loaded == null) {
+                // Never loaded yet in this JVM — nothing to redefine. It will simply
+                // load fresh, with the new bytecode, the first time something
+                // references it, from whichever directory resolveClassFile() would
+                // pick (overlay first on the classpath too, see build.gradle).
+                continue;
+            }
             try {
-                Class<?> loaded = findLoadedClass(className);
-                if (loaded == null) {
-                    // Never loaded yet in this JVM — nothing to redefine. It will simply
-                    // load fresh, with the new bytecode, the first time something
-                    // references it, from whichever directory resolveClassFile() would
-                    // pick (overlay first on the classpath too, see build.gradle).
-                    continue;
-                }
                 defs.add(new ClassDefinition(loaded, Files.readAllBytes(classFile)));
             } catch (IOException e) {
                 Debug.logError(e, "Hot-reload: failed to read class file for " + className, MODULE);
@@ -644,6 +620,36 @@ public class DevReloadContainer implements Container {
             return;
         }
 
+        redefineWithPerClassFallback(defs);
+    }
+
+    /**
+     * Builds a {@code className -> Class} map covering just the classes in {@code batch},
+     * scanning {@link Instrumentation#getAllLoadedClasses} once instead of once per class
+     * name — that array holds every class loaded in the JVM (routinely tens of thousands
+     * in a running OFBiz instance), so re-scanning it per class name in a batch made every
+     * save pay for an O(batchSize * totalLoadedClasses) walk.
+     */
+    private Map<String, Class<?>> indexLoadedClasses(Set<String> batch) {
+        Map<String, Class<?>> byName = new HashMap<>();
+        for (Class<?> c : instrumentation.getAllLoadedClasses()) {
+            if (batch.contains(c.getName())) {
+                byName.put(c.getName(), c);
+            }
+        }
+        return byName;
+    }
+
+    /**
+     * Redefines every class in {@code defs} in one {@link Instrumentation#redefineClasses}
+     * call when possible — the common, fast path. If the JVM rejects the whole batch
+     * because one class contains a structural change it can't apply
+     * ({@link UnsupportedOperationException}), falls back to redefining each class
+     * individually instead: otherwise, an unrelated valid method-body edit that happened
+     * to land in the same debounced batch as an unsupported structural change would
+     * silently fail to apply right along with it.
+     */
+    private void redefineWithPerClassFallback(List<ClassDefinition> defs) {
         try {
             instrumentation.redefineClasses(defs.toArray(new ClassDefinition[0]));
             // Clear service definition cache so newly added service methods are discovered.
@@ -651,20 +657,50 @@ public class DevReloadContainer implements Container {
             // has not changed, only .class files have, and clearing those caches triggers
             // Groovy re-compilation of screen expressions which can fail unexpectedly.
             UtilCache.clearCache(SERVICE_MODEL_CACHE_NAME);
-            Debug.logInfo("Hot-reload complete for: " + batch, MODULE);
+            Debug.logInfo("Hot-reload complete for: " + classNames(defs), MODULE);
+            return;
         } catch (UnsupportedOperationException e) {
+            Debug.logWarning("Hot-reload: batch redefinition rejected (" + e.getMessage()
+                    + ") -- retrying each class individually so other, valid changes in the "
+                    + "same save still apply.", MODULE);
+        } catch (Throwable e) {
+            Debug.logError(e, "Hot-reload failed for " + classNames(defs), MODULE);
+            return;
+        }
+
+        List<String> applied = new ArrayList<>();
+        List<String> rejected = new ArrayList<>();
+        for (ClassDefinition def : defs) {
+            String className = def.getDefinitionClass().getName();
+            try {
+                instrumentation.redefineClasses(def);
+                applied.add(className);
+            } catch (UnsupportedOperationException e) {
+                rejected.add(className);
+            } catch (Throwable e) {
+                Debug.logError(e, "Hot-reload failed for " + className, MODULE);
+                rejected.add(className);
+            }
+        }
+        if (!applied.isEmpty()) {
+            UtilCache.clearCache(SERVICE_MODEL_CACHE_NAME);
+            Debug.logInfo("Hot-reload complete for: " + applied, MODULE);
+        }
+        if (!rejected.isEmpty()) {
             // ./gradlew ofbizDev only ever runs on a DCEVM-patched JVM (see build.gradle),
             // which already lifts the plain-JVM restriction to method bodies only, so
             // add/remove method-or-field and signature changes normally succeed here. This
             // still fires for the narrower set of changes DCEVM itself can't apply either
             // (e.g. a changed class hierarchy) -- the same remaining limit an IDE debugger's
             // HotSwap has even on a capable JVM.
-            Debug.logWarning("Hot-reload: " + batch + " contains a structural change (added/removed "
+            Debug.logWarning("Hot-reload: " + rejected + " contain a structural change (added/removed "
                     + "method or field, changed signature, changed hierarchy) that the JVM cannot "
-                    + "hot-swap. Restart OFBiz to pick it up. (" + e.getMessage() + ")", MODULE);
-        } catch (Throwable e) {
-            Debug.logError(e, "Hot-reload failed for " + batch, MODULE);
+                    + "hot-swap. Restart OFBiz to pick it up.", MODULE);
         }
+    }
+
+    private static List<String> classNames(List<ClassDefinition> defs) {
+        return defs.stream().map(def -> def.getDefinitionClass().getName()).collect(Collectors.toList());
     }
 
     /**
@@ -678,16 +714,6 @@ public class DevReloadContainer implements Container {
     private static boolean enhancedRedefinitionRequested() {
         return ManagementFactory.getRuntimeMXBean().getInputArguments().stream()
                 .anyMatch(arg -> arg.contains("AllowEnhancedClassRedefinition"));
-    }
-
-    /** Searches classes already loaded in the JVM for one matching {@code className}. */
-    private Class<?> findLoadedClass(String className) {
-        for (Class<?> c : instrumentation.getAllLoadedClasses()) {
-            if (c.getName().equals(className)) {
-                return c;
-            }
-        }
-        return null;
     }
 
     private void applyServiceXmlReload(Set<Path> batch) {
@@ -707,48 +733,36 @@ public class DevReloadContainer implements Container {
             if (compiler == null) {
                 return;
             }
-            try (StandardJavaFileManager fm = compiler.getStandardFileManager(null, null, null)) {
-                fm.setLocation(StandardLocation.CLASS_OUTPUT,
+            DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
+            // Explicit UTF-8: the project's real compileJava forces options.encoding = 'UTF-8'
+            // (root build.gradle). Passing null here would fall back to Charset.defaultCharset(),
+            // which isn't guaranteed to be UTF-8 on every JVM/OS (notably pre-JDK18, or any JVM
+            // launched with an overridden -Dfile.encoding) and would silently decode source files
+            // containing non-ASCII characters differently than Gradle's own compile does.
+            try (StandardJavaFileManager standardFm =
+                    compiler.getStandardFileManager(diagnostics, null, StandardCharsets.UTF_8)) {
+                standardFm.setLocation(StandardLocation.CLASS_OUTPUT,
                         List.of(hotReloadOutputDir.toAbsolutePath().toFile()));
+                RecordingFileManager fm = new RecordingFileManager(standardFm);
                 // Reuse the running JVM's classpath — it already contains all OFBiz jars.
                 List<String> options = Arrays.asList("-cp", System.getProperty("java.class.path"), "-proc:none");
-                var units = fm.getJavaFileObjectsFromPaths(batch);
-                boolean ok = compiler.getTask(null, fm, null, options, null, units).call();
+                var units = standardFm.getJavaFileObjectsFromPaths(batch);
+                boolean ok = compiler.getTask(null, fm, diagnostics, options, null, units).call();
                 if (ok) {
                     Debug.logInfo("Hot-reload: compilation successful", MODULE);
 
-                    // Collect all .class files produced by this compilation round.
-                    // Each source file can produce multiple .class files when it contains
-                    // inner or anonymous classes (e.g. Foo$Bar.class, Foo$1.class).
-                    // All of them must be redefined too — otherwise the inner class still
-                    // resolves through its stale, previously-loaded bytecode.
-                    for (Path src : batch) {
-                        Path cf = sourceToClassFile(src); // relative path for the outer class
-                        if (cf == null) {
-                            continue;
-                        }
-                        String outerName = cf.getFileName().toString().replace(".class", "");
-                        Path absOutputDir = cf.toAbsolutePath().getParent();
-                        try (var dirStream = Files.list(absOutputDir)) {
-                            dirStream.filter(absFile -> {
-                                String fn = absFile.getFileName().toString();
-                                // Match Foo.class and Foo$Inner.class / Foo$1.class
-                                return fn.endsWith(".class")
-                                        && (fn.equals(outerName + ".class")
-                                                || fn.startsWith(outerName + "$"));
-                            }).forEach(absFile -> {
-                                // Convert absolute output path back to a relative path that
-                                // is rooted at CWD (same type as hotReloadOutputDir) so that
-                                // toClassName(hotReloadOutputDir, relPath) — which calls
-                                // relativize — does not throw IllegalArgumentException.
-                                Path rel = hotReloadOutputDir.resolve(
-                                        hotReloadOutputDir.toAbsolutePath().relativize(absFile));
-                                reloadClassFile(hotReloadOutputDir, rel);
-                            });
-                        } catch (IOException e) {
-                            // Output dir unreadable; fall back to the outer class only.
-                            reloadClassFile(hotReloadOutputDir, cf);
-                        }
+                    // Reload every .class file the compiler actually wrote for this batch, per
+                    // RecordingFileManager -- covers inner/anonymous classes (Foo$1.class) and,
+                    // unlike a name-based guess derived from the source file's own base name,
+                    // also a secondary top-level class in the same source file, or a lone
+                    // non-public top-level class named differently from its file (both legal
+                    // Java). A name-based guess would compile such a class to disk correctly
+                    // but never queue it for redefinition, leaving it silently running stale
+                    // bytecode.
+                    for (Path absFile : fm.outputFiles) {
+                        Path rel = hotReloadOutputDir.resolve(
+                                hotReloadOutputDir.toAbsolutePath().relativize(absFile));
+                        reloadClassFile(hotReloadOutputDir, rel);
                     }
 
                     // Re-register class directories so external compilations (./gradlew classes
@@ -766,7 +780,8 @@ public class DevReloadContainer implements Container {
                         }
                     }
                 } else {
-                    Debug.logWarning("Hot-reload: compilation failed — fix the error and save again", MODULE);
+                    Debug.logWarning("Hot-reload: compilation failed — fix the error and save again\n"
+                            + formatErrors(diagnostics), MODULE);
                 }
             }
         } catch (Throwable e) {
@@ -774,23 +789,18 @@ public class DevReloadContainer implements Container {
         }
     }
 
-    /**
-     * Maps a {@code .java} source file to the corresponding {@code .class} output file
-     * under {@link #hotReloadOutputDir}. Returns {@code null} if the source file is not
-     * under any registered source root.
-     */
-    private Path sourceToClassFile(Path sourceFile) {
-        for (Path srcRoot : sourceRootDirs) {
-            if (sourceFile.startsWith(srcRoot)) {
-                Path relative = srcRoot.relativize(sourceFile);
-                String name = relative.toString();
-                if (name.endsWith(".java")) {
-                    String classRelative = name.substring(0, name.length() - ".java".length()) + ".class";
-                    return hotReloadOutputDir.resolve(classRelative);
-                }
+    /** Formats the error-level diagnostics from a failed compile, one per line, as {@code file:line: message}. */
+    private static String formatErrors(DiagnosticCollector<JavaFileObject> diagnostics) {
+        StringBuilder sb = new StringBuilder();
+        for (Diagnostic<? extends JavaFileObject> d : diagnostics.getDiagnostics()) {
+            if (d.getKind() != Diagnostic.Kind.ERROR) {
+                continue;
             }
+            String source = d.getSource() != null ? d.getSource().getName() : "?";
+            sb.append("  ").append(source).append(':').append(d.getLineNumber())
+                    .append(": ").append(d.getMessage(null)).append('\n');
         }
-        return null;
+        return sb.toString();
     }
 
     // -------------------------------------------------------------------------
@@ -804,25 +814,73 @@ public class DevReloadContainer implements Container {
      * so one overloaded directory never leaves the rest of the tree unwatched.
      */
     private void registerAll(Path start) throws IOException {
+        walkAndRegister(start, false);
+    }
+
+    /**
+     * Logs that {@link #registerAll} itself failed for {@code dir} -- something more
+     * fundamental broke walking the tree at all (e.g. can't even list {@code dir}), as
+     * opposed to an individual directory failing to register, which {@code registerAll()}
+     * already logs and skips on its own via {@link #warnUnwatched}.
+     */
+    private void logWalkFailure(Path dir, IOException e) {
+        Debug.logWarning("Hot-reload: could not fully walk " + dir + ": " + e.getMessage(), MODULE);
+    }
+
+    /**
+     * Like {@link #registerAll}, but also dispatches every regular file already present
+     * under {@code start} through {@link #dispatchChangedFile}, as if a CREATE event had
+     * fired for each. Used only when a brand-new directory materializes mid-session (see
+     * {@link #watchLoop}) -- deliberately not used for the bulk registration done at
+     * startup or the periodic re-registration in {@link #applyCompile}, where
+     * re-dispatching every already-known file on every call would be both wasteful and
+     * cause spurious repeat reloads.
+     */
+    private void registerAllAndSeed(Path start) throws IOException {
+        walkAndRegister(start, true);
+    }
+
+    private void walkAndRegister(Path start, boolean seedExistingFiles) throws IOException {
         Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
-                watchDirsAttempted++;
-                try {
-                    dir.register(watchService,
-                            StandardWatchEventKinds.ENTRY_CREATE,
-                            StandardWatchEventKinds.ENTRY_MODIFY);
-                } catch (IOException e) {
-                    warnUnwatched(dir, e);
-                } catch (Throwable t) {
-                    // register() itself should only throw IOException, but nothing here is
-                    // worth crashing the whole startup over.
-                    Debug.logError(t, "Hot-reload: unexpected error registering watch for " + dir
-                            + " -- this directory will not be watched.", MODULE);
+                registerWatch(dir);
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                if (seedExistingFiles) {
+                    dispatchChangedFile(file.getParent(), file);
                 }
                 return FileVisitResult.CONTINUE;
             }
         });
+    }
+
+    /**
+     * Registers {@code dir} with the WatchService for create/modify events, incrementing
+     * {@link #watchDirsAttempted} and calling {@link #warnUnwatched} on failure instead of
+     * letting it propagate. Shared by {@link #registerServicedefDirs} and
+     * {@link #walkAndRegister} so both directory-registration paths get the same specific
+     * failure handling instead of each hand-rolling its own copy.
+     *
+     * @return {@code true} if the registration succeeded.
+     */
+    private boolean registerWatch(Path dir) {
+        watchDirsAttempted++;
+        try {
+            dir.register(watchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY);
+            return true;
+        } catch (IOException e) {
+            warnUnwatched(dir, e);
+        } catch (Throwable t) {
+            // register() itself should only throw IOException, but nothing here is worth
+            // crashing the whole startup over.
+            Debug.logError(t, "Hot-reload: unexpected error registering watch for " + dir
+                    + " -- this directory will not be watched.", MODULE);
+        }
+        return false;
     }
 
     /**
@@ -837,8 +895,7 @@ public class DevReloadContainer implements Container {
         watchDirsFailed++;
         Debug.logWarning("Hot-reload: could not watch " + dir + " (" + cause.getMessage() + ") -- changes "
                 + "there will not be picked up until OFBiz is restarted. Narrow the watched set with "
-                + "-Dofbiz.hotreload.components=compA,compB (or -Photreload.components=compA,compB with the "
-                + "ofbizDev Gradle task) to fit under the OS watch limit.", MODULE);
+                + SCOPE_HINT, MODULE);
     }
 
     /**
