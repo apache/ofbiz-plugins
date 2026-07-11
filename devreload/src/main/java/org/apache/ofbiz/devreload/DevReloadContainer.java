@@ -45,18 +45,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executors;
-import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
-import javax.tools.FileObject;
-import javax.tools.ForwardingJavaFileManager;
 import javax.tools.JavaCompiler;
-import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
@@ -161,9 +154,12 @@ public class DevReloadContainer implements Container {
     private ScheduledExecutorService debounceExecutor;
     private Instrumentation instrumentation;
 
-    private final Debouncer<String> classReloadDebouncer = new Debouncer<>(this::applyReload);
-    private final Debouncer<Path> xmlReloadDebouncer = new Debouncer<>(this::applyServiceXmlReload);
-    private final Debouncer<Path> compileDebouncer = new Debouncer<>(this::applyCompile);
+    // The executor is supplied lazily (a Supplier, not a direct reference) because these
+    // fields are initialized before startDebounceExecutor() creates debounceExecutor --
+    // see Debouncer's own javadoc.
+    private final Debouncer<String> classReloadDebouncer = new Debouncer<>(() -> debounceExecutor, this::applyReload);
+    private final Debouncer<Path> xmlReloadDebouncer = new Debouncer<>(() -> debounceExecutor, this::applyServiceXmlReload);
+    private final Debouncer<Path> compileDebouncer = new Debouncer<>(() -> debounceExecutor, this::applyCompile);
 
     // Counts across registerServicedefDirs()/registerSourceDirs()/registerAll(), so
     // start() can emit one aggregated warning instead of leaving individual failures
@@ -199,6 +195,11 @@ public class DevReloadContainer implements Container {
      * per-process ceiling on a large checkout.
      */
     private Set<String> allowedComponents;
+
+    /** {@code true} when {@code componentName} should be watched: no scoping set, or it's in the scoped set. */
+    private boolean isAllowedComponent(String componentName) {
+        return allowedComponents == null || allowedComponents.contains(componentName);
+    }
 
     /**
      * Whether {@link #classesDir} ({@code build/classes/java/main}) itself is watched, from
@@ -410,7 +411,7 @@ public class DevReloadContainer implements Container {
      */
     private void registerServicedefDirs() {
         for (ComponentConfig.ServiceResourceInfo sri : ComponentConfig.getAllServiceResourceInfos("model")) {
-            if (allowedComponents != null && !allowedComponents.contains(sri.getComponentConfig().getComponentName())) {
+            if (!isAllowedComponent(sri.getComponentConfig().getComponentName())) {
                 continue;
             }
             try {
@@ -459,7 +460,7 @@ public class DevReloadContainer implements Container {
             if (cc.rootLocation() == null) {
                 continue;
             }
-            if (allowedComponents != null && !allowedComponents.contains(cc.getComponentName())) {
+            if (!isAllowedComponent(cc.getComponentName())) {
                 continue;
             }
             Path srcDir = cc.rootLocation().resolve("src/main/java");
@@ -577,48 +578,6 @@ public class DevReloadContainer implements Container {
     // -------------------------------------------------------------------------
     // Debounced batching
     // -------------------------------------------------------------------------
-
-    /**
-     * Coalesces rapid-fire change notifications into one action, so a single compile run
-     * that touches many files (e.g. one with inner/anonymous classes, or a Gradle build
-     * writing several {@code .class} files at once) is handled as a single batch instead
-     * of one action per file. Shared by all three change pipelines (class reload,
-     * {@code services.xml} reload, Java compile) instead of each hand-rolling its own
-     * pending-set/cancel/reschedule bookkeeping.
-     */
-    private final class Debouncer<T> {
-        private final Set<T> pending = new HashSet<>();
-        private final Consumer<Set<T>> action;
-        private ScheduledFuture<?> scheduled;
-
-        Debouncer(Consumer<Set<T>> action) {
-            this.action = action;
-        }
-
-        synchronized void add(T item) {
-            pending.add(item);
-            if (scheduled != null) {
-                scheduled.cancel(false);
-            }
-            try {
-                // Wait 300 ms after the last change so a burst of related changes (e.g. a
-                // single Gradle compile run writing multiple .class files) is handled as
-                // one batch instead of one action per file.
-                scheduled = debounceExecutor.schedule(this::fire, 300, TimeUnit.MILLISECONDS);
-            } catch (RejectedExecutionException e) {
-                // Container is shutting down; pending changes will not be applied.
-            }
-        }
-
-        private synchronized void fire() {
-            if (pending.isEmpty()) {
-                return;
-            }
-            Set<T> batch = new HashSet<>(pending);
-            pending.clear();
-            action.accept(batch);
-        }
-    }
 
     /** Resolves {@code changed} to a class name relative to {@code baseDir} and, if valid, queues it for reload. */
     private void reloadClassFile(Path baseDir, Path changed) {
@@ -751,11 +710,7 @@ public class DevReloadContainer implements Container {
     }
 
     private static List<String> classNames(List<ClassDefinition> defs) {
-        List<String> names = new ArrayList<>();
-        for (ClassDefinition def : defs) {
-            names.add(def.getDefinitionClass().getName());
-        }
-        return names;
+        return defs.stream().map(def -> def.getDefinitionClass().getName()).collect(Collectors.toList());
     }
 
     /**
@@ -841,30 +796,6 @@ public class DevReloadContainer implements Container {
             }
         } catch (Throwable e) {
             Debug.logError(e, "Hot-reload: compilation error", MODULE);
-        }
-    }
-
-    /**
-     * Wraps the compiler's standard file manager to record the absolute path of every
-     * {@code .class} file it actually writes, so the post-compile reload step in
-     * {@link #applyCompile} can hot-swap exactly what the compiler produced instead of
-     * guessing from the source file's own base name -- a guess that misses a secondary
-     * top-level class declared in the same file, or a lone non-public top-level class
-     * named differently from its file.
-     */
-    private static final class RecordingFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {
-        private final List<Path> outputFiles = new ArrayList<>();
-
-        RecordingFileManager(StandardJavaFileManager fileManager) {
-            super(fileManager);
-        }
-
-        @Override
-        public JavaFileObject getJavaFileForOutput(JavaFileManager.Location location, String className,
-                JavaFileObject.Kind kind, FileObject sibling) throws IOException {
-            JavaFileObject file = super.getJavaFileForOutput(location, className, kind, sibling);
-            outputFiles.add(Paths.get(file.toUri()));
-            return file;
         }
     }
 
