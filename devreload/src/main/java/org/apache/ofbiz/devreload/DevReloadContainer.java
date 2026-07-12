@@ -32,6 +32,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
@@ -66,8 +67,9 @@ import org.apache.ofbiz.base.util.cache.UtilCache;
 
 /**
  * Development-only container that watches Java sources/classes, {@code services.xml}
- * files, and {@code entitydef} (entity/view-entity/entity-group) files, and applies
- * changes to a running OFBiz instance without a restart.
+ * files, {@code entitydef} (entity/view-entity/entity-group) files, and
+ * {@code config/} label/properties files, and applies changes to a running OFBiz
+ * instance without a restart.
  *
  * <h2>Activation</h2>
  * Add {@code -Dofbiz.hotreload=true -Djdk.attach.allowAttachSelf=true} to your JVM
@@ -142,6 +144,30 @@ import org.apache.ofbiz.base.util.cache.UtilCache;
  * caches. Optionally, with {@code -Dofbiz.hotreload.autoUpdateSchema=true}, it also
  * creates any missing table/column a changed entity needs, non-destructively.
  *
+ * <h2>How config (label/properties) changes are handled</h2>
+ * Every component's {@code config/} directory is also watched, scoped to files ending
+ * in {@code Labels.xml} (the real on-disk convention behind {@code *UiLabels.xml}/
+ * {@code *EntityLabels.xml}/etc.) or {@code .properties} -- a precise suffix match,
+ * since {@code config/} also holds unrelated, restart-only files this container must
+ * not touch ({@code entityengine.xml}, {@code serviceengine.xml}, {@code log4j2.xml},
+ * etc.). Unlike entity reload, no framework code holds a direct reference to a parsed
+ * label bundle or properties file -- {@code UtilProperties} re-resolves both from a
+ * {@code UtilCache} on every single call, exactly like the {@code services.xml} case.
+ * But clearing that cache alone would just force a re-read of a <em>stale</em> file:
+ * the root {@code build.gradle} makes every component's {@code config/} directory a
+ * Gradle resources source dir, so the actual classpath copy lives under
+ * {@code build/resources/main}, populated once by {@code processResources} -- not the
+ * live file being edited. So, mirroring how Java source is handled, the changed file is
+ * first copied into {@link #hotReloadOutputDir} (already ahead of
+ * {@code build/resources/main} on {@code ofbizDev}'s classpath), then
+ * {@code UtilCache.clearCachesThatStartWith("properties.")} is called -- see
+ * {@link #applyPropertiesReload} for the full rationale, confirmed live. Two static
+ * snapshots taken once at class-load time, {@code Debug}'s log-level cache (from
+ * {@code debug.properties}) and {@code HashCrypt.PBKDF2_ITERATIONS} (from
+ * {@code security.properties}), are not reachable this way and remain restart-only; see
+ * {@code plugins/supporting-docs/LABEL_PROPERTIES_HOTRELOAD_DESIGN.md} for the full
+ * rationale.
+ *
  * <h2>Directory watch limits</h2>
  * The OS may refuse to watch a directory once a process-wide ceiling is reached (most
  * commonly hit on macOS on a full checkout). This container does not try to work around
@@ -160,6 +186,11 @@ public class DevReloadContainer implements Container {
 
     private static final String MODULE = DevReloadContainer.class.getName();
     private static final String SERVICE_MODEL_CACHE_NAME = "service.ModelServiceMapByModel";
+
+    // Both UtilProperties.UtilResourceBundle.BUNDLE_CACHE ("properties.UtilPropertiesBundleCache")
+    // and UtilProperties.URL_CACHE ("properties.UtilPropertiesUrlCache") share this prefix, so one
+    // clearCachesThatStartWith call drops both -- see applyPropertiesReload().
+    private static final String PROPERTIES_CACHE_PREFIX = "properties.";
 
     // Shared by start()'s aggregated warning and warnUnwatched()'s per-directory warning,
     // so the two can't silently drift apart if the property/flag names ever change.
@@ -180,6 +211,7 @@ public class DevReloadContainer implements Container {
     private final Debouncer<Path> xmlReloadDebouncer = new Debouncer<>(() -> debounceExecutor, this::applyServiceXmlReload);
     private final Debouncer<Path> compileDebouncer = new Debouncer<>(() -> debounceExecutor, this::applyCompile);
     private final Debouncer<Path> entitydefReloadDebouncer = new Debouncer<>(() -> debounceExecutor, this::applyEntitydefReload);
+    private final Debouncer<Path> propertiesReloadDebouncer = new Debouncer<>(() -> debounceExecutor, this::applyPropertiesReload);
 
     // Counts across registerServicedefDirs()/registerSourceDirs()/registerAll(), so
     // start() can emit one aggregated warning instead of leaving individual failures
@@ -221,6 +253,18 @@ public class DevReloadContainer implements Container {
      * cheap and a no-op in effect when nothing of that kind actually changed.
      */
     private final Set<Path> entitydefDirs = new HashSet<>();
+
+    /**
+     * Every component's {@code config/} directory -- the home of {@code *Labels.xml}
+     * (label/message bundles) and {@code *.properties} files. Unlike
+     * {@link #servicedefDirs}/{@link #entitydefDirs}, there is no {@code ofbiz-component.xml}
+     * manifest element naming these resources at all (only a generic
+     * {@code <classpath type="dir" location="config"/>}), so this is populated the same
+     * convention-based way {@link #sourceRootDirs} is for {@code src/main/java}: every
+     * allowed component's {@code rootLocation().resolve("config")}, if it exists. See
+     * {@code plugins/supporting-docs/LABEL_PROPERTIES_HOTRELOAD_DESIGN.md} §5.
+     */
+    private final Set<Path> configDirs = new HashSet<>();
 
     /**
      * Component names to watch, from {@code -Dofbiz.hotreload.components}; {@code null}
@@ -440,6 +484,7 @@ public class DevReloadContainer implements Container {
         }
         registerServicedefDirs();
         registerEntitydefDirs();
+        registerConfigDirs();
         registerSourceDirs();
         if (watchDirsFailed > 0) {
             Debug.logWarning("Hot-reload: " + watchDirsFailed + " of " + watchDirsAttempted + " directory watch "
@@ -450,8 +495,8 @@ public class DevReloadContainer implements Container {
         watchThread = new Thread(this::watchLoop, "ofbiz-hot-reload-watcher");
         watchThread.setDaemon(true);
         watchThread.start();
-        Debug.logInfo("DevReloadContainer started. Edit any Java, services.xml, or entitydef file and changes go "
-                + "live without a restart.", MODULE);
+        Debug.logInfo("DevReloadContainer started. Edit any Java, services.xml, entitydef, or config "
+                + "*Labels.xml/*.properties file and changes go live without a restart.", MODULE);
         return true;
     }
 
@@ -496,7 +541,7 @@ public class DevReloadContainer implements Container {
      * {@code "data-security"}/etc. resources that also live under a component's
      * {@code entitydef/} directory -- those are seed/demo data, a different concern
      * from schema, and out of scope here (see the design notes at
-     * {@code ENTITY_HOTRELOAD_DESIGN.md}).
+     * {@code plugins/supporting-docs/hotreload-design-notes.md}).
      */
     private void registerEntitydefDirs() {
         registerEntitydefResourceDirs("model");
@@ -527,6 +572,31 @@ public class DevReloadContainer implements Container {
                 // directory unwatched.
                 Debug.logError(t, "Hot-reload: unexpected error registering entitydef dir for "
                         + eri.getLocation(), MODULE);
+            }
+        }
+    }
+
+    /**
+     * Registers every component's {@code config/} directory with the WatchService so that
+     * saving a {@code *Labels.xml} or {@code *.properties} file is detected. Called once
+     * from {@link #start()}, before the watch thread launches. There is no
+     * {@code ofbiz-component.xml} manifest element to enumerate these resources by (see
+     * {@link #configDirs}'s javadoc), so -- like {@link #registerSourceDirs()} -- this
+     * simply checks every allowed component's conventional {@code config} subdirectory
+     * directly, rather than introspecting {@code ComponentConfig}'s classpath entries.
+     * Registered non-recursively (single {@link #registerWatch}, not
+     * {@link #registerAll}), matching {@link #registerServicedefDirs()}/
+     * {@link #registerEntitydefDirs()}: every component's {@code config/} directory in
+     * this checkout is flat, with no label/properties files nested in subdirectories.
+     */
+    private void registerConfigDirs() {
+        for (ComponentConfig cc : ComponentConfig.getAllComponents()) {
+            if (cc.rootLocation() == null || !isAllowedComponent(cc.getComponentName())) {
+                continue;
+            }
+            Path dir = cc.rootLocation().resolve("config");
+            if (Files.isDirectory(dir) && configDirs.add(dir) && registerWatch(dir)) {
+                Debug.logInfo("Hot-reload: watching config directory " + dir, MODULE);
             }
         }
     }
@@ -644,9 +714,17 @@ public class DevReloadContainer implements Container {
      * Routes a single created/modified regular file through the correct reload pipeline --
      * a {@code .class} file under {@link #classesDir}, a {@code .xml} file under a
      * registered servicedef directory, a {@code .xml} file under a registered entitydef
+     * directory, a {@code *Labels.xml}/{@code .properties} file under a registered config
      * directory, or a {@code .java} file under a registered source root. Shared between
      * {@link #watchLoop}'s live WatchService events and {@link #registerAllAndSeed}'s
      * seeding of files that already existed when a new directory was first discovered.
+     *
+     * <p>The config-directory check deliberately matches the precise {@code Labels.xml}
+     * suffix (the real convention behind {@code *UiLabels.xml}/{@code *EntityLabels.xml})
+     * and {@code .properties}, not a generic {@code .xml} check the way the servicedef/
+     * entitydef branches use -- a component's {@code config/} directory also holds
+     * unrelated, restart-only files ({@code entityengine.xml}, {@code serviceengine.xml},
+     * {@code log4j2.xml}, etc.) that must not trigger this reload path.
      */
     private void dispatchChangedFile(Path dir, Path changed) {
         String name = changed.toString();
@@ -656,6 +734,9 @@ public class DevReloadContainer implements Container {
             xmlReloadDebouncer.add(changed);
         } else if (name.endsWith(".xml") && entitydefDirs.stream().anyMatch(dir::startsWith)) {
             entitydefReloadDebouncer.add(changed);
+        } else if ((name.endsWith("Labels.xml") || name.endsWith(".properties"))
+                && configDirs.stream().anyMatch(dir::startsWith)) {
+            propertiesReloadDebouncer.add(changed);
         } else if (name.endsWith(".java") && sourceRootDirs.stream().anyMatch(dir::startsWith)) {
             compileDebouncer.add(changed);
         }
@@ -857,6 +938,58 @@ public class DevReloadContainer implements Container {
             Debug.logInfo("Hot-reload: service model cache cleared; definitions will be re-read on next service call", MODULE);
         } catch (Throwable e) {
             Debug.logError(e, "Hot-reload: failed to clear service model cache", MODULE);
+        }
+    }
+
+    /**
+     * Reloads label/message bundles and properties files after a {@code config/*Labels.xml}
+     * or {@code config/*.properties} save. Unlike {@link #applyEntitydefReload}, no
+     * framework code holds a direct reference to a parsed bundle -- {@code UtilProperties}
+     * re-resolves both from a {@code UtilCache} on every call (the same shape as
+     * {@link #applyServiceXmlReload}'s service-model cache) -- so clearing
+     * {@code UtilCache.clearCachesThatStartWith("properties.")} would be sufficient on its
+     * own <em>if</em> the classpath resource it re-reads were the live source file. It
+     * isn't: the root {@code build.gradle} adds every component's {@code config/}
+     * directory as a Gradle <em>resources</em> source dir
+     * ({@code sourceSets.main.resources.srcDirs += getDirectoryInActiveComponentsIfExists
+     * ('config')}), so {@code processResources} copies it into {@code build/resources/main}
+     * once at build time -- that copy, not the live file under
+     * {@code <component>/config/}, is what a classloader's {@code getResource(...)} (and so
+     * {@code UtilURL.fromResource}/{@code UtilProperties}) actually finds on the running
+     * JVM's classpath. Clearing the cache alone would just force a re-read of that same
+     * stale copy. Confirmed live: an edited label value was not picked up until this copy
+     * step was added -- see {@code plugins/supporting-docs/LABEL_PROPERTIES_HOTRELOAD_DESIGN.md}
+     * §9 for the full incident.
+     *
+     * <p>The fix mirrors how Java source is already handled: copy the changed file into
+     * {@link #hotReloadOutputDir}, which {@code build.gradle}'s {@code ofbizDev} task
+     * already places ahead of {@code build/resources/main} on the JVM's actual classpath
+     * (see {@code classpath = rootProject.files(hotReloadOutputDir(project)) + ...} in
+     * {@code plugins/devreload/build.gradle}) -- so the next classloader resource lookup
+     * finds the fresh copy first, before it ever reaches Gradle's stale one. Only then is
+     * {@code UtilCache.clearCachesThatStartWith("properties.")} called, which drops both
+     * {@code UtilProperties.UtilResourceBundle.BUNDLE_CACHE}
+     * ({@code properties.UtilPropertiesBundleCache}) and {@code UtilProperties.URL_CACHE}
+     * ({@code properties.UtilPropertiesUrlCache}).
+     *
+     * <p>Does not reach two known static snapshots taken once at class-load time --
+     * {@code Debug}'s log-level cache (from {@code debug.properties}) and
+     * {@code HashCrypt.PBKDF2_ITERATIONS} (from {@code security.properties}) -- which
+     * remain restart-only; see
+     * {@code plugins/supporting-docs/LABEL_PROPERTIES_HOTRELOAD_DESIGN.md} §3/§6.
+     */
+    private void applyPropertiesReload(Set<Path> batch) {
+        Debug.logInfo("Hot-reload: label/properties config changed " + batch, MODULE);
+        try {
+            for (Path source : batch) {
+                Path dest = hotReloadOutputDir.resolve(source.getFileName());
+                Files.copy(source, dest, StandardCopyOption.REPLACE_EXISTING);
+            }
+            UtilCache.clearCachesThatStartWith(PROPERTIES_CACHE_PREFIX);
+            Debug.logInfo("Hot-reload: copied " + batch + " to " + hotReloadOutputDir.toAbsolutePath()
+                    + " and cleared properties caches; labels/properties will be re-read on next access", MODULE);
+        } catch (Throwable e) {
+            Debug.logError(e, "Hot-reload: failed to reload label/properties config for " + batch, MODULE);
         }
     }
 

@@ -1,8 +1,9 @@
 # devreload
 
 Development-only hot-reload for OFBiz. Edit a Java service/event method, a
-`services.xml` file, an `entitydef` (entity/view-entity/entity-group) file, or add a
-brand-new method, and the change is live in under a second — no restart, ever.
+`services.xml` file, an `entitydef` (entity/view-entity/entity-group) file, a
+`config/*Labels.xml` or `*.properties` file, or add a brand-new method, and the change
+is live in under a second — no restart, ever.
 
 The plugin is entirely self-contained: dropping this directory into a checkout (or
 removing it) has zero effect on the rest of OFBiz either way.
@@ -38,8 +39,9 @@ else to set.
 
 This is the only supported command — always run it exactly like this. It boots OFBiz
 and everything hot-swaps live, no restart: method-body edits, `services.xml` changes,
-entitydef (entity/view-entity/entity-group) changes, and structural changes
-(new/removed methods or fields, changed signatures) alike.
+entitydef (entity/view-entity/entity-group) changes, `config/*Labels.xml`/`*.properties`
+changes, and structural changes (new/removed methods or fields, changed signatures)
+alike.
 
 `--no-watch-fs` disables Gradle's own file-system watching, which otherwise competes
 with this plugin's `WatchService` for the same macOS per-process directory-watch
@@ -60,9 +62,9 @@ Scope to specific components for a faster startup:
 # devreload — Dev Notes
 
 `devreload` is a development-only OFBiz plugin that removes the restart step
-from the edit → test loop. Save a `.java` file, a `services.xml` file, or an
-`entitydef` file and the change is live in well under a second, in the
-already-running OFBiz process.
+from the edit → test loop. Save a `.java` file, a `services.xml` file, an
+`entitydef` file, or a `config/*Labels.xml`/`*.properties` file, and the
+change is live in well under a second, in the already-running OFBiz process.
 
 It lives at `plugins/devreload` and is completely self-contained: dropping the
 folder into a checkout adds the feature, deleting it removes the feature,
@@ -81,9 +83,10 @@ edit .java → ./gradlew classes → kill OFBiz → wait 30-60s → restart → 
 With `devreload` running (`./gradlew ofbizDev --no-watch-fs`):
 
 ```
-edit .java          → save → compiled automatically → live in < 1s → test
-edit *services.xml  → save → picked up automatically → live in < 1s → test
-edit entitydef/*.xml → save → picked up automatically → live in < 1s → test
+edit .java                     → save → compiled automatically → live in < 1s → test
+edit *services.xml             → save → picked up automatically → live in < 1s → test
+edit entitydef/*.xml           → save → picked up automatically → live in < 1s → test
+edit config/*Labels.xml/*.properties → save → picked up automatically → live in < 1s → test
 ```
 
 No restart, no re-login, no second terminal.
@@ -104,13 +107,15 @@ No restart, no re-login, no second terminal.
 
 ## 3. How it works (technical overview)
 
-Five small classes do all the work:
+Five small classes do all the work — label/properties reload (path 5 below) needed no
+sixth class, since it's just one more `UtilCache` clear on `DevReloadContainer` itself
+(see "Label/properties reload" below):
 
 | Class | Role |
 |---|---|
 | `DevReloadContainer` | Watches source/config directories, compiles changed Java in-process, and triggers reload |
 | `HotSwapAgent` | A tiny self-attaching Java agent that gives `DevReloadContainer` access to `Instrumentation.redefineClasses` — the same mechanism an IDE debugger uses for HotSwap |
-| `Debouncer<T>` | Coalesces rapid-fire change notifications (a burst of file-system events, or one compile producing several `.class` files) into a single batched action; shared by all four watch paths below |
+| `Debouncer<T>` | Coalesces rapid-fire change notifications (a burst of file-system events, or one compile producing several `.class` files) into a single batched action; shared by all five watch paths below |
 | `RecordingFileManager` | Wraps the in-process compiler's file manager to record exactly which `.class` files it wrote, so the reload step hot-swaps precisely what was compiled instead of guessing from the source file's name |
 | `EntityModelReloader` | Reflectively resets the already-running `ModelReader`/`ModelGroupReader` singletons so an `entitydef/*.xml` edit re-parses on the next access, clears delegator data caches afterwards, and (opt-in) creates any missing table/column the change needs |
 
@@ -122,14 +127,15 @@ reference to it (including OFBiz's own internal caches) automatically starts
 running the new code on the very next call — no framework code needs to know
 this plugin exists.
 
-### The four watch paths
+### The five watch paths
 
 | Path | Watches | On change | Result |
 |---|---|---|---|
 | 1. Java source | Every component's `src/main/java` | Compiles the file in-process, then hot-swaps the resulting class(es) | New method bodies live in < 1s |
 | 2. `services.xml` | Every component's `servicedef/` directory | Clears the `service.ModelServiceMapByModel` cache | OFBiz re-reads service definitions on the next call |
 | 3. `entitydef/*.xml` | Every component's `entitydef/` directory (`entity-resource type="model"`/`"group"` only — not seed/demo data) | Reflectively resets and eagerly rebuilds the affected `ModelReader`/`ModelGroupReader` singleton(s), then clears delegator data caches (see `EntityModelReloader`) | Entity/view-entity/entity-group definition changes live in < 1s |
-| 4. Build output (opt-in) | `build/classes/java/main` | Same hot-swap as Path 1 | Picks up `./gradlew -t classes` run in a second terminal |
+| 4. `config/*Labels.xml` / `*.properties` | Every component's `config/` directory (scoped to files ending `Labels.xml` or `.properties` — not other `config/*.xml` files like `entityengine.xml`) | Clears `UtilCache.clearCachesThatStartWith("properties.")` | Label/message bundle and property lookups re-read on the next call |
+| 5. Build output (opt-in) | `build/classes/java/main` | Same hot-swap as Path 1 | Picks up `./gradlew -t classes` run in a second terminal |
 
 Changes are debounced for 300ms so a burst of related file writes (e.g. one
 compile producing several `.class` files) is handled as a single batch.
@@ -163,8 +169,9 @@ already serving traffic. `EntityModelReloader` instead reflectively nulls the
 already-running `ModelReader`/`ModelGroupReader` singleton's private parsed-model
 field and eagerly rebuilds it in place — every delegator sharing a reader name
 (almost always `"main"`) picks up the change for free. See
-`ENTITY_HOTRELOAD_DESIGN.md` at the repo root for the full rationale, including why
-this needed reflection and a latent framework edge case it works around.
+`plugins/supporting-docs/hotreload-design-notes.md` for the full rationale,
+including why this needed reflection and a latent framework edge case it works
+around.
 
 A broken save (invalid XML, a view-entity referencing a non-existent member entity)
 is caught and logged clearly, and self-heals: the very next save (or any access, at
@@ -177,6 +184,42 @@ call webtools' "Update Database" screen uses — it only ever adds, never alters
 drops. Off by default: it's the one thing in this plugin that writes to the database
 automatically.
 
+### Label/properties reload
+
+Unlike entity reload, nothing in the framework holds a direct reference to a parsed
+label bundle or properties file the way a `GenericDelegator` holds its
+`ModelReader` — every lookup (`UtilProperties.getMessage`/`getResourceBundleMap`/
+`getPropertyValue`) re-resolves from a `UtilCache` on every single call, exactly
+like the `services.xml` case. But clearing that cache alone isn't sufficient by
+itself — confirmed the hard way during live validation. The root `build.gradle`
+adds every component's `config/` directory as a Gradle *resources* source dir, so
+the file actually on the running JVM's classpath is a one-time
+`processResources` copy under `build/resources/main/`, not the live file under
+`<component>/config/`. So a changed file is first copied into
+`hotReloadOutputDir` (`build/devreload/classes` — the same overlay directory Java
+compilation already writes into, already ahead of `build/resources/main` on
+`ofbizDev`'s classpath), *then* `UtilCache.clearCachesThatStartWith("properties.")`
+is called, which drops both `properties.UtilPropertiesBundleCache` and
+`properties.UtilPropertiesUrlCache`. No reflection, no new reloader class — just
+one more small method on `DevReloadContainer` plus the same overlay-copy trick
+Java source already uses.
+
+The watch itself is scoped precisely to files ending in `Labels.xml` (the real
+on-disk convention behind `*UiLabels.xml`/`*EntityLabels.xml`/etc. — note the plural,
+not `*Label.xml`) or `.properties`, not a blanket `config/*.xml` match: a component's
+`config/` directory also holds unrelated, restart-only files — `entityengine.xml`,
+`serviceengine.xml`, `log4j2.xml`, `web.xml`, and similar — that this plugin must not
+touch.
+
+**Known exception, still needs a restart:** two places read a `.properties` value
+once into a `static`/`static final` field at class-load time and never consult the
+cache again, so clearing it has no effect on them —
+`Debug`'s log-level cache (populated once from `debug.properties`, bypassing the
+`UtilCache` entirely) and `HashCrypt.PBKDF2_ITERATIONS` (a `static final` read once
+from `security.properties`). Editing either of those two specific settings still
+requires a restart; every other property and every label bundle reloads live. Full
+rationale: `plugins/supporting-docs/LABEL_PROPERTIES_HOTRELOAD_DESIGN.md`.
+
 ---
 
 ## 4. What does and doesn't hot-reload
@@ -184,13 +227,14 @@ automatically.
 | Works without restart | Needs a restart |
 |---|---|
 | Java method body changes | New OFBiz components (discovered at startup only) |
-| New services / parameter changes in `services.xml` | `*UiLabels.xml` (loaded at startup) |
-| New/removed methods, fields, changed signatures (DCEVM only) | `web.xml`, `*.properties` files |
-| `controller.xml` (re-read every ~10s automatically — not tied to devreload at all) | A brand-new `entitydef/*.xml` file not yet declared via `entity-resource` in `ofbiz-component.xml` (same restriction as new components — see `ENTITY_HOTRELOAD_DESIGN.md` §8) |
-| `entitymodel*.xml` changes: new/edited entities, view-entities, fields, relations, on already-declared files | `fieldtype*.xml` (DB-specific SQL type mapping) |
-| `entitygroup*.xml` changes (entity → datasource-group mapping) | Destructive schema changes: a changed field's SQL type, a removed field, a changed primary key |
-| New/missing tables/columns for a changed entity, only with `-Dofbiz.hotreload.autoUpdateSchema=true` (off by default) | Seed/demo data XML (`entity-resource type="data"`/`"data-security"`) — a different concern, not covered here |
-| | Changed class hierarchy (unreliable — often works for static-only classes with no instances, but isn't guaranteed) |
+| New services / parameter changes in `services.xml` | `web.xml` |
+| New/removed methods, fields, changed signatures (DCEVM only) | A brand-new `entitydef/*.xml` file not yet declared via `entity-resource` in `ofbiz-component.xml` (same restriction as new components — see `hotreload-design-notes.md` §3) |
+| `controller.xml` (re-read every ~10s automatically — not tied to devreload at all) | `fieldtype*.xml` (DB-specific SQL type mapping) |
+| `entitymodel*.xml` changes: new/edited entities, view-entities, fields, relations, on already-declared files | Destructive schema changes: a changed field's SQL type, a removed field, a changed primary key |
+| `entitygroup*.xml` changes (entity → datasource-group mapping) | Seed/demo data XML (`entity-resource type="data"`/`"data-security"`) — a different concern, not covered here |
+| New/missing tables/columns for a changed entity, only with `-Dofbiz.hotreload.autoUpdateSchema=true` (off by default) | Changed class hierarchy (unreliable — often works for static-only classes with no instances, but isn't guaranteed) |
+| `config/*Labels.xml` (all label/message bundles) | `debug.properties`'s effect on log levels (`Debug`'s static log-level cache — read once at class-load) |
+| `config/*.properties` files | `security.properties`'s `password.encrypt.pbkdf2.iterations` (`HashCrypt.PBKDF2_ITERATIONS` — a `static final` read once at class-load) |
 
 ---
 
@@ -246,7 +290,7 @@ Everything `devreload` reads or writes, in one place.
 | Repo | Contains | Why |
 |---|---|---|
 | `plugins/devreload` (a separate repo, dropped into a local checkout) | `DevReloadContainer.java`, `HotSwapAgent.java`, `Debouncer.java`, `RecordingFileManager.java`, `EntityModelReloader.java`, `ofbiz-component.xml`, `build.gradle` (the `ofbizDev` task), `README.md` — everything | OFBiz plugins are conventionally distributed as separate repos; `ofbiz-framework`'s `.gitignore` excludes `/plugins/` for exactly this reason |
-| `ofbiz-framework` | Nothing — no files, no diffs | The current design redefines already-loaded `Class` objects in place, so no framework code ever needs to ask "is a fresher class available." (An earlier prototype *did* need a small reflective bridge into `framework/base` — see the historical entries in the bug-fix table below for why that approach was replaced.) Entity/view-entity reload takes a related but separate approach: it reflects into `framework/entity`'s already-running `ModelReader`/`ModelGroupReader` instances rather than changing them — see `ENTITY_HOTRELOAD_DESIGN.md`. |
+| `ofbiz-framework` | Nothing — no files, no diffs | The current design redefines already-loaded `Class` objects in place, so no framework code ever needs to ask "is a fresher class available." (An earlier prototype *did* need a small reflective bridge into `framework/base` — see `plugins/supporting-docs/hotreload-design-notes.md` §5 for why that approach was replaced.) Entity/view-entity reload takes a related but separate approach: it reflects into `framework/entity`'s already-running `ModelReader`/`ModelGroupReader` instances rather than changing them — see the same document, §3. |
 
 To use it in a checkout: `git clone <devreload-repo-url> plugins/devreload`,
 then run `./gradlew ofbizDev --no-watch-fs`. Deleting `plugins/devreload/` at
@@ -262,13 +306,16 @@ OFBiz.
 | `Instrumentation`-based class redefinition instead of a custom classloader | Mutates the existing `Class` object in place — no second classloader to track, no cache invalidation, no framework code changes needed |
 | Own output directory (`build/devreload/classes`), separate from Gradle's | Writing into Gradle's managed output could confuse its incremental-build cache and leave stale bytecode behind after a later `git checkout` |
 | Overlay directory always wins over Gradle's output when both exist | Simple, predictable rule; matches its position on the runtime classpath |
-| One shared `Debouncer` class for all four watch paths | Avoids four hand-rolled copies of the same concurrency logic that could drift out of sync |
+| One shared `Debouncer` class for all five watch paths | Avoids five hand-rolled copies of the same concurrency logic that could drift out of sync |
 | Explicit `-PdcevmHome`/`DCEVM_HOME` only, no auto-detection | Guessing IDE install paths breaks silently whenever a vendor changes packaging; one explicit input is easier to keep working |
 | Failed directory watch = log a warning and skip it | No hidden fallback (like polling); a clear, actionable warning instead of silent degraded behavior |
 | Reflectively reset `ModelReader`/`ModelGroupReader`'s own parsed-model field in place, instead of clearing the `UtilCache` that hands them out | Every `GenericDelegator` grabs a direct object reference to a `ModelReader` at construction time and keeps it — clearing the lookup cache (the `services.xml` trick) would only affect a brand-new delegator, never the one already serving traffic |
 | A failed entity/group rebuild re-nulls the field again instead of leaving it half-populated | `ModelReader.getEntityCache()` populates its map field directly as it parses rather than swapping in a finished copy at the end, so a mid-parse failure would otherwise leave a broken, partial model served forever with no automatic retry; re-nulling makes the next save (or any access) retry instead |
 | Every entitydef save reloads both the entity model and the group model, regardless of which file actually changed | Both operations are cheap and a no-op in effect when nothing of that kind changed; same trade this plugin already makes elsewhere (see bug fix #10) in exchange for simpler bookkeeping |
 | Schema auto-update (`-Dofbiz.hotreload.autoUpdateSchema`) is opt-in, off by default, and additive-only (`checkDb(..., addMissing=true)`) | It's the one thing in this plugin that writes to the database automatically; non-destructive by construction (same call webtools' "Update Database" uses), but still a bigger blast radius than reloading in-memory definitions, so it stays explicit rather than bundled into entitydef reload unconditionally |
+| Label/properties reload copies the changed file into `hotReloadOutputDir`, then calls `UtilCache.clearCachesThatStartWith("properties.")` on `DevReloadContainer` itself — no new `XxxReloader` class | Nothing holds a direct reference to a parsed bundle the way `GenericDelegator` holds a `ModelReader`, so no reflection is needed — but a cache clear alone re-reads Gradle's stale `build/resources/main` copy, not the live source file (confirmed live); the overlay-copy step reuses the exact mechanism Java source already relies on to win over Gradle's own output |
+| Config-directory dispatch filters on the precise `Labels.xml`/`.properties` suffix, not a generic `.xml` check | A component's `config/` directory also holds unrelated, restart-only files (`entityengine.xml`, `serviceengine.xml`, `log4j2.xml`, `web.xml`) that a loose filter would misleadingly attempt to reload |
+| `Debug`'s log-level cache and `HashCrypt.PBKDF2_ITERATIONS` stay restart-only rather than patched via reflection | Both are one-time `static`/`static final` snapshots taken at class-load, unreachable via a cache clear; narrow enough (two fields) that a reflective fix isn't worth the added fragility — see `plugins/supporting-docs/LABEL_PROPERTIES_HOTRELOAD_DESIGN.md` §3/§6 |
 
 ---
 
@@ -294,26 +341,27 @@ OFBiz.
 | Log: "could not resolve ModelReader's private fields (READERS/entityCache/modelName) via reflection" | This OFBiz version's `ModelReader` implementation changed in a way `EntityModelReloader`'s reflection didn't account for | Entity/view-entity hot-reload is disabled for the session (Java and services.xml hot-reload are unaffected); file an issue against `devreload` naming the OFBiz version |
 | New field/entity shows up in the reloaded model but queries against it fail (missing column/table) | The DB schema itself wasn't updated — entitydef reload only ever changes the in-memory model | Run webtools' "Update Database", or set `-Dofbiz.hotreload.autoUpdateSchema=true` (`-Photreload.autoUpdateSchema=true`) to have it happen automatically on every entitydef save |
 | Log: "schema auto-update failed for delegator '...'" | The datasource for that group/helper isn't reachable, or `checkDb` itself hit a DB-specific error | `checkDb` only ever adds — it's safe to fix the underlying DB issue and save again |
+| A `*Labels.xml` or `.properties` edit under `config/` isn't picked up | Either the file doesn't end in `Labels.xml` (e.g. a component using the older singular convention, if any), or it's one of the two static-snapshot exceptions (`debug.properties` log levels, `security.properties`'s `password.encrypt.pbkdf2.iterations`) | Rename to match the `Labels.xml` convention, or restart for the two named exceptions — every other property and label reloads live |
 
 ---
 
-## 11. Top 25 bug fixes
+## 11. Top 20 bug fixes
 
 This component went through an earlier prototype design (a custom classloader
 approach, living directly in `framework/base`) before settling on the current
-`Instrumentation`-based design (a self-contained plugin). Fixes 1-14 are part
-of the current, shipped design. Fixes 15-20 were lessons learned in the
-earlier prototype; most of the mechanisms they touched no longer exist in the
-current design (noted per row), but the underlying lesson is worth keeping.
-Fixes 21-25 were found via later code-review passes on the current, shipped
-design, after real-world use surfaced edge cases the original test scenarios
-didn't happen to exercise.
+`Instrumentation`-based design (a self-contained plugin) — see
+`plugins/supporting-docs/hotreload-design-notes.md` §5 for that history in
+full. Fixes 1-14 are part of the current, shipped design. Fix 15 is a lesson
+from that earlier prototype still reflected in current behavior. Fixes 16-20
+were found via later code-review passes on the current, shipped design, after
+real-world use surfaced edge cases the original test scenarios didn't happen
+to exercise.
 
 | # | Bug | Impact if unfixed | Fix |
 |---|---|---|---|
 | 1 | Directory-watch failures on a full checkout crashed the entire OFBiz startup (`NoClassDefFoundError` from an unguarded fallback path) | OFBiz wouldn't start at all on a large, unscoped checkout | Catch failures per-directory and log a warning (`warnUnwatched`) instead of letting one bad directory abort the whole watch setup |
 | 2 | Gradle's own file-system watcher competed with `devreload`'s watcher for the same OS directory-watch ceiling (macOS kqueue limit) | Directories silently went unwatched on a full checkout, even after fix #1 | Documented and defaulted to `--no-watch-fs` for the `ofbizDev` command |
-| 3 | *(superseded by fix #23)* Inner and anonymous classes (e.g. `Foo$1.class`) weren't included when hot-reloading their outer class | Lambdas/anonymous classes kept running stale logic after a save | Originally fixed by scanning the compiled output for every `Outer.class` and `Outer$*.class` file, derived from the source file's own base name; superseded by fix #23's more general approach |
+| 3 | *(superseded by fix #18)* Inner and anonymous classes (e.g. `Foo$1.class`) weren't included when hot-reloading their outer class | Lambdas/anonymous classes kept running stale logic after a save | Originally fixed by scanning the compiled output for every `Outer.class` and `Outer$*.class` file, derived from the source file's own base name; superseded by fix #18's more general approach |
 | 4 | Deleting a source file could trigger a reload attempt against a now-missing class | Confusing errors / crash on file deletion | `ENTRY_DELETE` events are explicitly ignored everywhere in the watch pipeline |
 | 5 | A cache-clear step after class redefinition could throw an `Error` (not just an `Exception`), leaving the class updated but the service cache stale | Inconsistent state: new bytecode active, but old service definitions still cached | Widened the catch block to `catch (Throwable)` |
 | 6 | `IllegalArgumentException: 'other' is different type of Path` when comparing an absolute path against a relative one | Every successful compile failed to trigger a reload | Kept all paths consistently relative throughout the compile/reload pipeline |
@@ -325,14 +373,9 @@ didn't happen to exercise.
 | 12 | An invalid/deleted watch key (`key.reset()` returning `false`) was silently ignored | WatchService could quietly stop detecting changes in a directory with no indication why | Check the return value and log a warning naming the directory |
 | 13 | A `NoClassDefFoundError` (or similar) while registering one component's `servicedef` directory could abort the loop, leaving every later component's directory unwatched | Only the first few components' `services.xml` changes would ever be detected | Wrapped each component's registration in its own `catch (Throwable)` so one failure never blocks the rest |
 | 14 | Comparing modification times across two output directories (overlay vs. Gradle's) to decide which compiled class "wins," including deleting the stale copy when Gradle's was newer | Subtle correctness risk: a timestamp comparison plus a reconciling side-effect (file deletion) that could easily fall out of sync with the classpath's actual resolution order | Simplified to one rule: the overlay directory always wins when a copy exists there — consistent with its fixed position on the classpath |
-| 15 | *(historical, superseded)* Multi-cycle reload loss — editing file B produced a classloader that only knew about B; class A (changed in an earlier reload) fell back to its stale, startup-time version | Any class changed more than one reload ago silently regressed to old behavior | Prototype-only fix (an `allChangedClasses` accumulator); not applicable to the current design, since `redefineClasses` always applies the latest compiled bytecode directly with no classloader to lose track of anything |
-| 16 | *(historical, superseded)* `ClassFormatError` (a `LinkageError`) escaped as an unhandled `Error` when a class was read mid-write by a racing compiler | Unhandled `Error` could crash a request in the servlet container | Prototype-only fix (catch `LinkageError` during classload); not applicable now — `applyCompile()` reads its own compiler output synchronously, so there's no separate framework-side read racing the write |
-| 17 | *(historical, superseded)* Used `Thread.currentThread().getContextClassLoader()` as a parent reference from a background thread | Silent class-resolution failures if the servlet container mutated the thread's context classloader | Prototype-only fix (switched to a deterministic classloader reference); not applicable now — there's no custom classloader in the current design at all |
-| 18 | *(historical)* A code comment claimed `synchronized(DevReloadContainer.class)` while the actual code used `synchronized(this)` | A future developer trusting the comment could introduce a real data race | Comment/code mismatch fixed by reverting to a `private final` instance field with unambiguous `synchronized(this)` |
-| 19 | *(historical)* A single save produced two reload attempts for the same class — one direct call plus one from the WatchService event for the same `.class` file | Harmless but wasteful; duplicate "Hot-reload complete" log lines on every save | Originally patched with a timing-based suppression window; the current design's real fix is architectural (fix #10) — one shared debouncer per change type, so a duplicate at most causes one redundant, harmless redefinition |
-| 20 | *(historical)* Hardcoded, per-OS guesses at common IDE install paths to auto-detect a DCEVM-patched JVM (IntelliJ on macOS/Linux/Windows, JetBrains Toolbox, etc.) | Silently broke for any install layout not on the guessed list — a "works for some users, not others" pattern that grew another special case with every new packaging variant | Removed all guessing in favor of one explicit, always-honored input: `-PdcevmHome` or `DCEVM_HOME` |
-| 21 | A single unsupported structural change in a debounced batch caused `Instrumentation.redefineClasses` to reject the *entire* batch in one call, since every changed class's `ClassDefinition` was passed together | An unrelated, valid method-body edit that happened to land in the same ~300ms debounce window as a rejected class silently failed to apply too, with nothing in the log distinguishing it from the actual offender | `redefineWithPerClassFallback` tries the batch call first (the fast common path), and on `UnsupportedOperationException` retries each `ClassDefinition` individually — every class the JVM accepts is applied, and only the ones it genuinely rejects are named and left pending a restart |
-| 22 | `applyCompile()` passed a `null` `DiagnosticListener` to `javax.tools.JavaCompiler`, so a failed in-process compile produced no detail about what actually failed | The log's only output on a broken save was the generic "compilation failed — fix the error and save again", with no file, line number, or compiler message to act on | Pass a `DiagnosticCollector<JavaFileObject>` to the compiler task and log each `ERROR`-level diagnostic (`file:line: message`) alongside the existing warning |
-| 23 | The post-compile reload step guessed which `.class` files to hot-swap from the *source file's own base name* (`Outer.class`/`Outer$*.class`) | A secondary top-level class in the same source file, or a lone non-public top-level class named differently from its file (both legal Java), compiled to disk correctly but was never queued for redefinition — it silently kept running stale bytecode while the log claimed "Hot-reload complete" | Wrap the compiler's file manager in `RecordingFileManager`, which records the absolute path of every `.class` file the compiler actually writes via `getJavaFileForOutput`, and reload exactly that set instead of guessing from a name pattern |
-| 24 | In-process compilation read source files using `Charset.defaultCharset()` (passed `null` to `getStandardFileManager`) | The project's real `compileJava` forces `options.encoding = 'UTF-8'` (root `build.gradle`); on any JVM/OS whose platform default charset isn't UTF-8 (pre-JDK18, or an overridden `-Dfile.encoding` — plausible on Windows), a hot-reload compile of a file with non-ASCII characters (i18n literals, non-English comments) decoded differently than Gradle's own compile, producing different compiled string constants or spurious compile errors that didn't reproduce outside `devreload` | Pass `StandardCharsets.UTF_8` explicitly to `getStandardFileManager` |
-| 25 | A brand-new subdirectory created with files already inside it in one filesystem operation (e.g. a `git checkout` that adds a whole package, an IDE "extract to new package" refactor, or unzipping a folder into a watched source tree) could have those pre-existing files never picked up | The OS/JDK `WatchService` doesn't retroactively report `ENTRY_CREATE` for files that existed before their directory was registered, so such files silently never compiled until each was individually re-saved, with nothing in the log to explain why | New directories discovered via a live `ENTRY_CREATE` event are now walked with `registerAllAndSeed`, which also dispatches every regular file already present through the same `dispatchChangedFile` routing a live watch event would use — seeding just the newly-discovered subtree, not a full re-walk of already-known directories |
+| 15 | *(historical)* Hardcoded, per-OS guesses at common IDE install paths to auto-detect a DCEVM-patched JVM (IntelliJ on macOS/Linux/Windows, JetBrains Toolbox, etc.) | Silently broke for any install layout not on the guessed list — a "works for some users, not others" pattern that grew another special case with every new packaging variant | Removed all guessing in favor of one explicit, always-honored input: `-PdcevmHome` or `DCEVM_HOME` |
+| 16 | A single unsupported structural change in a debounced batch caused `Instrumentation.redefineClasses` to reject the *entire* batch in one call, since every changed class's `ClassDefinition` was passed together | An unrelated, valid method-body edit that happened to land in the same ~300ms debounce window as a rejected class silently failed to apply too, with nothing in the log distinguishing it from the actual offender | `redefineWithPerClassFallback` tries the batch call first (the fast common path), and on `UnsupportedOperationException` retries each `ClassDefinition` individually — every class the JVM accepts is applied, and only the ones it genuinely rejects are named and left pending a restart |
+| 17 | `applyCompile()` passed a `null` `DiagnosticListener` to `javax.tools.JavaCompiler`, so a failed in-process compile produced no detail about what actually failed | The log's only output on a broken save was the generic "compilation failed — fix the error and save again", with no file, line number, or compiler message to act on | Pass a `DiagnosticCollector<JavaFileObject>` to the compiler task and log each `ERROR`-level diagnostic (`file:line: message`) alongside the existing warning |
+| 18 | The post-compile reload step guessed which `.class` files to hot-swap from the *source file's own base name* (`Outer.class`/`Outer$*.class`) | A secondary top-level class in the same source file, or a lone non-public top-level class named differently from its file (both legal Java), compiled to disk correctly but was never queued for redefinition — it silently kept running stale bytecode while the log claimed "Hot-reload complete" | Wrap the compiler's file manager in `RecordingFileManager`, which records the absolute path of every `.class` file the compiler actually writes via `getJavaFileForOutput`, and reload exactly that set instead of guessing from a name pattern |
+| 19 | In-process compilation read source files using `Charset.defaultCharset()` (passed `null` to `getStandardFileManager`) | The project's real `compileJava` forces `options.encoding = 'UTF-8'` (root `build.gradle`); on any JVM/OS whose platform default charset isn't UTF-8 (pre-JDK18, or an overridden `-Dfile.encoding` — plausible on Windows), a hot-reload compile of a file with non-ASCII characters (i18n literals, non-English comments) decoded differently than Gradle's own compile, producing different compiled string constants or spurious compile errors that didn't reproduce outside `devreload` | Pass `StandardCharsets.UTF_8` explicitly to `getStandardFileManager` |
+| 20 | A brand-new subdirectory created with files already inside it in one filesystem operation (e.g. a `git checkout` that adds a whole package, an IDE "extract to new package" refactor, or unzipping a folder into a watched source tree) could have those pre-existing files never picked up | The OS/JDK `WatchService` doesn't retroactively report `ENTRY_CREATE` for files that existed before their directory was registered, so such files silently never compiled until each was individually re-saved, with nothing in the log to explain why | New directories discovered via a live `ENTRY_CREATE` event are now walked with `registerAllAndSeed`, which also dispatches every regular file already present through the same `dispatchChangedFile` routing a live watch event would use — seeding just the newly-discovered subtree, not a full re-walk of already-known directories |
