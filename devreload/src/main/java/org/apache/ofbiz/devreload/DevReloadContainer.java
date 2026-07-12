@@ -164,9 +164,7 @@ import org.apache.ofbiz.base.util.cache.UtilCache;
  * {@link #applyPropertiesReload} for the full rationale, confirmed live. Two static
  * snapshots taken once at class-load time, {@code Debug}'s log-level cache (from
  * {@code debug.properties}) and {@code HashCrypt.PBKDF2_ITERATIONS} (from
- * {@code security.properties}), are not reachable this way and remain restart-only; see
- * {@code plugins/supporting-docs/LABEL_PROPERTIES_HOTRELOAD_DESIGN.md} for the full
- * rationale.
+ * {@code security.properties}), are not reachable this way and remain restart-only.
  *
  * <h2>Directory watch limits</h2>
  * The OS may refuse to watch a directory once a process-wide ceiling is reached (most
@@ -261,8 +259,7 @@ public class DevReloadContainer implements Container {
      * manifest element naming these resources at all (only a generic
      * {@code <classpath type="dir" location="config"/>}), so this is populated the same
      * convention-based way {@link #sourceRootDirs} is for {@code src/main/java}: every
-     * allowed component's {@code rootLocation().resolve("config")}, if it exists. See
-     * {@code plugins/supporting-docs/LABEL_PROPERTIES_HOTRELOAD_DESIGN.md} §5.
+     * allowed component's {@code rootLocation().resolve("config")}, if it exists.
      */
     private final Set<Path> configDirs = new HashSet<>();
 
@@ -540,8 +537,7 @@ public class DevReloadContainer implements Container {
      * watch thread launches. Deliberately does <em>not</em> watch {@code type="data"}/
      * {@code "data-security"}/etc. resources that also live under a component's
      * {@code entitydef/} directory -- those are seed/demo data, a different concern
-     * from schema, and out of scope here (see the design notes at
-     * {@code plugins/supporting-docs/hotreload-design-notes.md}).
+     * from schema, and out of scope here.
      */
     private void registerEntitydefDirs() {
         registerEntitydefResourceDirs("model");
@@ -958,8 +954,7 @@ public class DevReloadContainer implements Container {
      * {@code UtilURL.fromResource}/{@code UtilProperties}) actually finds on the running
      * JVM's classpath. Clearing the cache alone would just force a re-read of that same
      * stale copy. Confirmed live: an edited label value was not picked up until this copy
-     * step was added -- see {@code plugins/supporting-docs/LABEL_PROPERTIES_HOTRELOAD_DESIGN.md}
-     * §9 for the full incident.
+     * step was added.
      *
      * <p>The fix mirrors how Java source is already handled: copy the changed file into
      * {@link #hotReloadOutputDir}, which {@code build.gradle}'s {@code ofbizDev} task
@@ -975,8 +970,7 @@ public class DevReloadContainer implements Container {
      * <p>Does not reach two known static snapshots taken once at class-load time --
      * {@code Debug}'s log-level cache (from {@code debug.properties}) and
      * {@code HashCrypt.PBKDF2_ITERATIONS} (from {@code security.properties}) -- which
-     * remain restart-only; see
-     * {@code plugins/supporting-docs/LABEL_PROPERTIES_HOTRELOAD_DESIGN.md} §3/§6.
+     * remain restart-only.
      */
     private void applyPropertiesReload(Set<Path> batch) {
         Debug.logInfo("Hot-reload: label/properties config changed " + batch, MODULE);

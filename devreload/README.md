@@ -168,10 +168,7 @@ object reference to a `ModelReader` at construction time and keeps it, so cleari
 already serving traffic. `EntityModelReloader` instead reflectively nulls the
 already-running `ModelReader`/`ModelGroupReader` singleton's private parsed-model
 field and eagerly rebuilds it in place — every delegator sharing a reader name
-(almost always `"main"`) picks up the change for free. See
-`plugins/supporting-docs/hotreload-design-notes.md` for the full rationale,
-including why this needed reflection and a latent framework edge case it works
-around.
+(almost always `"main"`) picks up the change for free.
 
 A broken save (invalid XML, a view-entity referencing a non-existent member entity)
 is caught and logged clearly, and self-heals: the very next save (or any access, at
@@ -217,8 +214,7 @@ cache again, so clearing it has no effect on them —
 `Debug`'s log-level cache (populated once from `debug.properties`, bypassing the
 `UtilCache` entirely) and `HashCrypt.PBKDF2_ITERATIONS` (a `static final` read once
 from `security.properties`). Editing either of those two specific settings still
-requires a restart; every other property and every label bundle reloads live. Full
-rationale: `plugins/supporting-docs/LABEL_PROPERTIES_HOTRELOAD_DESIGN.md`.
+requires a restart; every other property and every label bundle reloads live.
 
 ---
 
@@ -228,7 +224,7 @@ rationale: `plugins/supporting-docs/LABEL_PROPERTIES_HOTRELOAD_DESIGN.md`.
 |---|---|
 | Java method body changes | New OFBiz components (discovered at startup only) |
 | New services / parameter changes in `services.xml` | `web.xml` |
-| New/removed methods, fields, changed signatures (DCEVM only) | A brand-new `entitydef/*.xml` file not yet declared via `entity-resource` in `ofbiz-component.xml` (same restriction as new components — see `hotreload-design-notes.md` §3) |
+| New/removed methods, fields, changed signatures (DCEVM only) | A brand-new `entitydef/*.xml` file not yet declared via `entity-resource` in `ofbiz-component.xml` (same restriction as new components) |
 | `controller.xml` (re-read every ~10s automatically — not tied to devreload at all) | `fieldtype*.xml` (DB-specific SQL type mapping) |
 | `entitymodel*.xml` changes: new/edited entities, view-entities, fields, relations, on already-declared files | Destructive schema changes: a changed field's SQL type, a removed field, a changed primary key |
 | `entitygroup*.xml` changes (entity → datasource-group mapping) | Seed/demo data XML (`entity-resource type="data"`/`"data-security"`) — a different concern, not covered here |
@@ -290,7 +286,7 @@ Everything `devreload` reads or writes, in one place.
 | Repo | Contains | Why |
 |---|---|---|
 | `plugins/devreload` (a separate repo, dropped into a local checkout) | `DevReloadContainer.java`, `HotSwapAgent.java`, `Debouncer.java`, `RecordingFileManager.java`, `EntityModelReloader.java`, `ofbiz-component.xml`, `build.gradle` (the `ofbizDev` task), `README.md` — everything | OFBiz plugins are conventionally distributed as separate repos; `ofbiz-framework`'s `.gitignore` excludes `/plugins/` for exactly this reason |
-| `ofbiz-framework` | Nothing — no files, no diffs | The current design redefines already-loaded `Class` objects in place, so no framework code ever needs to ask "is a fresher class available." (An earlier prototype *did* need a small reflective bridge into `framework/base` — see `plugins/supporting-docs/hotreload-design-notes.md` §5 for why that approach was replaced.) Entity/view-entity reload takes a related but separate approach: it reflects into `framework/entity`'s already-running `ModelReader`/`ModelGroupReader` instances rather than changing them — see the same document, §3. |
+| `ofbiz-framework` | Nothing — no files, no diffs | The current design redefines already-loaded `Class` objects in place, so no framework code ever needs to ask "is a fresher class available." (An earlier prototype *did* need a small reflective bridge into `framework/base`, since replaced.) Entity/view-entity reload takes a related but separate approach: it reflects into `framework/entity`'s already-running `ModelReader`/`ModelGroupReader` instances rather than changing them. |
 
 To use it in a checkout: `git clone <devreload-repo-url> plugins/devreload`,
 then run `./gradlew ofbizDev --no-watch-fs`. Deleting `plugins/devreload/` at
@@ -315,7 +311,7 @@ OFBiz.
 | Schema auto-update (`-Dofbiz.hotreload.autoUpdateSchema`) is opt-in, off by default, and additive-only (`checkDb(..., addMissing=true)`) | It's the one thing in this plugin that writes to the database automatically; non-destructive by construction (same call webtools' "Update Database" uses), but still a bigger blast radius than reloading in-memory definitions, so it stays explicit rather than bundled into entitydef reload unconditionally |
 | Label/properties reload copies the changed file into `hotReloadOutputDir`, then calls `UtilCache.clearCachesThatStartWith("properties.")` on `DevReloadContainer` itself — no new `XxxReloader` class | Nothing holds a direct reference to a parsed bundle the way `GenericDelegator` holds a `ModelReader`, so no reflection is needed — but a cache clear alone re-reads Gradle's stale `build/resources/main` copy, not the live source file (confirmed live); the overlay-copy step reuses the exact mechanism Java source already relies on to win over Gradle's own output |
 | Config-directory dispatch filters on the precise `Labels.xml`/`.properties` suffix, not a generic `.xml` check | A component's `config/` directory also holds unrelated, restart-only files (`entityengine.xml`, `serviceengine.xml`, `log4j2.xml`, `web.xml`) that a loose filter would misleadingly attempt to reload |
-| `Debug`'s log-level cache and `HashCrypt.PBKDF2_ITERATIONS` stay restart-only rather than patched via reflection | Both are one-time `static`/`static final` snapshots taken at class-load, unreachable via a cache clear; narrow enough (two fields) that a reflective fix isn't worth the added fragility — see `plugins/supporting-docs/LABEL_PROPERTIES_HOTRELOAD_DESIGN.md` §3/§6 |
+| `Debug`'s log-level cache and `HashCrypt.PBKDF2_ITERATIONS` stay restart-only rather than patched via reflection | Both are one-time `static`/`static final` snapshots taken at class-load, unreachable via a cache clear; narrow enough (two fields) that a reflective fix isn't worth the added fragility |
 
 ---
 
@@ -349,9 +345,8 @@ OFBiz.
 
 This component went through an earlier prototype design (a custom classloader
 approach, living directly in `framework/base`) before settling on the current
-`Instrumentation`-based design (a self-contained plugin) — see
-`plugins/supporting-docs/hotreload-design-notes.md` §5 for that history in
-full. Fixes 1-14 are part of the current, shipped design. Fix 15 is a lesson
+`Instrumentation`-based design (a self-contained plugin). Fixes 1-14 are part
+of the current, shipped design. Fix 15 is a lesson
 from that earlier prototype still reflected in current behavior. Fixes 16-20
 were found via later code-review passes on the current, shipped design, after
 real-world use surfaced edge cases the original test scenarios didn't happen
