@@ -41,9 +41,21 @@ under the License.
 
     <!-- Request Mappings -->
     <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
+    <request-map uri="createPaymentGatewayFirstData">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPaymentGatewayFirstData"/>
+        <response name="success" type="request-redirect" value="main"/>
+        <response name="error" type="view" value="main"/>
+    </request-map>
     <request-map uri="updatePaymentGatewayFirstData">
         <security https="true" auth="true"/>
         <event type="service" invoke="updatePaymentGatewayFirstData"/>
+        <response name="success" type="request-redirect" value="main"/>
+        <response name="error" type="view" value="main"/>
+    </request-map>
+    <request-map uri="deletePaymentGatewayFirstData">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePaymentGatewayFirstData"/>
         <response name="success" type="request-redirect" value="main"/>
         <response name="error" type="view" value="main"/>
     </request-map>

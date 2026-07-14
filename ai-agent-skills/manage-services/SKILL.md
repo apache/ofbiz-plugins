@@ -50,6 +50,7 @@ Define and implement business logic as reusable, transactional, and securely enf
 - **Naming**: Use `verbNoun` format for all service names (e.g., `updateExample`, `createOrder`).
 - **In/Out Parameters**: Use `<attribute name="..." mode="IN|OUT|INOUT" type="..." optional="true|false"/>`. NEVER bypass attribute validation by casually omitting them or making them wrongly optional.
 - **Native Contract Types**: Backend/data services should keep OFBiz-native service types such as `Timestamp` and `BigDecimal` in IN/OUT attributes and returned maps.
+- **Type In XML First**: If a service consumes dates, numbers, or booleans, declare them with native OFBiz/Java types in `services.xml` first. Prefer fixing the service contract over keeping Groovy-side parsing code forever.
 - **Auth & Security**: Set `auth="true"` for protected services. ALWAYS implement permission checks (e.g., `<permission-service>`).
 - **Export & REST**: Set `export="true"` to expose the service to external callers. Set `action="GET|POST|PUT|DELETE"` to automatically export the service as a REST API endpoint.
 - **Service Overrides**: Use `<implements service="..." />` to inherit attributes from an existing service.
@@ -90,6 +91,11 @@ Define and implement business logic as reusable, transactional, and securely enf
 
 ### 4. Boilerplate CRUD Avoidance
 - Do NOT use a Java or Groovy service simply to write `delegator.create()`. Rely on the `entity-auto` engine.
+
+### 5. API Wrapper Services
+- Thin API wrappers may adapt naming, shape, or multi-call orchestration for a PWA or REST endpoint, but they should still preserve OFBiz-native types in the service contract.
+- Do not stringify timestamps, quantities, or money in wrapper services unless the service is explicitly a presentation/export formatter.
+- For multi-column primary keys exposed through a single REST path segment, use a stable composite ID mapping in the API wrapper rather than flattening the underlying entity model.
 
 ## Anti-Patterns
 
