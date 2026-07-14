@@ -54,6 +54,8 @@ Ensure all OFBiz contributions meet production-grade standards for clarity, main
     - **Logging**: Use `Debug.logInfo(...)`, `Debug.logError(...)` with a `MODULE` tag.
     - Use `.filterByDate()` for all date-effective entities (e.g., `ProductPrice`, `StatusItem`).
     - Prefer `EntityQuery` over `delegator.findOne(...)`.
+    - Prefer shared OFBiz/domain helpers such as `PartyHelper`, `UtilDateTime`, `ObjectType`, and existing component helpers over local formatting or conversion helpers.
+    - If service XML already types a parameter as `Timestamp`, `BigDecimal`, `Double`, `Long`, or `Integer`, use the value directly in Groovy/Java service logic instead of re-parsing or re-casting it at the service boundary.
 5. **Internationalization (i18n)**:
     - Never hardcode user-facing strings. Use `uiLabelMap.LabelKey`.
 

@@ -75,6 +75,7 @@ Implement business logic, complex data transformations, and data preparation scr
   GenericValue product = from("Product").where("productId", productId).queryOne()
   ```
 - **Domain Helpers First**: Before writing direct entity queries, look for existing OFBiz or component helper methods that encode business semantics. Direct or batched entity queries are still appropriate for enrichment, projections, or avoiding N+1 lookups once the helper behavior is understood.
+- **Typed Service Boundaries**: If the service definition already types an IN parameter as `Timestamp`, `BigDecimal`, `Double`, `Long`, or `Integer`, consume `parameters.foo` directly. Do not add redundant `ObjectType.simpleTypeOrObjectConvert(...)`, `as Timestamp`, or similar casts at the service boundary unless the value can also come from a mixed legacy/string source.
 - **Advanced Querying**: Use `EntityCondition` for complex filters:
   ```groovy
   import org.apache.ofbiz.entity.condition.EntityCondition
@@ -116,12 +117,14 @@ String newId = result.newProductId
 - **Hardcoding Strings**: Hardcoding error messages instead of UI Labels, or hardcoding IDs (like `partyId`).
 - **Legacy Entity APIs**: **DO NOT** use legacy Delegator APIs like `delegator.findList(...)`. Always use the modern Entity DSL `from("Entity").where(...).queryList()`.
 - **Custom Conversion Helpers**: Avoid local helper methods for conversions that OFBiz already provides. Prefer existing utilities such as `ObjectType.simpleTypeOrObjectConvert(...)` at service/input boundaries and `UtilMisc.toIntegerObject(...)` for integer conversion.
+- **Redundant Boundary Conversion**: Do not manually re-parse values that the Service Engine has already coerced from `services.xml`. Reserve `ObjectType.simpleTypeOrObjectConvert(...)` for legacy string-typed services, mixed-source fallback logic, or decoding composite REST IDs.
 
 ### Database Querying:
 - **Unconstrained Queries**: **NEVER** query a table without a `.where(...)` condition unless explicitly fetching a tiny bounded list (like enumerated `StatusItem`).
 - **N+1 Queries**: **AVOID** querying the database inside a loop. Instead, gather all IDs, perform a single `IN` query using `EntityOperator.IN`, and map the results in memory.
 - **Over-fetching**: **ALWAYS** use `.select("field1", "field2")` on `EntityQuery` when you only need a few fields from a wide or heavy table. This saves memory and JDBC overhead.
 - **Fetching Full Records for Existence Checks**: **DO NOT** use `queryList()` or `queryOne()` if you only need to know if a record exists. Use `.queryCount()` instead.
+- **Date-Effective Existence Checks**: For date-effective entities, push the date filtering into the query itself with `.filterByDate()` or `.filterByDate("fromField", "thruField")` before calling `.queryCount()`. Do not fetch rows and then filter them in memory just to answer "does one exist?".
 - **Large Result Sets**: **NEVER** use `queryList()` for queries that could return thousands of rows (e.g., all orders). Use `queryIterator()` to get an `EntityListIterator` and **must** wrap it in a `try-finally` block to ensure `.close()` is called.
 - **Missing Cache Usage**: For highly-read, rarely-changed data (e.g., `StatusItem`, `Geo`), missing `.cache(true)` bypasses the entity cache and impacts database performance unnecessarily.
 
@@ -170,6 +173,25 @@ def updateInternalName() {
     logInfo("Successfully updated internal name for product ${productId}")
     return success([updatedName: product.internalName])
 }
+```
+
+**Example 1b: Typed service boundary (The Right Way)**
+```groovy
+def createAssociation() {
+    Timestamp fromDate = parameters.fromDate ?: UtilDateTime.nowTimestamp()
+    BigDecimal quantity = parameters.quantity ?: BigDecimal.ONE
+    // services.xml already typed fromDate and quantity
+    ...
+}
+```
+
+**Example 1c: Date-effective existence check (The Right Way)**
+```groovy
+long supplierProductCount = from("SupplierProduct")
+        .where(productId: productId, currencyUomId: currencyUomId)
+        .filterByDate("availableFromDate", "availableThruDate")
+        .queryCount()
+boolean hasSupplierPrice = supplierProductCount > 0L
 ```
 
 **Example 2: Data Prep Screen Script (The Right Way)**

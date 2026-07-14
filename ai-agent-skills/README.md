@@ -24,6 +24,11 @@ The `ai-agent-skills` plugin is a repository of standardized knowledge, best pra
 
 By providing these "skills" in a structured format, we ensure that agents follow the correct design patterns (e.g., favoring View Entities over manual iteration, using Worker classes correctly, adhering to security standards) without manual intervention for every step.
 
+## Version Compatibility
+These skills work best with Apache OFBiz `trunk`, where the guidance is maintained and updated first.
+
+If you use them against older release branches or customized codebases, verify helper availability, service contracts, and framework behavior before applying the guidance verbatim.
+
 ## Agent Setup & Activation
 
 For an AI agent (like Antigravity, Cursor, or GitHub Copilot) to effectively use these skills, they need to be linked or aggregated into the specific directories those agents expect at the root of your workspace.
