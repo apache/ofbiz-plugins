@@ -24,10 +24,54 @@ under the License.
     <vendor></vendor>
     <version>1.0</version>
 
-    <service name="noSyntaxError" engine="interface">
-        <description>
-            Dummy service to prevent empty files and syntax error - Remove when the 1st real service will be added here 
-        </description>
+    <service name="commerceCreateOrder" engine="groovy"
+             location="component://commerce-api/src/main/groovy/org/apache/ofbiz/commerce/OrderServices.groovy" invoke="commerceCreateOrder" auth="true">
+        <description>Create Order for REST API</description>
+        <attribute name="externalId" mode="IN" type="String" optional="true"/>
+        <attribute name="orderName" mode="IN" type="String" optional="true"/>
+        <attribute name="orderTypeId" mode="IN" type="String" optional="true" default-value="SALES_ORDER"/>
+        <attribute name="salesChannelEnumId" mode="IN" type="String" optional="true" default-value="WEB_SALES_CHANNEL"/>
+        <attribute name="orderDate" mode="IN" type="String" optional="true"/>
+        <attribute name="entryDate" mode="IN" type="String" optional="true"/>
+        <attribute name="priority" mode="IN" type="String" optional="true"/>
+        <attribute name="currencyCode" mode="IN" type="String" optional="true" default-value="USD"/>
+        <attribute name="status" mode="IN" type="String" optional="true" default-value="ORDER_CREATED"/>
+        <attribute name="customer" mode="IN" type="Map" optional="false"/>
+        <attribute name="billingAddress" mode="IN" type="Map" optional="true"/>
+        <attribute name="shippingAddress" mode="IN" type="Map" optional="true"/>
+        <attribute name="items" mode="IN" type="List" optional="false"/>
+        <attribute name="adjustments" mode="IN" type="List" optional="true"/>
+        <attribute name="paymentPreferences" mode="IN" type="List" optional="true"/>
+        <attribute name="agreements" mode="IN" type="List" optional="true"/>
+        <attribute name="attributes" mode="IN" type="List" optional="true"/>
+        <attribute name="note" mode="IN" type="List" optional="true"/>
+        
+        <attribute name="orderId" mode="OUT" type="String" optional="false"/>
+    </service>
+
+    <service name="commerceGetOrder" engine="groovy"
+             location="component://commerce-api/src/main/groovy/org/apache/ofbiz/commerce/OrderServices.groovy" invoke="commerceGetOrder" auth="true">
+        <description>Get Order details for REST API</description>
+        <attribute name="orderId" mode="IN" type="String" optional="false"/>
+        <attribute name="orderId" mode="OUT" type="String" optional="false"/>
+        <attribute name="externalId" mode="OUT" type="String" optional="true"/>
+        <attribute name="orderName" mode="OUT" type="String" optional="true"/>
+        <attribute name="orderTypeId" mode="OUT" type="String" optional="true"/>
+        <attribute name="salesChannelEnumId" mode="OUT" type="String" optional="true"/>
+        <attribute name="orderDate" mode="OUT" type="String" optional="true"/>
+        <attribute name="entryDate" mode="OUT" type="String" optional="true"/>
+        <attribute name="priority" mode="OUT" type="String" optional="true"/>
+        <attribute name="currencyCode" mode="OUT" type="String" optional="true"/>
+        <attribute name="status" mode="OUT" type="String" optional="true"/>
+        <attribute name="customer" mode="OUT" type="Map" optional="true"/>
+        <attribute name="billingAddress" mode="OUT" type="Map" optional="true"/>
+        <attribute name="shippingAddress" mode="OUT" type="Map" optional="true"/>
+        <attribute name="items" mode="OUT" type="List" optional="true"/>
+        <attribute name="adjustments" mode="OUT" type="List" optional="true"/>
+        <attribute name="paymentPreferences" mode="OUT" type="List" optional="true"/>
+        <attribute name="agreements" mode="OUT" type="List" optional="true"/>
+        <attribute name="attributes" mode="OUT" type="List" optional="true"/>
+        <attribute name="note" mode="OUT" type="List" optional="true"/>
     </service> 
     
 </services>

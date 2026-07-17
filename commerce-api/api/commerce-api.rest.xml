@@ -18,16 +18,19 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<api name="Commerce REST API" path="commerce" displayName="Commerce API" description="Commerce REST API endpoints"
+<api name="Commerce REST API" path="orders" displayName="Commerce API" description="Commerce REST API endpoints"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/rest-api.xsd">
 
-    <!-- Define REST API resources and operations here -->
-    <!--
-    <resource name="ping" path="ping" description="Ping Endpoint">
-        <operation verb="get" auth="false" description="Ping service">
-            <service name="ping"/>
+    <resource name="orders" path="/" displayName="Orders Resource" description="Create Order">
+        <operation verb="post" consumes="application/json" produces="application/json" description="Create a new Order">
+            <service name="commerceCreateOrder"/>
         </operation>
     </resource>
-    -->
+
+    <resource name="order" path="{orderId}" displayName="Order Resource" description="Get Order details by ID">
+        <operation verb="get" produces="application/json" description="Get Order details by ID">
+            <service name="commerceGetOrder"/>
+        </operation>
+    </resource>
 </api>
