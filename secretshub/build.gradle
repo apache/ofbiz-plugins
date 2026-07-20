@@ -35,6 +35,18 @@ dependencies {
 
     pluginLibsCompile 'com.azure:azure-security-keyvault-secrets:4.8.0'
     pluginLibsCompile 'com.azure:azure-identity:1.12.0'
+    // Azure's HTTP client (azure-core-http-netty / reactor-netty) lists io.netty:netty-tcnative-boringssl-static
+    // as an OPTIONAL transitive dependency, so Gradle never downloads it and Netty falls back to the plain JDK
+    // SSLEngine for TLS. That fallback is functionally correct (confirmed against a real Azure Key Vault) — the
+    // only effect of its absence is losing OpenSSL-accelerated TLS throughput, which only matters at production
+    // scale, not for local development. Netty logs the missing-library fallback at DEBUG (see the io.netty /
+    // reactor / com.azure logger entries in framework/base/config/log4j2.xml); it is not an error.
+    // To opt in to native TLS acceleration, uncomment the line below. The version is already pinned by the
+    // existing dependency graph (see `./gradlew dependencies -p plugins/secretshub`), so no version guesswork is
+    // needed; it resolves to the same "uber" jar bundling native binaries for linux-x86_64, linux-aarch_64,
+    // osx-x86_64, osx-aarch_64, and windows-x86_64, so it stays portable across dev machines. Regenerate the
+    // lockfile after uncommenting (rm gradle.lockfile && ./gradlew :plugins:secretshub:dependencies --write-locks).
+    // pluginLibsRuntime 'io.netty:netty-tcnative-boringssl-static:2.0.65.Final'
 
     pluginLibsCompile 'com.google.cloud:google-cloud-secretmanager:2.36.0'
 

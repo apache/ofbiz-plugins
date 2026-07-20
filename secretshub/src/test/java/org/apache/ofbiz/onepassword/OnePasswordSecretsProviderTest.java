@@ -18,8 +18,9 @@
  *******************************************************************************/
 package org.apache.ofbiz.onepassword;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.atLeastOnce;
@@ -34,7 +35,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import org.apache.ofbiz.base.util.GeneralException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 public class OnePasswordSecretsProviderTest {
@@ -123,27 +124,27 @@ public class OnePasswordSecretsProviderTest {
 
     // -- Error handling --
 
-    @Test(expected = GeneralException.class)
+    @Test
     public void getSecretThrowsWhenItemNotFound() throws Exception {
         OnePasswordHttpClient client = mock(OnePasswordHttpClient.class);
         when(client.get(anyString(), anyString())).thenReturn("[]");
 
-        provider(client, "password", "").getSecret("missing");
+        assertThrows(GeneralException.class, () -> provider(client, "password", "").getSecret("missing"));
     }
 
-    @Test(expected = GeneralException.class)
+    @Test
     public void getSecretThrowsWhenFieldNotPresent() throws Exception {
         // Item exists but has no "password" field — only "username"
         OnePasswordHttpClient client = buildMockClient("mykey", ITEM_ID, "username", "dbuser", "password");
-        provider(client, "password", "").getSecret("mykey");
+        assertThrows(GeneralException.class, () -> provider(client, "password", "").getSecret("mykey"));
     }
 
-    @Test(expected = GeneralException.class)
+    @Test
     public void getSecretThrowsOnHttpError() throws Exception {
         OnePasswordHttpClient client = mock(OnePasswordHttpClient.class);
         when(client.get(anyString(), anyString())).thenThrow(new IOException("connection refused"));
 
-        provider(client, "password", "").getSecret("mykey");
+        assertThrows(GeneralException.class, () -> provider(client, "password", "").getSecret("mykey"));
     }
 
     // -- helpers --

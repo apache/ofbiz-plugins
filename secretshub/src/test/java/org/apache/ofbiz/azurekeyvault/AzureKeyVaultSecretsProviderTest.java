@@ -18,13 +18,14 @@
  *******************************************************************************/
 package org.apache.ofbiz.azurekeyvault;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.ofbiz.base.util.GeneralException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class AzureKeyVaultSecretsProviderTest {
 
@@ -127,16 +128,18 @@ public class AzureKeyVaultSecretsProviderTest {
 
     // -- Error handling --
 
-    @Test(expected = GeneralException.class)
-    public void getSecretThrowsOnReaderException() throws GeneralException {
-        AzureKeyVaultReader reader = secretName -> { throw new RuntimeException("SecretNotFound"); };
-        provider(reader, "", "-").getSecret("missing");
+    @Test
+    public void getSecretThrowsOnReaderException() {
+        AzureKeyVaultReader reader = secretName -> {
+            throw new RuntimeException("SecretNotFound");
+        };
+        assertThrows(GeneralException.class, () -> provider(reader, "", "-").getSecret("missing"));
     }
 
-    @Test(expected = GeneralException.class)
-    public void getSecretThrowsOnEmptyValue() throws GeneralException {
+    @Test
+    public void getSecretThrowsOnEmptyValue() {
         AzureKeyVaultReader reader = secretName -> "";
-        provider(reader, "", "-").getSecret("mykey");
+        assertThrows(GeneralException.class, () -> provider(reader, "", "-").getSecret("mykey"));
     }
 
     // -- helpers --

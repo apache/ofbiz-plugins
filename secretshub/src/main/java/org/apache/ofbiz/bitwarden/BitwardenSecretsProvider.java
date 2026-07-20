@@ -63,7 +63,7 @@ import org.apache.ofbiz.base.util.UtilProperties;
  * </ol>
  * This derived key decrypts the {@code encrypted_payload} field returned by the OAuth endpoint.
  * The payload contains a JSON object {@code {"encryptionKey": "<base64>"}} whose value is the
- * 64-byte org symmetric key used for all subsequent secret decryption.</p>
+ * 64-byte org symmetric key used for all subsequent secret decryption.
  *
  * <h2>End-to-end encryption</h2>
  * <p>Secret <em>keys</em> (names) and <em>values</em> are returned from the API in encrypted form.
@@ -439,7 +439,9 @@ public final class BitwardenSecretsProvider implements SecretProvider {
                     "Invalid Bitwarden cipher string — expected '2.<iv>|<ct>|<hmac>'");
         }
 
-        byte[] iv, ciphertext, expectedHmac;
+        byte[] iv;
+        byte[] ciphertext;
+        byte[] expectedHmac;
         try {
             iv = Base64.getDecoder().decode(parts[0]);
             ciphertext = Base64.getDecoder().decode(parts[1]);
@@ -526,8 +528,9 @@ public final class BitwardenSecretsProvider implements SecretProvider {
             public void close() {
                 // HttpClient became AutoCloseable in Java 21; safe to ignore on earlier versions.
                 if (javaClient instanceof AutoCloseable) {
+                    AutoCloseable closeable = (AutoCloseable) javaClient;
                     try {
-                        ((AutoCloseable) javaClient).close();
+                        closeable.close();
                     } catch (Exception e) {
                         // Nothing meaningful to do during shutdown.
                     }

@@ -18,11 +18,11 @@
  *******************************************************************************/
 package org.apache.ofbiz.secretshub;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.apache.ofbiz.envvar.EnvVarSecretProvider;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link ActiveSecretProvider}'s provider-selection/fail-fast logic.

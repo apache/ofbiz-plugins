@@ -271,8 +271,9 @@ public final class OnePasswordSecretsProvider implements SecretProvider {
             @Override
             public void close() {
                 if (javaClient instanceof AutoCloseable) {
+                    AutoCloseable closeable = (AutoCloseable) javaClient;
                     try {
-                        ((AutoCloseable) javaClient).close();
+                        closeable.close();
                     } catch (Exception ignored) { }
                 }
             }

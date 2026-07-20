@@ -18,7 +18,8 @@
  *******************************************************************************/
 package org.apache.ofbiz.bitwarden;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.ArgumentMatchers.eq;
@@ -40,8 +41,8 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.ofbiz.base.util.GeneralException;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link BitwardenSecretsProvider}.
@@ -59,15 +60,15 @@ public class BitwardenSecretsProviderTest {
     private static final String BEARER_TOKEN_RESPONSE =
             "{\"access_token\":\"test-bearer\",\"expires_in\":3600}";
 
-    private static byte[] TEST_ENC_KEY;
-    private static byte[] TEST_MAC_KEY;
+    private static byte[] testEncKey;
+    private static byte[] testMacKey;
 
-    @BeforeClass
+    @BeforeAll
     public static void generateTestKey() {
         byte[] keyBytes = new byte[64];
         new SecureRandom().nextBytes(keyBytes);
-        TEST_ENC_KEY = Arrays.copyOfRange(keyBytes, 0, 32);
-        TEST_MAC_KEY = Arrays.copyOfRange(keyBytes, 32, 64);
+        testEncKey = Arrays.copyOfRange(keyBytes, 0, 32);
+        testMacKey = Arrays.copyOfRange(keyBytes, 32, 64);
     }
 
     // -- Decryption unit tests (no HTTP, pure crypto) --
@@ -81,13 +82,14 @@ public class BitwardenSecretsProviderTest {
         assertEquals(plaintext, provider.decrypt(cipherString));
     }
 
-    @Test(expected = GeneralException.class)
+    @Test
     public void decryptThrowsOnWrongCipherType() throws Exception {
         BitwardenSecretsProvider provider = provider(mock(BitwardenHttpClient.class));
-        provider.decrypt("1.abc|def|ghi"); // type 1, not 2
+        // type 1, not 2
+        assertThrows(GeneralException.class, () -> provider.decrypt("1.abc|def|ghi"));
     }
 
-    @Test(expected = GeneralException.class)
+    @Test
     public void decryptThrowsOnTamperedCiphertext() throws Exception {
         String cipherString = encrypt("secret");
         // Flip a byte in the ciphertext part
@@ -97,7 +99,7 @@ public class BitwardenSecretsProviderTest {
         String tampered = "2." + parts[0] + "|" + Base64.getEncoder().encodeToString(ct) + "|" + parts[2];
 
         BitwardenSecretsProvider provider = provider(mock(BitwardenHttpClient.class));
-        provider.decrypt(tampered);
+        assertThrows(GeneralException.class, () -> provider.decrypt(tampered));
     }
 
     // -- Full flow tests (with mock HTTP) --
@@ -170,22 +172,24 @@ public class BitwardenSecretsProviderTest {
         assertEquals(secretValue, provider.getSecret("jdbc-password.mysql-ofbiz"));
     }
 
-    @Test(expected = GeneralException.class)
+    @Test
     public void getSecretThrowsWhenSecretNotFound() throws Exception {
         BitwardenHttpClient client = mock(BitwardenHttpClient.class);
         when(client.post(anyString(), anyString())).thenReturn(BEARER_TOKEN_RESPONSE);
         when(client.get(contains("/organizations/"), anyString()))
                 .thenReturn("{\"secrets\":[]}"); // empty list
 
-        provider(client).getSecret("missing");
+        BitwardenSecretsProvider provider = provider(client);
+        assertThrows(GeneralException.class, () -> provider.getSecret("missing"));
     }
 
-    @Test(expected = GeneralException.class)
+    @Test
     public void getSecretThrowsOnHttpError() throws Exception {
         BitwardenHttpClient client = mock(BitwardenHttpClient.class);
         when(client.post(anyString(), anyString())).thenThrow(new IOException("connection refused"));
 
-        provider(client).getSecret("mykey");
+        BitwardenSecretsProvider provider = provider(client);
+        assertThrows(GeneralException.class, () -> provider.getSecret("mykey"));
     }
 
     // -- helpers --
@@ -198,14 +202,14 @@ public class BitwardenSecretsProviderTest {
             throws GeneralException {
         return new BitwardenSecretsProvider(client, API_URL, IDENTITY_URL,
                 ORG_ID, prefix, ONE_HOUR_MS,
-                "service-account.test-id", "test-secret", TEST_ENC_KEY, TEST_MAC_KEY);
+                "service-account.test-id", "test-secret", testEncKey, testMacKey);
     }
 
     private BitwardenSecretsProvider providerWithAliases(BitwardenHttpClient client, String prefix,
             Map<String, String> keyAliases) throws GeneralException {
         return new BitwardenSecretsProvider(client, API_URL, IDENTITY_URL,
                 ORG_ID, prefix, ONE_HOUR_MS,
-                "service-account.test-id", "test-secret", TEST_ENC_KEY, TEST_MAC_KEY, keyAliases);
+                "service-account.test-id", "test-secret", testEncKey, testMacKey, keyAliases);
     }
 
     /**
@@ -234,11 +238,11 @@ public class BitwardenSecretsProviderTest {
         new SecureRandom().nextBytes(iv);
 
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(TEST_ENC_KEY, "AES"), new IvParameterSpec(iv));
+        cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(testEncKey, "AES"), new IvParameterSpec(iv));
         byte[] ciphertext = cipher.doFinal(plaintext.getBytes(StandardCharsets.UTF_8));
 
         Mac mac = Mac.getInstance("HmacSHA256");
-        mac.init(new SecretKeySpec(TEST_MAC_KEY, "HmacSHA256"));
+        mac.init(new SecretKeySpec(testMacKey, "HmacSHA256"));
         mac.update(iv);
         byte[] hmac = mac.doFinal(ciphertext);
 

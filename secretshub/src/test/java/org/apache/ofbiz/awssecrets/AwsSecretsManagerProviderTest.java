@@ -18,7 +18,8 @@
  *******************************************************************************/
 package org.apache.ofbiz.awssecrets;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -28,7 +29,7 @@ import static org.mockito.Mockito.when;
 import java.util.Map;
 
 import org.apache.ofbiz.base.util.GeneralException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
@@ -161,34 +162,34 @@ public class AwsSecretsManagerProviderTest {
 
     // -- Error handling --
 
-    @Test(expected = GeneralException.class)
-    public void getSecretThrowsWhenSecretNotFound() throws GeneralException {
+    @Test
+    public void getSecretThrowsWhenSecretNotFound() {
         SecretsManagerClient client = mock(SecretsManagerClient.class);
         when(client.getSecretValue(any(GetSecretValueRequest.class)))
                 .thenThrow(ResourceNotFoundException.builder().message("not found").build());
 
-        new AwsSecretsManagerProvider(client, ONE_HOUR_MS, "", "")
-                .getSecret("jdbc-password.missing");
+        AwsSecretsManagerProvider provider = new AwsSecretsManagerProvider(client, ONE_HOUR_MS, "", "");
+        assertThrows(GeneralException.class, () -> provider.getSecret("jdbc-password.missing"));
     }
 
-    @Test(expected = GeneralException.class)
-    public void getSecretThrowsWhenJsonFieldMissing() throws GeneralException {
+    @Test
+    public void getSecretThrowsWhenJsonFieldMissing() {
         String json = "{\"username\":\"dbuser\"}"; // no "password" field
         SecretsManagerClient client = clientReturning("jdbc-password.mydb", json);
 
-        new AwsSecretsManagerProvider(client, ONE_HOUR_MS, "", "password")
-                .getSecret("jdbc-password.mydb");
+        AwsSecretsManagerProvider provider = new AwsSecretsManagerProvider(client, ONE_HOUR_MS, "", "password");
+        assertThrows(GeneralException.class, () -> provider.getSecret("jdbc-password.mydb"));
     }
 
-    @Test(expected = GeneralException.class)
-    public void getSecretThrowsWhenSecretStringIsNull() throws GeneralException {
+    @Test
+    public void getSecretThrowsWhenSecretStringIsNull() {
         SecretsManagerClient client = mock(SecretsManagerClient.class);
         // secretString() returns null — this is a binary secret
         when(client.getSecretValue(any(GetSecretValueRequest.class)))
                 .thenReturn(GetSecretValueResponse.builder().build());
 
-        new AwsSecretsManagerProvider(client, ONE_HOUR_MS, "", "")
-                .getSecret("binary-secret");
+        AwsSecretsManagerProvider provider = new AwsSecretsManagerProvider(client, ONE_HOUR_MS, "", "");
+        assertThrows(GeneralException.class, () -> provider.getSecret("binary-secret"));
     }
 
     // -- helpers --

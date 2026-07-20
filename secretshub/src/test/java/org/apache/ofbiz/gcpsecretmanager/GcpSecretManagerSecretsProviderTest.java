@@ -18,13 +18,14 @@
  *******************************************************************************/
 package org.apache.ofbiz.gcpsecretmanager;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.ofbiz.base.util.GeneralException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class GcpSecretManagerSecretsProviderTest {
 
@@ -146,18 +147,18 @@ public class GcpSecretManagerSecretsProviderTest {
 
     // -- Error handling --
 
-    @Test(expected = GeneralException.class)
-    public void getSecretThrowsOnReaderException() throws GeneralException {
+    @Test
+    public void getSecretThrowsOnReaderException() {
         GcpSecretReader reader = resourceName -> {
             throw new Exception("NOT_FOUND");
         };
-        provider(reader, "", "-").getSecret("missing");
+        assertThrows(GeneralException.class, () -> provider(reader, "", "-").getSecret("missing"));
     }
 
-    @Test(expected = GeneralException.class)
-    public void getSecretThrowsOnEmptyValue() throws GeneralException {
+    @Test
+    public void getSecretThrowsOnEmptyValue() {
         GcpSecretReader reader = resourceName -> "";
-        provider(reader, "", "-").getSecret("mykey");
+        assertThrows(GeneralException.class, () -> provider(reader, "", "-").getSecret("mykey"));
     }
 
     // -- helpers --

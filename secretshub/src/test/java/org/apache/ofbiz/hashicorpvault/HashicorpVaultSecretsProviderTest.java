@@ -18,7 +18,8 @@
  *******************************************************************************/
 package org.apache.ofbiz.hashicorpvault;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,7 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import io.github.jopenlibs.vault.VaultException;
 
 import org.apache.ofbiz.base.util.GeneralException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class HashicorpVaultSecretsProviderTest {
 
@@ -131,28 +132,32 @@ public class HashicorpVaultSecretsProviderTest {
 
     // -- Error handling --
 
-    @Test(expected = GeneralException.class)
-    public void getSecretThrowsWhenDataIsEmpty() throws GeneralException {
+    @Test
+    public void getSecretThrowsWhenDataIsEmpty() {
         HashicorpVaultReader reader = path -> Collections.emptyMap();
-        provider(reader, "", "").getSecret("missing");
+        assertThrows(GeneralException.class, () -> provider(reader, "", "").getSecret("missing"));
     }
 
-    @Test(expected = GeneralException.class)
-    public void getSecretThrowsWhenFieldMissing() throws GeneralException {
+    @Test
+    public void getSecretThrowsWhenFieldMissing() {
         HashicorpVaultReader reader = fixedReader("secret/mykey", singleEntry("username", "dbuser"));
-        provider(reader, "", "password").getSecret("mykey"); // "password" field not present
+        // "password" field not present
+        assertThrows(GeneralException.class, () -> provider(reader, "", "password").getSecret("mykey"));
     }
 
-    @Test(expected = GeneralException.class)
-    public void getSecretThrowsWhenMultiFieldAndNoFieldConfigured() throws GeneralException {
+    @Test
+    public void getSecretThrowsWhenMultiFieldAndNoFieldConfigured() {
         HashicorpVaultReader reader = fixedReader("secret/mykey", twoEntry("username", "u", "password", "p"));
-        provider(reader, "", "").getSecret("mykey"); // ambiguous — 2 fields, no field config
+        // ambiguous — 2 fields, no field config
+        assertThrows(GeneralException.class, () -> provider(reader, "", "").getSecret("mykey"));
     }
 
-    @Test(expected = GeneralException.class)
-    public void getSecretThrowsOnVaultException() throws GeneralException {
-        HashicorpVaultReader reader = path -> { throw new VaultException("connection refused", 503); };
-        provider(reader, "", "").getSecret("mykey");
+    @Test
+    public void getSecretThrowsOnVaultException() {
+        HashicorpVaultReader reader = path -> {
+            throw new VaultException("connection refused", 503);
+        };
+        assertThrows(GeneralException.class, () -> provider(reader, "", "").getSecret("mykey"));
     }
 
     // -- helpers --

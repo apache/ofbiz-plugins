@@ -18,13 +18,14 @@
  *******************************************************************************/
 package org.apache.ofbiz.envvar;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.ofbiz.base.util.GeneralException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link EnvVarSecretProvider}.
@@ -111,16 +112,16 @@ public class EnvVarSecretProviderTest {
         assertEquals("dbpass", provider.getSecret("jdbc-password.mysql-ofbiz"));
     }
 
-    @Test(expected = GeneralException.class)
-    public void getSecretThrowsWhenEnvVarNotSet() throws Exception {
-        provider(new HashMap<>()).getSecret("jdbc-password.mysql-ofbiz");
+    @Test
+    public void getSecretThrowsWhenEnvVarNotSet() {
+        assertThrows(GeneralException.class, () -> provider(new HashMap<>()).getSecret("jdbc-password.mysql-ofbiz"));
     }
 
-    @Test(expected = GeneralException.class)
-    public void getSecretThrowsWhenEnvVarEmpty() throws Exception {
+    @Test
+    public void getSecretThrowsWhenEnvVarEmpty() {
         Map<String, String> env = new HashMap<>();
         env.put("OFBIZ_JDBC_PASSWORD_MYSQL_OFBIZ", "");
 
-        provider(env).getSecret("jdbc-password.mysql-ofbiz");
+        assertThrows(GeneralException.class, () -> provider(env).getSecret("jdbc-password.mysql-ofbiz"));
     }
 }
