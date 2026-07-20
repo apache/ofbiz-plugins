@@ -22,7 +22,7 @@ plugins {
 }
 
 dependencies {
-    pluginLibsCompile 'org.apache.tomcat.embed:tomcat-embed-websocket:9.0.119' // Moving to Tomcat 10 needs more work or maybe removing websocket that does not work anyway, see OFBIZ-7073
+    pluginLibsCompile 'org.apache.tomcat.embed:tomcat-embed-websocket:9.0.120' // Moving to Tomcat 10 needs more work or maybe removing websocket that does not work anyway, see OFBIZ-7073
 }
 
 node {
