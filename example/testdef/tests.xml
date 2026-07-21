@@ -33,4 +33,8 @@ under the License.
     <test-case case-name="example-tests-groovy">
         <junit-test-suite class-name="org.apache.ofbiz.example.test.ExampleTests"/>
     </test-case>
+
+    <test-case case-name="example-tests-jupiter">
+        <jupiter-test-suite class-name="org.apache.ofbiz.example.test.jupiter.ExampleJupiterTests"/>
+    </test-case>
 </test-suite>
