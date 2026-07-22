@@ -18,11 +18,10 @@
  */
 package org.apache.ofbiz.example.test.jupiter
 
-import org.apache.ofbiz.entity.Delegator
 import org.apache.ofbiz.entity.GenericValue
-import org.apache.ofbiz.service.LocalDispatcher
 import org.apache.ofbiz.service.ServiceUtil
 import org.apache.ofbiz.testtools.JupiterTestExtension
+import org.apache.ofbiz.testtools.JupiterTestHelper
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -31,26 +30,21 @@ import org.junit.jupiter.params.provider.CsvSource
 
 /**
  * Jupiter test-cases run through testdef's jupiter-test-suite element (see plugins/example/testdef/tests.xml),
- * side-by-side with org.apache.ofbiz.example.test.ExampleTests (JUnit 3, junit-test-suite) in the same
- * test-suite. Runs inside the full ofbiz --test container, so JupiterTestExtension can inject the
- * suite's own Delegator/LocalDispatcher (via ThreadLocal) with no bootstrapping of its own required.
+ * side-by-side with org.apache.ofbiz.example.test.ExampleTests (also Jupiter, jupiter-test-suite) in the same
+ * test-suite. Runs inside the full ofbiz --test container, so JupiterTestHelper's getDispatcher()/
+ * getDelegator()/getUserLogin()/from()/select() reach the suite's own Delegator/LocalDispatcher with
+ * no field, no method parameter, and no bootstrapping of its own required.
  *
- * <p>Both injection styles JupiterTestExtension supports are shown here: shouldCreateExample takes no
- * delegator/dispatcher parameters at all - they're plain Groovy properties on the class, set once per
- * test instance, same ergonomics as EntityTestCase's "delegator"/"dispatcher" on the JUnit 3 side.
- * shouldCreateExampleAcrossTypes still declares them as method parameters, which stays useful once CSV
- * arguments are already occupying the parameter list and a field would read ambiguously next to them.
+ * <p>Demonstrates a {@code @ParameterizedTest} with real CSV-driven invocations, and a
+ * {@code @Disabled} test that shows up as a logged, reportable skip instead of silently disappearing.
  */
 @ExtendWith(JupiterTestExtension)
-class ExampleJupiterTests {
-
-    protected Delegator delegator
-    protected LocalDispatcher dispatcher
+class ExampleJupiterTests implements JupiterTestHelper {
 
     @Test
     void shouldCreateExample() {
-        GenericValue userLogin = delegator.findOne('UserLogin', [userLoginId: 'system'], false)
-        Map<String, Object> result = dispatcher.runSync('createExample', [
+        GenericValue userLogin = getUserLogin()
+        Map<String, Object> result = getDispatcher().runSync('createExample', [
                 exampleTypeId: 'CONTRIVED',
                 exampleName: 'Test Example - Integration',
                 statusId: 'EXST_IN_DESIGN',
@@ -58,7 +52,7 @@ class ExampleJupiterTests {
         ])
         assert ServiceUtil.isSuccess(result)
 
-        GenericValue example = delegator.findOne('Example', [exampleId: result.exampleId], false)
+        GenericValue example = from('Example').where('exampleId', result.exampleId).queryOne()
         assert example != null
         assert example.exampleTypeId == 'CONTRIVED'
     }
@@ -70,9 +64,9 @@ class ExampleJupiterTests {
             'REAL_WORLD',
             'MADE_UP'
     ])
-    void shouldCreateExampleAcrossTypes(String exampleTypeId, Delegator delegator, LocalDispatcher dispatcher) {
-        GenericValue userLogin = delegator.findOne('UserLogin', [userLoginId: 'system'], false)
-        Map<String, Object> result = dispatcher.runSync('createExample', [
+    void shouldCreateExampleAcrossTypes(String exampleTypeId) {
+        GenericValue userLogin = getUserLogin()
+        Map<String, Object> result = getDispatcher().runSync('createExample', [
                 exampleTypeId: exampleTypeId,
                 exampleName: 'Test Example - ' + exampleTypeId,
                 statusId: 'EXST_IN_DESIGN',
@@ -83,9 +77,9 @@ class ExampleJupiterTests {
 
     @Disabled('OFBIZ-XXXXX: sample only - demonstrates a documented, reportable skip; not a real defect')
     @Test
-    void shouldUpdateExampleUnderConcurrentLoad(Delegator delegator, LocalDispatcher dispatcher) {
-        GenericValue userLogin = delegator.findOne('UserLogin', [userLoginId: 'system'], false)
-        Map<String, Object> result = dispatcher.runSync('updateExample', [exampleId: 'TestExampleUpdate', userLogin: userLogin])
+    void shouldUpdateExampleUnderConcurrentLoad() {
+        GenericValue userLogin = getUserLogin()
+        Map<String, Object> result = getDispatcher().runSync('updateExample', [exampleId: 'TestExampleUpdate', userLogin: userLogin])
         assert ServiceUtil.isSuccess(result)
     }
 
