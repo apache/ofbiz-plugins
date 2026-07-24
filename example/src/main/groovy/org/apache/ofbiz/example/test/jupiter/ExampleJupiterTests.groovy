@@ -30,10 +30,11 @@ import org.junit.jupiter.params.provider.CsvSource
 
 /**
  * Jupiter test-cases run through testdef's jupiter-test-suite element (see plugins/example/testdef/tests.xml),
- * side-by-side with org.apache.ofbiz.example.test.ExampleTests (also Jupiter, jupiter-test-suite) in the same
- * test-suite. Runs inside the full ofbiz --test container, so JupiterTestHelper's getDispatcher()/
- * getDelegator()/getUserLogin()/from()/select() reach the suite's own Delegator/LocalDispatcher with
- * no field, no method parameter, and no bootstrapping of its own required.
+ * side-by-side with org.apache.ofbiz.example.test.ExampleTests in the same test-suite. Runs inside the full
+ * ofbiz --test container, so JupiterTestExtension injects the suite's own Delegator/LocalDispatcher.
+ * Implementing JupiterTestHelper needs no field declarations, yet Groovy's getter-as-property syntax still
+ * exposes them as bare delegator/dispatcher (backed by JupiterTestHelper's getDelegator()/getDispatcher()),
+ * so call sites read exactly like the old field-injection style - delegator.findOne(...), dispatcher.runSync(...).
  *
  * <p>Demonstrates a {@code @ParameterizedTest} with real CSV-driven invocations, and a
  * {@code @Disabled} test that shows up as a logged, reportable skip instead of silently disappearing.
@@ -43,8 +44,8 @@ class ExampleJupiterTests implements JupiterTestHelper {
 
     @Test
     void shouldCreateExample() {
-        GenericValue userLogin = getUserLogin()
-        Map<String, Object> result = getDispatcher().runSync('createExample', [
+        GenericValue userLogin = delegator.findOne('UserLogin', [userLoginId: 'system'], false)
+        Map<String, Object> result = dispatcher.runSync('createExample', [
                 exampleTypeId: 'CONTRIVED',
                 exampleName: 'Test Example - Integration',
                 statusId: 'EXST_IN_DESIGN',
@@ -65,8 +66,8 @@ class ExampleJupiterTests implements JupiterTestHelper {
             'MADE_UP'
     ])
     void shouldCreateExampleAcrossTypes(String exampleTypeId) {
-        GenericValue userLogin = getUserLogin()
-        Map<String, Object> result = getDispatcher().runSync('createExample', [
+        GenericValue userLogin = delegator.findOne('UserLogin', [userLoginId: 'system'], false)
+        Map<String, Object> result = dispatcher.runSync('createExample', [
                 exampleTypeId: exampleTypeId,
                 exampleName: 'Test Example - ' + exampleTypeId,
                 statusId: 'EXST_IN_DESIGN',
@@ -78,8 +79,8 @@ class ExampleJupiterTests implements JupiterTestHelper {
     @Disabled('OFBIZ-XXXXX: sample only - demonstrates a documented, reportable skip; not a real defect')
     @Test
     void shouldUpdateExampleUnderConcurrentLoad() {
-        GenericValue userLogin = getUserLogin()
-        Map<String, Object> result = getDispatcher().runSync('updateExample', [exampleId: 'TestExampleUpdate', userLogin: userLogin])
+        GenericValue userLogin = delegator.findOne('UserLogin', [userLoginId: 'system'], false)
+        Map<String, Object> result = dispatcher.runSync('updateExample', [exampleId: 'TestExampleUpdate', userLogin: userLogin])
         assert ServiceUtil.isSuccess(result)
     }
 

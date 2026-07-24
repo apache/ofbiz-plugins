@@ -20,24 +20,23 @@ package org.apache.ofbiz.example.test
 
 import org.apache.ofbiz.entity.GenericValue
 import org.apache.ofbiz.service.ServiceUtil
-import org.apache.ofbiz.testtools.JupiterTestExtension
-import org.apache.ofbiz.testtools.JupiterTestHelper
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
+import org.apache.ofbiz.service.testtools.OFBizTestCase
 
-@ExtendWith(JupiterTestExtension)
-class ExampleTests implements JupiterTestHelper {
+class ExampleTests extends OFBizTestCase {
 
-    @Test
+    ExampleTests(String name) {
+        super(name)
+    }
+
     void testCreateExample() {
-        GenericValue userLogin = getUserLogin()
+        GenericValue userLogin = from('UserLogin').where('userLoginId', 'system').queryOne()
         Map<String, Object> serviceCtx = [:]
         serviceCtx.exampleTypeId = 'CONTRIVED'
         serviceCtx.exampleName = 'Test Example'
         serviceCtx.statusId = 'EXST_IN_DESIGN'
         serviceCtx.userLogin = userLogin
 
-        Map<String, Object> serviceResult = getDispatcher().runSync('createExample', serviceCtx)
+        Map<String, Object> serviceResult = dispatcher.runSync('createExample', serviceCtx)
         assert ServiceUtil.isSuccess(serviceResult)
         String exampleId = serviceResult.exampleId
 
@@ -48,15 +47,14 @@ class ExampleTests implements JupiterTestHelper {
         assert example.statusId == 'EXST_IN_DESIGN'
     }
 
-    @Test
     void testUpdateExample() {
-        GenericValue userLogin = getUserLogin()
+        GenericValue userLogin = from('UserLogin').where('userLoginId', 'system').queryOne()
         Map<String, Object> serviceCtx = [:]
         serviceCtx.exampleId = 'TestExampleUpdate'
         serviceCtx.exampleName = 'Updated Test Example Name'
         serviceCtx.userLogin = userLogin
 
-        Map<String, Object> serviceResult = getDispatcher().runSync('updateExample', serviceCtx)
+        Map<String, Object> serviceResult = dispatcher.runSync('updateExample', serviceCtx)
         assert ServiceUtil.isSuccess(serviceResult)
 
         GenericValue example = from('Example').where('exampleId', 'TestExampleUpdate').queryOne()
@@ -64,14 +62,13 @@ class ExampleTests implements JupiterTestHelper {
         assert example.exampleName == 'Updated Test Example Name'
     }
 
-    @Test
     void testDeleteExample() {
-        GenericValue userLogin = getUserLogin()
+        GenericValue userLogin = from('UserLogin').where('userLoginId', 'system').queryOne()
         Map<String, Object> serviceCtx = [:]
         serviceCtx.exampleId = 'TestExampleDelete'
         serviceCtx.userLogin = userLogin
 
-        Map<String, Object> serviceResult = getDispatcher().runSync('deleteExample', serviceCtx)
+        Map<String, Object> serviceResult = dispatcher.runSync('deleteExample', serviceCtx)
         assert ServiceUtil.isSuccess(serviceResult)
 
         GenericValue example = from('Example').where('exampleId', 'TestExampleDelete').queryOne()
