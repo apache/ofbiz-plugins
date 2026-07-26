@@ -20,11 +20,10 @@ package org.apache.ofbiz.example.test.jupiter
 
 import org.apache.ofbiz.entity.GenericValue
 import org.apache.ofbiz.service.ServiceUtil
-import org.apache.ofbiz.testtools.JupiterTestExtension
+import org.apache.ofbiz.testtools.JupiterTestEngine
 import org.apache.ofbiz.testtools.JupiterTestHelper
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 
@@ -39,7 +38,7 @@ import org.junit.jupiter.params.provider.CsvSource
  * <p>Demonstrates a {@code @ParameterizedTest} with real CSV-driven invocations, and a
  * {@code @Disabled} test that shows up as a logged, reportable skip instead of silently disappearing.
  */
-@ExtendWith(JupiterTestExtension)
+@JupiterTestEngine
 class ExampleJupiterTests implements JupiterTestHelper {
 
     @Test
