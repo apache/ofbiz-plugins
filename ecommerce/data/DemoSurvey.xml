@@ -41,6 +41,7 @@ under the License.
     <SurveyQuestion surveyQuestionId="1001" surveyQuestionCategoryId="1000" surveyQuestionTypeId="TEXT_LONG" description="recipientName" question="Recipient&apos;s Name:"/>
     <SurveyQuestion surveyQuestionId="1002" surveyQuestionCategoryId="1000" surveyQuestionTypeId="EMAIL" description="recipientEmail" question="Recipient&apos;s Email:"/>
     <SurveyQuestion surveyQuestionId="1003" surveyQuestionCategoryId="1000" surveyQuestionTypeId="TEXTAREA" description="giftMessage" question="Gift Message:"/>
+    <SurveyQuestion surveyQuestionId="1004" surveyQuestionCategoryId="1000" surveyQuestionTypeId="BOOLEAN" description="copyMe" question="Send me a copy of this email?"/>
     <SurveyQuestion surveyQuestionId="1010" surveyQuestionCategoryId="1000" surveyQuestionTypeId="GIFT_CARD" description="giftCardNumber" question="Gift Card Number:"/>
     <SurveyQuestion surveyQuestionId="1011" surveyQuestionCategoryId="1000" surveyQuestionTypeId="TEXT_SHORT" description="giftCardPin" question="PIN Number:"/>
 
@@ -64,6 +65,7 @@ under the License.
     <SurveyQuestionAppl surveyId="1000" surveyQuestionId="1001" fromDate="2001-01-01 00:00:00.0" requiredField="Y" sequenceNum="2"/>
     <SurveyQuestionAppl surveyId="1000" surveyQuestionId="1002" fromDate="2001-01-01 00:00:00.0" requiredField="Y" sequenceNum="3"/>
     <SurveyQuestionAppl surveyId="1000" surveyQuestionId="1003" fromDate="2001-01-01 00:00:00.0" requiredField="N" sequenceNum="4"/>
+    <SurveyQuestionAppl surveyId="1000" surveyQuestionId="1004" fromDate="2001-01-01 00:00:00.0" requiredField="Y" sequenceNum="5"/>
     <SurveyQuestionAppl surveyId="1001" surveyQuestionId="1010" fromDate="2001-01-01 00:00:00.0" requiredField="Y" sequenceNum="1"/>
     <SurveyQuestionAppl surveyId="1001" surveyQuestionId="1011" fromDate="2001-01-01 00:00:00.0" requiredField="Y" sequenceNum="2"/>
 
