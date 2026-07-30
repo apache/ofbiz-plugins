@@ -21,15 +21,17 @@ package org.apache.ofbiz.scrum.test
 import org.apache.ofbiz.base.util.UtilDateTime
 import org.apache.ofbiz.entity.GenericValue
 import org.apache.ofbiz.service.ServiceUtil
-import org.apache.ofbiz.service.testtools.OFBizTestCase
+import org.apache.ofbiz.testtools.JunitJupiterTest
+import org.apache.ofbiz.testtools.JupiterTestHelper
+import org.junit.jupiter.api.Order
+import org.junit.jupiter.api.Test
 import java.sql.Timestamp
 
-class ProductTests extends OFBizTestCase {
+@JunitJupiterTest
+class ProductTests implements JupiterTestHelper {
 
-    ProductTests(String name) {
-        super(name)
-    }
-
+    @Test
+    @Order(1)
     void testCreateProductByAdmin() {
         GenericValue adminUserLogin = from('UserLogin').where('userLoginId', 'admin').queryOne()
         assert adminUserLogin
@@ -56,6 +58,8 @@ class ProductTests extends OFBizTestCase {
         assert ServiceUtil.isSuccess(roleResult)
     }
 
+    @Test
+    @Order(2)
     void testUpdateProductByAdmin() {
         GenericValue adminUserLogin = from('UserLogin').where('userLoginId', 'admin').queryOne()
         assert adminUserLogin
@@ -82,6 +86,8 @@ class ProductTests extends OFBizTestCase {
         // We ensure the test passes by checking it doesn't hard fail if it's already there.
     }
 
+    @Test
+    @Order(3)
     void testAddProductTimeToNewInvoice() {
         GenericValue adminUserLogin = from('UserLogin').where('userLoginId', 'admin').queryOne()
         assert adminUserLogin

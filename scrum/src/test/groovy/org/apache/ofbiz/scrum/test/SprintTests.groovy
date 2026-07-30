@@ -19,15 +19,17 @@
 package org.apache.ofbiz.scrum.test
 
 import org.apache.ofbiz.service.ServiceUtil
-import org.apache.ofbiz.service.testtools.OFBizTestCase
+import org.apache.ofbiz.testtools.JunitJupiterTest
+import org.apache.ofbiz.testtools.JupiterTestHelper
+import org.junit.jupiter.api.Order
+import org.junit.jupiter.api.Test
 
-class SprintTests extends OFBizTestCase {
-
-    SprintTests(String name) {
-        super(name)
-    }
+@JunitJupiterTest
+class SprintTests implements JupiterTestHelper {
 
     // Migrated from SprintTests.xml:testUpdateSprintBacklog
+    @Test
+    @Order(1)
     void testUpdateSprintBacklog() {
         Map serviceCtx = [
                 custRequestId: 'TEST9',
@@ -39,12 +41,16 @@ class SprintTests extends OFBizTestCase {
     }
 
     // Migrated from SprintTests.xml:testCreateSprintByScrummaster
+    @Test
+    @Order(2)
     void testCreateSprintByScrummaster() {
         String sprintId = createSprint()
         assert sprintId
     }
 
     // Migrated from SprintTests.xml:testUpdateSprintByScrummaster
+    @Test
+    @Order(3)
     void testUpdateSprintByScrummaster() {
         String sprintId = createSprint()
         Map serviceCtx = [
@@ -58,12 +64,16 @@ class SprintTests extends OFBizTestCase {
     }
 
     // Migrated from SprintTests.xml:testCreateSprintByAdmin
+    @Test
+    @Order(4)
     void testCreateSprintByAdmin() {
         String sprintId = createSprint()
         assert sprintId
     }
 
     // Migrated from SprintTests.xml:testUpdateSprintByAdmin
+    @Test
+    @Order(5)
     void testUpdateSprintByAdmin() {
         String sprintId = createSprint()
         Map serviceCtx = [
@@ -77,6 +87,14 @@ class SprintTests extends OFBizTestCase {
     }
 
     // Migrated from SprintTests.xml:testAddSprintMember
+    // Ordered after testRemoveSprintMember: assignPartyToWorkEffort's own de-dup check
+    // (WorkEffortServicesScript.groovy's filterByDate() against "today") rejects a second
+    // active assignment for the same (workEffortId, partyId, roleTypeId), so if this ran
+    // first, testRemoveSprintMember's own defensive "assign first" call would silently fail
+    // and the subsequent delete-by-PK would find nothing to remove. Pre-existing bug, not
+    // introduced by this migration - see the design doc addendum.
+    @Test
+    @Order(7)
     void testAddSprintMember() {
         Map serviceCtx = [
                 workEffortId: 'DEMO-SPRINT-1',
@@ -93,6 +111,8 @@ class SprintTests extends OFBizTestCase {
     }
 
     // Migrated from SprintTests.xml:testRemoveSprintMember
+    @Test
+    @Order(6)
     void testRemoveSprintMember() {
         Map serviceCtx = [
                 workEffortId: 'DEMO-SPRINT-1',

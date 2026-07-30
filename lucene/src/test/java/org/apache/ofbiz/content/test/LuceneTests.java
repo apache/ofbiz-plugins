@@ -19,6 +19,10 @@
 
 package org.apache.ofbiz.content.test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,24 +41,20 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.content.search.SearchWorker;
 import org.apache.ofbiz.service.ServiceUtil;
-import org.apache.ofbiz.service.testtools.OFBizTestCase;
+import org.apache.ofbiz.testtools.JunitJupiterTest;
+import org.apache.ofbiz.testtools.JupiterTestHelper;
+import org.junit.jupiter.api.Test;
 
-public class LuceneTests extends OFBizTestCase {
+@JunitJupiterTest
+public class LuceneTests implements JupiterTestHelper {
 
     private static final String MODULE = LuceneTests.class.getName();
-
-    public LuceneTests(String name) {
-        super(name);
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-    }
 
     /**
      * Test search term hand.
      * @throws Exception the exception
      */
+    @Test
     public void testSearchTermHand() throws Exception {
         Map<String, Object> ctx = new HashMap<>();
         ctx.put("contentId", "LuceneCONTENT");
@@ -64,7 +64,7 @@ public class LuceneTests extends OFBizTestCase {
             String errorMessage = ServiceUtil.getErrorMessage(resp);
             throw new Exception(errorMessage);
         }
-        assertTrue("Could not init search index", ServiceUtil.isSuccess(resp));
+        assertTrue(ServiceUtil.isSuccess(resp), "Could not init search index");
 
         try {
             Thread.sleep(3000); // sleep 3 seconds to give enough time to the indexer to process the entries
@@ -94,6 +94,6 @@ public class LuceneTests extends OFBizTestCase {
 
         TopDocs topDocs = searcher.search(combQuery, 10);
 
-        assertEquals("Only 1 result expected from the testdata", 1, (int) topDocs.totalHits.value);
+        assertEquals(1, (int) topDocs.totalHits.value, "Only 1 result expected from the testdata");
     }
 }

@@ -19,16 +19,18 @@
 package org.apache.ofbiz.scrum.test
 
 import org.apache.ofbiz.service.ServiceUtil
-import org.apache.ofbiz.service.testtools.OFBizTestCase
+import org.apache.ofbiz.testtools.JunitJupiterTest
+import org.apache.ofbiz.testtools.JupiterTestHelper
+import org.junit.jupiter.api.Order
+import org.junit.jupiter.api.Test
 
-class SprintBacklogTests extends OFBizTestCase {
-
-    SprintBacklogTests(String name) {
-        super(name)
-    }
+@JunitJupiterTest
+class SprintBacklogTests implements JupiterTestHelper {
 
     // Migrated from SprintBacklogTests.xml:testcreateSprintBacklogByAdmin
     // Original called createSprintBacklog event which internally calls createWorkEffortRequest service.
+    @Test
+    @Order(1)
     void testCreateSprintBacklogByAdmin() {
         Map serviceCtx = [
                 custRequestId: 'TEST5',
@@ -41,6 +43,8 @@ class SprintBacklogTests extends OFBizTestCase {
     }
 
     // Migrated from SprintBacklogTests.xml:testcreateSprintBacklogByScrummaster
+    @Test
+    @Order(2)
     void testCreateSprintBacklogByScrummaster() {
         Map serviceCtx = [
                 custRequestId: 'TEST6',
@@ -53,6 +57,8 @@ class SprintBacklogTests extends OFBizTestCase {
     }
 
     // Migrated from SprintBacklogTests.xml:testdeleteSprintBacklogByAdmin
+    @Test
+    @Order(3)
     void testDeleteSprintBacklogByAdmin() {
         Map serviceCtx = [
                 custRequestId: 'TEST1',
@@ -65,6 +71,8 @@ class SprintBacklogTests extends OFBizTestCase {
     }
 
     // Migrated from SprintBacklogTests.xml:testdeleteSprintBacklogByScurmmaster
+    @Test
+    @Order(4)
     void testDeleteSprintBacklogByScrummaster() {
         Map serviceCtx = [
                 custRequestId: 'TEST2',

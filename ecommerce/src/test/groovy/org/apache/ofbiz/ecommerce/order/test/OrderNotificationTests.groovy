@@ -19,14 +19,14 @@
 package org.apache.ofbiz.ecommerce.order.test
 
 import org.apache.ofbiz.service.ServiceUtil
-import org.apache.ofbiz.service.testtools.OFBizTestCase
+import org.apache.ofbiz.testtools.JunitJupiterTest
+import org.apache.ofbiz.testtools.JupiterTestHelper
+import org.junit.jupiter.api.Test
 
-class OrderNotificationTests extends OFBizTestCase {
+@JunitJupiterTest
+class OrderNotificationTests implements JupiterTestHelper {
 
-    public OrderNotificationTests(String name) {
-        super(name)
-    }
-
+    @Test
     void testSendOrderConfirmation() {
         Map serviceCtx = [
             orderId: 'TEST_DEMO10090',
@@ -37,6 +37,8 @@ class OrderNotificationTests extends OFBizTestCase {
         assert ServiceUtil.isSuccess(serviceResult)
         assert serviceResult.emailType == 'PRDS_ODR_CONFIRM'
     }
+
+    @Test
     void testSendOrderChangeNotification() {
         Map serviceCtx = [
             orderId: 'TEST_DEMO10090',
@@ -49,6 +51,8 @@ class OrderNotificationTests extends OFBizTestCase {
         assert ServiceUtil.isSuccess(serviceResult)
         assert serviceResult.emailType == 'PRDS_ODR_CHANGE'
     }
+
+    @Test
     void testSendOrderBackorderNotification() {
         Map serviceCtx = [
             orderId: 'TEST_DEMO10090',
@@ -59,6 +63,8 @@ class OrderNotificationTests extends OFBizTestCase {
         assert ServiceUtil.isSuccess(serviceResult)
         assert serviceResult.emailType == 'PRDS_ODR_BACKORDER'
     }
+
+    @Test
     void testsendOrderPayRetryNotification() {
         Map serviceCtx = [
             orderId: 'TEST_DEMO10090',
@@ -69,6 +75,8 @@ class OrderNotificationTests extends OFBizTestCase {
         assert ServiceUtil.isSuccess(serviceResult)
         assert serviceResult.emailType == 'PRDS_ODR_PAYRETRY'
     }
+
+    @Test
     void testsendOrderCompleteNotification() {
         Map serviceCtx = [
             orderId: 'TEST_DEMO10090',

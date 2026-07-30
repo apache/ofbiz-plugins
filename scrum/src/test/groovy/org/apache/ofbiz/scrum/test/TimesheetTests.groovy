@@ -19,15 +19,15 @@
 package org.apache.ofbiz.scrum.test
 
 import org.apache.ofbiz.service.ServiceUtil
-import org.apache.ofbiz.service.testtools.OFBizTestCase
+import org.apache.ofbiz.testtools.JunitJupiterTest
+import org.apache.ofbiz.testtools.JupiterTestHelper
+import org.junit.jupiter.api.Test
 
-class TimesheetTests extends OFBizTestCase {
-
-    TimesheetTests(String name) {
-        super(name)
-    }
+@JunitJupiterTest
+class TimesheetTests implements JupiterTestHelper {
 
     // Migrated from TimesheetTests.xml:testTimesheetToComplete
+    @Test
     void testTimesheetToComplete() {
         Map serviceCtx = [
                 timesheetId: 'DEMO-TIMESHEET1',
