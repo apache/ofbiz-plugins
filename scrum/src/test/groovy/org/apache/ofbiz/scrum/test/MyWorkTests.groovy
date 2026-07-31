@@ -21,15 +21,17 @@ package org.apache.ofbiz.scrum.test
 import org.apache.ofbiz.entity.GenericValue
 import org.apache.ofbiz.entity.util.EntityQuery
 import org.apache.ofbiz.service.ServiceUtil
-import org.apache.ofbiz.service.testtools.OFBizTestCase
+import org.apache.ofbiz.testtools.JunitJupiterTest
+import org.apache.ofbiz.testtools.JupiterTestHelper
+import org.junit.jupiter.api.Order
+import org.junit.jupiter.api.Test
 
-class MyWorkTests extends OFBizTestCase {
-
-    MyWorkTests(String name) {
-        super(name)
-    }
+@JunitJupiterTest
+class MyWorkTests implements JupiterTestHelper {
 
     // Migrated from MyWorkTests.xml:testUpdateTimesheetEntryByWorkeffortNotComplete
+    @Test
+    @Order(1)
     void testUpdateTimesheetEntryByWorkeffortNotComplete() {
         Map serviceCtx = [
                 timesheetId: 'DEMO-TIMESHEET1',
@@ -45,6 +47,8 @@ class MyWorkTests extends OFBizTestCase {
     }
 
     // Migrated from MyWorkTests.xml:testUpdateTimesheetEntryByWorkeffortComplete
+    @Test
+    @Order(2)
     void testUpdateTimesheetEntryByWorkeffortComplete() {
         Map serviceCtx = [
                 timesheetId: 'DEMO-TIMESHEET1',
@@ -61,6 +65,8 @@ class MyWorkTests extends OFBizTestCase {
 
     // Migrated from MyWorkTests.xml:testUpdateTask
     // Original called updateTask event in ScrumEvents.xml which internally calls updateWorkEffort.
+    @Test
+    @Order(3)
     void testUpdateTask() {
         Map serviceCtx = [
                 workEffortId: 'DEMO-TASK-2',
@@ -72,6 +78,8 @@ class MyWorkTests extends OFBizTestCase {
     }
 
     // Migrated from MyWorkTests.xml:testRemoveTaskAssignToMe
+    @Test
+    @Order(4)
     void testRemoveTaskAssignToMe() {
         List<GenericValue> listWorkAssignment = EntityQuery.use(delegator).from('WorkEffortPartyAssignment')
                 .where('workEffortId', 'DEMO-TASK-2',
@@ -93,6 +101,8 @@ class MyWorkTests extends OFBizTestCase {
     }
 
     // Migrated from MyWorkTests.xml:testAddNewTimesheet
+    @Test
+    @Order(5)
     void testAddNewTimesheet() {
         Map serviceCtx = [
                 partyId: 'SCRUMTEAM-2',
@@ -106,6 +116,8 @@ class MyWorkTests extends OFBizTestCase {
     }
 
     // Migrated from MyWorkTests.xml:testSetTimeSheetStatusToComplete
+    @Test
+    @Order(6)
     void testSetTimeSheetStatusToComplete() {
         Map serviceCtx = [
                 timesheetId: 'DEMO-TIMESHEET2',

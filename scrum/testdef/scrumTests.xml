@@ -32,33 +32,33 @@ under the License.
         </test-case>
 
         <test-group case-name="scrum-tests">
-            <junit-test-suite class-name="org.apache.ofbiz.scrum.test.ScrumTests"/>
+            <jupiter-test-suite class-name="org.apache.ofbiz.scrum.test.ScrumTests"/>
         </test-group>
         <test-group case-name="productBacklog-tests">
-            <junit-test-suite class-name="org.apache.ofbiz.scrum.test.ProductBacklogTests"/>
+            <jupiter-test-suite class-name="org.apache.ofbiz.scrum.test.ProductBacklogTests"/>
         </test-group>
         <test-group case-name="scrumProject-tests">
-            <junit-test-suite class-name="org.apache.ofbiz.scrum.test.ScrumProjectTests"/>
+            <jupiter-test-suite class-name="org.apache.ofbiz.scrum.test.ScrumProjectTests"/>
         </test-group>
         <test-group case-name="sprint-tests">
-            <junit-test-suite class-name="org.apache.ofbiz.scrum.test.SprintTests"/>
+            <jupiter-test-suite class-name="org.apache.ofbiz.scrum.test.SprintTests"/>
         </test-group>
         <test-group case-name="sprintBacklog-tests">
-            <junit-test-suite class-name="org.apache.ofbiz.scrum.test.SprintBacklogTests"/>
+            <jupiter-test-suite class-name="org.apache.ofbiz.scrum.test.SprintBacklogTests"/>
         </test-group>
         <test-group case-name="dailyMeetingMinute-tests">
-            <junit-test-suite class-name="org.apache.ofbiz.scrum.test.DailyMeetingMinuteTests"/>
+            <jupiter-test-suite class-name="org.apache.ofbiz.scrum.test.DailyMeetingMinuteTests"/>
         </test-group>
         <test-group case-name="product-tests">
-            <junit-test-suite class-name="org.apache.ofbiz.scrum.test.ProductTests"/>
+            <jupiter-test-suite class-name="org.apache.ofbiz.scrum.test.ProductTests"/>
         </test-group>
         <test-group case-name="task-test">
-            <junit-test-suite class-name="org.apache.ofbiz.scrum.test.TaskTests"/>
+            <jupiter-test-suite class-name="org.apache.ofbiz.scrum.test.TaskTests"/>
         </test-group>
         <test-group case-name="myWork-test">
-            <junit-test-suite class-name="org.apache.ofbiz.scrum.test.MyWorkTests"/>
+            <jupiter-test-suite class-name="org.apache.ofbiz.scrum.test.MyWorkTests"/>
         </test-group>
         <test-group case-name="timesheet-test">
-            <junit-test-suite class-name="org.apache.ofbiz.scrum.test.TimesheetTests"/>
+            <jupiter-test-suite class-name="org.apache.ofbiz.scrum.test.TimesheetTests"/>
         </test-group>
 </test-suite>

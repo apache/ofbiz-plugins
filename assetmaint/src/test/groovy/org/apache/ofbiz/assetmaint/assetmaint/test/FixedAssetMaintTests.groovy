@@ -20,14 +20,14 @@ package org.apache.ofbiz.assetmaint.assetmaint.test
 
 import org.apache.ofbiz.base.util.UtilDateTime
 import org.apache.ofbiz.entity.GenericValue
-import org.apache.ofbiz.service.testtools.OFBizTestCase
+import org.apache.ofbiz.testtools.JunitJupiterTest
+import org.apache.ofbiz.testtools.JupiterTestHelper
+import org.junit.jupiter.api.Test
 
-class FixedAssetMaintTests extends OFBizTestCase {
+@JunitJupiterTest
+class FixedAssetMaintTests implements JupiterTestHelper {
 
-    public FixedAssetMaintTests(String name) {
-        super(name)
-    }
-
+    @Test
     void testCreateFixedAssetMaintUpdateWorkEffortWithProductMaint() {
         // Test case for service createFixedAssetMaintUpdateWorkEffort with a product Maintenance
         String fixedAssetId = 'DEMO_VEHICLE_01'
@@ -54,6 +54,8 @@ class FixedAssetMaintTests extends OFBizTestCase {
         assert workEffort.estimatedCompletionDate == serviceCtx.estimatedCompletionDate
         assert workEffort.actualStartDate == serviceCtx.actualStartDate
     }
+
+    @Test
     void testCreateFixedAssetMaintUpdateWorkEffortWithoutProductMaint() {
         // Test case for service createFixedAssetMaintUpdateWorkEffort without a product maintenance
         String fixedAssetId = 'DEMO_VEHICLE_01'
@@ -84,6 +86,7 @@ class FixedAssetMaintTests extends OFBizTestCase {
         assert workEffort.actualStartDate == serviceCtx.actualStartDate
     }
 
+    @Test
     void testUpdateFixedAssetMaintAndWorkEffort() {
         // Test case for service updateFixedAssetMaintAndWorkEffort
         String fixedAssetId = 'DEMO_VEHICLE_01'

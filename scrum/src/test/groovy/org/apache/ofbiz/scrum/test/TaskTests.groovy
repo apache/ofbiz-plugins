@@ -19,16 +19,16 @@
 package org.apache.ofbiz.scrum.test
 
 import org.apache.ofbiz.service.ServiceUtil
-import org.apache.ofbiz.service.testtools.OFBizTestCase
+import org.apache.ofbiz.testtools.JunitJupiterTest
+import org.apache.ofbiz.testtools.JupiterTestHelper
+import org.junit.jupiter.api.Test
 
-class TaskTests extends OFBizTestCase {
-
-    TaskTests(String name) {
-        super(name)
-    }
+@JunitJupiterTest
+class TaskTests implements JupiterTestHelper {
 
     // Migrated from TaskTests.xml:testViewScrumRevisionBadCall
     // Tests that viewScrumRevision service handles a bad repository URL gracefully
+    @Test
     void testViewScrumRevisionBadCall() {
         Map serviceCtx = [
                 repository: '--diff+--diff-cmd=/bin/ls',

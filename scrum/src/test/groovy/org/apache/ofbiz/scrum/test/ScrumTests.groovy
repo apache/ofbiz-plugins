@@ -18,27 +18,22 @@
  *******************************************************************************/
 package org.apache.ofbiz.scrum.test
 
-import org.apache.ofbiz.service.ServiceUtil
-import org.apache.ofbiz.service.testtools.OFBizTestCase
+import org.apache.ofbiz.entity.GenericValue
+import org.apache.ofbiz.entity.util.EntityQuery
+import org.apache.ofbiz.testtools.JunitJupiterTest
+import org.apache.ofbiz.testtools.JupiterTestHelper
+import org.junit.jupiter.api.Test
 
-class DailyMeetingMinuteTests extends OFBizTestCase {
+@JunitJupiterTest
+class ScrumTests implements JupiterTestHelper {
 
-    DailyMeetingMinuteTests(String name) {
-        super(name)
-    }
-
-    // Migrated from DailyMeetingMinuteTests.xml:testDailyMinute
-    // Original called createDailyNote event in ScrumEvents.xml which creates NoteData + WorkEffortNote.
-    // Equivalent: call createWorkEffortNote service which does the same.
-    void testDailyMinute() {
-        Map serviceCtx = [
-                workEffortId: 'DEMO-SPRINT-1',
-                noteInfo: 'NoteInfo',
-                noteName: 'NOTE-1-Name',
-                userLogin: userLogin
-        ]
-        Map serviceResult = dispatcher.runSync('createWorkEffortNote', serviceCtx)
-        assert ServiceUtil.isSuccess(serviceResult)
+    // Migrated from ScrumTests.xml:testFindProjectWithSearchParameters
+    @Test
+    void testFindProjectWithSearchParameters() {
+        List<GenericValue> workEffortList = EntityQuery.use(delegator).from('WorkEffort')
+                .where('workEffortTypeId', 'SCRUM_PROJECT')
+                .queryList()
+        assert workEffortList != null
     }
 
 }

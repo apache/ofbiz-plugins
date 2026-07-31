@@ -23,6 +23,6 @@
         xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/test-suite.xsd">
 
 <test-case case-name="assetmaint-tests">
-        <junit-test-suite class-name="org.apache.ofbiz.assetmaint.assetmaint.test.FixedAssetMaintTests"/>
+        <jupiter-test-suite class-name="org.apache.ofbiz.assetmaint.assetmaint.test.FixedAssetMaintTests"/>
     </test-case>
 </test-suite>

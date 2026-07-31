@@ -19,16 +19,18 @@
 package org.apache.ofbiz.scrum.test
 
 import org.apache.ofbiz.service.ServiceUtil
-import org.apache.ofbiz.service.testtools.OFBizTestCase
+import org.apache.ofbiz.testtools.JunitJupiterTest
+import org.apache.ofbiz.testtools.JupiterTestHelper
+import org.junit.jupiter.api.Order
+import org.junit.jupiter.api.Test
 
-class ScrumProjectTests extends OFBizTestCase {
-
-    ScrumProjectTests(String name) {
-        super(name)
-    }
+@JunitJupiterTest
+class ScrumProjectTests implements JupiterTestHelper {
 
     // Migrated from ScrumProjectTests.xml:testCreateScrumProjectByProductOwner
     // Original called createScrumProject event which internally calls createWorkEffort service.
+    @Test
+    @Order(1)
     void testCreateScrumProjectByProductOwner() {
         Map serviceCtx = [
                 workEffortId: 'TEST_WE_006',
@@ -42,6 +44,8 @@ class ScrumProjectTests extends OFBizTestCase {
     }
 
     // Migrated from ScrumProjectTests.xml:testUpdateScrumProjectByProductOwner
+    @Test
+    @Order(2)
     void testUpdateScrumProjectByProductOwner() {
         Map createCtx = [
                 workEffortId: 'TEST_WE_007',
@@ -64,6 +68,8 @@ class ScrumProjectTests extends OFBizTestCase {
     }
 
     // Migrated from ScrumProjectTests.xml:testUpdateScrumProjectByScrumMaster
+    @Test
+    @Order(3)
     void testUpdateScrumProjectByScrumMaster() {
         Map createCtx = [
                 workEffortId: 'TEST_WE_008',
@@ -86,6 +92,8 @@ class ScrumProjectTests extends OFBizTestCase {
     }
 
     // Migrated from ScrumProjectTests.xml:testCloseScrumProject
+    @Test
+    @Order(4)
     void testCloseScrumProject() {
         Map serviceCtx = [
                 workEffortId: 'DEMO-PROJECT-1',

@@ -20,14 +20,16 @@ package org.apache.ofbiz.scrum.test
 
 import org.apache.ofbiz.entity.GenericValue
 import org.apache.ofbiz.service.ServiceUtil
-import org.apache.ofbiz.service.testtools.OFBizTestCase
+import org.apache.ofbiz.testtools.JunitJupiterTest
+import org.apache.ofbiz.testtools.JupiterTestHelper
+import org.junit.jupiter.api.Order
+import org.junit.jupiter.api.Test
 
-class ProductBacklogTests extends OFBizTestCase {
+@JunitJupiterTest
+class ProductBacklogTests implements JupiterTestHelper {
 
-    ProductBacklogTests(String name) {
-        super(name)
-    }
-
+    @Test
+    @Order(1)
     void testAdminOperations() {
         GenericValue adminUserLogin = from('UserLogin').where('userLoginId', 'admin').queryOne()
         assert adminUserLogin
@@ -69,6 +71,8 @@ class ProductBacklogTests extends OFBizTestCase {
         }
     }
 
+    @Test
+    @Order(2)
     void testProductOwnerOperations() {
         GenericValue poUserLogin = from('UserLogin').where('userLoginId', 'productowner').queryOne()
         assert poUserLogin
@@ -110,6 +114,8 @@ class ProductBacklogTests extends OFBizTestCase {
         }
     }
 
+    @Test
+    @Order(3)
     void testScrumMasterOperations() {
         GenericValue smUserLogin = from('UserLogin').where('userLoginId', 'scrummaster').queryOne()
         assert smUserLogin
@@ -137,6 +143,8 @@ class ProductBacklogTests extends OFBizTestCase {
         assert ServiceUtil.isSuccess(deleteResult)
     }
 
+    @Test
+    @Order(4)
     void testCreateBacklogSetStatus() {
         GenericValue poUserLogin = from('UserLogin').where('userLoginId', 'productowner').queryOne()
         Map serviceCtx = [
@@ -152,6 +160,8 @@ class ProductBacklogTests extends OFBizTestCase {
         assert ServiceUtil.isSuccess(serviceResult)
     }
 
+    @Test
+    @Order(5)
     void testCreateDefaultBacklogs() {
         GenericValue adminUserLogin = from('UserLogin').where('userLoginId', 'admin').queryOne()
         Map serviceCtx = [
@@ -166,6 +176,8 @@ class ProductBacklogTests extends OFBizTestCase {
         assert ServiceUtil.isSuccess(serviceResult)
     }
 
+    @Test
+    @Order(6)
     void testProductBacklogCategoryOperations() {
         GenericValue adminUserLogin = from('UserLogin').where('userLoginId', 'admin').queryOne()
 
@@ -199,6 +211,8 @@ class ProductBacklogTests extends OFBizTestCase {
         assert ServiceUtil.isSuccess(updateResult)
     }
 
+    @Test
+    @Order(7)
     void testProductBacklogEmailOperations() {
         GenericValue systemUserLogin = from('UserLogin').where('userLoginId', 'system').queryOne()
 
@@ -228,6 +242,8 @@ class ProductBacklogTests extends OFBizTestCase {
         assert ServiceUtil.isSuccess(updateResult)
     }
 
+    @Test
+    @Order(8)
     void testUpdateSprintBacklogseqDown() {
         GenericValue systemUserLogin = from('UserLogin').where('userLoginId', 'system').queryOne()
         Map serviceCtx = [
@@ -243,6 +259,8 @@ class ProductBacklogTests extends OFBizTestCase {
         assert ServiceUtil.isSuccess(serviceResult)
     }
 
+    @Test
+    @Order(9)
     void testUpdateSprintBacklogseqUP() {
         GenericValue systemUserLogin = from('UserLogin').where('userLoginId', 'system').queryOne()
         Map serviceCtx = [
@@ -258,6 +276,8 @@ class ProductBacklogTests extends OFBizTestCase {
         assert ServiceUtil.isSuccess(serviceResult)
     }
 
+    @Test
+    @Order(10)
     void testUpdateSprintBacklogseqBotton() {
         GenericValue systemUserLogin = from('UserLogin').where('userLoginId', 'system').queryOne()
         Map serviceCtx = [
@@ -273,6 +293,8 @@ class ProductBacklogTests extends OFBizTestCase {
         assert ServiceUtil.isSuccess(serviceResult)
     }
 
+    @Test
+    @Order(11)
     void testUpdateSprintBacklogseqTOP() {
         GenericValue systemUserLogin = from('UserLogin').where('userLoginId', 'system').queryOne()
         Map serviceCtx = [
