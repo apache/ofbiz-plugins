@@ -581,7 +581,246 @@ Map commerceGetOrder() {
         }
         result.note = notes
     }
+    return result
+}
 
+Map commerceUpdateOrder() {
+    Map result = ServiceUtil.returnSuccess()
+    String orderId = parameters.orderId
+    GenericValue orderHeader = from('OrderHeader').where('orderId', orderId).queryOne()
+    if (!orderHeader) {
+        return ServiceUtil.returnError('Order not found with ID: ' + orderId)
+    }
+
+    try {
+        if (parameters.priority) {
+            orderHeader.priority = parameters.priority
+            orderHeader.store()
+        }
+
+        GenericValue placingCustomerRole = from('OrderRole')
+            .where('orderId', orderId, 'roleTypeId', 'PLACING_CUSTOMER')
+            .queryFirst()
+        String partyId = placingCustomerRole?.partyId
+
+        Closure<String> cleanStr = { Object obj ->
+            if (obj) {
+                return obj.toString().trim()
+            }
+            return ''
+        }
+
+        Closure<Boolean> isAddressEqual = { GenericValue addr, Map addrMap ->
+            return cleanStr(addr.toName) == cleanStr(addrMap.toName) &&
+                   cleanStr(addr.address1) == cleanStr(addrMap.address1) &&
+                   cleanStr(addr.city) == cleanStr(addrMap.city) &&
+                   cleanStr(addr.stateProvinceGeoId) == cleanStr(addrMap.stateProvinceGeoId) &&
+                   cleanStr(addr.countryGeoId) == cleanStr(addrMap.countryGeoId) &&
+                   cleanStr(addr.postalCode) == cleanStr(addrMap.postalCode)
+        }
+
+        Closure<String> getOrCreatePostalAddress = { Map addrMap, String purposeTypeId ->
+            if (!addrMap || !partyId) {
+                return null
+            }
+            List addresses = from('PartyAndPostalAddress')
+                .where('partyId', partyId)
+                .filterByDate()
+                .queryList()
+            for (Object addrObj : addresses) {
+                GenericValue addr = (GenericValue) addrObj
+                if (isAddressEqual(addr, addrMap)) {
+                    return addr.contactMechId
+                }
+            }
+            Map createAddrCtx = [
+                userLogin: userLogin,
+                partyId: partyId,
+                contactMechPurposeTypeId: purposeTypeId,
+                toName: addrMap.toName,
+                address1: addrMap.address1,
+                city: addrMap.city,
+                stateProvinceGeoId: addrMap.stateProvinceGeoId,
+                countryGeoId: addrMap.countryGeoId,
+                postalCode: addrMap.postalCode
+            ]
+            Map createAddrResult = runService('createPartyPostalAddress', createAddrCtx)
+            if (ServiceUtil.isError(createAddrResult)) {
+                throw new IllegalArgumentException('Error creating postal address: ' + ServiceUtil.getErrorMessage(createAddrResult))
+            }
+            return (String) createAddrResult.contactMechId
+        }
+
+        if (parameters.shippingAddress) {
+            String shippingContactMechId = getOrCreatePostalAddress(parameters.shippingAddress, 'SHIPPING_LOCATION')
+            if (shippingContactMechId) {
+                GenericValue orderContactMech = from('OrderContactMech')
+                    .where('orderId', orderId, 'contactMechPurposeTypeId', 'SHIPPING_LOCATION')
+                    .queryFirst()
+                if (orderContactMech) {
+                    if (orderContactMech.contactMechId != shippingContactMechId) {
+                        orderContactMech.remove()
+                        delegator.create('OrderContactMech', [
+                            orderId: orderId,
+                            contactMechId: shippingContactMechId,
+                            contactMechPurposeTypeId: 'SHIPPING_LOCATION'
+                        ])
+                    }
+                } else {
+                    delegator.create('OrderContactMech', [
+                        orderId: orderId,
+                        contactMechId: shippingContactMechId,
+                        contactMechPurposeTypeId: 'SHIPPING_LOCATION'
+                    ])
+                }
+
+                List shipGroups = from('OrderItemShipGroup').where('orderId', orderId).queryList()
+                shipGroups.each { Object sgObj ->
+                    GenericValue sg = (GenericValue) sgObj
+                    sg.contactMechId = shippingContactMechId
+                    sg.store()
+                }
+            }
+        }
+
+        if (parameters.items) {
+            for (Object reqItemObj : parameters.items) {
+                Map reqItem = (Map) reqItemObj
+                GenericValue orderItem = from('OrderItem')
+                    .where('orderId', orderId, 'externalId', reqItem.itemExternalId)
+                    .queryFirst()
+                if (orderItem) {
+                    if (['ITEM_CANCELLED', 'ITEM_COMPLETED', 'ITEM_REJECTED'].contains(orderItem.statusId)) {
+                        return ServiceUtil.returnError("Cannot update order item " + reqItem.itemExternalId + " because it is in status " + orderItem.statusId + ".")
+                    }
+                    if (reqItem.quantity != null) {
+                        BigDecimal oldQty = orderItem.getBigDecimal('quantity')
+                        BigDecimal newQty = new BigDecimal(reqItem.quantity)
+                        if (oldQty && oldQty.compareTo(BigDecimal.ZERO) != 0 && oldQty.compareTo(newQty) != 0) {
+                            BigDecimal scaleFactor = newQty.divide(oldQty, 10, java.math.RoundingMode.HALF_UP)
+                            List itemAdjs = from('OrderAdjustment')
+                                .where('orderId', orderId, 'orderItemSeqId', orderItem.orderItemSeqId)
+                                .queryList()
+                            itemAdjs.each { Object adjObj ->
+                                GenericValue adj = (GenericValue) adjObj
+                                if (adj.amount != null) {
+                                    adj.amount = adj.getBigDecimal('amount').multiply(scaleFactor).setScale(2, java.math.RoundingMode.HALF_UP)
+                                    adj.store()
+                                }
+                            }
+                        }
+                        orderItem.quantity = newQty
+                        orderItem.store()
+
+                        List osgas = from('OrderItemShipGroupAssoc')
+                            .where('orderId', orderId, 'orderItemSeqId', orderItem.orderItemSeqId)
+                            .queryList()
+                        osgas.each { Object osgaObj ->
+                            GenericValue osga = (GenericValue) osgaObj
+                            osga.quantity = newQty
+                            osga.store()
+                        }
+                    }
+
+                    if (reqItem.shippingInstructions != null) {
+                        GenericValue shipGroupAssoc = from('OrderItemShipGroupAssoc')
+                            .where('orderId', orderId, 'orderItemSeqId', orderItem.orderItemSeqId)
+                            .queryFirst()
+                        if (shipGroupAssoc) {
+                            GenericValue shipGroup = from('OrderItemShipGroup')
+                                .where('orderId', orderId, 'shipGroupSeqId', shipGroupAssoc.shipGroupSeqId)
+                                .queryOne()
+                            if (shipGroup) {
+                                shipGroup.shippingInstructions = reqItem.shippingInstructions
+                                shipGroup.store()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (parameters.attributes) {
+            parameters.attributes.each { Object attrObj ->
+                Map attr = (Map) attrObj
+                GenericValue orderAttr = from('OrderAttribute')
+                    .where('orderId', orderId, 'attrName', attr.name)
+                    .queryOne()
+                if (orderAttr) {
+                    orderAttr.attrValue = attr.value
+                    orderAttr.store()
+                } else {
+                    delegator.create('OrderAttribute', [
+                        orderId: orderId,
+                        attrName: attr.name,
+                        attrValue: attr.value
+                    ])
+                }
+            }
+        }
+
+        if (parameters.note) {
+            List notesList = []
+            if (parameters.note instanceof List) {
+                notesList = parameters.note
+            } else {
+                notesList = [parameters.note]
+            }
+            notesList.each { Object noteMsg ->
+                String noteStr = String.valueOf(noteMsg)
+                String noteId = delegator.getNextSeqId('NoteData')
+                GenericValue noteData = delegator.makeValue('NoteData', [
+                    noteId: noteId,
+                    noteInfo: noteStr,
+                    noteDateTime: UtilDateTime.nowTimestamp()
+                ])
+                delegator.create(noteData)
+
+                GenericValue orderNote = delegator.makeValue('OrderHeaderNote', [
+                    orderId: orderId,
+                    noteId: noteId,
+                    internalNote: 'N'
+                ])
+                delegator.create(orderNote)
+            }
+        }
+
+        result.orderId = orderId
+        result.externalId = orderHeader.externalId
+        result.status = orderHeader.statusId
+        result.message = 'Order updated successfully'
+    } catch (Exception e) {
+        Debug.logError(e, 'Error updating order ' + orderId + ' via commerce-api: ' + e.getMessage(), 'OrderServices')
+        return ServiceUtil.returnError('Error updating order: ' + e.getMessage())
+    }
+    return result
+}
+
+Map commerceGetOrderStatus() {
+    Map result = ServiceUtil.returnSuccess()
+    String orderId = parameters.orderId
+    GenericValue orderHeader = from('OrderHeader').where('orderId', orderId).queryOne()
+    if (!orderHeader) {
+        return ServiceUtil.returnError('Order not found with ID: ' + orderId)
+    }
+
+    List statusHistoryList = []
+    List orderStatuses = from('OrderStatus')
+        .where('orderId', orderId, 'orderItemSeqId', null)
+        .orderBy('statusDatetime ASC')
+        .queryList()
+
+    for (Object statusObj : orderStatuses) {
+        GenericValue os = (GenericValue) statusObj
+        statusHistoryList << [
+            statusId: os.statusId,
+            statusDate: formatDateTime(os.statusDatetime)
+        ]
+    }
+
+    result.orderId = orderId
+    result.statusId = orderHeader.statusId
+    result.statusHistory = statusHistoryList
     return result
 }
 

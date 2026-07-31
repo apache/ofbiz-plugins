@@ -74,4 +74,27 @@ under the License.
         <attribute name="note" mode="OUT" type="List" optional="true"/>
     </service> 
     
+    <service name="commerceUpdateOrder" engine="groovy"
+             location="component://commerce-api/src/main/groovy/org/apache/ofbiz/commerce/OrderServices.groovy" invoke="commerceUpdateOrder" auth="true">
+        <description>Update Order details for REST API</description>
+        <attribute name="orderId" mode="IN" type="String" optional="false"/>
+        <attribute name="priority" mode="IN" type="String" optional="true"/>
+        <attribute name="shippingAddress" mode="IN" type="Map" optional="true"/>
+        <attribute name="items" mode="IN" type="List" optional="true"/>
+        <attribute name="attributes" mode="IN" type="List" optional="true"/>
+        <attribute name="note" mode="IN" type="String" optional="true"/>
+        <attribute name="orderId" mode="OUT" type="String" optional="false"/>
+        <attribute name="externalId" mode="OUT" type="String" optional="true"/>
+        <attribute name="status" mode="OUT" type="String" optional="true"/>
+        <attribute name="message" mode="OUT" type="String" optional="true"/>
+    </service>
+
+    <service name="commerceGetOrderStatus" engine="groovy"
+             location="component://commerce-api/src/main/groovy/org/apache/ofbiz/commerce/OrderServices.groovy" invoke="commerceGetOrderStatus" auth="true">
+        <description>Get Order Status for REST API</description>
+        <attribute name="orderId" mode="IN" type="String" optional="false"/>
+        <attribute name="orderId" mode="OUT" type="String" optional="false"/>
+        <attribute name="statusId" mode="OUT" type="String" optional="false"/>
+        <attribute name="statusHistory" mode="OUT" type="List" optional="false"/>
+    </service>
 </services>

@@ -32,5 +32,14 @@ under the License.
         <operation verb="get" produces="application/json" description="Get Order details by ID">
             <service name="commerceGetOrder"/>
         </operation>
+        <operation verb="put" consumes="application/json" produces="application/json" description="Update Order details by ID">
+            <service name="commerceUpdateOrder"/>
+        </operation>
+    </resource>
+
+    <resource name="orderStatus" path="{orderId}/status" displayName="Order Status Resource" description="Get Order status details by ID">
+        <operation verb="get" produces="application/json" description="Get Order status details by ID">
+            <service name="commerceGetOrderStatus"/>
+        </operation>
     </resource>
 </api>
