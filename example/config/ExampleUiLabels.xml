@@ -55,6 +55,9 @@
         <value xml:lang="zh">样例应用</value>
         <value xml:lang="zh-TW">範例應用</value>
     </property>
+    <property key="ExampleAsOfDate">
+        <value xml:lang="en">As of date</value>
+    </property>
     <property key="ExampleAutocompleteDropdown">
         <value xml:lang="en">Autocomplete Dropdown</value>
         <value xml:lang="fr">Liste déroulante à auto complétion</value>
@@ -331,6 +334,12 @@
         <value xml:lang="ja">独立したドロップダウン</value>
         <value xml:lang="zh">相互依赖的下拉框</value>
         <value xml:lang="zh-TW">相互依賴的下拉清單</value>
+    </property>
+    <property key="ExampleMultiParamDependentDropDowns">
+        <value xml:lang="en">Dependent drop-down driven by two parent fields</value>
+    </property>
+    <property key="ExampleMultiParamDependentDropDownTooltip">
+        <value xml:lang="en">Pick an Example and a date. The feature drop-down lists only the features applied to that Example on that date, so both parent fields are sent to the service.</value>
     </property>
     <property key="ExampleDisabledFields">
         <value xml:lang="en">Disabled Fields</value>

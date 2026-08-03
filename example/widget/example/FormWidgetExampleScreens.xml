@@ -55,9 +55,9 @@ under the License.
                                     </container>
                                     <section>
                                         <actions>
-                                            <!-- fields for SetDependentDropdownValuesJs.ftl, it's a try on generalization,
-                                                if you need an example with more than one dropdown in a form have a look at 
-                                                EditProductPriceRules screen in PriceScreens.xml-->
+                                            <!-- fields for SetDependentDropdownValuesJs.ftl.
+                                                For a dependent drop-down driven by more than one parent field, see the
+                                                DependentDropDownMultiParamExampleForm section further down this screen. -->
                                             <set field="dependentForm" value="DropDownFieldsExampleForm"/>
                                             <set field="paramKey" value="countryGeoId"/>
                                             <set field="mainId" value="countryGeoId"/>
@@ -81,6 +81,37 @@ under the License.
                                             <platform-specific><html><html-template multi-block="true" location="component://common-theme/template/includes/SetMultipleSelectJs.ftl"/></html></platform-specific>
                                             <include-form name="DropDownFieldsExampleForm" location="component://example/widget/example/FormWidgetExampleForms.xml"/>
                                             <include-form name="DropDownMultipleFieldExampleForm" location="component://example/widget/example/FormWidgetExampleForms.xml"/>
+                                        </widgets>
+                                    </section>
+                                </container>
+                                <container style="screenlet-body">
+                                    <container style="button-bar"><label style="h2">${uiLabelMap.ExampleMultiParamDependentDropDowns}</label></container>
+                                    <container style="screenlet-body">
+                                        <label style="h3">${uiLabelMap.ExampleSourceCode}</label>
+                                        <label>${uiLabelMap.ExampleDefinitionName} &quot;DependentDropDownMultiParamExampleForm&quot; ${uiLabelMap.ExampleDefinitionFile}</label>
+                                        <link target="${formWidgetExampleFormsUrl}" url-mode="plain" target-window="svnPage" text="${uiLabelMap.ExampleDefinitionFileTooltip}" style="buttontext"/>
+                                    </container>
+                                    <section>
+                                        <actions>
+                                            <!-- A dependent drop-down driven by TWO parent fields (OFBIZ-11724).
+                                                 paramKey and mainId are comma separated lists, and the two lists are
+                                                 paired up by position: the Nth paramKey goes with the Nth mainId, so
+                                                 they must be listed in the same order. SetDependentDropdownValuesJs.ftl
+                                                 prefixes each field with the form name, so the service receives both
+                                                 exampleId and asOfDate and can filter ExampleFeatureAppl by date. -->
+                                            <set field="dependentForm" value="DependentDropDownMultiParamExampleForm"/>
+                                            <set field="paramKey" value="exampleId,asOfDate"/>
+                                            <set field="mainId" value="exampleId,asOfDate"/>
+                                            <set field="dependentId" value="exampleFeatureId"/>
+                                            <set field="requestName" value="getAssociatedExampleFeatures"/>
+                                            <set field="responseName" value="exampleFeatureList"/>
+                                            <set field="dependentKeyName" value="exampleFeatureId"/>
+                                            <set field="descName" value="description"/>
+                                            <set field="selectedDependentOption" value="_none_"/>
+                                        </actions>
+                                        <widgets>
+                                            <platform-specific><html><html-template multi-block="true" location="component://common-theme/template/includes/SetDependentDropdownValuesJs.ftl"/></html></platform-specific>
+                                            <include-form name="DependentDropDownMultiParamExampleForm" location="component://example/widget/example/FormWidgetExampleForms.xml"/>
                                         </widgets>
                                     </section>
                                 </container>
