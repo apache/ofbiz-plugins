@@ -79,23 +79,25 @@ class ExampleTests extends OFBizTestCase {
 
     void testGetAssociatedExampleFeaturesFiltersByDate() {
         GenericValue userLogin = from('UserLogin').where('userLoginId', 'system').queryOne()
+        String serviceName = 'getAssociatedExampleFeatures'
+        String exampleId = 'EXTEST01'
 
         // 2011 falls inside EXFTTEST01's range only
-        Map<String, Object> serviceResult = dispatcher.runSync('getAssociatedExampleFeatures',
-                [exampleId: 'EXTEST01', asOfDate: Timestamp.valueOf('2011-06-01 00:00:00'), userLogin: userLogin])
+        Map<String, Object> serviceResult = dispatcher.runSync(serviceName,
+                [exampleId: exampleId, asOfDate: Timestamp.valueOf('2011-06-01 00:00:00'), userLogin: userLogin])
         assert ServiceUtil.isSuccess(serviceResult)
         assert serviceResult.exampleFeatureList*.exampleFeatureId == ['EXFTTEST01']
         assert serviceResult.exampleFeatureList[0].description == 'Test feature one'
 
         // 2013 falls inside EXFTTEST02's range only, proving asOfDate is honoured
-        serviceResult = dispatcher.runSync('getAssociatedExampleFeatures',
-                [exampleId: 'EXTEST01', asOfDate: Timestamp.valueOf('2013-06-01 00:00:00'), userLogin: userLogin])
+        serviceResult = dispatcher.runSync(serviceName,
+                [exampleId: exampleId, asOfDate: Timestamp.valueOf('2013-06-01 00:00:00'), userLogin: userLogin])
         assert ServiceUtil.isSuccess(serviceResult)
         assert serviceResult.exampleFeatureList*.exampleFeatureId == ['EXFTTEST02']
 
         // 2020 falls outside both ranges
-        serviceResult = dispatcher.runSync('getAssociatedExampleFeatures',
-                [exampleId: 'EXTEST01', asOfDate: Timestamp.valueOf('2020-06-01 00:00:00'), userLogin: userLogin])
+        serviceResult = dispatcher.runSync(serviceName,
+                [exampleId: exampleId, asOfDate: Timestamp.valueOf('2020-06-01 00:00:00'), userLogin: userLogin])
         assert ServiceUtil.isSuccess(serviceResult)
         assert serviceResult.exampleFeatureList.isEmpty()
     }
