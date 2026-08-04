@@ -18,10 +18,11 @@ forecasts or production costing results).
 
 - **Company & plant** — its own `Company` organization (copied from OFBiz's `AccountingDemoData`,
   tagged `MANUFACTURER`) and a production plant facility `MFG_PLANT` (type `PLANT`).
-- **Login** — a focused, manufacturing-capable `admin` user (password `ofbiz`) in a
-  `FULLADMIN` group granted only this demo's permissions (`OFBTOOLS_VIEW`, `CATALOG_VIEW`,
+- **Login/security** — a focused, manufacturing-capable `admin` login and `FULLADMIN`
+  group granted only this demo's permissions (`OFBTOOLS_VIEW`, `CATALOG_VIEW`,
   `MANUFACTURING_*`, plus `WORKEFFORTMGR_ADMIN` / `ASSETMAINT_ADMIN` — production runs are
-  WorkEfforts). It drives the Manufacturing app, not unrelated back-office apps.
+  WorkEfforts). The plugin does not embed a password; set one using standard OFBiz
+  admin-user setup for the target environment.
 - **Products** — the finished skateboard deck (`DCGAPSOSR12`), its sub-assembly
   (`DSK15144-00`), and the purchased raw materials (glue, maple veneers, sticker,
   warranty card, transfer), correctly typed `FINISHED_GOOD` / `SUBASSEMBLY` / `RAW_MATERIAL`.
@@ -45,8 +46,9 @@ custom `manufacturingDemo` reader:
 ./gradlew "ofbiz --load-data readers=seed,seed-initial,manufacturingDemo"
 ```
 
-Then start OFBiz and log in to the Manufacturing application with `admin` / `ofbiz`. The
-component auto-registers (it contains an `ofbiz-component.xml`); restart OFBiz to pick it up.
+Then set an environment-specific admin password, start OFBiz, and log in to the
+Manufacturing application. The component auto-registers (it contains an
+`ofbiz-component.xml`); restart OFBiz to pick it up.
 
 ## Roadmap
 

@@ -24,7 +24,7 @@ under the License.
 
     <!-- Custom reader name: this demo loads ONLY when explicitly requested via
          readers=...,manufacturingDemo, so it never dirties the stock seed/demo data sets.
-         It is SELF-CONTAINED: it brings its own company, login and all manufacturing data,
+         It is SELF-CONTAINED: it brings its own company, security grants and all manufacturing data,
          so it loads on seed + seed-initial WITHOUT the stock 'demo' data set:
            readers=seed,seed-initial,manufacturingDemo -->
     <entity-resource type="data" reader-name="manufacturingDemo" loader="main" location="data/ManufacturingMrpDemoData.xml"/>

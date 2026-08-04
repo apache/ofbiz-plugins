@@ -6,7 +6,7 @@ reader: manufacturingDemo
 scenario: Skateboard factory (standing manufacturing configuration)
 source: Swapnil Shah (Apache OFBiz cwiki, Manufacturing space)
 scope: "slice 1 — standing config (no inventory, forecasts, MRP runs or production costing results)"
-selfContained: true   # brings its own company + login; needs no stock 'demo' data
+selfContained: true   # brings its own company + security grants; needs no stock 'demo' data
 loadCommand: './gradlew "ofbiz --load-data readers=seed,seed-initial,manufacturingDemo"'
 
 company:
@@ -14,10 +14,9 @@ company:
   roles: [INTERNAL_ORGANIZATIO, MANUFACTURER]
 login:
   userLoginId: admin
-  password: ofbiz
   group: FULLADMIN
   grantedPermissions: [OFBTOOLS_VIEW, CATALOG_VIEW, CATALOG_ADMIN, MANUFACTURING_VIEW, MANUFACTURING_CREATE, MANUFACTURING_UPDATE, MANUFACTURING_DELETE, MANUFACTURING_ADMIN, WORKEFFORTMGR_ADMIN, ASSETMAINT_ADMIN]
-  note: "Focused manufacturing-capable admin (manufacturing + the WorkEffort/AssetMaint families production runs require); not granted unrelated app permissions."
+  note: "Focused manufacturing-capable admin login and security grants without an embedded password; set the password using standard OFBiz admin-user setup for the target environment."
 facility:
   id: MFG_PLANT
   type: PLANT
@@ -99,7 +98,7 @@ supplierProducts:
 quickstartSteps:
   - { action: "Get OFBiz and plugins",            command: "git clone .../ofbiz-framework.git && ./gradlew pullAllPluginsSource", expectedResult: "plugins/manufacturing-demo/ exists" }
   - { action: "Load demo data",                   command: './gradlew "ofbiz --load-data readers=seed,seed-initial,manufacturingDemo"', expectedResult: "load completes; Company + admin login + MFG_PLANT exist" }
-  - { action: "Start OFBiz",                       command: "./gradlew ofbiz", expectedResult: "server reachable; login admin/ofbiz" }
+  - { action: "Set admin password and start OFBiz", command: "./gradlew ofbiz", expectedResult: "server reachable; admin can log in after password setup" }
   - { action: "See company and plant",            screen: "Manufacturing/Catalog app", expectedResult: "MFG_PLANT and 10 products visible" }
   - { action: "View multi-level BOM",             screen: "BOM for DCGAPSOSR12", expectedResult: "two-tier BOM (sub-assembly + finishing items)" }
   - { action: "View routing",                     screen: "Routing for DCGAPSOSR12", expectedResult: "tasks on machines AMC/LAM" }

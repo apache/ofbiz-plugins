@@ -24,9 +24,9 @@ under the License.
     readers=seed,seed-initial,manufacturingDemo
 
     Everything the evaluator sees is in THIS file - nothing is silently pulled from the
-    stock 'demo' data set. To keep it self-contained on stock entities, the company and a
-    login are copied/adapted (with attribution below) from OFBiz's own demo files; the rest
-    is the manufacturing scenario itself.
+    stock 'demo' data set. To keep it self-contained on stock entities, the company and
+    focused security grants are copied/adapted (with attribution below) from OFBiz's own
+    demo files; the rest is the manufacturing scenario itself.
 
     Scenario and manufacturing data: Swapnil Shah (Apache OFBiz cwiki, Manufacturing space).
     Product, routing and machine IDs are preserved verbatim so this demo lines up with the
@@ -34,8 +34,7 @@ under the License.
 
     Sources for the copied bootstrap rows:
       * Company organization   - applications/datamodel/data/demo/AccountingDemoData.xml
-      * Admin user / password  - applications/datamodel/data/demo/SecurityExtDemoData.xml,
-                                 framework/security/data/PasswordSecurityDemoData.xml
+      * Admin user             - applications/datamodel/data/demo/SecurityExtDemoData.xml
       * FULLADMIN group/member - framework/security/data/SecurityGroupDemoData.xml
       * Permission ids granted - defined in seed (e.g.
                                  applications/manufacturing/data/ManufacturingSecurityPermissionSeedData.xml);
@@ -62,10 +61,11 @@ under the License.
 
     <!-- ============================================================ -->
     <!-- Login & security: a focused, manufacturing-capable admin      -->
-    <!-- admin party/login copied from SecurityExtDemoData.xml +       -->
-    <!-- PasswordSecurityDemoData.xml ({SHA} hash of the standard demo -->
-    <!-- password "ofbiz"). FULLADMIN group copied from               -->
-    <!-- SecurityGroupDemoData.xml. NOTE: stock grants FULLADMIN ~55   -->
+    <!-- admin party/login copied from SecurityExtDemoData.xml.        -->
+    <!-- Passwords are intentionally not embedded in this plugin; use   -->
+    <!-- standard OFBiz admin-user setup for an environment-specific    -->
+    <!-- password. FULLADMIN group copied from SecurityGroupDemoData.   -->
+    <!-- NOTE: stock grants FULLADMIN ~55                              -->
     <!-- permissions across 16 demo files; we grant ONLY what this     -->
     <!-- manufacturing demo needs, so this admin drives the           -->
     <!-- Manufacturing app but not unrelated back-office apps.         -->
@@ -73,8 +73,7 @@ under the License.
     <Party partyId="admin" partyTypeId="PERSON" statusId="PARTY_ENABLED"/>
     <Person partyId="admin" firstName="THE" middleName="PRIVILEGED" lastName="ADMINISTRATOR" personalTitle="Mr."/>
     <PartyStatus partyId="admin" statusId="PARTY_ENABLED" statusDate="2001-01-01 12:00:00.0"/>
-    <UserLogin userLoginId="admin" userFullName="THE ADMINISTRATOR" partyId="admin"
-            currentPassword="{SHA}47b56994cbc2b6d10aa1be30f70165adb305a41a"/>
+    <UserLogin userLoginId="admin" userFullName="THE ADMINISTRATOR" partyId="admin"/>
 
     <SecurityGroup groupId="FULLADMIN" description="Full Admin group, has all general permissions." groupName="Full Admin"/>
     <UserLoginSecurityGroup groupId="FULLADMIN" userLoginId="admin" fromDate="2001-01-01 12:00:00.0"/>
