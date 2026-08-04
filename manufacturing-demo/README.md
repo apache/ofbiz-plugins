@@ -14,7 +14,7 @@ so the demo lines up with those articles.
 
 The **standing manufacturing configuration** — the "at rest" picture of a manufacturing
 company's OFBiz instance. No transactions yet (no production runs, inventory, orders,
-forecasts or costing rates).
+forecasts or production costing results).
 
 - **Company & plant** — its own `Company` organization (copied from OFBiz's `AccountingDemoData`,
   tagged `MANUFACTURER`) and a production plant facility `MFG_PLANT` (type `PLANT`).
@@ -28,7 +28,11 @@ forecasts or costing rates).
 - **Bill of Materials** — two-tier `MANUF_COMPONENT` structure.
 - **Machines** — two production machines (`AMC`, `LAM`) as fixed assets, each with a
   work calendar (`AMC` 5-day week, `LAM` 3-day week).
-- **Routings** — routings and operations tied to the products they produce.
+- **Routings** — routings and operations tied to the products they produce, including
+  a stable alternate-deck routing baseline for operation maintenance flows.
+- **Shop-floor references** — a worker party, routing labor cost calculation rule,
+  task output, tool standard and operator assignment, so routing-cost screens work
+  without the stock `demo` reader.
 - **Purchasing** — five suppliers and the vendor relationships for the raw materials.
 
 ## Load it

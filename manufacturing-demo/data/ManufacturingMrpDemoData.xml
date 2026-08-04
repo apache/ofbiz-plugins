@@ -206,6 +206,19 @@ under the License.
             purchaseCost="25000.000000" salvageValue="2500.000000" depreciation="2500.000000"/>
 
     <!-- ============================================================ -->
+    <!-- Shop-floor operator and costing reference data                -->
+    <!-- These records keep the routing-operation forms usable without -->
+    <!-- loading the stock demo reader.                                -->
+    <!-- ============================================================ -->
+    <Party partyId="SK8_ASM_OPERATOR" partyTypeId="PERSON" statusId="PARTY_ENABLED"/>
+    <Person partyId="SK8_ASM_OPERATOR" firstName="Skateboard" lastName="Operator"/>
+    <PartyStatus partyId="SK8_ASM_OPERATOR" statusId="PARTY_ENABLED" statusDate="2024-01-01 00:00:00"/>
+    <PartyRole partyId="SK8_ASM_OPERATOR" roleTypeId="WORKER"/>
+    <CostComponentCalc costComponentCalcId="SK8_TASK_COST_CALC"
+            description="Skateboard routing labor standard" currencyUomId="USD"
+            fixedCost="1.000000" variableCost="2.000000" perMilliSecond="60000.000000"/>
+
+    <!-- ============================================================ -->
     <!-- Routings and operations                                       -->
     <!-- A ROUTING groups ROU_TASKs (linked by ROUTING_COMPONENT) and  -->
     <!-- is tied to the product it produces by a ROU_PROD_TEMPLATE     -->
@@ -241,6 +254,31 @@ under the License.
             estimatedMilliSeconds="300000" estimatedSetupMillis="900000"/>
     <WorkEffortAssoc workEffortIdFrom="MANUF10165" workEffortIdTo="MANUF10171"
             workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="10" fromDate="2024-01-01 00:00:00"/>
+
+    <!-- Routing-operation baseline used by the Routing Cost Management PWA. -->
+    <WorkEffort workEffortId="SK8_ALT_ROUTING" workEffortTypeId="ROUTING" currentStatusId="ROU_ACTIVE"
+            workEffortName="Skateboard Alternate Deck Routing" description="Routing for the alternate skateboard deck"
+            quantityToProduce="1.000000" revisionNumber="1"/>
+    <WorkEffortGoodStandard workEffortId="SK8_ALT_ROUTING" productId="DCGAPSOSR13"
+            workEffortGoodStdTypeId="ROU_PROD_TEMPLATE" fromDate="2024-01-15 09:00:00"
+            estimatedQuantity="1.000000"/>
+    <WorkEffort workEffortId="SK8_TRANSFER_TASK" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE"
+            workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Apply Transfer to Alt Deck"
+            description="Apply transfer artwork to the alternate skateboard deck"
+            fixedAssetId="AMC" revisionNumber="1" estimatedMilliSeconds="420000"
+            estimatedSetupMillis="120000" reservPersons="1.000000"/>
+    <WorkEffortAssoc workEffortIdFrom="SK8_ALT_ROUTING" workEffortIdTo="SK8_TRANSFER_TASK"
+            workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="10" fromDate="2024-01-15 09:05:00"/>
+    <WorkEffortCostCalc workEffortId="SK8_TRANSFER_TASK" costComponentTypeId="EST_STD_LABOR_COST"
+            costComponentCalcId="SK8_TASK_COST_CALC" fromDate="2024-01-15 09:10:00"/>
+    <WorkEffortGoodStandard workEffortId="SK8_TRANSFER_TASK" productId="DCGAPSOSR13"
+            workEffortGoodStdTypeId="PRUNT_PROD_DELIV" fromDate="2024-01-15 09:15:00"
+            estimatedQuantity="1.000000"/>
+    <WorkEffortFixedAssetStd workEffortId="SK8_TRANSFER_TASK" fixedAssetTypeId="GROUP_EQUIPMENT"
+            estimatedQuantity="1.000000" estimatedDuration="60000.000000" estimatedCost="12.500000"/>
+    <WorkEffortPartyAssignment workEffortId="SK8_TRANSFER_TASK" partyId="SK8_ASM_OPERATOR" roleTypeId="WORKER"
+            fromDate="2024-01-15 09:20:00" statusId="PRTYASGN_ASSIGNED"
+            comments="Standard operator assignment for the skateboard alternate deck routing"/>
 
     <!-- ============================================================ -->
     <!-- Product-facility settings (MRP reorder parameters at plant)   -->

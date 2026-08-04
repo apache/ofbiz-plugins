@@ -5,7 +5,7 @@ component: manufacturing-demo
 reader: manufacturingDemo
 scenario: Skateboard factory (standing manufacturing configuration)
 source: Swapnil Shah (Apache OFBiz cwiki, Manufacturing space)
-scope: "slice 1 — standing config (no inventory, forecasts, MRP runs or costing rates)"
+scope: "slice 1 — standing config (no inventory, forecasts, MRP runs or production costing results)"
 selfContained: true   # brings its own company + login; needs no stock 'demo' data
 loadCommand: './gradlew "ofbiz --load-data readers=seed,seed-initial,manufacturingDemo"'
 
@@ -49,6 +49,12 @@ machines:
   - { id: AMC, calendar: CAL_AMC, locatedAt: MFG_PLANT }
   - { id: LAM, calendar: CAL_LAM, locatedAt: MFG_PLANT }
 
+operators:
+  - { id: SK8_ASM_OPERATOR, role: WORKER, name: "Skateboard Operator" }
+
+costCalcs:
+  - { id: SK8_TASK_COST_CALC, description: "Skateboard routing labor standard", currency: USD }
+
 calendars:
   - { id: CAL_AMC, week: CW_AMC_STD, pattern: "5-day work week" }
   - { id: CAL_LAM, week: CW_LAM_STD, pattern: "3-day work week (Mon/Wed/Fri)" }
@@ -63,6 +69,20 @@ routings:
     product: DCGAPSOSR12
     tasks:
       - { id: MANUF10171, name: "Apply Transfer to deck", machine: AMC, estimatedMs: 300000, seq: 10 }
+  - id: SK8_ALT_ROUTING
+    product: DCGAPSOSR13
+    tasks:
+      - { id: SK8_TRANSFER_TASK, name: "Apply Transfer to Alt Deck", machine: AMC, estimatedMs: 420000, seq: 10 }
+
+routingOperationReferences:
+  costRates:
+    - { task: SK8_TRANSFER_TASK, costType: EST_STD_LABOR_COST, costCalc: SK8_TASK_COST_CALC }
+  outputs:
+    - { task: SK8_TRANSFER_TASK, product: DCGAPSOSR13, type: PRUNT_PROD_DELIV }
+  tools:
+    - { task: SK8_TRANSFER_TASK, fixedAssetType: GROUP_EQUIPMENT }
+  assignments:
+    - { task: SK8_TRANSFER_TASK, party: SK8_ASM_OPERATOR, role: WORKER }
 
 suppliers:
   - { id: SUP_001, name: "Maplewood Veneer Supply" }
@@ -87,12 +107,18 @@ quickstartSteps:
   - { action: "Confirm/schedule run",             screen: "Production run detail", expectedResult: "status transitions; tasks + material requirements visible" }
 
 verificationAnchors:
-  totalValues: 101  # rows the manufacturingDemo reader loads (EntitySaxReader "Finished N values")
+  totalValues: 115  # rows the manufacturingDemo reader loads (EntitySaxReader "Finished N values")
   products: 10
   bomLines: 8
-  routings: 2
-  routingTasks: 3
+  routings: 3
+  routingTasks: 4
   machines: 2
+  operators: 1
+  costCalcs: 1
+  routingCostRates: 1
+  routingOutputs: 1
+  routingToolStandards: 1
+  routingOperatorAssignments: 1
   calendars: 2
   suppliers: 5
   supplierProducts: 3
