@@ -325,7 +325,29 @@ under the License.
                     <entity-order-by field-name="geoName"/>
                 </entity-options>
             </drop-down>
-        </field>        
+        </field>
+    </form>
+
+    <!-- ***************************************************** -->
+    <!-- ***   Dependent dropdown with several parameters  *** -->
+    <!-- ***************************************************** -->
+    <form name="DependentDropDownMultiParamExampleForm" type="single" title="">
+        <field name="multiParamDependentDropDownFields" title="${uiLabelMap.ExampleMultiParamDependentDropDowns}">
+            <display description="${uiLabelMap.ExampleMultiParamDependentDropDownTooltip}"/>
+        </field>
+        <field name="exampleId" title="${uiLabelMap.ExampleExampleId}">
+            <drop-down>
+                <entity-options entity-name="Example" key-field-name="exampleId" description="${exampleName}">
+                    <entity-order-by field-name="exampleId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="asOfDate" title="${uiLabelMap.ExampleAsOfDate}">
+            <date-time type="date" default-value="${groovy:org.apache.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
+        </field>
+        <field name="exampleFeatureId" title="${uiLabelMap.ExampleFeature}">
+            <drop-down allow-empty="false"/>
+        </field>
     </form>
 
     <!-- Simple form to print a FOP PDF file with the  fonts available in OFBiz Project -->

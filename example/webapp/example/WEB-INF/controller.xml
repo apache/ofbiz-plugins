@@ -248,6 +248,15 @@ under the License.
 
     <!-- end of request mappings -->
 
+    <!--========================== AJAX events =====================-->
+    <!-- Get ExampleFeatures applied to an Example, active on a given date -->
+    <request-map uri="getAssociatedExampleFeatures">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getAssociatedExampleFeatures"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://example/widget/example/CommonScreens.xml#main"/>
 
