@@ -30,4 +30,11 @@ under the License.
     <ExampleType exampleTypeId="CONTRIVED" description="Contrived Example Type"/>
     <Example exampleId="TestExampleUpdate" exampleTypeId="CONTRIVED" statusId="EXST_IN_DESIGN" exampleName="Test Example for Update"/>
     <Example exampleId="TestExampleDelete" exampleTypeId="CONTRIVED" statusId="EXST_IN_DESIGN" exampleName="Test Example for Delete"/>
+
+    <!-- Fixtures for testGetAssociatedExampleFeaturesFiltersByDate (OFBIZ-11724) -->
+    <Example exampleId="EXTEST01" exampleName="Multi param dependent drop-down test" exampleTypeId="CONTRIVED" statusId="EXST_IN_DESIGN"/>
+    <ExampleFeature exampleFeatureId="EXFTTEST01" featureSourceEnumId="EXFTSRC_CUSTOMER" description="Test feature one"/>
+    <ExampleFeature exampleFeatureId="EXFTTEST02" featureSourceEnumId="EXFTSRC_CUSTOMER" description="Test feature two"/>
+    <ExampleFeatureAppl exampleId="EXTEST01" exampleFeatureId="EXFTTEST01" fromDate="2010-01-01 00:00:00" thruDate="2012-01-01 00:00:00" exampleFeatureApplTypeId="REQUIRED" sequenceNum="1"/>
+    <ExampleFeatureAppl exampleId="EXTEST01" exampleFeatureId="EXFTTEST02" fromDate="2012-01-01 00:00:00" thruDate="2014-01-01 00:00:00" exampleFeatureApplTypeId="DESIRED" sequenceNum="2"/>
 </entity-engine-xml>

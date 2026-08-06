@@ -53,6 +53,14 @@ under the License.
         <auto-attributes include="pk" mode="IN" optional="true"/>
         <attribute name="exampleList" mode="OUT" optional="true" type="List"/>
     </service>
+    <service name="getAssociatedExampleFeatures" engine="groovy" auth="true"
+            location="component://example/src/main/groovy/org/apache/ofbiz/example/ExampleServicesScript.groovy" invoke="getAssociatedExampleFeatures">
+        <description>List the ExampleFeatures applied to an Example and active on a given date.
+            Backs the multi parameter dependent drop-down example (OFBIZ-11724).</description>
+        <attribute name="exampleId" mode="IN" type="String" optional="false"/>
+        <attribute name="asOfDate" mode="IN" type="Timestamp" optional="true"/>
+        <attribute name="exampleFeatureList" mode="OUT" type="List"/>
+    </service>
     <service name="createExampleStatus" default-entity-name="ExampleStatus" engine="groovy"
             location="component://example/src/main/groovy/org/apache/ofbiz/example/ExampleServicesScript.groovy" invoke="createExampleStatus" auth="true">
         <description>Create a ExampleStatus</description>

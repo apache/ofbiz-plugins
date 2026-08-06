@@ -18,6 +18,8 @@
  */
 package org.apache.ofbiz.example
 
+import java.sql.Timestamp
+
 import org.apache.ofbiz.base.util.UtilDateTime
 import org.apache.ofbiz.entity.GenericValue
 
@@ -86,5 +88,29 @@ Map createExampleStatus() {
     newEntity.changeByUserLoginId = userLogin.userLoginId
     newEntity.create()
 
+    return result
+}
+
+Map getAssociatedExampleFeatures() {
+    Map result = success()
+    List exampleFeatureList = []
+
+    Timestamp asOfDate = parameters.asOfDate ?: UtilDateTime.nowTimestamp()
+
+    List<GenericValue> featureAppls = from('ExampleFeatureAppl')
+            .where('exampleId', parameters.exampleId)
+            .filterByDate(asOfDate)
+            .orderBy('sequenceNum')
+            .queryList()
+
+    for (GenericValue featureAppl : featureAppls) {
+        GenericValue exampleFeature = featureAppl.getRelatedOne('ExampleFeature', true)
+        if (exampleFeature) {
+            exampleFeatureList << [exampleFeatureId: exampleFeature.exampleFeatureId,
+                                   description: exampleFeature.description]
+        }
+    }
+
+    result.exampleFeatureList = exampleFeatureList
     return result
 }

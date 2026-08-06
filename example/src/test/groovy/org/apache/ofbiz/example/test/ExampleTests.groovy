@@ -18,6 +18,8 @@
  */
 package org.apache.ofbiz.example.test
 
+import java.sql.Timestamp
+
 import org.apache.ofbiz.entity.GenericValue
 import org.apache.ofbiz.service.ServiceUtil
 import org.apache.ofbiz.service.testtools.OFBizTestCase
@@ -73,6 +75,31 @@ class ExampleTests extends OFBizTestCase {
 
         GenericValue example = from('Example').where('exampleId', 'TestExampleDelete').queryOne()
         assert example == null
+    }
+
+    void testGetAssociatedExampleFeaturesFiltersByDate() {
+        GenericValue userLogin = from('UserLogin').where('userLoginId', 'system').queryOne()
+        String serviceName = 'getAssociatedExampleFeatures'
+        String exampleId = 'EXTEST01'
+
+        // 2011 falls inside EXFTTEST01's range only
+        Map<String, Object> serviceResult = dispatcher.runSync(serviceName,
+                [exampleId: exampleId, asOfDate: Timestamp.valueOf('2011-06-01 00:00:00'), userLogin: userLogin])
+        assert ServiceUtil.isSuccess(serviceResult)
+        assert serviceResult.exampleFeatureList*.exampleFeatureId == ['EXFTTEST01']
+        assert serviceResult.exampleFeatureList[0].description == 'Test feature one'
+
+        // 2013 falls inside EXFTTEST02's range only, proving asOfDate is honoured
+        serviceResult = dispatcher.runSync(serviceName,
+                [exampleId: exampleId, asOfDate: Timestamp.valueOf('2013-06-01 00:00:00'), userLogin: userLogin])
+        assert ServiceUtil.isSuccess(serviceResult)
+        assert serviceResult.exampleFeatureList*.exampleFeatureId == ['EXFTTEST02']
+
+        // 2020 falls outside both ranges
+        serviceResult = dispatcher.runSync(serviceName,
+                [exampleId: exampleId, asOfDate: Timestamp.valueOf('2020-06-01 00:00:00'), userLogin: userLogin])
+        assert ServiceUtil.isSuccess(serviceResult)
+        assert serviceResult.exampleFeatureList.isEmpty()
     }
 
 }

@@ -90,4 +90,17 @@ under the License.
     <ExampleStatus exampleId="EX02" statusDate="2010-01-02 00:00:00" statusEndDate="2011-01-02 00:00:00" statusId="EXST_IN_DESIGN"/>
     <ExampleStatus exampleId="EX02" statusDate="2011-01-02 00:00:01" statusEndDate="2012-01-02 00:00:00" statusId="EXST_DEFINED"/>
     <ExampleStatus exampleId="EX02" statusDate="2012-01-02 00:00:00" statusEndDate="2013-01-02 00:00:00" statusId="EXST_APPROVED"/>
+
+    <!-- Features for the multi parameter dependent drop-down example (OFBIZ-11724).
+         The date ranges deliberately do not overlap, so changing the date on the
+         Form Widget Examples screen visibly changes the drop-down contents. -->
+    <ExampleFeature exampleFeatureId="EXFT01" featureSourceEnumId="EXFTSRC_CUSTOMER" description="Colour: red"/>
+    <ExampleFeature exampleFeatureId="EXFT02" featureSourceEnumId="EXFTSRC_CUSTOMER" description="Colour: blue"/>
+    <ExampleFeature exampleFeatureId="EXFT03" featureSourceEnumId="EXFTSRC_PARTNER" description="Size: large"/>
+    <ExampleFeature exampleFeatureId="EXFT04" featureSourceEnumId="EXFTSRC_EMPLOYEE" description="Finish: matte"/>
+
+    <ExampleFeatureAppl exampleId="EX01" exampleFeatureId="EXFT01" fromDate="2010-01-01 00:00:00" thruDate="2012-01-01 00:00:00" exampleFeatureApplTypeId="REQUIRED" sequenceNum="1"/>
+    <ExampleFeatureAppl exampleId="EX01" exampleFeatureId="EXFT02" fromDate="2012-01-01 00:00:00" thruDate="2014-01-01 00:00:00" exampleFeatureApplTypeId="DESIRED" sequenceNum="2"/>
+    <ExampleFeatureAppl exampleId="EX01" exampleFeatureId="EXFT03" fromDate="2014-01-01 00:00:00" exampleFeatureApplTypeId="REQUIRED" sequenceNum="3"/>
+    <ExampleFeatureAppl exampleId="EX02" exampleFeatureId="EXFT04" fromDate="2010-01-01 00:00:00" exampleFeatureApplTypeId="DESIRED" sequenceNum="1"/>
 </entity-engine-xml>
