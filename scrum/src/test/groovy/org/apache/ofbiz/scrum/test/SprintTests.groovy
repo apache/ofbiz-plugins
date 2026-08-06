@@ -86,35 +86,18 @@ class SprintTests implements JupiterTestHelper {
         assert ServiceUtil.isSuccess(serviceResult)
     }
 
-    // Migrated from SprintTests.xml:testAddSprintMember
-    // Ordered after testRemoveSprintMember: assignPartyToWorkEffort's own de-dup check
-    // (WorkEffortServicesScript.groovy's filterByDate() against "today") rejects a second
-    // active assignment for the same (workEffortId, partyId, roleTypeId), so if this ran
-    // first, testRemoveSprintMember's own defensive "assign first" call would silently fail
-    // and the subsequent delete-by-PK would find nothing to remove. Pre-existing bug, not
-    // introduced by this migration - see the design doc addendum.
-    @Test
-    @Order(7)
-    void testAddSprintMember() {
-        Map serviceCtx = [
-                workEffortId: 'DEMO-SPRINT-1',
-                roleTypeId: 'SCRUM_TEAM',
-                statusId: 'PRTYASGN_ASSIGNED',
-                partyId: 'DemoCustomer-1',
-                fromDate: java.sql.Timestamp.valueOf(
-                        '2010-07-30 00:00:00.000'),
-                userLogin: userLogin
-        ]
-        Map serviceResult = dispatcher.runSync(
-                'assignPartyToWorkEffort', serviceCtx)
-        assert ServiceUtil.isSuccess(serviceResult)
-    }
-
-    // Migrated from SprintTests.xml:testRemoveSprintMember
+    // Migrated from SprintTests.xml:testAddSprintMember and testRemoveSprintMember.
+    // Originally two separate @Order-pinned methods that only passed in one specific
+    // order: assignPartyToWorkEffort's own de-dup check (WorkEffortServicesScript.groovy's
+    // filterByDate() against "today") rejects a second active assignment for the same
+    // (workEffortId, partyId, roleTypeId), so testAddSprintMember's assignment had to run
+    // after testRemoveSprintMember's assign-then-remove pair, not before. Merged into one
+    // scenario - add a sprint member, then remove that same member - so the coupling is
+    // gone rather than worked around.
     @Test
     @Order(6)
-    void testRemoveSprintMember() {
-        Map serviceCtx = [
+    void testAddAndRemoveSprintMember() {
+        Map assignCtx = [
                 workEffortId: 'DEMO-SPRINT-1',
                 roleTypeId: 'SCRUM_TEAM',
                 statusId: 'PRTYASGN_ASSIGNED',
@@ -122,8 +105,8 @@ class SprintTests implements JupiterTestHelper {
                 fromDate: java.sql.Timestamp.valueOf('2010-07-31 00:00:00.000'),
                 userLogin: userLogin
         ]
-        // Assign first so we can safely remove it regardless of test execution order
-        dispatcher.runSync('assignPartyToWorkEffort', serviceCtx)
+        Map assignResult = dispatcher.runSync('assignPartyToWorkEffort', assignCtx)
+        assert ServiceUtil.isSuccess(assignResult)
 
         Map removeCtx = [
                 workEffortId: 'DEMO-SPRINT-1',
@@ -132,9 +115,9 @@ class SprintTests implements JupiterTestHelper {
                 fromDate: java.sql.Timestamp.valueOf('2010-07-31 00:00:00.000'),
                 userLogin: userLogin
         ]
-        Map serviceResult = dispatcher.runSync(
+        Map removeResult = dispatcher.runSync(
                 'unassignPartyFromWorkEffort', removeCtx)
-        assert ServiceUtil.isSuccess(serviceResult)
+        assert ServiceUtil.isSuccess(removeResult)
     }
 
     /**

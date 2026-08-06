@@ -23,6 +23,7 @@ import org.apache.ofbiz.service.ServiceUtil
 import org.apache.ofbiz.testtools.JunitJupiterTest
 import org.apache.ofbiz.testtools.JupiterTestHelper
 import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
@@ -42,6 +43,7 @@ import org.junit.jupiter.params.provider.CsvSource
 class ExampleJupiterTests implements JupiterTestHelper {
 
     @Test
+    @Order(1)
     void shouldCreateExample() {
         GenericValue userLogin = delegator.findOne('UserLogin', [userLoginId: 'system'], false)
         Map<String, Object> result = dispatcher.runSync('createExample', [
@@ -58,6 +60,7 @@ class ExampleJupiterTests implements JupiterTestHelper {
     }
 
     @ParameterizedTest(name = '[{index}] exampleTypeId={0}')
+    @Order(2)
     @CsvSource([
             'CONTRIVED',
             'INSPIRED',
@@ -77,6 +80,7 @@ class ExampleJupiterTests implements JupiterTestHelper {
 
     @Disabled('OFBIZ-XXXXX: sample only - demonstrates a documented, reportable skip; not a real defect')
     @Test
+    @Order(3)
     void shouldUpdateExampleUnderConcurrentLoad() {
         GenericValue userLogin = delegator.findOne('UserLogin', [userLoginId: 'system'], false)
         Map<String, Object> result = dispatcher.runSync('updateExample', [exampleId: 'TestExampleUpdate', userLogin: userLogin])

@@ -21,12 +21,14 @@ package org.apache.ofbiz.ecommerce.order.test
 import org.apache.ofbiz.service.ServiceUtil
 import org.apache.ofbiz.testtools.JunitJupiterTest
 import org.apache.ofbiz.testtools.JupiterTestHelper
+import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 
 @JunitJupiterTest
 class OrderNotificationTests implements JupiterTestHelper {
 
     @Test
+    @Order(1)
     void testSendOrderConfirmation() {
         Map serviceCtx = [
             orderId: 'TEST_DEMO10090',
@@ -39,6 +41,7 @@ class OrderNotificationTests implements JupiterTestHelper {
     }
 
     @Test
+    @Order(2)
     void testSendOrderChangeNotification() {
         Map serviceCtx = [
             orderId: 'TEST_DEMO10090',
@@ -53,6 +56,7 @@ class OrderNotificationTests implements JupiterTestHelper {
     }
 
     @Test
+    @Order(3)
     void testSendOrderBackorderNotification() {
         Map serviceCtx = [
             orderId: 'TEST_DEMO10090',
@@ -65,6 +69,7 @@ class OrderNotificationTests implements JupiterTestHelper {
     }
 
     @Test
+    @Order(4)
     void testsendOrderPayRetryNotification() {
         Map serviceCtx = [
             orderId: 'TEST_DEMO10090',
@@ -77,6 +82,7 @@ class OrderNotificationTests implements JupiterTestHelper {
     }
 
     @Test
+    @Order(5)
     void testsendOrderCompleteNotification() {
         Map serviceCtx = [
             orderId: 'TEST_DEMO10090',
