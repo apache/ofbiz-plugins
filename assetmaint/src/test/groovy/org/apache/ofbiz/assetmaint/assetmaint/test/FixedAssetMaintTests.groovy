@@ -22,12 +22,14 @@ import org.apache.ofbiz.base.util.UtilDateTime
 import org.apache.ofbiz.entity.GenericValue
 import org.apache.ofbiz.testtools.JunitJupiterTest
 import org.apache.ofbiz.testtools.JupiterTestHelper
+import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 
 @JunitJupiterTest
 class FixedAssetMaintTests implements JupiterTestHelper {
 
     @Test
+    @Order(1)
     void testCreateFixedAssetMaintUpdateWorkEffortWithProductMaint() {
         // Test case for service createFixedAssetMaintUpdateWorkEffort with a product Maintenance
         String fixedAssetId = 'DEMO_VEHICLE_01'
@@ -56,6 +58,7 @@ class FixedAssetMaintTests implements JupiterTestHelper {
     }
 
     @Test
+    @Order(2)
     void testCreateFixedAssetMaintUpdateWorkEffortWithoutProductMaint() {
         // Test case for service createFixedAssetMaintUpdateWorkEffort without a product maintenance
         String fixedAssetId = 'DEMO_VEHICLE_01'
@@ -87,6 +90,7 @@ class FixedAssetMaintTests implements JupiterTestHelper {
     }
 
     @Test
+    @Order(3)
     void testUpdateFixedAssetMaintAndWorkEffort() {
         // Test case for service updateFixedAssetMaintAndWorkEffort
         String fixedAssetId = 'DEMO_VEHICLE_01'
