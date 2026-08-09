@@ -18,27 +18,58 @@ under the License.
 -->
 
 ---
-name: precommit-readiness
-description: Write OFBiz changes so they pass local commit hooks, CodeNarc, Groovy compilation, Java checks, XML validation, and focused tests before the commit step.
+name: prepush-readiness
+description: Write OFBiz changes so they pass the pre-push hook (Checkstyle for Java, CodeNarc for Groovy) and are in committable shape — clean compilation, valid XML/widgets, and focused tests — before you push.
 ---
 
-# Skill: precommit-readiness
+# Skill: prepush-readiness
 
 ## Goal
 
 Prevent the "functional code first, hook fixes later" loop. Code should be
-written in the shape this repository's pre-commit checks, CodeNarc rules,
-Groovy compilation, Java compilation, XML parsers, and focused tests will
-accept.
+written in the shape this repository's pre-push hook (Checkstyle, CodeNarc),
+Groovy/Java compilation, XML parsers, and focused tests will accept — checked
+early, not discovered at push time.
+
+**There is no pre-commit hook in this repo.** The `com.github.jakemarsden.git-hooks`
+Gradle plugin wires a single **pre-push** hook (`build.gradle`) that runs
+`checkstyleMain checkstyleTest codenarcMain codenarcTest`. Compilation, XML
+validity, and tests are not hook-enforced at all — they're this skill's own
+recommended quality bar, worth checking before you commit even though nothing
+stops you from committing broken code locally.
 
 ## Triggers
 
 **ALWAYS** read this skill when:
-- Writing or modifying code that may be committed.
+- Writing or modifying code that may be committed or pushed.
 - Editing Groovy, Java, XML, FreeMarker, properties, data, tests, or Gradle files.
-- Preparing a commit or responding to pre-commit/build failures.
+- Preparing a commit, preparing to push, or responding to a pre-push hook failure.
 - Adding logic that affects service contracts, entity models, widgets, events,
   data loading, or tests.
+
+## The Pre-Push Gate
+
+The hook runs exactly two Gradle checks, both zero-tolerance:
+
+| Check | Language | Config | Command |
+| :--- | :--- | :--- | :--- |
+| Checkstyle | Java | `config/checkstyle/checkstyle.xml` (`maxErrors = 0`) | `./gradlew checkstyleMain checkstyleTest` |
+| CodeNarc | Groovy | `config/codenarc/codenarc.groovy` (`maxPriority1/2/3Violations = 0`) | `./gradlew codenarcMain codenarcTest` |
+
+Mirror the hook exactly before pushing:
+
+```bash
+./gradlew checkstyleMain checkstyleTest codenarcMain codenarcTest
+```
+
+This is the only command that reproduces what will actually block the push —
+running a broader `check`/`build` task also compiles and tests, which is
+useful, but don't mistake that for the hook itself.
+
+If working in a linked `git worktree`, the hook still fires there (the plugin
+resolves the real `.git` common dir so this works even though `.git` is a
+gitlink file in a worktree) — see `manage-contribution-workflow` for the
+other worktree setup steps.
 
 ## Core Workflow
 
@@ -49,22 +80,22 @@ accept.
      `manage-controller`, `manage-java`, or `manage-tests`.
 
 2. **Design for hook compatibility before editing**
-   - Identify likely checks for the touched files: CodeNarc for Groovy,
-     compilation for Java/Groovy, XML parsing/schema expectations for OFBiz XML,
-     and focused tests for behavior.
+   - Identify likely checks for the touched files: Checkstyle for Java,
+     CodeNarc for Groovy, compilation for both, XML parsing/schema
+     expectations for OFBiz XML, and focused tests for behavior.
    - Prefer existing local patterns in nearby files over introducing a new style.
    - Keep the diff narrow so validation failures are easy to isolate.
 
 3. **Run focused validation before finishing**
    - Prefer the narrowest command that exercises the changed area.
-   - If a pre-commit hook exists and the user is preparing to commit, run or
-     mirror the hook checks before the commit step when practical.
+   - When preparing to push, run the exact hook command above first — don't
+     rely on IDE linting or memory of the rules.
    - If validation is too expensive or blocked, explain exactly what was not run
      and why.
 
 4. **Capture reusable failures**
-   - When a hook or build fails for a pattern likely to recur, update this skill
-     with the bad pattern and preferred replacement.
+   - When the hook or build fails for a pattern likely to recur, update this
+     skill with the bad pattern and preferred replacement.
 
 ## Groovy Readiness
 
@@ -120,8 +151,8 @@ Choose the smallest useful validation set:
   existing Gradle task that validates the touched area.
 - Behavior changes: add or update focused tests when the risk is more than
   mechanical.
-- Commit preparation: run the same checks the pre-commit hook will run when
-  practical.
+- Push preparation: run `./gradlew checkstyleMain checkstyleTest codenarcMain
+  codenarcTest` — the exact pre-push hook command — before pushing.
 
 ## Common Failure Patterns To Avoid
 
@@ -148,3 +179,7 @@ Before handing back a code change:
 - Imports, locals, and labels are clean.
 - Focused validation was run, or any skipped validation is clearly reported.
 - Any new recurring hook failure pattern is added back to this skill.
+
+## See Also
+- `coding-standards` — the broader style and OFBiz-idiom rules this skill's checks partially enforce.
+- `manage-contribution-workflow` — worktree setup (including why the pre-push hook still works there), testing against real data, and PR conventions.
