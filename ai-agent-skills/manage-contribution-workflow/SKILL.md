@@ -41,8 +41,15 @@ with the code change itself.
   filed JIRA issue).
 - Creating a branch or a linked `git worktree` in an `ofbiz-framework` (or
   paired `ofbiz-plugins`) checkout.
+- **Resuming work on a branch or PR that already existed before this
+  session** — this applies exactly as much as starting fresh. A branch
+  cut days or weeks ago is more likely to be stale against `upstream`, not
+  less, so picking up old work is a stronger reason to re-sync, not a reason
+  to skip it because "setup already happened."
+- About to `git push` for any reason — a new branch, an update to an
+  existing one, or a fix requested on an open PR.
 - About to run `ofbiz --test component=...` for regression verification.
-- Preparing a commit message or a pull request.
+- Preparing a commit message or a pull request, or updating one already open.
 - Backporting a fix from `trunk` to a release branch.
 
 ## Fork And Upstream Sync
@@ -59,9 +66,9 @@ questions are even relevant:
    ```bash
    git remote add upstream https://github.com/apache/<repo-name>.git
    ```
-2. **Sync fully, then branch, then push.** Fetch and fast-forward the local
-   base branch (`trunk`, or the release branch you're backporting to) from
-   `upstream`:
+2. **Sync fully, then branch, then push — for a brand new branch.** Fetch
+   and fast-forward the local base branch (`trunk`, or the release branch
+   you're backporting to) from `upstream`:
    ```bash
    git fetch upstream
    git checkout trunk
@@ -74,13 +81,27 @@ questions are even relevant:
    upstream since the fork's `trunk` was last updated; syncing *after* the
    branch already exists doesn't fix that, since the branch's base is fixed
    at the moment it's cut.
-3. **Re-check before opening the PR.** If time has passed since the branch
-   was cut, re-fetch `upstream` and confirm the branch still applies cleanly
-   against current `trunk` — don't assume nothing has changed. This is a
-   check, not an automatic rebase: if the feature branch has already been
-   pushed, don't rewrite its history to "catch up" — a real conflict is a
-   sign to resolve it deliberately (merge or rebase, as the situation calls
-   for), not to silently force-sync.
+3. **Re-sync before every push — not just the first one, unconditionally.**
+   Before pushing to a branch that already exists — the second commit, the
+   tenth, a fix requested on review, a session picking the branch back up —
+   re-fetch `upstream` and check whether its target branch (`trunk`, or the
+   release branch) has moved in a way that would conflict:
+   ```bash
+   git fetch upstream
+   git log HEAD..upstream/trunk --oneline
+   ```
+   Do this **every single push**, with no exceptions for "I just did this
+   earlier," "this is the same session," or "it's probably still fine" —
+   none of those are things an agent can actually verify without doing the
+   fetch, so they're not valid reasons to skip it. A branch resumed after a
+   gap (a new session, a different day) is *more* likely to be stale, not
+   less — resuming old work is a stronger reason to check, never a reason to
+   assume the earlier sync still covers you.
+   This is a check, not an automatic rebase: if the feature branch has
+   already been pushed, don't rewrite its history to "catch up" — a real
+   conflict is a sign to resolve it deliberately (merge or rebase, as the
+   situation calls for), not to silently force-sync or push anyway and let
+   the PR surface the conflict.
 
 ## JIRA And Branching
 
