@@ -13,12 +13,24 @@ removing it) has zero effect on the rest of OFBiz either way.
 This plugin needs a **DCEVM (Dynamic Code Evolution Virtual Machine)** JVM to run.
 Set it up once, before running `./gradlew ofbizDev --no-watch-fs`:
 
-1. Get a DCEVM-patched JVM. Easiest source: JetBrains Runtime (JBR), bundled with
-   IntelliJ IDEA under `<IDE install>/jbr` (`.../Contents/jbr` on macOS). Standalone
-   DCEVM builds work too.
+1. Get a DCEVM-patched JVM. Recommended source: **JetBrains Runtime (JBR)** — it has
+   DCEVM's enhanced class redefinition built in and officially maintained for JDK 17,
+   21, and 25 (trunk targets 17). This matters because neither of the community forks
+   covers that: the original [dcevm/dcevm](https://github.com/dcevm/dcevm) project
+   stops at Java 7/8, and the
+   [TravaOpenJDK](https://github.com/TravaOpenJDK/trava-jdk-11-dcevm) forks extend that
+   only to Java 11 (and haven't been updated in a couple of years). JBR is downloadable
+   standalone from
+   [JetBrains' own JBR releases page](https://github.com/JetBrains/JetBrainsRuntime/releases)
+   — no IntelliJ install required. If you already have IntelliJ IDEA, its bundled copy
+   under `<IDE install>/jbr` (`.../Contents/jbr` on macOS) works just as well.
 2. Point at it — set the `DCEVM_HOME` env var (e.g. in your shell profile) so every
    future run picks it up automatically, or pass `-PdcevmHome=/path/to/jvm` each time
    instead.
+
+This plugin is IDE-agnostic: `DCEVM_HOME`/`-PdcevmHome` just needs to resolve to a
+`java` executable, so it works identically whether you use IntelliJ, VSCode, or no IDE
+at all — see the VSCode example below.
 
 Add this to your shell profile (`~/.zshrc`, `~/.bashrc`, etc.) so it's always set:
 
@@ -30,6 +42,17 @@ export DCEVM_HOME="/Applications/IntelliJ IDEA.app/Contents/jbr"
 bundled JetBrains Runtime by default). Reload your shell (or run `source ~/.zshrc`) and
 every future `./gradlew ofbizDev --no-watch-fs` picks it up automatically, with nothing
 else to set.
+
+**VSCode (or any non-IntelliJ setup):** download a standalone JBR build matching your
+OS and JDK version from the JBR releases page linked above, unpack it anywhere (e.g.
+`~/jvms/jbr-21/`), and point `DCEVM_HOME`/`-PdcevmHome` at that directory the same way
+— IntelliJ never needs to be installed. `devreload` looks for `bin/java` directly under
+that path, and automatically falls back to the `Contents/Home/bin/java` layout macOS
+JDK bundles use, so either standalone-download layout resolves without extra steps.
+If you also want VSCode's Java extension (`redhat.java`) to build/run against that same
+JDK, add it under `java.configuration.runtimes` in your VSCode settings — that's a
+separate, independent setting from `DCEVM_HOME`, which only controls the JVM
+`./gradlew ofbizDev` itself launches with.
 
 ## Usage
 
@@ -101,7 +124,7 @@ No restart, no re-login, no second terminal.
 | Does it affect production? | No. It is completely inert unless started with a special flag (`-Dofbiz.hotreload=true`). Safe to have installed anywhere |
 | Does it change OFBiz core code? | No. The current design needs zero changes to `ofbiz-framework` — it's a plugin only |
 | What do I run? | One command: `./gradlew ofbizDev --no-watch-fs` |
-| What do I need installed? | A DCEVM-patched JVM (e.g. JetBrains Runtime, bundled with IntelliJ IDEA) |
+| What do I need installed? | A DCEVM-patched JVM. JetBrains Runtime (JBR) is recommended — it's officially maintained for JDK 17/21/25 and downloadable standalone, independent of IntelliJ |
 
 ---
 
@@ -255,7 +278,7 @@ with `devreload`'s own watcher for the same OS-level directory-watch budget
 | Requirement | Why |
 |---|---|
 | A JDK, not just a JRE | In-process compilation uses `javax.tools.JavaCompiler` (`ToolProvider.getSystemJavaCompiler()`), which is only present in a full JDK. Running on a JRE disables Java auto-compilation (a warning is logged); `services.xml` reload still works |
-| A DCEVM-patched JVM | Required by the `ofbizDev` Gradle task specifically (not by `DevReloadContainer` itself) so that structural changes (new/removed methods/fields, changed signatures) hot-swap instead of silently requiring an unannounced restart. Easiest source: JetBrains Runtime (JBR), bundled with IntelliJ IDEA under `<IDE install>/jbr` (`.../Contents/jbr` on macOS) |
+| A DCEVM-patched JVM | Required by the `ofbizDev` Gradle task specifically (not by `DevReloadContainer` itself) so that structural changes (new/removed methods/fields, changed signatures) hot-swap instead of silently requiring an unannounced restart. Recommended source: JetBrains Runtime (JBR) — officially maintained for JDK 17/21/25 (unlike dcevm/dcevm, which stops at 8, or TravaOpenJDK, which stops at 11), and downloadable standalone from JetBrains' releases page without installing IntelliJ. IntelliJ's bundled copy under `<IDE install>/jbr` (`.../Contents/jbr` on macOS) also works if you already have it |
 | `-Djdk.attach.allowAttachSelf=true` | A JDK 9+ safeguard against a process attaching to itself; required for `HotSwapAgent` to self-attach. Set automatically by `./gradlew ofbizDev` |
 
 ---
@@ -328,7 +351,7 @@ OFBiz.
 | Log: "could not self-attach HotSwapAgent" | Missing `-Djdk.attach.allowAttachSelf=true` | Set automatically by `./gradlew ofbizDev`; add it explicitly if starting OFBiz another way |
 | `services.xml` change not picked up | OFBiz restarted without going through `ofbizDev` | Only works when `-Dofbiz.hotreload=true` is set |
 | A "just a method body" change still asks for a restart | Structural-change-only edit (new/removed method or field, changed signature) running on a stock JDK | Restart, or run on a DCEVM-patched JVM |
-| Could not find a DCEVM-patched JVM | Neither `-PdcevmHome` nor `DCEVM_HOME` is set | Point at a JetBrains Runtime (`<IDE install>/jbr`) or standalone DCEVM build explicitly — not auto-detected |
+| Could not find a DCEVM-patched JVM | Neither `-PdcevmHome` nor `DCEVM_HOME` is set | Point at a JetBrains Runtime — either IntelliJ's bundled copy (`<IDE install>/jbr`) or a standalone JBR download — explicitly; not auto-detected |
 | Same class keeps reporting a structural-change warning even after a pure method-body edit | Once a stock JVM rejects one structural change on a class, that class stays "stuck" until restart — every subsequent diff against its still-loaded old bytecode still includes the pending change | Expected JVM `redefineClasses` behavior, not a bug; restart to clear it |
 | Log: "batch redefinition rejected (...) -- retrying each class individually", but only some classes in the save show "Hot-reload complete" | One class in a debounced batch has a change the JVM can't apply; the others were only rejected as part of the same all-or-nothing batch call | Expected fallback behavior, not a bug — every class the JVM *can* apply still succeeds individually; only the named, rejected class needs a restart |
 | `<attribute>`/`<override>` schema warning (`cvc-complex-type.2.4.a`) repeats on every reload cycle | `<attribute>` elements must come before `<override>` per `services.xsd` | Reorder the elements in the edited `services.xml` |
