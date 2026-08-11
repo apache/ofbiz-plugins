@@ -1,0 +1,99 @@
+/*
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements.  See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.  The ASF licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+ */
+
+package org.apache.ofbiz.content.test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.ofbiz.base.util.Debug;
+import org.apache.ofbiz.content.search.SearchWorker;
+import org.apache.ofbiz.service.ServiceUtil;
+import org.apache.ofbiz.testtools.JunitJupiterTest;
+import org.apache.ofbiz.testtools.JupiterTestHelper;
+import org.junit.jupiter.api.Test;
+
+@JunitJupiterTest
+public class LuceneTests implements JupiterTestHelper {
+
+    private static final String MODULE = LuceneTests.class.getName();
+
+    /**
+     * Test search term hand.
+     * @throws Exception the exception
+     */
+    @Test
+    public void testSearchTermHand() throws Exception {
+        Map<String, Object> ctx = new HashMap<>();
+        ctx.put("contentId", "LuceneCONTENT");
+        ctx.put("userLogin", getUserLogin("system"));
+        Map<String, Object> resp = getDispatcher().runSync("indexContentTree", ctx);
+        if (ServiceUtil.isError(resp)) {
+            String errorMessage = ServiceUtil.getErrorMessage(resp);
+            throw new Exception(errorMessage);
+        }
+        assertTrue(ServiceUtil.isSuccess(resp), "Could not init search index");
+
+        try {
+            Thread.sleep(3000); // sleep 3 seconds to give enough time to the indexer to process the entries
+        } catch (InterruptedException e) {
+            Debug.logError("Thread interrupted :" + e, MODULE);
+        }
+
+        Directory directory = FSDirectory.open(new File(SearchWorker.getIndexPath("content")).toPath());
+
+        DirectoryReader r = null;
+        try {
+            r = DirectoryReader.open(directory);
+        } catch (Exception e) {
+            fail("Could not open search index: " + directory);
+        }
+
+        BooleanQuery.Builder combQueryBuilder = new BooleanQuery.Builder();
+        String queryLine = "hand";
+
+        IndexSearcher searcher = new IndexSearcher(r);
+        Analyzer analyzer = new StandardAnalyzer();
+
+        QueryParser parser = new QueryParser("content", analyzer);
+        Query query = parser.parse(queryLine);
+        combQueryBuilder.add(query, BooleanClause.Occur.MUST);
+        BooleanQuery combQuery = combQueryBuilder.build();
+
+        TopDocs topDocs = searcher.search(combQuery, 10);
+
+        assertEquals(1, (int) topDocs.totalHits.value, "Only 1 result expected from the testdata");
+    }
+}
