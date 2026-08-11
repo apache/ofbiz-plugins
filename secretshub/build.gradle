@@ -1,0 +1,63 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+// Combined dependencies for all 7 bundled SecretProvider implementations.
+// Only the provider selected via secret.provider.active in secretshub.properties
+// is ever constructed at runtime (see ActiveSecretProvider), but all 7 SDKs must
+// be on the classpath at build time since any one of them may be chosen.
+//
+// AWS SDK for Java v2 — Apache License 2.0 — https://github.com/aws/aws-sdk-java-v2
+// Azure SDK for Java — Key Vault Secrets (MIT License) — https://github.com/Azure/azure-sdk-for-java
+// Google Cloud Secret Manager Java client (Apache License 2.0) — https://github.com/googleapis/java-secretmanager
+// HashiCorp Vault Java Driver — Apache License 2.0 — https://github.com/jopenlibs/vault-java-driver
+//
+// Bitwarden, env-var, and 1Password contribute no third-party dependencies here —
+// JDK java.net.http.HttpClient only.
+dependencies {
+    pluginLibsCompile 'software.amazon.awssdk:secretsmanager:2.26.31'
+    pluginLibsCompile 'software.amazon.awssdk:url-connection-client:2.26.31'
+
+    pluginLibsCompile 'com.azure:azure-security-keyvault-secrets:4.8.0'
+    pluginLibsCompile 'com.azure:azure-identity:1.12.0'
+    // Azure's HTTP client (azure-core-http-netty / reactor-netty) lists io.netty:netty-tcnative-boringssl-static
+    // as an OPTIONAL transitive dependency, so Gradle never downloads it and Netty falls back to the plain JDK
+    // SSLEngine for TLS. That fallback is functionally correct (confirmed against a real Azure Key Vault) — the
+    // only effect of its absence is losing OpenSSL-accelerated TLS throughput, which only matters at production
+    // scale, not for local development. Netty logs the missing-library fallback at DEBUG (see the io.netty /
+    // reactor / com.azure logger entries in framework/base/config/log4j2.xml); it is not an error.
+    // To opt in to native TLS acceleration, uncomment the line below. The version is already pinned by the
+    // existing dependency graph (see `./gradlew dependencies -p plugins/secretshub`), so no version guesswork is
+    // needed; it resolves to the same "uber" jar bundling native binaries for linux-x86_64, linux-aarch_64,
+    // osx-x86_64, osx-aarch_64, and windows-x86_64, so it stays portable across dev machines. Regenerate the
+    // lockfile after uncommenting (rm gradle.lockfile && ./gradlew :plugins:secretshub:dependencies --write-locks).
+    // pluginLibsRuntime 'io.netty:netty-tcnative-boringssl-static:2.0.65.Final'
+
+    pluginLibsCompile 'com.google.cloud:google-cloud-secretmanager:2.36.0'
+
+    pluginLibsCompile 'io.github.jopenlibs:vault-java-driver:5.4.0'
+}
+
+// AWS SDK v2 and others bundle several items that conflict with OFBiz's global exclusions
+configurations.all {
+    exclude group: 'commons-logging', module: 'commons-logging'
+}
+
+dependencyLocking {
+    lockAllConfigurations()
+}
