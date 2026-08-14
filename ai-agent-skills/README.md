@@ -100,7 +100,8 @@ The toolkit currently covers:
 - **Integrations**: `manage-api-integration`, `manage-email-services`.
 - **Advanced Management**: `manage-security-advanced`, `manage-localization-advanced`, `manage-webapps`, `manage-cache-and-performance`.
 - **Strategies**: `manage-strategies` (Xml vs Java/Groovy, Dos and Donts).
-- **Quality Gates**: `precommit-readiness` (pre-commit hooks, CodeNarc, Groovy/Java compilation, XML validation, and focused tests).
+- **Quality Gates**: `prepush-readiness` (the pre-push hook — Checkstyle, CodeNarc — plus compilation, XML validation, and focused tests).
+- **Contribution Workflow**: `manage-contribution-workflow` (worktree setup, the framework/plugins repo pairing, pre-test data loading, backporting, and the PR template).
 
 ## Deployment and Updates
 This plugin is linked to the GitHub repository. To update the skills available to your agent, pull the latest changes from the repository.

@@ -79,7 +79,8 @@ This document provides a high-level summary of the specialized skills developed 
 | **create-component** | Scaffold new OFBiz plugins using standardized directory structures. |
 | **manage-component** | Manage component-level dependencies and `ofbiz-component.xml` registrations. |
 | **coding-standards** | General guidelines for clean code, commenting, and OFBiz contribution standards. |
-| **precommit-readiness** | Write changes in a hook-ready shape for CodeNarc, Groovy/Java compilation, XML validation, and focused tests before committing. |
+| **prepush-readiness** | Write changes in a hook-ready shape for the pre-push hook (Checkstyle, CodeNarc), plus compilation, XML validation, and focused tests before pushing. |
+| **manage-contribution-workflow** | Take a change from branch to merge-ready PR: worktree setup, the framework/plugins repo pairing, pre-test data loading, backporting, and the community PR template. |
 
 ## 🧠 Strategic Thinking
 | Skill | Description |

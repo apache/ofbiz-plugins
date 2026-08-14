@@ -19,7 +19,11 @@ under the License.
 
 ---
 name: coding-standards
-description: Guidelines for writing production-quality code, focusing on commenting style, cleanliness, and professionalism.
+description:
+- Writing or reviewing Java, Groovy, or XML changes in OFBiz.
+- Choosing naming conventions for components, entities, services, or classes.
+- Deciding whether logic belongs in XML actions vs. Groovy.
+- Applying UtilValidate, UtilMisc, EntityQuery, or UI-label (i18n) patterns.
 ---
 
 # Skill: coding-standards
@@ -73,3 +77,7 @@ GenericValue price = EntityQuery.use(delegator).from("ProductPrice")
         .filterByDate()
         .queryFirst();
 ```
+
+## See Also
+- `prepush-readiness` — the mechanical checks (Checkstyle, CodeNarc, compilation) that enforce a subset of these standards before a push.
+- `manage-contribution-workflow` — branching, testing, commit, and PR conventions once the code itself is ready.
