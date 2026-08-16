@@ -62,9 +62,9 @@ public final class DocumentIndexer extends Thread {
     }
 
     public static synchronized DocumentIndexer getInstance(Delegator delegator, String indexName) {
-        String documentIndexerId = delegator.getDelegatorName() + "_" + indexName;
+        String documentIndexerId = SearchWorker.getIndexPath(indexName);
         DocumentIndexer documentIndexer = documentIndexerMap.get(documentIndexerId);
-        if (documentIndexer == null) {
+        if (documentIndexer == null || !documentIndexer.isAlive()) {
             documentIndexer = new DocumentIndexer(delegator, indexName);
             documentIndexer.setName("DocumentIndexer_" + delegator.getDelegatorName() + "_" + indexName);
             documentIndexer.start();
@@ -77,79 +77,73 @@ public final class DocumentIndexer extends Thread {
     public void run() {
         IndexWriter indexWriter = null;
         int uncommittedDocs = 0;
-        while (true) {
-            LuceneDocument ofbizDocument;
-            try {
-                // Execution will pause here until the queue receives a LuceneDocument for indexing
-                ofbizDocument = documentIndexQueue.take();
-            } catch (InterruptedException e) {
-                Debug.logError(e, MODULE);
-                if (indexWriter != null) {
-                    try {
-                        indexWriter.close();
-                        indexWriter = null;
-                    } catch (IOException ioe) {
-                        Debug.logError(ioe, MODULE);
-                    }
-                }
-                break;
-            }
-            Term documentIdentifier = ofbizDocument.getDocumentIdentifier();
-            Document document = ofbizDocument.prepareDocument(this.delegator);
-            if (indexWriter == null) {
+        try {
+            while (true) {
+                LuceneDocument ofbizDocument;
                 try {
-                    StandardAnalyzer analyzer = new StandardAnalyzer();
-                    indexWriter = new IndexWriter(this.indexDirectory, new IndexWriterConfig(analyzer));
-                } catch (CorruptIndexException e) {
-                    Debug.logError("Corrupted lucene index: " + e.getMessage(), MODULE);
-                    break;
-                } catch (LockObtainFailedException e) {
-                    Debug.logError("Could not obtain Lock on lucene index " + e.getMessage(), MODULE);
-                    // TODO: put the thread to sleep waiting for the locked to be released
-                    break;
-                } catch (IOException e) {
-                    Debug.logError(e.getMessage(), MODULE);
+                    // Execution will pause here until the queue receives a LuceneDocument for indexing
+                    ofbizDocument = documentIndexQueue.take();
+                } catch (InterruptedException e) {
+                    Debug.logError(e, MODULE);
                     break;
                 }
-            }
-            try {
-                if (document == null) {
-                    indexWriter.deleteDocuments(documentIdentifier);
-                    if (Debug.infoOn()) {
-                        Debug.logInfo(getName() + ": deleted Lucene document: " + ofbizDocument, MODULE);
-                    }
-                } else {
-                    indexWriter.updateDocument(documentIdentifier, document);
-                    if (Debug.infoOn()) {
-                        Debug.logInfo(getName() + ": indexed Lucene document: " + ofbizDocument, MODULE);
+                Term documentIdentifier = ofbizDocument.getDocumentIdentifier();
+                Document document = ofbizDocument.prepareDocument(this.delegator);
+                if (indexWriter == null) {
+                    try {
+                        StandardAnalyzer analyzer = new StandardAnalyzer();
+                        indexWriter = new IndexWriter(this.indexDirectory, new IndexWriterConfig(analyzer));
+                    } catch (CorruptIndexException e) {
+                        Debug.logError("Corrupted lucene index: " + e.getMessage(), MODULE);
+                        break;
+                    } catch (LockObtainFailedException e) {
+                        Debug.logError("Could not obtain Lock on lucene index " + e.getMessage(), MODULE);
+                        // TODO: put the thread to sleep waiting for the locked to be released
+                        break;
+                    } catch (IOException e) {
+                        Debug.logError(e.getMessage(), MODULE);
+                        break;
                     }
                 }
-            } catch (Exception e) {
-                Debug.logError(e, getName() + ": error processing Lucene document: " + ofbizDocument, MODULE);
+                try {
+                    if (document == null) {
+                        indexWriter.deleteDocuments(documentIdentifier);
+                        if (Debug.infoOn()) {
+                            Debug.logInfo(getName() + ": deleted Lucene document: " + ofbizDocument, MODULE);
+                        }
+                    } else {
+                        indexWriter.updateDocument(documentIdentifier, document);
+                        if (Debug.infoOn()) {
+                            Debug.logInfo(getName() + ": indexed Lucene document: " + ofbizDocument, MODULE);
+                        }
+                    }
+                } catch (Exception e) {
+                    Debug.logError(e, getName() + ": error processing Lucene document: " + ofbizDocument, MODULE);
+                    continue;
+                }
+                uncommittedDocs++;
+                if (uncommittedDocs == UNCOMMITTED_DOC_LIMIT || documentIndexQueue.peek() == null) {
+                    // limit reached or queue empty, time to commit
+                    try {
+                        indexWriter.commit();
+                    } catch (IOException e) {
+                        Debug.logError(e, MODULE);
+                    }
+                    uncommittedDocs = 0;
+                }
                 if (documentIndexQueue.peek() == null) {
                     try {
                         indexWriter.close();
                         indexWriter = null;
-                    } catch (IOException ioe) {
-                        Debug.logError(ioe, MODULE);
+                    } catch (IOException e) {
+                        Debug.logError(e, MODULE);
                     }
                 }
-                continue;
             }
-            uncommittedDocs++;
-            if (uncommittedDocs == UNCOMMITTED_DOC_LIMIT || documentIndexQueue.peek() == null) {
-                // limit reached or queue empty, time to commit
-                try {
-                    indexWriter.commit();
-                } catch (IOException e) {
-                    Debug.logError(e, MODULE);
-                }
-                uncommittedDocs = 0;
-            }
-            if (documentIndexQueue.peek() == null) {
+        } finally {
+            if (indexWriter != null) {
                 try {
                     indexWriter.close();
-                    indexWriter = null;
                 } catch (IOException e) {
                     Debug.logError(e, MODULE);
                 }
