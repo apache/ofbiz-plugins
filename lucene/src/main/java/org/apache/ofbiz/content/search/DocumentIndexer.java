@@ -47,6 +47,8 @@ public final class DocumentIndexer extends Thread {
     private Directory indexDirectory;
     // TODO: Move to property file
     private static final int UNCOMMITTED_DOC_LIMIT = 100;
+    private static final int MAX_LOCK_RETRIES = 5;
+    private static final long LOCK_RETRY_DELAY_MILLIS = 500;
 
     private DocumentIndexer(Delegator delegator, String indexName) {
         this.delegator = delegator;
@@ -90,19 +92,33 @@ public final class DocumentIndexer extends Thread {
                 Term documentIdentifier = ofbizDocument.getDocumentIdentifier();
                 Document document = ofbizDocument.prepareDocument(this.delegator);
                 if (indexWriter == null) {
-                    try {
-                        StandardAnalyzer analyzer = new StandardAnalyzer();
-                        indexWriter = new IndexWriter(this.indexDirectory, new IndexWriterConfig(analyzer));
-                    } catch (CorruptIndexException e) {
-                        Debug.logError("Corrupted lucene index: " + e.getMessage(), MODULE);
-                        break;
-                    } catch (LockObtainFailedException e) {
-                        Debug.logError("Could not obtain Lock on lucene index " + e.getMessage(), MODULE);
-                        // TODO: put the thread to sleep waiting for the locked to be released
-                        break;
-                    } catch (IOException e) {
-                        Debug.logError(e.getMessage(), MODULE);
-                        break;
+                    int lockRetries = 0;
+                    while (indexWriter == null) {
+                        try {
+                            StandardAnalyzer analyzer = new StandardAnalyzer();
+                            indexWriter = new IndexWriter(this.indexDirectory, new IndexWriterConfig(analyzer));
+                        } catch (CorruptIndexException e) {
+                            Debug.logError("Corrupted lucene index: " + e.getMessage(), MODULE);
+                            return;
+                        } catch (LockObtainFailedException e) {
+                            lockRetries++;
+                            if (lockRetries > MAX_LOCK_RETRIES) {
+                                Debug.logError("Could not obtain Lock on lucene index after " + MAX_LOCK_RETRIES
+                                        + " retries, giving up: " + e.getMessage(), MODULE);
+                                return;
+                            }
+                            Debug.logWarning("Could not obtain Lock on lucene index, retrying in "
+                                    + LOCK_RETRY_DELAY_MILLIS + "ms: " + e.getMessage(), MODULE);
+                            try {
+                                Thread.sleep(LOCK_RETRY_DELAY_MILLIS);
+                            } catch (InterruptedException ie) {
+                                Thread.currentThread().interrupt();
+                                return;
+                            }
+                        } catch (IOException e) {
+                            Debug.logError(e.getMessage(), MODULE);
+                            return;
+                        }
                     }
                 }
                 try {
