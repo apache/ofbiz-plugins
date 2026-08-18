@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<entity-engine-xml>
+    <ExampleItem exampleId="EX03" exampleItemSeqId="00001" description="EX3-001" amount="50"/>
+    <ExampleItem exampleId="EX03" exampleItemSeqId="00002" description="EX3-002" amount="25"/>
+    <ExampleItem exampleId="EX04" exampleItemSeqId="00001" description="EX4-001" amount="10"/>
+    <ExampleItem exampleId="EX13" exampleItemSeqId="00001" description="EX13-001" amount="41"/>
+    <ExampleItem exampleId="EX14" exampleItemSeqId="00001" description="EX14-001" amount="20"/>
+    <ExampleItem exampleId="EX12" exampleItemSeqId="00001" description="EX12-001" amount="30"/>
+
+    <create-update>
+      <!-- re-add EX09 because <delete declare just before works the second time this file is process (not the first) so it's not very
+             simple for Selenium Webdriver test to manage demo not always the same-->
+      <Example exampleId="EX09" exampleName="Example 9" exampleTypeId="MADE_UP" statusId="EXST_IN_DESIGN"/>
+      <!-- Modify EX10 name and description to have some element to search in selenium test -->
+      <Example exampleId="EX10" exampleName="Example 10 auto" exampleTypeId="MADE_UP" statusId="EXST_IN_DESIGN" description="mMy adesc inspired example 10 description"/>
+    </create-update>
+    <Example exampleId="EX15" exampleName="Example 15" exampleTypeId="INSPIRED" statusId="EXST_IN_DESIGN"/>
+    <Example exampleId="EX16" exampleName="Example 16" exampleTypeId="INSPIRED" statusId="EXST_IN_DESIGN"/>
+    <Example exampleId="EX17" exampleName="Example 17" exampleTypeId="INSPIRED" statusId="EXST_IN_DESIGN"/>
+    <Example exampleId="EX18" exampleName="Example 18" exampleTypeId="INSPIRED" statusId="EXST_IN_DESIGN"/>
+    <Example exampleId="EX19" exampleName="Example 19" exampleTypeId="INSPIRED" statusId="EXST_IN_DESIGN"/>
+    <Example exampleId="EX20" exampleName="Example 20" exampleTypeId="INSPIRED" statusId="EXST_IN_DESIGN"/>
+    <Example exampleId="EX21" exampleName="Example 21" exampleTypeId="INSPIRED" statusId="EXST_IN_DESIGN"/>
+    <Example exampleId="EX22" exampleName="Example 22" exampleTypeId="INSPIRED" statusId="EXST_IN_DESIGN"/>
+    <Example exampleId="EX23" exampleName="Example 23" exampleTypeId="INSPIRED" statusId="EXST_IN_DESIGN"/>
+    <Example exampleId="EX24" exampleName="Example 24" exampleTypeId="INSPIRED" statusId="EXST_IN_DESIGN"/>
+    <Example exampleId="EX25" exampleName="Example 25" exampleTypeId="INSPIRED" statusId="EXST_IN_DESIGN"/>
+    <Example exampleId="EX26" exampleName="Example 26" exampleTypeId="INSPIRED" statusId="EXST_IN_DESIGN"/>
+    <Example exampleId="EX27" exampleName="Example 27" exampleTypeId="INSPIRED" statusId="EXST_IN_DESIGN"/>
+    <Example exampleId="EX28" exampleName="Example 28" exampleTypeId="INSPIRED" statusId="EXST_IN_DESIGN"/>
+    <Example exampleId="EX29" exampleName="Example 29" exampleTypeId="INSPIRED" statusId="EXST_IN_DESIGN"/>
+    <Example exampleId="EX30" exampleName="Example 30" exampleTypeId="INSPIRED" statusId="EXST_IN_DESIGN"/>
+    <Example exampleId="EX31" exampleName="Example 31" exampleTypeId="INSPIRED" statusId="EXST_IN_DESIGN"/>
+    <Example exampleId="EX32" exampleName="Example 32" exampleTypeId="INSPIRED" statusId="EXST_IN_DESIGN"/>
+    <Example exampleId="EX33" exampleName="Example 33" exampleTypeId="INSPIRED" statusId="EXST_IN_DESIGN"/>
+    <Example exampleId="EX34" exampleName="Example 34" exampleTypeId="INSPIRED" statusId="EXST_IN_DESIGN"/>
+    <Example exampleId="EX35" exampleName="Example 35" exampleTypeId="INSPIRED" statusId="EXST_IN_DESIGN" description="test2 description 2iem test"/>
+
+    <ExampleFeature exampleFeatureId="BEA" description="beautiful design"/>
+    <ExampleFeature exampleFeatureId="CHEAP" description="Cheaper"/>
+    <ExampleFeature exampleFeatureId="COL" description="Colleague"/>
+    <ExampleFeature exampleFeatureId="BOSS" description="The Boss"/>
+</entity-engine-xml>

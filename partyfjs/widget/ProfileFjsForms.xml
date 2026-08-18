@@ -1,0 +1,1369 @@
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://ofbiz.apache.org/Widget-Form" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Form http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+    <form name="SelectParty" type="single" target="showPortalPage">
+        <actions>
+            <set field="lookupName" from-field="lookupName" default-value="LookupPartyName"/>
+        </actions>
+        <!-- param field is here to receive an unique parameter intended to be used by the lookup
+                leave empty otherwise -->
+        <field name="lookupParam"><hidden value="${lookupParam}"/></field>
+        <field name="partyId">
+            <lookup target-form-name="${lookupName}" target-parameter="lookupParam" size="10"/>
+        </field>
+        <field name="submit" title="${uiLabelMap.CommonSelect}" position="2"><submit/></field>
+        <on-event-update-area area-target="" event-type="set-watcher" area-id="selectParty"/>
+    </form>
+
+    <form name="EditParam_SelectParty" extends="CommonPortletEdit" extends-resource="component://common/widget/PortletEditForms.xml"  default-entity-name="PartyAttribute">
+        <field name="lookupName"><text/></field>
+        <field name="lookupParam" title="${uiLabelMap.CommonGenericLookupParam}"><text/></field>
+        <field name="windowRoleType" title="${uiLabelMap.CommonGenericLookupParam}">
+            <drop-down allow-empty="true" no-current-selected-key="O">
+                <option key="SUPPLIER" description="${uiLabelMap.PartySupplier}"/>
+                <option key="CUSTOMER" description="${uiLabelMap.PartyClient}"/>
+                <option key=" " description="${uiLabelMap.CommonOther}"/>
+            </drop-down>
+        </field>
+        <field name="submit" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <form name="EditPerson" type="single" target="updatePerson" default-map-name="personInfo"
+        focus-field-name="salutation" header-row-style="header-row" default-table-style="basic-table"
+        extends="EditPerson" extends-resource="component://party/widget/partymgr/PartyForms.xml">
+        <alt-target use-when="personInfo==null" target="createPerson"/><!-- TODO check if createPerson is usable, seem to not exist with Party-Portlet -->
+
+        <field name="cancelLink" title=" " position="2" widget-style="smallSubmit">
+            <hyperlink description="${uiLabelMap.CommonCancel}" also-hidden="false"/>
+            <on-field-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+                <parameter param-name="partyId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+
+        <on-event-update-area area-target="" event-type="submit" area-id=""/>
+        <on-event-update-area area-target="" event-type="set-watcher" area-id="showParty">
+            <parameter param-name="partyId"/>
+        </on-event-update-area>
+        <on-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+            <parameter param-name="partyId"/>
+            <auto-parameters-portlet/>
+        </on-event-update-area>
+    </form>
+
+    <form name="EditPartyGroup" type="single" target="updatePartyGroup" default-map-name="partyGroup"
+        focus-field-name="groupName" header-row-style="header-row" default-table-style="basic-table"
+        extends="EditPartyGroup" extends-resource="component://party/widget/partymgr/PartyForms.xml">
+        <alt-target use-when="partyGroup==null" target="createPartyGroup"/><!-- TODO check if createPerson is usable, seem to not exist with Party-Portlet -->
+        <field name="cancelLink" title=" " position="2" widget-style="smallSubmit">
+            <hyperlink description="${uiLabelMap.CommonCancelDone}" also-hidden="false"/>
+            <on-field-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+                <parameter param-name="partyId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+
+        <on-event-update-area area-target="" event-type="submit" area-id=""/>
+        <on-event-update-area area-target="" event-type="set-watcher" area-id="showParty">
+            <parameter param-name="partyId"/>
+        </on-event-update-area>
+        <on-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+            <parameter param-name="partyId"/>
+            <auto-parameters-portlet/>
+        </on-event-update-area>
+    </form>
+
+    <!-- TODO : Voir pourquoi le passage du paramètre ${iteratorIndex} dans l'item-index-separator ne fonctionne pas -->
+<!--           extends="ListUserLoginSecurityGroups" extends-resource="component://common/widget/SecurityForms.xml" -->
+    <form name="ListUserLoginSecurityGroups" type="list" header-row-style="header-row-2" list-name="userLoginSecurityGroups" default-entity-name="UserLoginSecurityGroup"
+          target="updateUserLoginToSecurityGroup" odd-row-style="alternate-row" default-table-style="basic-table hover-bar" id="ListUserLoginSecurityGroups_${iteratorIndex}" >
+        <actions>
+            <entity-condition entity-name="UserLoginAndSecurityGroup">
+                <condition-expr field-name="userLoginId" from-field="userLoginId"/>
+                <order-by field-name="groupId"/>
+            </entity-condition>
+        </actions>
+        <field name="partyId" id-name="partyId_${iteratorIndex}"><hidden/></field>
+        <field name="userLoginId" id-name="userLoginId_${iteratorIndex}"><hidden/></field>
+        <field name="groupIdCol" id-name="groupIdCol_${iteratorIndex}" title="${uiLabelMap.CommonSecurityGroupId}" widget-style="emptyStyle">
+            <display description="${groupId}" also-hidden="false"/>
+        </field>
+        <field name="groupId" id-name="groupId_${iteratorIndex}" title="${uiLabelMap.CommonDescription}">
+            <display-entity entity-name="SecurityGroup"/>
+        </field>
+        <field name="fromDate" id-name="fromDate_${iteratorIndex}" title="${uiLabelMap.CommonFromDate}"><display/></field>
+        <field name="thruDate" id-name="thruDate_${iteratorIndex}" title="${uiLabelMap.CommonThruDate}" use-when="hasSecurityUpdate"><date-time/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" use-when="hasSecurityUpdate"><submit button-type="button"/></field>
+        <field name="submitButton" title=" " use-when="! hasSecurityUpdate"><ignored/></field>
+        <field name="deleteLink" title=" " widget-style="emptyStyle" use-when="hasSecurityUpdate">
+            <hyperlink also-hidden="false" image-location="${iconsPurpose.Delete}" image-title="${uiLabelMap.IconsTooltips_Deactivate}"
+                       request-confirmation="true" confirmation-message="${uiLabelMap.CommonConfirmDelete} : ${groupId}">
+            </hyperlink>
+            <on-field-event-update-area event-type="post" area-id="" area-target="removeUserLoginFromSecurityGroup">
+                   <parameter param-name="userLoginId"/>
+                   <parameter param-name="fromDate"/>
+                   <parameter param-name="groupId"/>
+                   <parameter param-name="partyId"/>
+                   <parameter param-name="thruDate" from-field="date:nowTimestamp()"/>
+            </on-field-event-update-area>
+            <on-field-event-update-area event-type="set-area" area-id="${currentAreaId}" area-target="showPortletFj">
+                   <parameter param-name="partyId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+        <field name="deleteLink" title=" " widget-style="emptyStyle" use-when="! hasSecurityUpdate"><ignored/></field>
+
+        <on-event-update-area area-target="" event-type="submit" area-id="" />
+        <on-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+            <parameter param-name="partyId"/>
+            <auto-parameters-portlet/>
+        </on-event-update-area>
+    </form>
+
+    <form name="EditParam_PartyUserLogin" type="single" extends="CommonPortletEdit" extends-resource="component://common/widget/PortletEditForms.xml" default-entity-name="PartyAttribute">
+         <actions>
+          <call-parent-actions/>
+          <script location="component://party/script/org/ofbiz/party/ProfileWactions.xml#hasSecurityUpdate"/>
+         </actions>
+        <field name="showEditButton"><radio><option key="Y"/><option key="N"/></radio></field>
+        <field name="showScreenletMenu"><radio><option key="Y"/><option key="N"/></radio></field>
+        <field name="securityGroupId" title="${uiLabelMap.CommonGroup}" use-when="hasSecurityUpdate"
+         tooltip="if a securityGroupId is put, the 'add user login button' will automatically add this securityGroupId to the userLogin">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="SecurityGroup" key-field-name="groupId" description="${groupId} ${description}">
+                    <entity-order-by field-name="groupId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submit" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <form name="ShowUserLogin" type="single" odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate="false" default-entity-name="UserLogin">
+        <field name="userLoginId" title-style="h2" widget-area-style="h2" use-when="hasSecurityUpdate">
+            <hyperlink description="${userLoginId}" />
+            <on-field-event-update-area event-type="set-area" area-id="PartyUserLogin${userLoginIdSeq}_EditArea" area-target="editPartyUserLogin">
+                <parameter param-name="userLoginId"/>
+                <parameter param-name="partyId" />
+                <parameter param-name="securityGroup" from-field="parameters.securityGroup"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+        <field name="userLoginId" title-style="h2" widget-area-style="h2" use-when="! hasSecurityUpdate">
+            <display/>
+        </field>
+        <field name="disabledDateTime" use-when="disabledDateTime != null" position="2"><display description="${disabledDateTime}"/></field>
+        <field name="disableLink" title="${uiLabelMap.PartyEnabled}" position="7" use-when="disabledDateTime == null @and ! hasSecurityUpdate">
+          <display/>
+        </field>
+        <field name="disableLink" title="${uiLabelMap.PartyEnabled}" position="3" use-when="disabledDateTime == null @and hasSecurityUpdate">
+            <hyperlink also-hidden="false" image-location="${iconsPurpose.Expire}" image-title="${uiLabelMap.IconsTooltips_Expire}"
+                       request-confirmation="true" confirmation-message="${uiLabelMap.CommonConfirm} : ${uiLabelMap.IconsTooltips_Expire} - ${userLoginId}">
+            </hyperlink>
+            <on-field-event-update-area event-type="post" area-id="" area-target="disableUserLogin">
+                   <parameter param-name="userLoginId"/>
+                   <parameter param-name="partyId"/>
+                   <parameter param-name="enabled" value="N"/>
+                   <parameter param-name="disabledDateTime" value="${nowTimestamp}"/>
+            </on-field-event-update-area>
+            <on-field-event-update-area event-type="set-area" area-id="${currentAreaId}" area-target="showPortletFj">
+                <parameter param-name="userLoginId"/>
+                <parameter param-name="partyId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+        <field name="enableLink" title=" " position="4" use-when="disabledDateTime != null @and hasSecurityUpdate">
+            <hyperlink also-hidden="false" image-location="${iconsPurpose.Activate}" image-title="${uiLabelMap.IconsTooltips_Activate}"
+                       request-confirmation="true" confirmation-message="${uiLabelMap.CommonConfirm} : ${uiLabelMap.IconsTooltips_Activate} - ${userLoginId}">
+            </hyperlink>
+            <on-field-event-update-area event-type="post" area-id="" area-target="enableUserLogin">
+                   <parameter param-name="userLoginId"/>
+                   <parameter param-name="partyId"/>
+                   <parameter param-name="enabled" value="Y"/>
+            </on-field-event-update-area>
+            <on-field-event-update-area event-type="set-area" area-id="${currentAreaId}" area-target="showPortletFj">
+                   <parameter param-name="userLoginId"/>
+                   <parameter param-name="partyId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+        <field name="addSecurityGroup" title=" " position="5" use-when="hasSecurityUpdate">
+            <hyperlink also-hidden="false" image-location="${iconsPurpose.Grants}" image-title="${uiLabelMap.AddUserLoginToSecurityGroup}"/>
+            <on-field-event-update-area event-type="set-area" area-id="PartyUserLogin${userLoginIdSeq}_EditArea" area-target="addUserLoginSecurityGroup">
+                <parameter param-name="userLoginId"/>
+                <parameter param-name="partyId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+        <field name="changePassword" title=" " position="6" use-when="isUserLogin @and userLoginIdLogged.equals(userLoginId)">
+            <hyperlink also-hidden="false" image-location="${iconsPurpose.UserLogin}" image-title="${uiLabelMap.PartyChangePassword}"/>
+            <on-field-event-update-area event-type="set-area" area-id="PartyUserLogin${userLoginIdSeq}_EditArea" area-target="editUserLoginPassword">
+                   <parameter param-name="userLoginId"/>
+                   <parameter param-name="partyId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+    </form>
+
+    <form name="updateUserLoginSecurity" type="single" target="createUserLogin" extends="UpdateUserLoginSecurity" extends-resource="component://common/widget/SecurityForms.xml"
+        focus-field-name="userLoginId" default-map-name="editUserLogin" header-row-style="header-row" default-table-style="basic-table">
+        <alt-target use-when="editUserLogin != null" target="updateUserLoginSecurity" />
+        <alt-target use-when="securityGroup != null @and editUserLogin == null" target="createUserLoginAndSecurityGroup" />
+        <field name="enabled">
+            <drop-down allow-empty="false" no-current-selected-key="N">
+                <option key="Y" description="${uiLabelMap.CommonY}"/>
+                <option key="N" description="${uiLabelMap.CommonN}"/>
+            </drop-down>
+        </field>
+        <field name="requirePasswordChange">
+            <drop-down allow-empty="false" no-current-selected-key="N">
+                <option key="Y" description="${uiLabelMap.CommonY}"/>
+                <option key="N" description="${uiLabelMap.CommonN}"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit /></field>
+        <field name="cancelLink" title=" " position="2" widget-style="smallSubmit">
+            <hyperlink description="${uiLabelMap.CommonCancel}" also-hidden="false"/>
+            <on-field-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+                <parameter param-name="partyId" from-field="parameters.partyId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+        <on-event-update-area area-target="" event-type="submit" area-id="" />
+        <on-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+            <parameter param-name="partyId" from-field="parameters.partyId"/>
+            <auto-parameters-portlet/>
+        </on-event-update-area>
+    </form>
+
+    <form name="EditUserLoginPassword" type="single" target="updateUserLoginPassword" extends="UpdatePassword" extends-resource="component://common/widget/SecurityForms.xml"
+        focus-field-name="currentPassword" default-map-name="editUserLogin" header-row-style="header-row" default-table-style="basic-table">
+        <field name="currentPassword" widget-style="required" required-field="true"><password/></field>
+        <field name="newPassword" widget-style="required" required-field="true"><password/></field>
+        <field name="newPasswordVerify" widget-style="required" required-field="true"><password/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit/></field>
+        <field name="cancelLink" title=" " position="2" widget-style="smallSubmit">
+            <hyperlink description="${uiLabelMap.CommonCancel}" also-hidden="false"/>
+            <on-field-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+                <parameter param-name="partyId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+        <on-event-update-area area-target="" event-type="submit" area-id="" />
+        <on-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+            <parameter param-name="partyId"/>
+            <auto-parameters-portlet/>
+        </on-event-update-area>
+    </form>
+
+    <form name="addUserLogin" type="single" target="createUserLogin" extends="AddUserLogin" extends-resource="component://common/widget/SecurityForms.xml"
+        focus-field-name="userLoginId" default-map-name="editUserLogin" header-row-style="header-row" default-table-style="basic-table">
+        <alt-target use-when="securityGroupId != 'empty'" target="createUserLoginAndSecurityGroup" />
+        <field name="securityGroupId"><display/></field>
+        <field name="currentPassword" widget-style="required"><password/></field>
+        <field name="currentPasswordVerify" widget-style="required"><password/></field>
+        <field name="portalPageId" use-when="securityGroupId != 'empty'"><hidden value="${parameters.portalPageId}"/></field>
+        <field name="portalPortletId" use-when="securityGroupId != 'empty'"><hidden value="${parameters.portalPortletId}"/></field>
+        <field name="portletSeqId" use-when="securityGroupId != 'empty'"><hidden value="${parameters.portletSeqId}"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit /></field>
+        <field name="cancelLink" title=" " position="2" widget-style="smallSubmit">
+            <hyperlink description="${uiLabelMap.CommonCancel}" also-hidden="false"/>
+            <on-field-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+                <parameter param-name="partyId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+        <on-event-update-area area-target="" event-type="submit" area-id="" />
+        <on-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+            <parameter param-name="partyId"/>
+            <auto-parameters-portlet/>
+        </on-event-update-area>
+    </form>
+
+    <form name="AddUserLoginSecurityGroup" type="single" target="addUserLoginToSecurityGroup" extends="AddUserLoginSecurityGroup" extends-resource="component://common/widget/SecurityForms.xml"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="cancelLink" title=" " position="2" widget-style="smallSubmit">
+            <hyperlink description="${uiLabelMap.CommonCancel}" also-hidden="false"/>
+            <on-field-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+                <parameter param-name="partyId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+        <on-event-update-area area-target="" event-type="submit" area-id="" />
+        <on-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+            <parameter param-name="partyId"/>
+            <auto-parameters-portlet/>
+        </on-event-update-area>
+    </form>
+
+    <grid name="PartyRelationFroms" list-name="partyRelationList" default-entity-name="PartyRelationship"
+          odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+      <actions>
+        <set field="roleFromLabel" value="${groovy: (roleTypeGroupIdFrom!=null) ? uiLabelMap.PartyPartyInTheRoleOf : ' '}"/>
+        <set field="roleToLabel" value="${groovy: (roleTypeGroupIdTo!=null) ? uiLabelMap.PartyPartyInTheRoleOf : ' '}"/>
+        <set field="relTypeLabel" value="${groovy: (partyRelationshipTypeIdAttr == null) ? uiLabelMap.PartyIsA : ' '}"/>
+        <set field="commonFromLabel" value="${groovy: (Y.equals(showHistory)) ? uiLabelMap.CommonFrom : ' '}"/>
+        <set field="commonThruLabel" value="${groovy: (Y.equals(showHistory)) ? uiLabelMap.CommonThru : ' '}"/>
+      </actions>
+      <row-actions>
+          <entity-one entity-name="PartyNameView" value-field="partyName" use-cache="true">
+              <field-map field-name="partyId" from-field="partyIdTo"/>
+          </entity-one>
+          <set field="name" value="${partyName.firstName} ${partyName.middleName} ${partyName.lastName} ${partyName.groupName} [${partyName.partyId}]"/>
+          <service service-name="getPartyEmail" result-map="partyEmail">
+              <field-map field-name="partyId" from-field="partyName.partyId"/>
+          </service>
+          <set field="emailAddress" from-field="partyEmail.emailAddress"/>
+          <service service-name="getPartyTelephone" result-map="phone">
+              <field-map field-name="partyId" from-field="partyName.partyId"/>
+              <field-map field-name="contactMechPurposeTypeId" value="PHONE_WORK"/>
+          </service>
+      </row-actions>
+      <field name="edit" title=" " use-when="Y.equals(showEditButton)">
+            <hyperlink also-hidden="false" image-location="${iconsPurpose.Edit}" image-title="${uiLabelMap.IconsTooltips_Edit}"/>
+            <on-field-event-update-area event-type="set-area" area-id="${editArea}" area-target="editPartyRelationship">
+               <parameter param-name="partyIdFrom"/>
+               <parameter param-name="partyIdTo"/>
+               <parameter param-name="roleTypeIdFrom"/>
+               <parameter param-name="roleTypeIdTo"/>
+               <parameter param-name="fromDate"/>
+               <parameter param-name="relationIs"/>
+               <parameter param-name="partyId" from-field="parameters.partyId"/>
+               <parameter param-name="roleId" from-field="parameters.roleId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+      </field>
+      <field name="name" title="${uiLabelMap.PartyParty}"><display/></field>
+      <field name="roleTypeIdFrom" use-when="roleTypeGroupIdFrom != null" title="${roleFromLabel}" sort-field="true"><display-entity entity-name="RoleType" key-field-name="roleTypeId"/></field>
+      <field name="partyRelationshipTypeId" use-when="partyRelationshipTypeIdAttr == null" title="${relTypeLabel}" sort-field="true"><display-entity entity-name="PartyRelationshipType" description="${partyRelationshipName}"/></field>
+      <field name="roleTypeIdTo" use-when="roleTypeGroupIdTo != null" title="${roleToLabel}" sort-field="true"><display-entity entity-name="RoleType" key-field-name="roleTypeId"/></field>
+      <field name="fromDate" sort-field="true" title="${commonFromLabel}" use-when="Y.equals(showHistory)"><display type="date"/></field>
+      <field name="thruDate" sort-field="true" title="${commonThruLabel}" use-when="Y.equals(showHistory)"><display type="date"/></field>
+      <field name="comments"><display size="15"/></field>
+      <field name="partyEmailAddress" title="${uiLabelMap.PartyEmailAddress}" use-when="emailAddress != null">
+          <hyperlink image-title="${partyEmail.emailAddress}" target="mailto:${partyEmail.emailAddress}" target-type="plain" image-location="${iconsPurpose.Email}" alternate="${uiLabelMap.PartyEmailAddress}"/>
+      </field>
+      <field name="contactNumber" title="${uiLabelMap.PartyPhoneNumber}" ><display description="${phone.countryCode}${phone.areaCode} ${phone.contactNumber}"/></field>
+
+      <field name="disable" title=" " use-when="Y.equals(showHistoryButton) @and thruDate == null">
+            <hyperlink also-hidden="false" image-location="${iconsPurpose.Expire}" image-title="${uiLabelMap.IconsTooltips_Expire}"
+                       request-confirmation="true" confirmation-message="${uiLabelMap.IconsTooltips_Expire} - ${uiLabelMap.CommonConfirm} : ${name}">
+            </hyperlink>
+            <on-field-event-update-area event-type="post" area-id="" area-target="updateRelation">
+               <parameter param-name="partyIdFrom"/>
+               <parameter param-name="partyIdTo"/>
+               <parameter param-name="roleTypeIdFrom"/>
+               <parameter param-name="roleTypeIdTo"/>
+               <parameter param-name="fromDate"/>
+               <parameter param-name="thruDate" from-field="nowTimestamp"/>
+               <parameter param-name="partyId" from-field="parameters.partyId"/>
+               <parameter param-name="roleId" from-field="parameters.roleId"/>
+            </on-field-event-update-area>
+            <on-field-event-update-area event-type="set-area" area-id="${currentAreaId}" area-target="showPortletFj">
+                <parameter param-name="partyId"/>
+                <parameter param-name="roleId" from-field="parameters.roleId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+      </field>
+      <field name="delete" title=" " use-when="Y.equals(showDeleteButton)">
+            <hyperlink also-hidden="false" image-location="${iconsPurpose.Delete}" image-title="${uiLabelMap.IconsTooltips_Delete}"
+                       request-confirmation="true" confirmation-message="${uiLabelMap.CommonConfirmDelete} : ${name}">
+            </hyperlink>
+            <on-field-event-update-area event-type="post" area-id="" area-target="deleteRelation">
+               <parameter param-name="partyIdFrom"/>
+               <parameter param-name="partyIdTo"/>
+               <parameter param-name="roleTypeIdFrom"/>
+               <parameter param-name="roleTypeIdTo"/>
+               <parameter param-name="fromDate"/>
+               <parameter param-name="thruDate" from-field="nowTimestamp"/>
+               <parameter param-name="partyId" from-field="parameters.partyId"/>
+               <parameter param-name="roleId" from-field="parameters.roleId"/>
+            </on-field-event-update-area>
+            <on-field-event-update-area event-type="set-area" area-id="${currentAreaId}" area-target="showPortletFj">
+                <parameter param-name="partyId"/>
+                <parameter param-name="roleId" from-field="parameters.roleId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+      </field>
+      <sort-order>
+          <sort-field name="edit"/>
+          <sort-field name="enable"/>
+          <sort-field name="roleTypeIdFrom"/>
+          <sort-field name="name"/>
+          <sort-field name="roleTypeIdTo"/>
+          <sort-field name="partyRelationshipTypeId"/>
+      </sort-order>
+    </grid>
+
+    <form name="EditParam_PartyRelationship" extends="CommonPortletEdit" extends-resource="component://common/widget/PortletEditForms.xml" default-entity-name="PartyAttribute">
+        <field name="titleLabel" ><text/></field>
+        <field name="roleTypeIdFrom">
+            <drop-down allow-empty="true" >
+                <entity-options description="[${roleTypeId}] ${description}" entity-name="RoleType" key-field-name="roleTypeId">
+                  <entity-order-by field-name="roleTypeId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="roleTypeGroupIdFrom">
+            <drop-down allow-empty="true" >
+                <entity-options description="[${roleTypeId}] ${description}" entity-name="RoleType" key-field-name="roleTypeId">
+                  <entity-constraint name="parentTypeId" env-name="nullField" />
+                  <entity-order-by field-name="roleTypeId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="partyRelationshipTypeId" ><drop-down allow-empty="true"><entity-options entity-name="PartyRelationshipType" description="${partyRelationshipName}" key-field-name="partyRelationshipTypeId"/></drop-down></field>
+        <field name="roleTypeIdTo">
+            <drop-down allow-empty="true" >
+                <entity-options description="[${roleTypeId}] ${description}" entity-name="RoleType" key-field-name="roleTypeId">
+                  <entity-order-by field-name="roleTypeId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="roleTypeGroupIdTo">
+            <drop-down allow-empty="true" >
+                <entity-options description="[${roleTypeId}] ${description}" entity-name="RoleType" key-field-name="roleTypeId">
+                  <entity-constraint name="parentTypeId" env-name="nullField" />
+                  <entity-order-by field-name="roleTypeId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="showEditButton"><radio><option key="Y"/><option key="N"/></radio></field>
+        <field name="showHistoryButton"><radio><option key="Y"/><option key="N"/></radio></field>
+        <field name="showDeleteButton"><radio><option key="Y"/><option key="N"/></radio></field>
+        <field name="updateButton"><submit/></field>
+    </form>
+
+    <form name="EditPartyRelationship" type="single" target="createRelation" default-map-name="relation">
+      <!-- Edit PartyRelationship used by portlet PartyRelationFroms and PartyRelationTos -->
+      <actions>
+        <!-- field initializing for use-when, because still in bsh not groovy -->
+        <set field="relationIs" from-field="parameters.relationIs"/>
+        <set field="FROM" value="FROM"/>
+        <set field="TO"   value="TO"/>
+        <set field="roleTypeIdFromAttr" from-field="attributeMap.roleTypeIdFrom"/>
+        <set field="roleTypeGroupIdFrom" from-field="attributeMap.roleTypeGroupIdFrom"/>
+        <set field="roleTypeIdToAttr" from-field="attributeMap.roleTypeIdTo"/>
+        <set field="roleTypeGroupIdTo" from-field="attributeMap.roleTypeGroupIdTo"/>
+        <set field="partyRelationshipTypeIdAttr" from-field="attributeMap.partyRelationshipTypeId"/>
+        <set field="role" from-field="parameters.roleId"/>
+        <!-- End field initializing for use-when -->
+        <entity-one entity-name="PartyRelationship" value-field="relation" use-cache="true"/>
+        <set field="relationPartyId" value="${groovy: (relation != null &amp;&amp; FROM.equals(relationIs)) ? relation.partyIdTo :
+                                                      (relation != null &amp;&amp; TO.equals(relationIs)) ? relation.partyIdFrom : null}"/>
+        <entity-one entity-name="PartyNameView" value-field="relatedParty" use-cache="true">
+          <field-map field-name="partyId" from-field="relationPartyId"/>
+        </entity-one>
+        <set field="paramPartyId" value="${groovy: (FROM.equals(relationIs)) ? parameters.partyIdFrom : parameters.partyIdTo }"/>
+      </actions>
+      <alt-target use-when="relation != null" target="updateRelation"/>
+      <field name="debug"><hidden value="relationPartyId=${relationPartyId}"/> </field>
+      <field name="partyIdFrom" use-when="FROM.equals(relationIs)"><hidden /></field>
+      <field name="partyIdFrom" use-when="relation==null @and TO.equals(relationIs)" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
+      <field name="partyIdFrom" use-when="relation!=null @and TO.equals(relationIs)"><display description="${relatedParty.firstName} ${relatedParty.middleName} ${relatedParty.lastName} ${relatedParty.groupName} ${relatedParty.corporateName}"/></field>
+
+      <field name="roleTypeIdFrom" use-when="relation != null @and roleTypeGroupIdFrom == null"><hidden/></field>
+      <field name="roleTypeIdFrom" use-when="relation != null @and roleTypeGroupIdFrom != null" title="${uiLabelMap.PartyPartyInTheRoleOf}">
+          <display-entity entity-name="RoleType" description="${description}" key-field-name="roleTypeId"/>
+      </field>
+      <field name="roleTypeIdFrom" use-when="relation == null @and roleTypeIdFromAttr != null"><hidden value="${roleTypeIdFrom}"/></field>
+      <field name="roleTypeIdFrom" use-when="relation == null @and roleTypeIdFromAttr == null @and roleTypeGroupIdFrom == null"><hidden value="_NA_"/></field>
+      <field name="roleTypeIdFrom" use-when="relation == null @and roleTypeIdFromAttr == null @and roleTypeGroupIdFrom != null"
+             title="${uiLabelMap.PartyPartyInTheRoleOf}">
+             <drop-down>
+                <option key="_NA_" description=" "/>
+                <entity-options description="${description}" entity-name="RoleTypeGroupView" key-field-name="roleTypeId">
+                    <entity-constraint name="roleTypeGroupId" operator="equals" value="${roleTypeGroupIdFrom}" ignore-if-empty="true" ignore-if-null="true"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+      </field>
+
+      <field name="partyRelationshipTypeId" use-when="relation != null @and partyRelationshipTypeIdAttr != null"><hidden/></field>
+      <field name="partyRelationshipTypeId" use-when="relation == null @and partyRelationshipTypeIdAttr != null"><hidden value="${partyRelationshipTypeIdAttr}"/></field>
+      <field name="partyRelationshipTypeId" use-when="partyRelationshipTypeIdAttr == null @and TO.equals(relationIs)"
+             title="${uiLabelMap.PartyIsA}">
+        <drop-down allow-empty="true" no-current-selected-key="${relation.partyRelationshipTypeId}" current-description="${partyRelationshipName}">
+          <entity-options entity-name="PartyRelationshipType" description="${partyRelationshipName}">
+            <entity-constraint name="roleTypeIdValidTo" operator="equals" value="${role}" ignore-if-empty="true"/>
+            <entity-order-by field-name="partyRelationshipName"/>
+          </entity-options>
+        </drop-down>
+      </field>
+      <field name="partyRelationshipTypeId" use-when="partyRelationshipTypeIdAttr == null @and FROM.equals(relationIs)"
+             title="${uiLabelMap.PartyIsA}">
+        <drop-down allow-empty="true" no-current-selected-key="${relation.partyRelationshipTypeId}" current-description="${partyRelationshipName}">
+          <entity-options entity-name="PartyRelationshipType" description="${partyRelationshipName}">
+            <entity-constraint name="roleTypeIdValidFrom" operator="equals" value="${role}"  ignore-if-empty="true"/>
+            <entity-order-by field-name="partyRelationshipName"/>
+          </entity-options>
+        </drop-down>
+      </field>
+
+      <field name="partyIdTo" use-when="TO.equals(relationIs)"><hidden /></field>
+      <field name="partyIdTo" use-when="relation==null @and FROM.equals(relationIs)" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
+      <field name="partyIdTo" use-when="relation!=null @and FROM.equals(relationIs)"><display description="${relatedParty.firstName} ${relatedParty.middleName} ${relatedParty.lastName} ${relatedParty.groupName} ${relatedParty.corporateName}"/></field>
+
+      <field name="roleTypeIdTo" use-when="relation != null @and roleTypeGroupIdTo == null"><hidden/></field>
+      <field name="roleTypeIdTo" use-when="relation != null @and roleTypeGroupIdTo != null" title="${uiLabelMap.PartyPartyInTheRoleOf}">
+          <display-entity entity-name="RoleType" description="${description}" key-field-name="roleTypeId"/>
+      </field>
+      <field name="roleTypeIdTo" use-when="relation == null @and roleTypeIdToAttr != null"><hidden value="${roleTypeIdTo}"/></field>
+      <field name="roleTypeIdTo" use-when="relation == null @and roleTypeIdToAttr == null @and roleTypeGroupIdTo == null"><hidden value="_NA_"/></field>
+      <field name="roleTypeIdTo" use-when="relation == null @and roleTypeIdToAttr == null @and roleTypeGroupIdTo != null"
+             title="${uiLabelMap.PartyPartyInTheRoleOf}">
+             <drop-down>
+                <option key="_NA_" description=" "/>
+                <entity-options description="${description}" entity-name="RoleTypeGroupView" key-field-name="roleTypeId">
+                    <entity-constraint name="roleTypeGroupId" operator="equals" value="${roleTypeGroupIdTo}" ignore-if-empty="true" ignore-if-null="true"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+      </field>
+
+      <field name="fromDate" use-when="relation != null"><display description="${relation.fromDate}"/></field>
+      <field name="fromDate" use-when="relation == null" required-field="true"><date-time type="date" default-value="${nowTimestamp}"/></field>
+      <field name="thruDate"><date-time default-value="${relation.thruDate}" type="date"/></field>
+      <field name="comments"><text size="50"/></field>
+
+      <field name="submit" title="${uiLabelMap.CommonUpdate}" use-when="relation != null"><submit/></field>
+      <field name="submit" title="${uiLabelMap.CommonCreate}" use-when="relation == null"><submit/></field>
+      <field name="back" title=" " position="2" widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.CommonBack}" also-hidden="false"/>
+            <on-field-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+             <parameter param-name="partyId" from-field="paramPartyId"/>
+             <parameter param-name="roleId" from-field="parameters.roleId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+      </field>
+        <on-event-update-area area-target="" event-type="submit" area-id="" />
+        <on-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+            <parameter param-name="partyId" from-field="paramPartyId"/>
+            <parameter param-name="roleId" from-field="parameters.roleId"/>
+            <auto-parameters-portlet/>
+        </on-event-update-area>
+    </form>
+
+    <form name="PartyRelationTos" extends="PartyRelationFroms">
+      <row-actions>
+          <entity-one entity-name="PartyNameView" value-field="partyName" use-cache="true">
+              <field-map field-name="partyId" from-field="partyIdFrom"/>
+          </entity-one>
+          <set field="name" value="${partyName.firstName} ${partyName.middleName} ${partyName.lastName} ${partyName.groupName} ${partyName.corporateName} [${partyName.partyId}]"/>
+          <service service-name="getPartyEmail" result-map="partyEmail">
+              <field-map field-name="partyId" from-field="partyName.partyId"/>
+          </service>
+          <set field="emailAddress" from-field="partyEmail.emailAddress"/>
+          <service service-name="getPartyTelephone" result-map="phone">
+              <field-map field-name="partyId" from-field="partyName.partyId"/>
+              <field-map field-name="contactMechPurposeTypeId" value="PHONE_WORK"/>
+          </service>
+      </row-actions>
+      <sort-order>
+          <sort-field name="edit"/>
+          <sort-field name="enable"/>
+          <sort-field name="partyRelationshipTypeId"/>
+          <sort-field name="roleTypeIdTo"/>
+          <sort-field name="name"/>
+          <sort-field name="roleTypeIdFrom"/>
+      </sort-order>
+    </form>
+
+    <form name="EditParam_PartyRoles" extends="CommonPortletEdit" extends-resource="component://common/widget/PortletEditForms.xml" default-entity-name="PartyAttribute">
+        <actions>
+          <call-parent-actions/>
+          <script location="component://party/script/org/ofbiz/party/ProfileWactions.xml#getParentRoleDescription"/>
+          <script location="component://common/script/org/ofbiz/common/PortalPageMethods.xml#hasPortalAdminSecurity"/>
+        </actions>
+        <field name="showEditButton" use-when="hasPortalAdminSecurity"><radio><option key="Y"/><option key="N"/></radio></field>
+        <field name="roleTypeGroupId"  use-when="hasPortalAdminSecurity">
+            <drop-down allow-empty="true">
+                <list-options list-name="parentRoleList" key-name="parentTypeId" description="${description}"/>
+            </drop-down>
+        </field>
+        <field name="updateButton"><submit/></field>
+    </form>
+   <grid name="PartyRoles" list-name="partyRoles" odd-row-style="alternate-row" default-table-style="basic-table hover-bar" default-entity-name="PartyRole">
+        <field name="roleTypeId"><display-entity entity-name="RoleType" description="${description} [${roleTypeId}]"/></field>
+        <field name="parentTypeId" title="${uiLabelMap.PartyRoleTypeParent}"><display-entity entity-name="RoleType" key-field-name="roleTypeId" description="${description}"/></field>
+        <field name="remove" title=" " use-when="showEditButton == 'Y'">
+            <hyperlink also-hidden="false" image-location="${iconsPurpose.Delete}" image-title="${uiLabelMap.IconsTooltips_Delete}"
+                       request-confirmation="true" confirmation-message="${uiLabelMap.CommonConfirmDelete} : ${description}">
+            </hyperlink>
+            <on-field-event-update-area event-type="post" area-id="" area-target="deletePartyRole">
+                <parameter param-name="partyId"/>
+                <parameter param-name="roleTypeId"/>
+            </on-field-event-update-area>
+            <on-field-event-update-area event-type="set-area" area-id="${currentAreaId}" area-target="showPortletFj">
+                <parameter param-name="partyId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+    </grid>
+
+    <form name="AddRoleForPartyWithFilter" target="addPartyRole" type="single">
+        <actions>
+            <entity-condition entity-name="RoleType" list="roles" use-cache="true">
+                <condition-expr field-name="parentTypeId" from-field="attributeMap.roleTypeGroupId" ignore-if-empty="true"/>
+                <order-by field-name="roleTypeId"/><!-- orderBy on description not works with other langage than en -->
+            </entity-condition>
+        </actions>
+        <field name="partyId"><hidden/></field>
+        <field name="roleTypeId">
+            <drop-down>
+                <list-options key-name="roleTypeId" list-name="roles" description="${groovy:org.ofbiz.base.util.UtilProperties.getMessage('PartyEntityLabels', 'RoleType.description.' + roleTypeId, locale)}"/>
+            </drop-down>
+        </field>
+        <field name="addButton"><submit/></field>
+        <on-event-update-area area-target="" event-type="submit" area-id="" />
+        <on-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+            <parameter param-name="partyId"/>
+            <auto-parameters-portlet/>
+        </on-event-update-area>
+    </form>
+    <form name="SelectMainRoleForParty" type="single">
+        <actions>
+          <script location="component://partyfjs/groovyScripts/getParentRoleTypeDescription.groovy"/>
+        </actions>
+        <field name="portalPageId"><hidden value="${parameters.portalPageId}"/></field>
+        <field name="portalPortletId"><hidden value="${parameters.portalPortletId}"/></field>
+        <field name="portletSeqId"><hidden value="${parameters.portletSeqId}"/></field>
+        <field name="currentAreaId"><hidden value="${parameters.currentAreaId}"/></field>
+        <field name="partyId"><hidden value="${parameters.partyId}"/></field>
+
+<!--         <field name="roleTypeId" event="onChange" action="ajaxUpdateArea('addPartySecondaryRole', 'AddSecondaryPartyRole', jQuery('#SelectMainRoleForParty').serialize());"> -->
+        <field name="roleTypeId" >
+            <drop-down allow-empty="true">
+                <list-options list-name="parentRoleList" key-name="parentTypeId" description="${description}"/>
+            </drop-down>
+        </field>
+        <field name="childRole" position="2"><submit/></field>
+        <on-event-update-area area-target="addSecondaryPartyRole" event-type="set-area" area-id="addSecondaryPartyRole">
+        </on-event-update-area>
+
+    </form>
+    <form name="AddRoletoParty" target="addPartyRole" extends="AddPartyRole" extends-resource="component://party/widget/partymgr/PartyForms.xml">
+        <field name="add" position="2"/>
+        <on-event-update-area area-target="" event-type="submit" area-id="" />
+        <on-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+            <parameter param-name="partyId"/>
+            <auto-parameters-portlet/>
+        </on-event-update-area>
+    </form>
+    <form name="AddSecondaryPartyRole" target="addPartyRole" extends="AddPartySecondaryRoles" extends-resource="component://party/widget/partymgr/PartyForms.xml">
+        <field name="add" position="2"/>
+        <on-event-update-area area-target="" event-type="submit" area-id="" />
+        <on-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+            <parameter param-name="partyId" from-field="parameters.partyId"/>
+            <auto-parameters-portlet/>
+        </on-event-update-area>
+    </form>
+
+    <grid name="PartyAttributes" odd-row-style="alternate-row" default-table-style="basic-table hover-bar" default-entity-name="PartyAttribute">
+        <actions>
+            <set field="partyId" from-field="parameters.partyId" />
+            <entity-and entity-name="PartyAttribute">
+                <field-map field-name="partyId"/>
+            </entity-and>
+        </actions>
+        <field name="attrName" >
+            <hyperlink description="${attrName}" also-hidden="false"/>
+            <on-field-event-update-area event-type="set-area" area-id="PartyAttributes_editArea" area-target="editPartyAttribute">
+                 <parameter param-name="partyId"/>
+                 <parameter param-name="attrName"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+        <field name="attrValue" title="${uiLabelMap.CommonValue}">
+          <display>
+            <in-place-editor url="updatePartyAttribute" saving-text="Updating...">
+                <simple-editor/>
+                <field-map field-name="partyId"/>
+                <field-map field-name="attrName"/>
+            </in-place-editor>
+          </display>
+        </field>
+        <field name="attrDescription" title="${uiLabelMap.CommonDescription}">
+          <display>
+            <in-place-editor url="updatePartyAttribute" saving-text="Updating...">
+                <simple-editor/>
+                <field-map field-name="partyId"/>
+                <field-map field-name="attrName"/>
+            </in-place-editor>
+          </display>
+        </field>
+        <field name="delete" title=" ">
+            <hyperlink also-hidden="false" image-location="${iconsPurpose.Delete}" image-title="${uiLabelMap.IconsTooltips_Delete}"
+                       request-confirmation="true" confirmation-message="${uiLabelMap.CommonConfirmDelete} : ${attrName}">
+            </hyperlink>
+            <on-field-event-update-area event-type="post" area-id="" area-target="removePartyAttribute">
+                <parameter param-name="partyId"/>
+                <parameter param-name="attrName"/>
+            </on-field-event-update-area>
+            <on-field-event-update-area event-type="set-area" area-id="${currentAreaId}" area-target="showPortletFj">
+                <parameter param-name="partyId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+    </grid>
+    <form name="EditPartyAttribute" type="single" target="updatePartyAttribute" default-map-name="attribute"
+        focus-field-name="attrName" header-row-style="header-row" default-table-style="basic-table" >
+        <alt-target use-when="attribute==null" target="createPartyAttribute"/>
+        <auto-fields-service service-name="updatePartyAttribute" map-name="attribute"/>
+        <field use-when="attribute==null" name="attrName" widget-style="required"><text size="25" maxlength="60"/></field>
+        <field use-when="attribute!=null" name="attrName" ><display/></field>
+        <field name="partyId" map-name="attribute" field-name="partyId"><hidden value="${parameters.partyId}"/></field>
+
+        <field name="submitButton" title="${uiLabelMap.CommonSave}"><submit button-type="button"/></field>
+        <field name="cancelLink"   title=" " position="2" widget-style="smallSubmit">
+            <hyperlink description="${uiLabelMap.CommonCancel}" also-hidden="false"/>
+            <on-field-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+               <parameter param-name="partyId" from-field="parameters.partyId"/>
+               <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+        <on-event-update-area area-target="" event-type="submit" area-id="" />
+        <on-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+            <parameter param-name="partyId" from-field="parameters.partyId"/>
+            <auto-parameters-portlet/>
+        </on-event-update-area>
+    </form>
+
+    <form name="EditParam_PartyIdentLists" extends="CommonPortletEdit" extends-resource="component://common/widget/PortletEditForms.xml" default-entity-name="PartyAttribute">
+        <field name="parentTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="PartyIdentificationType" key-field-name="partyIdentificationTypeId">
+                    <entity-constraint name="parentTypeId" operator="equals" env-name="nullField"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="updateButton"><submit/></field>
+    </form>
+    <grid name="PartyIdentLists" list-name="partyIdentifications" odd-row-style="alternate-row" default-table-style="basic-table" default-entity-name="PartyIdentification">
+        <actions>
+            <entity-condition entity-name="PartyIdentificationAndType" list="partyIdentifications">
+                <condition-list combine="and">
+                    <condition-expr field-name="partyId" from-field="parameters.partyId"/>
+                    <condition-expr field-name="parentTypeId" from-field="parentTypeId" ignore-if-empty="true"/>
+                </condition-list>
+            </entity-condition>
+        </actions>
+        <row-actions>
+          <entity-one entity-name="PartyIdentificationType" use-cache="true" value-field="partyIdentificationType">
+            <field-map field-name="partyIdentificationTypeId"/>
+          </entity-one>
+          <set field="partyIdentificationTypeDescription" from-field="partyIdentificationType.description"/>
+        </row-actions>
+        <field name="partyIdentificationTypeId">
+            <hyperlink description="${partyIdentificationTypeDescription}" also-hidden="false"/>
+            <on-field-event-update-area event-type="set-area" area-id="PartyIdentLists_editArea" area-target="editPartyIdentification">
+                 <parameter param-name="partyId"/>
+                 <parameter param-name="partyIdentificationTypeId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+        <field name="idValue">
+          <display>
+            <in-place-editor url="updatePartyIdentification" saving-text="Updating...">
+                <simple-editor/>
+                <field-map field-name="partyId"/>
+                <field-map field-name="partyIdentificationTypeId"/>
+            </in-place-editor>
+          </display>
+        </field>
+        <field name="deleteLink" title=" ">
+            <hyperlink also-hidden="false" image-location="${iconsPurpose.Delete}" image-title="${uiLabelMap.IconsTooltips_Delete}"
+                       request-confirmation="true" confirmation-message="${uiLabelMap.CommonConfirmDelete} : ${partyIdentificationTypeDescription}">
+            </hyperlink>
+            <on-field-event-update-area event-type="post" area-id="" area-target="deletePartyIdentification">
+                   <parameter param-name="partyId"/>
+                   <parameter param-name="partyIdentificationTypeId"/>
+            </on-field-event-update-area>
+            <on-field-event-update-area event-type="set-area" area-id="${currentAreaId}" area-target="showPortletFj">
+                   <parameter param-name="partyId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+    </grid>
+    <form name="EditPartyIdentification" type="single" target="createPartyIdentification" default-map-name="partyIdentification">
+        <alt-target use-when="partyIdentification != null" target="updatePartyIdentification"/>
+        <field name="paramParentTypeId"><hidden/></field>
+        <field name="partyId"><hidden/></field>
+        <field name="partyIdentificationTypeId" use-when="partyIdentification == null">
+           <drop-down>
+                <entity-options entity-name="PartyIdentificationType" description="${description}">
+                    <entity-constraint name="parentTypeId" env-name="paramParentTypeId"  ignore-if-empty="true"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="partyIdentificationTypeId" use-when="partyIdentification !=null">
+            <display-entity entity-name="PartyIdentificationType"/>
+        </field>
+        <field name="idValue"><text/></field>
+        <field name="submitButton" title="${groovy: partyIdentification == null ? uiLabelMap.CommonCreate : uiLabelMap.CommonSave }" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field name="back" title=" " position="2" widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.CommonBack}" also-hidden="false"/>
+            <on-field-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+               <parameter param-name="partyId" from-field="parameters.partyId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+        <on-event-update-area area-target="" event-type="submit" area-id="" />
+        <on-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+             <parameter param-name="partyId" from-field="parameters.partyId"/>
+            <auto-parameters-portlet/>
+        </on-event-update-area>
+    </form>
+
+    <grid name="PartyNotes" list-name="partyNotes" separate-columns="true" default-entity-name="PartyNote"
+             odd-row-style="alternate-row" header-row-style="header-row" default-table-style="basic-table hover-bar">
+        <actions>
+            <set field="sortField" from-field="parameters.sortField" default-value="noteDateTime"/>
+            <set field="canEditNote" from-field="canEditNote"/>
+            <entity-and entity-name="PartyNoteView" list="partyNotes">
+                <field-map field-name="targetPartyId" from-field="parameters.partyId"/>
+                <order-by field-name="${sortField}"/>
+            </entity-and>
+        </actions>
+        <row-actions>
+            <entity-one entity-name="PartyNameView" value-field="partyNameView">
+                <field-map field-name="partyId" from-field="noteParty"/>
+            </entity-one>
+        </row-actions>
+        <field name="noteId" title="${uiLabelMap.CommonId}" use-when="! 'N'.equals(canEditNote)">
+            <hyperlink description="${noteId}" also-hidden="false"/>
+            <on-field-event-update-area event-type="set-area" area-id="PartyNotes_editArea" area-target="editPartyNote">
+                 <parameter param-name="partyId" from-field="targetPartyId"/>
+                 <parameter param-name="noteId" />
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+        <field name="noteId" title="${uiLabelMap.CommonId}" use-when="  'N'.equals(canEditNote)">
+            <display/>
+        </field>
+        <field name="noteInfo" title="${uiLabelMap.CommonNote}"><display size="100"/></field>
+        <field name="noteParty" title="${uiLabelMap.CommonBy}">
+          <display description="${partyNameView.lastName} ${partyNameView.middleName} ${partyNameView.firstName}, ${groovy:noteDateTime.toString().substring(0,10)}"/>
+        </field>
+<!--        <field name="noteName" sort-field="true"><display/></field>-->
+    </grid>
+    <form name="EditParam_PartyNote" extends="CommonPortletEdit" extends-resource="component://common/widget/PortletEditForms.xml" default-entity-name="PartyAttribute">
+        <field name="canEditNote">  <radio no-current-selected-key="Y"><option key="Y"/><option key="N"/></radio></field>
+        <field name="assocNoteMenu"><radio no-current-selected-key="Y"><option key="Y"/><option key="N"/></radio></field>
+        <field name="updateButton">
+            <submit />
+        </field>
+    </form>
+    <form name="EditPartyNote" type="single" target="createPartyNote" default-map-name="partyNote">
+        <alt-target use-when="partyNote != null" target="updatePartyNote"/>
+        <field name="partyId"><hidden/></field>
+        <field name="noteId"><hidden/></field>
+        <field name="noteName" tooltip="${uiLabelMap.CommonNoteNameOptional}"><text/></field>
+        <field name="noteDateTime" title="${uiLabelMap.CommonThe}" use-when="partyNote != null"><display type="date"/></field>
+        <field name="note" title="${uiLabelMap.CommonContent}" use-when="partyNote == null"><textarea/></field>
+        <field name="noteInfo" title="${uiLabelMap.CommonContent}" use-when="partyNote != null"><textarea/></field>
+        <field name="submit" title="${groovy: partyNote != null?uiLabelMap.CommonUpdate : uiLabelMap.CommonCreate}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field name="back" title=" " position="2" widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.CommonBack}" also-hidden="false"/>
+            <on-field-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+               <parameter param-name="partyId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+        <on-event-update-area area-target="" event-type="submit" area-id="" />
+        <on-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+             <parameter param-name="partyId"/>
+            <auto-parameters-portlet/>
+        </on-event-update-area>
+    </form>
+    <form name="AssocPartyNote" type="single" target="createPartyNote" header-row-style="header-row" default-table-style="basic-table">
+        <field name="partyId"><hidden/></field>
+        <field name="noteId"><lookup target-form-name="LookupNote"/></field>
+        <field name="submitButton" title="${uiLabelMap.IconsTooltips_Associate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="back" title=" " position="2" widget-style="smallSubmit">  <!-- Back button that refresh portlet with edit area-->
+            <hyperlink description="${uiLabelMap.CommonBack}" also-hidden="false"/>
+            <on-field-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+               <parameter param-name="partyId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+        <on-event-update-area area-target="" event-type="submit" area-id="" />
+        <on-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+             <parameter param-name="partyId"/>
+            <auto-parameters-portlet/>
+        </on-event-update-area>
+    </form>
+
+    <grid name="PartyPaymentMethodsList" list-name="paymentInfos" odd-row-style="alternate-row" default-table-style="basic-table">
+        <field name="editLink" entry-name="workEffortId" title=" " use-when="activeEdit!=null &amp;&amp;paymentMethodId != null">
+            <hyperlink description="${workEffortName}" also-hidden="false" image-location="${iconsPurpose.Edit}" image-title="${uiLabelMap.IconsTooltips_Edit}"/>
+            <on-field-event-update-area event-type="set-area" area-id="PartyPaymentMethods_editArea" area-target="editPartyPaymentMethod">
+                 <parameter param-name="partyId"/>
+                 <parameter param-name="paymentMethodId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+        <field name="editLink" entry-name="workEffortId" title=" " use-when="billingAccountId != null">
+            <hyperlink description="${workEffortName}" also-hidden="false" image-location="${iconsPurpose.Edit}" image-title="${uiLabelMap.IconsTooltips_Edit}"/>
+            <on-field-event-update-area event-type="set-area" area-id="PartyPaymentMethods_editArea" area-target="editPartyBillingAccount">
+                 <parameter param-name="partyId"/>
+                 <parameter param-name="billingAccountId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+        <field name="billingAccountId"><hidden/></field>
+        <field name="paymentMethodId"><hidden/></field>
+        <field name="type"><display/></field>
+        <field name="description"><display/></field>
+        <field name="deleteLink" title=" " use-when="activeEdit!=null @and paymentMethodId != null">
+            <hyperlink also-hidden="false" image-location="${iconsPurpose.Expire}" image-title="${uiLabelMap.IconsTooltips_Expire}"
+                       request-confirmation="true" confirmation-message="${uiLabelMap.CommonConfirm} ${uiLabelMap.IconsTooltips_Expire} : ${description}">
+            </hyperlink>
+            <on-field-event-update-area event-type="post" area-id="" area-target="deletePaymentMethod">
+                   <parameter param-name="partyId"/>
+                   <parameter param-name="paymentMethodId"/>
+            </on-field-event-update-area>
+            <on-field-event-update-area event-type="set-area" area-id="${currentAreaId}" area-target="showPortletFj">
+                   <parameter param-name="partyId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+        <field name="deleteLink" title=" " use-when="billingAccountId != null">
+            <hyperlink also-hidden="false" image-location="${iconsPurpose.Expire}" image-title="${uiLabelMap.IconsTooltips_Expire}"
+                       request-confirmation="true" confirmation-message="${uiLabelMap.CommonConfirm} ${uiLabelMap.IconsTooltips_Expire} : ${description}">
+            </hyperlink>
+            <on-field-event-update-area event-type="post" area-id="" area-target="deleteBillingAccount">
+                   <parameter param-name="partyId"/>
+                   <parameter param-name="billingAccountId"/>
+            </on-field-event-update-area>
+            <on-field-event-update-area event-type="set-area" area-id="${currentAreaId}" area-target="showPortletFj">
+                   <parameter param-name="partyId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+    </grid>
+
+    <form name="EditParam_PartyPaymentMethodsList" extends="CommonPortletEdit" extends-resource="component://common/widget/PortletEditForms.xml" default-entity-name="PartyAttribute">
+        <field name="addGiftCard">  <radio no-current-selected-key="Y"><option key="Y"/><option key="N"/></radio></field>
+        <field name="addEftAccount"><radio no-current-selected-key="Y"><option key="Y"/><option key="N"/></radio></field>
+        <field name="addCreditCard"><radio no-current-selected-key="Y"><option key="Y"/><option key="N"/></radio></field>
+        <field name="addBillingAccount"><radio no-current-selected-key="Y"><option key="Y"/><option key="N"/></radio></field>
+        <field name="showHistory"><radio no-current-selected-key="Y"><option key="Y"/><option key="N"/></radio></field>
+        <field name="hideHistory"><radio no-current-selected-key="Y"><option key="Y"/><option key="N"/></radio></field>
+        <field name="updateButton">
+            <submit />
+        </field>
+    </form>
+
+
+    <form name="EditPartyBillingAccount" type="single" target="createBillingAccountAndRole" default-map-name="billingAccount">
+        <actions>
+            <set field="availableBalance" value="${groovy:billingAccount != null ? org.apache.ofbiz.accounting.payment.BillingAccountWorker.getBillingAccountBalance(billingAccount) : 0}" type="BigDecimal"/>
+        </actions>
+        <alt-target use-when="billingAccount != null" target="updateBillingAccount"/>
+        <auto-fields-service service-name="createBillingAccount" map-name="billingAccount"/>
+        <field use-when="billingAccount!=null" name="billingAccountId" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
+        <field name="accountLimit"><text /></field>
+        <field name="description"><text size="60"/></field>
+
+        <field name="partyId"><hidden/></field>
+        <field use-when="roleTypeId == null" name="roleTypeId"><hidden value="BILL_TO_CUSTOMER"/></field>
+        <field use-when="roleTypeId != null" name="roleTypeId"><hidden/></field>
+
+        <field name="accountCurrencyUomId">
+            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">
+                <entity-options key-field-name="uomId" description="${description} - ${abbreviation}" entity-name="Uom">
+                    <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="netBalance" title="${uiLabelMap.AccountingBillingNetBalance}" tooltip="${uiLabelMap.AccountingBillingNetBalanceMessage}">
+            <display description="${groovy:org.apache.ofbiz.accounting.payment.BillingAccountWorker.getBillingAccountNetBalance(delegator, billingAccountId)}" type="currency" currency="${billingAccount.accountCurrencyUomId}"/>
+        </field>
+        <field name="availableBalance" title="${uiLabelMap.AccountingBillingAvailableBalance}" tooltip="${uiLabelMap.AccountingBillingAvailableBalanceMessage}">
+            <display type="currency" currency="${billingAccount.accountCurrencyUomId}"/>
+        </field>
+        <field name="contactMechId" use-when="billingAccount == null"><ignored/></field>
+        <field name="contactMechId" use-when="billingAccount != null" tooltip="${uiLabelMap.AccountingBillingContactMechIdMessage}">
+            <drop-down>
+                <entity-options entity-name="BillingAccountRoleAndAddress" description="[${partyId}][${contactMechId}] ${toName}, ${attnName}, ${address1}, ${stateProvinceGeoId} ${postalCode}" key-field-name="contactMechId" filter-by-date="true">
+                    <entity-constraint name="billingAccountId" env-name="billingAccount.billingAccountId"/>
+                    <entity-order-by field-name="partyId"/>
+                    <entity-order-by field-name="contactMechId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${groovy: billingAccount == null ? uiLabelMap.CommonCreate : uiLabelMap.CommonSave }" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field name="back" title=" " position="2" widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.CommonBack}" also-hidden="false"/>
+            <on-field-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+               <parameter param-name="partyId" from-field="parameters.partyId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+        <on-event-update-area area-target="" event-type="submit" area-id="" />
+        <on-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+             <parameter param-name="partyId" from-field="parameters.partyId"/>
+             <parameter param-name="billingAccountId"/>
+            <auto-parameters-portlet/>
+        </on-event-update-area>
+    </form>
+
+    <form name="EditPartyCreditCard" type="single" target="createCreditCard" default-map-name="creditCard">
+        <actions>
+            <entity-one entity-name="CreditCard" value-field="creditCard"/>
+            <entity-one entity-name="PaymentMethod" value-field="paymentMethod"/>
+            <script location="component://partyfjs/groovyScripts/FormatCreditCardNumber.groovy"/>
+        </actions>
+        <alt-target use-when="creditCard != null" target="updateCreditCard"/>
+        <field name="paymentMethodId"><hidden/></field>
+        <field name="partyId" map-name="paymentMethod"><hidden/></field>
+        <field name="companyNameOnCard" title="${uiLabelMap.AccountingCompanyNameCard}"><text size="30" maxlength="60"/></field>
+        <field name="titleOnCard" title="${uiLabelMap.AccountingPrefixCard}">
+            <drop-down current="selected">
+                <option key=""     description="${uiLabelMap.CommonSelectOne}"/>
+                <option key="Mr."  description="${uiLabelMap.CommonTitleMr}"/>
+                <option key="Mrs." description="${uiLabelMap.CommonTitleMrs}"/>
+                <option key="Ms."  description="${uiLabelMap.CommonTitleMs}"/>
+                <option key="Dr."  description="${uiLabelMap.CommonTitleDr}"/>
+            </drop-down>
+        </field>
+        <field name="firstNameOnCard" title="${uiLabelMap.AccountingFirstNameCard}" widget-style="required" required-field="true"><text size="20" maxlength="60"/></field>
+        <field name="middleNameOnCard" title="${uiLabelMap.AccountingMiddleNameCard}"><text size="15" maxlength="60"/></field>
+        <field name="lastNameOnCard" title="${uiLabelMap.AccountingLastNameCard}" widget-style="required" required-field="true"><text size="20" maxlength="60"/></field>
+        <field name="suffixOnCard" title="${uiLabelMap.AccountingSuffixCard}">
+            <drop-down>
+                <option key=""    description="${uiLabelMap.CommonSelectOne}"/>
+                <option key="Jr." description="Jr."/>
+                <option key="Sr." description="Sr."/>
+                <option key="I"   description="I"/>
+                <option key="II"  description="II"/>
+                <option key="III" description="III"/>
+                <option key="IV"  description="IV"/>
+                <option key="V"   description="V"/>
+            </drop-down>
+        </field>
+        <field name="cardType" title="${uiLabelMap.AccountingCardType}" required-field="true">
+            <drop-down>
+                <option key="CCT_VISA" description="Visa"/>
+                <option key="CCT_MASTERCARD" description="Master Card"/>
+                <option key="CCT_AMERICANEXPRESS" description="American Express"/>
+                <option key="CCT_DINERSCLUB" description="Diners Club"/>
+                <option key="CCT_DISCOVER" description="Discover"/>
+                <option key="CCT_ENROUTE" description="EnRoute"/>
+                <option key="CCT_JCB" description="JCB"/>
+            </drop-down>
+        </field>
+        <field name="cardNumber" map-name="context" title="${uiLabelMap.AccountingCardNumber}" widget-style="required" required-field="true"><text size="20" maxlength="30" mask="9999-9999-9999-9999"/></field>
+        <!--TODO Waiting correction finalisation, it's necessary to review this form with creditcardfield.ftl file
+        <field name="expMonth" title="${uiLabelMap.CommonExpireDate}" widget-style="required">
+           <text mask="**" size="2" maxlength="2"/>
+        </field>
+        <field name="expYear" widget-style="required" position="2">
+            <text mask="****" size="4" maxlength="4"/></field>
+         -->
+        <field name="expireDate" title="${uiLabelMap.CommonExpireDate}" widget-style="required"><text mask="99/9999" size="7" maxlength="7"/></field>
+        <field name="description" map-name="paymentMethod"><text/></field>
+        <field name="submitButton" title="${groovy: creditCard == null ? uiLabelMap.CommonCreate : uiLabelMap.CommonSave }" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field name="back" title=" " position="2" widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.CommonBack}" also-hidden="false"/>
+            <on-field-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+               <parameter param-name="partyId" from-field="parameters.partyId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+        <on-event-update-area area-target="" event-type="submit" area-id="" />
+        <on-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+             <parameter param-name="partyId" from-field="parameters.partyId"/>
+            <auto-parameters-portlet/>
+        </on-event-update-area>
+    </form>
+
+    <form name="EditPartyEftAccount" type="single" target="createEftAccount" default-map-name="eftAccount">
+        <actions>
+            <entity-one value-field="eftAccount" entity-name="EftAccount"/>
+            <entity-one value-field="paymentMethod" entity-name="PaymentMethod"/>
+        </actions>
+        <alt-target use-when="eftAccount != null" target="updateEftAccount"/>
+        <field name="paymentMethodId"><hidden/></field>
+        <field name="partyId" map-name="paymentMethod"><hidden/></field>
+        <field name="nameOnAccount" title="${uiLabelMap.AccountingNameAccount}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="companyNameOnAccount" title="${uiLabelMap.AccountingCompanyNameAccount}"><text size="30" maxlength="60"/></field>
+        <field name="bankName" title="${uiLabelMap.AccountingBankName}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="routingNumber" title="${uiLabelMap.EftAccountBic}" widget-style="required"><text size="10" maxlength="30"/></field>
+        <field name="accountType" title="${uiLabelMap.AccountingAccountType}" use-when="${!empty paymentMethod}"><display/></field>
+        <field name="accountType" title="${uiLabelMap.AccountingAccountType}" use-when="${empty paymentMethod}" widget-style="required">
+            <drop-down allow-empty="true" current="selected">
+                 <option key="${uiLabelMap.CommonSavings}" description="${uiLabelMap.CommonSavings}"/>
+                 <option key="${uiLabelMap.CommonChecking}" description="${uiLabelMap.CommonChecking}"/>
+            </drop-down>
+        </field>
+        <field name="accountNumber" title="${uiLabelMap.EftAccountIban}" widget-style="required"><text size="20" maxlength="40"/></field>        <field name="description" map-name="paymentMethod" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="contactMechId" title="${uiLabelMap.PartyBillingAddress}" use-when="&quot;&quot;.equals(&quot;${postalAddressInfos}&quot;)">
+            <display description="${uiLabelMap.PartyNoContactInformation}"/>
+        </field>
+        <field name="contactMechId" title="${uiLabelMap.PartyBillingAddress}" use-when="(!&quot;&quot;.equals(&quot;${postalAddressInfos}&quot;) &amp;&amp; &quot;&quot;.equals(&quot;${curPostalAddress}&quot;)) || eftAccount == null">
+             <radio no-current-selected-key="${eftAccount.contactMechId}">
+                 <list-options key-name="postalAddressInfo.contactMech.contactMechId" list-name="postalAddressInfos" list-entry-name="postalAddressInfo" description="${postalAddressInfo.postalAddress.address1} ${postalAddressInfo.postalAddress.address2} ${postalAddressInfo.postalAddress.city} ${postalAddressInfo.postalAddress.postalCode} ${postalAddressInfo.postalAddress.countryGeoId}"/>
+             </radio>
+        </field>
+        <field name="contactMechId" title="${uiLabelMap.PartyBillingAddress}" use-when="!&quot;&quot;.equals(&quot;${postalAddressInfos}&quot;) &amp;&amp; !&quot;&quot;.equals(&quot;${curPostalAddress}&quot;)">
+             <radio no-current-selected-key="${eftAccount.contactMechId}">
+                 <option key="${curPostalAddress.contactMechId}" description="${curPostalAddress.address1} ${curPostalAddress.address2} ${curPostalAddress.city} ${curPostalAddress.postalCode} ${curPostalAddress.countryGeoId}"/>
+                 <list-options key-name="postalAddressInfo.contactMech.contactMechId" list-name="postalAddressInfos" list-entry-name="postalAddressInfo" description="${postalAddressInfo.postalAddress.address1} ${postalAddressInfo.postalAddress.address2} ${postalAddressInfo.postalAddress.city} ${postalAddressInfo.postalAddress.postalCode} ${postalAddressInfo.postalAddress.countryGeoId}"/>
+             </radio>
+        </field>
+        <field name="submitButton" title="${groovy: eftAccount == null ? uiLabelMap.CommonCreate : uiLabelMap.CommonSave }" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field name="back" title=" " position="2" widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.CommonBack}" also-hidden="false"/>
+            <on-field-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+               <parameter param-name="partyId" from-field="parameters.partyId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+        <on-event-update-area area-target="" event-type="submit" area-id="" />
+        <on-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+             <parameter param-name="partyId" from-field="parameters.partyId"/>
+            <auto-parameters-portlet/>
+        </on-event-update-area>
+    </form>
+
+    <form name="EditPartyGiftCard" type="single" target="createGiftCard" default-map-name="giftCard">
+        <actions>
+            <entity-one entity-name="GiftCard" value-field="giftCard"/>
+            <entity-one entity-name="PaymentMethod" value-field="paymentMethod"/>
+        </actions>
+        <alt-target use-when="giftCard != null" target="updateGiftCard"/>
+        <field name="paymentMethodId"><hidden/></field>
+        <field name="partyId"><hidden value="${parameters.partyId}"/></field>
+        <field name="cardNumber" title="${uiLabelMap.AccountingCardNumber}" widget-style="required"><text size="20" maxlength="60"/></field>
+        <field name="pinNumber" title="${uiLabelMap.AccountingPinNumber}"><text size="10" maxlength="60"/></field>
+        <field name="expireDate" title="${uiLabelMap.CommonExpireDate}"><text mask="**/****" size="7" maxlength="7"/></field>
+        <field name="description" map-name="paymentMethod"><text/></field>
+        <field name="submitButton" title="${groovy: giftCard == null ? uiLabelMap.CommonCreate : uiLabelMap.CommonSave }" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field name="back" title=" " position="2" widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.CommonBack}" also-hidden="false"/>
+            <on-field-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+               <parameter param-name="partyId" from-field="parameters.partyId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+        <on-event-update-area area-target="" event-type="submit" area-id="" />
+        <on-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+             <parameter param-name="partyId" from-field="parameters.partyId"/>
+            <auto-parameters-portlet/>
+        </on-event-update-area>
+    </form>
+
+    <form name="EditPartyPaymentMethod" type="single" target="createPaymentMethod" default-map-name="paymentMethod">
+        <actions>
+            <entity-one entity-name="PaymentMethod" value-field="paymentMethod"/>
+        </actions>
+        <alt-target use-when="paymentMethod != null" target="updatePaymentMethod"/>
+        <auto-fields-entity entity-name="PaymentMethod" default-field-type="display"/>
+        <field name="partyId"><hidden/></field>
+        <field name="paymentMethodId" use-when="paymentMethod == null" widget-style="required"><display/></field>
+        <field name="paymentMethodId" use-when="paymentMethod != null"><display/></field>
+        <field name="paymentMethodTypeId" use-when="paymentMethod == null">
+            <drop-down>
+                <entity-options description="${description}" entity-name="PaymentMethodType"/>
+            </drop-down>
+        </field>
+        <field name="paymentMethodTypeId" use-when="paymentMethod != null"><display-entity entity-name="PaymentMethodType"/></field>
+        <!-- TODO : Remove or uncomment if createPaymentMethod and updatePaymentMethod are created
+        <field name="glAccountId"><text size="20" maxlength="20"/></field>
+        <field name="finAccountId"><text size="20" maxlength="20"/></field>
+        <field name="description"><text size="60" maxlength="250"/></field>
+        <field name="fromDate"><date-time/></field>
+        <field name="thruDate"><date-time/></field>
+        <field name="submitButton" title="${groovy: paymentMethod == null ? uiLabelMap.CommonCreate : uiLabelMap.CommonSave }" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+        -->
+        <field name="back" title=" " position="2" widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.CommonBack}" also-hidden="false"/>
+            <on-field-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+               <parameter param-name="partyId" from-field="parameters.partyId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+        <on-event-update-area area-target="" event-type="submit" area-id="" />
+        <on-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+             <parameter param-name="partyId" from-field="parameters.partyId"/>
+            <auto-parameters-portlet/>
+        </on-event-update-area>
+    </form>
+
+    <grid name="PartyContents" list-name="listIt" default-entity-name="PartyContent" separate-columns="false" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-and entity-name="PartyContentDetail" list="listIt">
+                <field-map field-name="partyId" from-field="parameters.partyId" />
+            </entity-and>
+        </actions>
+        <field name="partyId"><hidden /></field>
+        <field name="contentId" title="${uiLabelMap.CommonId}">
+            <hyperlink description="${contentId}" also-hidden="false" />
+            <on-field-event-update-area event-type="set-area" area-id="PartyContents_editArea" area-target="editPartyContent">
+            <parameter param-name="contentId" />
+            <parameter param-name="partyId" />
+            <parameter param-name="partyContentTypeId" />
+            <parameter param-name="fromDate" />
+                <auto-parameters-portlet />
+            </on-field-event-update-area>
+        </field>
+        <field name="contentName"><display /></field>
+        <field name="partyContentTypeId"><display-entity entity-name="PartyContentType" /></field>
+        <field name="description"><display /></field>
+        <field name="statusId"><display-entity entity-name="StatusItem" /></field>
+        <field name="localeString"><display-entity entity-name="CountryCode" key-field-name="countryCode" description="${countryName}${countryCode}" /></field>
+<!--        <field name="contentTypeId"><display-entity entity-name="ContentType"/></field>-->
+        <field name="mimeTypeId"><display-entity entity-name="MimeType" /></field>
+        <field name="dataResourceId" title="${uiLabelMap.FormFieldTitle_dataResourceName}" use-when="dataResourceId==null"><display /> </field>
+        <field name="dataResourceId" title="${uiLabelMap.FormFieldTitle_dataResourceName}" use-when="dataResourceId!=null">
+            <display-entity entity-name="DataResource" description="${dataResourceName}" />
+        </field>
+       <field name="viewLink" title=" " use-when="contentId!=null">
+            <hyperlink target="stream?contentId=${contentId}" target-type="inter-app" target-window="upload" image-location="${iconsPurpose.Download}" image-title="${uiLabelMap.IconsTooltips_Download}">
+            </hyperlink>
+        </field>
+        <field name="deleteLink" title=" ">
+            <hyperlink also-hidden="false" image-location="${iconsPurpose.Delete}" image-title="${uiLabelMap.IconsTooltips_Delete}" request-confirmation="true" confirmation-message="${uiLabelMap.CommonConfirmDelete} : ${contentName}">
+            </hyperlink>
+            <on-field-event-update-area event-type="post" area-id="" area-target="removePartyContent">
+                   <parameter param-name="contentId" />
+                   <parameter param-name="partyId" />
+                   <parameter param-name="partyContentTypeId" />
+                   <parameter param-name="fromDate" />
+            </on-field-event-update-area>
+            <on-field-event-update-area event-type="set-area" area-id="${currentAreaId}" area-target="showPortletFj">
+                <parameter param-name="partyId" />
+                <auto-parameters-portlet />
+            </on-field-event-update-area>
+        </field>
+    </grid>
+
+    <form name="EditPartyContent" target="updatePartyContent" type="upload" default-map-name="content"
+        focus-field-name="contentTypeId" header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+            <entity-one entity-name="StatusItem" value-field="currentStatus" auto-field-map="false">
+                <field-map field-name="statusId" from-field="content.statusId"/>
+            </entity-one>
+            <entity-one entity-name="DataResource" value-field="dataResource" auto-field-map="false">
+                <field-map field-name="dataResourceId" from-field="content.dataResourceId"/>
+            </entity-one>
+        </actions>
+        <alt-target use-when="content==null" target="uploadPartyContent"/>
+        <field name="partyId" map-name="parameters"><hidden/></field>
+        <field name="dataResourceId" map-name="dataResource" use-when="content!=null"><hidden/></field>
+        <field use-when="content!=null" name="contentId" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
+        <field name="dataCategoryId"><hidden value="PERSONAL"/></field>
+        <field name="contentTypeId"><hidden value="DOCUMENT"/></field>
+        <field name="statusId"><hidden value="CTNT_PUBLISHED"/></field>
+        <field name="uploadedFile" title="${uiLabelMap.CommonUpload}" use-when="content==null"><file/></field>
+        <field name="fromDate" use-when="content!=null"><display type="date-time"/></field>
+        <field name="thruDate" use-when="content!=null"><date-time/></field>
+        <field name="partyContentTypeId">
+            <drop-down allow-empty="false">
+                <entity-options description="${description}" entity-name="PartyContentType"/>
+            </drop-down>
+        </field>
+        <field name="mimeTypeId" >
+            <drop-down allow-empty="false">
+                <entity-options description="${description}" entity-name="MimeType"/>
+            </drop-down>
+        </field>
+        <field name="isPublic" title="${uiLabelMap.PartyIsPublic}" map-name="dataResource">
+            <drop-down no-current-selected-key="N">
+                <option key="N" description="${uiLabelMap.CommonNo}"/>
+                <option key="Y" description="${uiLabelMap.CommonYes}"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${groovy: content==null ? uiLabelMap.CommonAdd: uiLabelMap.CommonSave}"><submit button-type="button"/></field>
+        <field name="back" title=" " position="2" widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.CommonBack}" also-hidden="false"/>
+            <on-field-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+               <parameter param-name="partyId" from-field="parameters.partyId"/>
+                <auto-parameters-portlet/>
+            </on-field-event-update-area>
+        </field>
+        <on-event-update-area area-target="" event-type="submit" area-id="" />
+        <on-event-update-area area-target="showPortletFj" event-type="set-area" area-id="${parameters.currentAreaId}">
+             <parameter param-name="partyId"/>
+            <auto-parameters-portlet/>
+        </on-event-update-area>
+        <sort-order>
+            <sort-field name="uploadedFile"/>
+        </sort-order>
+    </form>
+
+    <form name="PartyAvsSettings" type="single" default-map-name="avsOverride">
+      <field name="avsDeclineString" title="${uiLabelMap.PartyAvsString}" >
+        <display type="text" default-value="${uiLabelMap.CommonGlobal}">
+          <in-place-editor url="updateAvsOverride" saving-text="Updating...">
+              <simple-editor/>
+              <field-map field-name="partyId" from-field="parameters.partyId"/>
+          </in-place-editor>
+        </display>
+      </field>
+    </form>
+
+    <form name="PartyLoyaltyPoints" type="single" >
+        <actions>
+            <script location="component://party/groovyScripts/party/GetLoyaltyPoints.groovy"/>
+        </actions>
+        <field name="f" title=" " title-area-style="" title-style="">
+            <display type="text" default-value="${uiLabelMap.PartyYouHave} ${totalSubRemainingAmount} ${uiLabelMap.PartyPointsFrom} ${totalOrders} ${uiLabelMap.PartyOrderInLast} ${monthsToInclude} ${uiLabelMap.CommonMonths}."/>
+        </field>
+    </form>
+
+    <form name="EditParam_PartyDetailsMenu" extends="CommonPortletEdit" extends-resource="component://common/widget/PortletEditForms.xml" default-entity-name="PartyAttribute">
+        <field name="ContactMechMgmtMenu">   <radio no-current-selected-key="Y"><option key="Y"/><option key="N"/></radio></field>
+        <field name="PartyRelationFromsMenu"><radio no-current-selected-key="Y"><option key="Y"/><option key="N"/></radio></field>
+        <field name="PartyUserLoginsMenu">   <radio no-current-selected-key="Y"><option key="Y"/><option key="N"/></radio></field>
+        <field name="PartyRolesMenu">        <radio no-current-selected-key="Y"><option key="Y"/><option key="N"/></radio></field>
+        <field name="PartyNotesMenu">        <radio no-current-selected-key="Y"><option key="Y"/><option key="N"/></radio></field>
+        <field name="PartyContentsMenu">     <radio no-current-selected-key="Y"><option key="Y"/><option key="N"/></radio></field>
+        <field name="PartyPaymentsMenu">     <radio no-current-selected-key="Y"><option key="Y"/><option key="N"/></radio></field>
+        <field name="PartyIdentListsMenu">   <radio no-current-selected-key="Y"><option key="Y"/><option key="N"/></radio></field>
+        <field name="PartyAttributesMenu">   <radio no-current-selected-key="Y"><option key="Y"/><option key="N"/></radio></field>
+        <field name="PartyFacilityMenu">     <radio no-current-selected-key="Y"><option key="Y"/><option key="N"/></radio></field>
+        <field name="PartyAgreementMenu">    <radio no-current-selected-key="Y"><option key="Y"/><option key="N"/></radio></field>
+        <field name="PartyInfoMgmtMenu">     <radio no-current-selected-key="Y"><option key="Y"/><option key="N"/></radio></field>
+        <field name="PartyContactTypeMenu" tooltip="(CUSTOMER, SUPPLIER...)"><text maxlength="10" default-value="CUSTOMER"/></field>
+        <field name="updateButton">
+            <submit />
+        </field>
+    </form>
+
+</forms>

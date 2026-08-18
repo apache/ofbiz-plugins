@@ -1,0 +1,380 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+/* ----------------------------------------------------- */
+/* This CSS file is used for the Flat Grey visual theme. */
+/* ----------------------------------------------------- */
+
+/* This theme uses a scalable, floating layout - so most
+   sizes are expressed in EMs. PX sizes are used only for
+   drop shadows and positioning around graphic images. */
+
+/* -------------------------------------- */
+/*      Resets/Browser Normalization      */
+/* -------------------------------------- */
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center, dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+    border: 0;
+    margin: 0;
+    outline: 0;
+    padding: 0;
+    font-size: 100%;
+    background: transparent;
+    vertical-align: baseline;
+}
+
+blockquote, body, div, dl, dt, dd, fieldset, form, h1, h2, h3, h4, h5, h6,
+img, input, li, ol, p, select, span, td, textarea, th, ul {
+    border-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+body, caption, th {
+    text-align: left;
+}
+
+ol, ul {
+    list-style: none;
+}
+
+ol.numbers {
+    list-style: decimal;
+    padding-left: 20px;
+}
+
+ul.dots {
+    list-style: circle;
+    padding-left: 20px;
+}
+
+/* ------------------------------ */
+/*      Basic Element Styles      */
+/* ------------------------------ */
+
+
+.disabled {
+    color: #333366;
+    text-decoration: none;
+}
+
+html {
+    background-image: url(/flatgrey/images/tile.gif);
+}
+
+hr {
+    background-color: #ccc;
+    color: #ccc;
+    border-bottom: #fafafa 0.1em solid;
+    border-right: #fafafa 0.2em solid;
+    border-left: #d9d9d9 0.2em solid;
+    border-top: #d9d9d9 0.1em solid;
+    margin: 0.5em 0 0.5em 0;
+}
+
+h1, .h1 {
+    font-size: 1.6em;
+    font-weight: bold;
+}
+
+h2, .h2 {
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+h3, .h3 {
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+th, th a {
+    color: #000000;
+    font-weight: bold;
+}
+
+/* -------------------------- */
+/*     Float Clear/Reset      */
+/* -------------------------- */
+
+.clear {
+    clear: both;
+    height: 0;
+    visibility: hidden;
+}
+
+.no-clear .clear {
+    /* Used in container elements to override
+     the clear class in contained elements. */
+    clear: none;
+}
+
+/* ------------------------------- */
+/*      Single Element Styles      */
+/* ------------------------------- */
+
+.alert {
+    /* Used for alert text */
+    color: #ff0000;
+}
+
+.content-messages p {
+    margin: 0.5em 0 0.5em 0;
+}
+
+.hidden {
+    height: 0;
+    visibility: hidden;
+}
+
+
+.tooltip {
+    color: #557996;
+    font-style: italic;
+    margin: 0.4em;
+}
+
+.visible {
+    height: auto;
+    visibility: visible;
+}
+
+.page-container {
+    /*background: url("images/big-fade.png") repeat-x 0 90px transparent;*/
+}
+
+.align-float {
+    float: right;
+}
+
+.align-text {
+    text-align: right;
+}
+
+.align-top {
+    vertical-align: top;
+}
+
+.centered {
+    text-align: center;
+}
+
+.page-title {
+    color: #557996;
+    margin-bottom: 0.5em;
+    font-size: 1.6em;
+    font-weight: bold;
+}
+
+.contentarea {
+}
+
+/* ------------------------ */
+/*      Masthead Style      */
+/* ------------------------ */
+
+#masthead {
+    background: #47637c url(images/masthead.gif) top left repeat-x;
+    color: #ccc;
+    font-size: 1em;
+    font-weight: normal;
+    min-height: 26px; /* Setting must be in px */
+    height: 31px;
+    overflow: auto;
+}
+
+#masthead ul li {
+    float: left;
+    padding: 0.5em 0.8em 0.5em 0;
+}
+
+#masthead ul li a {
+    color: #ccc;
+    font-weight: normal;
+}
+
+.last-system-msg {
+    color: #FFFFFF;
+    font-size: 0.9em;
+    padding-left: 10px;
+}
+
+.preference-area {
+    float: right !important;
+}
+
+.preference-area li {
+    font-size: 0.6em;
+}
+
+#masthead ul .logo-area {
+    padding: 0.1em 0.8em;
+}
+#masthead ul .logo-area img {
+    height: 60px;
+    width: 129px;
+}
+
+#masthead ul .org-logo-area {
+    padding: 0.1em 0.8em;
+}
+
+#masthead ul .org-logo-area img {
+    width: auto;
+    height: 22px;
+}
+
+#masthead ul a:focus {
+    text-decoration: underline;
+}
+
+/* ---------------------- */
+/*      Footer Style      */
+/* ---------------------- */
+
+#footer {
+    background: #333;
+    border-top: 0.1em inset #000;
+    padding: 0.5em 0 0.5em 0.5em;
+    margin-left: 80px
+}
+
+#footer a {
+    color: #ccc;
+    font-weight: normal;
+}
+
+#footer ul {
+    float: left;
+    display: inline;
+    font-size: 0.6em;
+}
+
+#footer ul li {
+    border-left: 0.1em solid #444;
+    border-right: 0.1em solid #222;
+    float: left;
+    display: inline;
+    color: #ccc;
+    font-weight: normal;
+    padding: 0.5em;
+}
+
+#footer ul .first {
+    border-left: none;
+}
+
+#footer ul .last {
+    border-right: none;
+}
+
+#footer ul li a {
+    color: #ccc;
+    font-weight: normal;
+}
+
+#footer p {
+    clear: left;
+    color: #ccc;
+    font-weight: normal;
+    padding: 0.5em;
+}
+
+#footer a:focus {
+    text-decoration: underline;
+}
+
+.footerTextColour {
+    color: #b3b3b3;
+}
+
+.poweredBy {
+    font-size: 0.6em;
+}
+
+/* ------------------------------- */
+/*      Main Navigation Style      */
+/* ------------------------------- */
+
+#main-navigation {
+    clear: both;
+    background: #436783 url(images/main-nav.gif) top left repeat-x;
+    color: #fff;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 1em;
+    height: 53px;
+    overflow: auto;
+    border-bottom: 0.3em solid #47637c;
+    padding: 0.2em 0 0.1em 0;
+    margin-left: 80px
+}
+
+#main-navigation ul li {
+    float: left;
+    display: inline;
+    height: 4.85em;
+    padding: 0 1em 0 0.5em;
+    border-left: 0.1em solid #5c809c;
+    border-right: 0.1em solid #3e5a71;
+}
+
+#main-navigation ul .disabled {
+    color: #D4D0C8;
+}
+
+#main-navigation ul .first {
+    border-left: none;
+    margin : 0px;
+}
+
+#main-navigation ul .last {
+    border-right: none;
+}
+
+#main-navigation ul a {
+    color: #fff;
+    display: block;
+    padding: 0 0.6em 0 0.6em;
+    font-size: 0.54em;
+    font-weight: normal;
+    text-transform: uppercase;
+    /* Uncomment next line for main-nav drop shadows */
+    /*text-shadow: 0px 1px 1px #22323f;*/
+}
+
+#main-navigation ul a:hover,
+#main-navigation ul .selected {
+    color: #F9924B;
+    text-decoration: none;
+}
+
+#main-navigation ul a:focus {
+    text-decoration: underline;
+}
+

@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://ofbiz.apache.org/Widget-Screen" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Screen http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="FindExamples">
+      <section>
+          <widgets>
+            <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+              <decorator-section name="body">
+                <screenlet title="${uiLabelMap.PageTitleFindExamples}" id="FindExample" collapsible="true">
+                  <include-form name="FindExamples" location="component://examplefjs/widget/ExampleFjsForms.xml"/>
+                </screenlet>
+              </decorator-section>
+            </decorator-screen>
+          </widgets>
+      </section>
+    </screen>
+
+    <screen name="ListExamples">
+      <section>
+        <actions>
+          <set field="formExampleListName" value="${groovy:
+              if (parameters.listOtherElements == 'items') return 'ListExamplesWithItems';
+              else if (parameters.listOtherElements == 'features') return 'ListExamplesWithFeatures';
+              else if (parameters.listOtherElements == 'status') return 'ListExamplesWithStatus';
+              else return 'ListExamples'}"/>
+        </actions>
+        <widgets>
+          <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+            <decorator-section name="body">
+              <screenlet title="${uiLabelMap.PageTitleListExamples}" id="ListExampleLayer" collapsible="true" >
+                <include-grid name="${formExampleListName}" location="component://examplefjs/widget/ExampleFjsForms.xml"/>
+              </screenlet>
+            </decorator-section>
+          </decorator-screen>
+        </widgets>
+      </section>
+    </screen>
+
+    <screen name="SelectExample">
+      <section>
+        <widgets>
+          <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+            <decorator-section name="body">
+              <screenlet title="${uiLabelMap.PageTitleSelectExample}">
+                <include-form name="SelectExample" location="component://examplefjs/widget/ExampleFjsForms.xml"/>
+              </screenlet>
+            </decorator-section>
+          </decorator-screen>
+        </widgets>
+      </section>
+    </screen>
+
+    <screen name="ExampleDetailsMenu">
+      <section>
+        <actions>
+          <set field="exampleId" from-field="parameters.exampleId"/>
+          <entity-one entity-name="Example" value-field="example"/>
+        </actions>
+        <widgets>
+          <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+            <decorator-section name="body">
+              <screenlet title="${groovy: exampleId ? exampleId+ ': '+example.exampleName : uiLabelMap.PageTitleExampleDetailsMenu}" navigation-menu-name="ExampleDetailsMenu" >
+                <include-menu name="ExampleDetailsMenu" location="component://examplefjs/widget/ExampleFjsMenus.xml"/>
+                <include-menu name="ExampleExternalMenu" location="component://examplefjs/widget/ExampleFjsMenus.xml"/>
+                <section>
+                    <condition>
+                        <not><if-empty field="exampleId"/></not>
+                    </condition>
+                    <widgets>
+                        <include-form name="ExampleDetailsMenu" location="component://examplefjs/widget/ExampleFjsForms.xml"/>
+                    </widgets>
+                </section>
+              </screenlet>
+            </decorator-section>
+          </decorator-screen>
+        </widgets>
+      </section>
+    </screen>
+
+    <screen name="ExampleDetail"><!-- Portlet ExampleDetail -->
+      <section>
+        <condition>
+          <not><if-empty field="parameters.exampleId"/></not>
+        </condition>
+        <actions>
+          <set field="defaultdetailPortletId" from-field="dtExampleId" from-scope="user" default-value="ShowExample"/>
+          <set field="subPortletId" from-field="parameters.subPortletId" default-value="${defaultdetailPortletId}"/>
+          <set field="dtExampleId" from-field="subPortletId" to-scope="user"/>
+          <set field="portalPageId" from-field="parameters.portalPageId" default-value="${portalPageId}"/>
+          <set field="parameters.portalPortletId" from-field="subPortletId"/>
+          <set field="portletSeqId" from-field="parameters.portletSeqId" default-value="00001"/>
+          <set field="currentAreaId" value="${parameters.portalPortletId}-${parameters.portletSeqId}"/>
+        </actions>
+        <widgets>
+<!--           <label text="portalPageId=${portalPageId} portalPortletId=${subPortletId} portletSeqId=${portletSeqId}"/> -->
+<!--           <include-portal-page id="${portalPageId}" portletId="${subPortletId}" portletSeqId="${portletSeqId}"/> -->
+          <container id="${currentAreaId}">
+            <include-screen name="showPortlet" location="component://vuejs/widget/CommonScreens.xml"/>
+          </container>
+        </widgets>
+      </section>
+    </screen>
+
+    <screen name="ShowExample">
+      <section>
+        <condition>
+          <not><if-empty field="parameters.exampleId"/></not>
+        </condition>
+        <actions>
+          <set field="exampleId" from-field="parameters.exampleId"/>
+          <entity-one entity-name="Example" value-field="example"/>
+        </actions>
+        <widgets>
+          <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+            <decorator-section name="body">
+              <screenlet title="${uiLabelMap.PageTitleShowExample}" navigation-menu-name="ShowExample" >
+                <include-menu name="ShowExample" location="component://examplefjs/widget/ExampleFjsMenus.xml"/>
+                <container id="EditExample01" > <!-- will be used by a set-area to be able to put EditExample-->
+                  <include-form name="ShowExample" location="component://examplefjs/widget/ExampleFjsForms.xml"/>
+                </container>
+              </screenlet>
+            </decorator-section>
+          </decorator-screen>
+        </widgets>
+      </section>
+    </screen>
+
+    <!-- Screen used by controller for entity edition (not used directly by a portlet) -->
+    <screen name="EditExample">
+      <section>
+        <actions>
+          <set field="exampleId" from-field="parameters.exampleId"/>
+          <entity-one entity-name="Example" value-field="example"/>
+        </actions>
+        <widgets>
+          <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+            <decorator-section name="body">
+              <include-form name="EditExample" location="component://examplefjs/widget/ExampleFjsForms.xml"/>
+            </decorator-section>
+          </decorator-screen>
+        </widgets>
+      </section>
+    </screen>
+
+    <!-- Screen used by controller for entity edition (not used directly by a portlet) -->
+    <screen name="EditExampleItem">
+      <section>
+        <actions>
+          <set field="exampleId" from-field="parameters.exampleId"/>
+          <set field="exampleItemSeqId" from-field="parameters.exampleItemSeqId"/>
+          <entity-one value-field="exampleItem" entity-name="ExampleItem"/>
+        </actions>
+        <widgets>
+          <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+            <decorator-section name="body">
+              <include-form name="EditExampleItem" location="component://examplefjs/widget/ExampleFjsForms.xml"/>
+            </decorator-section>
+          </decorator-screen>
+        </widgets>
+      </section>
+    </screen>
+
+    <screen name="ExampleItems"> <!-- Portlet ExampleItems -->
+      <section>
+        <condition>
+          <not><if-empty field="parameters.exampleId"/></not>
+        </condition>
+        <actions>
+            <set field="idDescription" value="for exampleId=${parameters.exampleId}"/>
+        </actions>
+          <widgets>
+            <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+              <decorator-section name="body">
+                <screenlet title="${uiLabelMap.PageTitleExampleItems} ${idDescription}" navigation-menu-name="ExampleItems" >
+                  <include-menu name="ExampleItems" location="component://examplefjs/widget/ExampleFjsMenus.xml"/>
+                  <container id="ExampleItem01" /> <!-- will be used by add and edit exampleItem with a set-area -->
+                  <include-grid name="ExampleItems" location="component://examplefjs/widget/ExampleFjsForms.xml"/>
+                </screenlet>
+              </decorator-section>
+            </decorator-screen>
+          </widgets>
+      </section>
+    </screen>
+
+    <screen name="ExampleStatus"> <!-- Portlet ExampleStatus -->
+      <section>
+        <condition>
+          <not><if-empty field="parameters.exampleId"/></not>
+        </condition>
+        <actions>
+            <set field="idDescription" value="for exampleId=${parameters.exampleId}"/>
+        </actions>
+          <widgets>
+            <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+              <decorator-section name="body">
+                <screenlet title="${uiLabelMap.PageTitleExampleStatus} ${idDescription}" >
+                  <include-grid name="ExampleStatus" location="component://examplefjs/widget/ExampleFjsForms.xml"/>
+                </screenlet>
+              </decorator-section>
+            </decorator-screen>
+          </widgets>
+      </section>
+    </screen>
+
+    <screen name="ExampleFeatureAppls"> <!-- Portlet ExampleFeatureAppls -->
+      <section>
+        <condition>
+          <not><if-empty field="parameters.exampleId"/></not>
+        </condition>
+        <actions>
+            <set field="idDescription" value="for exampleId=${parameters.exampleId}"/>
+        </actions>
+          <widgets>
+            <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+              <decorator-section name="body">
+                <screenlet title="${uiLabelMap.PageTitleExampleFeatureAppls} ${idDescription}" navigation-menu-name="ExampleFeatureAppls" >
+                  <include-menu name="ExampleFeatureAppls" location="component://examplefjs/widget/ExampleFjsMenus.xml"/>
+                  <include-menu name="ExampleFeatureExternalMenu" location="component://examplefjs/widget/ExampleFjsMenus.xml"/>
+                  <container id="EditExampleFeatureApplArea" /> <!-- will be used by add and edit ExampleFeatureAppls with a set-area -->
+                  <include-grid name="ExampleFeatureAppls" location="component://examplefjs/widget/ExampleFjsForms.xml"/>
+                </screenlet>
+              </decorator-section>
+            </decorator-screen>
+          </widgets>
+      </section>
+    </screen>
+    <!-- Screen used by controller for entity edition -->
+    <screen name="EditExampleFeatureAppl">
+      <section>
+        <actions>
+          <set field="exampleId" from-field="parameters.exampleId"/>
+          <set field="exampleFeatureId" from-field="parameters.exampleFeatureId"/>
+          <set field="fromDate" from-field="parameters.fromDate"/>
+          <entity-one value-field="exampleFeatureAppl" entity-name="ExampleFeatureAppl"/>
+        </actions>
+        <widgets>
+          <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+            <decorator-section name="body">
+              <include-form name="EditExampleFeatureAppl" location="component://examplefjs/widget/ExampleFjsForms.xml"/>
+            </decorator-section>
+          </decorator-screen>
+        </widgets>
+      </section>
+    </screen>
+
+    <screen name="LookupExample">
+      <section>
+        <actions>
+          <property-map resource="ExampleFjsUiLabels" map-name="uiLabelMap" global="true"/>
+          <property-map resource="ExampleUiLabels" map-name="uiLabelMap" global="true"/>
+          <set field="title" value="${uiLabelMap.PageTitleFindExampleMgmt}"/>
+          <set field="queryString" from-field="result.queryString"/>
+          <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+          <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+          <set field="autocompleterViewSize" value="20"/>
+
+          <!-- entries needed for lookup ajax auto completer -->
+          <!-- required: entity to search in -->
+          <set field="entityName" value="Example"/>
+
+          <!-- required: fields to search a match -->
+          <set field="searchFields" value="[exampleId, exampleName, description]"/>
+
+          <!-- optional: field to return after user selection, default is first element of searchFields -->
+          <!-- return field might be hidden based on widget.autocompleter.displayReturnField property in widget.properties -->
+          <!--set field="returnField" value="exampleFeatureId"/-->
+
+          <!-- optional: fields to display, default are searchFields -->
+          <set field="displayFields" value="[exampleName]"/>
+        </actions>
+        <widgets>
+          <decorator-screen name="LookupDecorator" location="component://vuejs/widget/CommonScreens.xml">
+            <decorator-section name="search-options">
+              <include-form name="LookupFindExamples" location="component://examplefjs/widget/ExampleFjsForms.xml"/>
+            </decorator-section>
+            <decorator-section name="search-results">
+              <include-form name="LookupListExamples" location="component://examplefjs/widget/ExampleFjsForms.xml"/>
+            </decorator-section>
+          </decorator-screen>
+        </widgets>
+      </section>
+    </screen>
+</screens>

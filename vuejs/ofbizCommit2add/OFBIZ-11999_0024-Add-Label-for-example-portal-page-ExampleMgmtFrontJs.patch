@@ -1,0 +1,32 @@
+From e0408fd23fe0088754f51b49939a666f8958dee5 Mon Sep 17 00:00:00 2001
+From: holivier <holivier@apache.org>
+Date: Wed, 27 May 2020 14:59:49 +0200
+Subject: [PATCH 24/25] Add Label for example portal page ExampleMgmtFrontJs
+ and ExampleRecapJs in CommonPortalEntityLabels
+
+---
+ framework/common/config/CommonPortalEntityLabels.xml | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/framework/common/config/CommonPortalEntityLabels.xml b/framework/common/config/CommonPortalEntityLabels.xml
+index bd65f5164d..48670ed21c 100644
+--- a/framework/common/config/CommonPortalEntityLabels.xml
++++ b/framework/common/config/CommonPortalEntityLabels.xml
+@@ -123,4 +123,14 @@
+         <value xml:lang="zh-CN">仓储设施</value>
+         <value xml:lang="zh-TW">場所</value>
+     </property>
++    <!--Begin For ExampleFjs plugin -->
++    <property key="PortalPage.portalPageName.ExampleRecapJs">
++        <value xml:lang="en">One example (RecapPageFrontJs)</value>
++        <value xml:lang="fr">Un exemple (RecapPageFrontJs)</value>
++    </property>
++    <property key="PortalPage.portalPageName.ExampleMgmtFrontJs">
++        <value xml:lang="en">Examples management (MgmtPageFrontJs)</value>
++        <value xml:lang="fr">Gestion des exemples (MgmtPageFrontJs)</value>
++    </property>
++    <!--End For ExampleFJs plugin -->
+ </resource>
+-- 
+2.11.0
+

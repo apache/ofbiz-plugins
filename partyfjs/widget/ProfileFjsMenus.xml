@@ -1,0 +1,587 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+
+<menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://ofbiz.apache.org/Widget-Menu" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Menu http://ofbiz.apache.org/dtds/widget-menu.xsd">
+
+    <menu name="PersonUpdate">
+      <menu-item name="updatePerson">
+          <condition>
+            <and>
+              <or>
+                  <if-empty field="showEditButton"/>
+                  <if-compare field="showEditButton" operator="equals" value="Y"/>
+              </or>
+              <or>
+                  <if-has-permission permission="PARTYMGR" action="_GRP_UPDATE"/>
+                  <if-compare-field field="parameters.partyId" operator="equals" to-field="userLogin.partyId"/>
+              </or>
+            </and>
+          </condition>
+          <link target="editperson" link-type="set-area" url-mode="intra-post" target-window="PartyInfo_subArea">
+              <parameter param-name="partyId" from-field="parameters.partyId"/>
+              <auto-parameters-portlet/>
+              <image src="${iconsPurpose.Edit}" title="${uiLabelMap.IconsTooltips_Edit}"/>
+          </link>
+      </menu-item>
+    </menu>
+
+    <menu name="GroupUpdate">
+      <menu-item name="updatePartyGroup">
+          <condition>
+            <and>
+              <or>
+                  <if-empty field="showEditButton"/>
+                  <if-compare field="showEditButton" operator="equals" value="Y"/>
+              </or>
+              <not><if-empty field="lookupGroup"/></not>
+              <if-has-permission permission="PARTYMGR" action="_GRP_UPDATE"/>
+            </and>
+          </condition>
+          <link  target="editPartyGroup" link-type="set-area" url-mode="intra-post" target-window="PartyInfo_subArea">
+              <parameter param-name="partyId" from-field="parameters.partyId"/>
+              <auto-parameters-portlet/>
+              <image src="${iconsPurpose.Edit}" title="${uiLabelMap.IconsTooltips_Edit}"/>
+          </link>
+      </menu-item>
+    </menu>
+
+    <menu name="PartyUserLogins" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="AddPartyUserLogin">
+          <condition>
+            <and>
+              <or>
+                  <if-empty field="showEditButton"/>
+                  <if-compare field="showEditButton" operator="equals" value="Y"/>
+              </or>
+              <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+            </and>
+          </condition>
+          <link  target="createPartyUserLogin" link-type="set-area" url-mode="intra-post" target-window="PartyUserLogins_editArea">
+              <parameter param-name="partyId" from-field="parameters.partyId"/>
+              <parameter param-name="securityGroupId"/>
+              <auto-parameters-portlet/>
+              <image src="${iconsPurpose.Add}" title="${uiLabelMap.IconsTooltips_Add}"/>
+          </link>
+        </menu-item>
+    </menu>
+
+    <menu name="PartyRelationships" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+      <menu-item name="AddPartyRelationshipFrom">
+          <condition>
+            <and>
+              <if-compare field="showEditButton" operator="equals" value="Y"/>
+              <if-compare field="relationIs" operator="equals" value="FROM"/>
+            </and>
+          </condition>
+          <link  target="editPartyRelationship" link-type="set-area" url-mode="intra-post" target-window="PartyRelationFroms_editArea">
+               <parameter param-name="relationIs" value="FROM"/>
+               <parameter param-name="partyIdFrom" from-field="parameters.partyId"/>
+               <parameter param-name="roleTypeIdFrom"/>
+               <parameter param-name="roleTypeGroupIdFrom"/>
+               <parameter param-name="partyRelationshipTypeIdAttr"/>
+               <parameter param-name="roleTypeIdTo"/>
+               <parameter param-name="roleTypeGroupIdTo"/>
+               <parameter param-name="roleId" from-field="parameters.roleId"/>
+              <auto-parameters-portlet/>
+              <image src="${iconsPurpose.Add}" title="${uiLabelMap.IconsTooltips_Add}"/>
+          </link>
+      </menu-item>
+      <menu-item name="AddPartyRelationshipTo">
+          <condition>
+            <and>
+              <if-compare field="showEditButton" operator="equals" value="Y"/>
+              <if-compare field="relationIs" operator="equals" value="TO"/>
+            </and>
+          </condition>
+          <link  target="editPartyRelationship" link-type="set-area" url-mode="intra-post" target-window="PartyRelationTos_editArea">
+               <parameter param-name="relationIs" value="TO"/>
+               <parameter param-name="partyIdTo" from-field="parameters.partyId"/>
+               <parameter param-name="roleTypeIdFrom"/>
+               <parameter param-name="roleTypeGroupIdFrom"/>
+               <parameter param-name="partyRelationshipTypeIdAttr"/>
+               <parameter param-name="roleTypeIdTo"/>
+               <parameter param-name="roleTypeGroupIdTo"/>
+               <parameter param-name="roleId" from-field="parameters.roleId"/>
+              <auto-parameters-portlet/>
+              <image src="${iconsPurpose.Add}" title="${uiLabelMap.IconsTooltips_Add}"/>
+          </link>
+      </menu-item>
+      <menu-item name="showHistory">
+          <condition>
+            <and>
+              <if-compare field="showHistoryButton" operator="equals" value="Y"/>
+              <if-compare field="showHistory" operator="not-equals" value="Y"/>
+            </and>
+          </condition>
+          <link  target="showPortletFj" link-type="set-area" url-mode="intra-post" target-window="${currentAreaId}">
+              <parameter param-name="partyId" from-field="parameters.partyId"/>
+              <parameter param-name="showHistory" value="Y"/>
+              <parameter param-name="roleId" from-field="parameters.roleId"/>
+              <auto-parameters-portlet/>
+              <image src="${iconsPurpose.History}" title="${uiLabelMap.IconsTooltips_History}"/>
+          </link>
+      </menu-item>
+      <menu-item name="hideHistory">
+          <condition>
+            <and>
+              <if-compare field="showHistoryButton" operator="equals" value="Y"/>
+              <if-compare field="showHistory" operator="equals" value="Y"/>
+            </and>
+          </condition>
+          <link  target="showPortletFj" link-type="set-area" url-mode="intra-post" target-window="${currentAreaId}">
+              <parameter param-name="partyId" from-field="parameters.partyId"/>
+              <parameter param-name="showHistory" value="N"/>
+              <parameter param-name="roleId" from-field="parameters.roleId"/>
+              <auto-parameters-portlet/>
+              <image src="${iconsPurpose.HideHistory}" title="${uiLabelMap.IconsTooltips_HideHistory}"/>
+          </link>
+      </menu-item>
+    </menu>
+
+    <menu name="PartyRoles" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="PartyRoleAddMenu">
+          <condition>
+              <if-compare field="showEditButton" operator="equals" value="Y"/>
+          </condition>
+            <link  target="addPartyRoles" link-type="set-area" url-mode="intra-post" target-window="PartyRoles_editArea">
+                 <parameter param-name="partyId" from-field="parameters.partyId"/>
+                 <parameter param-name="parentGroupId"/>
+                 <parameter param-name="parentTypeId"/>
+              <auto-parameters-portlet/>
+              <image src="${iconsPurpose.Add}" title="${uiLabelMap.IconsTooltips_Add}"/>
+            </link>
+        </menu-item>
+    </menu>
+
+    <menu name="PartyAttributes" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="AddPartyAttributes">
+            <condition><not><if-empty field="parameters.partyId"/></not></condition>
+            <link  target="editPartyAttribute" link-type="set-area" url-mode="intra-post" target-window="PartyAttributes_editArea">
+              <parameter param-name="partyId" from-field="parameters.partyId"/>
+              <auto-parameters-portlet/>
+              <image src="${iconsPurpose.Add}" title="${uiLabelMap.IconsTooltips_Add}"/>
+            </link>
+        </menu-item>
+    </menu>
+
+    <menu name="PartyIdentLists" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="AddPartyIdentification">
+            <condition>
+                <not><if-empty field="parameters.partyId"/></not></condition>
+            <link  target="editPartyIdentification" link-type="set-area" url-mode="intra-post" target-window="PartyIdentLists_editArea">
+              <parameter param-name="partyId" from-field="parameters.partyId"/>
+              <auto-parameters-portlet/>
+              <image src="${iconsPurpose.Add}" title="${uiLabelMap.IconsTooltips_Add}"/>
+            </link>
+        </menu-item>
+    </menu>
+
+    <menu name="PartyNotes" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="AddPartyNote">
+            <condition><not><if-empty field="parameters.partyId"/></not></condition>
+            <link  target="editPartyNote" link-type="set-area" url-mode="intra-post" target-window="PartyNotes_editArea">
+              <parameter param-name="partyId" from-field="parameters.partyId"/>
+              <auto-parameters-portlet/>
+              <image src="${iconsPurpose.Add}" title="${uiLabelMap.IconsTooltips_Add}"/>
+            </link>
+        </menu-item>
+        <menu-item name="AssocNote" position="1">
+          <condition>
+              <and>
+                  <not><if-empty field="parameters.partyId"/></not>
+                  <or>
+                      <if-empty field="assocNoteMenu"/>
+                      <if-compare field="assocNoteMenu" operator="equals" value="Y"/>
+                  </or>
+              </and>
+          </condition>
+            <link  target="assocPartyNote" link-type="set-area" url-mode="intra-post" target-window="PartyNotes_editArea">
+              <parameter param-name="partyId" from-field="parameters.partyId"/>
+              <auto-parameters-portlet/>
+              <image src="${iconsPurpose.Associate}" title="${uiLabelMap.CommonAssociateExistingNote}"/>
+            </link>
+        </menu-item>
+    </menu>
+
+    <menu name="PartyPaymentMethods" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <actions>
+            <set field="SHOW_OLD" from-field="parameters.SHOW_OLD" default-value="false"/>
+        </actions>
+        <menu-item name="AddGiftCard" title="${uiLabelMap.PartyCreateNewGiftCard}">
+            <condition>
+                <and>
+                    <not><if-empty field="parameters.partyId"/></not>
+                        <or>
+                            <if-empty field="addGiftCard"/>
+                            <if-compare field="addGiftCard" operator="equals" value="Y"/>
+                        </or>
+                </and>
+            </condition>
+            <link  target="editPartyPaymentMethod" link-type="set-area" url-mode="intra-post" target-window="PartyPaymentMethods_editArea">
+                 <parameter param-name="partyId" from-field="parameters.partyId"/>
+                 <parameter param-name="paymentMethodTypeId" value="GIFT_CARD"/>
+              <auto-parameters-portlet/>
+              <image src="${iconsPurpose.GiftCard}" title="${uiLabelMap.PartyCreateNewGiftCard}"/>
+            </link>
+        </menu-item>
+        <menu-item name="AddEftAccount" title="${uiLabelMap.PartyCreateNewEftAccount}">
+            <condition>
+                <and>
+                    <not><if-empty field="parameters.partyId"/></not>
+                        <or>
+                            <if-empty field="addEftAccount"/>
+                            <if-compare field="addEftAccount" operator="equals" value="Y"/>
+                        </or>
+                </and>
+            </condition>
+            <link  target="editPartyPaymentMethod" link-type="set-area" url-mode="intra-post" target-window="PartyPaymentMethods_editArea">
+                 <parameter param-name="partyId" from-field="parameters.partyId"/>
+                 <parameter param-name="paymentMethodTypeId" value="EFT_ACCOUNT"/>
+              <auto-parameters-portlet/>
+              <image src="${iconsPurpose.EftAccount}" title="${uiLabelMap.PartyCreateNewEftAccount}"/>
+            </link>
+        </menu-item>
+        <menu-item name="AddCreditCard" title="${uiLabelMap.PartyCreateNewCreditCard}">
+            <condition>
+                <and>
+                    <not><if-empty field="parameters.partyId"/></not>
+                        <or>
+                            <if-empty field="addCreditCard"/>
+                            <if-compare field="addCreditCard" operator="equals" value="Y"/>
+                        </or>
+                </and>
+            </condition>
+            <link  target="editPartyPaymentMethod" link-type="set-area" url-mode="intra-post" target-window="PartyPaymentMethods_editArea">
+                 <parameter param-name="partyId" from-field="parameters.partyId"/>
+                 <parameter param-name="paymentMethodTypeId" value="CREDIT_CARD"/>
+              <auto-parameters-portlet/>
+              <image src="${iconsPurpose.CreditCard}" title="${uiLabelMap.PartyCreateNewCreditCard}"/>
+            </link>
+        </menu-item>
+        <menu-item name="AddBillingAccount" title="${uiLabelMap.AccountingCreateBillingAccount}">
+            <condition>
+                <and>
+                    <not><if-empty field="parameters.partyId"/></not>
+                        <or>
+                            <if-empty field="addBillingAccount"/>
+                            <if-compare field="addBillingAccount" operator="equals" value="Y"/>
+                        </or>
+                </and>
+            </condition>
+            <link  target="editPartyBillingAccount" link-type="set-area" url-mode="intra-post" target-window="PartyPaymentMethods_editArea">
+                 <parameter param-name="partyId" from-field="parameters.partyId"/>
+              <auto-parameters-portlet/>
+              <image src="${iconsPurpose.BillingAccount}" title="${uiLabelMap.AccountingCreateBillingAccount}"/>
+            </link>
+        </menu-item>
+        <menu-item name="ShowHistory" title="${uiLabelMap.IconsTooltips_History}">
+            <condition>
+                <and>
+                    <or>
+                        <if-empty field="SHOW_OLD"/>
+                        <if-compare field="SHOW_OLD" operator="equals" value="false"/>
+                    </or>
+                    <or>
+                        <if-empty field="showHistory"/>
+                        <if-compare field="showHistory" operator="equals" value="Y"/>
+                    </or>
+                </and>
+            </condition>
+            <link  target="showPortletFj" link-type="set-area" url-mode="intra-post" target-window="${currentAreaId}">
+                <parameter param-name="partyId" from-field="parameters.partyId"/>
+                <parameter param-name="SHOW_OLD" value="true"/>
+                <auto-parameters-portlet/>
+                <image src="${iconsPurpose.History}" title="${uiLabelMap.IconsTooltips_History}"/>
+            </link>
+        </menu-item>
+        <menu-item name="HideHistory" title="${uiLabelMap.IconsTooltips_HideHistory}">
+            <condition><if-compare field="SHOW_OLD" operator="not-equals" value="false"/></condition>
+            <link  target="showPortletFj" link-type="set-area" url-mode="intra-post" target-window="${currentAreaId}">
+                <parameter param-name="partyId" from-field="parameters.partyId"/>
+                <parameter param-name="SHOW_OLD" value="false"/>
+                <auto-parameters-portlet/>
+                <image src="${iconsPurpose.HideHistory}" title="${uiLabelMap.IconsTooltips_HideHistory}"/>
+            </link>
+        </menu-item>
+    </menu>
+
+    <menu name="PartyContents" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="RefreshPortlet">
+            <link  target="showPortletFj" link-type="set-area" url-mode="intra-post" target-window="${currentAreaId}">
+              <parameter param-name="partyId" from-field="parameters.partyId"/>
+              <auto-parameters-portlet/>
+              <image src="${iconsPurpose.Refresh}" title="${uiLabelMap.IconsTooltips_Refresh}"/>
+            </link>
+        </menu-item>
+        <menu-item name="AddPartyContent">
+            <condition><not><if-empty field="parameters.partyId"/></not></condition>
+            <link  target="editPartyContent" link-type="set-area" url-mode="intra-post" target-window="PartyContents_editArea">
+              <parameter param-name="partyId" from-field="parameters.partyId"/>
+              <auto-parameters-portlet/>
+              <image src="${iconsPurpose.Add}" title="${uiLabelMap.IconsTooltips_Add}"/>
+            </link>
+        </menu-item>
+    </menu>
+
+    <menu name="PartyAvsSettings" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+      <menu-item name="resetAVS">
+            <link  target="resetAvsOverride" link-type="set-area" url-mode="intra-post" target-window="${currentAreaId}" >
+              <parameter param-name="partyId" from-field="parameters.partyId"/>
+              <auto-parameters-portlet/>
+              <image src="${iconsPurpose.Cancel}" title="${uiLabelMap.CommonReset}"/>
+            </link>
+      </menu-item>
+    </menu>
+
+    <menu name="PartyDetailsMenu"  extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-selected-style="selected">
+        <actions>
+            <set field="areaId" value="PartyDetail-00001"/>
+            <set field="roleId" from-field="parameters.roleId" default-value="SUPPLIER"/>
+        </actions>
+        <menu-item name="PartyInfo" >
+            <condition>
+              <or>
+                  <if-empty field="PartyInfoMgmtMenu"/>
+                 <if-compare field="PartyInfoMgmtMenu" operator="equals" value="Y"/>
+              </or>
+            </condition>
+            <link text="${uiLabelMap.IconsTooltips_Details}" target="showPortletFj" link-type="set-area" url-mode="intra-post" target-window="${areaId}">
+              <parameter param-name="partyId" from-field="parameters.partyId"/>
+                <parameter param-name="portalPageId" from-field="parameters.portalPageId"/>
+                <parameter param-name="portalPortletId" value="PartyDetail"/>
+                <parameter param-name="portletSeqId"    value="00001"/>
+                <parameter param-name="subPortletId" value="PartyInfo"/>
+                <image src="${iconsPurpose.Details}" title="${uiLabelMap.IconsTooltips_Details}"/>
+            </link>
+        </menu-item>
+        <menu-item name="ContactMechMgmt">
+            <condition>
+              <or>
+                  <if-empty field="ContactMechMgmtMenu"/>
+                  <if-compare field="ContactMechMgmtMenu" operator="equals" value="Y"/>
+              </or>
+            </condition>
+            <link text="${uiLabelMap.IconsTooltips_ContactMech}" target="showPortletFj" link-type="set-area" url-mode="intra-post" target-window="${areaId}">
+              <parameter param-name="partyId" from-field="parameters.partyId"/>
+                <parameter param-name="portalPageId" from-field="parameters.portalPageId"/>
+                <parameter param-name="portalPortletId" value="PartyDetail"/>
+                <parameter param-name="portletSeqId"    value="00001"/>
+                <parameter param-name="subPortletId" value="PartyContactMech"/>
+                <image src="${iconsPurpose.ContactMech}" title="${uiLabelMap.IconsTooltips_ContactMech}"/>
+            </link>
+        </menu-item>
+        <menu-item name="PartyRelationFroms">
+            <condition>
+              <or>
+                  <if-empty field="PartyRelationFromsMenu"/>
+                  <if-compare field="PartyRelationFromsMenu" operator="equals" value="Y"/>
+              </or>
+            </condition>
+            <link text="${uiLabelMap.IconsTooltips_Relation}" target="showPortletFj" link-type="set-area" url-mode="intra-post" target-window="${areaId}">
+              <parameter param-name="partyId" from-field="parameters.partyId"/>
+                <parameter param-name="portalPageId" from-field="parameters.portalPageId"/>
+                <parameter param-name="portalPortletId" value="PartyDetail"/>
+                <parameter param-name="portletSeqId"    value="00001"/>
+                <parameter param-name="subPortletId" value="PartyRelationFroms"/>
+                <image src="${iconsPurpose.Relation}" title="${uiLabelMap.IconsTooltips_Relation}"/>
+            </link>
+        </menu-item>
+        <menu-item name="PartyRelationTos">
+            <condition>
+              <and>
+                <if-empty field="lookupPerson"/>
+                <or>
+                  <if-empty field="PartyRelationTosMenu"/>
+                  <if-compare field="PartyRelationTosMenu" operator="equals" value="Y"/>
+                </or>
+              </and>
+            </condition>
+            <link text="${uiLabelMap.IconsTooltips_Group}" target="showPortletFj" link-type="set-area" url-mode="intra-post" target-window="${areaId}">
+              <parameter param-name="partyId" from-field="parameters.partyId"/>
+              <parameter param-name="roleId"  from-field="roleId"/>
+                <parameter param-name="portalPageId" from-field="parameters.portalPageId"/>
+                <parameter param-name="portalPortletId" value="PartyDetail"/>
+                <parameter param-name="portletSeqId"    value="00001"/>
+                <parameter param-name="subPortletId" value="PartyRelationTos"/>
+                <image src="${iconsPurpose.Group}" title="${uiLabelMap.IconsTooltips_Group}"/>
+            </link>
+        </menu-item>
+        <menu-item name="PartyUserLogins">
+            <condition>
+              <or>
+                  <if-empty field="PartyUserLoginsMenu"/>
+                  <if-compare field="PartyUserLoginsMenu" operator="equals" value="Y"/>
+              </or>
+            </condition>
+            <link text="${uiLabelMap.IconsTooltips_UserLogin}" target="showPortletFj" link-type="set-area" url-mode="intra-post" target-window="${areaId}">
+              <parameter param-name="partyId" from-field="parameters.partyId"/>
+                <parameter param-name="portalPageId" from-field="parameters.portalPageId"/>
+                <parameter param-name="portalPortletId" value="PartyDetail"/>
+                <parameter param-name="portletSeqId"    value="00001"/>
+                <parameter param-name="subPortletId" value="PartyUserLogins"/>
+                <image src="${iconsPurpose.UserLogin}" title="${uiLabelMap.IconsTooltips_UserLogin}"/>
+            </link>
+        </menu-item>
+        <menu-item name="PartyRoles">
+            <condition>
+              <or>
+                  <if-empty field="PartyRolesMenu"/>
+                  <if-compare field="PartyRolesMenu" operator="equals" value="Y"/>
+              </or>
+            </condition>
+            <link text="${uiLabelMap.IconsTooltips_Role}" target="showPortletFj" link-type="set-area" url-mode="intra-post" target-window="${areaId}">
+              <parameter param-name="partyId" from-field="parameters.partyId"/>
+                <parameter param-name="portalPageId" from-field="parameters.portalPageId"/>
+                <parameter param-name="portalPortletId" value="PartyDetail"/>
+                <parameter param-name="portletSeqId"    value="00001"/>
+                <parameter param-name="subPortletId" value="PartyRoles"/>
+                <image src="${iconsPurpose.Role}" title="${uiLabelMap.IconsTooltips_Role}"/>
+            </link>
+        </menu-item>
+        <menu-item name="PartyNotes">
+            <condition>
+              <or>
+                  <if-empty field="PartyNotesMenu"/>
+                  <if-compare field="PartyNotesMenu" operator="equals" value="Y"/>
+              </or>
+            </condition>
+            <link text="${uiLabelMap.IconsTooltips_Note}" target="showPortletFj" link-type="set-area" url-mode="intra-post" target-window="${areaId}">
+              <parameter param-name="partyId" from-field="parameters.partyId"/>
+                <parameter param-name="portalPageId" from-field="parameters.portalPageId"/>
+                <parameter param-name="portalPortletId" value="PartyDetail"/>
+                <parameter param-name="portletSeqId"    value="00001"/>
+                <parameter param-name="subPortletId" value="PartyNotes"/>
+                <image src="${iconsPurpose.Note}" title="${uiLabelMap.IconsTooltips_Note}"/>
+            </link>
+        </menu-item>
+
+        <menu-item name="PartyContents">
+            <condition>
+              <or>
+                  <if-empty field="PartyContentsMenu"/>
+                  <if-compare field="PartyContentsMenu" operator="equals" value="Y"/>
+              </or>
+            </condition>
+            <link text="${uiLabelMap.IconsTooltips_Attach}" target="showPortletFj" link-type="set-area" url-mode="intra-post" target-window="${areaId}">
+              <parameter param-name="partyId" from-field="parameters.partyId"/>
+                <parameter param-name="portalPageId" from-field="parameters.portalPageId"/>
+                <parameter param-name="portalPortletId" value="PartyDetail"/>
+                <parameter param-name="portletSeqId"    value="00001"/>
+                <parameter param-name="subPortletId" value="PartyContents"/>
+                <image src="${iconsPurpose.Attach}" title="${uiLabelMap.IconsTooltips_Attach}"/>
+            </link>
+        </menu-item>
+
+        <menu-item name="PartyPayments">
+            <condition>
+              <or>
+                  <if-empty field="PartyPaymentsMenu"/>
+                  <if-compare field="PartyPaymentsMenu" operator="equals" value="Y"/>
+              </or>
+            </condition>
+            <link text="${uiLabelMap.IconsTooltips_Payment}" target="showPortletFj" link-type="set-area" url-mode="intra-post" target-window="${areaId}">
+              <parameter param-name="partyId" from-field="parameters.partyId"/>
+                <parameter param-name="portalPageId" from-field="parameters.portalPageId"/>
+                <parameter param-name="portalPortletId" value="PartyDetail"/>
+                <parameter param-name="portletSeqId"    value="00001"/>
+                <parameter param-name="subPortletId" value="PartyPaymentMethods"/>
+                <image src="${iconsPurpose.Payment}" title="${uiLabelMap.IconsTooltips_Payment}"/>
+            </link>
+        </menu-item>
+        <menu-item name="PartyIdentLists">
+            <condition>
+              <or>
+                  <if-empty field="PartyIdentListsMenu"/>
+                  <if-compare field="PartyIdentListsMenu" operator="equals" value="Y"/>
+              </or>
+            </condition>
+            <link text="${uiLabelMap.IconsTooltips_Identification}" target="showPortletFj" link-type="set-area" url-mode="intra-post" target-window="${areaId}">
+              <parameter param-name="partyId" from-field="parameters.partyId"/>
+                <parameter param-name="portalPageId" from-field="parameters.portalPageId"/>
+                <parameter param-name="portalPortletId" value="PartyDetail"/>
+                <parameter param-name="portletSeqId"    value="00001"/>
+                <parameter param-name="subPortletId" value="PartyIdentLists"/>
+                <image src="${iconsPurpose.Identification}" title="${uiLabelMap.IconsTooltips_Identification}"/>
+            </link>
+        </menu-item>
+        <menu-item name="PartyAttributes" title=" ">
+            <condition>
+              <or>
+                  <if-empty field="PartyAttributesMenu"/>
+                  <if-compare field="PartyAttributesMenu" operator="equals" value="Y"/>
+              </or>
+            </condition>
+            <link text="${uiLabelMap.PartyAttributes}" target="showPortletFj" link-type="set-area" url-mode="intra-post" target-window="${areaId}">
+              <parameter param-name="partyId" from-field="parameters.partyId"/>
+                <parameter param-name="portalPageId" from-field="parameters.portalPageId"/>
+                <parameter param-name="portalPortletId" value="PartyDetail"/>
+                <parameter param-name="portletSeqId"    value="00001"/>
+                <parameter param-name="subPortletId" value="PartyAttributes"/>
+                <image src="${iconsPurpose.Attributes}" title="${uiLabelMap.PartyAttributes}"/>
+            </link>
+        </menu-item>
+    </menu>
+    <menu name="PartyExternalMenu" menu-container-style="button-bar button-style-2">
+        <menu-item name="findRequest" title="${uiLabelMap.PartyPartyRequests}" >
+            <condition>
+                <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+            </condition>
+            <link target="/ordermgr/control/FindRequest" url-mode="inter-app">
+                <parameter param-name="lookupFlag" value="Y"/>
+                <parameter param-name="fromPartyId" from-field="partyId"/>
+                <parameter param-name="externaLoginKey" from-field="externalLoginKey"/>
+            </link>
+        </menu-item>
+        <menu-item name="findQuote" title="${uiLabelMap.OrderOrderQuotes}" >
+            <condition>
+                <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+            </condition>
+            <link target="/ordermgr/control/FindQuote" url-mode="inter-app">
+                <parameter param-name="partyId"/>
+                <parameter param-name="externalLoginKey"/>
+            </link>
+        </menu-item>
+        <menu-item name="searchOrder" title="${uiLabelMap.OrderOrders}" >
+            <condition>
+                <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+            </condition>
+            <link target="/ordermgr/control/searchorders" url-mode="inter-app">
+                <parameter param-name="lookupFlag" value="Y"/>
+                <parameter param-name="hideFields" value="Y"/>
+                <parameter param-name="partyId"/>
+                <parameter param-name="externalLoginKey"/>
+                <parameter param-name="viewIndex" value="1"/>
+                <parameter param-name="viewSize" value="20"/>
+            </link>
+        </menu-item>
+        <menu-item name="newQuote" title="${uiLabelMap.OrderNewQuote}">
+            <condition>
+                <if-has-permission permission="ORDERMGR" action="_CREATE"/>
+            </condition>
+            <link target="/ordermgr/control/EditQuote" url-mode="inter-app">
+                <parameter param-name="partyId"/>
+                <parameter param-name="externaLoginKey" from-field="externalLoginKey"/>
+            </link>
+        </menu-item>
+    </menu>
+
+</menus>

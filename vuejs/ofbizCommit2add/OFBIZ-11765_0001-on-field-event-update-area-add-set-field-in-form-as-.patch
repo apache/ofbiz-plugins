@@ -1,0 +1,42 @@
+From 36c9b862cbc89bb74e513bfe572d1e8d405da84a Mon Sep 17 00:00:00 2001
+From: holivier <holivier@apache.org>
+Date: Wed, 27 May 2020 11:07:47 +0200
+Subject: [PATCH 13/22] Improved: on-field-event-update-area: add
+ set-field-in-form as event-type (OFBIZ-11765)
+
+it's a click event, when click the field is update, it's useful in
+lookup form to update field from which the lookup has been call
+
+No modification in renderer in this commit
+---
+ framework/widget/dtd/widget-form.xsd                                     | 1 +
+ .../main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java   | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/framework/widget/dtd/widget-form.xsd b/framework/widget/dtd/widget-form.xsd
+index f171869dff..d2a02a3ec4 100644
+--- a/framework/widget/dtd/widget-form.xsd
++++ b/framework/widget/dtd/widget-form.xsd
+@@ -1582,6 +1582,7 @@ under the License.
+                         <xs:enumeration value="set-watcher" />
+                         <xs:enumeration value="refresh-watcher" />
+                         <xs:enumeration value="submit" />
++                        <xs:enumeration value="set-field-in-form" />
+                     </xs:restriction>
+                 </xs:simpleType>
+             </xs:attribute>
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java
+index 04cac8497a..e8ec357c19 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java
+@@ -223,6 +223,7 @@ public class ModelFormFieldBuilder {
+                         || "set-watcher".equals(updateArea.getEventType())
+                         || "refresh-watcher".equals(updateArea.getEventType())
+                         || "submit".equals(updateArea.getEventType())
++                        || "set-field-in-form".equals(updateArea.getEventType())
+                         ) {
+                     onClickUpdateAreas.add(updateArea);
+                 }
+-- 
+2.11.0
+
