@@ -136,8 +136,8 @@ class ExampleJupiterTests implements JupiterTestHelper {
                 userLogin: userLogin
         ])
 
-        Assertions.assertFalse(ServiceUtil.isError(result))
-        GenericValue example = delegator.findOne('Example', [exampleId: result.exampleId], false)
+        assert ServiceUtil.isSuccess(result)
+        GenericValue example = from('Example').where('exampleId', result.exampleId).queryOne()
         Assertions.assertEquals(exampleName, example.exampleName)
         Assertions.assertEquals(exampleTypeId, example.exampleTypeId)
         Assertions.assertEquals(statusId, example.statusId)

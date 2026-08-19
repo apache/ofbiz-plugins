@@ -54,7 +54,7 @@ under the License.
     <resource name="TestRunResource"
               path="testruns"
               displayName="Test Run"
-              description="Trigger and poll example component test runs"
+              description="Trigger and poll test runs across any registered component by default; pass componentName to narrow to one component"
               primaryPermission="TESTEXEC"
               mainAction="ADMIN">
 
