@@ -50,4 +50,22 @@ under the License.
             <service name="findExampleById"/>
         </operation>
     </resource>
+
+    <resource name="TestRunResource"
+              path="testruns"
+              displayName="Test Run"
+              description="Trigger and poll example component test runs"
+              primaryPermission="TESTEXEC"
+              mainAction="ADMIN">
+
+        <operation verb="post" description="Trigger a test suite run"
+                   consumes="application/json">
+            <service name="runTestSuite"/>
+        </operation>
+
+        <operation verb="get" description="Get a test run's status"
+                   path="{runId}">
+            <service name="getTestRunStatus"/>
+        </operation>
+    </resource>
 </api>
