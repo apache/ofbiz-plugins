@@ -121,6 +121,28 @@ class ExampleJupiterTests implements JupiterTestHelper {
         }
     }
 
+    @Test
+    @Order(5)
+    void shouldCreateExampleWithParams() {
+        GenericValue userLogin = delegator.findOne('UserLogin', [userLoginId: 'system'], false)
+        String exampleTypeId = testParameters.exampleTypeId ?: 'CONTRIVED'
+        String exampleName = testParameters.exampleName ?: 'Test Example - Default'
+        String statusId = testParameters.statusId ?: 'EXST_IN_DESIGN'
+
+        Map<String, Object> result = dispatcher.runSync('createExample', [
+                exampleTypeId: exampleTypeId,
+                exampleName: exampleName,
+                statusId: statusId,
+                userLogin: userLogin
+        ])
+
+        Assertions.assertFalse(ServiceUtil.isError(result))
+        GenericValue example = delegator.findOne('Example', [exampleId: result.exampleId], false)
+        Assertions.assertEquals(exampleName, example.exampleName)
+        Assertions.assertEquals(exampleTypeId, example.exampleTypeId)
+        Assertions.assertEquals(statusId, example.statusId)
+    }
+
     @SuppressWarnings('UnusedPrivateMethod')
     private static List<Arguments> exampleCreationCases() {
         [
