@@ -54,8 +54,7 @@ under the License.
     <resource name="TestRunResource"
               path="testruns"
               displayName="Test Run"
-              description="Trigger and poll example component test runs only - componentName is not
-                  accepted, this resource is permanently scoped to the example component"
+              description="Trigger and poll example component test runs only - componentName is not accepted, permanently scoped to the example component"
               primaryPermission="TESTEXEC"
               mainAction="ADMIN">
 
