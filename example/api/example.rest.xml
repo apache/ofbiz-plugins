@@ -54,18 +54,19 @@ under the License.
     <resource name="TestRunResource"
               path="testruns"
               displayName="Test Run"
-              description="Trigger and poll test runs across any registered component by default; pass componentName to narrow to one component"
+              description="Trigger and poll example component test runs only - componentName is not
+                  accepted, this resource is permanently scoped to the example component"
               primaryPermission="TESTEXEC"
               mainAction="ADMIN">
 
-        <operation verb="post" description="Trigger a test suite run"
+        <operation verb="post" description="Trigger a test suite run (scoped to the example component)"
                    consumes="application/json">
-            <service name="runTestSuite"/>
+            <service name="runExampleTestSuite"/>
         </operation>
 
-        <operation verb="get" description="Get a test run's status"
+        <operation verb="get" description="Get a test run's status (scoped to the example component)"
                    path="{runId}">
-            <service name="getTestRunStatus"/>
+            <service name="getExampleTestRunStatus"/>
         </operation>
     </resource>
 </api>
