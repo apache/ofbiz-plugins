@@ -52,9 +52,9 @@ class ExampleJupiterTests implements JupiterTestHelper {
     @Order(1)
     void shouldCreateExample() {
         GenericValue userLogin = delegator.findOne('UserLogin', [userLoginId: 'system'], false)
-        String exampleTypeId = testParameters.exampleTypeId ?: 'CONTRIVED'
-        String exampleName = testParameters.exampleName ?: 'Test Example - Integration'
-        String statusId = testParameters.statusId ?: 'EXST_IN_DESIGN'
+        String exampleTypeId = testParams.exampleTypeId ?: 'CONTRIVED'
+        String exampleName = testParams.exampleName ?: 'Test Example - Integration'
+        String statusId = testParams.statusId ?: 'EXST_IN_DESIGN'
 
         Map<String, Object> result = dispatcher.runSync('createExample', [
                 exampleTypeId: exampleTypeId,
@@ -79,11 +79,11 @@ class ExampleJupiterTests implements JupiterTestHelper {
     ])
     void shouldCreateExampleAcrossTypes(String exampleTypeId) {
         GenericValue userLogin = delegator.findOne('UserLogin', [userLoginId: 'system'], false)
-        // exampleTypeId is deliberately left CSV-driven, not testParameters-driven - that's the one
+        // exampleTypeId is deliberately left CSV-driven, not testParams-driven - that's the one
         // value this method exists to vary across invocations. statusId isn't varied by the CSV
         // source, so it's the one field here that can take a caller override the same way
         // shouldCreateExample/shouldCreateExampleWithParams do.
-        String statusId = testParameters.statusId ?: 'EXST_IN_DESIGN'
+        String statusId = testParams.statusId ?: 'EXST_IN_DESIGN'
         Map<String, Object> result = dispatcher.runSync('createExample', [
                 exampleTypeId: exampleTypeId,
                 exampleName: 'Test Example - ' + exampleTypeId,
@@ -134,9 +134,9 @@ class ExampleJupiterTests implements JupiterTestHelper {
     @Order(5)
     void shouldCreateExampleWithParams() {
         GenericValue userLogin = delegator.findOne('UserLogin', [userLoginId: 'system'], false)
-        String exampleTypeId = testParameters.exampleTypeId ?: 'CONTRIVED'
-        String exampleName = testParameters.exampleName ?: 'Test Example - Default'
-        String statusId = testParameters.statusId ?: 'EXST_IN_DESIGN'
+        String exampleTypeId = testParams.exampleTypeId ?: 'CONTRIVED'
+        String exampleName = testParams.exampleName ?: 'Test Example - Default'
+        String statusId = testParams.statusId ?: 'EXST_IN_DESIGN'
 
         Map<String, Object> result = dispatcher.runSync('createExample', [
                 exampleTypeId: exampleTypeId,
