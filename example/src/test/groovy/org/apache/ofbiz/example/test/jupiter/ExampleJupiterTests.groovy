@@ -52,17 +52,21 @@ class ExampleJupiterTests implements JupiterTestHelper {
     @Order(1)
     void shouldCreateExample() {
         GenericValue userLogin = delegator.findOne('UserLogin', [userLoginId: 'system'], false)
+        String exampleTypeId = testParameters.exampleTypeId ?: 'CONTRIVED'
+        String exampleName = testParameters.exampleName ?: 'Test Example - Integration'
+        String statusId = testParameters.statusId ?: 'EXST_IN_DESIGN'
+
         Map<String, Object> result = dispatcher.runSync('createExample', [
-                exampleTypeId: 'CONTRIVED',
-                exampleName: 'Test Example - Integration',
-                statusId: 'EXST_IN_DESIGN',
+                exampleTypeId: exampleTypeId,
+                exampleName: exampleName,
+                statusId: statusId,
                 userLogin: userLogin
         ])
         assert ServiceUtil.isSuccess(result)
 
         GenericValue example = from('Example').where('exampleId', result.exampleId).queryOne()
         assert example != null
-        assert example.exampleTypeId == 'CONTRIVED'
+        assert example.exampleTypeId == exampleTypeId
     }
 
     @ParameterizedTest(name = '[{index}] exampleTypeId={0}')
@@ -75,10 +79,15 @@ class ExampleJupiterTests implements JupiterTestHelper {
     ])
     void shouldCreateExampleAcrossTypes(String exampleTypeId) {
         GenericValue userLogin = delegator.findOne('UserLogin', [userLoginId: 'system'], false)
+        // exampleTypeId is deliberately left CSV-driven, not testParameters-driven - that's the one
+        // value this method exists to vary across invocations. statusId isn't varied by the CSV
+        // source, so it's the one field here that can take a caller override the same way
+        // shouldCreateExample/shouldCreateExampleWithParams do.
+        String statusId = testParameters.statusId ?: 'EXST_IN_DESIGN'
         Map<String, Object> result = dispatcher.runSync('createExample', [
                 exampleTypeId: exampleTypeId,
                 exampleName: 'Test Example - ' + exampleTypeId,
-                statusId: 'EXST_IN_DESIGN',
+                statusId: statusId,
                 userLogin: userLogin
         ])
         assert ServiceUtil.isSuccess(result)
