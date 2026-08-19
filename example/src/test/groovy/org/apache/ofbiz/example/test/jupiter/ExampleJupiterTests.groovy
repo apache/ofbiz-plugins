@@ -152,6 +152,48 @@ class ExampleJupiterTests implements JupiterTestHelper {
         Assertions.assertEquals(statusId, example.statusId)
     }
 
+    @Test
+    @Order(6)
+    void shouldUpdateExample() {
+        GenericValue userLogin = delegator.findOne('UserLogin', [userLoginId: 'system'], false)
+        // Initial-state fields reuse the same testParams keys shouldCreateExample uses - both tests
+        // create a fresh Example the same way, so sharing key names here is harmless (each test's
+        // record is independent). The post-update target fields use their own, distinct keys
+        // (updatedExampleName/updatedStatusId) - those can't share names with the initial-state keys
+        // above, or one testParams map couldn't set a different "before" and "after" value in the
+        // same call.
+        String exampleTypeId = testParams.exampleTypeId ?: 'CONTRIVED'
+        String exampleName = testParams.exampleName ?: 'Test Example - Before Update'
+        String statusId = testParams.statusId ?: 'EXST_IN_DESIGN'
+
+        Map<String, Object> createResult = dispatcher.runSync('createExample', [
+                exampleTypeId: exampleTypeId,
+                exampleName: exampleName,
+                statusId: statusId,
+                userLogin: userLogin
+        ])
+        assert ServiceUtil.isSuccess(createResult)
+        String exampleId = createResult.exampleId
+
+        String updatedExampleName = testParams.updatedExampleName ?: 'Test Example - After Update'
+        String updatedStatusId = testParams.updatedStatusId ?: 'EXST_APPROVED'
+
+        Map<String, Object> updateResult = dispatcher.runSync('updateExample', [
+                exampleId: exampleId,
+                exampleName: updatedExampleName,
+                statusId: updatedStatusId,
+                userLogin: userLogin
+        ])
+        assert ServiceUtil.isSuccess(updateResult)
+        assert updateResult.oldStatusId == statusId
+
+        GenericValue example = from('Example').where('exampleId', exampleId).queryOne()
+        assert example != null
+        assert example.exampleTypeId == exampleTypeId
+        assert example.exampleName == updatedExampleName
+        assert example.statusId == updatedStatusId
+    }
+
     @SuppressWarnings('UnusedPrivateMethod')
     private static List<Arguments> exampleCreationCases() {
         [
