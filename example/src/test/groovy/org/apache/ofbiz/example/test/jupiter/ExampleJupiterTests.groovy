@@ -51,7 +51,8 @@ class ExampleJupiterTests implements JupiterTestHelper {
     @Test
     @Order(1)
     void shouldCreateExample() {
-        createAndAssertExample('Test Example - Integration')
+        GenericValue example = createAndAssertExample('Test Example - Integration')
+        assert example != null
     }
 
     @ParameterizedTest(name = '[{index}] exampleTypeId={0}')
@@ -118,7 +119,8 @@ class ExampleJupiterTests implements JupiterTestHelper {
     @Test
     @Order(5)
     void shouldCreateExampleWithParams() {
-        createAndAssertExample('Test Example - Default')
+        GenericValue example = createAndAssertExample('Test Example - Default')
+        assert example != null
     }
 
     @Test
@@ -144,8 +146,12 @@ class ExampleJupiterTests implements JupiterTestHelper {
         assert ServiceUtil.isSuccess(createResult)
         String exampleId = createResult.exampleId
 
+        // EXST_APPROVED isn't reachable directly from EXST_IN_DESIGN per ExampleDemoData.xml's
+        // StatusValidChange rows (IN_DESIGN -> DEFINED -> APPROVED) - EXST_DEFINED is the default
+        // here because it's the one status updateExample can always reach from the default initial
+        // statusId above in a single call.
         String updatedExampleName = testParams.updatedExampleName ?: 'Test Example - After Update'
-        String updatedStatusId = testParams.updatedStatusId ?: 'EXST_APPROVED'
+        String updatedStatusId = testParams.updatedStatusId ?: 'EXST_DEFINED'
 
         Map<String, Object> updateResult = dispatcher.runSync('updateExample', [
                 exampleId: exampleId,
@@ -163,6 +169,18 @@ class ExampleJupiterTests implements JupiterTestHelper {
         assert example.statusId == updatedStatusId
     }
 
+    @SuppressWarnings('UnusedPrivateMethod')
+    private static List<Arguments> exampleCreationCases() {
+        [
+                Arguments.of('real-world-in-design', 'REAL_WORLD', 'EXST_IN_DESIGN', 'Test Example - Real World', true),
+                Arguments.of('made-up-defined', 'MADE_UP', 'EXST_DEFINED', 'Test Example - Made Up', true),
+                Arguments.of('contrived-approved', 'CONTRIVED', 'EXST_APPROVED', 'Test Example - Contrived', true),
+                Arguments.of('inspired-implemented', 'INSPIRED', 'EXST_IMPLEMENTED', 'Test Example - Inspired', true),
+                Arguments.of('missing-example-type-fails', null, 'EXST_IN_DESIGN', 'Test Example - Missing Type', false),
+                Arguments.of('missing-example-name-fails', 'REAL_WORLD', 'EXST_IN_DESIGN', null, false),
+        ]
+    }
+
     /**
      * Creates an Example from testParams-driven exampleTypeId/exampleName/statusId (each falling
      * back to a default) and asserts the createExample service succeeded and that the persisted
@@ -172,7 +190,7 @@ class ExampleJupiterTests implements JupiterTestHelper {
      * @param defaultExampleName the exampleName to use when testParams doesn't override it
      * @return the created, already-asserted Example
      */
-        private GenericValue createAndAssertExample(String defaultExampleName) {
+    private GenericValue createAndAssertExample(String defaultExampleName) {
         GenericValue userLogin = delegator.findOne('UserLogin', [userLoginId: 'system'], false)
         String exampleTypeId = testParams.exampleTypeId ?: 'CONTRIVED'
         String exampleName = testParams.exampleName ?: defaultExampleName
@@ -192,18 +210,6 @@ class ExampleJupiterTests implements JupiterTestHelper {
         Assertions.assertEquals(exampleName, example.exampleName)
         Assertions.assertEquals(statusId, example.statusId)
         example
-    }
-
-    @SuppressWarnings('UnusedPrivateMethod')
-    private static List<Arguments> exampleCreationCases() {
-        [
-                Arguments.of('real-world-in-design', 'REAL_WORLD', 'EXST_IN_DESIGN', 'Test Example - Real World', true),
-                Arguments.of('made-up-defined', 'MADE_UP', 'EXST_DEFINED', 'Test Example - Made Up', true),
-                Arguments.of('contrived-approved', 'CONTRIVED', 'EXST_APPROVED', 'Test Example - Contrived', true),
-                Arguments.of('inspired-implemented', 'INSPIRED', 'EXST_IMPLEMENTED', 'Test Example - Inspired', true),
-                Arguments.of('missing-example-type-fails', null, 'EXST_IN_DESIGN', 'Test Example - Missing Type', false),
-                Arguments.of('missing-example-name-fails', 'REAL_WORLD', 'EXST_IN_DESIGN', null, false),
-        ]
     }
 
 }
