@@ -146,6 +146,37 @@ under the License.
         <attribute name="successMessage" mode="IN" type="String" optional="true"></attribute>
     </service>
 
+    <!-- Test Run Services (component-scoped wrapper around framework/testtools) -->
+    <service name="runExampleTestSuite" engine="groovy" auth="true"
+             location="component://example/src/main/groovy/org/apache/ofbiz/example/ExampleTestRunServices.groovy"
+             invoke="runExampleTestSuite">
+        <description>Kicks off a testdef test-suite run asynchronously, scoped to the example
+            component only - see TestRunServices.runScopedTestSuite. Gated by the test.api.enabled
+            config flag and the TESTEXEC_ADMIN permission (checked inside the underlying service).
+            componentName is deliberately not an attribute here - the component is fixed, not
+            caller-suppliable. testMethodName optionally scopes the run to one
+            @Test/@ParameterizedTest method within the class testCaseName resolves to - requires
+            testCaseName, and only applies when it resolves to a jupiter-test-suite.</description>
+        <attribute name="suiteName" type="String" mode="IN" optional="false"/>
+        <attribute name="testCaseName" type="String" mode="IN" optional="true"/>
+        <attribute name="testMethodName" type="String" mode="IN" optional="true"/>
+        <attribute name="testParams" type="Map" mode="IN" optional="true"/>
+        <attribute name="runId" type="String" mode="OUT" optional="true"/>
+    </service>
+
+    <service name="getExampleTestRunStatus" engine="groovy" auth="true"
+             location="component://example/src/main/groovy/org/apache/ofbiz/example/ExampleTestRunServices.groovy"
+             invoke="getExampleTestRunStatus">
+        <description>Reads a runExampleTestSuite-triggered run's status, scoped to the example
+            component only - a runId belonging to another component's run is reported as
+            not-found, not a distinguishable "wrong component" error. See
+            TestRunServices.getScopedTestRunStatus.</description>
+        <attribute name="runId" type="String" mode="IN" optional="false"/>
+        <attribute name="status" type="String" mode="OUT" optional="true"/>
+        <attribute name="componentName" type="String" mode="OUT" optional="true"/>
+        <attribute name="resultSummary" type="Map" mode="OUT" optional="true"/>
+    </service>
+
     <!-- ExampleType services -->
     <service name="createExampleType" default-entity-name="ExampleType" engine="entity-auto" invoke="create" auth="true">
         <description>Create a record of ExampleType</description>
