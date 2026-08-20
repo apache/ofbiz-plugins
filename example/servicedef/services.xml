@@ -153,7 +153,9 @@ under the License.
             component only - see TestRunServices.runScopedTestSuite. Gated by the test.api.enabled
             config flag and the TESTEXEC_ADMIN permission (checked inside the underlying service).
             componentName is deliberately not an attribute here - the component is fixed, not
-            caller-suppliable.</description>
+            caller-suppliable. testMethodName optionally scopes the run to one
+            @Test/@ParameterizedTest method within the class testCaseName resolves to - requires
+            testCaseName, and only applies when it resolves to a jupiter-test-suite.</description>
         <attribute name="suiteName" type="String" mode="IN" optional="false"/>
         <attribute name="testCaseName" type="String" mode="IN" optional="true"/>
         <attribute name="testMethodName" type="String" mode="IN" optional="true"/>
