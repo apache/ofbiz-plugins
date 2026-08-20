@@ -51,22 +51,7 @@ class ExampleJupiterTests implements JupiterTestHelper {
     @Test
     @Order(1)
     void shouldCreateExample() {
-        GenericValue userLogin = delegator.findOne('UserLogin', [userLoginId: 'system'], false)
-        String exampleTypeId = testParams.exampleTypeId ?: 'CONTRIVED'
-        String exampleName = testParams.exampleName ?: 'Test Example - Integration'
-        String statusId = testParams.statusId ?: 'EXST_IN_DESIGN'
-
-        Map<String, Object> result = dispatcher.runSync('createExample', [
-                exampleTypeId: exampleTypeId,
-                exampleName: exampleName,
-                statusId: statusId,
-                userLogin: userLogin
-        ])
-        assert ServiceUtil.isSuccess(result)
-
-        GenericValue example = from('Example').where('exampleId', result.exampleId).queryOne()
-        assert example != null
-        assert example.exampleTypeId == exampleTypeId
+        createAndAssertExample('Test Example - Integration')
     }
 
     @ParameterizedTest(name = '[{index}] exampleTypeId={0}')
@@ -133,23 +118,7 @@ class ExampleJupiterTests implements JupiterTestHelper {
     @Test
     @Order(5)
     void shouldCreateExampleWithParams() {
-        GenericValue userLogin = delegator.findOne('UserLogin', [userLoginId: 'system'], false)
-        String exampleTypeId = testParams.exampleTypeId ?: 'CONTRIVED'
-        String exampleName = testParams.exampleName ?: 'Test Example - Default'
-        String statusId = testParams.statusId ?: 'EXST_IN_DESIGN'
-
-        Map<String, Object> result = dispatcher.runSync('createExample', [
-                exampleTypeId: exampleTypeId,
-                exampleName: exampleName,
-                statusId: statusId,
-                userLogin: userLogin
-        ])
-
-        assert ServiceUtil.isSuccess(result)
-        GenericValue example = from('Example').where('exampleId', result.exampleId).queryOne()
-        Assertions.assertEquals(exampleName, example.exampleName)
-        Assertions.assertEquals(exampleTypeId, example.exampleTypeId)
-        Assertions.assertEquals(statusId, example.statusId)
+        createAndAssertExample('Test Example - Default')
     }
 
     @Test
@@ -192,6 +161,37 @@ class ExampleJupiterTests implements JupiterTestHelper {
         assert example.exampleTypeId == exampleTypeId
         assert example.exampleName == updatedExampleName
         assert example.statusId == updatedStatusId
+    }
+
+    /**
+     * Creates an Example from testParams-driven exampleTypeId/exampleName/statusId (each falling
+     * back to a default) and asserts the createExample service succeeded and that the persisted
+     * record matches the resolved values - the exact create+assert sequence shouldCreateExample()
+     * and shouldCreateExampleWithParams() both perform, differing only in exampleName's default
+     * text, factored out here to remove that duplication.
+     * @param defaultExampleName the exampleName to use when testParams doesn't override it
+     * @return the created, already-asserted Example
+     */
+        private GenericValue createAndAssertExample(String defaultExampleName) {
+        GenericValue userLogin = delegator.findOne('UserLogin', [userLoginId: 'system'], false)
+        String exampleTypeId = testParams.exampleTypeId ?: 'CONTRIVED'
+        String exampleName = testParams.exampleName ?: defaultExampleName
+        String statusId = testParams.statusId ?: 'EXST_IN_DESIGN'
+
+        Map<String, Object> result = dispatcher.runSync('createExample', [
+                exampleTypeId: exampleTypeId,
+                exampleName: exampleName,
+                statusId: statusId,
+                userLogin: userLogin
+        ])
+        assert ServiceUtil.isSuccess(result)
+
+        GenericValue example = from('Example').where('exampleId', result.exampleId).queryOne()
+        assert example != null
+        Assertions.assertEquals(exampleTypeId, example.exampleTypeId)
+        Assertions.assertEquals(exampleName, example.exampleName)
+        Assertions.assertEquals(statusId, example.statusId)
+        example
     }
 
     @SuppressWarnings('UnusedPrivateMethod')
