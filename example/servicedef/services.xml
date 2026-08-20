@@ -147,8 +147,9 @@ under the License.
     </service>
 
     <!-- Test Run Services (component-scoped wrapper around framework/testtools) -->
-    <service name="runExampleTestSuite" engine="java" auth="true"
-             location="org.apache.ofbiz.example.ExampleTestRunServices" invoke="runExampleTestSuite">
+    <service name="runExampleTestSuite" engine="groovy" auth="true"
+             location="component://example/src/main/groovy/org/apache/ofbiz/example/ExampleTestRunServices.groovy"
+             invoke="runExampleTestSuite">
         <description>Kicks off a testdef test-suite run asynchronously, scoped to the example
             component only - see TestRunServices.runScopedTestSuite. Gated by the test.api.enabled
             config flag and the TESTEXEC_ADMIN permission (checked inside the underlying service).
@@ -163,8 +164,9 @@ under the License.
         <attribute name="runId" type="String" mode="OUT" optional="true"/>
     </service>
 
-    <service name="getExampleTestRunStatus" engine="java" auth="true"
-             location="org.apache.ofbiz.example.ExampleTestRunServices" invoke="getExampleTestRunStatus">
+    <service name="getExampleTestRunStatus" engine="groovy" auth="true"
+             location="component://example/src/main/groovy/org/apache/ofbiz/example/ExampleTestRunServices.groovy"
+             invoke="getExampleTestRunStatus">
         <description>Reads a runExampleTestSuite-triggered run's status, scoped to the example
             component only - a runId belonging to another component's run is reported as
             not-found, not a distinguishable "wrong component" error. See
