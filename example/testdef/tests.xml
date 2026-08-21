@@ -30,8 +30,8 @@ under the License.
         <entity-xml action="load" entity-xml-url="component://example/testdef/data/ExampleTestData.xml"/>
     </test-case>
 
-    <test-case case-name="example-tests-groovy">
-        <junit-test-suite class-name="org.apache.ofbiz.example.test.ExampleJUnit3Tests"/>
+    <test-case case-name="example-tests-junit3">
+        <junit-test-suite class-name="org.apache.ofbiz.example.test.ExampleOldJUnit3Tests"/>
     </test-case>
 
     <test-case case-name="example-tests-jupiter">

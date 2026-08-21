@@ -34,7 +34,7 @@ import org.junit.jupiter.params.provider.MethodSource
 
 /**
  * Jupiter test-cases run through testdef's jupiter-test-suite element (see plugins/example/testdef/tests.xml),
- * side-by-side with org.apache.ofbiz.example.test.ExampleJUnit3Tests in the same test-suite. Runs inside the full
+ * side-by-side with org.apache.ofbiz.example.test.ExampleOldJUnit3Tests in the same test-suite. Runs inside the full
  * ofbiz --test container, so JupiterTestExtension injects the suite's own Delegator/LocalDispatcher.
  * Implementing JupiterTestHelper needs no field declarations, yet Groovy's getter-as-property syntax still
  * exposes them as bare delegator/dispatcher (backed by JupiterTestHelper's getDelegator()/getDispatcher()),
