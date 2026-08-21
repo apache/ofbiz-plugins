@@ -51,7 +51,6 @@ class ExampleJupiterTests implements JupiterTestHelper {
     @Test
     @Order(1)
     void shouldCreateExample() {
-
         GenericValue userLogin = delegator.findOne('UserLogin', [userLoginId: 'system'], false)
 
         String exampleTypeId = testParams.exampleTypeId ?: 'CONTRIVED'
@@ -76,7 +75,6 @@ class ExampleJupiterTests implements JupiterTestHelper {
     @Test
     @Order(6)
     void shouldUpdateExample() {
-
         GenericValue userLogin = delegator.findOne('UserLogin', [userLoginId: 'system'], false)
 
         String exampleTypeId = testParams.exampleTypeId ?: 'CONTRIVED'
@@ -140,7 +138,6 @@ class ExampleJupiterTests implements JupiterTestHelper {
     @Test
     @Order(3)
     void shouldDeleteExample() {
-
         GenericValue userLogin = delegator.findOne('UserLogin', [userLoginId: 'system'], false)
 
         String exampleTypeId = testParams.exampleTypeId ?: 'CONTRIVED'
