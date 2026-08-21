@@ -24,9 +24,9 @@ import org.apache.ofbiz.entity.GenericValue
 import org.apache.ofbiz.service.ServiceUtil
 import org.apache.ofbiz.service.testtools.OFBizTestCase
 
-class ExampleTests extends OFBizTestCase {
+class ExampleJUnit3Tests extends OFBizTestCase {
 
-    ExampleTests(String name) {
+    ExampleJUnit3Tests(String name) {
         super(name)
     }
 
