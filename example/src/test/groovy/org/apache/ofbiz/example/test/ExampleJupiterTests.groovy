@@ -51,8 +51,64 @@ class ExampleJupiterTests implements JupiterTestHelper {
     @Test
     @Order(1)
     void shouldCreateExample() {
-        GenericValue example = createAndAssertExample('Test Example - Integration')
+
+        GenericValue userLogin = delegator.findOne('UserLogin', [userLoginId: 'system'], false)
+
+        String exampleTypeId = testParams.exampleTypeId ?: 'CONTRIVED'
+        String exampleName = testParams.exampleName ?: 'Test Example - Integration'
+        String statusId = testParams.statusId ?: 'EXST_IN_DESIGN'
+
+        Map<String, Object> result = dispatcher.runSync('createExample', [
+                exampleTypeId: exampleTypeId,
+                exampleName: exampleName,
+                statusId: statusId,
+                userLogin: userLogin
+        ])
+        assert ServiceUtil.isSuccess(result)
+
+        GenericValue example = from('Example').where('exampleId', result.exampleId).queryOne()
         assert example != null
+        Assertions.assertEquals(exampleTypeId, example.exampleTypeId)
+        Assertions.assertEquals(exampleName, example.exampleName)
+        Assertions.assertEquals(statusId, example.statusId)
+    }
+
+    @Test
+    @Order(6)
+    void shouldUpdateExample() {
+
+        GenericValue userLogin = delegator.findOne('UserLogin', [userLoginId: 'system'], false)
+
+        String exampleTypeId = testParams.exampleTypeId ?: 'CONTRIVED'
+        String exampleName = testParams.exampleName ?: 'Test Example - Before Update'
+        String statusId = testParams.statusId ?: 'EXST_IN_DESIGN'
+
+        Map<String, Object> createResult = dispatcher.runSync('createExample', [
+                exampleTypeId: exampleTypeId,
+                exampleName: exampleName,
+                statusId: statusId,
+                userLogin: userLogin
+        ])
+        assert ServiceUtil.isSuccess(createResult)
+        String exampleId = createResult.exampleId
+
+        String updatedExampleName = testParams.updatedExampleName ?: 'Test Example - After Update'
+        String updatedStatusId = testParams.updatedStatusId ?: 'EXST_DEFINED'
+
+        Map<String, Object> updateResult = dispatcher.runSync('updateExample', [
+                exampleId: exampleId,
+                exampleName: updatedExampleName,
+                statusId: updatedStatusId,
+                userLogin: userLogin
+        ])
+        assert ServiceUtil.isSuccess(updateResult)
+        assert updateResult.oldStatusId == statusId
+
+        GenericValue example = from('Example').where('exampleId', exampleId).queryOne()
+        assert example != null
+        assert example.exampleTypeId == exampleTypeId
+        assert example.exampleName == updatedExampleName
+        assert example.statusId == updatedStatusId
     }
 
     @ParameterizedTest(name = '[{index}] exampleTypeId={0}')
@@ -68,7 +124,7 @@ class ExampleJupiterTests implements JupiterTestHelper {
         // exampleTypeId is deliberately left CSV-driven, not testParams-driven - that's the one
         // value this method exists to vary across invocations. statusId isn't varied by the CSV
         // source, so it's the one field here that can take a caller override the same way
-        // shouldCreateExample/shouldCreateExampleWithParams do.
+        // shouldCreateExample does.
         String statusId = testParams.statusId ?: 'EXST_IN_DESIGN'
         Map<String, Object> result = dispatcher.runSync('createExample', [
                 exampleTypeId: exampleTypeId,
@@ -79,13 +135,35 @@ class ExampleJupiterTests implements JupiterTestHelper {
         assert ServiceUtil.isSuccess(result)
     }
 
+    // This method will not be executed and will remain disabled since it is annotated with @Disabled.
     @Disabled('OFBIZ-XXXXX: sample only - demonstrates a documented, reportable skip; not a real defect')
     @Test
     @Order(3)
-    void shouldUpdateExampleUnderConcurrentLoad() {
+    void shouldDeleteExample() {
+
         GenericValue userLogin = delegator.findOne('UserLogin', [userLoginId: 'system'], false)
-        Map<String, Object> result = dispatcher.runSync('updateExample', [exampleId: 'TestExampleUpdate', userLogin: userLogin])
-        assert ServiceUtil.isSuccess(result)
+
+        String exampleTypeId = testParams.exampleTypeId ?: 'CONTRIVED'
+        String exampleName = testParams.exampleName ?: 'Test Example - Before Delete'
+        String statusId = testParams.statusId ?: 'EXST_IN_DESIGN'
+
+        Map<String, Object> createResult = dispatcher.runSync('createExample', [
+                exampleTypeId: exampleTypeId,
+                exampleName: exampleName,
+                statusId: statusId,
+                userLogin: userLogin
+        ])
+        assert ServiceUtil.isSuccess(createResult)
+        String exampleId = createResult.exampleId
+
+        Map<String, Object> deleteResult = dispatcher.runSync('deleteExample', [
+                exampleId: exampleId,
+                userLogin: userLogin
+        ])
+        assert ServiceUtil.isSuccess(deleteResult)
+
+        GenericValue example = from('Example').where('exampleId', exampleId).queryOne()
+        assert example == null
     }
 
     @ParameterizedTest(name = '[{index}] {0}')
@@ -116,59 +194,6 @@ class ExampleJupiterTests implements JupiterTestHelper {
         }
     }
 
-    @Test
-    @Order(5)
-    void shouldCreateExampleWithParams() {
-        GenericValue example = createAndAssertExample('Test Example - Default')
-        assert example != null
-    }
-
-    @Test
-    @Order(6)
-    void shouldUpdateExample() {
-        GenericValue userLogin = delegator.findOne('UserLogin', [userLoginId: 'system'], false)
-        // Initial-state fields reuse the same testParams keys shouldCreateExample uses - both tests
-        // create a fresh Example the same way, so sharing key names here is harmless (each test's
-        // record is independent). The post-update target fields use their own, distinct keys
-        // (updatedExampleName/updatedStatusId) - those can't share names with the initial-state keys
-        // above, or one testParams map couldn't set a different "before" and "after" value in the
-        // same call.
-        String exampleTypeId = testParams.exampleTypeId ?: 'CONTRIVED'
-        String exampleName = testParams.exampleName ?: 'Test Example - Before Update'
-        String statusId = testParams.statusId ?: 'EXST_IN_DESIGN'
-
-        Map<String, Object> createResult = dispatcher.runSync('createExample', [
-                exampleTypeId: exampleTypeId,
-                exampleName: exampleName,
-                statusId: statusId,
-                userLogin: userLogin
-        ])
-        assert ServiceUtil.isSuccess(createResult)
-        String exampleId = createResult.exampleId
-
-        // EXST_APPROVED isn't reachable directly from EXST_IN_DESIGN per ExampleDemoData.xml's
-        // StatusValidChange rows (IN_DESIGN -> DEFINED -> APPROVED) - EXST_DEFINED is the default
-        // here because it's the one status updateExample can always reach from the default initial
-        // statusId above in a single call.
-        String updatedExampleName = testParams.updatedExampleName ?: 'Test Example - After Update'
-        String updatedStatusId = testParams.updatedStatusId ?: 'EXST_DEFINED'
-
-        Map<String, Object> updateResult = dispatcher.runSync('updateExample', [
-                exampleId: exampleId,
-                exampleName: updatedExampleName,
-                statusId: updatedStatusId,
-                userLogin: userLogin
-        ])
-        assert ServiceUtil.isSuccess(updateResult)
-        assert updateResult.oldStatusId == statusId
-
-        GenericValue example = from('Example').where('exampleId', exampleId).queryOne()
-        assert example != null
-        assert example.exampleTypeId == exampleTypeId
-        assert example.exampleName == updatedExampleName
-        assert example.statusId == updatedStatusId
-    }
-
     @SuppressWarnings('UnusedPrivateMethod')
     private static List<Arguments> exampleCreationCases() {
         [
@@ -179,37 +204,6 @@ class ExampleJupiterTests implements JupiterTestHelper {
                 Arguments.of('missing-example-type-fails', null, 'EXST_IN_DESIGN', 'Test Example - Missing Type', false),
                 Arguments.of('missing-example-name-fails', 'REAL_WORLD', 'EXST_IN_DESIGN', null, false),
         ]
-    }
-
-    /**
-     * Creates an Example from testParams-driven exampleTypeId/exampleName/statusId (each falling
-     * back to a default) and asserts the createExample service succeeded and that the persisted
-     * record matches the resolved values - the exact create+assert sequence shouldCreateExample()
-     * and shouldCreateExampleWithParams() both perform, differing only in exampleName's default
-     * text, factored out here to remove that duplication.
-     * @param defaultExampleName the exampleName to use when testParams doesn't override it
-     * @return the created, already-asserted Example
-     */
-    private GenericValue createAndAssertExample(String defaultExampleName) {
-        GenericValue userLogin = delegator.findOne('UserLogin', [userLoginId: 'system'], false)
-        String exampleTypeId = testParams.exampleTypeId ?: 'CONTRIVED'
-        String exampleName = testParams.exampleName ?: defaultExampleName
-        String statusId = testParams.statusId ?: 'EXST_IN_DESIGN'
-
-        Map<String, Object> result = dispatcher.runSync('createExample', [
-                exampleTypeId: exampleTypeId,
-                exampleName: exampleName,
-                statusId: statusId,
-                userLogin: userLogin
-        ])
-        assert ServiceUtil.isSuccess(result)
-
-        GenericValue example = from('Example').where('exampleId', result.exampleId).queryOne()
-        assert example != null
-        Assertions.assertEquals(exampleTypeId, example.exampleTypeId)
-        Assertions.assertEquals(exampleName, example.exampleName)
-        Assertions.assertEquals(statusId, example.statusId)
-        example
     }
 
 }
