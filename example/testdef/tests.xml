@@ -30,11 +30,11 @@ under the License.
         <entity-xml action="load" entity-xml-url="component://example/testdef/data/ExampleTestData.xml"/>
     </test-case>
 
-    <test-case case-name="example-tests-groovy">
-        <junit-test-suite class-name="org.apache.ofbiz.example.test.ExampleTests"/>
+    <test-case case-name="example-tests-junit3">
+        <junit-test-suite class-name="org.apache.ofbiz.example.test.ExampleOldJUnit3Tests"/>
     </test-case>
 
     <test-case case-name="example-tests-jupiter">
-        <jupiter-test-suite class-name="org.apache.ofbiz.example.test.jupiter.ExampleJupiterTests"/>
+        <jupiter-test-suite class-name="org.apache.ofbiz.example.test.ExampleJupiterTests"/>
     </test-case>
 </test-suite>
