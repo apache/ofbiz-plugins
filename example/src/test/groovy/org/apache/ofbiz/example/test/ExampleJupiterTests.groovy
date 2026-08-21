@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.ofbiz.example.test.jupiter
+package org.apache.ofbiz.example.test
 
 import org.apache.ofbiz.entity.GenericValue
 import org.apache.ofbiz.service.ServiceUtil

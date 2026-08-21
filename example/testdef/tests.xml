@@ -35,6 +35,6 @@ under the License.
     </test-case>
 
     <test-case case-name="example-tests-jupiter">
-        <jupiter-test-suite class-name="org.apache.ofbiz.example.test.jupiter.ExampleJupiterTests"/>
+        <jupiter-test-suite class-name="org.apache.ofbiz.example.test.ExampleJupiterTests"/>
     </test-case>
 </test-suite>
