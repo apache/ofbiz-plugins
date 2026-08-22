@@ -29,15 +29,14 @@ import org.junit.jupiter.api.Test
 @JunitJupiterTest
 class MyWorkTests implements JupiterTestHelper {
 
-    // Migrated from MyWorkTests.xml:testUpdateTimesheetEntryByWorkeffortNotComplete
-    @Test
-    @Order(1)
-    void testUpdateTimesheetEntryByWorkeffortNotComplete() {
+    // Shared by testUpdateTimesheetEntryByWorkeffortNotComplete/Complete below - identical apart
+    // from the checkComplete flag each test exercises.
+    private void updateTimesheetEntryByWorkeffort(String defaultCheckComplete) {
         String timesheetId = testParams.timesheetId ?: 'DEMO-TIMESHEET1'
         String workEffortId = testParams.workEffortId ?: 'DEMO-TASK-1'
         Double planHours = (testParams.planHours ?: 2.0d) as Double
         Double hoursDay0 = (testParams.hoursDay0 ?: 1.0d) as Double
-        String checkComplete = testParams.checkComplete ?: 'N'
+        String checkComplete = testParams.checkComplete ?: defaultCheckComplete
         Map serviceCtx = [
                 timesheetId: timesheetId,
                 workEffortId: workEffortId,
@@ -51,26 +50,18 @@ class MyWorkTests implements JupiterTestHelper {
         assert ServiceUtil.isSuccess(serviceResult)
     }
 
+    // Migrated from MyWorkTests.xml:testUpdateTimesheetEntryByWorkeffortNotComplete
+    @Test
+    @Order(1)
+    void testUpdateTimesheetEntryByWorkeffortNotComplete() {
+        updateTimesheetEntryByWorkeffort('N')
+    }
+
     // Migrated from MyWorkTests.xml:testUpdateTimesheetEntryByWorkeffortComplete
     @Test
     @Order(2)
     void testUpdateTimesheetEntryByWorkeffortComplete() {
-        String timesheetId = testParams.timesheetId ?: 'DEMO-TIMESHEET1'
-        String workEffortId = testParams.workEffortId ?: 'DEMO-TASK-1'
-        Double planHours = (testParams.planHours ?: 2.0d) as Double
-        Double hoursDay0 = (testParams.hoursDay0 ?: 1.0d) as Double
-        String checkComplete = testParams.checkComplete ?: 'Y'
-        Map serviceCtx = [
-                timesheetId: timesheetId,
-                workEffortId: workEffortId,
-                planHours_o_0: planHours,
-                hoursDay0_o_0: hoursDay0,
-                checkComplete: checkComplete,
-                userLogin: userLogin
-        ]
-        Map serviceResult = dispatcher.runSync(
-                'updateTimesheetEntryByWorkeffort', serviceCtx)
-        assert ServiceUtil.isSuccess(serviceResult)
+        updateTimesheetEntryByWorkeffort('Y')
     }
 
     // Migrated from MyWorkTests.xml:testUpdateTask

@@ -30,10 +30,11 @@ import java.sql.Timestamp
 @JunitJupiterTest
 class FixedAssetMaintTests implements JupiterTestHelper {
 
-    @Test
-    @Order(1)
-    void testCreateFixedAssetMaintUpdateWorkEffortWithProductMaint() {
-        // Test case for service createFixedAssetMaintUpdateWorkEffort with a product Maintenance
+    // Shared by testCreateFixedAssetMaintUpdateWorkEffortWithProductMaint and
+    // testUpdateFixedAssetMaintAndWorkEffort - both need a freshly-created FixedAssetMaint (with
+    // product maintenance) as their starting point, one to assert on directly, the other as
+    // fixture setup before its own update assertions.
+    private Map createFixedAssetMaintWithProductMaint() {
         String fixedAssetId = testParams.fixedAssetId ?: 'DEMO_VEHICLE_01'
         String statusId = testParams.statusId ?: 'FAM_CREATED'
         String productMaintSeqId = testParams.productMaintSeqId ?: 'seq03'
@@ -50,6 +51,17 @@ class FixedAssetMaintTests implements JupiterTestHelper {
                           actualStartDate: actualStartDate,
                           userLogin: userLogin]
         Map serviceResult = dispatcher.runSync('createFixedAssetMaintUpdateWorkEffort', serviceCtx)
+        return [fixedAssetId: fixedAssetId, serviceCtx: serviceCtx, serviceResult: serviceResult]
+    }
+
+    @Test
+    @Order(1)
+    void testCreateFixedAssetMaintUpdateWorkEffortWithProductMaint() {
+        // Test case for service createFixedAssetMaintUpdateWorkEffort with a product Maintenance
+        Map created = createFixedAssetMaintWithProductMaint()
+        String fixedAssetId = created.fixedAssetId
+        Map serviceCtx = created.serviceCtx
+        Map serviceResult = created.serviceResult
         GenericValue fixedAssetMaint = from('FixedAssetMaint')
                 .where('fixedAssetId', fixedAssetId,
                 'maintHistSeqId', serviceResult.maintHistSeqId)
@@ -107,23 +119,11 @@ class FixedAssetMaintTests implements JupiterTestHelper {
     @Order(3)
     void testUpdateFixedAssetMaintAndWorkEffort() {
         // Test case for service updateFixedAssetMaintAndWorkEffort
-        String fixedAssetId = testParams.fixedAssetId ?: 'DEMO_VEHICLE_01'
-        String statusId = testParams.statusId ?: 'FAM_CREATED'
-        String productMaintSeqId = testParams.productMaintSeqId ?: 'seq03'
-        String intervalMeterTypeId = testParams.intervalMeterTypeId ?: 'ODOMETER'
-        Timestamp estimatedStartDate = UtilDateTime.toTimestamp(testParams.estimatedStartDate ?: '2009-12-18 00:00:00.000')
-        Timestamp estimatedCompletionDate = UtilDateTime.toTimestamp(testParams.estimatedCompletionDate ?: '2009-12-18 00:00:00.000')
-        Timestamp actualStartDate = UtilDateTime.toTimestamp(testParams.actualStartDate ?: '2009-12-20 00:00:00.000')
-        Map serviceCtx = [fixedAssetId: fixedAssetId,
-                          statusId: statusId,
-                          productMaintSeqId: productMaintSeqId,  // product maintenance,
-                          intervalMeterTypeId: intervalMeterTypeId,
-                          estimatedStartDate: estimatedStartDate,
-                          estimatedCompletionDate: estimatedCompletionDate,
-                          actualStartDate: actualStartDate,
-                          userLogin: userLogin]
-        Map serviceResult = dispatcher.runSync('createFixedAssetMaintUpdateWorkEffort', serviceCtx)
-        String maintHistSeqId = serviceResult.maintHistSeqId
+        Map created = createFixedAssetMaintWithProductMaint()
+        String fixedAssetId = created.fixedAssetId
+        String statusId = created.serviceCtx.statusId
+        String intervalMeterTypeId = created.serviceCtx.intervalMeterTypeId
+        String maintHistSeqId = created.serviceResult.maintHistSeqId
         GenericValue fixedAssetMaint = from('FixedAssetMaint')
                 .where('fixedAssetId', fixedAssetId,
                         'maintHistSeqId', maintHistSeqId)
@@ -132,7 +132,7 @@ class FixedAssetMaintTests implements JupiterTestHelper {
         String productMaintTypeId = testParams.productMaintTypeId ?: 'OIL_CHANGE'
         Timestamp updatedEstimatedCompletionDate =
                 UtilDateTime.toTimestamp(testParams.updatedEstimatedCompletionDate ?: '2009-12-22 01:00:00.000')
-        serviceCtx = [fixedAssetId: fixedAssetId,
+        Map serviceCtx = [fixedAssetId: fixedAssetId,
                           maintHistSeqId: maintHistSeqId,
                           statusId: statusId,
                           productMaintTypeId: productMaintTypeId,

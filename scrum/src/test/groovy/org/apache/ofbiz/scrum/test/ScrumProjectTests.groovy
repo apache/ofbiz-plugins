@@ -47,15 +47,15 @@ class ScrumProjectTests implements JupiterTestHelper {
         assert ServiceUtil.isSuccess(serviceResult)
     }
 
-    // Migrated from ScrumProjectTests.xml:testUpdateScrumProjectByProductOwner
-    @Test
-    @Order(2)
-    void testUpdateScrumProjectByProductOwner() {
-        String workEffortId = testParams.workEffortId ?: 'TEST_WE_007'
-        String workEffortName = testParams.workEffortName ?: 'TEST_WEN07'
+    // Shared by testUpdateScrumProjectByProductOwner/ByScrumMaster below - identical apart from
+    // the fixture IDs/names each test creates and updates.
+    private void updateScrumProject(String defaultWorkEffortId, String defaultWorkEffortName,
+            String defaultUpdatedWorkEffortName) {
+        String workEffortId = testParams.workEffortId ?: defaultWorkEffortId
+        String workEffortName = testParams.workEffortName ?: defaultWorkEffortName
         String workEffortTypeId = testParams.workEffortTypeId ?: 'SCRUM_PROJECT'
         String currentStatusId = testParams.currentStatusId ?: 'SPJ_ACTIVE'
-        String updatedWorkEffortName = testParams.updatedWorkEffortName ?: 'TEST_WEN07_UPDATE'
+        String updatedWorkEffortName = testParams.updatedWorkEffortName ?: defaultUpdatedWorkEffortName
         Map createCtx = [
                 workEffortId: workEffortId,
                 workEffortName: workEffortName,
@@ -76,33 +76,18 @@ class ScrumProjectTests implements JupiterTestHelper {
         assert ServiceUtil.isSuccess(serviceResult)
     }
 
+    // Migrated from ScrumProjectTests.xml:testUpdateScrumProjectByProductOwner
+    @Test
+    @Order(2)
+    void testUpdateScrumProjectByProductOwner() {
+        updateScrumProject('TEST_WE_007', 'TEST_WEN07', 'TEST_WEN07_UPDATE')
+    }
+
     // Migrated from ScrumProjectTests.xml:testUpdateScrumProjectByScrumMaster
     @Test
     @Order(3)
     void testUpdateScrumProjectByScrumMaster() {
-        String workEffortId = testParams.workEffortId ?: 'TEST_WE_008'
-        String workEffortName = testParams.workEffortName ?: 'TEST_WEN08'
-        String workEffortTypeId = testParams.workEffortTypeId ?: 'SCRUM_PROJECT'
-        String currentStatusId = testParams.currentStatusId ?: 'SPJ_ACTIVE'
-        String updatedWorkEffortName = testParams.updatedWorkEffortName ?: 'TEST_WEN08_UPDATE'
-        Map createCtx = [
-                workEffortId: workEffortId,
-                workEffortName: workEffortName,
-                workEffortTypeId: workEffortTypeId,
-                currentStatusId: currentStatusId,
-                userLogin: userLogin
-        ]
-        dispatcher.runSync('createWorkEffort', createCtx)
-
-        Map serviceCtx = [
-                workEffortId: workEffortId,
-                workEffortName: updatedWorkEffortName,
-                workEffortTypeId: workEffortTypeId,
-                currentStatusId: currentStatusId,
-                userLogin: userLogin
-        ]
-        Map serviceResult = dispatcher.runSync('updateWorkEffort', serviceCtx)
-        assert ServiceUtil.isSuccess(serviceResult)
+        updateScrumProject('TEST_WE_008', 'TEST_WEN08', 'TEST_WEN08_UPDATE')
     }
 
     // Migrated from ScrumProjectTests.xml:testCloseScrumProject

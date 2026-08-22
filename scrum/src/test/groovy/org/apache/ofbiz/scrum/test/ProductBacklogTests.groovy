@@ -288,11 +288,11 @@ class ProductBacklogTests implements JupiterTestHelper {
         assert ServiceUtil.isSuccess(updateResult)
     }
 
-    @Test
-    @Order(8)
-    void testUpdateSprintBacklogseqDown() {
+    // Shared by the 4 testUpdateSprintBacklogseq* tests below - identical apart from the mode
+    // each test moves the backlog item by.
+    private void updateSprintBacklogseq(String defaultMode) {
         GenericValue systemUserLogin = from('UserLogin').where('userLoginId', 'system').queryOne()
-        String mode = testParams.mode ?: 'DWN'
+        String mode = testParams.mode ?: defaultMode
         String custRequestId = testParams.custRequestId ?: 'TEST9'
         String productId = testParams.productId ?: 'DEMO-PRODUCT-1'
         String custRequestItemSeqId = testParams.custRequestItemSeqId ?: 'TESTSEQ9'
@@ -309,75 +309,30 @@ class ProductBacklogTests implements JupiterTestHelper {
         ]
         Map serviceResult = dispatcher.runSync('updateSprintBacklogseq', serviceCtx)
         assert ServiceUtil.isSuccess(serviceResult)
+    }
+
+    @Test
+    @Order(8)
+    void testUpdateSprintBacklogseqDown() {
+        updateSprintBacklogseq('DWN')
     }
 
     @Test
     @Order(9)
     void testUpdateSprintBacklogseqUP() {
-        GenericValue systemUserLogin = from('UserLogin').where('userLoginId', 'system').queryOne()
-        String mode = testParams.mode ?: 'UP'
-        String custRequestId = testParams.custRequestId ?: 'TEST9'
-        String productId = testParams.productId ?: 'DEMO-PRODUCT-1'
-        String custRequestItemSeqId = testParams.custRequestItemSeqId ?: 'TESTSEQ9'
-        String statusId = testParams.statusId ?: 'CRQ_ACCEPTED'
-        String searchOptionStatusId = testParams.searchOptionStatusId ?: 'CRQ_ACCEPTED'
-        Map serviceCtx = [
-                mode: mode,
-                custRequestId: custRequestId,
-                productId: productId,
-                custRequestItemSeqId: custRequestItemSeqId,
-                statusId: statusId,
-                searchOption_statusId: searchOptionStatusId,
-                userLogin: systemUserLogin
-        ]
-        Map serviceResult = dispatcher.runSync('updateSprintBacklogseq', serviceCtx)
-        assert ServiceUtil.isSuccess(serviceResult)
+        updateSprintBacklogseq('UP')
     }
 
     @Test
     @Order(10)
     void testUpdateSprintBacklogseqBotton() {
-        GenericValue systemUserLogin = from('UserLogin').where('userLoginId', 'system').queryOne()
-        String mode = testParams.mode ?: 'BOT'
-        String custRequestId = testParams.custRequestId ?: 'TEST9'
-        String productId = testParams.productId ?: 'DEMO-PRODUCT-1'
-        String custRequestItemSeqId = testParams.custRequestItemSeqId ?: 'TESTSEQ9'
-        String statusId = testParams.statusId ?: 'CRQ_ACCEPTED'
-        String searchOptionStatusId = testParams.searchOptionStatusId ?: 'CRQ_ACCEPTED'
-        Map serviceCtx = [
-                mode: mode,
-                custRequestId: custRequestId,
-                productId: productId,
-                custRequestItemSeqId: custRequestItemSeqId,
-                statusId: statusId,
-                searchOption_statusId: searchOptionStatusId,
-                userLogin: systemUserLogin
-        ]
-        Map serviceResult = dispatcher.runSync('updateSprintBacklogseq', serviceCtx)
-        assert ServiceUtil.isSuccess(serviceResult)
+        updateSprintBacklogseq('BOT')
     }
 
     @Test
     @Order(11)
     void testUpdateSprintBacklogseqTOP() {
-        GenericValue systemUserLogin = from('UserLogin').where('userLoginId', 'system').queryOne()
-        String mode = testParams.mode ?: 'TOP'
-        String custRequestId = testParams.custRequestId ?: 'TEST9'
-        String productId = testParams.productId ?: 'DEMO-PRODUCT-1'
-        String custRequestItemSeqId = testParams.custRequestItemSeqId ?: 'TESTSEQ9'
-        String statusId = testParams.statusId ?: 'CRQ_ACCEPTED'
-        String searchOptionStatusId = testParams.searchOptionStatusId ?: 'CRQ_ACCEPTED'
-        Map serviceCtx = [
-                mode: mode,
-                custRequestId: custRequestId,
-                productId: productId,
-                custRequestItemSeqId: custRequestItemSeqId,
-                statusId: statusId,
-                searchOption_statusId: searchOptionStatusId,
-                userLogin: systemUserLogin
-        ]
-        Map serviceResult = dispatcher.runSync('updateSprintBacklogseq', serviceCtx)
-        assert ServiceUtil.isSuccess(serviceResult)
+        updateSprintBacklogseq('TOP')
     }
 
 }
