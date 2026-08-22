@@ -34,13 +34,21 @@ class ProductBacklogTests implements JupiterTestHelper {
         GenericValue adminUserLogin = from('UserLogin').where('userLoginId', 'admin').queryOne()
         assert adminUserLogin
 
+        String custRequestId = testParams.custRequestId ?: 'TEST5'
+        String custRequestName = testParams.custRequestName ?: 'TEST Product Backlog'
+        String productId = testParams.productId ?: 'DEMO-PRODUCT-1'
+        String description = testParams.description ?: 'TEST Product Backlog'
+        String custRequestTypeId = testParams.custRequestTypeId ?: 'RF_PROD_BACKLOG'
+        String statusId = testParams.statusId ?: 'CRQ_ACCEPTED'
+        String cancelledStatusId = testParams.cancelledStatusId ?: 'CRQ_CANCELLED'
+
         // Create
         Map createCtx = [
-                custRequestName: 'TEST Product Backlog',
-                productId: 'DEMO-PRODUCT-1',
-                description: 'TEST Product Backlog',
-                custRequestTypeId: 'RF_PROD_BACKLOG',
-                statusId: 'CRQ_ACCEPTED',
+                custRequestName: custRequestName,
+                productId: productId,
+                description: description,
+                custRequestTypeId: custRequestTypeId,
+                statusId: statusId,
                 fromPartyId: adminUserLogin.partyId,
                 userLogin: adminUserLogin
         ]
@@ -49,21 +57,21 @@ class ProductBacklogTests implements JupiterTestHelper {
 
         // Update
         Map updateCtx = [
-                custRequestId: 'TEST5',
-                custRequestName: 'TEST Product Backlog',
-                description: 'TEST Product Backlog',
-                statusId: 'CRQ_ACCEPTED',
+                custRequestId: custRequestId,
+                custRequestName: custRequestName,
+                description: description,
+                statusId: statusId,
                 userLogin: adminUserLogin
         ]
         Map updateResult = dispatcher.runSync('updateCustRequest', updateCtx)
         assert ServiceUtil.isSuccess(updateResult)
 
         // Delete
-        GenericValue result = from('CustRequest').where('custRequestId', 'TEST5').queryOne()
-        if (result && result.statusId == 'CRQ_ACCEPTED') {
+        GenericValue result = from('CustRequest').where('custRequestId', custRequestId).queryOne()
+        if (result && result.statusId == statusId) {
             Map deleteCtx = [
-                    custRequestId: 'TEST5',
-                    statusId: 'CRQ_CANCELLED',
+                    custRequestId: custRequestId,
+                    statusId: cancelledStatusId,
                     userLogin: adminUserLogin
             ]
             Map deleteResult = dispatcher.runSync('updateCustRequest', deleteCtx)
@@ -77,13 +85,21 @@ class ProductBacklogTests implements JupiterTestHelper {
         GenericValue poUserLogin = from('UserLogin').where('userLoginId', 'productowner').queryOne()
         assert poUserLogin
 
+        String custRequestId = testParams.custRequestId ?: 'TEST6'
+        String custRequestName = testParams.custRequestName ?: 'TEST Product Backlog'
+        String productId = testParams.productId ?: 'DEMO-PRODUCT-1'
+        String description = testParams.description ?: 'TEST Product Backlog'
+        String custRequestTypeId = testParams.custRequestTypeId ?: 'RF_PROD_BACKLOG'
+        String statusId = testParams.statusId ?: 'CRQ_ACCEPTED'
+        String cancelledStatusId = testParams.cancelledStatusId ?: 'CRQ_CANCELLED'
+
         // Create
         Map createCtx = [
-                custRequestName: 'TEST Product Backlog',
-                productId: 'DEMO-PRODUCT-1',
-                description: 'TEST Product Backlog',
-                custRequestTypeId: 'RF_PROD_BACKLOG',
-                statusId: 'CRQ_ACCEPTED',
+                custRequestName: custRequestName,
+                productId: productId,
+                description: description,
+                custRequestTypeId: custRequestTypeId,
+                statusId: statusId,
                 fromPartyId: poUserLogin.partyId,
                 userLogin: poUserLogin
         ]
@@ -92,21 +108,21 @@ class ProductBacklogTests implements JupiterTestHelper {
 
         // Update
         Map updateCtx = [
-                custRequestId: 'TEST6',
-                custRequestName: 'TEST Product Backlog',
-                description: 'TEST Product Backlog',
-                statusId: 'CRQ_ACCEPTED',
+                custRequestId: custRequestId,
+                custRequestName: custRequestName,
+                description: description,
+                statusId: statusId,
                 userLogin: poUserLogin
         ]
         Map updateResult = dispatcher.runSync('updateCustRequest', updateCtx)
         assert ServiceUtil.isSuccess(updateResult)
 
         // Delete
-        GenericValue result = from('CustRequest').where('custRequestId', 'TEST6').queryOne()
-        if (result && result.statusId == 'CRQ_ACCEPTED') {
+        GenericValue result = from('CustRequest').where('custRequestId', custRequestId).queryOne()
+        if (result && result.statusId == statusId) {
             Map deleteCtx = [
-                    custRequestId: 'TEST6',
-                    statusId: 'CRQ_CANCELLED',
+                    custRequestId: custRequestId,
+                    statusId: cancelledStatusId,
                     userLogin: poUserLogin
             ]
             Map deleteResult = dispatcher.runSync('updateCustRequest', deleteCtx)
@@ -120,13 +136,21 @@ class ProductBacklogTests implements JupiterTestHelper {
         GenericValue smUserLogin = from('UserLogin').where('userLoginId', 'scrummaster').queryOne()
         assert smUserLogin
 
+        String custRequestName = testParams.custRequestName ?: 'TEST Product Backlog'
+        String productId = testParams.productId ?: 'DEMO-PRODUCT-1'
+        String description = testParams.description ?: 'TEST Product Backlog'
+        String custRequestTypeId = testParams.custRequestTypeId ?: 'RF_PROD_BACKLOG'
+        String statusId = testParams.statusId ?: 'CRQ_ACCEPTED'
+        String custRequestId = testParams.custRequestId ?: 'TEST7'
+        String cancelledStatusId = testParams.cancelledStatusId ?: 'CRQ_CANCELLED'
+
         // Create
         Map createCtx = [
-                custRequestName: 'TEST Product Backlog',
-                productId: 'DEMO-PRODUCT-1',
-                description: 'TEST Product Backlog',
-                custRequestTypeId: 'RF_PROD_BACKLOG',
-                statusId: 'CRQ_ACCEPTED',
+                custRequestName: custRequestName,
+                productId: productId,
+                description: description,
+                custRequestTypeId: custRequestTypeId,
+                statusId: statusId,
                 fromPartyId: smUserLogin.partyId,
                 userLogin: smUserLogin
         ]
@@ -135,8 +159,8 @@ class ProductBacklogTests implements JupiterTestHelper {
 
         // Delete
         Map deleteCtx = [
-                custRequestId: 'TEST7',
-                statusId: 'CRQ_CANCELLED',
+                custRequestId: custRequestId,
+                statusId: cancelledStatusId,
                 userLogin: smUserLogin
         ]
         Map deleteResult = dispatcher.runSync('updateCustRequest', deleteCtx)
@@ -147,12 +171,17 @@ class ProductBacklogTests implements JupiterTestHelper {
     @Order(4)
     void testCreateBacklogSetStatus() {
         GenericValue poUserLogin = from('UserLogin').where('userLoginId', 'productowner').queryOne()
+        String custRequestName = testParams.custRequestName ?: 'TEST Product Backlog'
+        String productId = testParams.productId ?: 'DEMO-PRODUCT-1'
+        String description = testParams.description ?: 'TEST Product Backlog'
+        String custRequestTypeId = testParams.custRequestTypeId ?: 'RF_PROD_BACKLOG'
+        String statusId = testParams.statusId ?: 'CRQ_ACCEPTED'
         Map serviceCtx = [
-                custRequestName: 'TEST Product Backlog',
-                productId: 'DEMO-PRODUCT-1',
-                description: 'TEST Product Backlog',
-                custRequestTypeId: 'RF_PROD_BACKLOG',
-                statusId: 'CRQ_ACCEPTED',
+                custRequestName: custRequestName,
+                productId: productId,
+                description: description,
+                custRequestTypeId: custRequestTypeId,
+                statusId: statusId,
                 fromPartyId: poUserLogin.partyId,
                 userLogin: poUserLogin
         ]
@@ -164,12 +193,17 @@ class ProductBacklogTests implements JupiterTestHelper {
     @Order(5)
     void testCreateDefaultBacklogs() {
         GenericValue adminUserLogin = from('UserLogin').where('userLoginId', 'admin').queryOne()
+        String workEffortName = testParams.workEffortName ?: 'Test Default Task'
+        String description = testParams.description ?: 'Test Project'
+        String workEffortTypeId = testParams.workEffortTypeId ?: 'SCRUM_TASK_IMPL'
+        String workEffortPurposeTypeId = testParams.workEffortPurposeTypeId ?: 'SCRUM_DEFAULT_TASK'
+        String currentStatusId = testParams.currentStatusId ?: 'STS_CREATED'
         Map serviceCtx = [
-                workEffortName: 'Test Default Task',
-                description: 'Test Project',
-                workEffortTypeId: 'SCRUM_TASK_IMPL',
-                workEffortPurposeTypeId: 'SCRUM_DEFAULT_TASK',
-                currentStatusId: 'STS_CREATED',
+                workEffortName: workEffortName,
+                description: description,
+                workEffortTypeId: workEffortTypeId,
+                workEffortPurposeTypeId: workEffortPurposeTypeId,
+                currentStatusId: currentStatusId,
                 userLogin: adminUserLogin
         ]
         Map serviceResult = dispatcher.runSync('createWorkEffort', serviceCtx)
@@ -180,12 +214,17 @@ class ProductBacklogTests implements JupiterTestHelper {
     @Order(6)
     void testProductBacklogCategoryOperations() {
         GenericValue adminUserLogin = from('UserLogin').where('userLoginId', 'admin').queryOne()
+        String custRequestName = testParams.custRequestName ?: 'Backlog'
+        String custRequestTypeId = testParams.custRequestTypeId ?: 'RF_PROD_BACKLOG'
+        String statusId = testParams.statusId ?: 'CRQ_ACCEPTED'
+        String productId = testParams.productId ?: 'DEMO-PRODUCT-1'
+        String updateCustRequestId = testParams.updateCustRequestId ?: 'TEST10'
 
         // Create
         Map createCtx = [
-                custRequestName: 'Backlog',
-                custRequestTypeId: 'RF_PROD_BACKLOG',
-                statusId: 'CRQ_ACCEPTED',
+                custRequestName: custRequestName,
+                custRequestTypeId: custRequestTypeId,
+                statusId: statusId,
                 fromPartyId: adminUserLogin.partyId,
                 userLogin: adminUserLogin
         ]
@@ -195,7 +234,7 @@ class ProductBacklogTests implements JupiterTestHelper {
         String custRequestId = createResult.custRequestId
         Map itemCtx = [
                 custRequestId: custRequestId,
-                productId: 'DEMO-PRODUCT-1',
+                productId: productId,
                 userLogin: adminUserLogin
         ]
         Map itemResult = dispatcher.runSync('createCustRequestItem', itemCtx)
@@ -203,8 +242,8 @@ class ProductBacklogTests implements JupiterTestHelper {
 
         // Update
         Map updateCtx = [
-                custRequestId: 'TEST10',
-                custRequestName: 'Backlog',
+                custRequestId: updateCustRequestId,
+                custRequestName: custRequestName,
                 userLogin: adminUserLogin
         ]
         Map updateResult = dispatcher.runSync('updateCustRequest', updateCtx)
@@ -215,15 +254,22 @@ class ProductBacklogTests implements JupiterTestHelper {
     @Order(7)
     void testProductBacklogEmailOperations() {
         GenericValue systemUserLogin = from('UserLogin').where('userLoginId', 'system').queryOne()
+        String productId = testParams.productId ?: 'DEMO-PRODUCT-1'
+        String custRequestId = testParams.custRequestId ?: 'TEST10'
+        String communicationEventTypeId = testParams.communicationEventTypeId ?: 'EMAIL_COMMUNICATION'
+        String partyIdFrom = testParams.partyIdFrom ?: 'DemoCustomer-1'
+        String partyIdTo = testParams.partyIdTo ?: 'SCRUMASTER'
+        String subject = testParams.subject ?: 'Test New Product Backlog Email'
+        String communicationEventId = testParams.communicationEventId ?: 'DEMO-COM-PRODUCT-1'
 
         // Create
         Map createCtx = [
-                productId: 'DEMO-PRODUCT-1',
-                custRequestId: 'TEST10',
-                communicationEventTypeId: 'EMAIL_COMMUNICATION',
-                partyIdFrom: 'DemoCustomer-1',
-                partyIdTo: 'SCRUMASTER',
-                subject: 'Test New Product Backlog Email',
+                productId: productId,
+                custRequestId: custRequestId,
+                communicationEventTypeId: communicationEventTypeId,
+                partyIdFrom: partyIdFrom,
+                partyIdTo: partyIdTo,
+                subject: subject,
                 userLogin: systemUserLogin
         ]
         Map createResult = dispatcher.runSync('createCommunicationEvent', createCtx)
@@ -231,11 +277,11 @@ class ProductBacklogTests implements JupiterTestHelper {
 
         // Update
         Map updateCtx = [
-                communicationEventId: 'DEMO-COM-PRODUCT-1',
-                productId: 'DEMO-PRODUCT-1',
-                custRequestId: 'TEST10',
-                communicationEventTypeId: 'EMAIL_COMMUNICATION',
-                subject: 'Test New Product Backlog Email',
+                communicationEventId: communicationEventId,
+                productId: productId,
+                custRequestId: custRequestId,
+                communicationEventTypeId: communicationEventTypeId,
+                subject: subject,
                 userLogin: systemUserLogin
         ]
         Map updateResult = dispatcher.runSync('updateCommunicationEvent', updateCtx)
@@ -246,13 +292,19 @@ class ProductBacklogTests implements JupiterTestHelper {
     @Order(8)
     void testUpdateSprintBacklogseqDown() {
         GenericValue systemUserLogin = from('UserLogin').where('userLoginId', 'system').queryOne()
+        String mode = testParams.mode ?: 'DWN'
+        String custRequestId = testParams.custRequestId ?: 'TEST9'
+        String productId = testParams.productId ?: 'DEMO-PRODUCT-1'
+        String custRequestItemSeqId = testParams.custRequestItemSeqId ?: 'TESTSEQ9'
+        String statusId = testParams.statusId ?: 'CRQ_ACCEPTED'
+        String searchOptionStatusId = testParams.searchOptionStatusId ?: 'CRQ_ACCEPTED'
         Map serviceCtx = [
-                mode: 'DWN',
-                custRequestId: 'TEST9',
-                productId: 'DEMO-PRODUCT-1',
-                custRequestItemSeqId: 'TESTSEQ9',
-                statusId: 'CRQ_ACCEPTED',
-                searchOption_statusId: 'CRQ_ACCEPTED',
+                mode: mode,
+                custRequestId: custRequestId,
+                productId: productId,
+                custRequestItemSeqId: custRequestItemSeqId,
+                statusId: statusId,
+                searchOption_statusId: searchOptionStatusId,
                 userLogin: systemUserLogin
         ]
         Map serviceResult = dispatcher.runSync('updateSprintBacklogseq', serviceCtx)
@@ -263,13 +315,19 @@ class ProductBacklogTests implements JupiterTestHelper {
     @Order(9)
     void testUpdateSprintBacklogseqUP() {
         GenericValue systemUserLogin = from('UserLogin').where('userLoginId', 'system').queryOne()
+        String mode = testParams.mode ?: 'UP'
+        String custRequestId = testParams.custRequestId ?: 'TEST9'
+        String productId = testParams.productId ?: 'DEMO-PRODUCT-1'
+        String custRequestItemSeqId = testParams.custRequestItemSeqId ?: 'TESTSEQ9'
+        String statusId = testParams.statusId ?: 'CRQ_ACCEPTED'
+        String searchOptionStatusId = testParams.searchOptionStatusId ?: 'CRQ_ACCEPTED'
         Map serviceCtx = [
-                mode: 'UP',
-                custRequestId: 'TEST9',
-                productId: 'DEMO-PRODUCT-1',
-                custRequestItemSeqId: 'TESTSEQ9',
-                statusId: 'CRQ_ACCEPTED',
-                searchOption_statusId: 'CRQ_ACCEPTED',
+                mode: mode,
+                custRequestId: custRequestId,
+                productId: productId,
+                custRequestItemSeqId: custRequestItemSeqId,
+                statusId: statusId,
+                searchOption_statusId: searchOptionStatusId,
                 userLogin: systemUserLogin
         ]
         Map serviceResult = dispatcher.runSync('updateSprintBacklogseq', serviceCtx)
@@ -280,13 +338,19 @@ class ProductBacklogTests implements JupiterTestHelper {
     @Order(10)
     void testUpdateSprintBacklogseqBotton() {
         GenericValue systemUserLogin = from('UserLogin').where('userLoginId', 'system').queryOne()
+        String mode = testParams.mode ?: 'BOT'
+        String custRequestId = testParams.custRequestId ?: 'TEST9'
+        String productId = testParams.productId ?: 'DEMO-PRODUCT-1'
+        String custRequestItemSeqId = testParams.custRequestItemSeqId ?: 'TESTSEQ9'
+        String statusId = testParams.statusId ?: 'CRQ_ACCEPTED'
+        String searchOptionStatusId = testParams.searchOptionStatusId ?: 'CRQ_ACCEPTED'
         Map serviceCtx = [
-                mode: 'BOT',
-                custRequestId: 'TEST9',
-                productId: 'DEMO-PRODUCT-1',
-                custRequestItemSeqId: 'TESTSEQ9',
-                statusId: 'CRQ_ACCEPTED',
-                searchOption_statusId: 'CRQ_ACCEPTED',
+                mode: mode,
+                custRequestId: custRequestId,
+                productId: productId,
+                custRequestItemSeqId: custRequestItemSeqId,
+                statusId: statusId,
+                searchOption_statusId: searchOptionStatusId,
                 userLogin: systemUserLogin
         ]
         Map serviceResult = dispatcher.runSync('updateSprintBacklogseq', serviceCtx)
@@ -297,13 +361,19 @@ class ProductBacklogTests implements JupiterTestHelper {
     @Order(11)
     void testUpdateSprintBacklogseqTOP() {
         GenericValue systemUserLogin = from('UserLogin').where('userLoginId', 'system').queryOne()
+        String mode = testParams.mode ?: 'TOP'
+        String custRequestId = testParams.custRequestId ?: 'TEST9'
+        String productId = testParams.productId ?: 'DEMO-PRODUCT-1'
+        String custRequestItemSeqId = testParams.custRequestItemSeqId ?: 'TESTSEQ9'
+        String statusId = testParams.statusId ?: 'CRQ_ACCEPTED'
+        String searchOptionStatusId = testParams.searchOptionStatusId ?: 'CRQ_ACCEPTED'
         Map serviceCtx = [
-                mode: 'TOP',
-                custRequestId: 'TEST9',
-                productId: 'DEMO-PRODUCT-1',
-                custRequestItemSeqId: 'TESTSEQ9',
-                statusId: 'CRQ_ACCEPTED',
-                searchOption_statusId: 'CRQ_ACCEPTED',
+                mode: mode,
+                custRequestId: custRequestId,
+                productId: productId,
+                custRequestItemSeqId: custRequestItemSeqId,
+                statusId: statusId,
+                searchOption_statusId: searchOptionStatusId,
                 userLogin: systemUserLogin
         ]
         Map serviceResult = dispatcher.runSync('updateSprintBacklogseq', serviceCtx)

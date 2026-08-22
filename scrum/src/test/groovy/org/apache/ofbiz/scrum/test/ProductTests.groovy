@@ -36,10 +36,15 @@ class ProductTests implements JupiterTestHelper {
         GenericValue adminUserLogin = from('UserLogin').where('userLoginId', 'admin').queryOne()
         assert adminUserLogin
 
+        String internalName = testParams.internalName ?: 'Demo Product 1'
+        String longDescription = testParams.longDescription ?: 'Demo-Create-Description'
+        String productTypeId = testParams.productTypeId ?: 'SCRUM_ITEM'
+        String partyId = testParams.partyId ?: 'DemoCustomer-1'
+        String roleTypeId = testParams.roleTypeId ?: 'PRODUCT_OWNER'
         Map serviceCtx = [
-                internalName: 'Demo Product 1',
-                longDescription: 'Demo-Create-Description',
-                productTypeId: 'SCRUM_ITEM',
+                internalName: internalName,
+                longDescription: longDescription,
+                productTypeId: productTypeId,
                 introductionDate: UtilDateTime.nowTimestamp(),
                 userLogin: adminUserLogin
         ]
@@ -50,8 +55,8 @@ class ProductTests implements JupiterTestHelper {
 
         Map roleCtx = [
                 productId: productId,
-                partyId: 'DemoCustomer-1',
-                roleTypeId: 'PRODUCT_OWNER',
+                partyId: partyId,
+                roleTypeId: roleTypeId,
                 userLogin: adminUserLogin
         ]
         Map roleResult = dispatcher.runSync('addPartyToProduct', roleCtx)
@@ -64,11 +69,17 @@ class ProductTests implements JupiterTestHelper {
         GenericValue adminUserLogin = from('UserLogin').where('userLoginId', 'admin').queryOne()
         assert adminUserLogin
 
+        String productId = testParams.productId ?: 'DEMO-PRODUCT-1'
+        String internalName = testParams.internalName ?: 'Demo Product 1 Updated'
+        String longDescription = testParams.longDescription ?: 'Demo-Update-Description'
+        String productTypeId = testParams.productTypeId ?: 'SCRUM_ITEM'
+        String partyId = testParams.partyId ?: 'DemoCustomer-1'
+        String roleTypeId = testParams.roleTypeId ?: 'PRODUCT_OWNER'
         Map serviceCtx = [
-                productId: 'DEMO-PRODUCT-1',
-                internalName: 'Demo Product 1 Updated',
-                longDescription: 'Demo-Update-Description',
-                productTypeId: 'SCRUM_ITEM',
+                productId: productId,
+                internalName: internalName,
+                longDescription: longDescription,
+                productTypeId: productTypeId,
                 userLogin: adminUserLogin
         ]
         Map serviceResult = dispatcher.runSync('updateProduct', serviceCtx)
@@ -76,9 +87,9 @@ class ProductTests implements JupiterTestHelper {
 
         // Minilang test also calls createProductRole again (effectively updating/ensuring it exists)
         Map roleCtx = [
-                productId: 'DEMO-PRODUCT-1',
-                partyId: 'DemoCustomer-1',
-                roleTypeId: 'PRODUCT_OWNER',
+                productId: productId,
+                partyId: partyId,
+                roleTypeId: roleTypeId,
                 userLogin: adminUserLogin
         ]
         dispatcher.runSync('addPartyToProduct', roleCtx)
@@ -92,13 +103,17 @@ class ProductTests implements JupiterTestHelper {
         GenericValue adminUserLogin = from('UserLogin').where('userLoginId', 'admin').queryOne()
         assert adminUserLogin
 
-        Timestamp fromDate = Timestamp.valueOf('2010-10-01 00:00:00.000')
-        Timestamp thruDate = Timestamp.valueOf('2010-11-01 00:00:00.000')
+        Timestamp fromDate = Timestamp.valueOf(testParams.fromDate ?: '2010-10-01 00:00:00.000')
+        Timestamp thruDate = Timestamp.valueOf(testParams.thruDate ?: '2010-11-01 00:00:00.000')
+        String productId = testParams.productId ?: 'DEMO-PRODUCT-1'
+        String partyIdFrom = testParams.partyIdFrom ?: 'Company'
+        String partyId = testParams.partyId ?: 'DemoScrumCompany'
+        String invoiceTypeId = testParams.invoiceTypeId ?: 'SALES_INVOICE'
 
         Map serviceCtx = [
-                productId: 'DEMO-PRODUCT-1',
-                partyIdFrom: 'Company',
-                partyId: 'DemoScrumCompany',
+                productId: productId,
+                partyIdFrom: partyIdFrom,
+                partyId: partyId,
                 fromDate: fromDate,
                 thruDate: thruDate,
                 reCreate: 'N',
@@ -111,9 +126,9 @@ class ProductTests implements JupiterTestHelper {
 
         GenericValue invoice = from('Invoice').where('invoiceId', invoiceId).queryOne()
         assert invoice
-        assert invoice.invoiceTypeId == 'SALES_INVOICE'
-        assert invoice.partyIdFrom == 'Company'
-        assert invoice.partyId == 'DemoScrumCompany'
+        assert invoice.invoiceTypeId == invoiceTypeId
+        assert invoice.partyIdFrom == partyIdFrom
+        assert invoice.partyId == partyId
     }
 
 }

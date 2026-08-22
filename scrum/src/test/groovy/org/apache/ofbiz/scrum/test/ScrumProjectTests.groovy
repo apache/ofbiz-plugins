@@ -32,11 +32,15 @@ class ScrumProjectTests implements JupiterTestHelper {
     @Test
     @Order(1)
     void testCreateScrumProjectByProductOwner() {
+        String workEffortId = testParams.workEffortId ?: 'TEST_WE_006'
+        String workEffortName = testParams.workEffortName ?: 'TEST_WEN06'
+        String workEffortTypeId = testParams.workEffortTypeId ?: 'SCRUM_PROJECT'
+        String currentStatusId = testParams.currentStatusId ?: 'SPJ_ACTIVE'
         Map serviceCtx = [
-                workEffortId: 'TEST_WE_006',
-                workEffortName: 'TEST_WEN06',
-                workEffortTypeId: 'SCRUM_PROJECT',
-                currentStatusId: 'SPJ_ACTIVE',
+                workEffortId: workEffortId,
+                workEffortName: workEffortName,
+                workEffortTypeId: workEffortTypeId,
+                currentStatusId: currentStatusId,
                 userLogin: userLogin
         ]
         Map serviceResult = dispatcher.runSync('createWorkEffort', serviceCtx)
@@ -47,20 +51,25 @@ class ScrumProjectTests implements JupiterTestHelper {
     @Test
     @Order(2)
     void testUpdateScrumProjectByProductOwner() {
+        String workEffortId = testParams.workEffortId ?: 'TEST_WE_007'
+        String workEffortName = testParams.workEffortName ?: 'TEST_WEN07'
+        String workEffortTypeId = testParams.workEffortTypeId ?: 'SCRUM_PROJECT'
+        String currentStatusId = testParams.currentStatusId ?: 'SPJ_ACTIVE'
+        String updatedWorkEffortName = testParams.updatedWorkEffortName ?: 'TEST_WEN07_UPDATE'
         Map createCtx = [
-                workEffortId: 'TEST_WE_007',
-                workEffortName: 'TEST_WEN07',
-                workEffortTypeId: 'SCRUM_PROJECT',
-                currentStatusId: 'SPJ_ACTIVE',
+                workEffortId: workEffortId,
+                workEffortName: workEffortName,
+                workEffortTypeId: workEffortTypeId,
+                currentStatusId: currentStatusId,
                 userLogin: userLogin
         ]
         dispatcher.runSync('createWorkEffort', createCtx)
 
         Map serviceCtx = [
-                workEffortId: 'TEST_WE_007',
-                workEffortName: 'TEST_WEN07_UPDATE',
-                workEffortTypeId: 'SCRUM_PROJECT',
-                currentStatusId: 'SPJ_ACTIVE',
+                workEffortId: workEffortId,
+                workEffortName: updatedWorkEffortName,
+                workEffortTypeId: workEffortTypeId,
+                currentStatusId: currentStatusId,
                 userLogin: userLogin
         ]
         Map serviceResult = dispatcher.runSync('updateWorkEffort', serviceCtx)
@@ -71,20 +80,25 @@ class ScrumProjectTests implements JupiterTestHelper {
     @Test
     @Order(3)
     void testUpdateScrumProjectByScrumMaster() {
+        String workEffortId = testParams.workEffortId ?: 'TEST_WE_008'
+        String workEffortName = testParams.workEffortName ?: 'TEST_WEN08'
+        String workEffortTypeId = testParams.workEffortTypeId ?: 'SCRUM_PROJECT'
+        String currentStatusId = testParams.currentStatusId ?: 'SPJ_ACTIVE'
+        String updatedWorkEffortName = testParams.updatedWorkEffortName ?: 'TEST_WEN08_UPDATE'
         Map createCtx = [
-                workEffortId: 'TEST_WE_008',
-                workEffortName: 'TEST_WEN08',
-                workEffortTypeId: 'SCRUM_PROJECT',
-                currentStatusId: 'SPJ_ACTIVE',
+                workEffortId: workEffortId,
+                workEffortName: workEffortName,
+                workEffortTypeId: workEffortTypeId,
+                currentStatusId: currentStatusId,
                 userLogin: userLogin
         ]
         dispatcher.runSync('createWorkEffort', createCtx)
 
         Map serviceCtx = [
-                workEffortId: 'TEST_WE_008',
-                workEffortName: 'TEST_WEN08_UPDATE',
-                workEffortTypeId: 'SCRUM_PROJECT',
-                currentStatusId: 'SPJ_ACTIVE',
+                workEffortId: workEffortId,
+                workEffortName: updatedWorkEffortName,
+                workEffortTypeId: workEffortTypeId,
+                currentStatusId: currentStatusId,
                 userLogin: userLogin
         ]
         Map serviceResult = dispatcher.runSync('updateWorkEffort', serviceCtx)
@@ -95,9 +109,11 @@ class ScrumProjectTests implements JupiterTestHelper {
     @Test
     @Order(4)
     void testCloseScrumProject() {
+        String workEffortId = testParams.workEffortId ?: 'DEMO-PROJECT-1'
+        String currentStatusId = testParams.currentStatusId ?: 'SPJ_CLOSED'
         Map serviceCtx = [
-                workEffortId: 'DEMO-PROJECT-1',
-                currentStatusId: 'SPJ_CLOSED',
+                workEffortId: workEffortId,
+                currentStatusId: currentStatusId,
                 userLogin: userLogin
         ]
         Map serviceResult = dispatcher.runSync('updateWorkEffort', serviceCtx)
