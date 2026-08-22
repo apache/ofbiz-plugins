@@ -52,4 +52,38 @@ under the License.
         <attribute name="productCategoryId" mode="IN" type="String"/>
     </service>
 
+    <!-- Test Run Services (component-scoped wrapper around framework/testtools) -->
+    <service name="runLuceneTestSuite" engine="groovy" auth="true"
+             location="component://lucene/src/test/groovy/org/apache/ofbiz/content/LuceneTestRunServices.groovy"
+             invoke="runLuceneTestSuite">
+        <description>Kicks off a testdef test-suite run asynchronously, scoped to the lucene
+            component only - see TestRunServices.runScopedTestSuite. Gated by the test.api.enabled
+            config flag and the TESTEXEC_ADMIN permission (checked inside the underlying service).
+            Also gated by the per-component test.api.enabled.lucene override - same
+            SystemProperty-backed mechanism, defaults to enabled, lets this component's endpoint be
+            disabled independently of every other component's. componentName is deliberately not an
+            attribute here - the component is fixed, not caller-suppliable. testMethodName optionally
+            scopes the run to one @Test/@ParameterizedTest method within the class testCaseName
+            resolves to - requires testCaseName, and only applies when it resolves to a
+            jupiter-test-suite.</description>
+        <attribute name="suiteName" type="String" mode="IN" optional="false"/>
+        <attribute name="testCaseName" type="String" mode="IN" optional="true"/>
+        <attribute name="testMethodName" type="String" mode="IN" optional="true"/>
+        <attribute name="testParams" type="Map" mode="IN" optional="true"/>
+        <attribute name="runId" type="String" mode="OUT" optional="true"/>
+    </service>
+
+    <service name="getLuceneTestRunStatus" engine="groovy" auth="true"
+             location="component://lucene/src/test/groovy/org/apache/ofbiz/content/LuceneTestRunServices.groovy"
+             invoke="getLuceneTestRunStatus">
+        <description>Reads a runLuceneTestSuite-triggered run's status, scoped to the lucene
+            component only - a runId belonging to another component's run is reported as
+            not-found, not a distinguishable "wrong component" error. See
+            TestRunServices.getScopedTestRunStatus.</description>
+        <attribute name="runId" type="String" mode="IN" optional="false"/>
+        <attribute name="status" type="String" mode="OUT" optional="true"/>
+        <attribute name="componentName" type="String" mode="OUT" optional="true"/>
+        <attribute name="resultSummary" type="Map" mode="OUT" optional="true"/>
+    </service>
+
 </services>
