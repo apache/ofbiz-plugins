@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 
 @JunitJupiterTest
+@SuppressWarnings(['PublicMethodsBeforeNonPublicMethods', 'JUnitTestMethodWithoutAssert'])
 class ScrumProjectTests implements JupiterTestHelper {
 
     // Migrated from ScrumProjectTests.xml:testCreateScrumProjectByProductOwner

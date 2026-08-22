@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Test
 import java.sql.Timestamp
 
 @JunitJupiterTest
+@SuppressWarnings(['PublicMethodsBeforeNonPublicMethods', 'JUnitTestMethodWithoutAssert'])
 class FixedAssetMaintTests implements JupiterTestHelper {
 
     // Shared by testCreateFixedAssetMaintUpdateWorkEffortWithProductMaint and

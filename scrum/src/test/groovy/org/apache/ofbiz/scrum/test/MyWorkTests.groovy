@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 
 @JunitJupiterTest
+@SuppressWarnings(['PublicMethodsBeforeNonPublicMethods', 'JUnitTestMethodWithoutAssert'])
 class MyWorkTests implements JupiterTestHelper {
 
     // Shared by testUpdateTimesheetEntryByWorkeffortNotComplete/Complete below - identical apart
@@ -34,8 +35,8 @@ class MyWorkTests implements JupiterTestHelper {
     private void updateTimesheetEntryByWorkeffort(String defaultCheckComplete) {
         String timesheetId = testParams.timesheetId ?: 'DEMO-TIMESHEET1'
         String workEffortId = testParams.workEffortId ?: 'DEMO-TASK-1'
-        Double planHours = (testParams.planHours ?: 2.0d) as Double
-        Double hoursDay0 = (testParams.hoursDay0 ?: 1.0d) as Double
+        BigDecimal planHours = (testParams.planHours ?: 2.0) as BigDecimal
+        BigDecimal hoursDay0 = (testParams.hoursDay0 ?: 1.0) as BigDecimal
         String checkComplete = testParams.checkComplete ?: defaultCheckComplete
         Map serviceCtx = [
                 timesheetId: timesheetId,
