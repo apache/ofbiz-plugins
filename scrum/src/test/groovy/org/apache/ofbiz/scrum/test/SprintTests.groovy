@@ -31,9 +31,11 @@ class SprintTests implements JupiterTestHelper {
     @Test
     @Order(1)
     void testUpdateSprintBacklog() {
+        String custRequestId = testParams.custRequestId ?: 'TEST9'
+        Long estimatedMilliSeconds = (testParams.estimatedMilliSeconds ?: 36000000L) as Long
         Map serviceCtx = [
-                custRequestId: 'TEST9',
-                estimatedMilliSeconds: 36000000L,
+                custRequestId: custRequestId,
+                estimatedMilliSeconds: estimatedMilliSeconds,
                 userLogin: userLogin
         ]
         Map serviceResult = dispatcher.runSync('updateCustRequest', serviceCtx)
@@ -53,10 +55,12 @@ class SprintTests implements JupiterTestHelper {
     @Order(3)
     void testUpdateSprintByScrummaster() {
         String sprintId = createSprint()
+        String workEffortName = testParams.workEffortName ?: 'SprintTest'
+        String currentStatusId = testParams.currentStatusId ?: 'SPRINT_ACTIVE'
         Map serviceCtx = [
                 workEffortId: sprintId,
-                workEffortName: 'SprintTest',
-                currentStatusId: 'SPRINT_ACTIVE',
+                workEffortName: workEffortName,
+                currentStatusId: currentStatusId,
                 userLogin: userLogin
         ]
         Map serviceResult = dispatcher.runSync('updateWorkEffort', serviceCtx)
@@ -76,10 +80,12 @@ class SprintTests implements JupiterTestHelper {
     @Order(5)
     void testUpdateSprintByAdmin() {
         String sprintId = createSprint()
+        String workEffortName = testParams.workEffortName ?: 'SprintTest'
+        String currentStatusId = testParams.currentStatusId ?: 'SPRINT_ACTIVE'
         Map serviceCtx = [
                 workEffortId: sprintId,
-                workEffortName: 'SprintTest',
-                currentStatusId: 'SPRINT_ACTIVE',
+                workEffortName: workEffortName,
+                currentStatusId: currentStatusId,
                 userLogin: userLogin
         ]
         Map serviceResult = dispatcher.runSync('updateWorkEffort', serviceCtx)
@@ -97,22 +103,27 @@ class SprintTests implements JupiterTestHelper {
     @Test
     @Order(6)
     void testAddAndRemoveSprintMember() {
+        String workEffortId = testParams.workEffortId ?: 'DEMO-SPRINT-1'
+        String roleTypeId = testParams.roleTypeId ?: 'SCRUM_TEAM'
+        String statusId = testParams.statusId ?: 'PRTYASGN_ASSIGNED'
+        String partyId = testParams.partyId ?: 'DemoCustomer-1'
+        java.sql.Timestamp fromDate = java.sql.Timestamp.valueOf(testParams.fromDate ?: '2010-07-31 00:00:00.000')
         Map assignCtx = [
-                workEffortId: 'DEMO-SPRINT-1',
-                roleTypeId: 'SCRUM_TEAM',
-                statusId: 'PRTYASGN_ASSIGNED',
-                partyId: 'DemoCustomer-1',
-                fromDate: java.sql.Timestamp.valueOf('2010-07-31 00:00:00.000'),
+                workEffortId: workEffortId,
+                roleTypeId: roleTypeId,
+                statusId: statusId,
+                partyId: partyId,
+                fromDate: fromDate,
                 userLogin: userLogin
         ]
         Map assignResult = dispatcher.runSync('assignPartyToWorkEffort', assignCtx)
         assert ServiceUtil.isSuccess(assignResult)
 
         Map removeCtx = [
-                workEffortId: 'DEMO-SPRINT-1',
-                roleTypeId: 'SCRUM_TEAM',
-                partyId: 'DemoCustomer-1',
-                fromDate: java.sql.Timestamp.valueOf('2010-07-31 00:00:00.000'),
+                workEffortId: workEffortId,
+                roleTypeId: roleTypeId,
+                partyId: partyId,
+                fromDate: fromDate,
                 userLogin: userLogin
         ]
         Map removeResult = dispatcher.runSync(
@@ -126,13 +137,19 @@ class SprintTests implements JupiterTestHelper {
      * which internally creates a WorkEffort of type SCRUM_SPRINT.
      */
     protected String createSprint() {
+        String workEffortName = testParams.workEffortName ?: 'SprintTest'
+        String description = testParams.description ?: 'Test Create Sprint'
+        String workEffortTypeId = testParams.workEffortTypeId ?: 'SCRUM_SPRINT'
+        String currentStatusId = testParams.currentStatusId ?: 'SPRINT_ACTIVE'
+        String workEffortParentId = testParams.workEffortParentId ?: 'DEMO-PROJECT-1'
+        Long estimatedMilliSeconds = (testParams.estimatedMilliSeconds ?: 1440000000L) as Long
         Map serviceCtx = [
-                workEffortName: 'SprintTest',
-                description: 'Test Create Sprint',
-                workEffortTypeId: 'SCRUM_SPRINT',
-                currentStatusId: 'SPRINT_ACTIVE',
-                workEffortParentId: 'DEMO-PROJECT-1',
-                estimatedMilliSeconds: 1440000000L,
+                workEffortName: workEffortName,
+                description: description,
+                workEffortTypeId: workEffortTypeId,
+                currentStatusId: currentStatusId,
+                workEffortParentId: workEffortParentId,
+                estimatedMilliSeconds: estimatedMilliSeconds,
                 userLogin: userLogin
         ]
         Map serviceResult = dispatcher.runSync('createWorkEffort', serviceCtx)

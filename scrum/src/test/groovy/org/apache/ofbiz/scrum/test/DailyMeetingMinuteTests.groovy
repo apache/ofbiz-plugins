@@ -31,10 +31,13 @@ class DailyMeetingMinuteTests implements JupiterTestHelper {
     // Equivalent: call createWorkEffortNote service which does the same.
     @Test
     void testDailyMinute() {
+        String workEffortId = testParams.workEffortId ?: 'DEMO-SPRINT-1'
+        String noteInfo = testParams.noteInfo ?: 'NoteInfo'
+        String noteName = testParams.noteName ?: 'NOTE-1-Name'
         Map serviceCtx = [
-                workEffortId: 'DEMO-SPRINT-1',
-                noteInfo: 'NoteInfo',
-                noteName: 'NOTE-1-Name',
+                workEffortId: workEffortId,
+                noteInfo: noteInfo,
+                noteName: noteName,
                 userLogin: userLogin
         ]
         Map serviceResult = dispatcher.runSync('createWorkEffortNote', serviceCtx)

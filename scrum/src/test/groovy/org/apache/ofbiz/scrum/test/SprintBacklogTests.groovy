@@ -32,9 +32,11 @@ class SprintBacklogTests implements JupiterTestHelper {
     @Test
     @Order(1)
     void testCreateSprintBacklogByAdmin() {
+        String custRequestId = testParams.custRequestId ?: 'TEST5'
+        String workEffortId = testParams.workEffortId ?: 'DEMO-SPRINT-1'
         Map serviceCtx = [
-                custRequestId: 'TEST5',
-                workEffortId: 'DEMO-SPRINT-1',
+                custRequestId: custRequestId,
+                workEffortId: workEffortId,
                 userLogin: userLogin
         ]
         Map serviceResult = dispatcher.runSync(
@@ -46,9 +48,11 @@ class SprintBacklogTests implements JupiterTestHelper {
     @Test
     @Order(2)
     void testCreateSprintBacklogByScrummaster() {
+        String custRequestId = testParams.custRequestId ?: 'TEST6'
+        String workEffortId = testParams.workEffortId ?: 'DEMO-SPRINT-1'
         Map serviceCtx = [
-                custRequestId: 'TEST6',
-                workEffortId: 'DEMO-SPRINT-1',
+                custRequestId: custRequestId,
+                workEffortId: workEffortId,
                 userLogin: userLogin
         ]
         Map serviceResult = dispatcher.runSync(
@@ -60,9 +64,11 @@ class SprintBacklogTests implements JupiterTestHelper {
     @Test
     @Order(3)
     void testDeleteSprintBacklogByAdmin() {
+        String custRequestId = testParams.custRequestId ?: 'TEST1'
+        String workEffortId = testParams.workEffortId ?: 'DEMO-SPRINT-1'
         Map serviceCtx = [
-                custRequestId: 'TEST1',
-                workEffortId: 'DEMO-SPRINT-1',
+                custRequestId: custRequestId,
+                workEffortId: workEffortId,
                 userLogin: userLogin
         ]
         Map serviceResult = dispatcher.runSync(
@@ -74,9 +80,11 @@ class SprintBacklogTests implements JupiterTestHelper {
     @Test
     @Order(4)
     void testDeleteSprintBacklogByScrummaster() {
+        String custRequestId = testParams.custRequestId ?: 'TEST2'
+        String workEffortId = testParams.workEffortId ?: 'DEMO-SPRINT-1'
         Map serviceCtx = [
-                custRequestId: 'TEST2',
-                workEffortId: 'DEMO-SPRINT-1',
+                custRequestId: custRequestId,
+                workEffortId: workEffortId,
                 userLogin: userLogin
         ]
         Map serviceResult = dispatcher.runSync(

@@ -29,9 +29,11 @@ class TimesheetTests implements JupiterTestHelper {
     // Migrated from TimesheetTests.xml:testTimesheetToComplete
     @Test
     void testTimesheetToComplete() {
+        String timesheetId = testParams.timesheetId ?: 'DEMO-TIMESHEET1'
+        String statusId = testParams.statusId ?: 'TIMESHEET_COMPLETED'
         Map serviceCtx = [
-                timesheetId: 'DEMO-TIMESHEET1',
-                statusId: 'TIMESHEET_COMPLETED',
+                timesheetId: timesheetId,
+                statusId: statusId,
                 userLogin: userLogin
         ]
         Map serviceResult = dispatcher.runSync('updateTimesheet', serviceCtx)

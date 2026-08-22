@@ -30,9 +30,11 @@ class TaskTests implements JupiterTestHelper {
     // Tests that viewScrumRevision service handles a bad repository URL gracefully
     @Test
     void testViewScrumRevisionBadCall() {
+        String repository = testParams.repository ?: '--diff+--diff-cmd=/bin/ls'
+        String revision = testParams.revision ?: '7'
         Map serviceCtx = [
-                repository: '--diff+--diff-cmd=/bin/ls',
-                revision: '7',
+                repository: repository,
+                revision: revision,
                 userLogin: userLogin
         ]
         Map serviceResult = dispatcher.runSync('viewScrumRevision', serviceCtx)

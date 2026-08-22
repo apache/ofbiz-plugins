@@ -30,9 +30,12 @@ class OrderNotificationTests implements JupiterTestHelper {
     @Test
     @Order(1)
     void testSendOrderConfirmation() {
+        String orderId = testParams.orderId ?: 'TEST_DEMO10090'
+        String sendTo = testParams.sendTo ?: 'test_email@example.com'
+
         Map serviceCtx = [
-            orderId: 'TEST_DEMO10090',
-            sendTo: 'test_email@example.com',
+            orderId: orderId,
+            sendTo: sendTo,
             userLogin: userLogin
         ]
         Map serviceResult = dispatcher.runSync('sendOrderConfirmation', serviceCtx)
@@ -43,11 +46,16 @@ class OrderNotificationTests implements JupiterTestHelper {
     @Test
     @Order(2)
     void testSendOrderChangeNotification() {
+        String orderId = testParams.orderId ?: 'TEST_DEMO10090'
+        String note = testParams.note ?: 'Test Note'
+        String comments = testParams.comments ?: 'Test comments'
+        String sendTo = testParams.sendTo ?: 'test_email@example.com'
+
         Map serviceCtx = [
-            orderId: 'TEST_DEMO10090',
-            note: 'Test Note',
-            comments: 'Test comments',
-            sendTo: 'test_email@example.com',
+            orderId: orderId,
+            note: note,
+            comments: comments,
+            sendTo: sendTo,
             userLogin: userLogin
         ]
         Map serviceResult = dispatcher.runSync('sendOrderChangeNotification', serviceCtx)
@@ -58,9 +66,12 @@ class OrderNotificationTests implements JupiterTestHelper {
     @Test
     @Order(3)
     void testSendOrderBackorderNotification() {
+        String orderId = testParams.orderId ?: 'TEST_DEMO10090'
+        String sendTo = testParams.sendTo ?: 'test_email@example.com'
+
         Map serviceCtx = [
-            orderId: 'TEST_DEMO10090',
-            sendTo: 'test_email@example.com',
+            orderId: orderId,
+            sendTo: sendTo,
             userLogin: userLogin
         ]
         Map serviceResult = dispatcher.runSync('sendOrderBackorderNotification', serviceCtx)
@@ -71,9 +82,12 @@ class OrderNotificationTests implements JupiterTestHelper {
     @Test
     @Order(4)
     void testsendOrderPayRetryNotification() {
+        String orderId = testParams.orderId ?: 'TEST_DEMO10090'
+        String sendTo = testParams.sendTo ?: 'test_email@example.com'
+
         Map serviceCtx = [
-            orderId: 'TEST_DEMO10090',
-            sendTo: 'test_email@example.com',
+            orderId: orderId,
+            sendTo: sendTo,
             userLogin: userLogin
         ]
         Map serviceResult = dispatcher.runSync('sendOrderPayRetryNotification', serviceCtx)
@@ -84,9 +98,12 @@ class OrderNotificationTests implements JupiterTestHelper {
     @Test
     @Order(5)
     void testsendOrderCompleteNotification() {
+        String orderId = testParams.orderId ?: 'TEST_DEMO10090'
+        String sendTo = testParams.sendTo ?: 'test_email@example.com'
+
         Map serviceCtx = [
-            orderId: 'TEST_DEMO10090',
-            sendTo: 'test_email@example.com',
+            orderId: orderId,
+            sendTo: sendTo,
             userLogin: userLogin
         ]
         Map serviceResult = dispatcher.runSync('sendOrderCompleteNotification', serviceCtx)

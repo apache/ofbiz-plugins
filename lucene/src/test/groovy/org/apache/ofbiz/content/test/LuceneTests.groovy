@@ -40,8 +40,9 @@ class LuceneTests implements JupiterTestHelper {
 
     @Test
     void testSearchTermHand() {
+        String contentId = testParams.contentId ?: 'LuceneCONTENT'
         Map ctx = [
-                contentId: 'LuceneCONTENT',
+                contentId: contentId,
                 userLogin: userLogin
         ]
         Map resp = dispatcher.runSync('indexContentTree', ctx)
@@ -64,7 +65,7 @@ class LuceneTests implements JupiterTestHelper {
         }
 
         BooleanQuery.Builder combQueryBuilder = new BooleanQuery.Builder()
-        String queryLine = 'hand'
+        String queryLine = testParams.queryLine ?: 'hand'
 
         IndexSearcher searcher = new IndexSearcher(reader)
         Analyzer analyzer = new StandardAnalyzer()

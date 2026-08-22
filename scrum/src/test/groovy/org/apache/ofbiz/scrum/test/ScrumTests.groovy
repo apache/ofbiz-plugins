@@ -30,8 +30,9 @@ class ScrumTests implements JupiterTestHelper {
     // Migrated from ScrumTests.xml:testFindProjectWithSearchParameters
     @Test
     void testFindProjectWithSearchParameters() {
+        String workEffortTypeId = testParams.workEffortTypeId ?: 'SCRUM_PROJECT'
         List<GenericValue> workEffortList = EntityQuery.use(delegator).from('WorkEffort')
-                .where('workEffortTypeId', 'SCRUM_PROJECT')
+                .where('workEffortTypeId', workEffortTypeId)
                 .queryList()
         assert workEffortList != null
     }
