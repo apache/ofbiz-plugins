@@ -80,10 +80,11 @@ under the License.
           </div>
           <div class="col-sm-6">
             <label>${uiLabelMap.PartyMaritalStatus}</label>
-            <#assign maritalStatusEnums = EntityQuery.use(delegator).from("Enumeration").where("enumTypeId", "MARITAL_STATUS").cache().orderBy("sequenceId").queryList()!>
-            <select name="maritalStatusEnumId" class="form-control custom-select">
-              <#list maritalStatusEnums as maritalStatus>
-                <option <#if maritalStatus.enumId == personData.maritalStatusEnumId!>selected="selected"</#if> value="${maritalStatus.enumId!}">${maritalStatus.description!}</option>
+            <#assign maritalStatusTypes = EntityQuery.use(delegator).from("MaritalStatusType").cache().queryList()!>
+            <select name="maritalStatusTypeId" class="form-control custom-select">
+              <option value="">${uiLabelMap.CommonSelectOne}</option>
+              <#list maritalStatusTypes as maritalStatusType>
+                <option <#if maritalStatusType.maritalStatusTypeId == personData.maritalStatusTypeId!>selected="selected"</#if> value="${maritalStatusType.maritalStatusTypeId!}">${maritalStatusType.description!}</option>
               </#list>
             </select>
           </div>
