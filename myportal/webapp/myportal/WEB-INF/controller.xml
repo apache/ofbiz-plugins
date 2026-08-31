@@ -84,7 +84,7 @@
     </request-map>
     
     <view-map name="main" type="screen" page="component://common/widget/PortalPageScreens.xml#showPortalPage"/>
-    <view-map name="login" type="screen" page="component://myportal/widget/CommonScreens.xml#login"/>
+    <view-map name="login" type="screen" page="component://myportal/widget/CommonScreens.xml#login" auth="false"/>
     <view-map name="newRegisterLogin" type="screen" page="component://myportal/widget/CommonScreens.xml#newRegisterLogin" auth="false"/>
 
     <view-map name="LookupUserLoginAndPartyDetails" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupUserLoginAndPartyDetails"/>
