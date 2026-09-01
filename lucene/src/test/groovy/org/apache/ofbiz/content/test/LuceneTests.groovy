@@ -49,35 +49,41 @@ class LuceneTests implements JupiterTestHelper {
         assert ServiceUtil.isSuccess(resp) :
                 ServiceUtil.isError(resp) ? ServiceUtil.getErrorMessage(resp) : 'Could not init search index'
 
-        try {
-            Thread.sleep(3000) // sleep 3 seconds to give enough time to the indexer to process the entries
-        } catch (InterruptedException e) {
-            logError("Thread interrupted :${e}")
-        }
-
         Directory directory = FSDirectory.open(new File(SearchWorker.getIndexPath('content')).toPath())
-
-        DirectoryReader reader = null
-        try {
-            reader = DirectoryReader.open(directory)
-        } catch (Exception e) {
-            throw new AssertionError("Could not open search index: ${directory}" as String)
-        }
 
         BooleanQuery.Builder combQueryBuilder = new BooleanQuery.Builder()
         String queryLine = testParams.queryLine ?: 'hand'
 
-        IndexSearcher searcher = new IndexSearcher(reader)
         Analyzer analyzer = new StandardAnalyzer()
-
         QueryParser parser = new QueryParser('content', analyzer)
         Query query = parser.parse(queryLine)
         combQueryBuilder.add(query, BooleanClause.Occur.MUST)
         BooleanQuery combQuery = combQueryBuilder.build()
 
-        TopDocs topDocs = searcher.search(combQuery, 10)
+        // indexContentTree only enqueues documents onto the background DocumentIndexer
+        // thread's queue and returns immediately, so the on-disk index may still be empty
+        // here. Poll for the expected hit instead of sleeping a fixed duration, which is
+        // either flaky (too short under a slow/busy CI run) or wastes time on every run
+        // (too long once indexing is already done).
+        TopDocs topDocs = null
+        long deadline = System.currentTimeMillis() + 10000
+        while ((topDocs == null || topDocs.totalHits.value != 1) && System.currentTimeMillis() < deadline) {
+            try {
+                DirectoryReader reader = DirectoryReader.open(directory)
+                try {
+                    topDocs = new IndexSearcher(reader).search(combQuery, 10)
+                } finally {
+                    reader.close()
+                }
+            } catch (Exception ignored) {
+                // index not created yet by the background indexer thread
+            }
+            if (topDocs == null || topDocs.totalHits.value != 1) {
+                Thread.sleep(200)
+            }
+        }
 
-        assert topDocs.totalHits.value == 1 : 'Only 1 result expected from the testdata'
+        assert topDocs != null && topDocs.totalHits.value == 1 : 'Only 1 result expected from the testdata'
     }
 
 }
