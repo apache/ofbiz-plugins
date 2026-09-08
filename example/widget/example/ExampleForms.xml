@@ -52,6 +52,10 @@ under the License.
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.CommonExport}"
                        target="javascript: document.FindExamples.action='ListExampleExport'; document.FindExamples.submit();"/>
         </field>
+        <field name="exportButtonXlsx" position="2" widget-style="smallSubmit" title=" ">
+            <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.CommonViewAsXlsx}"
+                       target="javascript: document.FindExamples.action='ListExampleExportXlsx'; document.FindExamples.submit();"/>
+        </field>
     </form>
 
     <grid name="ListExamples" list-name="listIt" paginate-target="FindExample" default-entity-name="Example" separate-columns="true"
