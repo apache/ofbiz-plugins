@@ -146,6 +146,9 @@ under the License.
                                             <link target="ExampleReportXls" text="${uiLabelMap.CommonViewAsXls}" style="buttontext">
                                                 <parameter param-name="exampleId"/>
                                             </link>
+                                            <link target="ExampleReportXlsx" text="${uiLabelMap.CommonViewAsXlsx}" style="buttontext">
+                                                <parameter param-name="exampleId"/>
+                                            </link>
                                             <link target="ExampleReportPdf" text="${uiLabelMap.CommonPdf}" style="buttontext" target-window="_blank">
                                                 <parameter param-name="exampleId"/>
                                                 <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
