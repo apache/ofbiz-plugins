@@ -140,14 +140,14 @@ Map loadSalesInvoiceItemFact() {
         }
 
         // taxes
-        List taxes = delegator.getRelated('ChildrenInvoiceItem', null, null, invoiceItem, false)
+        List taxes = delegator.getRelated('ChildrenInvoiceItem', [invoiceItemTypeId: 'ITM_SALES_TAX'], null, invoiceItem, false)
         for (GenericValue tax : taxes) {
             if (tax.amount) {
                 fact.extTaxAmount = fact.extTaxAmount + tax.amount
             }
         }
         // discounts
-        List discounts = delegator.getRelated('ChildrenInvoiceItem', null, null, invoiceItem, false)
+        List discounts = delegator.getRelated('ChildrenInvoiceItem', [invoiceItemTypeId: 'ITM_PROMOTION_ADJ'], null, invoiceItem, false)
         for (GenericValue discount : discounts) {
             if (discount.amount) {
                 fact.extDiscountAmount = fact.extDiscountAmount - discount.amount
@@ -205,8 +205,8 @@ Map loadSalesOrderItemFact() {
     List orderAdjustments
     GenericValue orderStatus
 
-    orderHeader ?: from('OrderHeader').where(parameters).queryOne()
-    orderItem ?: this.from('OrderItem').where(parameters).queryOne()
+    orderHeader = orderHeader ?: from('OrderHeader').where(parameters).queryOne()
+    orderItem = orderItem ?: from('OrderItem').where(parameters).queryOne()
     if (!orderAdjustment) {
         orderAdjustments = from('OrderAdjustment').where('orderId': orderItem.orderId).queryList()
     }
