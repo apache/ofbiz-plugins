@@ -278,38 +278,43 @@ Map scheduleProject() {
         startDate = tasks[0].actualStartDate
         taskId = tasks[0].workEffortId
         tasks.each {
-            tasks.estimatedStartDate = null
-            tasks.estimatedCompletionDate = null
+            it.estimatedStartDate = null
+            it.estimatedCompletionDate = null
         }
     } else {
         generalStartDate = UtilDateTime.nowTimestamp()
     }
 
+    String predecessorId = null
     while (!generalStartDate) {
         BigDecimal highestHours
         List assocs = from('WorkEffortAssoc')
-                .where(workEffortId: taskId)
+                .where(workEffortIdTo: taskId)
                 .queryList()
         if (assocs) {
             assocs.each {
                 BigDecimal hours = 0
                 Map task = run service: 'getProjectTask', with: [taskId: it.workEffortIdFrom]
-                if (task.estimatedHours && task.actualHours) {
-                    hours = (task.estimatedHours < task.actualHours) ? task.actualHours : task.estimatedHours
+                Map taskInfo = task?.taskInfo ?: [:]
+                BigDecimal estimatedHours = (taskInfo.plannedHours ?: taskInfo.estimatedHours) as BigDecimal
+                BigDecimal actualHours = taskInfo.actualHours as BigDecimal
+                if (estimatedHours && actualHours) {
+                    hours = (estimatedHours < actualHours) ? actualHours : estimatedHours
                 } else {
-                    hours = task.actualHours ?: 16
+                    hours = actualHours ?: (estimatedHours ?: 16)
                 }
                 if (!highestHours || highestHours < hours) {
                     highestHours = hours
-                    preDesessorId = task.taskId
+                    predecessorId = it.workEffortIdFrom
                 }
             }
+            taskId = predecessorId
             BigDecimal taskDays = -(highestHours / 8)
-            startDate = UtilDateTime.addDaysToTimestamp(startDate, taskDays)
+            startDate = UtilDateTime.addDaysToTimestamp(startDate, taskDays as Double)
         } else {
             GenericValue workEffort = from('WorkEffort').where(workEffortId: taskId).queryOne()
-            if (workEffort.parentWorkEffortId) {
-                taskId = workEffort.parentWorkEffortId
+            if (workEffort?.workEffortParentId) {
+                taskId = workEffort.workEffortParentId
             } else {
                 generalStartDate = startDate
             }
@@ -1090,7 +1095,7 @@ private Map combineDatesAndPlannedHoursInfo(Map highInfo) {
             .where(condition)
             .select('actualEntryStartDate')
             .queryFirst()
-    if (timeEntriesInfo && highInfo.actualStartDate > timeEntriesInfo.actualEntryStartDate) {
+    if (timeEntriesInfo?.actualEntryStartDate && (!highInfo.actualStartDate || highInfo.actualStartDate > timeEntriesInfo.actualEntryStartDate)) {
         highInfo.actualStartDate = timeEntriesInfo.actualEntryStartDate
     }
     return highInfo
