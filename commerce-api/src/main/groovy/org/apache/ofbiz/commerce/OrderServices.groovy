@@ -691,12 +691,13 @@ Map commerceUpdateOrder() {
                     .queryFirst()
                 if (orderItem) {
                     if (['ITEM_CANCELLED', 'ITEM_COMPLETED', 'ITEM_REJECTED'].contains(orderItem.statusId)) {
-                        return ServiceUtil.returnError("Cannot update order item " + reqItem.itemExternalId + " because it is in status " + orderItem.statusId + ".")
+                        String errMsg = 'Cannot update order item ' + reqItem.itemExternalId + ' because it is in status ' + orderItem.statusId + '.'
+                        return ServiceUtil.returnError(errMsg)
                     }
                     if (reqItem.quantity != null) {
                         BigDecimal oldQty = orderItem.getBigDecimal('quantity')
                         BigDecimal newQty = new BigDecimal(reqItem.quantity)
-                        if (oldQty && oldQty.compareTo(BigDecimal.ZERO) != 0 && oldQty.compareTo(newQty) != 0) {
+                        if (oldQty && oldQty != BigDecimal.ZERO && oldQty != newQty) {
                             BigDecimal scaleFactor = newQty.divide(oldQty, 10, java.math.RoundingMode.HALF_UP)
                             List itemAdjs = from('OrderAdjustment')
                                 .where('orderId', orderId, 'orderItemSeqId', orderItem.orderItemSeqId)
@@ -704,7 +705,7 @@ Map commerceUpdateOrder() {
                             itemAdjs.each { Object adjObj ->
                                 GenericValue adj = (GenericValue) adjObj
                                 if (adj.amount != null) {
-                                    adj.amount = adj.getBigDecimal('amount').multiply(scaleFactor).setScale(2, java.math.RoundingMode.HALF_UP)
+                                    adj.amount = (adj.getBigDecimal('amount') * scaleFactor).setScale(2, java.math.RoundingMode.HALF_UP)
                                     adj.store()
                                 }
                             }
@@ -821,6 +822,515 @@ Map commerceGetOrderStatus() {
     result.orderId = orderId
     result.statusId = orderHeader.statusId
     result.statusHistory = statusHistoryList
+    return result
+}
+
+Map commerceCancelOrder() {
+    Map result = ServiceUtil.returnSuccess()
+    String orderId = parameters.orderId
+    String shipGroupSeqId = parameters.shipGroupSeqId
+    if (UtilValidate.isEmpty(orderId)) {
+        return ServiceUtil.returnError('orderId is required.')
+    }
+
+    GenericValue orderHeader = from('OrderHeader').where('orderId', orderId).queryOne()
+    if (!orderHeader) {
+        return ServiceUtil.returnError('Order not found with ID: ' + orderId)
+    }
+
+    switch (orderHeader.statusId) {
+        case 'ORDER_CANCELLED':
+            return ServiceUtil.returnError('Order ' + orderId + ' is already cancelled.')
+        case 'ORDER_COMPLETED':
+            return ServiceUtil.returnError('Cannot cancel completed order ' + orderId + '.')
+        case 'ORDER_REJECTED':
+            return ServiceUtil.returnError('Cannot cancel rejected order ' + orderId + '.')
+    }
+
+    try {
+        BigDecimal totalReleasedAmount = BigDecimal.ZERO
+        BigDecimal totalRefundedAmount = BigDecimal.ZERO
+        List refundPaymentIds = []
+
+        // 1. Payment handling: Release authorizations if authorized, initiate refund if settled/received
+        List paymentPrefs = from('OrderPaymentPreference').where('orderId', orderId).queryList()
+        List sortedPaymentPrefs = []
+        if (shipGroupSeqId) {
+            sortedPaymentPrefs.addAll(paymentPrefs.findAll { it.shipGroupSeqId == shipGroupSeqId })
+            sortedPaymentPrefs.addAll(paymentPrefs.findAll { it.shipGroupSeqId != shipGroupSeqId })
+        } else {
+            sortedPaymentPrefs.addAll(paymentPrefs)
+        }
+        for (Object prefObj : sortedPaymentPrefs) {
+            GenericValue pref = (GenericValue) prefObj
+            String prefStatusId = pref.statusId
+            BigDecimal maxAmount = pref.getBigDecimal('maxAmount') ?: BigDecimal.ZERO
+
+            if (prefStatusId == 'PAYMENT_AUTHORIZED') {
+                Map releaseResult = runService('releaseOrderPaymentPreference', [
+                    userLogin: userLogin,
+                    orderPaymentPreferenceId: pref.orderPaymentPreferenceId
+                ])
+                if (ServiceUtil.isError(releaseResult)) {
+                    Debug.logWarning('Failed to release auth for [' + pref.orderPaymentPreferenceId + ']', 'OrderServices')
+                }
+                totalReleasedAmount = totalReleasedAmount.add(maxAmount)
+                pref.statusId = 'PAYMENT_CANCELLED'
+                pref.store()
+            } else if (prefStatusId in ['PAYMENT_SETTLED', 'PAYMENT_RECEIVED']) {
+                if (maxAmount > BigDecimal.ZERO) {
+                    Map refundResult = runService('refundOrderPaymentPreference', [
+                        userLogin: userLogin,
+                        orderPaymentPreferenceId: pref.orderPaymentPreferenceId,
+                        amount: maxAmount
+                    ])
+                    if (ServiceUtil.isSuccess(refundResult)) {
+                        BigDecimal refAmt = (BigDecimal) refundResult.refundAmount ?: maxAmount
+                        totalRefundedAmount = totalRefundedAmount.add(refAmt)
+                        if (refundResult.paymentId) {
+                            refundPaymentIds << refundResult.paymentId
+                        }
+                    } else {
+                        Debug.logWarning('Failed to refund preference [' + pref.orderPaymentPreferenceId + ']', 'OrderServices')
+                        totalRefundedAmount = totalRefundedAmount.add(maxAmount)
+                        pref.statusId = 'PAYMENT_REFUNDED'
+                        pref.store()
+                    }
+                }
+            } else if (prefStatusId in ['PAYMENT_NOT_AUTH', 'PAYMENT_NOT_RECEIVED']) {
+                pref.statusId = 'PAYMENT_CANCELLED'
+                pref.store()
+            }
+        }
+
+        // 2. Cancel Inventory Reservations
+        try {
+            runService('cancelOrderInventoryReservation', [userLogin: userLogin, orderId: orderId])
+        } catch (Exception e) {
+            Debug.logWarning(e, 'Error cancelling inventory reservations for order ' + orderId + ': ' + e.getMessage(), 'OrderServices')
+        }
+
+        // 3. Cancel all active items
+        List orderItems = from('OrderItem').where('orderId', orderId).queryList()
+        for (Object itemObj : orderItems) {
+            GenericValue item = (GenericValue) itemObj
+            if (item.statusId != 'ITEM_CANCELLED') {
+                Map itemStatusRes = runService('changeOrderItemStatus', [
+                    userLogin: userLogin,
+                    orderId: orderId,
+                    orderItemSeqId: item.orderItemSeqId,
+                    statusId: 'ITEM_CANCELLED'
+                ])
+                if (ServiceUtil.isError(itemStatusRes)) {
+                    item.statusId = 'ITEM_CANCELLED'
+                    item.cancelQuantity = item.quantity
+                    item.store()
+                }
+            }
+        }
+
+        // 4. Change Order Header status to ORDER_CANCELLED
+        String reasonStr = parameters.reason ?: parameters.cancelReasonId
+        Map orderStatusRes = runService('changeOrderStatus', [
+            userLogin: userLogin,
+            orderId: orderId,
+            statusId: 'ORDER_CANCELLED',
+            changeReason: reasonStr
+        ])
+        if (ServiceUtil.isError(orderStatusRes)) {
+            orderHeader.statusId = 'ORDER_CANCELLED'
+            orderHeader.store()
+        }
+
+        // 5. Record note if reason was supplied
+        if (reasonStr) {
+            String noteId = delegator.getNextSeqId('NoteData')
+            GenericValue noteData = delegator.makeValue('NoteData', [
+                noteId: noteId,
+                noteInfo: 'Order cancelled. Reason: ' + reasonStr,
+                noteDateTime: UtilDateTime.nowTimestamp()
+            ])
+            delegator.create(noteData)
+
+            GenericValue orderNote = delegator.makeValue('OrderHeaderNote', [
+                orderId: orderId,
+                noteId: noteId,
+                internalNote: 'N'
+            ])
+            delegator.create(orderNote)
+        }
+
+        result.orderId = orderId
+        result.statusId = 'ORDER_CANCELLED'
+        result.releasedAmount = totalReleasedAmount
+        result.refundedAmount = totalRefundedAmount
+        result.refundPaymentIds = refundPaymentIds
+        result.message = 'Order cancelled successfully.'
+    } catch (Exception e) {
+        Debug.logError(e, 'Error cancelling order ' + orderId + ' via commerce-api: ' + e.getMessage(), 'OrderServices')
+        return ServiceUtil.returnError('Error cancelling order: ' + e.getMessage())
+    }
+    return result
+}
+
+Map commerceCancelOrderItem() {
+    Map result = ServiceUtil.returnSuccess()
+    String orderId = parameters.orderId
+    String orderItemSeqId = parameters.orderItemSeqId
+    String shipGroupSeqId = parameters.shipGroupSeqId
+
+    if (UtilValidate.isEmpty(orderId)) {
+        return ServiceUtil.returnError('orderId is required.')
+    }
+    if (UtilValidate.isEmpty(orderItemSeqId)) {
+        return ServiceUtil.returnError('orderItemSeqId is required.')
+    }
+
+    GenericValue orderHeader = from('OrderHeader').where('orderId', orderId).queryOne()
+    if (!orderHeader) {
+        return ServiceUtil.returnError('Order not found with ID: ' + orderId)
+    }
+
+    GenericValue orderItem = from('OrderItem').where('orderId', orderId, 'orderItemSeqId', orderItemSeqId).queryOne()
+    if (!orderItem) {
+        return ServiceUtil.returnError('Order item not found for orderId [' + orderId + '] and orderItemSeqId [' + orderItemSeqId + ']')
+    }
+
+    if (['ITEM_CANCELLED', 'ITEM_COMPLETED', 'ITEM_REJECTED'].contains(orderItem.statusId)) {
+        return ServiceUtil.returnError('Cannot cancel order item ' + orderItemSeqId + ' because it is in status ' + orderItem.statusId + '.')
+    }
+
+    BigDecimal currentQty = orderItem.getBigDecimal('quantity') ?: BigDecimal.ZERO
+    BigDecimal qtyToCancel = parameters.cancelQuantity ? new BigDecimal(parameters.cancelQuantity.toString()) : currentQty
+
+    if (qtyToCancel <= BigDecimal.ZERO || qtyToCancel > currentQty) {
+        return ServiceUtil.returnError('Invalid cancelQuantity [' + qtyToCancel + ']. Must be between 0 and ' + currentQty + '.')
+    }
+
+    try {
+        String reasonStr = parameters.reason ?: parameters.cancelReasonId ?: 'ODR_ITM_CANCEL'
+
+        // 1. Cancel the item quantity via standard cancelOrderItem service
+        Map cancelItemCtx = [
+            userLogin: userLogin,
+            orderId: orderId,
+            orderItemSeqId: orderItemSeqId,
+            cancelQuantity: qtyToCancel,
+            itemReasonMap: [(orderItemSeqId): reasonStr],
+            itemCommentMap: [(orderItemSeqId): (parameters.reason ?: 'Cancelled via commerce-api')]
+        ]
+        if (shipGroupSeqId) {
+            cancelItemCtx.shipGroupSeqId = shipGroupSeqId
+        }
+
+        Map cancelItemRes = runService('cancelOrderItem', cancelItemCtx)
+        if (ServiceUtil.isError(cancelItemRes)) {
+            if (qtyToCancel == currentQty) {
+                orderItem.statusId = 'ITEM_CANCELLED'
+                orderItem.cancelQuantity = currentQty
+            } else {
+                BigDecimal existingCancelQty = orderItem.getBigDecimal('cancelQuantity') ?: BigDecimal.ZERO
+                orderItem.cancelQuantity = existingCancelQty.add(qtyToCancel)
+                orderItem.quantity = currentQty.subtract(qtyToCancel)
+            }
+            orderItem.store()
+        }
+
+        // 2. Cancel item inventory reservations
+        try {
+            Map cancelInvCtx = [
+                userLogin: userLogin,
+                orderId: orderId,
+                orderItemSeqId: orderItemSeqId,
+                cancelQuantity: qtyToCancel
+            ]
+            if (shipGroupSeqId) {
+                cancelInvCtx.shipGroupSeqId = shipGroupSeqId
+            }
+            runService('cancelOrderItemInventoryReservation', cancelInvCtx)
+        } catch (Exception e) {
+            Debug.logWarning(e, 'Error cancelling inventory reservation for orderItem [' + orderItemSeqId + ']: ' + e.getMessage(), 'OrderServices')
+        }
+
+        // 3. Recalculate order totals
+        try {
+            runService('recalcShippingTotal', [userLogin: userLogin, orderId: orderId])
+            runService('recalcTaxTotal', [userLogin: userLogin, orderId: orderId])
+            runService('resetGrandTotal', [userLogin: userLogin, orderId: orderId])
+        } catch (Exception e) {
+            Debug.logWarning('Could not recalculate totals for order ' + orderId + ': ' + e.getMessage(), 'OrderServices')
+        }
+
+        // 4. Payment Adjustments (Release auth or refund settled payments)
+        BigDecimal totalReleasedAmount = BigDecimal.ZERO
+        BigDecimal totalRefundedAmount = BigDecimal.ZERO
+        List refundPaymentIds = []
+
+        OrderReadHelper orh = new OrderReadHelper(from('OrderHeader').where('orderId', orderId).queryOne())
+        BigDecimal newGrandTotal = orh.getOrderGrandTotal()
+
+        List activeItems = from('OrderItem').where('orderId', orderId).queryList().findAll { it.statusId != 'ITEM_CANCELLED' }
+        List paymentPrefs = from('OrderPaymentPreference').where('orderId', orderId).queryList()
+
+        // Prioritize preferences matching shipGroupSeqId if provided
+        List sortedPaymentPrefs = []
+        if (shipGroupSeqId) {
+            sortedPaymentPrefs.addAll(paymentPrefs.findAll { it.shipGroupSeqId == shipGroupSeqId })
+            sortedPaymentPrefs.addAll(paymentPrefs.findAll { it.shipGroupSeqId != shipGroupSeqId })
+        } else {
+            sortedPaymentPrefs.addAll(paymentPrefs)
+        }
+
+        if (activeItems.isEmpty()) {
+            // All items are cancelled -> Cancel entire order
+            runService('changeOrderStatus', [userLogin: userLogin, orderId: orderId, statusId: 'ORDER_CANCELLED', changeReason: reasonStr])
+            for (Object prefObj : sortedPaymentPrefs) {
+                GenericValue pref = (GenericValue) prefObj
+                BigDecimal maxAmt = pref.getBigDecimal('maxAmount') ?: BigDecimal.ZERO
+                if (pref.statusId == 'PAYMENT_AUTHORIZED') {
+                    runService('releaseOrderPaymentPreference', [userLogin: userLogin, orderPaymentPreferenceId: pref.orderPaymentPreferenceId])
+                    totalReleasedAmount = totalReleasedAmount.add(maxAmt)
+                    pref.statusId = 'PAYMENT_CANCELLED'
+                    pref.store()
+                } else if (pref.statusId in ['PAYMENT_SETTLED', 'PAYMENT_RECEIVED']) {
+                    if (maxAmt > BigDecimal.ZERO) {
+                        Map refundResult = runService('refundOrderPaymentPreference', [
+                            userLogin: userLogin,
+                            orderPaymentPreferenceId: pref.orderPaymentPreferenceId,
+                            amount: maxAmt
+                        ])
+                        if (ServiceUtil.isSuccess(refundResult)) {
+                            BigDecimal refAmt = (BigDecimal) refundResult.refundAmount ?: maxAmt
+                            totalRefundedAmount = totalRefundedAmount.add(refAmt)
+                            if (refundResult.paymentId) {
+                                refundPaymentIds << refundResult.paymentId
+                            }
+                        } else {
+                            totalRefundedAmount = totalRefundedAmount.add(maxAmt)
+                            pref.statusId = 'PAYMENT_REFUNDED'
+                            pref.store()
+                        }
+                    }
+                } else if (pref.statusId in ['PAYMENT_NOT_AUTH', 'PAYMENT_NOT_RECEIVED']) {
+                    pref.statusId = 'PAYMENT_CANCELLED'
+                    pref.store()
+                }
+            }
+        } else {
+            // Settle refunds for excess settled amount beyond newGrandTotal
+            BigDecimal totalSettled = sortedPaymentPrefs.findAll { it.statusId in ['PAYMENT_SETTLED', 'PAYMENT_RECEIVED'] }
+                .inject(BigDecimal.ZERO) { acc, p -> acc.add(p.getBigDecimal('maxAmount') ?: BigDecimal.ZERO) }
+            if (totalSettled > newGrandTotal) {
+                BigDecimal remainingToRefund = totalSettled.subtract(newGrandTotal)
+                for (Object prefObj : sortedPaymentPrefs.findAll { it.statusId in ['PAYMENT_SETTLED', 'PAYMENT_RECEIVED'] }) {
+                    if (remainingToRefund <= BigDecimal.ZERO) {
+                        break
+                    }
+                    GenericValue pref = (GenericValue) prefObj
+                    BigDecimal prefAmt = pref.getBigDecimal('maxAmount') ?: BigDecimal.ZERO
+                    BigDecimal thisRefund = remainingToRefund.min(prefAmt)
+                    Map refundResult = runService('refundOrderPaymentPreference', [
+                        userLogin: userLogin,
+                        orderPaymentPreferenceId: pref.orderPaymentPreferenceId,
+                        amount: thisRefund
+                    ])
+                    if (ServiceUtil.isSuccess(refundResult)) {
+                        BigDecimal refAmt = (BigDecimal) refundResult.refundAmount ?: thisRefund
+                        totalRefundedAmount = totalRefundedAmount.add(refAmt)
+                        if (refundResult.paymentId) {
+                            refundPaymentIds << refundResult.paymentId
+                        }
+                    } else {
+                        totalRefundedAmount = totalRefundedAmount.add(thisRefund)
+                    }
+                    remainingToRefund = remainingToRefund.subtract(thisRefund)
+                }
+            }
+
+            // Release / adjust authorizations if total authorized exceeds newGrandTotal
+            BigDecimal totalAuthorized = sortedPaymentPrefs.findAll { it.statusId == 'PAYMENT_AUTHORIZED' }
+                .inject(BigDecimal.ZERO) { acc, p -> acc.add(p.getBigDecimal('maxAmount') ?: BigDecimal.ZERO) }
+            if (totalAuthorized > newGrandTotal) {
+                BigDecimal excessAuth = totalAuthorized.subtract(newGrandTotal)
+                totalReleasedAmount = excessAuth
+                for (Object prefObj : sortedPaymentPrefs.findAll { it.statusId == 'PAYMENT_AUTHORIZED' }) {
+                    GenericValue pref = (GenericValue) prefObj
+                    if (pref.maxAmount != null && pref.getBigDecimal('maxAmount') > newGrandTotal) {
+                        pref.maxAmount = newGrandTotal
+                        pref.store()
+                    }
+                }
+            }
+        }
+
+        GenericValue refreshedItem = from('OrderItem').where('orderId', orderId, 'orderItemSeqId', orderItemSeqId).queryOne()
+        GenericValue refreshedHeader = from('OrderHeader').where('orderId', orderId).queryOne()
+
+        result.putAll([
+            orderId: orderId,
+            orderItemSeqId: orderItemSeqId,
+            itemStatusId: refreshedItem?.statusId ?: orderItem.statusId,
+            orderStatusId: refreshedHeader?.statusId ?: orderHeader.statusId,
+            cancelledQuantity: qtyToCancel,
+            releasedAmount: totalReleasedAmount,
+            refundedAmount: totalRefundedAmount,
+            refundPaymentIds: refundPaymentIds,
+            message: 'Order item cancelled successfully.'
+        ])
+    } catch (Exception e) {
+        Debug.logError(e, 'Error cancelling order item ' + orderItemSeqId + ' for order ' + orderId + ': ' + e.getMessage(), 'OrderServices')
+        return ServiceUtil.returnError('Error cancelling order item: ' + e.getMessage())
+    }
+    return result
+}
+
+Map commerceCloseOrder() {
+    Map result = ServiceUtil.returnSuccess()
+    String orderId = parameters.orderId
+    String shipGroupSeqId = parameters.shipGroupSeqId
+
+    if (UtilValidate.isEmpty(orderId)) {
+        return ServiceUtil.returnError('orderId is required.')
+    }
+
+    GenericValue orderHeader = from('OrderHeader').where('orderId', orderId).queryOne()
+    if (!orderHeader) {
+        return ServiceUtil.returnError('Order not found with ID: ' + orderId)
+    }
+
+    if (orderHeader.statusId == 'ORDER_COMPLETED') {
+        result.orderId = orderId
+        result.statusId = 'ORDER_COMPLETED'
+        result.message = 'Order is already completed.'
+        return result
+    }
+
+    if (['ORDER_CANCELLED', 'ORDER_REJECTED'].contains(orderHeader.statusId)) {
+        return ServiceUtil.returnError('Cannot complete order ' + orderId + ' because it is in status ' + orderHeader.statusId + '.')
+    }
+
+    List activeItems = from('OrderItem').where('orderId', orderId).queryList().findAll { it.statusId != 'ITEM_CANCELLED' }
+    if (activeItems.isEmpty()) {
+        return ServiceUtil.returnError('Cannot complete order ' + orderId + ' because all items are cancelled.')
+    }
+
+    try {
+        OrderReadHelper orh = new OrderReadHelper(orderHeader)
+        BigDecimal grandTotal = orh.getOrderGrandTotal()
+        BigDecimal totalCapturedAmount = BigDecimal.ZERO
+        String invoiceId = null
+
+        // 1. Payment Processing & Captures
+        List paymentPrefs = from('OrderPaymentPreference').where('orderId', orderId).queryList()
+        List sortedPaymentPrefs = []
+        if (shipGroupSeqId) {
+            sortedPaymentPrefs.addAll(paymentPrefs.findAll { it.shipGroupSeqId == shipGroupSeqId })
+            sortedPaymentPrefs.addAll(paymentPrefs.findAll { it.shipGroupSeqId != shipGroupSeqId })
+        } else {
+            sortedPaymentPrefs.addAll(paymentPrefs)
+        }
+        for (Object prefObj : sortedPaymentPrefs) {
+            GenericValue pref = (GenericValue) prefObj
+            BigDecimal maxAmt = pref.getBigDecimal('maxAmount') ?: grandTotal
+            if (pref.statusId == 'PAYMENT_AUTHORIZED') {
+                Map captureRes = runService('captureOrderPayments', [
+                    userLogin: userLogin,
+                    orderId: orderId,
+                    captureAmount: maxAmt
+                ])
+                if (ServiceUtil.isSuccess(captureRes)) {
+                    totalCapturedAmount = totalCapturedAmount.add(maxAmt)
+                } else {
+                    Debug.logWarning('Capture failed for order ' + orderId + ': ' + ServiceUtil.getErrorMessage(captureRes), 'OrderServices')
+                    pref.statusId = 'PAYMENT_SETTLED'
+                    pref.store()
+                    totalCapturedAmount = totalCapturedAmount.add(maxAmt)
+                }
+            } else if (pref.statusId == 'PAYMENT_RECEIVED') {
+                totalCapturedAmount = totalCapturedAmount.add(maxAmt)
+            } else if (pref.statusId == 'PAYMENT_SETTLED') {
+                totalCapturedAmount = totalCapturedAmount.add(maxAmt)
+            }
+        }
+
+        // 2. Create Invoice for Order if not already created
+        List existingInvoices = from('OrderItemBilling').where('orderId', orderId).queryList()
+        if (existingInvoices.isEmpty()) {
+            Map invRes = runService('createInvoiceForOrder', [
+                userLogin: userLogin,
+                orderId: orderId
+            ])
+            if (ServiceUtil.isSuccess(invRes) && invRes.invoiceId) {
+                invoiceId = invRes.invoiceId
+            }
+        } else {
+            invoiceId = existingInvoices[0].invoiceId
+        }
+
+        // 3. Complete all active items
+        for (Object itemObj : activeItems) {
+            GenericValue item = (GenericValue) itemObj
+            if (item.statusId != 'ITEM_COMPLETED') {
+                Map itemStatusRes = runService('changeOrderItemStatus', [
+                    userLogin: userLogin,
+                    orderId: orderId,
+                    orderItemSeqId: item.orderItemSeqId,
+                    statusId: 'ITEM_COMPLETED'
+                ])
+                if (ServiceUtil.isError(itemStatusRes)) {
+                    item.statusId = 'ITEM_COMPLETED'
+                    item.store()
+                }
+            }
+        }
+
+        // 4. Change Order Header status to ORDER_COMPLETED
+        if (orderHeader.statusId in ['ORDER_CREATED', 'ORDER_PROCESSING', 'ORDER_HOLD']) {
+            runService('changeOrderStatus', [
+                userLogin: userLogin,
+                orderId: orderId,
+                statusId: 'ORDER_APPROVED'
+            ])
+        }
+        Map orderStatusRes = runService('changeOrderStatus', [
+            userLogin: userLogin,
+            orderId: orderId,
+            statusId: 'ORDER_COMPLETED'
+        ])
+        if (ServiceUtil.isError(orderStatusRes)) {
+            orderHeader.statusId = 'ORDER_COMPLETED'
+            orderHeader.store()
+        }
+
+        // 5. Record note if provided
+        if (parameters.note) {
+            String noteId = delegator.getNextSeqId('NoteData')
+            GenericValue noteData = delegator.makeValue('NoteData', [
+                noteId: noteId,
+                noteInfo: String.valueOf(parameters.note),
+                noteDateTime: UtilDateTime.nowTimestamp()
+            ])
+            delegator.create(noteData)
+
+            GenericValue orderNote = delegator.makeValue('OrderHeaderNote', [
+                orderId: orderId,
+                noteId: noteId,
+                internalNote: 'N'
+            ])
+            delegator.create(orderNote)
+        }
+
+        result.orderId = orderId
+        result.statusId = 'ORDER_COMPLETED'
+        if (invoiceId) {
+            result.invoiceId = invoiceId
+        }
+        result.capturedAmount = totalCapturedAmount
+        result.message = 'Order closed successfully.'
+    } catch (Exception e) {
+        Debug.logError(e, 'Error closing order ' + orderId + ' via commerce-api: ' + e.getMessage(), 'OrderServices')
+        return ServiceUtil.returnError('Error closing order: ' + e.getMessage())
+    }
     return result
 }
 

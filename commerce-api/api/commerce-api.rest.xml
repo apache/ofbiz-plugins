@@ -42,4 +42,22 @@ under the License.
             <service name="commerceGetOrderStatus"/>
         </operation>
     </resource>
+
+    <resource name="cancelOrder" path="{orderId}/cancel" displayName="Cancel Order Resource" description="Cancel Order by ID">
+        <operation verb="post" consumes="application/json" produces="application/json" description="Cancel an Order">
+            <service name="commerceCancelOrder"/>
+        </operation>
+    </resource>
+
+    <resource name="cancelOrderItem" path="{orderId}/items/{orderItemSeqId}/cancel" displayName="Cancel Order Item Resource" description="Cancel Order Item by ID">
+        <operation verb="post" consumes="application/json" produces="application/json" description="Cancel an Order Item">
+            <service name="commerceCancelOrderItem"/>
+        </operation>
+    </resource>
+
+    <resource name="closeOrder" path="{orderId}/close" displayName="Close Order Resource" description="Close Order by ID">
+        <operation verb="post" consumes="application/json" produces="application/json" description="Close an Order">
+            <service name="commerceCloseOrder"/>
+        </operation>
+    </resource>
 </api>

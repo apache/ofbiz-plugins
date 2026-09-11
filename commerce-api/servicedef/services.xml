@@ -97,4 +97,52 @@ under the License.
         <attribute name="statusId" mode="OUT" type="String" optional="false"/>
         <attribute name="statusHistory" mode="OUT" type="List" optional="false"/>
     </service>
+
+    <service name="commerceCancelOrder" engine="groovy"
+             location="component://commerce-api/src/main/groovy/org/apache/ofbiz/commerce/OrderServices.groovy" invoke="commerceCancelOrder" auth="true">
+        <description>Cancel Order for REST API</description>
+        <attribute name="orderId" mode="IN" type="String" optional="false"/>
+        <attribute name="shipGroupSeqId" mode="IN" type="String" optional="true"/>
+        <attribute name="reason" mode="IN" type="String" optional="true"/>
+        <attribute name="cancelReasonId" mode="IN" type="String" optional="true"/>
+        <attribute name="orderId" mode="OUT" type="String" optional="false"/>
+        <attribute name="statusId" mode="OUT" type="String" optional="false"/>
+        <attribute name="releasedAmount" mode="OUT" type="BigDecimal" optional="true"/>
+        <attribute name="refundedAmount" mode="OUT" type="BigDecimal" optional="true"/>
+        <attribute name="refundPaymentIds" mode="OUT" type="List" optional="true"/>
+        <attribute name="message" mode="OUT" type="String" optional="true"/>
+    </service>
+
+    <service name="commerceCancelOrderItem" engine="groovy"
+             location="component://commerce-api/src/main/groovy/org/apache/ofbiz/commerce/OrderServices.groovy" invoke="commerceCancelOrderItem" auth="true">
+        <description>Cancel Order Item for REST API</description>
+        <attribute name="orderId" mode="IN" type="String" optional="false"/>
+        <attribute name="orderItemSeqId" mode="IN" type="String" optional="false"/>
+        <attribute name="shipGroupSeqId" mode="IN" type="String" optional="true"/>
+        <attribute name="cancelQuantity" mode="IN" type="BigDecimal" optional="true"/>
+        <attribute name="reason" mode="IN" type="String" optional="true"/>
+        <attribute name="cancelReasonId" mode="IN" type="String" optional="true"/>
+        <attribute name="orderId" mode="OUT" type="String" optional="false"/>
+        <attribute name="orderItemSeqId" mode="OUT" type="String" optional="false"/>
+        <attribute name="itemStatusId" mode="OUT" type="String" optional="false"/>
+        <attribute name="orderStatusId" mode="OUT" type="String" optional="false"/>
+        <attribute name="cancelledQuantity" mode="OUT" type="BigDecimal" optional="true"/>
+        <attribute name="releasedAmount" mode="OUT" type="BigDecimal" optional="true"/>
+        <attribute name="refundedAmount" mode="OUT" type="BigDecimal" optional="true"/>
+        <attribute name="refundPaymentIds" mode="OUT" type="List" optional="true"/>
+        <attribute name="message" mode="OUT" type="String" optional="true"/>
+    </service>
+
+    <service name="commerceCloseOrder" engine="groovy"
+             location="component://commerce-api/src/main/groovy/org/apache/ofbiz/commerce/OrderServices.groovy" invoke="commerceCloseOrder" auth="true">
+        <description>Close Order for REST API</description>
+        <attribute name="orderId" mode="IN" type="String" optional="false"/>
+        <attribute name="shipGroupSeqId" mode="IN" type="String" optional="true"/>
+        <attribute name="note" mode="IN" type="String" optional="true"/>
+        <attribute name="orderId" mode="OUT" type="String" optional="false"/>
+        <attribute name="statusId" mode="OUT" type="String" optional="false"/>
+        <attribute name="invoiceId" mode="OUT" type="String" optional="true"/>
+        <attribute name="capturedAmount" mode="OUT" type="BigDecimal" optional="true"/>
+        <attribute name="message" mode="OUT" type="String" optional="true"/>
+    </service>
 </services>
