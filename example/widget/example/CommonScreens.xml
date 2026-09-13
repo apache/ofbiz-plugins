@@ -143,9 +143,6 @@ under the License.
                                                 <parameter param-name="exampleId"/>
                                                 <image url-mode="raw" src="${iconsLocation}/printer.png"/>
                                             </link>
-                                            <link target="ExampleReportXls" text="${uiLabelMap.CommonViewAsXls}" style="buttontext">
-                                                <parameter param-name="exampleId"/>
-                                            </link>
                                             <link target="ExampleReportXlsx" text="${uiLabelMap.CommonViewAsXlsx}" style="buttontext">
                                                 <parameter param-name="exampleId"/>
                                             </link>
