@@ -38,6 +38,7 @@ import javax.ws.rs.core.UriInfo;
 import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.ws.rs.openapi.OFBizOpenApiReader;
 import org.apache.ofbiz.ws.rs.openapi.OFBizResourceScanner;
+import org.apache.ofbiz.ws.rs.security.Secured;
 
 import io.swagger.v3.core.util.Json;
 import io.swagger.v3.core.util.Yaml;
@@ -53,6 +54,7 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 
 @Path("/openapi.{type:json|yaml}")
+@Secured
 public final class OpenApiResource {
     @Context
     private ServletConfig config;

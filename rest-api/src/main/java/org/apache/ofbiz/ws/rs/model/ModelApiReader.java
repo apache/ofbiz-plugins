@@ -49,7 +49,7 @@ public final class ModelApiReader {
         api.setDisplayName(UtilXml.checkEmpty(docElement.getAttribute("displayName")).intern());
         api.setName(UtilXml.checkEmpty(docElement.getAttribute("name")).intern());
         api.setDescription(UtilXml.checkEmpty(docElement.getAttribute("description")).intern());
-        api.setPublish(Boolean.parseBoolean(UtilXml.checkEmpty(docElement.getAttribute("publish")).intern()));
+        api.setPublish(parseBooleanDefaultTrue(docElement.getAttribute("publish")));
         for (Element resourceEle : UtilXml.childElementList(docElement, "resource")) {
             createModelResource(resourceEle, api);
         }
@@ -61,8 +61,8 @@ public final class ModelApiReader {
                 .description(UtilXml.checkEmpty(resourceEle.getAttribute("description")).intern())
                 .displayName(UtilXml.checkEmpty(resourceEle.getAttribute("displayName")).intern())
                 .path(UtilXml.checkEmpty(resourceEle.getAttribute("path")).intern())
-                .publish(Boolean.parseBoolean(UtilXml.checkEmpty(resourceEle.getAttribute("publish")).intern()))
-                .auth(Boolean.parseBoolean(UtilXml.checkEmpty(resourceEle.getAttribute("auth")).intern()));
+                .publish(parseBooleanDefaultTrue(resourceEle.getAttribute("publish")))
+                .auth(parseBooleanDefaultTrue(resourceEle.getAttribute("auth")));
         createOperations(resourceEle, resource);
         Debug.logInfo(resource.toString(), MODULE);
         modelApi.addResource(resource);
@@ -78,9 +78,24 @@ public final class ModelApiReader {
                     .produces(UtilXml.checkEmpty(operationEle.getAttribute("produces")).intern())
                     .consumes(UtilXml.checkEmpty(operationEle.getAttribute("consumes")).intern())
                     .description(UtilXml.checkEmpty(operationEle.getAttribute("description")).intern())
-                    .auth(Boolean.parseBoolean(UtilXml.checkEmpty(operationEle.getAttribute("auth")).intern()));
+                    .auth(parseBooleanDefaultTrue(operationEle.getAttribute("auth")));
             resource.addOperation(op);
         }
+    }
+
+    /**
+     * Parses an {@code xs:boolean}-typed attribute that {@code rest-api.xsd} declares with
+     * {@code default="true"} (currently {@code publish} and {@code auth}). DOM's
+     * {@code Element.getAttribute} returns {@code ""} for an attribute that is absent from the
+     * source XML, so the omitted case must be defaulted explicitly rather than handed to
+     * {@link Boolean#parseBoolean(String)}, which would otherwise resolve it to {@code false}.
+     *
+     * @param attributeValue the raw attribute value, or {@code ""} if the attribute was omitted
+     * @return {@code true} if the attribute was omitted or explicitly {@code "true"}; {@code false} otherwise
+     */
+    private static boolean parseBooleanDefaultTrue(String attributeValue) {
+        String value = UtilXml.checkEmpty(attributeValue).intern();
+        return value.isEmpty() || Boolean.parseBoolean(value);
     }
 
 }
