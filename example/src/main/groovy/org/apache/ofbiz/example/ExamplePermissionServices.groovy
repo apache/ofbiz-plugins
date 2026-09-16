@@ -25,7 +25,7 @@ Map exampleGenericPermission() {
     String mainAction = parameters.mainAction
 
     if (!mainAction) {
-        return error(UtilProperties.getMessage('ExampleUiLabels', 'ExamplePermissionMainActionAttributeMissing', locale))
+        return error('ExampleUiLabels', 'ExamplePermissionMainActionAttributeMissing')
     }
 
     if (security.hasEntityPermission('EXAMPLE', '_' + mainAction, userLogin) || security.hasEntityPermission('EXAMPLE', '_ADMIN', userLogin)) {
