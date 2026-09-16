@@ -59,7 +59,7 @@ Map createProject() {
     if (parameters.emailAddress) {
         require(UtilValidate.isEmail(parameters.emailAddress) as boolean,
                 label('PartyUiLabels', 'PartyEmailAddressNotFormattedCorrectly'))
-        run service: 'createWorkEffortEmailAddress', with: serviceMap
+        runAsync service: 'createWorkEffortEmailAddress', with: serviceMap
     }
     return success([projectId: serviceMap.workEffortId, workEffortId: serviceMap.workEffortId])
 }
@@ -93,10 +93,10 @@ Map updateProject() {
                 .filterByDate()
                 .queryFirst()
         if (existEmailAddress) {
-            run service: 'updateWorkEffortEmailAddress', with: [*: parameters,
+            runAsync service: 'updateWorkEffortEmailAddress', with: [*: parameters,
                                                                 oldContactMechId: existEmailAddress.contactMechId]
         } else {
-            run service: 'createWorkEffortEmailAddress', with: parameters
+            runAsync service: 'createWorkEffortEmailAddress', with: parameters
         }
     }
     return success()
