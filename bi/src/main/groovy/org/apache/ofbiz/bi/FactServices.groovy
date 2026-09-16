@@ -36,7 +36,7 @@ Map loadSalesInvoiceFact() {
     if (!invoice) {
         String errorMessage = UtilProperties.getMessage('AccountingUiLabels', 'AccountingInvoiceDoesNotExists', parameters.locale)
         logError(errorMessage)
-        return error(errorMessage)
+        fail(errorMessage)
     }
     if (invoice.invoiceTypeId == 'SALES_INVOICE') {
         List invoiceItems = delegator.getRelated('InvoiceItem', null, null, invoice, false)
@@ -58,12 +58,12 @@ Map loadSalesInvoiceItemFact() {
     if (!invoice) {
         String errorMessage = UtilProperties.getMessage('AccountingUiLabels', 'AccountingInvoiceDoesNotExists', parameters.locale)
         logError(errorMessage)
-        return error(errorMessage)
+        fail(errorMessage)
     }
     if (!invoiceItem) {
         String errorMessage = UtilProperties.getMessage('AccountingUiLabels', 'AccountingInvoiceItemDoesNotExists', parameters.locale)
         logError(errorMessage)
-        return error(errorMessage)
+        fail(errorMessage)
     }
 
     if (invoice.invoiceTypeId == 'SALES_INVOICE') {
@@ -174,7 +174,7 @@ Map loadSalesOrderFact() {
     if (!orderHeader) {
         String errorMessage = UtilProperties.getMessage('OrderErrorUiLabels', 'OrderOrderIdDoesNotExists', parameters.locale)
         logError(errorMessage)
-        return error(errorMessage)
+        fail(errorMessage)
     }
     if (orderHeader.orderTypeId == 'SALES_ORDER') {
         if (orderHeader.statusId == 'ORDER_APPROVED') {
@@ -213,12 +213,12 @@ Map loadSalesOrderItemFact() {
     if (!orderHeader) {
         String errorMessage = UtilProperties.getMessage('OrderErrorUiLabels', 'OrderOrderIdDoesNotExists', parameters.locale)
         logError(errorMessage)
-        return error(errorMessage)
+        fail(errorMessage)
     }
     if (!orderItem) {
         String errorMessage = UtilProperties.getMessage('OrderErrorUiLabels', 'OrderOrderItemIdDoesNotExists', parameters.locale)
         logError(errorMessage)
-        return error(errorMessage)
+        fail(errorMessage)
     }
 
     if (orderHeader.statusId == 'ORDER_APPROVED') {

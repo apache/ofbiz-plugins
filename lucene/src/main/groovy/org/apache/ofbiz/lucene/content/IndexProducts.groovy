@@ -33,7 +33,7 @@ if (pi) {
         }
     } catch (Exception e) {
         TransactionUtil.rollback(beganTransaction, e.getMessage(), e)
-        return error(e.getMessage())
+        fail(e.getMessage())
     } finally {
         TransactionUtil.commit(beganTransaction)
     }

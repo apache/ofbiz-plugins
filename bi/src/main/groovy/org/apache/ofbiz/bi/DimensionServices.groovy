@@ -78,9 +78,7 @@ Map loadCurrencyDimension() {
 
 Map prepareProductDimensionData() {
     GenericValue product = from('Product').where(parameters).queryOne()
-    if (!product) {
-        return error(label('ProductUiLabels', 'ProductProductNotFoundWithProduct'))
-    }
+    require(product as boolean, label('ProductUiLabels', 'ProductProductNotFoundWithProduct'))
     GenericValue productDimension = makeValue('ProductDimension')
     productDimension.setNonPKFields(product)
     GenericValue productType = select('description').from('ProductType')
