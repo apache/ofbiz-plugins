@@ -57,10 +57,9 @@ Map createProject() {
 
     // create new work effort's e-mail address
     if (parameters.emailAddress) {
-        if (!UtilValidate.isEmail(parameters.emailAddress)) {
-            return error(label('PartyUiLabels', 'PartyEmailAddressNotFormattedCorrectly'))
-        }
-        run service: 'createWorkEffortEmailAddress', with: serviceMap
+        require(UtilValidate.isEmail(parameters.emailAddress) as boolean,
+                label('PartyUiLabels', 'PartyEmailAddressNotFormattedCorrectly'))
+        runAsync service: 'createWorkEffortEmailAddress', with: serviceMap
     }
     return success([projectId: serviceMap.workEffortId, workEffortId: serviceMap.workEffortId])
 }
@@ -86,19 +85,18 @@ Map updateProject() {
 
     // update new work effort's e-mail address
     if (parameters.emailAddress) {
-        if (!UtilValidate.isEmail(parameters.emailAddress)) {
-            return error(label('PartyUiLabels', 'PartyEmailAddressNotFormattedCorrectly'))
-        }
+        require(UtilValidate.isEmail(parameters.emailAddress) as boolean,
+                label('PartyUiLabels', 'PartyEmailAddressNotFormattedCorrectly'))
         GenericValue existEmailAddress = from('WorkEffortContactMechView')
                 .where(workEffortId: parameters.workEffortId,
                         contactMechTypeId: 'EMAIL_ADDRESS')
                 .filterByDate()
                 .queryFirst()
         if (existEmailAddress) {
-            run service: 'updateWorkEffortEmailAddress', with: [*: parameters,
+            runAsync service: 'updateWorkEffortEmailAddress', with: [*: parameters,
                                                                 oldContactMechId: existEmailAddress.contactMechId]
         } else {
-            run service: 'createWorkEffortEmailAddress', with: parameters
+            runAsync service: 'createWorkEffortEmailAddress', with: parameters
         }
     }
     return success()
@@ -452,9 +450,7 @@ Map getProjectIdAndNameFromTask() {
  */
 Map copyProject() {
     GenericValue project = from('WorkEffort').where(workEffortId: parameters.projectId).queryOne()
-    if (!project) {
-        return error(label('ProjectMgrUiLabels', 'ProjectMgrErrorProjectNotFound'))
-    }
+    require(project as boolean, label('ProjectMgrUiLabels', 'ProjectMgrErrorProjectNotFound'))
     parameters.workEffortName = parameters.workEffortName ?: project.workEffortName
     parameters.description = parameters.description ?: project.description
     parameters.workEffortTypeId = parameters.toTemplate == 'Y' ? 'PROJECT_TEMPLATE' : 'PROJECT'
@@ -538,9 +534,7 @@ Map getProject() {
  */
 Map getProjectPhaseList() {
     GenericValue project = from('WorkEffort').where(workEffortId: parameters.projectId).cache().queryOne()
-    if (!project) {
-        return error(label('ProjectMgrUiLabels', 'ProjectMgrErrorProjectNotFound'))
-    }
+    require(project as boolean, label('ProjectMgrUiLabels', 'ProjectMgrErrorProjectNotFound'))
 
     List phaseList = []
     from('WorkEffort')
@@ -567,9 +561,7 @@ Map getProjectPhaseList() {
  */
 Map getProjectTaskList() {
     GenericValue project = from('WorkEffort').where(workEffortId: parameters.projectId).cache().queryOne()
-    if (!project) {
-        return error(label('ProjectMgrUiLabels', 'ProjectMgrErrorProjectNotFound'))
-    }
+    require(project as boolean, label('ProjectMgrUiLabels', 'ProjectMgrErrorProjectNotFound'))
 
     List taskList = []
     from('ProjectAndPhaseAndTask')
@@ -707,9 +699,8 @@ Map createTimeEntryInTimesheet() {
     if (parameters.fromDate && !parameters.timesheetId) {
         GenericValue timesheet = from('Timesheet').where(partyId: parameters.partyId).filterByDate().queryFirst()
         if (timesheet) {
-            if (timesheet.statusId != 'TIMESHEET_IN_PROCESS') {
-                return error(label('ProjectMgrUiLabels', 'ProjectMgrCannotAddToTimesheet'))
-            }
+            require(!(timesheet.statusId != 'TIMESHEET_IN_PROCESS'),
+                    label('ProjectMgrUiLabels', 'ProjectMgrCannotAddToTimesheet'))
             timesheetId = timesheet.timesheetId
         } else {
             // create new timesheet
@@ -741,9 +732,7 @@ Map addProjectTimeToInvoice() {
     boolean createInvoice = !parameters.reCreate
     if (parameters.reCreate == 'Y') {
         GenericValue invoice = from('Invoice').where(parameters).queryOne()
-        if (!invoice) {
-            return error(label('WorkEffortUiLabels', 'WorkEffortTimesheetCannotFindInvoice'))
-        }
+        require(invoice as boolean, label('WorkEffortUiLabels', 'WorkEffortTimesheetCannotFindInvoice'))
         //FIXME <call-simple-method method-name="checkInvoiceStatusInProgress"
         // xml-resource="component://accounting/minilang/invoice/InvoiceServices.xml"/>
         EntityCondition removeCond = EntityCondition.makeCondition('invoiceId', parameters.invoiceId)
@@ -765,9 +754,7 @@ Map addProjectTimeToInvoice() {
             .where(condition)
             .orderBy('workEffortId')
             .queryList()
-    if (!tasks) {
-        return error(label('WorkEffortUiLabels', 'ProjectMgrNoTimeentryItemsFound'))
-    }
+    require(tasks as boolean, label('WorkEffortUiLabels', 'ProjectMgrNoTimeentryItemsFound'))
     String invoiceId = parameters.invoiceId
     if (createInvoice) {
         Map serviceResult = run service: 'addWorkEffortTimeToNewInvoice', with: [*: parameters,

@@ -24,9 +24,7 @@ Map exampleGenericPermission() {
     Map result = success()
     String mainAction = parameters.mainAction
 
-    if (!mainAction) {
-        return error(UtilProperties.getMessage('ExampleUiLabels', 'ExamplePermissionMainActionAttributeMissing', locale))
-    }
+    require(mainAction as boolean, 'ExampleUiLabels', 'ExamplePermissionMainActionAttributeMissing')
 
     if (security.hasEntityPermission('EXAMPLE', '_' + mainAction, userLogin) || security.hasEntityPermission('EXAMPLE', '_ADMIN', userLogin)) {
         result.hasPermission = true
