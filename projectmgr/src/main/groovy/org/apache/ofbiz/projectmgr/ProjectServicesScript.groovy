@@ -699,7 +699,7 @@ Map createTimeEntryInTimesheet() {
     if (parameters.fromDate && !parameters.timesheetId) {
         GenericValue timesheet = from('Timesheet').where(partyId: parameters.partyId).filterByDate().queryFirst()
         if (timesheet) {
-            require(!(timesheet.statusId != 'TIMESHEET_IN_PROCESS'),
+            require(timesheet.statusId == 'TIMESHEET_IN_PROCESS',
                     label('ProjectMgrUiLabels', 'ProjectMgrCannotAddToTimesheet'))
             timesheetId = timesheet.timesheetId
         } else {
