@@ -109,6 +109,42 @@ class ExampleJupiterTests implements JupiterTestHelper {
         assert example.statusId == updatedStatusId
     }
 
+    @Test
+    @Order(5)
+    void shouldExpirePreviousStatusOnCreateExampleStatus() {
+        GenericValue userLogin = delegator.findOne('UserLogin', [userLoginId: 'system'], false)
+
+        Map<String, Object> createResult = dispatcher.runSync('createExample', [
+                exampleTypeId: 'CONTRIVED',
+                exampleName: 'Test Example - Status Expiry',
+                statusId: 'EXST_IN_DESIGN',
+                userLogin: userLogin
+        ])
+        assert ServiceUtil.isSuccess(createResult)
+        String exampleId = createResult.exampleId
+
+        // createExample's own "return" ECA already calls createExampleStatus once, seeding the
+        // first ExampleStatus row -- so the explicit call below is the second one, and it's this
+        // conversion's ifExists()/first()/orderBy() that must find and expire that ECA-created row.
+        List<GenericValue> afterCreate = from('ExampleStatus').where('exampleId', exampleId).queryList()
+        assert afterCreate.size() == 1
+        assert afterCreate[0].statusEndDate == null
+
+        Map<String, Object> secondStatusResult = dispatcher.runSync('createExampleStatus', [
+                exampleId: exampleId,
+                statusId: 'EXST_DEFINED',
+                userLogin: userLogin
+        ])
+        assert ServiceUtil.isSuccess(secondStatusResult)
+
+        List<GenericValue> afterSecond = from('ExampleStatus').where('exampleId', exampleId)
+                .orderBy('statusDate').queryList()
+        assert afterSecond.size() == 2
+        assert afterSecond[0].statusEndDate != null
+        assert afterSecond[1].statusEndDate == null
+        assert afterSecond[1].statusId == 'EXST_DEFINED'
+    }
+
     @ParameterizedTest(name = '[{index}] exampleTypeId={0}')
     @Order(2)
     @CsvSource([

@@ -71,15 +71,8 @@ Map createExampleStatus() {
     nowTimestamp = UtilDateTime.nowTimestamp()
 
     // find the most recent status record and set the statusEndDate
-    GenericValue oldExampleStatus = from('ExampleStatus')
-            .where('exampleId', parameters.exampleId)
-            .orderBy('-statusDate')
-            .queryFirst()
-
-    if (oldExampleStatus) {
-        oldExampleStatus.statusEndDate = nowTimestamp
-        oldExampleStatus.store()
-    }
+    update('ExampleStatus').where([exampleId: parameters.exampleId])
+            .orderBy('-statusDate').first().ifExists().set([statusEndDate: nowTimestamp])
 
     GenericValue newEntity = makeValue('ExampleStatus')
     newEntity.setPKFields(parameters)
