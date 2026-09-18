@@ -1,0 +1,125 @@
+# manufacturing-demo manifest — a structured map of the demo's contents.
+# Source of truth for entities is data/ManufacturingMrpDemoData.xml; this file is a derived map
+# kept in sync with it. Not loaded by OFBiz.
+component: manufacturing-demo
+reader: manufacturingDemo
+scenario: Skateboard factory (standing manufacturing configuration)
+source: Swapnil Shah (Apache OFBiz cwiki, Manufacturing space)
+scope: "slice 1 — standing config (no inventory, forecasts, MRP runs or production costing results)"
+selfContained: true   # brings its own company + security grants; needs no stock 'demo' data
+loadCommand: './gradlew "ofbiz --load-data readers=seed,seed-initial,manufacturingDemo"'
+
+company:
+  partyId: Company
+  roles: [INTERNAL_ORGANIZATIO, MANUFACTURER]
+login:
+  userLoginId: admin
+  group: FULLADMIN
+  grantedPermissions: [OFBTOOLS_VIEW, CATALOG_VIEW, CATALOG_ADMIN, MANUFACTURING_VIEW, MANUFACTURING_CREATE, MANUFACTURING_UPDATE, MANUFACTURING_DELETE, MANUFACTURING_ADMIN, WORKEFFORTMGR_ADMIN, ASSETMAINT_ADMIN]
+  note: "Focused manufacturing-capable admin login and security grants without an embedded password; set the password using standard OFBiz admin-user setup for the target environment."
+facility:
+  id: MFG_PLANT
+  type: PLANT
+  name: Skateboard Manufacturing Plant
+
+products:
+  - { id: DCGAPSOSR12,     type: FINISHED_GOOD, name: "Skateboard Deck FG",           bomLevel: 0 }
+  - { id: DCGAPSOSR13,     type: FINISHED_GOOD, name: "Skateboard Deck FG Alt",       bomLevel: 0 }
+  - { id: DSK15144-00,     type: SUBASSEMBLY,   name: "Skateboard Deck Sub Assembly", bomLevel: 1 }
+  - { id: DRGAMBSK8II,     type: RAW_MATERIAL,  name: "Glue",                         bomLevel: 2 }
+  - { id: DRVM52105036FAS, type: RAW_MATERIAL,  name: "veneer maple face",            bomLevel: 2 }
+  - { id: DRVM60361050XA,  type: RAW_MATERIAL,  name: "veneer maple x ply",           bomLevel: 2 }
+  - { id: DRVM62105036CA,  type: RAW_MATERIAL,  name: "veneer maple core",            bomLevel: 2 }
+  - { id: DCSPPUSA,        type: RAW_MATERIAL,  name: "sticker",                      bomLevel: 1 }
+  - { id: DRSASOCWC2,      type: RAW_MATERIAL,  name: "warranty card",                bomLevel: 1 }
+  - { id: DRTGPSOSR12,     type: RAW_MATERIAL,  name: "Transfer",                     bomLevel: 1 }
+
+bomLines:
+  - { parent: DSK15144-00, component: DRGAMBSK8II,     qty: 0.83 }
+  - { parent: DSK15144-00, component: DRVM52105036FAS, qty: 2 }
+  - { parent: DSK15144-00, component: DRVM60361050XA,  qty: 2 }
+  - { parent: DSK15144-00, component: DRVM62105036CA,  qty: 3 }
+  - { parent: DCGAPSOSR12, component: DCSPPUSA,        qty: 1 }
+  - { parent: DCGAPSOSR12, component: DRSASOCWC2,      qty: 1 }
+  - { parent: DCGAPSOSR12, component: DRTGPSOSR12,     qty: 1 }
+  - { parent: DCGAPSOSR12, component: DSK15144-00,     qty: 1 }
+
+machines:
+  - { id: AMC, calendar: CAL_AMC, locatedAt: MFG_PLANT }
+  - { id: LAM, calendar: CAL_LAM, locatedAt: MFG_PLANT }
+
+operators:
+  - { id: SK8_ASM_OPERATOR, role: WORKER, name: "Skateboard Operator" }
+
+costCalcs:
+  - { id: SK8_TASK_COST_CALC, description: "Skateboard routing labor standard", currency: USD }
+
+calendars:
+  - { id: CAL_AMC, week: CW_AMC_STD, pattern: "5-day work week" }
+  - { id: CAL_LAM, week: CW_LAM_STD, pattern: "3-day work week (Mon/Wed/Fri)" }
+
+routings:
+  - id: MANUF10169
+    product: DSK15144-00
+    tasks:
+      - { id: MANUF20169, name: "LAM",        machine: LAM,  estimatedMs: 300000, seq: 10 }
+      - { id: MANUF10170, name: "Shape Deck", machine: null, estimatedMs: null,   seq: 20 }
+  - id: MANUF10165
+    product: DCGAPSOSR12
+    tasks:
+      - { id: MANUF10171, name: "Apply Transfer to deck", machine: AMC, estimatedMs: 300000, seq: 10 }
+  - id: SK8_ALT_ROUTING
+    product: DCGAPSOSR13
+    tasks:
+      - { id: SK8_TRANSFER_TASK, name: "Apply Transfer to Alt Deck", machine: AMC, estimatedMs: 420000, seq: 10 }
+
+routingOperationReferences:
+  costRates:
+    - { task: SK8_TRANSFER_TASK, costType: EST_STD_LABOR_COST, costCalc: SK8_TASK_COST_CALC }
+  outputs:
+    - { task: SK8_TRANSFER_TASK, product: DCGAPSOSR13, type: PRUNT_PROD_DELIV }
+  tools:
+    - { task: SK8_TRANSFER_TASK, fixedAssetType: GROUP_EQUIPMENT }
+  assignments:
+    - { task: SK8_TRANSFER_TASK, party: SK8_ASM_OPERATOR, role: WORKER }
+
+suppliers:
+  - { id: SUP_001, name: "Maplewood Veneer Supply" }
+  - { id: SUP_002, name: "Adhesive Solutions Inc." }
+  - { id: SUP_003, name: "Sticker Print Co." }
+  - { id: SUP_004, name: "Universal Bearings Ltd." }
+  - { id: SUP_005, name: "Packaging Solutions LLC" }
+
+supplierProducts:
+  - { product: DRGAMBSK8II,    supplier: SUP_002, lastPrice: 22.50, minOrderQty: 50 }
+  - { product: DRVM60361050XA, supplier: SUP_001, lastPrice: 18.75, minOrderQty: 100 }
+  - { product: DCSPPUSA,       supplier: SUP_003, lastPrice: 0.35,  minOrderQty: 500 }
+
+quickstartSteps:
+  - { action: "Get OFBiz and plugins",            command: "git clone .../ofbiz-framework.git && ./gradlew pullAllPluginsSource", expectedResult: "plugins/manufacturing-demo/ exists" }
+  - { action: "Load demo data",                   command: './gradlew "ofbiz --load-data readers=seed,seed-initial,manufacturingDemo"', expectedResult: "load completes; Company + admin login + MFG_PLANT exist" }
+  - { action: "Set admin password and start OFBiz", command: "./gradlew ofbiz", expectedResult: "server reachable; admin can log in after password setup" }
+  - { action: "See company and plant",            screen: "Manufacturing/Catalog app", expectedResult: "MFG_PLANT and 10 products visible" }
+  - { action: "View multi-level BOM",             screen: "BOM for DCGAPSOSR12", expectedResult: "two-tier BOM (sub-assembly + finishing items)" }
+  - { action: "View routing",                     screen: "Routing for DCGAPSOSR12", expectedResult: "tasks on machines AMC/LAM" }
+  - { action: "Create standalone production run", screen: "Production run for DCGAPSOSR12 at MFG_PLANT", expectedResult: "run created; operations + component requirements generated" }
+  - { action: "Confirm/schedule run",             screen: "Production run detail", expectedResult: "status transitions; tasks + material requirements visible" }
+
+verificationAnchors:
+  totalValues: 115  # rows the manufacturingDemo reader loads (EntitySaxReader "Finished N values")
+  products: 10
+  bomLines: 8
+  routings: 3
+  routingTasks: 4
+  machines: 2
+  operators: 1
+  costCalcs: 1
+  routingCostRates: 1
+  routingOutputs: 1
+  routingToolStandards: 1
+  routingOperatorAssignments: 1
+  calendars: 2
+  suppliers: 5
+  supplierProducts: 3
+  securityGroupPermissions: 10  # FULLADMIN grants for the focused manufacturing-capable admin
+  userLogins: 1
