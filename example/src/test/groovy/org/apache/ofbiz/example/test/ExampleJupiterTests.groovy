@@ -48,6 +48,8 @@ import org.junit.jupiter.params.provider.MethodSource
 @JunitJupiterTest
 class ExampleJupiterTests implements JupiterTestHelper {
 
+    private static final String STATUS_DEFINED = 'EXST_DEFINED'
+
     @Test
     @Order(1)
     void shouldCreateExample() {
@@ -91,7 +93,7 @@ class ExampleJupiterTests implements JupiterTestHelper {
         String exampleId = createResult.exampleId
 
         String updatedExampleName = testParams.updatedExampleName ?: 'Test Example - After Update'
-        String updatedStatusId = testParams.updatedStatusId ?: 'EXST_DEFINED'
+        String updatedStatusId = testParams.updatedStatusId ?: STATUS_DEFINED
 
         Map<String, Object> updateResult = dispatcher.runSync('updateExample', [
                 exampleId: exampleId,
@@ -132,7 +134,7 @@ class ExampleJupiterTests implements JupiterTestHelper {
 
         Map<String, Object> secondStatusResult = dispatcher.runSync('createExampleStatus', [
                 exampleId: exampleId,
-                statusId: 'EXST_DEFINED',
+                statusId: STATUS_DEFINED,
                 userLogin: userLogin
         ])
         assert ServiceUtil.isSuccess(secondStatusResult)
@@ -142,7 +144,7 @@ class ExampleJupiterTests implements JupiterTestHelper {
         assert afterSecond.size() == 2
         assert afterSecond[0].statusEndDate != null
         assert afterSecond[1].statusEndDate == null
-        assert afterSecond[1].statusId == 'EXST_DEFINED'
+        assert afterSecond[1].statusId == STATUS_DEFINED
     }
 
     @ParameterizedTest(name = '[{index}] exampleTypeId={0}')
@@ -231,7 +233,7 @@ class ExampleJupiterTests implements JupiterTestHelper {
     private static List<Arguments> exampleCreationCases() {
         [
                 Arguments.of('real-world-in-design', 'REAL_WORLD', 'EXST_IN_DESIGN', 'Test Example - Real World', true),
-                Arguments.of('made-up-defined', 'MADE_UP', 'EXST_DEFINED', 'Test Example - Made Up', true),
+                Arguments.of('made-up-defined', 'MADE_UP', STATUS_DEFINED, 'Test Example - Made Up', true),
                 Arguments.of('contrived-approved', 'CONTRIVED', 'EXST_APPROVED', 'Test Example - Contrived', true),
                 Arguments.of('inspired-implemented', 'INSPIRED', 'EXST_IMPLEMENTED', 'Test Example - Inspired', true),
                 Arguments.of('missing-example-type-fails', null, 'EXST_IN_DESIGN', 'Test Example - Missing Type', false),
