@@ -269,7 +269,7 @@ under the License.
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="invoiceId" type="String" mode="INOUT" optional="true"/>
-        <attribute name="reCreate" type="String" mode="IN" default-value="Y"/>
+        <attribute name="reCreate" type="String" mode="IN" optional="true"/>
     </service>
     <service name="addProjectTimeToInvoice" engine="groovy" auth="true"
         location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/ProjectServicesScript.groovy" invoke="addProjectTimeToInvoice">
@@ -278,6 +278,7 @@ under the License.
         <attribute name="invoiceId" type="String" mode="IN"/>
         <attribute name="billedPartyId" type="String" mode="IN"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="reCreate" type="String" mode="IN" optional="true" default-value="N"/>
     </service>
     <service name="addValidationPartiesToTask" engine="groovy" auth="true"
         location="component://projectmgr/src/main/groovy/org/apache/ofbiz/projectmgr/ProjectServicesScript.groovy" invoke="addValidationPartiesToTask">
