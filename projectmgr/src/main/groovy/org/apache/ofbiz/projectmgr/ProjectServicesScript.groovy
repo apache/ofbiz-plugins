@@ -183,7 +183,13 @@ Map updateTaskAssigment() {
     if ((parameters.newPartyId && parameters.partyId != parameters.newPartyId)
             || (parameters.newRoleTypeId && parameters.roleTypeId != parameters.newRoleTypeId)) {
         // roleType and/or partyId changed: end old and create new assign
-        run service: 'expireWorkEffortPartyAssignment', with: parameters
+        GenericValue oldAssignmentPk = makeValue('WorkEffortPartyAssignment')
+        oldAssignmentPk.setPKFields(parameters)
+        update('WorkEffortPartyAssignment').where(oldAssignmentPk).set([
+                thruDate: UtilDateTime.nowTimestamp(),
+                delegateReasonEnumId: parameters.delegateReasonEnumId,
+                comments: parameters.comments,
+                assignedByUserLoginId: userLogin.userLoginId])
         Map serviceResult = run service: 'createWorkEffortPartyAssignment', with: [*: parameters,
                                                                                    partyId: parameters.newPartyId,
                                                                                    statusId: 'PAS_ASSIGNED',
@@ -191,16 +197,19 @@ Map updateTaskAssigment() {
         fromDate = serviceResult.fromDate
     } else {
         GenericValue partyAssignment = from('WorkEffortAndPartyAssign').where(parameters).queryOne()
+        boolean markComplete = false
         if (partyAssignment) {
             if (parameters.statusId == 'PAS_ENDED') {
                 run service: 'expireWorkEffortPartyAssignment', with: parameters
+                parameters.statusId = null
             }
-            if (parameters.statusId == 'PAS_COMPLETED') {
-                return updateTaskStatusToComplete(parameters.workEffortId)
-            }
+            markComplete = parameters.statusId == 'PAS_COMPLETED'
         }
         String serviceName = partyAssignment ? 'updateWorkEffortPartyAssignment' : 'assignPartyToWorkEffort'
         run service: serviceName, with: parameters
+        if (markComplete) {
+            return updateTaskStatusToComplete(parameters.workEffortId)
+        }
     }
     return success([workEffortId: parameters.workEffortId, fromDate: fromDate])
 }
@@ -217,7 +226,7 @@ Map updateTaskStatusToComplete(String workEffortId) {
     boolean canComplete = from('WorkEffortPartyAssignment')
             .where(condition)
             .filterByDate()
-            .queryOne() == 0
+            .queryCount() == 0
     if (canComplete) {
         run service: 'updateWorkEffort', with: [
                 workEffortId: workEffortId,
@@ -643,9 +652,9 @@ Map getProjectsByParties() {
         }
         // get the planned/actual hours
         projectParty.putAll(getHours(task, task, task.partyId))
-        if (!projectParty) {
-            projectParties << projectParty
-        }
+    }
+    if (projectParty) {
+        projectParties << projectParty
     }
 
     return success([projectParties: projectParties])
@@ -692,7 +701,7 @@ Map getTasksByParties() {
                 // get the planned hours
                 taskParty.putAll(getHours(taskParty, it.getRelatedOne('WorkEffort', true), it.partyId))
             }
-    if (taskParties) {
+    if (taskParty) {
         taskParties << taskParty
     }
     return success([taskParties: taskParties])
@@ -719,17 +728,21 @@ Map createTimeEntryInTimesheet() {
         }
     }
     // get role for this party in this project
-    if (parameters.roleTypeId) {
+    if (!parameters.roleTypeId) {
         GenericValue taskRole = from('ProjectPartyAndPhaseAndTask')
                 .where(partyId: parameters.partyId,
                         workEffortId: parameters.workEffortId)
+                .filterByDate()
                 .queryFirst()
-        run service: 'assignPartyToWorkEffort', with: [*: taskRole.getAllFields(),
-                                                       statusId: 'PAS_ASSIGNED']
+        if (taskRole) {
+            parameters.roleTypeId = taskRole.roleTypeId
+            run service: 'assignPartyToWorkEffort', with: [*: taskRole.getAllFields(),
+                                                           statusId: 'PAS_ASSIGNED']
+        }
     }
     Map serviceResult = run service: 'createTimeEntry', with: [*: parameters,
                                                                timesheetId: timesheetId]
-    return success([fromDate: serviceResult.fromDate, timesheetId: timesheetId])
+    return success([timeEntryId: serviceResult.timeEntryId, fromDate: serviceResult.fromDate, timesheetId: timesheetId])
 }
 
 /**
@@ -751,7 +764,7 @@ Map addProjectTimeToInvoice() {
                 [invoiceId: null, invoiceItemSeqId: null],
                 removeCond)
         delegator.removeByCondition('InvoiceItem', removeCond)
-        createInvoice = true //do not create, only add
+        createInvoice = false //do not create, only add
     }
     EntityCondition condition = new EntityConditionBuilder().AND {
         EQUALS(projectId: parameters.projectId)
@@ -795,8 +808,9 @@ Map addValidationPartiesToTask() {
         NOT_EQUAL(statusId: 'PAS_COMPLETED')
         NOT_EQUAL(partyId: parameters.partyId)
     }
-    if (from('addValidationPartiesToTask')
+    if (from('WorkEffortPartyAssignment')
             .where(condition)
+            .filterByDate()
             .queryCount() == 0) {
         Map serviceResult = run service: 'getProjectIdAndNameFromTask', with: [taskId: parameters.workEffortId]
         String projectId = serviceResult.projectId
@@ -867,7 +881,7 @@ private Map combineActualHours(Map highInfo, String partyId) {
             .queryFirst()
     // not used ratedValue.totalRatedHours  because not works, reason seem to be totalRatedHours is a calculated field ???
     highInfo.actualHours = (ratedValue.totalRatedHours ?: 0) + (originalHours ?: 0)
-    highInfo.originalActualHours = originalHours ?: 0 + (ratedValue.totalOriginalHours ?: 0)
+    highInfo.originalActualHours = (originalHours ?: 0) + (ratedValue.totalOriginalHours ?: 0)
 
     // do the same but for non-billed hours
     // first get not rated hours
@@ -952,17 +966,18 @@ private Map getHours(Map highInfo, Map lowInfo, String partyId) {
 
                     // check if only a part of the registered hours need to be taken into account
                     BigDecimal originalActualHours = it.hours
+                    BigDecimal actualHours = it.hours
                     GenericValue partyRate = from('PartyRate')
                             .where(partyId: timesheet.partyId,
                                     rateTypeId: it.rateTypeId)
                             .filterByDate(it.fromDate)
                             .queryFirst()
-                    if (partyRate.percentageUsed) {
-                        it.actualHours = (it.actualHours * partyRate.percentageUsed) / 100
+                    if (partyRate?.percentageUsed) {
+                        actualHours = (actualHours * partyRate.percentageUsed) / 100
                     }
                     if (partyId && timesheet.partyId == partyId) {
                         highInfo.originalActualHours = originalActualHours + (highInfo.originalActualHours ?: 0)
-                        highInfo.actualHours = it.actualHours + (highInfo.actualHours ?: 0)
+                        highInfo.actualHours = actualHours + (highInfo.actualHours ?: 0)
                         if (!it.invoiceId) {
                             highInfo.actualNonBilledHours = it.hours + (highInfo.actualNonBilledHours ?: 0)
                         }
