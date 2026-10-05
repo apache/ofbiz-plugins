@@ -36,7 +36,6 @@ under the License.
     <handler name="rome" type="request" class="org.apache.ofbiz.webapp.event.RomeEventHandler"/>
 
     <handler name="jsp" type="view" class="org.apache.ofbiz.webapp.view.JspViewHandler"/>
-    <handler name="http" type="view" class="org.apache.ofbiz.webapp.view.HttpViewHandler"/>
     <handler name="screen" type="view" class="org.apache.ofbiz.widget.renderer.macro.MacroScreenViewHandler"/>
     <handler name="simplecontent" type="view" class="org.apache.ofbiz.content.view.SimpleContentViewHandler"/>
     <handler name="screenfop" type="view" class="org.apache.ofbiz.widget.renderer.fo.ScreenFopViewHandler"/>
