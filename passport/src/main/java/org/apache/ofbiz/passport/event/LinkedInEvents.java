@@ -31,7 +31,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.lang.RandomStringUtils;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -45,6 +44,7 @@ import org.apache.ofbiz.base.conversion.JSONConverters.JSONToMap;
 import org.apache.ofbiz.base.crypto.HashCrypt;
 import org.apache.ofbiz.base.lang.JSON;
 import org.apache.ofbiz.base.util.Debug;
+import org.apache.ofbiz.base.util.StringUtil;
 import org.apache.ofbiz.base.util.UtilHttp;
 import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.base.util.UtilProperties;
@@ -55,7 +55,6 @@ import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.util.EntityQuery;
-import org.apache.ofbiz.entity.util.EntityUtilProperties;
 import org.apache.ofbiz.passport.user.LinkedInAuthenticator;
 import org.apache.ofbiz.passport.util.PassportUtil;
 import org.apache.ofbiz.product.store.ProductStoreWorker;
@@ -80,7 +79,7 @@ public class LinkedInEvents {
     public static final String ENV_PREFIX = UtilProperties.getPropertyValue(LinkedInAuthenticator.getPROPS(), "linkedin.env.prefix", "test");
 
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
-    private static final String ALPHANUMERIC = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private static final int AUTO_PASSWORD_LENGTH = 16;
 
     /**
      * Redirect to LinkedIn login page.
@@ -267,9 +266,7 @@ public class LinkedInEvents {
                 String userLoginId = authn.createUser(userInfo);
                 userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", userLoginId).queryOne();
             }
-            String autoPassword = RandomStringUtils.random(
-                    EntityUtilProperties.getPropertyAsInteger("security", "password.length.min", 5), 0, 0, true, true,
-                    ALPHANUMERIC.toCharArray(), SECURE_RANDOM);
+            String autoPassword = StringUtil.randomString(AUTO_PASSWORD_LENGTH, StringUtil.ALPHANUMERIC_CHARS);
             boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security", "password.encrypt"));
             userLogin.set("currentPassword", useEncryption ? HashCrypt.digestHash(LoginServices.getHashType(), null, autoPassword) : autoPassword);
             userLogin.store();
