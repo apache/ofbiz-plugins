@@ -84,7 +84,7 @@ under the License.
             <select name="maritalStatusTypeId" class="form-control custom-select">
               <option value="">${uiLabelMap.CommonSelectOne}</option>
               <#list maritalStatusTypes as maritalStatusType>
-                <option <#if maritalStatusType.maritalStatusTypeId == personData.maritalStatusTypeId!>selected="selected"</#if> value="${maritalStatusType.maritalStatusTypeId!}">${maritalStatusType.description!}</option>
+                <option <#if maritalStatusType.maritalStatusTypeId == (personData.maritalStatusTypeId)!>selected="selected"</#if> value="${maritalStatusType.maritalStatusTypeId!}">${(maritalStatusType.description)!maritalStatusType.maritalStatusTypeId}</option>
               </#list>
             </select>
           </div>

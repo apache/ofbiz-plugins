@@ -92,7 +92,7 @@ under the License.
           <#if person.maritalStatusTypeId?has_content>
             <#assign maritalStatus = EntityQuery.use(delegator).from("MaritalStatusType").where("maritalStatusTypeId", person.maritalStatusTypeId!).cache(true).queryOne()!>
             <dt class="col-lg-2">${uiLabelMap.PartyMaritalStatus}</dt>
-            <dd class="col-lg-10">${maritalStatus.description!person.maritalStatusTypeId}</dd>
+            <dd class="col-lg-10">${(maritalStatus.description)!person.maritalStatusTypeId}</dd>
           </#if>
         </dl>
         </div>
