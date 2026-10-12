@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://ofbiz.apache.org/Site-Conf" xsi:schemaLocation="http://ofbiz.apache.org/Site-Conf http://ofbiz.apache.org/dtds/site-conf.xsd">
+    <!-- The controller elements that are common to all OFBiz components
+         can be found in the following xml file. A component can override the
+         elements found in the common-controller.xml file. -->
+    <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
+    <include location="component://vuejs/webcommon/vuejs-controller.xml"/>
+    <include location="component://examplefjs/widget/ExampleWidgets.xml"/>
+    <include location="component://examplefjs/widget/ExampleItemWidgets.xml"/>
+    <include location="component://examplefjs/widget/ExampleFeatureWidgets.xml"/>
+    <include location="component://examplefjs/widget/ExampleFeatureApplWidgets.xml"/>
+
+    <description>ExampleFjs Component Site Configuration File</description>
+
+    <!-- Request Mappings -->
+    <request-map uri="findExample"><security https="true" auth="true"/><response name="success" type="view" value="FindExample"/></request-map>
+    <request-map uri="ListExampleExport"><security https="true" auth="true"/><response name="success" type="view" value="ListExampleExport"/></request-map>
+
+<!-- Begin Test URI to test service done in groovy (training purpose) -->
+    <request-map uri="createExampleG">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createExampleG"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+        <response name="fail" type="request" value="json"/>
+    </request-map>
+    <request-map uri="deleteExampleG">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteExampleG"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+<!-- End Test URI to test service done in minlang and groovy -->
+
+    <request-map uri="updateExample">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateExample"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="example/{exampleId}" method="put">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateExample"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="createExampleItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createExampleItem"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="updateExampleItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateExampleItem"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="deleteExampleItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteExampleItem"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
+    <request-map uri="editExampleFeatureAppl"><security https="true" auth="true"/><response name="success" type="view" value="editExampleFeatureAppl"/></request-map>
+    <request-map uri="createExampleFeatureAppl" method="post">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createExampleFeatureAppl"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="updateExampleFeatureAppl" method="post">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateExampleFeatureAppl"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="deleteExampleFeatureAppl" method="post">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteExampleFeatureAppl"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
+    <request-map uri="iconsList"><security https="true" auth="true"/><response name="success" type="view" value="iconsList"/></request-map>
+
+    <!-- Begin only for debugging purpose  -->
+    <request-map uri="showPortlet">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="showPortlet" />
+        <response name="error" type="view" value="showPortlet" />
+    </request-map>
+    <request-map uri="showPortletWD">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="showPortletWD" />
+        <response name="error" type="view" value="showPortletWD" />
+    </request-map>
+    <!-- End only for debugging purpose  -->
+
+    <!--Begin edit screen call in the portlet-->
+    <request-map uri="editExample">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="editExample" />
+        <response name="error" type="view" value="editExample" />
+    </request-map>
+    <request-map uri="editExampleItem">
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="editExampleItem" />
+        <response name="error" type="view" value="editExampleItem" />
+    </request-map>
+
+    <request-map uri="LookupExample"><security https="true" auth="true"/><response name="success" type="view" value="LookupExample"/></request-map>
+
+    <!-- View Mappings -->
+    <view-map name="main"              type="screenfrontjs" page="component://examplefjs/widget/CommonScreens.xml#mainfjs"/>
+    <view-map name="applicationMenu"   type="screenfrontjs" page="component://examplefjs/widget/CommonScreens.xml#applicationMenu"/>
+
+    <view-map name="FindExample"       type="screenfrontjs" page="component://examplefjs/widget/ExampleScreens.xml#FindExample"/>
+    <view-map name="ListExampleExport" type="screenxls"     page="component://example/widget/example/ExampleScreens.xml#ListExampleExport" content-type="application/vnd.ms-excel"/>
+
+    <view-map name="showExampleDetail" type="screenfrontjs" page="component://examplefjs/widget/ExampleFjsScreens.xml#ShowExampleDetail"/>
+    <view-map name="editExample"       type="screenfrontjs" page="component://examplefjs/widget/ExampleFjsScreens.xml#EditExample"/>
+    <view-map name="editExampleItem"   type="screenfrontjs" page="component://examplefjs/widget/ExampleFjsScreens.xml#EditExampleItem"/>
+    <view-map name="editExampleFeatureAppl" type="screenfrontjs" page="component://examplefjs/widget/ExampleFjsScreens.xml#EditExampleFeatureAppl"/>
+    <view-map name="iconsList"         type="screenfrontjs" page="component://examplefjs/widget/ExampleScreens.xml#IconsList"/>
+    <view-map name="LookupExample"     type="screenfrontjs" page="component://examplefjs/widget/ExampleFjsScreens.xml#LookupExample"/>
+
+</site-conf>

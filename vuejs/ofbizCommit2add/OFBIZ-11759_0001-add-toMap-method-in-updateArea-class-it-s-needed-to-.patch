@@ -1,0 +1,33 @@
+From f3982d88b3f77e1f7af66beb31f8e648b3b99e75 Mon Sep 17 00:00:00 2001
+From: holivier <holivier@apache.org>
+Date: Mon, 25 May 2020 17:50:22 +0200
+Subject: [PATCH 08/22] Improved: add toMap() method in updateArea class, it's needed to
+ send a updateArea list in json format (OFBIZ-11759)
+
+---
+ .../src/main/java/org/apache/ofbiz/widget/model/ModelForm.java   | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java
+index b2f01f93b3..0e3b609efd 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java
+@@ -1849,6 +1849,15 @@ public abstract class ModelForm extends ModelWidget {
+         public List<CommonWidgetModels.Parameter> getParameterList() {
+             return parameterList;
+         }
++
++        public Map<String, Object> toMap(Map<String, Object> context) {
++            Map<String, Object> map = new HashMap<>();
++            map.put("eventType",    this.getEventType());
++            map.put("areaId",       FlexibleStringExpander.expandString(this.getAreaId(), context));
++            map.put("areaTarget",   FlexibleStringExpander.expandString(this.getAreaTarget(), context));
++            map.put("parameterMap", this.getParameterMap(context));
++            return map;
++        }
+     }
+ 
+     static protected List<UpdateArea> getValidUpdateAreas(List<UpdateArea> updateAreas, Map<String, Object> context) {
+-- 
+2.11.0
+

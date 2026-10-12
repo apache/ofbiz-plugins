@@ -1,0 +1,409 @@
+
+[[_portlet_party_pt]]
+= Catégorie Party_Profile (avec portlet type).
+
+Cette catégorie de portlet regroupe toutes les portlets de base du composant Party (acteurs) utilisant des portlets type et un fonctionnement avec des requêtes ajax (show-portlet).
+
+[[_portlet_selectparty]]
+== Sélectionner un acteur.
+
+SelectParty : Sélection de l'acteur pour lequel on souhaite l'affichage de la page portail détail
+
+Cette portlet est utiliser pour sélectionner-choisir un acteur, pour afficher la page portail en cours.
+
+=== Les paramètre de la Portlet
+
+* uri pour le lookup: la valeur par défault est lookupParty, ce paramètre est utile pour les pages  portail à usage d'un "groupe" d'acteur, par exemple avec un filtre sur le type d'acteur, son role, ....  Demander à un consultant technique pour avoir la liste de lookup existant ou pour en définir un nouveau
+
+
+
+=== Règles de Securité
+
+* aucune, (celles du composant)
+
+
+[[_portlet_partyinfo]]
+== Descriptif d'un acteur
+
+PartInfo : Informations générales d'un acteur, une personne ou un groupe, affiche et édite
+
+Cette portlet affiche un résumé des informations de l'acteur (différent selon le type de l'acteur Personne ou Groupe d'acteur). Si une image a été associée avec cet acteur avec le type "URL vers un logo" alors elle apparait (il semble y  avoir un bug, il faut avoir une connection active au composant content pour que l'image s'affiche). 
+
+Le Bouton édition permet de voir l'ensemble des informations et au besoin de les modifier.
+
+=== Les paramètre de la Portlet
+
+* Le show screenlet menu Standard, il permet de cacher le menu de la portlet (refresh et édition)
+* Le show edit menu Standard: s'il est positionné à N alors le boutton "édition" n'apparait pas
+
+
+
+=== Règles de Securité
+
+* aucune au niveau de la portlet, uniquement celle au niveau du service de mise à jours de l'acteur  (et celles du composant)
+
+
+[[_portlet_partyuserlogins]]
+== Liste des logins d'un acteur
+
+PartyUserLogins : Liste et gestion des utilisateurs de connexion d'un acteur.
+Permet les modifications des informations de sécurités (mot de passe, groupe de sécurité, ...)
+
+Cette portlet liste tous les utilisateurs de connexion associés à un acteur.
+La plupart du temps, il n'y a qu'un utilisateur de connexion par acteur, mais pour les acteurs de type société, il peut être utile de pouvoir créer de multiple utilisateurs, plutot que de créer des acteurs pour chaque employé(e).
+
+Un utilisateur de connexion permet de se connecter à l'application OFBiz.
+Les groupes de sécurité auxquels il est associé déterminent les écrans qu'il peut voir et les fonctions qu'il peux excécuter.
+
+=== Limitations ou futures fonctionnalitées
+
+* Seul les 5 premiers utilisateur de connexion sont affichés
+
+
+=== Les paramètres de la Portlet
+
+* Le show screenlet menu Standard, il permet de cacher le menu de la portlet (refresh et ajout d'un utilisateur de connexion)
+* Le show edit menu Standard: si il est positionné à N alors le bouton "ajout d'un utilisateur de connexion" n'apparait pas
+* security Group Id : Si un groupe de sécurité est indiqué alors le bouton "ajout d'un utilisateur de connexion" associe ce  groupe de sécurité à l'utilisateur de connexion juste après sa création
+
+
+=== Règles de Securité
+
+* SECURITY_VIEW est nécessaire pour voir la liste des groupes de sécurité
+* PARTYMGR_CREATE est nécessaire pour avoir le bouton "ajout d'un utilisateur de connexion",  ainsi que SECURITY_CREATE si il y a un ajout de groupe de securité en automatique (cf paramètre Security Group Id)
+* PARTYMGR_UPDATE et SECURITY_ADMIN sont nécessaires pour pourvoir éditer les informations de sécurité d'un utilisateur de connexion  (le rendre valide ou non, changer son mot de passe, ...) et pour gérer les groupes de sécurité associés à un utilisateur de connexion.
+* Quand un utilisateur accéde à cette portlet pour lui-même, il peut changer son mot de passe
+
+
+[[_portlet_partyroles]]
+== Liste des rôles de l'acteur
+
+PartyRoles : Liste tous (ou uniquement ceux d'un groupe de rôle) les rôle de l'acteur.
+Affichage  et édition
+
+Cette portlet affiche la liste des roles de l'acteur, tous ou seulement ceux faisant partie d'un groupe de rôle, celui-ci étant alors affiché  dans le titre de la portlet, cela depend du paramétrage de la portlet dans cette page.
+
+S'il n'y a pas de groupe de rôle de paramétré alors lors de l'ajout d'un rôle, il est possible de commencer par sélectionner un rôle père puis un de ses fils.
+
+S'il y a un groupe de rôle de paramétré alors lors de l'ajout d'un rôle, il ne sera possible de choisir que parmi les rôles du groupe.
+
+=== Limitations ou futures fonctionnalitées
+
+* Actuellement c'est le Role père qui permet de regrouper plusieurs rôle, donc il n'est pas possible pour un rôle d'être  dans plusieurs "groupe".
+
+
+=== Les paramètre de la Portlet
+
+* Le show edit Standard: s'il est positionné à N alors les bouttons "ajout" et "suppression n'apparaissent pas, la valeur par défaut est Y
+* Groupe de role : indique le groupe de rôle parmi lequel l'utisateur choisira dans l'écran d'ajout. La liste des rôles affiché est alors filtré seul ceux du groupe sont affiché.
+
+
+=== Règles de Securité
+
+* PORTAL_ADMIN est nécessaire pour pouvoir éditer les paramètres de la portlet
+
+
+[[_portlet_contactmechmgmt]]
+== Coordonnées de l'acteur
+
+ContactMechMgmt : Liste les coordonnées de l'acteur, affichage  et édition
+
+Cette portlet permet d'afficher les coordonnées d'un objet metier, acteur, magasin, commande, ...
+
+Selon le type de coordonnée (adresse postal, mail, téléphone, ...), l'affichage et la saisie diffère.
+Dans tous les cas, il est possible de préciser le but de la coordonnée (adresse de facturation, et/ou de livraison, et/ou ...)
+
+Une coordonnée peut être associé à un ou plusieurs objet métier, par exemple l'adresse postal de livraison d'un client sera aussi associé à ses différentes commandes ou devis.
+Il est donc trés rare de supprimer une coordonnée, il est par contre, possible de  l'invalider, en effet chaque coordonnée posséde des date de validité (de .. jusqu'a ..)
+
+Par défaut seul les coordonnées valide sont affiché et un boutton permet d'afficher l'historique
+
+=== Les paramètre de la Portlet
+
+* Paramétrage du champ N° de téléphone : ce champ peut être compéter par 3 sous-champ complémentaire (pay, région, ext), chacun peut ou non etre utilisé.
+* Il est possible de faire apparaitre ou chacune des options du menu d'ajout
+* Il est possible, pour chacun des types d'ajout de donner un but qui sera utilisé lors de la création
+
+
+=== Règles de Securité
+
+* aucune au niveau de la portlet, uniquement celle au niveau du service de mise à jours (et celles du composant)
+
+
+=== Remarques Techniques
+
+Cette portlet fonctionne si elle reçoit un partyId, ou un facilityId ou un orderId ou un workEffortId
+
+[[_portlet_partyrelationfroms]]
+== Liste des acteurs associés à l'acteur
+
+PartyRelationFroms : Liste des acteurs associés à l'acteur, le type de relation et les roles associés sont configurable.
+Affichage  et édition
+
+Cette portlet permet d'afficher les acteurs associés à l'acteur sélectionné.
+L'affichage et son comportement dependent de son paramétrage.
+
+Pour caractériser la relation entre deux acteurs, il faut préciser le "type de relation", le plus courament cette portlet est utilisé pour un type de relation précis, par exemple 
+
+* "Contact", c'est à dire lister tous les contacts d'un commerciale ou chez un client;
+* "Employé", c'est à dire lister tous les employées d'une société;
+* "Membre d'équipe", c'est à dire lister tous les membres d'une équipe ou d'un service;
+* $$...$$
+
+Pour une relation entre acteur, il est aussi possible de préciser le rôle de l'acteur associé, par exemple dans le cas du type de relation "employé", le rôle permettra de détailler le rôle de l'employé dans la société.
+Le plus souvent ce champ n'apparait pas car il n'est pas nécessaire.
+
+Un relation entre acteur posséde des date de validité (de .. jusqu'a ..), il est donc possible de garder un historique.
+Selon le paramétrage il est aussi possible de supprimer une relation et dans ce cas l'historique ne sera pas conservé.
+
+=== Les paramètre de la Portlet
+
+* Titre de la portlet : Il faut indiquer un "uiLabel" (un code qui selon la langue donnera un libéllé), cela permet de personnaliser la portlet, c'est surtout utile dès que cette portlet est utilisé plusieurs fois dans la même page. Demander à un consultant technique pour trouver le uiLabel correspondant à votre besoin ou pour en définir un nouveau.
+* Role type From : Si ce champ est renseigné, cela permet de filtrer la liste affiché et dans l'écran d'édition (ajout ou modification) ce sera la valeur utilisé, le champ role ne sera pas affiché à l'utilisateur. Habituellement, ce paramètre est laissé vide.
+* Groupe de role : Si le champ Role from est vide, indique le groupe de rôle parmi lequel l'utisateur choisira dans l'écran d'édition (ajout - modification). Le champ rôle d'origine sera alors affiché dans la liste
+* Type de relation (Party Relationship Type Id) : permer d'indiquer le type de relation à utiliser pour filtrer les relations à afficher, ou laisser le champ vide pour les afficher toutes et donc montrer ce champ.
+* Rôle de l'acteur associé (Role type To) : Si ce champ est renseigné, cela permet de filtrer la liste affiché et dans l'écran d'édition (ajout ou modification) ce sera la valeur utilisé, le champ role ne sera pas affiché à l'utilisateur.
+* Groupe de role : Si le champ Role To est vide, indique le groupe de rôle parmi lequel l'utisateur choisira dans l'écran d'édition (ajout - modification). Le champ rôle de destination sera alors affiché dans la liste.
+* Le show edit menu Standard: s'il est positionné à N alors les bouttons "ajout", "édition" et "suppression n'apparaissent pas
+* Gestion de l'historique (show history button): s'il est positionné à N alors les bouttons "invalider" et "afficher l'historique" apparaissent pas
+* Bouton suppression (Show Delete button) : s'il est positionné à N alors le bouttons "suppression" n'apparait pas, souvent utilisé pour forcer uniquement l'usage de l'historisation.
+
+
+=== Règles de Securité
+
+* aucune au niveau de la portlet, uniquement celle au niveau du service de mise à jours (et celles du composant)
+
+
+=== Remarques Techniques
+
+Cette portlet ne liste que la table PartyRelationship avec partyIdFrom == le partyId selectionné.
+Une seconde portlet existe pour partyIdTo = partyId
+
+Quand les roles ne sont pas précisé (à la saisie ou en paramétrage), la valeur _NA_ est utilisé.
+
+[[_portlet_partyrelationtos]]
+== Liste des acteurs auxquels il est associés
+
+PartyRelationTos : Liste des acteurs auxquels il est associés, le type de relation et les roles associés sont configurable.
+Affichage  et édition
+
+Cette portlet permet d'afficher Les acteurs auxquels est associés l'acteur sélectionné.
+L'affichage et son comportement dependent de son paramétrage.
+
+Pour caractériser la relation entre deux acteurs, il faut préciser le "type de relation", le plus courament cette portlet est utilisé pour un type de relation précis, par exemple 
+
+* "Contact", c'est à dire lister tous les commerciaux ou les clients pour lequel il est un contact;
+* "Employé", c'est à dire lister la ou les sociétés où une personne est employé;
+* "Membre d'équipe", c'est à dire lister les groupes ou les services auxquels l'acteur est inscrit;
+* $$...$$
+
+Pour une relation entre acteur, il est aussi possible de préciser le rôle de l'acteur associé, par exemple dans le cas du type de relation "employé", le rôle permettra de détailler le rôle de l'employé dans la société.
+Le plus souvent ce champ n'apparait pas car il n'est pas nécessaire.
+
+Un relation entre acteur posséde des date de validité (de .. jusqu'a ..), il est donc possible de garder un historique.
+Selon le paramétrage il est aussi possible de supprimer une relation et dans ce cas l'historique ne sera pas conservé.
+
+=== Les paramètre de la Portlet
+
+* Titre de la portlet : Il faut indiquer un "uiLabel" (un code qui selon la langue donnera un libéllé), cela permet de personnaliser la portlet, c'est surtout utile dès que cette portlet est utilisé plusieurs fois dans la même page. Demander à un consultant technique pour trouver le uiLabel correspondant à votre besoin ou pour en définir un nouveau.
+* Role type From : Si ce champ est renseigné, cela permet de filtrer la liste affiché et dans l'écran d'édition (ajout ou modification) ce sera la valeur utilisé, le champ role ne sera pas affiché à l'utilisateur. Habituellement, ce paramètre est laissé vide.
+* Groupe de role : Si le champ Role from est vide, indique le groupe de rôle parmi lequel l'utisateur choisira dans l'écran d'édition (ajout - modification). Le champ rôle d'origine sera alors affiché dans la liste
+* Type de relation (Party Relationship Type Id) : permer d'indiquer le type de relation à utiliser pour filtrer les relations à afficher, ou laisser le champ vide pour les afficher toutes et donc montrer ce champ.
+* Rôle de l'acteur associé (Role type To) : Si ce champ est renseigné, cela permet de filtrer la liste affiché et dans l'écran d'édition (ajout ou modification) ce sera la valeur utilisé, le champ role ne sera pas affiché à l'utilisateur.
+* Groupe de role : Si le champ Role To est vide, indique le groupe de rôle parmi lequel l'utisateur choisira dans l'écran d'édition (ajout - modification). Le champ rôle de destination sera alors affiché dans la liste.
+* Le show edit menu Standard: s'il est positionné à N alors les bouttons "ajout", "édition" et "suppression n'apparaissent pas
+* Gestion de l'historique (show history button): s'il est positionné à N alors les bouttons "invalider" et "afficher l'historique" apparaissent pas
+* Bouton suppression (Show Delete button) : s'il est positionné à N alors le bouttons "suppression" n'apparait pas, souvent utilisé pour forcer uniquement l'usage de l'historisation.
+
+
+=== Règles de Securité
+
+* aucune au niveau de la portlet, uniquement celle au niveau du service de mise à jours (et celles du composant)
+
+
+=== Remarques Techniques
+
+Cette portlet ne liste que la table PartyRelationship avec partyIdTo == le partyId selectionné.
+Une seconde portlet existe pour partyIdFrom = partyId
+
+Quand les roles ne sont pas précisé (à la saisie ou en paramétrage), la valeur _NA_ est utilisé.
+
+[[_portlet_partyattributes]]
+== Les attribues d'un acteur
+
+PartyAttributes : Liste des attribues d'un acteur, liste et gestion
+
+Cette portlet permet d'afficher la liste des attribues d'un acteur.
+Les attribues permettent ajouter des informations sans modifier la structure de la base de données.
+Il est possible d'assister ou de contraindre l'ajout d'attribues en  fonction du type de l'acteur ou de ces roles.
+
+=== Les paramètre de la Portlet
+
+* aucun
+
+
+=== Limitations ou futures fonctionnalitées
+
+* Actuellement, la saisi est libre, il n'y a pas de possibilité d'ajouter des contraintes ou des  propositions attribues lors de l'ajout. Par la suite il sera possible de paramétrer un Type d'acteur ou un rôle ou un  groupe de rôle, ce qui permettra d'avoir à saisie uniquement les attribues paramétré pour ce type d'acteur ou ce rôle ou pour les rôles de ce groupe.
+* Dans le futur il y aura une portlet generique de gestion d'attribue pour un objet métier.
+
+
+=== Règles de Securité
+
+* aucune au niveau de la portlet, uniquement celle au niveau du service de mise à jours  (partyBasePermissionCheck) (et celles du composant)
+
+
+[[_portlet_partyavssettings]]
+== Réglage Avs d'un acteur
+
+PartyAvsSettings : Réglage ou validation Avs d'un acteur (criblage de fraude)
+
+Pour modifier la valeur, il suffit de clicker directement sur le champ
+
+Cette portlet permet d'afficher si l'acteur à un indicateur Avs. 
+
+=== Les paramètre de la Portlet
+
+* aucun
+
+
+=== Règles de Securité
+
+* aucune au niveau de la portlet, uniquement celle du composant
+
+
+[[_portlet_partyloyaltypoints]]
+== Points de fidélité d'un acteur
+
+PartyLoyaltyPoints : Affichage des points de fidélité d'un acteur
+
+Cette portlet permet d'afficher les points de fidélité cumulé lors de la saisie des commandes. 
+
+=== Les paramètre de la Portlet
+
+* aucun
+
+
+=== Règles de Securité
+
+* aucune au niveau de la portlet, uniquement celle du composant
+
+
+[[_portlet_partyidentlists]]
+== N° d'identifications d'un acteur
+
+PartyIdentLists : Liste et gestion des n° d'identifications d'un acteur
+
+Cette portlet liste et gère les n° d'identification d'un acteur, un n° d'identification correspond à un type de  n° (n°sécurité social, n° de siret, n° de tva, ...) et un champ libre.
+
+=== Les paramètre de la Portlet
+
+* Type de n° d'identification père : s'il est vide il est possible de saisir tous les types de n° d'identification, dans le cas contraire seul les fils de type de n° d'identification seront accessible.
+
+
+=== Limitations ou futures fonctionnalitées
+
+* Il est possible de saisir qu'une seul valeur par type de n° d'identification .
+* Il n'existe pas de portlet de gestion des types de n° d'identification.
+
+
+=== Règles de Securité
+
+* aucune au niveau de la portlet, uniquement uniquement celle au niveau du service de mise à jours  (partyBasePermissionCheck)
+
+
+=== Remarques Techniques
+
+portletLongId="PartyIdentifications"
+
+[[_portlet_partynotes]]
+== Les notes d'un acteur
+
+PartyNotes : Liste et gestion des notes d'un acteur
+
+Cette portlet liste et gère -ajout modification et association- les notes associées à un acteur.
+Il est possible  d'associer une note existante, c'est pour cela que le n° d'identifiant de la note apparait dans la liste.
+
+=== Les paramètre de la Portlet
+
+* Aucun
+
+
+=== Limitations ou futures fonctionnalitées
+
+* Il y aura des paramètres pour supprimer les boutons d'association, d'ajout et de modification.
+
+
+=== Règles de Securité
+
+* aucune au niveau de la portlet, uniquement celle du composant
+
+
+[[_portlet_partypaymentmethods]]
+== Les méthodes de payment d'un acteur
+
+PartyPaymentMethods : Liste et gestion des méthodes de payment d'un acteur
+
+Cette portlet liste et gère -ajout modification et invalidation- les moyens de paiement associées à un acteur.
+Pour  chaque mode de paiement ajouté il y a interval de date de validité, la date de début est positionné à la date du jour de la création et la date de fin est vide.
+Pour un mode de paiement il n'est pas possible de le supprimer mais seulement de le rendre invalide (l'icone horloge à droite). Dans le menu de la portlet, la première option permet d'afficher les mode de paiement avec une date de fin de validité inférieur à la date du jour.
+
+=== Les paramètre de la Portlet
+
+* Aucun
+
+
+=== Limitations ou futures fonctionnalitées
+
+* Il y aura des paramètres pour rendre chaque bouton du menu optionnel.
+* 4 moyens de paiement sont géré Carte cadeau, Compte de virement, Carte Banquaire, Compte de facturation si vous souhaitez en ajouter un supplémentaire en utilisant le service générique creatPaymentMethod, celui-ci  n'existe pas.
+
+
+=== Règles de Securité
+
+* aucune au niveau de la portlet, uniquement celle du composant
+
+
+[[_portlet_partycontents]]
+== Elément de contenu d'un acteur
+
+PartyContents : Liste et gestion des éléments de contenu associé à un acteur
+
+Cette portlet liste et gère -ajout modification et suppression- les fichiers joints à un acteur.
+
+Si on associe une image avec le type "URL vers un logo", alors elle apparaitra dans la portlet <<_portlet_partyinfo,PartyInfo>>
+
+=== Les paramètre de la Portlet
+
+* Aucun
+
+
+=== Limitations ou futures fonctionnalitées
+
+* Il y aura des paramètres pour rendre chaque bouton du menu optionnel.
+* Il y aura des paramètres pour faire apparaitre ou non les différents champs complémentaires Type de contenu et type Mime.
+* Il n'existe pas de portlet pour gérer les différents type de contenu.
+
+
+=== Règles de Securité
+
+* aucune au niveau de la portlet, uniquement uniquement celle au niveau du service de mise à jours CONTENTMGR_CREATE, CONTENTMGR_UPDATE and service ensurePartyRole (_NA_ ou OWNER).
+
+
+[[_portlet_partylastvisits]]
+== Dernière "visite" d'un acteur
+
+PartyLastVisits : Les 5 dernières visites (sur le site web de l'instance OFBiz) d'un acteur
+
+Cette portlet liste les 5 dernières visites (sur le site web de l'instance OFBiz) d'un acteur.
+
+TODO à détailler
+
+=== Les paramètre de la Portlet
+
+* Aucun
+
+
+=== Règles de Securité
+
+* aucune au niveau de la portlet, uniquement celle du composant

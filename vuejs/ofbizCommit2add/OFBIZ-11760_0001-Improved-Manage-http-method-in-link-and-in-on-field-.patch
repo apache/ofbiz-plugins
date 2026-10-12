@@ -1,0 +1,79 @@
+From 7f2b9b28a42ccb2ce28a9877e5e208581b3d8cc0 Mon Sep 17 00:00:00 2001
+From: holivier <holivier@apache.org>
+Date: Mon, 25 May 2020 18:10:28 +0200
+Subject: [PATCH 09/22] Improved: Manage http method in link and in
+ on-field-event-update-area (OFBIZ-11760)
+
+In link, added in url-mode and
+in on-field-event-update-area added in event-type.
+
+Add post,put, delete (get is the default)
+---
+ framework/widget/dtd/widget-common.xsd                               | 3 +++
+ framework/widget/dtd/widget-form.xsd                                 | 3 +++
+ .../src/main/java/org/apache/ofbiz/widget/model/ModelForm.java       | 4 +++-
+ .../java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java    | 5 +++++
+ 4 files changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/framework/widget/dtd/widget-common.xsd b/framework/widget/dtd/widget-common.xsd
+index bd23e32046..eb73280c7d 100644
+--- a/framework/widget/dtd/widget-common.xsd
++++ b/framework/widget/dtd/widget-common.xsd
+@@ -566,6 +566,9 @@ under the License.
+             <xs:simpleType>
+                 <xs:restriction base="xs:token">
+                     <xs:enumeration value="intra-app" />
++                    <xs:enumeration value="intra-post" />
++                    <xs:enumeration value="intra-put" />
++                    <xs:enumeration value="intra-delete" />
+                     <xs:enumeration value="inter-app" />
+                     <xs:enumeration value="content" />
+                     <xs:enumeration value="plain" />
+diff --git a/framework/widget/dtd/widget-form.xsd b/framework/widget/dtd/widget-form.xsd
+index 08e0c9c4e3..4b068d2284 100644
+--- a/framework/widget/dtd/widget-form.xsd
++++ b/framework/widget/dtd/widget-form.xsd
+@@ -1531,6 +1531,9 @@ under the License.
+                     <xs:restriction base="xs:token">
+                         <xs:enumeration value="change" />
+                         <xs:enumeration value="click" />
++                        <xs:enumeration value="post" />
++                        <xs:enumeration value="put" />
++                        <xs:enumeration value="delete" />
+                     </xs:restriction>
+                 </xs:simpleType>
+             </xs:attribute>
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java
+index 0e3b609efd..d831077c6e 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java
+@@ -434,7 +434,9 @@ public abstract class ModelForm extends ModelWidget {
+                 } else {
+                     onPaginateUpdateAreas.add(updateArea);
+                 }
+-            } else if ("submit".equals(updateArea.getEventType())) {
++            } else if ("submit".equals(updateArea.getEventType())
++                     ||"post".equals(updateArea.getEventType())
++                      ) {
+                 int index = onSubmitUpdateAreas.indexOf(updateArea);
+                 if (index != -1) {
+                     onSubmitUpdateAreas.set(index, updateArea);
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java
+index 06f2397c68..f6f30289c4 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java
+@@ -215,6 +215,11 @@ public class ModelFormFieldBuilder {
+                     onChangeUpdateAreas.add(updateArea);
+                 } else if ("click".equals(updateArea.getEventType())) {
+                     onClickUpdateAreas.add(updateArea);
++                } else if ("post".equals(updateArea.getEventType())
++                        || "put".equals(updateArea.getEventType())
++                        || "delete".equals(updateArea.getEventType())
++                        ) {
++                    onClickUpdateAreas.add(updateArea);
+                 }
+             } else {
+                 if (this.fieldType != null) {
+-- 
+2.11.0
+

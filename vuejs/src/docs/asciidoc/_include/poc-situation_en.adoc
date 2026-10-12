@@ -1,0 +1,43 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+= POC current situation
+Currently VueJs POC is only able to manage PortalPage, but it will be simple to manage all other screen types.
+
+The Objective here is to make different use cases portal page to work. +
+At the menu, there are different pages, actually the name of portal pages name are MgmtPageFrontJs and RecapPageFrontJs. +
+The first page aim to find and edit examples.
+The second page aim to show all properties of a given example.
+
+For each portlet present in theses pages, a portlet component is created in Vue.js with the portlet name which initialise itself
+with showPortletFj.
+
+ShowPortletFj give the component all information about components it have to render (viewScreen) and data set it have to work with (viewEntities).
+Actually ShowPortletFj respond with a JSON.
+
+image::PortalPageDetail-Example.svg[Imbrication des container]
+
+== ViewScreen and ViewEntities
+Actually FrontJsViewHandler send all information to component who need update.
+In a client side logic, ViewScreen would be send only the first time while the portlet call information then would only care about
+ViewEntity which update the data set it work on.
+
+Actually "use-when" are handled by ofbiz in model model management whatever level they belong to (screen, form, field, menu),
+so we can't get this information in the renderer.
+Later, we had to transmit to renderer all screen elements and if there was "use-when" for manage them in the frontend.
+This way next call could sent "use-when" correct value to properly update the final screen.

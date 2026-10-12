@@ -1,0 +1,44 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+= User login list for a Party.
+This screenlet list all user login associated to a Party.
+Most of time a party has only one, but when party is a company, sometime it's  useful to give multiple user login,
+if you don't want create a party for each company's employee.
+
+A user login is used to connect to ofbiz application. +
+Security Group give which screens he can view and which functions he can execute.
+
+This screenlet can be use to manage (create, modify delete) userLogin and securityGroup associated
+
+== Limitations or futurs fonctionnalities
+* Only the first 5 user login are show
+
+
+== Screenlet parameters
+* Standard show screenlet menu
+* Standard show edit menu : if value = N "add user login button" not appears
+* security Group Id : if a securityGroupId is put, the 'add user login button' will automatically add this securityGroupId to the  userLogin just after creating it
+
+
+== Security rules
+* SECURITY_VIEW is needed to view Security Group List
+* PARTYMGR_CREATE is needed to have the "add user login button", and SECURITY_CREATE when a security group is automatically add (cf security group parameters)
+* PARTYMGR_UPDATE and SECURITY_ADMIN are needed to be able to edit user login security information (enable or not user login, new password, ...) 
+  and to manage security group list for a login
+* When a user use this screenlet for him (with its own user login), he can change its password

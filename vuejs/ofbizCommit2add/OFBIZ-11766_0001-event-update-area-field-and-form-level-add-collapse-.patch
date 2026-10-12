@@ -1,0 +1,65 @@
+From b6cd7a29a4d8b2a3f6290873fc3eee7389e9f174 Mon Sep 17 00:00:00 2001
+From: holivier <holivier@apache.org>
+Date: Wed, 27 May 2020 11:16:52 +0200
+Subject: [PATCH 14/22] Improved: event-update-area (field and form level): add
+ collapse as event-type (OFBIZ-11766)
+
+it's a click event, when click all the screenlet with the areaId are
+collapse
+
+No modification in renderer in this commit
+area-target can be used to detail action to do toggle, collapse or
+expand
+---
+ framework/widget/dtd/widget-form.xsd                                    | 2 ++
+ .../widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java   | 1 +
+ .../main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java  | 1 +
+ 3 files changed, 4 insertions(+)
+
+diff --git a/framework/widget/dtd/widget-form.xsd b/framework/widget/dtd/widget-form.xsd
+index d2a02a3ec4..f850de9321 100644
+--- a/framework/widget/dtd/widget-form.xsd
++++ b/framework/widget/dtd/widget-form.xsd
+@@ -617,6 +617,7 @@ under the License.
+                         </xs:enumeration>
+                         <xs:enumeration value="set-watcher" />
+                         <xs:enumeration value="refresh-watcher" />
++                        <xs:enumeration value="collapse" />
+                     </xs:restriction>
+                 </xs:simpleType>
+             </xs:attribute>
+@@ -1583,6 +1584,7 @@ under the License.
+                         <xs:enumeration value="refresh-watcher" />
+                         <xs:enumeration value="submit" />
+                         <xs:enumeration value="set-field-in-form" />
++                        <xs:enumeration value="collapse" />
+                     </xs:restriction>
+                 </xs:simpleType>
+             </xs:attribute>
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java
+index 0a1496fb23..97982c55c0 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java
+@@ -440,6 +440,7 @@ public abstract class ModelForm extends ModelWidget {
+                      ||"refresh-area".equals(updateArea.getEventType())
+                      ||"set-watcher".equals(updateArea.getEventType())
+                      ||"refresh-watcher".equals(updateArea.getEventType())
++                     ||"collapse".equals(updateArea.getEventType())
+                       ) {
+                 int index = onSubmitUpdateAreas.indexOf(updateArea);
+                 if (index != -1) {
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java
+index e8ec357c19..0e5fafb551 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java
+@@ -224,6 +224,7 @@ public class ModelFormFieldBuilder {
+                         || "refresh-watcher".equals(updateArea.getEventType())
+                         || "submit".equals(updateArea.getEventType())
+                         || "set-field-in-form".equals(updateArea.getEventType())
++                        || "collapse".equals(updateArea.getEventType())
+                         ) {
+                     onClickUpdateAreas.add(updateArea);
+                 }
+-- 
+2.11.0
+

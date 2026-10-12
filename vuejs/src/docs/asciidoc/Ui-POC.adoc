@@ -1,0 +1,515 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+
+= Use cases for POC-UI
+
+Theses use cases are to be used for new UI POC, documentation associated
+and selenium unit task test.
+
+All these use cases should be done with existing entities and services,
+if it's necessary to develop one, simplify the use case, the goal is UI,
+not service or entity.
+
+These use case description are done in a agile philosophy, only main
+point is present and during realization details choices will be discuss
+and done.
+
+== Preliminary remarks :
+.  In this document, the term "application" corresponding to
+   "plugin component" in the ofbiz terminology which is not same as
+   a "applications/trunk component" in ofbiz terminology. An application is
+   dedicated for a business purpose for a user type, it's build by
+   assembling piece of ofbiz components, sometimes without any specifics
+   entities, services and screen (ex: CRM-B2C, CRM-B2B, SFA are 3
+   applications uses by sales men)
+
+.  Each use case is on an "application" and is part of one of the menu
+   of this application.
++
+--
+Of course, this document describe only menu-option
+   needed by the use-case. As it's difficult to do a clear definition of
+   "web-page" because it's depending of theme/template, use case is for me
+   at two level :
+   
+..  screen, which can be well define
+..  page, which depend on default theme
+
+Of course, some of use case (screen or page) will be done by a previous
+   one (ex : sometime edit is done by the same screen as add). It's even,
+   one of the re-usable important point (UI, Doc and Selenium)
+--
+. Each time a line (or point) start by a "?" the question is "is this
+point is needed ?"
+
+= Release and goal
+
+Goal is the POC realization, not doing multiple super applications. POC
+realization should generate discussion and decision, each time be
+careful to mainly discuss on UI, Doc or Selenium and not on use case
+business justification. Use case are to be realistic but mainly as a
+support for a specifics UI, Doc or Selenium needed.
+
+== V1
+**Main Goal is to proof the technical points**. Of course UI
+re-organization is the driver for this phase, documentation start to
+work in parallel but will wait first realization to test integration for
+help. For selenium unit task, it will be a simple usage of the new UI
+with the default theme, the sole purpose being to check that test with
+default theme is simple.
+
+So never mind if all cases is not done, the list exist to give different
+classic case what we will need to know how to process it. Some case
+which seem to be duplicate from other can be use for beginner who want
+to help and check if the concept is understanding.
+
+During V1 realization, UseCase list will be updated
+
+== V2
+*Main Goal is to check if* the solution is *useful for the different
+type of contributors*
+
+* experiment developer
+* beginner developer
+* functional consultant for parameters
+* functional consultant for personalization
+* ? end user - for parameters ? (if it's still possible with the new
+architecture)
+
+Use Case list will be use as a deployment plan. The list contains
+similar case to these which are realize in V1, so those on V2 can be
+achieve by all types of contributors.
+
+== Documentation Goal
+* Apache OFBiz User documentation (asscidoc)
+* Apache OFBiz web site wiki
+* OFBiz Help
+
+
+== Selenium test
+.  demo data for each use case and scenario
+.  selenium scenario test for each page (or page group)
+.  selenium unit test for each screen
+
+
+= Simple Party Management
+
+== Which Sub-Application
+.  in HR application, simple employee management
+.  in CRM B2C application, simple customer (person) management
+.  in eCommerce, simple profile page
+.  in HR application, simple organization/place (group) management
+.  in CRM B2B application, simple customer (company) management
+.  in Facility application, simple worker management
+
+== Which Party sub-component
+. Party - Person - PartyGroup
+. Contact Mech,
+  * with postal address, phone and mail;
+  * one or two fixes purpose (ex: phone fix number and mobile phone number)
+. Role
+. Party Identification
+. Party association
+. Not [line-through]*UserLogin* because all Security entities should
+   be use and it will generate a too large domain for this POC
+
+== Which Screen
+.  Party
+  * find, list
+  * A person
+   ** add / edit, show
+  * A group
+   ** add / edit, show
+  * A company
+   ** add / edit, show
+  * show a synthesis view (party/person/company, contact informations, roles, Identification)
+   ** Person
+   ** Company
+   ** PartyGroup
+
+.  Contact information
+  * all contact informations (for one party / facility)
+   ** with and without purpose
+   ** with and without history
+   ** deactivated
+  * add / edit postal address
+  * add / edit mail
+  * add / edit phone
+
+.  Role
+  * list for a party
+  * add a role (for a parent RoleType)
+  * add a role in two step :
+   . select parent RoleType
+   .  select the role
+  * remove a role
+
+.  Party Identifications
+  * list, add, remove
+
+= HR Employee management
+In HR Component, starting person management with the more complete form about person. 
+
+* Menu option to manage employee 
+ ** find, list, show, add, edit and manage his 
+  *** contact information 
+  *** identification (3 idTypes, one mandatory, two optionals) 
+* template page with a header (or sidebar or ...) to show on which employee we are
+
+== Use Case Screen :
+. find Person
+ * simple form (only on party or person)
+ * with an add button (which can be show or not depending on parameter or authorization)
+. Person list with an add button (which can be show or not depending on parameter or authorization)
+. add a Person
+. show a Person
+. show a Person with sub-menu with two options : contact informations and Identifications
+. edit a Person
+. List of all contact informations for a person, with an add button
+  (which can be show or not depending on parameter or authorization)
+. add a postal address
+. add a mail
+. add a phone number (to go step by step, without purpose management,
+  will be done in next Use Case group)
+. edit a postal address
+. edit a mail
+. edit a phone number
+. List of all identification number for a person, with an add button
+  (which can be show or not depending on parameter or authorization)
+. add a identification number with choice of identification type
+. edit a identification number with choice of identification type
+. add a identification number with a fix identification type
+. edit a identification number with a fix identification type
+
+== Use Case Page :
+. create a person
+. search a person
+. visualize a person
+. manage informations about a person
+. template page with a header (or sidebar or ...) to show on which
+  employee we are, (for example to show all his knowledges, or his skills,
+  or his positions, or his ...)
+. manage informations about a person on one page, and with access at
+  this page directly by a field (auto-completion on id, first, last name)
+
+= CRM B2C, customer mgnt
+In a CRM B2C application, the customer (so, in this context, a person) management. +
+The difference from previous use case group is :
+
+. person form is more simple than in HR
+. role will be used to characterize customer position (suspect,
+   prospect, with_Quote, customer)
+
+Menu option to manage employee 
+
+* find (with role field), list, show, add, edit and manage his 
+ ** contact informations 
+ ** identification (3idTypes, one mandatory, two optionals) 
+* template page with a header (or sidebar or ...) to show on which customer we are
+
+== Use Case Screen :
+. find Person with an add button (which can be show or not depending on parameter or authorization)
+ * search field same as in HR find person
+ * role field which can appear or not, when not appear a fix value has been put as parameters.
+ * contact information field, phone, mail, town. These fields can be show
+   or not by the user with a "deploy" button
+
+. Person list with an add button (which can be show or not depending on parameter or authorization)
+ * role field appear or not, when not appear a fix value has been put as
+   parameters, so only person with this role appear
+
+. add a Person, all main informations in the form
+ * role
+ * less field about person than in HR form
+ * 1 postal address
+ * 2 phone number
+ * 1 identification number
+
+. show a Person, all main informations in the screen with indicator for
+   contact information and identification when there are more data that
+   what it's show.
+
+. show a Person with sub-menu with options :
+ * contact informations
+ * Identifications
+ * role history
+ * change role : a direct action button
+
+. edit a Person, only "Person" field
+
+. a button bar to change role (ex: for a suspect, there are the 3
+   options), this use case is for having a action bar, in this business
+   process case it's maybe not a need, but for more complex object like
+   order or task, it's a classical need.
+
+. List of all contact informations for a person, with one or multiple
+   add buttons (which can be show or not depending on parameter or
+   authorization) and purpose are show, it's the second step, with purpose
+   management.
+
+. add a postal address (or just a purpose)
+. add a mail
+. add a phone number
+. edit a postal address
+. edit a mail
+. edit a phone number
+. List of all identification number for a person, with an add button
+   (which can be show or not depending on parameter or authorization)
+. add a identification number with choice of identification type
+. edit a identification number with choice of identification type
+
+
+== Use Case Page
+. create a new entry in CRM (role is choose during creation)
+. search a "customer" (or suspect, prospect, ...)
+. visualize a "customer"
+. manage informations about a "customer"
+. template page with a header (or sidebar or ...) to show on which
+   "customer" we are, (for example to show all his quotes, or his orders, or ...)
+. manage informations about a person on one page, and with access at
+   this page directly by a field (auto-completion on id, first, last name)
+
+
+= eCommerce, profile page
+A simple profile page. +
+The difference from previous use case will be mainly on Use Case Page
+because eCommerce theme could be more original and public user interface
+should be, most of the time, more simple.
+
+== Use Case Screen :
+. show the person, all main informations in the screen with indicator
+   for contact information and identification when there are more data that
+   what it's show.
+
+. show the Person with sub-menu with options :
+ * contact informations
+ * Identifications
+
+. edit a Person, only "Person" field
+. List of all contact informations for a person, with an add button and
+   purpose are show, purpose is need for invoice or shipping.
+. add a postal address (or just a purpose)
+. add a mail
+. add a phone number
+. edit a postal address
+. edit a mail
+. edit a phone number
+
+== Use Case Page :
+.  visualize the profile (the person) with edit button
+.  manage his contact informations
+.  manage his identifications
+.  All in one page, which can be look as a long page.
+
+
+= HR organization mgnt
+In HR component, a simple organization/place (group) management. +
+Now PartyGroup management (very simple), but with complex screen to
+manage hierarchy. In this use case group we will use the word "group"
+for service or department, or subsiadiry.
+
+* Menu option to manage the Company organization
+ ** manage group
+ ** associated employee in a group
+ ** manage a hierarchy of group
+
+== Use Case Screen :
+. find group (with a specific partyType)
+ * simple form (only on party or partyGroup)
+ * with an add button (which can be show or not depending on parameter orauthorization)
+
+. PartyGroup list with an add button (which can be show or not dependingon parameter or authorization)
+. add a group
+. show a Person, all informations in screen with sub-menu with two
+   options : contact informations and Identifications
+. edit a Group
+. List all contact informations for a group, with an add button (which
+   can be show or not depending on parameter or authorization)
+. add a postal address
+. add a phone number
+. edit a postal address
+. edit a phone number
+. List all identification number for a group, with an add button (which
+   can be show or not depending on parameter or authorization)
+. add a identification number with choice of identification type
+. edit a identification number with choice of identification type
+. add a identification number with a fix identification type
+. edit a identification number with a fix identification type
+. List all person associated to the group with two add buttons (which
+   can be, individually, show or not depending on parameter or
+   authorization)
+ * add a manager
+ * add a member
+. List all group associated to the group (the child) with two add
+   buttons (which can be, individually, show or not depending on parameter
+   or authorization)
+ * add an existing group as a child
+ * create a new group and add it as a child
+ * in the list, each group is a link to this screen, to be able to navigate top-down
+ * a third button to go to the parent level, to be able to navigate bottom-up
+ * the name of the group manager appear above the list
+. ? List all parent group for a group or for a person ?
+. show group hierarchy as a tree with action or detail at each level,
+   top-down
+. show group hierarchy as a tree with action or detail at each level,
+   bottom-up
+
+== Use Case Page :
+.  search a group
+.  manage a group
+.  manage its contact informations
+.  manage hierarchy step by step (parent to child or child to parent)
+.  manage hierarchy with a tree view
+.  in HR employee, show the tree, top-down or bottom-up with the template "for an employee"
+
+
+= CRM B2B customer mgnt
+In a CRM B2B application, the customer (so, in this context, a company) management. +
+For clarification, in these Use Cases, B2B is an other application than B2C. +
+The "CRM B2C & B2B" will be a third, but not in this list because
+it contains no specificity on screen-page definition
+
+The main difference between B2C is : 
+
+. company versus person, 
+. contact management with PartyAssociation 
+. ? customer organization management ?
+
+== Use Case Screen :
+. find customer (a company (specific partyType)) with an add button
+   (which can be show or not depending on parameter or authorization)
+ * search field are on multiple entities with some part deploy or not
+ * role field which can appear or not, when not appear a fix value has been put as parameters.
+ * contact information field, phone, mail, town. These fields can be show
+   or not by the user with a "deploy" button
+
+. Company list with an add button (which can be show or not depending on parameter or authorization)
+ * role field appear or not, when not appear a fix value has been put as
+   parameters, so only company with this role appear
+
+. add a Company, all main informations in the form
+ * role
+ * field from PartyGroup
+ * 1 postal address
+ * 2 phone number
+ * 2 identification number
+
+. show a Company, all main informations in the screen with indicator for
+   contact informations and identification when there are more data that
+   what it's show.
+
+. show a Company with sub-menu with options :
+ * contact informations
+ * Identifications
+ * role history
+ * change role : a direct action button
+
+. edit a Company, only "Company" field
+
+. a button bar to change role (ex: for a suspect, there are the 3
+   options), this use case is for having a action bar. +
+   In this business process case it's maybe not a need, but for more complex object like
+   order or task, it's a classical need.
+
+. List of all contact informations for a company, with an add button
+   (which can be show or not depending on parameter or authorization) and
+   purpose are show, (so, with purpose management).
+
+. add a postal address (or just a purpose)
+. add a mail
+. add a phone number with purpose
+. edit a postal address
+. edit a mail
+. edit a phone number
+. List of all identification number for a company, with an add button
+   (which can be show or not depending on parameter or authorization)
+. add a identification number with choice of identification type
+.  edit a identification number with choice of identification type
+
+. list of contact (person) associated to this company with an add button
+(which can be show or not depending on parameter or authorization)
+ * a contact is a person with contact information
+ * list with only one line per contact
+ * list of block with contact details for each
+
+. edit a contact or his contact information
+
+== Use Case Page :
+Exactly the same as the CRMB2C
+
+. create a new entry in CRM (role is choose during creation)
+. search a "customer" (or suspect, prospect, ...)
+. visualize a "customer"
+. manage informations about a "customer"
+. template page with a header (or sidebar or ...) to show on which
+   "customer" we are, (for example to show all his quotes, or his orders, or ...)
+. manage informations about a company on one page, and with access at
+   this page directly by a field (auto-completion on id, first, last name).
+
+
+= Facility worker mgnt
+In Facility application, simple facility's worker management. +
+For this last use case group, it's a simplification of the previous one. +
+Only a very simple and short process for adding people.
+
+It's the last one, because the goal is to check if it's easy and rapid
+to create (or parametrize) a new small application from existing one.
+
+In the Warehouse Management application (simple version OOTB)
+
+* in the administration menu
+ ** the user menu to manage internal user per facility In the standard
+    business process, it will be used mainly for login and authorization, in
+    our case we will only manage person, his phone number and his facility
+    (where he's authorized)
+ ** the facility menu to manage contact informations and person authorized
+
+
+== Use Case Screen :
+
+=== Already existing screen used
+. find Person
+ * simple form (only on party or person)
+ * with an add button
+
+.  Person list with an add button
+.  add a Person, simple form 3-6 fields
+.  show a Person
+.  show a Person with sub-menu with option to manage contact informations
+.  edit a Person
+.  List of all contact informations for a person, with one or multiple add button
+.  add a mail
+.  add a phone number
+.  edit a mail
+. edit a phone number
+
+=== New Screen
+.  add a facility, simple form, if service exist, including some contact informations
+.  List of all existing facility
+.  List of all contact informations for a facility, with one or multiple add button
+.  List of all persons associated to the facility, with two add button
+ * add an existing person
+ * create a new person and add it to the facility
+.  List of all facility associated to a person, with one add button
+ * add an existing facility
+
+== Use Case Page :
+.  manage facilities
+.  manage persons
+.  visualize a facility details (info, contact informations, persons associated)

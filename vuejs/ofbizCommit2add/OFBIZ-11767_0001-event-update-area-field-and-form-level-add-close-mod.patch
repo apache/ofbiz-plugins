@@ -1,0 +1,63 @@
+From b172a773a74e589eca7ac3829362d35844efacff Mon Sep 17 00:00:00 2001
+From: holivier <holivier@apache.org>
+Date: Wed, 27 May 2020 11:21:14 +0200
+Subject: [PATCH 15/22] Improved: event-update-area (field and form level): add
+ close-modal as event-type (OFBIZ-11767)
+
+it's a click event, when click one or all open modal area closed.
+it's use for lookup and for modal created with link with layered-modal
+
+No modification in renderer in this commit
+---
+ framework/widget/dtd/widget-form.xsd                                    | 2 ++
+ .../widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java   | 1 +
+ .../main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java  | 1 +
+ 3 files changed, 4 insertions(+)
+
+diff --git a/framework/widget/dtd/widget-form.xsd b/framework/widget/dtd/widget-form.xsd
+index f850de9321..f82a0b2f44 100644
+--- a/framework/widget/dtd/widget-form.xsd
++++ b/framework/widget/dtd/widget-form.xsd
+@@ -618,6 +618,7 @@ under the License.
+                         <xs:enumeration value="set-watcher" />
+                         <xs:enumeration value="refresh-watcher" />
+                         <xs:enumeration value="collapse" />
++                        <xs:enumeration value="close-modal" />
+                     </xs:restriction>
+                 </xs:simpleType>
+             </xs:attribute>
+@@ -1585,6 +1586,7 @@ under the License.
+                         <xs:enumeration value="submit" />
+                         <xs:enumeration value="set-field-in-form" />
+                         <xs:enumeration value="collapse" />
++                        <xs:enumeration value="close-modal" />
+                     </xs:restriction>
+                 </xs:simpleType>
+             </xs:attribute>
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java
+index 97982c55c0..3dd94b21ce 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java
+@@ -441,6 +441,7 @@ public abstract class ModelForm extends ModelWidget {
+                      ||"set-watcher".equals(updateArea.getEventType())
+                      ||"refresh-watcher".equals(updateArea.getEventType())
+                      ||"collapse".equals(updateArea.getEventType())
++                     ||"close-modal".equals(updateArea.getEventType())
+                       ) {
+                 int index = onSubmitUpdateAreas.indexOf(updateArea);
+                 if (index != -1) {
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java
+index 0e5fafb551..dbefb0c3ba 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java
+@@ -225,6 +225,7 @@ public class ModelFormFieldBuilder {
+                         || "submit".equals(updateArea.getEventType())
+                         || "set-field-in-form".equals(updateArea.getEventType())
+                         || "collapse".equals(updateArea.getEventType())
++                        || "close-modal".equals(updateArea.getEventType())
+                         ) {
+                     onClickUpdateAreas.add(updateArea);
+                 }
+-- 
+2.11.0
+
