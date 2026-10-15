@@ -20,7 +20,9 @@ package org.apache.ofbiz.content.search;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -43,6 +45,20 @@ public final class DocumentIndexer extends Thread {
     private static final String MODULE = DocumentIndexer.class.getName();
 
     private static Map<String, DocumentIndexer> documentIndexerMap = new HashMap<>();
+    // set when OFBiz shuts down: the indexers then stop without indexing the documents still queued
+    private static volatile boolean stopping = false;
+    // queued to wake up an indexer waiting for documents, so that it sees it has to stop
+    private static final LuceneDocument STOP = new LuceneDocument() {
+        @Override
+        public Term getDocumentIdentifier() {
+            return null;
+        }
+
+        @Override
+        public Document prepareDocument(Delegator delegator) {
+            return null;
+        }
+    };
     private LinkedBlockingQueue<LuceneDocument> documentIndexQueue = new LinkedBlockingQueue<>();
     private Delegator delegator;
     private Directory indexDirectory;
@@ -90,6 +106,9 @@ public final class DocumentIndexer extends Thread {
                     Debug.logError(e, MODULE);
                     break;
                 }
+                if (stopping) {
+                    break;
+                }
                 Term documentIdentifier = ofbizDocument.getDocumentIdentifier();
                 Document document = null;
                 boolean prepared = false;
@@ -99,6 +118,10 @@ public final class DocumentIndexer extends Thread {
                 } catch (GeneralException e) {
                     // the record may still exist: keep its document in the index instead of deleting it
                     Debug.logError(e, getName() + ": could not prepare Lucene document, index left unchanged for: " + ofbizDocument, MODULE);
+                }
+                if (stopping) {
+                    // the document may not have been prepared correctly, the datasources being closed
+                    break;
                 }
                 if (!prepared && indexWriter == null) {
                     // nothing to write and no pending changes to commit
@@ -184,5 +207,34 @@ public final class DocumentIndexer extends Thread {
 
     public boolean queue(LuceneDocument document) {
         return documentIndexQueue.add(document);
+    }
+
+    /**
+     * Stops all the document indexers, without indexing the documents still queued.
+     * This method is called when OFBiz shuts down, so that the indexers are done with the database before it is closed.
+     * @param timeoutMillis the maximum time to wait for the indexers to stop
+     */
+    public static void stopAll(long timeoutMillis) {
+        stopping = true;
+        List<DocumentIndexer> documentIndexers;
+        synchronized (DocumentIndexer.class) {
+            documentIndexers = new ArrayList<>(documentIndexerMap.values());
+        }
+        long deadline = System.currentTimeMillis() + timeoutMillis;
+        for (DocumentIndexer documentIndexer : documentIndexers) {
+            documentIndexer.documentIndexQueue.clear();
+            documentIndexer.queue(STOP);
+        }
+        for (DocumentIndexer documentIndexer : documentIndexers) {
+            try {
+                documentIndexer.join(Math.max(1, deadline - System.currentTimeMillis()));
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return;
+            }
+            if (documentIndexer.isAlive()) {
+                Debug.logWarning(documentIndexer.getName() + " did not stop within " + timeoutMillis + " ms", MODULE);
+            }
+        }
     }
 }
