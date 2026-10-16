@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements. See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership. The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License. You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation=
+          "https://ofbiz.apache.org/dtds/services.xsd">
+
+    <service name="aiGenerate" engine="java"
+             location="org.apache.ofbiz.ai.AiServices" invoke="generate">
+        <description>Generate a text response from an AI model</description>
+        <attribute name="messages" mode="IN" type="List" optional="false"/>
+        <attribute name="configName" mode="IN" type="String" optional="true"/>
+        <attribute name="response" mode="OUT" type="String" optional="false"/>
+    </service>
+
+    <service name="aiGenerateStructured" engine="java"
+             location="org.apache.ofbiz.ai.AiServices" invoke="generateStructured">
+        <description>Generate a structured Map response from an AI model</description>
+        <attribute name="messages" mode="IN" type="List" optional="false"/>
+        <attribute name="schema" mode="IN" type="Map" optional="false"/>
+        <attribute name="configName" mode="IN" type="String" optional="true"/>
+        <attribute name="result" mode="OUT" type="Map" optional="false"/>
+    </service>
+
+    <service name="aiSmokeTest" engine="groovy"
+             location="component://ai/groovyScripts/AiTest.groovy"
+             invoke="">
+        <description>Smoke test for the AI plugin — calls aiGenerate with a test message</description>
+    </service>
+
+    <service name="aiSmokeTestStructured" engine="groovy"
+             location="component://ai/groovyScripts/AiStructuredTest.groovy"
+             invoke="">
+        <description>Smoke test for generateStructured — expects Map with word key</description>
+    </service>
+
+    <service name="agentRun" engine="java"
+             location="org.apache.ofbiz.ai.AiAgentServices" invoke="agentRun"
+             auth="true">
+        <description>Run a named AI agent with a user message and return the assistant response</description>
+        <attribute name="agentName" mode="IN" type="String" optional="false"/>
+        <attribute name="userMessage" mode="IN" type="String" optional="false"/>
+        <attribute name="threadId" mode="INOUT" type="String" optional="true"/>
+        <attribute name="assistantMessage" mode="OUT" type="String" optional="false"/>
+        <attribute name="stopReason" mode="OUT" type="String" optional="false"/>
+        <attribute name="iterationsUsed" mode="OUT" type="Integer" optional="false"/>
+        <attribute name="approvalRequired" mode="IN"  type="Boolean" optional="true"/>
+        <attribute name="proposalId"       mode="OUT" type="String"  optional="true"/>
+        <attribute name="structuredResult" mode="OUT" type="Map"     optional="true"/>
+    </service>
+
+    <service name="approveAgentProposal" engine="java"
+             location="org.apache.ofbiz.ai.AiAgentServices"
+             invoke="approveAgentProposal" auth="true">
+        <description>Execute a pending agent proposal and resume the agent loop to completion</description>
+        <attribute name="proposalId"       mode="IN"  type="String"  optional="false"/>
+        <attribute name="assistantMessage" mode="OUT" type="String"  optional="false"/>
+        <attribute name="stopReason"       mode="OUT" type="String"  optional="false"/>
+        <attribute name="iterationsUsed"   mode="OUT" type="Integer" optional="false"/>
+    </service>
+
+    <service name="rejectAgentProposal" engine="java"
+             location="org.apache.ofbiz.ai.AiAgentServices"
+             invoke="rejectAgentProposal" auth="true">
+        <description>Reject a pending agent proposal and obtain a graceful LLM acknowledgment</description>
+        <attribute name="proposalId"       mode="IN"  type="String"  optional="false"/>
+        <attribute name="rejectionReason"  mode="IN"  type="String"  optional="true"/>
+        <attribute name="assistantMessage" mode="OUT" type="String"  optional="false"/>
+    </service>
+
+    <service name="archiveConversationThread" engine="java"
+             location="org.apache.ofbiz.ai.AiAgentServices"
+             invoke="archiveConversationThread" auth="true">
+        <description>Archive a conversation thread so future agentRun calls with the same threadId start fresh</description>
+        <attribute name="threadId" mode="IN" type="String" optional="false"/>
+    </service>
+
+    <service name="getConversationHistory" engine="java"
+             location="org.apache.ofbiz.ai.AiAgentServices"
+             invoke="getConversationHistory" auth="true">
+        <description>Return message history for a conversation thread</description>
+        <attribute name="threadId"  mode="IN"  type="String" optional="false"/>
+        <attribute name="messages"  mode="OUT" type="List"   optional="false"/>
+    </service>
+
+    <service name="getUsageSummary" engine="java"
+             location="org.apache.ofbiz.ai.AiAgentServices" invoke="getUsageSummary"
+             auth="true">
+        <description>Query AI agent run history and estimate token cost for a date range</description>
+        <attribute name="agentName"          mode="IN"  type="String"     optional="true"/>
+        <attribute name="userLoginId"        mode="IN"  type="String"     optional="true"/>
+        <attribute name="fromDate"           mode="IN"  type="Timestamp"  optional="true"/>
+        <attribute name="thruDate"           mode="IN"  type="Timestamp"  optional="true"/>
+        <attribute name="totalRuns"          mode="OUT" type="Long"       optional="false"/>
+        <attribute name="totalInputTokens"   mode="OUT" type="Long"       optional="false"/>
+        <attribute name="totalOutputTokens"  mode="OUT" type="Long"       optional="false"/>
+        <attribute name="estimatedCostUsd"   mode="OUT" type="BigDecimal" optional="true"/>
+    </service>
+
+    <!-- ==================== Ecommerce Promo Advisor tools ==================== -->
+
+    <service name="getProductPriceSummary" engine="groovy"
+             location="component://ai/groovyScripts/GetProductPriceSummary.groovy"
+             invoke="getProductPriceSummary" auth="true">
+        <description>Return all active USD selling prices for a product: default, list, average cost, promo, competitive</description>
+        <attribute name="productId"          mode="IN"  type="String"     optional="false"/>
+        <attribute name="productName"        mode="OUT" type="String"     optional="false"/>
+        <attribute name="defaultPrice"       mode="OUT" type="BigDecimal" optional="true"/>
+        <attribute name="listPrice"          mode="OUT" type="BigDecimal" optional="true"/>
+        <attribute name="averageCost"        mode="OUT" type="BigDecimal" optional="true"/>
+        <attribute name="competitivePrice"   mode="OUT" type="BigDecimal" optional="true"/>
+        <attribute name="activePromoPrice"   mode="OUT" type="BigDecimal" optional="true"/>
+        <attribute name="currencyUomId"      mode="OUT" type="String"     optional="false"/>
+    </service>
+
+    <service name="getProductInventorySummary" engine="groovy"
+             location="component://ai/groovyScripts/GetProductInventorySummary.groovy"
+             invoke="getProductInventorySummary" auth="true">
+        <description>Return total available-to-promise quantity for a product across all facilities</description>
+        <attribute name="productId"         mode="IN"  type="String"     optional="false"/>
+        <attribute name="totalAtpQuantity"  mode="OUT" type="BigDecimal" optional="false"/>
+        <attribute name="facilityBreakdown" mode="OUT" type="String"     optional="false"/>
+    </service>
+
+    <service name="getRecentOrderActivity" engine="groovy"
+             location="component://ai/groovyScripts/GetRecentOrderActivity.groovy"
+             invoke="getRecentOrderActivity" auth="true">
+        <description>Return order count, quantity sold, and revenue for a product over the last N days (default 30)</description>
+        <attribute name="productId"    mode="IN"  type="String"     optional="false"/>
+        <attribute name="days"         mode="IN"  type="Integer"    optional="true"/>
+        <attribute name="orderCount"   mode="OUT" type="Integer"    optional="false"/>
+        <attribute name="quantitySold" mode="OUT" type="BigDecimal" optional="false"/>
+        <attribute name="totalRevenue" mode="OUT" type="BigDecimal" optional="false"/>
+        <attribute name="periodDays"   mode="OUT" type="Integer"    optional="false"/>
+    </service>
+
+    <service name="setProductPromoPrice" engine="groovy"
+             location="component://ai/groovyScripts/SetProductPromoPrice.groovy"
+             invoke="setProductPromoPrice" auth="true">
+        <description>Create a SPECIAL_PROMO_PRICE for a product in USD. Requires manager approval before execution.</description>
+        <attribute name="productId"           mode="IN"  type="String"     optional="false"/>
+        <attribute name="promoPrice"          mode="IN"  type="BigDecimal" optional="false"/>
+        <attribute name="durationDays"        mode="IN"  type="Integer"    optional="true"/>
+        <attribute name="confirmedProductId"  mode="OUT" type="String"     optional="false"/>
+        <attribute name="confirmedPrice"      mode="OUT" type="BigDecimal" optional="false"/>
+        <attribute name="confirmedFromDate"   mode="OUT" type="String"     optional="false"/>
+        <attribute name="confirmedThruDate"   mode="OUT" type="String"     optional="false"/>
+    </service>
+
+    <!-- ==================== AiAgentDef CRUD (entity-auto) ==================== -->
+
+    <service name="createAiAgentDef" engine="entity-auto" invoke="create"
+             default-entity-name="AiAgentDef" auth="true">
+        <description>Create a new AI Agent Definition</description>
+        <auto-attributes mode="IN" include="nonpk" optional="false"/>
+        <attribute name="agentName" mode="IN" type="String" optional="false"/>
+        <override name="statusId" optional="true" default-value="AI_AGENT_ACTIVE"/>
+        <override name="maxIterations" optional="true"/>
+        <override name="modelName" optional="true"/>
+        <override name="systemPrompt" optional="true"/>
+    </service>
+
+    <service name="updateAiAgentDef" engine="entity-auto" invoke="update"
+             default-entity-name="AiAgentDef" auth="true">
+        <description>Update an AI Agent Definition</description>
+        <auto-attributes mode="IN" include="all" optional="true"/>
+        <override name="agentName" optional="false"/>
+    </service>
+
+    <service name="createAiAgentToolGrant" engine="entity-auto" invoke="create"
+             default-entity-name="AiAgentToolGrant" auth="true">
+        <description>Grant a tool to an AI Agent</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+
+    <service name="deleteAiAgentToolGrant" engine="entity-auto" invoke="delete"
+             default-entity-name="AiAgentToolGrant" auth="true">
+        <description>Revoke a tool grant from an AI Agent</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+
+</services>
