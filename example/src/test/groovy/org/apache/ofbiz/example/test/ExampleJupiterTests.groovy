@@ -18,6 +18,9 @@
  */
 package org.apache.ofbiz.example.test
 
+import java.sql.Timestamp
+
+import org.apache.ofbiz.base.util.UtilDateTime
 import org.apache.ofbiz.entity.GenericValue
 import org.apache.ofbiz.service.ServiceUtil
 import org.apache.ofbiz.service.ServiceValidationException
@@ -131,6 +134,14 @@ class ExampleJupiterTests implements JupiterTestHelper {
         List<GenericValue> afterCreate = from('ExampleStatus').where('exampleId', exampleId).queryList()
         assert afterCreate.size() == 1
         assert afterCreate[0].statusEndDate == null
+
+        // statusDate is part of the ExampleStatus primary key and createExampleStatus sets it to the current
+        // time, so wait for the clock to move past the ECA-created row's statusDate, otherwise both rows can
+        // share the same millisecond and the second insert fails with a duplicate key.
+        Timestamp firstStatusDate = afterCreate[0].statusDate
+        while (!UtilDateTime.nowTimestamp().after(firstStatusDate)) {
+            Thread.onSpinWait()
+        }
 
         Map<String, Object> secondStatusResult = dispatcher.runSync('createExampleStatus', [
                 exampleId: exampleId,
