@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.apache.ofbiz.content.search;
 
+import org.apache.ofbiz.base.util.GeneralException;
 import org.apache.ofbiz.entity.Delegator;
 
 import org.apache.lucene.document.Document;
@@ -27,5 +28,11 @@ public interface LuceneDocument {
 
     Term getDocumentIdentifier();
 
-    Document prepareDocument(Delegator delegator);
+    /**
+     * Prepares the Lucene document of the record.
+     * @param delegator the delegator to read the record with
+     * @return the document to index, or {@code null} when the record is to be removed from the index
+     * @throws GeneralException when the document cannot be prepared, the index is then left unchanged for this record
+     */
+    Document prepareDocument(Delegator delegator) throws GeneralException;
 }
