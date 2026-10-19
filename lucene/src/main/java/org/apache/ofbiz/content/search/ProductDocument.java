@@ -143,7 +143,7 @@ public class ProductDocument implements LuceneDocument {
     }
 
     @Override
-    public Document prepareDocument(Delegator delegator) {
+    public Document prepareDocument(Delegator delegator) throws GenericEntityException {
         String productId = getDocumentIdentifier().text();
         try {
             GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne();
@@ -364,9 +364,8 @@ public class ProductDocument implements LuceneDocument {
                 return doc;
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e, MODULE);
+            throw new GenericEntityException("Could not prepare the Lucene document of product " + productId, e);
         }
-        return null;
     }
 
     private Timestamp populateCategoryData(Document doc, GenericValue product) throws GenericEntityException {

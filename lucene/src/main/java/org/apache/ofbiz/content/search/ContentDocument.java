@@ -30,14 +30,12 @@ import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.Term;
-import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.GeneralException;
 import org.apache.ofbiz.base.util.StringUtil;
 import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.content.content.ContentWorker;
 import org.apache.ofbiz.entity.Delegator;
-import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.service.LocalDispatcher;
 
@@ -47,7 +45,6 @@ import org.apache.ofbiz.service.LocalDispatcher;
 
 public class ContentDocument implements LuceneDocument {
 
-    private static final String MODULE = ContentDocument.class.getName();
     private final Term documentIdentifier;
     private final LocalDispatcher dispatcher;
     private final GenericValue content;
@@ -69,7 +66,7 @@ public class ContentDocument implements LuceneDocument {
     }
 
     @Override
-    public Document prepareDocument(Delegator delegator) {
+    public Document prepareDocument(Delegator delegator) throws GeneralException {
         Document doc;
         // make a new, empty document
         doc = new Document();
@@ -107,15 +104,9 @@ public class ContentDocument implements LuceneDocument {
         return doc;
     }
 
-    private boolean indexDataResource(Document doc) {
+    private boolean indexDataResource(Document doc) throws GeneralException {
         String contentId = content.getString("contentId");
-        GenericValue dataResource;
-        try {
-            dataResource = content.getRelatedOne("DataResource", true);
-        } catch (GenericEntityException e) {
-            Debug.logError(e, MODULE);
-            return false;
-        }
+        GenericValue dataResource = content.getRelatedOne("DataResource", true);
         if (dataResource == null) {
             return false;
         }
@@ -131,21 +122,14 @@ public class ContentDocument implements LuceneDocument {
         String text;
         try {
             text = ContentWorker.renderContentAsText(dispatcher, contentId, null, locale, mimeTypeId, true);
-        } catch (GeneralException | IOException e) {
-            Debug.logError(e, MODULE);
-            return false;
+        } catch (IOException e) {
+            throw new GeneralException("Could not render content " + contentId + " as text", e);
         }
         if (UtilValidate.isNotEmpty(text)) {
             Field field = new TextField("content", text, Store.NO);
             doc.add(field);
         }
-        List<GenericValue> featureDataResourceList;
-        try {
-            featureDataResourceList = content.getRelated("ProductFeatureDataResource", null, null, true);
-        } catch (GenericEntityException e) {
-            Debug.logError(e, MODULE);
-            return false;
-        }
+        List<GenericValue> featureDataResourceList = content.getRelated("ProductFeatureDataResource", null, null, true);
         List<String> featureList = new ArrayList<>();
         for (GenericValue productFeatureDataResource : featureDataResourceList) {
             String feature = productFeatureDataResource.getString("productFeatureId");
