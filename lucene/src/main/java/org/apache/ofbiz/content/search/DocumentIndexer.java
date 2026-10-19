@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.ofbiz.base.util.Debug;
+import org.apache.ofbiz.base.util.GeneralException;
 import org.apache.ofbiz.entity.Delegator;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -95,7 +96,19 @@ public final class DocumentIndexer extends Thread {
                 break;
             }
             Term documentIdentifier = ofbizDocument.getDocumentIdentifier();
-            Document document = ofbizDocument.prepareDocument(this.delegator);
+            Document document = null;
+            boolean prepared = false;
+            try {
+                document = ofbizDocument.prepareDocument(this.delegator);
+                prepared = true;
+            } catch (GeneralException e) {
+                // the record may still exist: keep its document in the index instead of deleting it
+                Debug.logError(e, getName() + ": could not prepare Lucene document, index left unchanged for: " + ofbizDocument, MODULE);
+            }
+            if (!prepared && indexWriter == null) {
+                // nothing to write and no pending changes to commit
+                continue;
+            }
             if (indexWriter == null) {
                 try {
                     StandardAnalyzer analyzer = new StandardAnalyzer();
@@ -113,31 +126,33 @@ public final class DocumentIndexer extends Thread {
                     break;
                 }
             }
-            try {
-                if (document == null) {
-                    indexWriter.deleteDocuments(documentIdentifier);
-                    if (Debug.infoOn()) {
-                        Debug.logInfo(getName() + ": deleted Lucene document: " + ofbizDocument, MODULE);
+            if (prepared) {
+                try {
+                    if (document == null) {
+                        indexWriter.deleteDocuments(documentIdentifier);
+                        if (Debug.infoOn()) {
+                            Debug.logInfo(getName() + ": deleted Lucene document: " + ofbizDocument, MODULE);
+                        }
+                    } else {
+                        indexWriter.updateDocument(documentIdentifier, document);
+                        if (Debug.infoOn()) {
+                            Debug.logInfo(getName() + ": indexed Lucene document: " + ofbizDocument, MODULE);
+                        }
                     }
-                } else {
-                    indexWriter.updateDocument(documentIdentifier, document);
-                    if (Debug.infoOn()) {
-                        Debug.logInfo(getName() + ": indexed Lucene document: " + ofbizDocument, MODULE);
+                } catch (Exception e) {
+                    Debug.logError(e, getName() + ": error processing Lucene document: " + ofbizDocument, MODULE);
+                    if (documentIndexQueue.peek() == null) {
+                        try {
+                            indexWriter.close();
+                            indexWriter = null;
+                        } catch (IOException ioe) {
+                            Debug.logError(ioe, MODULE);
+                        }
                     }
+                    continue;
                 }
-            } catch (Exception e) {
-                Debug.logError(e, getName() + ": error processing Lucene document: " + ofbizDocument, MODULE);
-                if (documentIndexQueue.peek() == null) {
-                    try {
-                        indexWriter.close();
-                        indexWriter = null;
-                    } catch (IOException ioe) {
-                        Debug.logError(ioe, MODULE);
-                    }
-                }
-                continue;
+                uncommittedDocs++;
             }
-            uncommittedDocs++;
             if (uncommittedDocs == UNCOMMITTED_DOC_LIMIT || documentIndexQueue.peek() == null) {
                 // limit reached or queue empty, time to commit
                 try {
