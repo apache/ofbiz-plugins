@@ -21,8 +21,10 @@ package org.apache.ofbiz.content.search;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -36,7 +38,9 @@ import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.content.content.ContentWorker;
 import org.apache.ofbiz.entity.Delegator;
+import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
+import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.service.LocalDispatcher;
 
 /**
@@ -91,7 +95,7 @@ public class ContentDocument implements LuceneDocument {
             doc.add(new TextField("description", description, Store.YES));
         }
         List<String> ancestorList = new ArrayList<>();
-        ContentWorker.getContentAncestryAll(content.getDelegator(), contentId, "WEB_SITE_PUB_PT", "TO", ancestorList);
+        getContentAncestry(content.getDelegator(), contentId, "WEB_SITE_PUB_PT", ancestorList, new HashSet<>());
         String ancestorString = StringUtil.join(ancestorList, " ");
         if (UtilValidate.isNotEmpty(ancestorString)) {
             Field field = new StringField("site", ancestorString, Store.NO);
@@ -102,6 +106,31 @@ public class ContentDocument implements LuceneDocument {
             doc = null;
         }
         return doc;
+    }
+
+    /**
+     * Adds the ancestors of a content having the given content type to the list, following the content associations from
+     * contentId to contentIdTo. Unlike ContentWorker.getContentAncestryAll(), a database error is thrown instead of being
+     * logged, so that the content is not indexed without its ancestors.
+     */
+    private static void getContentAncestry(Delegator delegator, String contentId, String contentTypeId, List<String> ancestorList,
+            Set<String> visitedContentIds) throws GenericEntityException {
+        if (!visitedContentIds.add(contentId)) {
+            return;
+        }
+        List<GenericValue> contentAssocs = EntityQuery.use(delegator).from("ContentAssoc")
+                .where("contentId", contentId)
+                .cache().filterByDate().queryList();
+        for (GenericValue contentAssoc : contentAssocs) {
+            String contentIdTo = contentAssoc.getString("contentIdTo");
+            getContentAncestry(delegator, contentIdTo, contentTypeId, ancestorList, visitedContentIds);
+            if (!ancestorList.contains(contentIdTo)) {
+                GenericValue contentTo = EntityQuery.use(delegator).from("Content").where("contentId", contentIdTo).cache().queryOne();
+                if (contentTo != null && contentTypeId.equals(contentTo.getString("contentTypeId"))) {
+                    ancestorList.add(contentIdTo);
+                }
+            }
+        }
     }
 
     private boolean indexDataResource(Document doc) throws GeneralException {
