@@ -39,23 +39,4 @@ if (previousParams) {
 }
 context.previousParams = previousParams
 
-//the parameters from janrain
-userInfoMap = request.getAttribute("userInfoMap")
-if (!userInfoMap) {
-    userInfoMap = request.getSession().getAttribute("userInfoMap")
-}
-if (userInfoMap) {
-    if (userInfoMap.givenName && userInfoMap.familyName) {
-        requestParameters.USER_FIRST_NAME = userInfoMap.givenName
-        requestParameters.USER_LAST_NAME = userInfoMap.familyName
-    } else if (userInfoMap.formatted) {
-        requestParameters.USER_FIRST_NAME = userInfoMap.formatted
-    }
-    requestParameters.CUSTOMER_EMAIL = userInfoMap.email
-    requestParameters.preferredUsername = userInfoMap.preferredUsername
-    requestParameters.USERNAME = userInfoMap.preferredUsername
-    request.getSession().setAttribute("userInfoMap", userInfoMap)
-}
-
-donePage = "main;" + UtilHttp.getSessionId(request)
-context.donePage = donePage
+context.donePage = 'main;' + UtilHttp.getSessionId(request)

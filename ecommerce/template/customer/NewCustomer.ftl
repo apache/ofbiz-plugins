@@ -403,25 +403,17 @@ will generally always be reserved for the logo at the top of the page.
     <legend><#if getUsername>${uiLabelMap.CommonUsername}</#if></legend>
     <#if getUsername>
       <@fieldErrors fieldName="USERNAME"/>
-      <#if !requestParameters.preferredUsername?has_content>
         <div class="form-check">
             <input type="checkbox" name="UNUSEEMAIL" class="form-check-input" id="UNUSEEMAIL" value="on"
                 onclick="setEmailUsername();" onfocus="setLastFocused(this);"/>
             <label>${uiLabelMap.EcommerceUseEmailAddress}</label>
         </div>
-      </#if>
 
       <div class="row form-group">
       <div class="col-12">
         <label for="USERNAME">${uiLabelMap.CommonUsername}*</label>
-        <#if requestParameters.preferredUsername?has_content>
-          <input type="text" name="showUserName" id="showUserName" value="${requestParameters.USERNAME!}"
-              disabled="disabled"/>
-          <input type="hidden" name="USERNAME" id="USERNAME" value="${requestParameters.USERNAME!}"/>
-        <#else>
           <input type="text" name="USERNAME" id="USERNAME" value="${requestParameters.USERNAME!}"
               class="form-control form-control-sm" onfocus="clickUsername();" onchange="changeEmail();"/>
-        </#if>
       </div>
       </div>
     </#if>
