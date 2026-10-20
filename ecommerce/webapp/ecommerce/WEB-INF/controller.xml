@@ -1800,15 +1800,6 @@ under the License.
         <response name="error" type="view-last" save-current-view="true"/>
     </request-map>
 
-    <!-- ============== Janrain Engage ============== -->
-    <request-map uri="janrainCheckLogin">
-        <security https="true" auth="false"/>
-        <event type="java" path="org.apache.ofbiz.ecommerce.janrain.JanrainHelper" invoke="janrainCheckLogin"/>
-        <response name="success" type="view" value="main"/>
-        <response name="error" type="view" value="login"/>
-        <response name="userLoginMissing" type="request" value="newcustomer"/>
-    </request-map>
-
     <!-- End of Request Mappings -->
 
     <!-- View Mappings -->
