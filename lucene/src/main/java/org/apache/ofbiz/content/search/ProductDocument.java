@@ -296,6 +296,9 @@ public class ProductDocument implements LuceneDocument {
                             String contentText = DataResourceWorker.renderDataResourceAsText(null, delegator, productContentAndInfo.getString(
                                     "dataResourceId"), drContext, null, null, false);
                             addTextField(doc, "content", contentText, false, "fullText", delegator);
+                        } catch (GenericEntityException e) {
+                            // a database error: keep the indexed document rather than index the product without this text
+                            throw e;
                         } catch (IOException | GeneralException e1) {
                             Debug.logError(e1, "Error getting content text to index", MODULE);
                         }
