@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<!--
+    manufacturing-demo: a SELF-CONTAINED skateboard-factory manufacturing configuration.
+
+    Loads on its own reader with NO stock demo data, via the ofbiz load-data command with
+    readers=seed,seed-initial,manufacturingDemo
+
+    Everything the evaluator sees is in THIS file - nothing is silently pulled from the
+    stock 'demo' data set. To keep it self-contained on stock entities, the company and
+    focused security grants are copied/adapted (with attribution below) from OFBiz's own
+    demo files; the rest is the manufacturing scenario itself.
+
+    Scenario and manufacturing data: Swapnil Shah (Apache OFBiz cwiki, Manufacturing space).
+    Product, routing and machine IDs are preserved verbatim so this demo lines up with the
+    published manufacturing how-tos.
+
+    Sources for the copied bootstrap rows:
+      * Company organization   - applications/datamodel/data/demo/AccountingDemoData.xml
+      * Admin user             - applications/datamodel/data/demo/SecurityExtDemoData.xml
+      * FULLADMIN group/member - framework/security/data/SecurityGroupDemoData.xml
+      * Permission ids granted - defined in seed (e.g.
+                                 applications/manufacturing/data/ManufacturingSecurityPermissionSeedData.xml);
+                                 we only grant them to FULLADMIN here.
+-->
+<entity-engine-xml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entity-engine-xml.xsd">
+
+    <!-- ============================================================ -->
+    <!-- Company organization                                          -->
+    <!-- Copied/adapted from AccountingDemoData.xml so the demo stands -->
+    <!-- alone (the stock 'demo' reader normally provides "Company").  -->
+    <!-- partyId kept as "Company" to match the published how-tos.     -->
+    <!-- ============================================================ -->
+    <Party partyId="Company" partyTypeId="PARTY_GROUP" statusId="PARTY_ENABLED"/>
+    <PartyGroup partyId="Company" groupName="Your Company Name Here" logoImageUrl="/images/ofbiz_logo.png"/>
+    <PartyStatus partyId="Company" statusId="PARTY_ENABLED" statusDate="2001-01-01 12:00:00.0"/>
+    <PartyRole partyId="Company" roleTypeId="INTERNAL_ORGANIZATIO"/>
+    <PartyRole partyId="Company" roleTypeId="MANUFACTURER"/>
+    <ContactMech contactMechId="9000" contactMechTypeId="POSTAL_ADDRESS"/>
+    <PostalAddress contactMechId="9000" toName="Company XYZ" address1="2003 Open Blvd" city="Open City"
+            postalCode="999999" countryGeoId="USA" stateProvinceGeoId="CA"/>
+    <PartyContactMech partyId="Company" contactMechId="9000" fromDate="2000-01-01 00:00:00.000" allowSolicitation="Y"/>
+
+    <!-- ============================================================ -->
+    <!-- Login & security: a focused, manufacturing-capable admin      -->
+    <!-- admin party/login copied from SecurityExtDemoData.xml.        -->
+    <!-- Passwords are intentionally not embedded in this plugin; use   -->
+    <!-- standard OFBiz admin-user setup for an environment-specific    -->
+    <!-- password. FULLADMIN group copied from SecurityGroupDemoData.   -->
+    <!-- NOTE: stock grants FULLADMIN ~55                              -->
+    <!-- permissions across 16 demo files; we grant ONLY what this     -->
+    <!-- manufacturing demo needs, so this admin drives the           -->
+    <!-- Manufacturing app but not unrelated back-office apps.         -->
+    <!-- ============================================================ -->
+    <Party partyId="admin" partyTypeId="PERSON" statusId="PARTY_ENABLED"/>
+    <Person partyId="admin" firstName="THE" middleName="PRIVILEGED" lastName="ADMINISTRATOR" personalTitle="Mr."/>
+    <PartyStatus partyId="admin" statusId="PARTY_ENABLED" statusDate="2001-01-01 12:00:00.0"/>
+    <UserLogin userLoginId="admin" userFullName="THE ADMINISTRATOR" partyId="admin"/>
+
+    <SecurityGroup groupId="FULLADMIN" description="Full Admin group, has all general permissions." groupName="Full Admin"/>
+    <UserLoginSecurityGroup groupId="FULLADMIN" userLoginId="admin" fromDate="2001-01-01 12:00:00.0"/>
+    <!-- Focused permission set for this demo (ids are defined in seed). -->
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="OFBTOOLS_VIEW" fromDate="2001-01-01 12:00:00.0"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="CATALOG_VIEW" fromDate="2001-01-01 12:00:00.0"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="CATALOG_ADMIN" fromDate="2001-01-01 12:00:00.0"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MANUFACTURING_VIEW" fromDate="2001-01-01 12:00:00.0"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MANUFACTURING_CREATE" fromDate="2001-01-01 12:00:00.0"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MANUFACTURING_UPDATE" fromDate="2001-01-01 12:00:00.0"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MANUFACTURING_DELETE" fromDate="2001-01-01 12:00:00.0"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MANUFACTURING_ADMIN" fromDate="2001-01-01 12:00:00.0"/>
+    <!-- Production runs create WorkEfforts; these cover createWorkEffort and routing-task creation. -->
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="WORKEFFORTMGR_ADMIN" fromDate="2001-01-01 12:00:00.0"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="ASSETMAINT_ADMIN" fromDate="2001-01-01 12:00:00.0"/>
+
+    <!-- ============================================================ -->
+    <!-- Production plant (owned by the company above)                 -->
+    <!-- ============================================================ -->
+    <Facility facilityId="MFG_PLANT" facilityTypeId="PLANT" facilityName="Skateboard Manufacturing Plant"
+            ownerPartyId="Company" defaultInventoryItemTypeId="NON_SERIAL_INV_ITEM"
+            description="Plant where skateboard decks are laminated, shaped and finished."/>
+
+    <!-- ============================================================ -->
+    <!-- Products                                                      -->
+    <!-- Finished good (the deck), its sub-assembly, and the purchased -->
+    <!-- raw materials. quantityUomId WT_lb = pound.                  -->
+    <!-- ============================================================ -->
+    <!-- Finished good -->
+    <Product productId="DCGAPSOSR12" productTypeId="FINISHED_GOOD" internalName="Skateboard Deck FG"
+            productName="Skateboard Deck FG" inventoryItemTypeId="NON_SERIAL_INV_ITEM"
+            isVirtual="N" isVariant="N" billOfMaterialLevel="0" inShippingBox="N"
+            lotIdFilledIn="Allowed" quantityUomId="WT_lb"/>
+    <!-- Alternate finished good kept BOM-free so it is a clean BOM copy target -->
+    <Product productId="DCGAPSOSR13" productTypeId="FINISHED_GOOD" internalName="Skateboard Deck FG Alt"
+            productName="Skateboard Deck FG Alt" inventoryItemTypeId="NON_SERIAL_INV_ITEM"
+            isVirtual="N" isVariant="N" billOfMaterialLevel="0" inShippingBox="N"
+            lotIdFilledIn="Allowed" quantityUomId="WT_lb"/>
+    <!-- Sub-assembly (the glued/pressed deck blank) -->
+    <Product productId="DSK15144-00" productTypeId="SUBASSEMBLY" internalName="Skateboard Deck Sub Assembly"
+            productName="Skateboard Deck Sub Assembly" inventoryItemTypeId="NON_SERIAL_INV_ITEM"
+            isVirtual="N" isVariant="N" billOfMaterialLevel="1" inShippingBox="N"
+            lotIdFilledIn="Allowed" quantityUomId="WT_lb"/>
+    <!-- Raw materials -->
+    <Product productId="DRGAMBSK8II" productTypeId="RAW_MATERIAL" internalName="Glue"
+            productName="Glue" inventoryItemTypeId="NON_SERIAL_INV_ITEM"
+            isVirtual="N" isVariant="N" billOfMaterialLevel="2" inShippingBox="N"
+            lotIdFilledIn="Allowed" quantityUomId="WT_lb"/>
+    <Product productId="DRVM52105036FAS" productTypeId="RAW_MATERIAL" internalName="veneer maple face"
+            productName="veneer maple face" inventoryItemTypeId="NON_SERIAL_INV_ITEM"
+            isVirtual="N" isVariant="N" billOfMaterialLevel="2" inShippingBox="N"
+            lotIdFilledIn="Allowed" quantityUomId="WT_lb"/>
+    <Product productId="DRVM60361050XA" productTypeId="RAW_MATERIAL" internalName="veneer maple x ply"
+            productName="veneer maple x ply" inventoryItemTypeId="NON_SERIAL_INV_ITEM"
+            isVirtual="N" isVariant="N" billOfMaterialLevel="2" inShippingBox="N"
+            lotIdFilledIn="Allowed" quantityUomId="WT_lb"/>
+    <Product productId="DRVM62105036CA" productTypeId="RAW_MATERIAL" internalName="veneer maple core"
+            productName="veneer maple core" inventoryItemTypeId="NON_SERIAL_INV_ITEM"
+            isVirtual="N" isVariant="N" billOfMaterialLevel="2" inShippingBox="N"
+            lotIdFilledIn="Allowed" quantityUomId="WT_lb"/>
+    <Product productId="DCSPPUSA" productTypeId="RAW_MATERIAL" internalName="sticker"
+            productName="sticker" inventoryItemTypeId="NON_SERIAL_INV_ITEM"
+            isVirtual="N" isVariant="N" billOfMaterialLevel="1" inShippingBox="N"
+            lotIdFilledIn="Allowed" quantityUomId="WT_lb"/>
+    <Product productId="DRSASOCWC2" productTypeId="RAW_MATERIAL" internalName="warranty card"
+            productName="warranty card" inventoryItemTypeId="NON_SERIAL_INV_ITEM"
+            isVirtual="N" isVariant="N" billOfMaterialLevel="1" inShippingBox="N"
+            lotIdFilledIn="Allowed" quantityUomId="WT_lb"/>
+    <Product productId="DRTGPSOSR12" productTypeId="RAW_MATERIAL" internalName="Transfer"
+            productName="Transfer" inventoryItemTypeId="NON_SERIAL_INV_ITEM"
+            isVirtual="N" isVariant="N" billOfMaterialLevel="1" inShippingBox="N"
+            lotIdFilledIn="Allowed" quantityUomId="WT_lb"/>
+
+    <!-- ============================================================ -->
+    <!-- Bill of Materials (MANUF_COMPONENT)                           -->
+    <!-- Two tiers: the sub-assembly is glued from veneers; the        -->
+    <!-- finished deck adds sticker, warranty card and transfer.       -->
+    <!-- ============================================================ -->
+    <!-- Sub-assembly DSK15144-00 = glue + maple veneers -->
+    <ProductAssoc productId="DSK15144-00" productIdTo="DRGAMBSK8II" productAssocTypeId="MANUF_COMPONENT"
+            fromDate="2024-01-01 00:00:00" sequenceNum="1" quantity="0.830000"/>
+    <ProductAssoc productId="DSK15144-00" productIdTo="DRVM52105036FAS" productAssocTypeId="MANUF_COMPONENT"
+            fromDate="2024-01-01 00:00:00" sequenceNum="2" quantity="2.000000"/>
+    <ProductAssoc productId="DSK15144-00" productIdTo="DRVM60361050XA" productAssocTypeId="MANUF_COMPONENT"
+            fromDate="2024-01-01 00:00:00" sequenceNum="3" quantity="2.000000"/>
+    <ProductAssoc productId="DSK15144-00" productIdTo="DRVM62105036CA" productAssocTypeId="MANUF_COMPONENT"
+            fromDate="2024-01-01 00:00:00" sequenceNum="4" quantity="3.000000"/>
+    <!-- Finished deck DCGAPSOSR12 = sub-assembly + finishing items -->
+    <ProductAssoc productId="DCGAPSOSR12" productIdTo="DCSPPUSA" productAssocTypeId="MANUF_COMPONENT"
+            fromDate="2024-01-01 00:00:00" sequenceNum="1" quantity="1.000000"/>
+    <ProductAssoc productId="DCGAPSOSR12" productIdTo="DRSASOCWC2" productAssocTypeId="MANUF_COMPONENT"
+            fromDate="2024-01-01 00:00:00" sequenceNum="2" quantity="1.000000"/>
+    <ProductAssoc productId="DCGAPSOSR12" productIdTo="DRTGPSOSR12" productAssocTypeId="MANUF_COMPONENT"
+            fromDate="2024-01-01 00:00:00" sequenceNum="3" quantity="1.000000"/>
+    <ProductAssoc productId="DCGAPSOSR12" productIdTo="DSK15144-00" productAssocTypeId="MANUF_COMPONENT"
+            fromDate="2024-01-01 00:00:00" sequenceNum="4" quantity="1.000000"/>
+
+    <!-- ============================================================ -->
+    <!-- Machine work calendars                                        -->
+    <!-- Capacity is in milliseconds: 28800000 ms = 8 hours.          -->
+    <!-- ============================================================ -->
+    <!-- AMC machine: standard 5-day work week -->
+    <TechDataCalendarWeek calendarWeekId="CW_AMC_STD" description="Standard Work Week - 5 days, 8 hours/day"
+            mondayStartTime="08:30:00" mondayCapacity="28800000"
+            tuesdayStartTime="08:30:00" tuesdayCapacity="28800000"
+            wednesdayStartTime="08:30:00" wednesdayCapacity="28800000"
+            thursdayStartTime="08:30:00" thursdayCapacity="28800000"
+            fridayStartTime="08:30:00" fridayCapacity="28800000"
+            saturdayStartTime="" saturdayCapacity="" sundayStartTime="" sundayCapacity=""/>
+    <!-- LAM machine: 3-day work week (Mon/Wed/Fri) -->
+    <TechDataCalendarWeek calendarWeekId="CW_LAM_STD" description="Standard Work Week - 3 days, 8 hours/day"
+            mondayStartTime="08:30:00" mondayCapacity="28800000"
+            tuesdayStartTime="" tuesdayCapacity=""
+            wednesdayStartTime="08:30:00" wednesdayCapacity="28800000"
+            thursdayStartTime="" thursdayCapacity=""
+            fridayStartTime="08:30:00" fridayCapacity="28800000"
+            saturdayStartTime="" saturdayCapacity="" sundayStartTime="" sundayCapacity=""/>
+    <TechDataCalendar calendarId="CAL_AMC" description="Production Calendar for AMC Machine" calendarWeekId="CW_AMC_STD"/>
+    <TechDataCalendar calendarId="CAL_LAM" description="Production Calendar for LAM Machine" calendarWeekId="CW_LAM_STD"/>
+
+    <!-- ============================================================ -->
+    <!-- Production machines (fixed assets), located at the plant      -->
+    <!-- ============================================================ -->
+    <FixedAsset fixedAssetId="AMC" fixedAssetTypeId="GROUP_EQUIPMENT" serialNumber="AMC-001"
+            locatedAtFacilityId="MFG_PLANT" calendarId="CAL_AMC"
+            purchaseCost="25000.000000" salvageValue="2500.000000" depreciation="2500.000000"/>
+    <FixedAsset fixedAssetId="LAM" fixedAssetTypeId="GROUP_EQUIPMENT" serialNumber="LAM-001"
+            locatedAtFacilityId="MFG_PLANT" calendarId="CAL_LAM"
+            purchaseCost="25000.000000" salvageValue="2500.000000" depreciation="2500.000000"/>
+
+    <!-- ============================================================ -->
+    <!-- Shop-floor operator and costing reference data                -->
+    <!-- These records keep the routing-operation forms usable without -->
+    <!-- loading the stock demo reader.                                -->
+    <!-- ============================================================ -->
+    <Party partyId="SK8_ASM_OPERATOR" partyTypeId="PERSON" statusId="PARTY_ENABLED"/>
+    <Person partyId="SK8_ASM_OPERATOR" firstName="Skateboard" lastName="Operator"/>
+    <PartyStatus partyId="SK8_ASM_OPERATOR" statusId="PARTY_ENABLED" statusDate="2024-01-01 00:00:00"/>
+    <PartyRole partyId="SK8_ASM_OPERATOR" roleTypeId="WORKER"/>
+    <CostComponentCalc costComponentCalcId="SK8_TASK_COST_CALC"
+            description="Skateboard routing labor standard" currencyUomId="USD"
+            fixedCost="1.000000" variableCost="2.000000" perMilliSecond="60000.000000"/>
+
+    <!-- ============================================================ -->
+    <!-- Routings and operations                                       -->
+    <!-- A ROUTING groups ROU_TASKs (linked by ROUTING_COMPONENT) and  -->
+    <!-- is tied to the product it produces by a ROU_PROD_TEMPLATE     -->
+    <!-- WorkEffortGoodStandard. Task times are in milliseconds.       -->
+    <!-- ============================================================ -->
+    <!-- Routing for the sub-assembly DSK15144-00: laminate (LAM), then shape -->
+    <WorkEffort workEffortId="MANUF10169" workEffortTypeId="ROUTING" currentStatusId="ROU_ACTIVE"
+            workEffortName="Skateboard Deck Sub Assembly" description="Skateboard Deck Sub Assembly"
+            quantityToProduce="0.000000" revisionNumber="1"/>
+    <WorkEffortGoodStandard workEffortId="MANUF10169" productId="DSK15144-00"
+            workEffortGoodStdTypeId="ROU_PROD_TEMPLATE" fromDate="2024-01-01 00:00:00"/>
+    <WorkEffort workEffortId="MANUF20169" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE"
+            workEffortPurposeTypeId="ROU_ASSEMBLING" workEffortName="LAM" description="LAM"
+            quantityToProduce="0.000000" fixedAssetId="LAM" revisionNumber="1"
+            estimatedMilliSeconds="300000" estimatedSetupMillis="900000"/>
+    <WorkEffort workEffortId="MANUF10170" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE"
+            workEffortPurposeTypeId="ROU_ASSEMBLING" workEffortName="Shape Deck" description="Shape Deck"
+            revisionNumber="1"/>
+    <WorkEffortAssoc workEffortIdFrom="MANUF10169" workEffortIdTo="MANUF20169"
+            workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="10" fromDate="2024-01-01 00:00:00"/>
+    <WorkEffortAssoc workEffortIdFrom="MANUF10169" workEffortIdTo="MANUF10170"
+            workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="20" fromDate="2024-01-01 00:00:00"/>
+
+    <!-- Routing for the finished deck DCGAPSOSR12: apply transfer (AMC) -->
+    <WorkEffort workEffortId="MANUF10165" workEffortTypeId="ROUTING" currentStatusId="ROU_ACTIVE"
+            workEffortName="Apply Transfer to deck" description="Apply Transfer to deck"
+            quantityToProduce="0.000000" revisionNumber="1"/>
+    <WorkEffortGoodStandard workEffortId="MANUF10165" productId="DCGAPSOSR12"
+            workEffortGoodStdTypeId="ROU_PROD_TEMPLATE" fromDate="2024-01-01 00:00:00"/>
+    <WorkEffort workEffortId="MANUF10171" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE"
+            workEffortPurposeTypeId="ROU_ASSEMBLING" workEffortName="Apply Transfer to deck"
+            description="Apply Transfer to deck" fixedAssetId="AMC" revisionNumber="1"
+            estimatedMilliSeconds="300000" estimatedSetupMillis="900000"/>
+    <WorkEffortAssoc workEffortIdFrom="MANUF10165" workEffortIdTo="MANUF10171"
+            workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="10" fromDate="2024-01-01 00:00:00"/>
+
+    <!-- Routing-operation baseline used by the Routing Cost Management PWA. -->
+    <WorkEffort workEffortId="SK8_ALT_ROUTING" workEffortTypeId="ROUTING" currentStatusId="ROU_ACTIVE"
+            workEffortName="Skateboard Alternate Deck Routing" description="Routing for the alternate skateboard deck"
+            quantityToProduce="1.000000" revisionNumber="1"/>
+    <WorkEffortGoodStandard workEffortId="SK8_ALT_ROUTING" productId="DCGAPSOSR13"
+            workEffortGoodStdTypeId="ROU_PROD_TEMPLATE" fromDate="2024-01-15 09:00:00"
+            estimatedQuantity="1.000000"/>
+    <WorkEffort workEffortId="SK8_TRANSFER_TASK" workEffortTypeId="ROU_TASK" currentStatusId="ROU_ACTIVE"
+            workEffortPurposeTypeId="ROU_MANUFACTURING" workEffortName="Apply Transfer to Alt Deck"
+            description="Apply transfer artwork to the alternate skateboard deck"
+            fixedAssetId="AMC" revisionNumber="1" estimatedMilliSeconds="420000"
+            estimatedSetupMillis="120000" reservPersons="1.000000"/>
+    <WorkEffortAssoc workEffortIdFrom="SK8_ALT_ROUTING" workEffortIdTo="SK8_TRANSFER_TASK"
+            workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="10" fromDate="2024-01-15 09:05:00"/>
+    <WorkEffortCostCalc workEffortId="SK8_TRANSFER_TASK" costComponentTypeId="EST_STD_LABOR_COST"
+            costComponentCalcId="SK8_TASK_COST_CALC" fromDate="2024-01-15 09:10:00"/>
+    <WorkEffortGoodStandard workEffortId="SK8_TRANSFER_TASK" productId="DCGAPSOSR13"
+            workEffortGoodStdTypeId="PRUNT_PROD_DELIV" fromDate="2024-01-15 09:15:00"
+            estimatedQuantity="1.000000"/>
+    <WorkEffortFixedAssetStd workEffortId="SK8_TRANSFER_TASK" fixedAssetTypeId="GROUP_EQUIPMENT"
+            estimatedQuantity="1.000000" estimatedDuration="60000.000000" estimatedCost="12.500000"/>
+    <WorkEffortPartyAssignment workEffortId="SK8_TRANSFER_TASK" partyId="SK8_ASM_OPERATOR" roleTypeId="WORKER"
+            fromDate="2024-01-15 09:20:00" statusId="PRTYASGN_ASSIGNED"
+            comments="Standard operator assignment for the skateboard alternate deck routing"/>
+
+    <!-- ============================================================ -->
+    <!-- Product-facility settings (MRP reorder parameters at plant)   -->
+    <!-- ============================================================ -->
+    <ProductFacility productId="DCGAPSOSR12" facilityId="MFG_PLANT" minimumStock="100.000000" reorderQuantity="1.000000"/>
+    <ProductFacility productId="DCGAPSOSR13" facilityId="MFG_PLANT" minimumStock="100.000000" reorderQuantity="1.000000"/>
+    <ProductFacility productId="DSK15144-00" facilityId="MFG_PLANT" minimumStock="50.000000"/>
+    <ProductFacility productId="DRGAMBSK8II" facilityId="MFG_PLANT" minimumStock="1.000000" reorderQuantity="1.000000"/>
+    <ProductFacility productId="DRVM52105036FAS" facilityId="MFG_PLANT" minimumStock="1.000000" reorderQuantity="1.000000"/>
+    <ProductFacility productId="DRVM60361050XA" facilityId="MFG_PLANT" minimumStock="1.000000" reorderQuantity="1.000000"/>
+    <ProductFacility productId="DRVM62105036CA" facilityId="MFG_PLANT" minimumStock="1.000000" reorderQuantity="1.000000"/>
+    <ProductFacility productId="DCSPPUSA" facilityId="MFG_PLANT" minimumStock="1.000000" reorderQuantity="1.000000"/>
+    <ProductFacility productId="DRSASOCWC2" facilityId="MFG_PLANT" minimumStock="1.000000" reorderQuantity="1.000000"/>
+    <ProductFacility productId="DRTGPSOSR12" facilityId="MFG_PLANT" minimumStock="1.000000" reorderQuantity="1.000000"/>
+
+    <!-- ============================================================ -->
+    <!-- Suppliers and supplier products (purchasing setup)            -->
+    <!-- ============================================================ -->
+    <Party partyId="SUP_001" partyTypeId="PARTY_GROUP"/>
+    <PartyGroup partyId="SUP_001" groupName="Maplewood Veneer Supply"/>
+    <PartyRole partyId="SUP_001" roleTypeId="SUPPLIER" fromDate="2024-01-01 00:00:00"/>
+    <ContactMech contactMechId="CM_SUP001" contactMechTypeId="POSTAL_ADDRESS"/>
+    <PostalAddress contactMechId="CM_SUP001" toName="Maplewood Veneer Supply" address1="500 Industrial Dr"
+            city="Portland" stateProvinceGeoId="OR" postalCode="97201" countryGeoId="USA"/>
+    <PartyContactMech partyId="SUP_001" contactMechId="CM_SUP001" fromDate="2024-01-01 00:00:00"/>
+
+    <Party partyId="SUP_002" partyTypeId="PARTY_GROUP"/>
+    <PartyGroup partyId="SUP_002" groupName="Adhesive Solutions Inc."/>
+    <PartyRole partyId="SUP_002" roleTypeId="SUPPLIER" fromDate="2024-01-01 00:00:00"/>
+    <ContactMech contactMechId="CM_SUP002" contactMechTypeId="POSTAL_ADDRESS"/>
+    <PostalAddress contactMechId="CM_SUP002" toName="Adhesive Solutions Inc." address1="200 Chemical Way"
+            city="Houston" stateProvinceGeoId="TX" postalCode="77001" countryGeoId="USA"/>
+    <PartyContactMech partyId="SUP_002" contactMechId="CM_SUP002" fromDate="2024-01-01 00:00:00"/>
+
+    <Party partyId="SUP_003" partyTypeId="PARTY_GROUP"/>
+    <PartyGroup partyId="SUP_003" groupName="Sticker Print Co."/>
+    <PartyRole partyId="SUP_003" roleTypeId="SUPPLIER" fromDate="2024-01-01 00:00:00"/>
+    <ContactMech contactMechId="CM_SUP003" contactMechTypeId="POSTAL_ADDRESS"/>
+    <PostalAddress contactMechId="CM_SUP003" toName="Sticker Print Co." address1="789 Graphics Blvd"
+            city="Los Angeles" stateProvinceGeoId="CA" postalCode="90001" countryGeoId="USA"/>
+    <PartyContactMech partyId="SUP_003" contactMechId="CM_SUP003" fromDate="2024-01-01 00:00:00"/>
+
+    <Party partyId="SUP_004" partyTypeId="PARTY_GROUP"/>
+    <PartyGroup partyId="SUP_004" groupName="Universal Bearings Ltd."/>
+    <PartyRole partyId="SUP_004" roleTypeId="SUPPLIER" fromDate="2024-01-01 00:00:00"/>
+    <ContactMech contactMechId="CM_SUP004" contactMechTypeId="POSTAL_ADDRESS"/>
+    <PostalAddress contactMechId="CM_SUP004" toName="Universal Bearings Ltd." address1="321 Precision Circle"
+            city="Detroit" stateProvinceGeoId="MI" postalCode="48201" countryGeoId="USA"/>
+    <PartyContactMech partyId="SUP_004" contactMechId="CM_SUP004" fromDate="2024-01-01 00:00:00"/>
+
+    <Party partyId="SUP_005" partyTypeId="PARTY_GROUP"/>
+    <PartyGroup partyId="SUP_005" groupName="Packaging Solutions LLC"/>
+    <PartyRole partyId="SUP_005" roleTypeId="SUPPLIER" fromDate="2024-01-01 00:00:00"/>
+    <ContactMech contactMechId="CM_SUP005" contactMechTypeId="POSTAL_ADDRESS"/>
+    <PostalAddress contactMechId="CM_SUP005" toName="Packaging Solutions LLC" address1="654 Corrugated Ln"
+            city="Atlanta" stateProvinceGeoId="GA" postalCode="30301" countryGeoId="USA"/>
+    <PartyContactMech partyId="SUP_005" contactMechId="CM_SUP005" fromDate="2024-01-01 00:00:00"/>
+
+    <!-- Vendor relationships for the purchased raw materials.
+         (lastPrice is the OFBiz field for the supplier's quoted price.) -->
+    <SupplierProduct productId="DRGAMBSK8II" partyId="SUP_002" availableFromDate="2024-01-01 00:00:00"
+            minimumOrderQuantity="50.000000" lastPrice="22.500000" currencyUomId="USD"/>
+    <SupplierProduct productId="DRVM60361050XA" partyId="SUP_001" availableFromDate="2024-01-01 00:00:00"
+            minimumOrderQuantity="100.000000" lastPrice="18.750000" currencyUomId="USD"/>
+    <SupplierProduct productId="DCSPPUSA" partyId="SUP_003" availableFromDate="2024-01-01 00:00:00"
+            minimumOrderQuantity="500.000000" lastPrice="0.350000" currencyUomId="USD"/>
+</entity-engine-xml>
