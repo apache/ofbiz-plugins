@@ -30,11 +30,11 @@
 // Bitwarden, env-var, and 1Password contribute no third-party dependencies here —
 // JDK java.net.http.HttpClient only.
 dependencies {
-    pluginLibsCompile 'software.amazon.awssdk:secretsmanager:2.26.31'
-    pluginLibsCompile 'software.amazon.awssdk:url-connection-client:2.26.31'
+    pluginLibsCompile 'software.amazon.awssdk:secretsmanager:2.57.0'
+    pluginLibsCompile 'software.amazon.awssdk:url-connection-client:2.57.0'
 
-    pluginLibsCompile 'com.azure:azure-security-keyvault-secrets:4.8.0'
-    pluginLibsCompile 'com.azure:azure-identity:1.12.0'
+    pluginLibsCompile 'com.azure:azure-security-keyvault-secrets:4.11.3'
+    pluginLibsCompile 'com.azure:azure-identity:1.18.7'
     // Azure's HTTP client (azure-core-http-netty / reactor-netty) lists io.netty:netty-tcnative-boringssl-static
     // as an OPTIONAL transitive dependency, so Gradle never downloads it and Netty falls back to the plain JDK
     // SSLEngine for TLS. That fallback is functionally correct (confirmed against a real Azure Key Vault) — the
@@ -48,7 +48,7 @@ dependencies {
     // lockfile after uncommenting (rm gradle.lockfile && ./gradlew :plugins:secretshub:dependencies --write-locks).
     // pluginLibsRuntime 'io.netty:netty-tcnative-boringssl-static:2.0.65.Final'
 
-    pluginLibsCompile 'com.google.cloud:google-cloud-secretmanager:2.36.0'
+    pluginLibsCompile 'com.google.cloud:google-cloud-secretmanager:2.99.0'
 
     pluginLibsCompile 'io.github.jopenlibs:vault-java-driver:5.4.0'
 }
