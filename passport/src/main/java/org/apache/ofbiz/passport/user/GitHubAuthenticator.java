@@ -25,8 +25,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.transaction.Transaction;
-
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -47,7 +45,6 @@ import org.apache.ofbiz.common.authentication.api.AuthenticatorException;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
-import org.apache.ofbiz.entity.transaction.GenericTransactionException;
 import org.apache.ofbiz.entity.transaction.TransactionUtil;
 import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.passport.event.GitHubEvents;
@@ -155,20 +152,9 @@ public class GitHubAuthenticator implements Authenticator {
             throw new AuthenticatorException(e.getMessage(), e);
         }
 
-        // suspend the current transaction and load the user
-        Transaction parentTx = null;
-        boolean beganTransaction = false;
-
+        // load the user in its own transaction, the current one being suspended
         try {
-            try {
-                parentTx = TransactionUtil.suspend();
-            } catch (GenericTransactionException e) {
-                Debug.logError(e, "Could not suspend transaction: " + e.getMessage(), MODULE);
-            }
-
-            try {
-                beganTransaction = TransactionUtil.begin();
-
+            TransactionUtil.doNewTransaction(() -> {
                 if (userLogin == null) {
                     // create the user
                     createUser(userMap, system);
@@ -176,28 +162,10 @@ public class GitHubAuthenticator implements Authenticator {
                     // update the user information
                     updateUser(userMap, system, userLogin);
                 }
-
-            } catch (GenericTransactionException e) {
-                Debug.logError(e, "Could not suspend transaction: " + e.getMessage(), MODULE);
-            } finally {
-                try {
-                    TransactionUtil.commit(beganTransaction);
-                } catch (GenericTransactionException e) {
-                    Debug.logError(e, "Could not commit nested transaction: " + e.getMessage(), MODULE);
-                }
-            }
-        } finally {
-            // resume/restore parent transaction
-            if (parentTx != null) {
-                try {
-                    TransactionUtil.resume(parentTx);
-                    if (Debug.verboseOn()) {
-                        Debug.logVerbose("Resumed the parent transaction.", MODULE);
-                    }
-                } catch (GenericTransactionException e) {
-                    Debug.logError(e, "Could not resume parent nested transaction: " + e.getMessage(), MODULE);
-                }
-            }
+                return null;
+            }, "Could not sync the GitHub user " + userLoginId, 0, true);
+        } catch (GenericEntityException e) {
+            throw new AuthenticatorException(e.getMessage(), e);
         }
     }
 
