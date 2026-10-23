@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-import javax.transaction.Transaction;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.http.HttpStatus;
@@ -45,7 +44,6 @@ import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.transaction.TransactionUtil;
-import org.apache.ofbiz.entity.transaction.GenericTransactionException;
 import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.base.util.UtilProperties;
 import org.apache.ofbiz.base.util.Debug;
@@ -160,20 +158,9 @@ public class LinkedInAuthenticator implements Authenticator {
             throw new AuthenticatorException(e.getMessage(), e);
         }
 
-        // suspend the current transaction and load the user
-        Transaction parentTx = null;
-        boolean beganTransaction = false;
-
+        // load the user in its own transaction, the current one being suspended
         try {
-            try {
-                parentTx = TransactionUtil.suspend();
-            } catch (GenericTransactionException e) {
-                Debug.logError(e, "Could not suspend transaction: " + e.getMessage(), MODULE);
-            }
-
-            try {
-                beganTransaction = TransactionUtil.begin();
-
+            TransactionUtil.doNewTransaction(() -> {
                 if (userLogin == null) {
                     // create the user
                     createUser(user, system);
@@ -181,28 +168,10 @@ public class LinkedInAuthenticator implements Authenticator {
                     // update the user information
                     updateUser(user, system, userLogin);
                 }
-
-            } catch (GenericTransactionException e) {
-                Debug.logError(e, "Could not suspend transaction: " + e.getMessage(), MODULE);
-            } finally {
-                try {
-                    TransactionUtil.commit(beganTransaction);
-                } catch (GenericTransactionException e) {
-                    Debug.logError(e, "Could not commit nested transaction: " + e.getMessage(), MODULE);
-                }
-            }
-        } finally {
-            // resume/restore parent transaction
-            if (parentTx != null) {
-                try {
-                    TransactionUtil.resume(parentTx);
-                    if (Debug.verboseOn()) {
-                        Debug.logVerbose("Resumed the parent transaction.", MODULE);
-                    }
-                } catch (GenericTransactionException e) {
-                    Debug.logError(e, "Could not resume parent nested transaction: " + e.getMessage(), MODULE);
-                }
-            }
+                return null;
+            }, "Could not sync the LinkedIn user " + userLoginId, 0, true);
+        } catch (GenericEntityException e) {
+            throw new AuthenticatorException(e.getMessage(), e);
         }
     }
 
