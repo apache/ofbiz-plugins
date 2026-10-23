@@ -18,37 +18,46 @@
 # Please see the documentation for all configuration options:
 # https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference
 
+# Each update runs the CI workflows on its pull request, again on each rebase
+# after another pull request is merged, and once more when it is merged.
+# To keep the number of jobs low, the updates are checked weekly and the minor
+# and patch updates of each entry are grouped in a single pull request, while
+# major updates, which need a closer review, still get their own pull request.
+
 version: 2
 updates:
   - package-ecosystem: "gradle"
     directories:
       - "/ai-agent-skills"
-      - "/aws-secrets-provider"
-      - "/azure-keyvault-secrets-provider"
       - "/birt"
-      - "/bitwarden-secrets-provider"
       - "/example"
       - "/firstdatapaymentgateway"
-      - "/gcp-secretmanager-secrets-provider"
-      - "/hashicorp-vault-secrets-provider"
       - "/ldap"
       - "/lucene"
-      - "/onepassword-secrets-provider"
       - "/pricat"
+      - "/secretshub"
+      - "/solr"
     schedule:
-      interval: "daily"
-    #groups:
-    #  all-dependencies:
-    #    patterns:
-    #      - "*"
-    ignore:
-      - dependency-name: "*"
+      interval: "weekly"
+    open-pull-requests-limit: 20
+    groups:
+      minor-and-patch:
         update-types:
-          - "version-update:semver-major"
+          - "minor"
+          - "patch"
+    ignore:
+      # Lucene 10 and Solr 10 are compiled for Java 21, above our Java 17
+      # baseline. Solr and Lucene have to stay on the same version.
+      - dependency-name: "org.apache.lucene:*"
+        versions: [">= 10"]
+      - dependency-name: "org.apache.solr:*"
+        versions: [">= 10"]
+      # cas-server-support-ldap-core 7.x needs Java 21 and 8.x needs Java 25.
+      - dependency-name: "org.apereo.cas:cas-server-support-ldap-core"
+        versions: [">= 7"]
 
   - package-ecosystem: "gradle"
     directories:
-      - "/ai-agent-skills"
       - "/birt"
       - "/example"
       - "/firstdatapaymentgateway"
@@ -56,13 +65,20 @@ updates:
       - "/lucene"
       - "/pricat"
       - "/rest-api"
+      - "/solr"
     target-branch: "release24.09"
+    labels:
+      - "dependencies"
+      - "java"
+      - "release_branch"
     schedule:
-      interval: "daily"
-    #groups:
-    #  all-dependencies:
-    #    patterns:
-    #      - "*"
+      interval: "weekly"
+    open-pull-requests-limit: 20
+    groups:
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
     ignore:
       - dependency-name: "*"
         update-types:
@@ -71,21 +87,49 @@ updates:
   - package-ecosystem: "npm"
     directory: "example/vite-react-app"
     schedule:
-      interval: "daily"
+      interval: "weekly"
+    groups:
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
 
   - package-ecosystem: "npm"
     directory: "example/vite-react-app"
     target-branch: "release24.09"
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "release_branch"
     schedule:
-      interval: "daily"
+      interval: "weekly"
+    groups:
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
 
   - package-ecosystem: "npm"
     directory: "projectmgr/webapp/projectmgr"
     schedule:
-      interval: "daily"
+      interval: "weekly"
+    groups:
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
 
   - package-ecosystem: "npm"
     directory: "projectmgr/webapp/projectmgr"
     target-branch: "release24.09"
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "release_branch"
     schedule:
-      interval: "daily"
+      interval: "weekly"
+    groups:
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
