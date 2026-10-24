@@ -246,7 +246,25 @@ In the backport PR description, say "Backported from trunk (#<PR-number>)"
 either way, and note if it required manual adaptation rather than a clean
 cherry-pick.
 
+## Commit Message Conventions
+
+Follow section 5 of `CONTRIBUTING.md`, which no longer uses the pull request
+title format for commits:
+
+- Title: a short line in the imperative mood that says what the commit does
+  (for example "Fix rounding issue in order calculation"), without a trailing
+  period. No `Fixed:`/`Improved:` prefix and no JIRA ticket: those belong to
+  the pull request title.
+- Body, only when context is needed: a blank line, then a short paragraph on
+  why the change was made, important implementation details or side effects.
+  When one commit groups several distinct fixes, list them as bullets.
+- A `Thanks:` line may end the body, under the same conditions as in the pull
+  request description.
+- Keep commits focused and avoid mixing unrelated changes.
+
 ## Pull Request Conventions
+
+Follow `.github/pull_request_template.md`.
 
 Title: one of `Improved:` / `Implemented:` / `Documented:` / `Completed:` /
 `Reverted:` / `Fixed:`, followed by a short description, ending with
@@ -271,8 +289,8 @@ changed.
 - Don't hand-reapply a diff for a backport when cherry-pick is available.
 - Don't block a change on filing a JIRA issue when the contributor (e.g. a
   committer) doesn't need one — but do suggest filing one for anything
-  non-trivial, since it's what ties the PR title, commit history, and
-  release notes together.
+  non-trivial, since it's what ties the PR title and the release notes
+  together.
 
 ## See Also
 - `coding-standards` — OFBiz style and idiom rules to follow while writing the change.
