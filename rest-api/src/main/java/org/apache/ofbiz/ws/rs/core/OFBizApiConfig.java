@@ -63,8 +63,13 @@ public class OFBizApiConfig extends ResourceConfig {
         register(MultiPartFeature.class);
         register(ServiceContextCleanupFilter.class);
         if (Debug.verboseOn()) {
-            register(new LoggingFeature(Logger.getLogger(LoggingFeature.DEFAULT_LOGGER_NAME), Level.INFO,
-                    LoggingFeature.Verbosity.PAYLOAD_ANY, 10000));
+            // headers only, the ones carrying credentials or tokens being redacted: bodies can hold credentials and tokens
+            register(LoggingFeature.builder()
+                    .withLogger(Logger.getLogger(LoggingFeature.DEFAULT_LOGGER_NAME))
+                    .level(Level.INFO)
+                    .verbosity(LoggingFeature.Verbosity.HEADERS_ONLY)
+                    .redactHeaders(List.of("Authorization", "Proxy-Authorization", "Cookie", "Set-Cookie", "Refresh-Token"))
+                    .build());
         }
         registerDSLResources();
     }
