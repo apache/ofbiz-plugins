@@ -23,7 +23,7 @@ dependencies {
     // TODO : upgrade when jakarte update has been done ?
     pluginLibsCompile 'org.apache.solr:solr-core:9.11.0'
 //    pluginLibsCompile 'org.apache.solr:solr-core:8.11.3'
-    pluginLibsCompile 'com.google.guava:guava:28.2-jre'
+    pluginLibsCompile 'com.google.guava:guava:33.7.2-jre'
 }
 
 configurations.all {
