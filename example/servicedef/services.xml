@@ -137,15 +137,6 @@ under the License.
         <implements service="permissionInterface"/>
     </service>
 
-
-    <!-- Send push notification service -->
-    <service name="sendExamplePushNotifications" engine="java"
-                location="org.apache.ofbiz.example.ExampleServices" invoke="sendExamplePushNotifications" auth="true">
-        <attribute name="exampleId" mode="IN" type="String" optional="true"></attribute>
-        <attribute name="message" mode="IN" type="String" optional="true"></attribute>
-        <attribute name="successMessage" mode="IN" type="String" optional="true"></attribute>
-    </service>
-
     <!-- ExampleType services -->
     <service name="createExampleType" default-entity-name="ExampleType" engine="entity-auto" invoke="create" auth="true">
         <description>Create a record of ExampleType</description>
