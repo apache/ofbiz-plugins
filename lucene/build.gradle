@@ -17,8 +17,6 @@
  * under the License.
  */
 dependencies {
-    // solr and lucene should be updated together
-    // luceneMatchVersion should be updated in solrconfig.xml
     pluginLibsCompile 'org.apache.lucene:lucene-core:9.12.3'
     pluginLibsCompile 'org.apache.lucene:lucene-queryparser:9.12.3'
 //    pluginLibsCompile 'org.apache.lucene:lucene-analyzers-common:9.8.0'

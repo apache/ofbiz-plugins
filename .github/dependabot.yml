@@ -36,7 +36,6 @@ updates:
       - "/lucene"
       - "/pricat"
       - "/secretshub"
-      - "/solr"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 20
@@ -46,11 +45,8 @@ updates:
           - "minor"
           - "patch"
     ignore:
-      # Lucene 10 and Solr 10 are compiled for Java 21, above our Java 17
-      # baseline. Solr and Lucene have to stay on the same version.
+      # Lucene 10 is compiled for Java 21, above our Java 17 baseline.
       - dependency-name: "org.apache.lucene:*"
-        versions: [">= 10"]
-      - dependency-name: "org.apache.solr:*"
         versions: [">= 10"]
       # cas-server-support-ldap-core 7.x needs Java 21 and 8.x needs Java 25.
       - dependency-name: "org.apereo.cas:cas-server-support-ldap-core"
@@ -65,7 +61,6 @@ updates:
       - "/lucene"
       - "/pricat"
       - "/rest-api"
-      - "/solr"
     target-branch: "release24.09"
     labels:
       - "dependencies"
