@@ -50,7 +50,7 @@ dependencies {
 
     pluginLibsCompile 'com.google.cloud:google-cloud-secretmanager:2.99.0'
 
-    pluginLibsCompile 'io.github.jopenlibs:vault-java-driver:5.4.0'
+    pluginLibsCompile 'io.github.jopenlibs:vault-java-driver:6.2.3'
 }
 
 // AWS SDK v2 and others bundle several items that conflict with OFBiz's global exclusions
