@@ -193,7 +193,7 @@ public final class HashicorpVaultSecretsProvider implements SecretProvider {
                         .engineVersion(kvVersion)
                         .sslConfig(ssl)
                         .build();
-                token = new Vault(bootConfig)
+                token = Vault.create(bootConfig)
                         .auth()
                         .loginByAppRole(roleId, secretId)
                         .getAuthClientToken();
@@ -210,7 +210,7 @@ public final class HashicorpVaultSecretsProvider implements SecretProvider {
 
             Debug.logInfo("HashicorpVaultSecretsProvider: initialized address=" + address
                     + " auth=" + authMethod + " kv-version=" + kvVersion, MODULE);
-            return new Vault(config);
+            return Vault.create(config);
 
         } catch (VaultException e) {
             throw new RuntimeException("HashicorpVaultSecretsProvider: initialization failed: " + e.getMessage(), e);
