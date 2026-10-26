@@ -31,6 +31,7 @@ under the License.
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="PROJECTADMIN" permissionId="PROJECTMGR_VIEW"/>
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="PROJECTADMIN" permissionId="PROJECTMGR_TIMESHEET_CREATE"/>
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="PROJECTADMIN" permissionId="PROJECTMGR_TIMESHEET_UPDATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="PROJECTADMIN" permissionId="ORDERMGR_CRQ_UPDATE"/>
 
     <SecurityGroup description="Project User group, has read, task create/assign and timesheet create/update access to own projects." groupId="PROJECTUSER"/>
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="PROJECTUSER" permissionId="PROJECTMGR_VIEW"/>
