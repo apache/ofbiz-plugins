@@ -61,6 +61,9 @@ under the License.
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="CATALOG_ROLE_UPDATE"/>
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="SECURITY_CREATE"/>
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="CATALOG_DELETE"/>
+
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="ORDERMGR_CRQ_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_PRODUCT_OWNER" permissionId="ORDERMGR_CRQ_UPDATE"/>
     
     
     <!-- Scrum Master Security Group -->
@@ -103,6 +106,9 @@ under the License.
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="PARTYMGR_CME_CREATE"/>
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="PARTYMGR_CME_UPDATE"/>
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="CONTENTMGR_ROLE_CREATE"/>
+
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="ORDERMGR_CRQ_CREATE"/>
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_MASTER" permissionId="ORDERMGR_CRQ_UPDATE"/>
     
     <!-- Scrum Team Security Group -->
     <SecurityGroup description="Scrum Team" groupId="SCRUM_TEAM"/>
@@ -133,6 +139,8 @@ under the License.
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEAM" permissionId="PARTYMGR_CME_CREATE"/>
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEAM" permissionId="PARTYMGR_CME_UPDATE"/>
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEAM" permissionId="CONTENTMGR_ROLE_CREATE"/>
+
+    <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_TEAM" permissionId="ORDERMGR_CRQ_UPDATE"/>
     
     <SecurityGroup description="Scrum Administrator group, has all scrum permissions." groupId="SCRUM_ADMIN"/>
     <SecurityGroupPermission fromDate="2001-05-13 12:00:00.0" groupId="SCRUM_ADMIN" permissionId="SCRUM_ADMIN"/>
