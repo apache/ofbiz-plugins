@@ -50,9 +50,14 @@
                 <result-to-field result-name="workEffortId" field="workEffortId"/>
             </call-service>
             <set field="eventMessage" value="${eventMessage} and attached to task: ${workEffortId}"/>
+            <!-- the request was just created and attached to the new task, so its status is updated by the system user here -->
+            <entity-one entity-name="UserLogin" value-field="systemUserLogin">
+                <field-map field-name="userLoginId" value="system"/>
+            </entity-one>
             <set field="updCust.statusId" value="CRQ_REVIEWED"/>
             <set field="updCust.custRequestId" from-field="custRequestId"/>
-            <call-service service-name="updateCustRequest" in-map-name="updCust"/>
+            <set field="updCust.userLogin" from-field="systemUserLogin"/>
+            <call-service service-name="updateCustRequest" in-map-name="updCust" include-user-login="false"/>
             <if-not-empty field="parameters.partyId">
                 <set field="assignParty.workEffortId" from-field="workEffortId"/>
                 <set field="assignParty.partyId" from-field="parameters.partyId"/>

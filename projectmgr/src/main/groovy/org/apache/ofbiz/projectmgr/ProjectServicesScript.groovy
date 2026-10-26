@@ -231,13 +231,16 @@ Map updateTaskStatusToComplete(String workEffortId) {
                 currentStatusId: 'PTS_COMPLETED',
                 actualCompletionDate: UtilDateTime.nowTimestamp()]
 
-        // check for related customer request, set these too to completed
+        // check for related customer request, set these too to completed, as the system user since this is a
+        // side effect of completing the task
+        GenericValue systemUserLogin = from('UserLogin').where(userLoginId: 'system').cache().queryOne()
         from('CustRequestWorkEffort')
                 .where(workEffortId: workEffortId)
                 .queryList()
                 .each {
                     run service: 'updateCustRequest', with: [custRequestId: it.custRequestId,
-                                                             statusId: 'CRQ_COMPLETED']
+                                                             statusId: 'CRQ_COMPLETED',
+                                                             userLogin: systemUserLogin]
                 }
     }
     return success([workEffortId: workEffortId])
