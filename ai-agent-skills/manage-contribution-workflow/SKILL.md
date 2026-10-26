@@ -319,6 +319,9 @@ changed.
   branches disagree — fix the mismatch first, don't debug around it.
 - Don't treat `ofbiz --test` failures as pre-existing/environmental without
   first confirming `cleanAll loadAll` was run.
+- Don't treat a clean component-scoped `ofbiz --test` run (or a codebase
+  grep for callers) as proof a functional change is safe — run the full
+  suite with no `component=` filter before calling it verified.
 - Don't hand-reapply a diff for a backport when cherry-pick is available.
 - Don't block a change on filing a JIRA issue when the contributor (e.g. a
   committer) doesn't need one — but do suggest filing one for anything
