@@ -220,6 +220,39 @@ Skipping this doesn't fail loudly — it produces failures like
 `cleanAll loadAll` first, every time, before treating test failures as
 meaningful signal.
 
+### Regression Scope: Run The Whole Suite, Not Just The Touched Component
+
+Running only `./gradlew "ofbiz --test component=<the-component-you-changed>"`
+after a functional change is not sufficient verification, even when it
+passes clean. Other components — and even other repositories (`plugins/`) —
+can call into the component you touched internally, as a trusted side
+effect, using a `userLogin` that was never meant to satisfy whatever new
+requirement your change just added. A clean component-level suite proves
+nothing about those callers if no test in that one component happens to
+exercise the call path.
+
+This is not specific to permission checks — any functional/behavioral change
+can break an internal caller in a different component or plugin the same
+way. It has recurred more than once in the same vein of work: a change in
+one application component broke internal callers in two unrelated
+components, and a separate change broke a caller inside a `plugins/`
+repository entirely — something a codebase grep for callers inside
+`applications/` can never find, because plugin code lives outside the
+framework checkout.
+
+**The rule:** before considering any functional change verified, run
+`./gradlew cleanAll loadAll` and then the full regression suite with **no**
+`component=` filter (`./gradlew "ofbiz --test"`), which runs every
+component's and every plugin's tests — not just the one(s) you edited.
+Grepping the codebase for callers of a changed service
+(`grep -rn "\"<serviceName>\""`) is a useful first pass to scope the blast
+radius and find candidates to double-check, but it is not a substitute for
+actually running the full suite: it cannot see across repositories, and it
+can miss indirect or ECA-triggered call chains. Only fall back to a
+component-scoped run when the full suite is genuinely impractical (e.g. a
+known-slow CI environment), and say so explicitly rather than treating a
+component-only pass as equivalent verification.
+
 ## Backporting To A Release Branch
 
 When a fix committed on `trunk` also needs to land on a release branch (e.g.
