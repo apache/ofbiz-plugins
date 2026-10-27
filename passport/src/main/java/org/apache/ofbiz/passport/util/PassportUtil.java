@@ -29,24 +29,6 @@ import org.apache.ofbiz.base.util.Debug;
 public class PassportUtil {
 
     private static final String MODULE = PassportUtil.class.getName();
-    private static final String CLIENT_ID_LABEL = "ClientId";
-    private static final String SECRET_LABEL = "Secret";
-    private static final String TOKEN_END_POINT_LABEL = "TokenEndpoint";
-    private static final String GRANT_TYPE_LABEL = "grantType";
-    private static final String CONTENT_TYPE_LABEL = "contentType";
-    private static final String USER_PROFILE_URL_LABEL = "UserProfileUrl";
-    private static final String GRANT_TYPE_PARAM = "grant_type";
-    private static final String CONTENT_TYPE_PARAM = "Content-Type";
-    private static final String APPLICATION_JSON = "application/json";
-    private static final String RESTAPI_END_POINT_LABEL = "RESTApiEndpoint";
-    private static final String COMMON_SCOPE = "scope";
-    private static final String AUTHOR_CODE_GRANT_TYPE = "authorization_code";
-    private static final String API_ID_LABEL = "apiId";
-    private static final String APP_KEY_LABEL = "appKey";
-    private static final String APP_SECRET_LABEL = "appSecret";
-    private static final String APP_ID_LABEL = "appId";
-    private static final String COMMON_APP_KEY = "AppKey";
-    private static final String COMMON_APP_SECRET = "AppSecret";
 
     // TODO: Following should be made private
     public static final String COMMON_CLIENT_SECRET = "clientSecret";
