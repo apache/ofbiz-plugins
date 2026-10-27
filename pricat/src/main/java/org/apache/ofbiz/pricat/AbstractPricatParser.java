@@ -30,7 +30,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.ofbiz.base.util.Debug;
@@ -78,22 +77,17 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public abstract class AbstractPricatParser implements InterfacePricatParser {
 
     private static final String MODULE = AbstractPricatParser.class.getName();
-    private LocalDispatcher dispatcher;
     private Delegator delegator;
     private List<FileItem> fileItems;
     private File pricatFile;
     private String userLoginId;
-    private GenericValue userLogin;
     private String pricatFileVersion;
     private String currencyId;
     private Map<CellReference, String> errorMessages = new HashMap<>();
     private HSSFDataFormatter formatter = new HSSFDataFormatter();
     private Map<String, String[]> facilities = new HashMap<>();
-    private HttpSession session;
     private List<EntityCondition> basicCategoryConds;
     private List<EntityCondition> basicBrandConds;
-    private String selectedPricatType = DEFAULT_PRICAT_TYPE;
-    private String selectedFacilityId;
     private InterfaceReport report;
     private Locale locale;
     private long sequenceNum = -1L;
@@ -257,11 +251,9 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
 
     public AbstractPricatParser(LocalDispatcher dispatcher, Delegator delegator, Locale locale, InterfaceReport report,
                                 Map<String, String[]> facilities, File pricatFile, GenericValue userLogin) {
-        this.dispatcher = dispatcher;
         this.delegator = delegator;
         this.locale = locale;
         this.report = report;
-        this.userLogin = userLogin;
         if (UtilValidate.isNotEmpty(userLogin)) {
             this.userLoginId = userLogin.getString("userLoginId");
         }
@@ -687,7 +679,6 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
 
     @Override
     public void setFacilityId(String selectedFacilityId) {
-        this.selectedFacilityId = selectedFacilityId;
     }
 
     /**

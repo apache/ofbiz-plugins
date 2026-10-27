@@ -29,7 +29,6 @@ import org.apache.ofbiz.htmlreport.util.ReportStringUtil;
  */
 public abstract class AbstractHtmlReport extends HtmlReport {
 
-    private static final String MODULE = AbstractHtmlReport.class.getName();
     public static final String THREAD_TYPE = "thread_type";
     public static final String FILE_REPORT_OUTPUT = "plugins/pricat/template/pricat/report.ftl";
 
