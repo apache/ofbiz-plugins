@@ -30,8 +30,8 @@
 // Bitwarden, env-var, and 1Password contribute no third-party dependencies here —
 // JDK java.net.http.HttpClient only.
 dependencies {
-    pluginLibsCompile 'software.amazon.awssdk:secretsmanager:2.57.2'
-    pluginLibsCompile 'software.amazon.awssdk:url-connection-client:2.57.2'
+    pluginLibsCompile 'software.amazon.awssdk:secretsmanager:2.57.3'
+    pluginLibsCompile 'software.amazon.awssdk:url-connection-client:2.57.3'
 
     pluginLibsCompile 'com.azure:azure-security-keyvault-secrets:4.11.3'
     pluginLibsCompile 'com.azure:azure-identity:1.18.7'
