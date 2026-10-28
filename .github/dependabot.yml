@@ -29,7 +29,6 @@ updates:
   - package-ecosystem: "gradle"
     directories:
       - "/ai-agent-skills"
-      - "/birt"
       - "/example"
       - "/firstdatapaymentgateway"
       - "/ldap"
@@ -54,7 +53,6 @@ updates:
 
   - package-ecosystem: "gradle"
     directories:
-      - "/birt"
       - "/example"
       - "/firstdatapaymentgateway"
       - "/ldap"

@@ -103,13 +103,6 @@ under the License.
             </widgets>
         </section>
     </screen>
-    <screen name="CommonBirtDecorator">
-        <section>
-            <widgets>
-                <include-screen name="CommonBirtDecorator" location="component://example/widget/example/CommonScreens.xml"/>
-            </widgets>
-        </section>
-    </screen>
     <screen name="CommonExampleChartsDecorator">
         <section>
             <widgets>

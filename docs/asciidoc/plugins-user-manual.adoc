@@ -35,6 +35,4 @@ include::../../assetmaint/src/docs/asciidoc/assetm.adoc[leveloffset=+1]
 
 include::../../scrum/src/docs/asciidoc/scrum.adoc[leveloffset=+1]
 
-include::../../birt/src/docs/asciidoc/birt.adoc[leveloffset=+1]
-
 include::../../example/src/docs/asciidoc/example.adoc[leveloffset=+1]
