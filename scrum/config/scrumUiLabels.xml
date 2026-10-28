@@ -625,12 +625,6 @@ under the License.
         <value xml:lang="zh">订单标识</value>
         <value xml:lang="zh-TW">訂單識別</value>
     </property>
-    <property key="ScrumBacklogInformationChart">
-        <value xml:lang="en">Backlogs Information Chart</value>
-        <value xml:lang="ja">バックログ情報チャート</value>
-        <value xml:lang="zh">订单信息图</value>
-        <value xml:lang="zh-TW">訂單資訊圖</value>
-    </property>
     <property key="ScrumBacklogItem">
         <value xml:lang="en">Backlog Item</value>
         <value xml:lang="ja">バックログアイテム</value>
@@ -667,12 +661,6 @@ under the License.
         <value xml:lang="zh">订单列表</value>
         <value xml:lang="zh-TW">訂單清單</value>
     </property>
-    <property key="ScrumBacklogsStatusChart">
-        <value xml:lang="en">Backlogs Status Chart</value>
-        <value xml:lang="ja">バックログステータスチャート</value>
-        <value xml:lang="zh">订单状态图</value>
-        <value xml:lang="zh-TW">訂單狀態圖</value>
-    </property>
     <property key="ScrumBeforeNextMeeting">
         <value xml:lang="en">What are you going to do before the next meeting?</value>
         <value xml:lang="ja">次のミーティングまでに何をしますか?</value>
@@ -696,12 +684,6 @@ under the License.
         <value xml:lang="ja">このページを表示する権限がありません。("SCRUM_BILLING_VIEW" または "SCRUM_BILLING_ADMIN" が必要です)</value>
         <value xml:lang="zh">你没有权限浏览这个页面。（需要"SCRUM_BILLING_VIEW" 或 "SCRUM_BILLING_ADMIN"）</value>
         <value xml:lang="zh-TW">你沒有許可權流覽這個頁面.(需要"SCRUM_BILLING_VIEW" 或 "SCRUM_BILLING_ADMIN")</value>
-    </property>
-    <property key="ScrumBurnDownChart">
-        <value xml:lang="en">Burndown Chart</value>
-        <value xml:lang="ja">バーンダウンチャート</value>
-        <value xml:lang="zh">燃尽图</value>
-        <value xml:lang="zh-TW">燃盡圖</value>
     </property>
     <property key="ScrumCancelProductBacklog">
         <value xml:lang="en">Cancel Product Backlog</value>
@@ -1090,12 +1072,6 @@ under the License.
         <value xml:lang="ja">製品バックログアイテムを検索</value>
         <value xml:lang="zh">查找产品订单明细</value>
         <value xml:lang="zh-TW">尋找產品訂單細項</value>
-    </property>
-    <property key="ScrumFindProductStatistics">
-        <value xml:lang="en">Find Product Statistics</value>
-        <value xml:lang="ja">製品統計を検索</value>
-        <value xml:lang="zh">查找产品统计</value>
-        <value xml:lang="zh-TW">尋找產品統計</value>
     </property>
     <property key="ScrumFindProjectMember">
         <value xml:lang="en">Find Project Member</value>
@@ -1605,12 +1581,6 @@ under the License.
         <value xml:lang="zh">产品拥有人</value>
         <value xml:lang="zh-TW">產品擁有人</value>
     </property>
-    <property key="ScrumProductStatistics">
-        <value xml:lang="en">Product Statistics</value>
-        <value xml:lang="ja">製品統計</value>
-        <value xml:lang="zh">产品统计</value>
-        <value xml:lang="zh-TW">產品統計</value>
-    </property>
     <property key="ScrumProductUpdate">
         <value xml:lang="en">Product Update</value>
         <value xml:lang="ja">製品更新</value>
@@ -1622,12 +1592,6 @@ under the License.
         <value xml:lang="ja">プロジェクト</value>
         <value xml:lang="zh">项目</value>
         <value xml:lang="zh-TW">專案</value>
-    </property>
-    <property key="ScrumProjectAndSprintInformationChart">
-        <value xml:lang="en">Project And Sprint Information Chart</value>
-        <value xml:lang="ja">プロジェクトおよびスプリント情報チャート</value>
-        <value xml:lang="zh">项目和冲刺信息图</value>
-        <value xml:lang="zh-TW">專案和衝刺資訊圖</value>
     </property>
     <property key="ScrumProjectAndSprintList">
         <value xml:lang="en">Project and Sprint List</value>
@@ -2025,12 +1989,6 @@ under the License.
         <value xml:lang="ja">タスクID</value>
         <value xml:lang="zh">任务标识</value>
         <value xml:lang="zh-TW">任務識別</value>
-    </property>
-    <property key="ScrumTaskInformationChart">
-        <value xml:lang="en">Task Information Chart</value>
-        <value xml:lang="ja">タスク情報表</value>
-        <value xml:lang="zh">任务信息图</value>
-        <value xml:lang="zh-TW">任務資訊圖</value>
     </property>
     <property key="ScrumTaskMember">
         <value xml:lang="de">Kein Mitglied von irgendeinem Projekt, bitte Projektmanager kontaktieren</value>

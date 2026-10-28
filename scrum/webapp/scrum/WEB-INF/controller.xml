@@ -1234,11 +1234,6 @@ under the License.
         <response name="success" type="view" value="FindResource"/>
         <response name="error" type="view" value="quickAddPartyRelationship"/>
     </request-map>
-    <request-map uri="ProductStatistics">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ProductStatistics"/>
-        <response name="error" type="view" value="ProductStatistics"/>
-    </request-map>
     <request-map uri="QuickAddPartyRate">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="QuickAddPartyRate"/>
@@ -1344,7 +1339,6 @@ under the License.
     <view-map name="quickAddParty" type="screen" page="component://scrum/widget/ResourceScreens.xml#QuickAddParty"/>
     <view-map name="quickAddPartyRelationship" type="screen" page="component://scrum/widget/ResourceScreens.xml#QuickAddPartyRelationship"/>
     <view-map name="QuickAddPartyRate" type="screen" page="component://scrum/widget/ResourceScreens.xml#QuickAddPartyRate"/>
-    <view-map name="ProductStatistics" type="screen" page="component://scrum/widget/scrumScreens.xml#ProductStatistics"/>
     
     <!-- Unplan Backlog -->
     <view-map name="unplanBacklog" type="screen" page="component://scrum/widget/scrumScreens.xml#unplanBacklog"/>

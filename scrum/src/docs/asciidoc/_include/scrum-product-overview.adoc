@@ -22,7 +22,6 @@ On the product overview there are 8 sub menus -Overview,Update,Backlog,Billing,D
 The product overview consist of:
 
 . Product Information: Show the product's information.
-. Backlogs Status Chart: Show backlogs' status in the pie chart concerning with open(yellow),be implement(blue),and finished(red).
 . Find Product Backlog Item: To find any Product backlog which belongs to the product.
 . Product Backlogs Item List: Product Backlogs Item List will show the backlogs which are not in the sprint by default.
 . Emails: List of the e-mails which are sent to the product owner who created the product.

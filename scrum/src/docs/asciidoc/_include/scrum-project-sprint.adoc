@@ -59,24 +59,6 @@ The screen consists of :
 
 === Sprint
 
-==== Sprint overview, Burndown Chart
-Keep an eye on the burndown chart if you are still on track.
-If not discuss with the product owner if backlog items have to be added or removed.
-
-A burn down chart is a graphical representation of work left to do versus time. +
-The outstanding work (or backlog) is often on the vertical axis, with time along the horizontal.
-
-That is, it is a run chart of outstanding work. +
-It is useful for predicting when all of the work will be completed.
-
-The hour burndown chart provides you with the following information:
-
-. Actual Hours -- The number of hours remaining until the version release date.
-. Planned Hours -- The minus of the previous planned hours and the current actual hours.
-. Ideal Hours -- The ideal burndown. This is computed with the remaining estimates,
-                not the original estimates of the hours remaining at the version's start date.
-. Daily Completed -- The total time worked by the team (the current actual hours).
-
 ==== Create the first sprint
 Now that there is a project we can look at creating the (first) sprint.
 Have a Sprint meeting, define what should be implemented in the (first) sprint and how it should be implemented

@@ -3159,17 +3159,4 @@ under the License.
     </form>
     <form name="ListBacklogRevisions" extends="ListTaskRevisions" extends-resource="component://scrum/widget/TaskForms.xml" paginate-target="ViewProdBacklogItem" view-size="10">
     </form>
-    <form name="FindProductStatistics" type="single" target="ProductStatistics">
-        <field name="productId" title="${uiLabelMap.ScrumProductName}">
-            <drop-down>
-                <entity-options description="${groupName} -- ${internalName}[${productId}]" entity-name="ProductAndRole" key-field-name="productId">
-                    <entity-constraint name="supportDiscontinuationDate" operator="equals" value=""/>
-                    <entity-constraint name="roleTypeId" value="PRODUCT_OWNER_COMP"/>
-                    <entity-order-by field-name="groupName"/>
-                    <entity-order-by field-name="internalName"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}"><submit/></field>
-    </form>
 </forms>
