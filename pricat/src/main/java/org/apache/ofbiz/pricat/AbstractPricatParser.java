@@ -259,7 +259,7 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
         }
         this.facilities = facilities;
         this.pricatFile = pricatFile;
-        initBasicConds(UtilMisc.toList(userLogin.getString("partyId")));
+        setBasicConds(UtilMisc.toList(userLogin.getString("partyId")));
     }
 
     /**
@@ -499,6 +499,10 @@ public abstract class AbstractPricatParser implements InterfacePricatParser {
 
     @Override
     public void initBasicConds(List<String> orgPartyIds) {
+        setBasicConds(orgPartyIds);
+    }
+
+    private void setBasicConds(List<String> orgPartyIds) {
         basicCategoryConds = new ArrayList<>();
         basicCategoryConds.add(EntityCondition.makeCondition("isPublic", "N"));
         //basicCategoryConds.add(EntityCondition.makeCondition("isDefault", "Y"));

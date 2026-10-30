@@ -49,20 +49,35 @@ public abstract class AbstractReportThread extends Thread implements InterfaceRe
      * Constructs a new report Thread with the given name.
      */
     protected AbstractReportThread(HttpServletRequest request, HttpServletResponse response, String name) {
+        this(request, name, generateUUID());
+    }
 
-        super(Thread.currentThread().getThreadGroup(), name);
-        // report Threads are never daemon Threads
-        setDaemon(false);
-        // the session must not be updated when it is used in a report
-        EthernetAddress ethernetAddress = UUIDGenerator.getInstance().getDummyAddress();
-        uuid = UUIDGenerator.getInstance().generateTimeBasedUUID(ethernetAddress);
-        setName(name + " [" + uuid.toString() + "]");
+    private AbstractReportThread(HttpServletRequest request, String name, UUID uuid) {
+        super(Thread.currentThread().getThreadGroup(), name + " [" + uuid.toString() + "]");
+        this.uuid = uuid;
         // new Threads are not doomed
         doomed = false;
         // set start time
         startTime = System.currentTimeMillis();
         locale = UtilHttp.getLocale(request);
     }
+
+    private static UUID generateUUID() {
+        // the session must not be updated when it is used in a report
+        EthernetAddress ethernetAddress = UUIDGenerator.getInstance().getDummyAddress();
+        return UUIDGenerator.getInstance().generateTimeBasedUUID(ethernetAddress);
+    }
+
+    /**
+     * Starts this report Thread as a non-daemon Thread.
+     */
+    @Override
+    public void start() {
+        // report Threads are never daemon Threads
+        setDaemon(false);
+        super.start();
+    }
+
     @Override
     public UUID getUUID() {
         return uuid;
