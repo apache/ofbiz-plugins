@@ -187,8 +187,7 @@ public class HtmlReport extends AbstractReport {
      * @param isTransient If set to <code>true</code> nothing is kept in memory
      */
     public HtmlReport(HttpServletRequest request, HttpServletResponse response, boolean writeHtml, boolean isTransient) {
-
-        init(UtilHttp.getLocale(request));
+        super(UtilHttp.getLocale(request));
         content = new ArrayList<>(256);
         logContent = new ArrayList<>(256);
         showExceptionStackTrace = true;

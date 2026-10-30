@@ -52,6 +52,23 @@ public abstract class AbstractReport implements InterfaceReport {
     private static final long SECONDS = 1000;
     public static final String SESSION_REPORT_CLASS = "OFBIZ_HTML_REPORT";
 
+    /**
+     * Constructs a report whose member variables are set later by {@link #init(Locale)}.
+     */
+    protected AbstractReport() {
+    }
+
+    /**
+     * Constructs a report and initializes its member variables.
+     *
+     * @param locale the locale for this report
+     */
+    protected AbstractReport(Locale locale) {
+        startTime = System.currentTimeMillis();
+        this.locale = locale;
+        errors = new ArrayList<>();
+    }
+
     @Override
     public void addError(Object obj) {
         errors.add(obj);

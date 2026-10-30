@@ -34,7 +34,7 @@ import org.apache.ofbiz.htmlreport.InterfaceReport;
 /**
  * Thread for running sample html report.
  */
-public class SampleHtmlThread extends AbstractReportThread {
+public final class SampleHtmlThread extends AbstractReportThread {
 
     public static final String COUNT_DOWN = "countdown";
     public static final String COUNT_UP = "countup";
