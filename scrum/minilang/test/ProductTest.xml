@@ -55,7 +55,7 @@ under the License.
         <!-- Billing -->
         <simple-method method-name="testAddProductTimeToNewInvoice" short-description="Test Add Product Time To New Invoice" login-required="false">
         <entity-one entity-name="UserLogin" value-field="userLogin">
-            <field-map field-name="userLoginId" value="system"/>
+            <field-map field-name="userLoginId" value="admin"/>
                 </entity-one>
             <set field="serviceCtx.productId" value="DEMO-PRODUCT-1"/>
             <set field="serviceCtx.partyIdFrom" value="Company"/>
