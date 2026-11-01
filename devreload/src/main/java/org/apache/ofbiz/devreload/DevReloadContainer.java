@@ -138,11 +138,11 @@ import org.apache.ofbiz.base.util.cache.UtilCache;
  * {@code GenericDelegator} grabs a direct object reference to a {@code ModelReader} at
  * construction time and keeps it, so clearing {@code ModelReader}'s own lookup cache
  * would only affect a brand-new delegator, never the one already serving traffic. See
- * {@link EntityModelReloader}'s class javadoc for the full mechanism: it reflectively
- * resets the already-running {@code ModelReader}/{@code ModelGroupReader} singleton's
- * parsed-model field and eagerly rebuilds it in place, then clears delegator data
- * caches. Optionally, with {@code -Dofbiz.hotreload.autoUpdateSchema=true}, it also
- * creates any missing table/column a changed entity needs, non-destructively.
+ * {@link EntityModelReloader}'s class javadoc for the full mechanism: it eagerly reloads
+ * the already-running {@code ModelReader}/{@code ModelGroupReader} instances in place
+ * through their {@code reload()} methods, then clears delegator data caches.
+ * Optionally, with {@code -Dofbiz.hotreload.autoUpdateSchema=true}, it also creates
+ * any missing table/column a changed entity needs, non-destructively.
  *
  * <h2>How config (label/properties) changes are handled</h2>
  * Every component's {@code config/} directory is also watched, scoped to files ending
@@ -243,8 +243,8 @@ public class DevReloadContainer implements Container {
      * {@code type="group"} file (an {@code entitydef/entitymodel*.xml} or
      * {@code entitygroup*.xml}). Deliberately not split into two separate sets keyed by
      * resource type: a save anywhere in one of these directories triggers both
-     * {@link EntityModelReloader#resetAndRebuildEntityModels()} and
-     * {@link EntityModelReloader#resetAndRebuildGroupModels()} (see
+     * {@link EntityModelReloader#reloadEntityModels()} and
+     * {@link EntityModelReloader#reloadGroupModels()} (see
      * {@code applyEntitydefReload}), same as this container already accepts some
      * harmless redundant work elsewhere (e.g. a WatchService event storm re-triggering
      * unrelated classes) in exchange for simpler bookkeeping -- both reload calls are
@@ -893,11 +893,11 @@ public class DevReloadContainer implements Container {
      * Reloads entity/view-entity and entity-group definitions after an
      * {@code entitydef/*.xml} save. Unlike {@link #applyServiceXmlReload}, this can't
      * just clear a {@code UtilCache} keyed by name -- see {@link EntityModelReloader}'s
-     * class javadoc for why entity definitions need to be reset on the already-running
-     * {@code ModelReader}/{@code ModelGroupReader} singletons directly instead.
+     * class javadoc for why entity definitions need to be reloaded on the already-running
+     * {@code ModelReader}/{@code ModelGroupReader} instances directly instead.
      *
-     * <p>Both {@link EntityModelReloader#resetAndRebuildEntityModels()} and
-     * {@link EntityModelReloader#resetAndRebuildGroupModels()} run on every entitydef
+     * <p>Both {@link EntityModelReloader#reloadEntityModels()} and
+     * {@link EntityModelReloader#reloadGroupModels()} run on every entitydef
      * save regardless of which specific file changed (see {@link #entitydefDirs}'s
      * javadoc for why that's an acceptable simplification). Delegator data caches are
      * only cleared if at least one of the two actually succeeded -- clearing them after
@@ -911,8 +911,8 @@ public class DevReloadContainer implements Container {
      */
     private void applyEntitydefReload(Set<Path> batch) {
         Debug.logInfo("Hot-reload: entitydef changed " + batch, MODULE);
-        boolean entityOk = EntityModelReloader.resetAndRebuildEntityModels();
-        boolean groupOk = EntityModelReloader.resetAndRebuildGroupModels();
+        boolean entityOk = EntityModelReloader.reloadEntityModels();
+        boolean groupOk = EntityModelReloader.reloadGroupModels();
         if (entityOk || groupOk) {
             EntityModelReloader.clearAllDelegatorCaches();
         }

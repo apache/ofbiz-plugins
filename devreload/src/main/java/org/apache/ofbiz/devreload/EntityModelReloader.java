@@ -25,14 +25,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 import org.apache.ofbiz.base.util.Debug;
-import org.apache.ofbiz.base.util.cache.UtilCache;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.DelegatorFactory;
 import org.apache.ofbiz.entity.config.model.DelegatorElement;
@@ -44,39 +45,35 @@ import org.apache.ofbiz.entity.model.ModelGroupReader;
 import org.apache.ofbiz.entity.model.ModelReader;
 
 /**
- * Forces already-running {@link ModelReader}/{@link ModelGroupReader} singletons to
- * forget their parsed entity model/group mapping and re-read it from disk, so edits to
- * an {@code entitydef/*.xml} file take effect in the already-running JVM without a
- * restart.
+ * Makes the already-running {@link ModelReader}/{@link ModelGroupReader} instances re-read
+ * their entity model/group mapping from disk, so edits to an {@code entitydef/*.xml} file
+ * take effect in the already-running JVM without a restart.
  *
- * <h2>Why this needs reflection</h2>
+ * <h2>Why the readers are reloaded in place</h2>
  * Unlike {@code services.xml} reload (which just clears a {@code UtilCache} that the
  * service engine looks up <em>by name on every call</em>), entity reload can't work
  * that way: every {@code GenericDelegator} grabs a direct object reference to a
  * {@link ModelReader} at construction time and keeps it
- * (see {@code GenericDelegator.modelReader}), and {@code ModelReader} itself has no
- * public API to make it forget its parsed {@code entityCache} once built — it's a
- * {@code private volatile} field populated once via double-checked locking and never
- * reset. Clearing the {@code ModelReader.READERS} cache (the {@code services.xml}
- * trick) would therefore only affect a brand-new delegator; every delegator already
- * serving traffic would keep using its already-fetched, stale {@code ModelReader}
- * forever. {@link ModelGroupReader} (entitygroup.xml → datasource-group mapping) has
- * the exact same shape: a static {@code READERS} cache plus a private, build-once
- * {@code groupCache} field.
+ * (see {@code GenericDelegator.modelReader}), so dropping the reader from its lookup
+ * cache would only affect a brand-new delegator; every delegator already serving
+ * traffic would keep using its already-fetched, stale {@code ModelReader} forever.
+ * {@link ModelGroupReader} (entitygroup.xml → datasource-group mapping) has the exact
+ * same shape.
  *
- * <p>The only way to make the model already in use forget itself, without changing
- * {@code framework/entity}, is to reflectively null out that private field on the
- * singleton(s) already sitting in each class's {@code READERS} cache — every delegator
- * sharing a reader name (almost always {@code "main"}) picks up the change for free,
- * since they share the same object. The underlying XML itself needs no separate cache
- * invalidation: {@code MainResourceHandler.getDocument()} re-reads its
- * {@code InputStream} fresh on every call.
+ * <p>Instead, {@link ModelReader#reload()} and {@link ModelGroupReader#reload()} are
+ * called on the reader of every configured delegator -- every delegator sharing a
+ * reader name (almost always {@code "main"}) picks up the change for free, since they
+ * share the same object. Both readers build the new model on the side and swap it in
+ * only once it is complete, so requests keep being served from the previous model
+ * while the reload runs, and a broken save leaves that previous model in place. The
+ * underlying XML itself needs no separate cache invalidation:
+ * {@code MainResourceHandler.getDocument()} re-reads its {@code InputStream} fresh on
+ * every call.
  *
- * <p>All reflective {@link Field} handles are resolved once, the first time they're
- * needed, and cached: a resolution failure (e.g. a future OFBiz version renaming one
- * of these private fields) is logged once with the exact class/field name and
- * disables that half (entity or group) of the reload for the rest of the session,
- * rather than failing on every save or crashing the container.
+ * <p>Enumerating already-created delegators (to clear their data caches) still needs
+ * reflection into {@link DelegatorFactory}; that {@link Field} handle is resolved once,
+ * the first time it's needed, and a resolution failure is logged once and disables
+ * only that part for the rest of the session.
  */
 final class EntityModelReloader {
 
@@ -84,95 +81,38 @@ final class EntityModelReloader {
 
     private static volatile boolean resolutionAttempted;
 
-    private static volatile boolean entityReloadAvailable;
-    private static Field modelReaderReadersField;
-    private static Field modelReaderEntityCacheField;
-
-    private static volatile boolean groupReloadAvailable;
-    private static Field modelGroupReaderReadersField;
-    private static Field modelGroupReaderGroupCacheField;
-
     private static volatile boolean delegatorCacheClearAvailable;
     private static Field delegatorFactoryDelegatorsField;
 
     private EntityModelReloader() { }
 
     /**
-     * Reflectively resets every currently-cached {@link ModelReader}'s parsed entity
-     * model and eagerly rebuilds it in place (rather than leaving the rebuild for the
-     * next unrelated request to trigger lazily), so a broken {@code entitydef} save is
-     * caught and logged right here instead of surfacing as a random failure later.
+     * Reloads the {@link ModelReader} of every configured delegator, eagerly (rather
+     * than leaving it for the next unrelated request), so a broken {@code entitydef}
+     * save is caught and logged right here instead of surfacing as a random failure
+     * later. A failed reload keeps the previous model, and the next save retries.
      *
-     * <p>{@code ModelReader.getEntityCache()} populates its map field directly as it
-     * parses, rather than building into a local variable and swapping it in at the
-     * end. That means a parse failure partway through (bad XML, a view-entity
-     * referencing a non-existent member entity, etc.) would normally leave the field
-     * non-null but incomplete — and since the reader's own double-checked-locking guard
-     * only rebuilds when the field is {@code null}, that broken, partial model would
-     * otherwise be served forever, even after the mistake is fixed. Because this class
-     * controls the field directly, a failed rebuild re-nulls it before returning, so
-     * the very next save (or even the next unrelated access, at reparse cost) retries
-     * the parse instead of staying poisoned until a restart.
-     *
-     * @return {@code true} if every cached {@link ModelReader} rebuilt cleanly.
+     * @return {@code true} if every {@link ModelReader} reloaded cleanly.
      */
-    static boolean resetAndRebuildEntityModels() {
-        ensureFieldsResolved();
-        if (!entityReloadAvailable) {
-            return false;
-        }
-
-        UtilCache<String, ModelReader> readers;
-        try {
-            readers = castCache(modelReaderReadersField.get(null));
-        } catch (ReflectiveOperationException | ClassCastException e) {
-            Debug.logError(e, "Hot-reload: could not read ModelReader.READERS; entity model reload is disabled "
-                    + "for this session.", MODULE);
-            entityReloadAvailable = false;
-            return false;
-        }
-
+    static boolean reloadEntityModels() {
         boolean allSucceeded = true;
-        for (String readerName : readers.getCacheLineKeys()) {
-            ModelReader reader = readers.get(readerName);
-            if (reader != null) {
-                allSucceeded &= rebuildOneEntityReader(readerName, reader);
-            }
+        for (Map.Entry<String, String> entry : readerDelegators(DelegatorElement::getEntityModelReader).entrySet()) {
+            allSucceeded &= reloadOneEntityReader(entry.getKey(), entry.getValue());
         }
         return allSucceeded;
     }
 
     /**
-     * Reflectively resets every currently-cached {@link ModelGroupReader}'s parsed
-     * entity-group mapping and eagerly rebuilds it in place. Same rationale and
-     * self-healing behavior as {@link #resetAndRebuildEntityModels()}; kept as a
-     * separate entry point (and a separate availability flag) so a reflection failure
-     * against one class never disables the other.
+     * Reloads the {@link ModelGroupReader} of every configured delegator. Same rationale
+     * as {@link #reloadEntityModels()}; kept as a separate entry point so a failure in
+     * one never skips the other.
      *
-     * @return {@code true} if every cached {@link ModelGroupReader} rebuilt cleanly.
+     * @return {@code true} if every {@link ModelGroupReader} reloaded cleanly.
      */
-    static boolean resetAndRebuildGroupModels() {
-        ensureFieldsResolved();
-        if (!groupReloadAvailable) {
-            return false;
-        }
-
-        UtilCache<String, ModelGroupReader> readers;
-        try {
-            readers = castCache(modelGroupReaderReadersField.get(null));
-        } catch (ReflectiveOperationException | ClassCastException e) {
-            Debug.logError(e, "Hot-reload: could not read ModelGroupReader.READERS; entitygroup.xml reload is "
-                    + "disabled for this session.", MODULE);
-            groupReloadAvailable = false;
-            return false;
-        }
-
+    static boolean reloadGroupModels() {
         boolean allSucceeded = true;
-        for (String readerName : readers.getCacheLineKeys()) {
-            ModelGroupReader reader = readers.get(readerName);
-            if (reader != null) {
-                allSucceeded &= rebuildOneGroupReader(readerName, reader);
-            }
+        for (Map.Entry<String, String> entry : readerDelegators(DelegatorElement::getEntityGroupReader).entrySet()) {
+            allSucceeded &= reloadOneGroupReader(entry.getKey(), entry.getValue());
         }
         return allSucceeded;
     }
@@ -235,22 +175,17 @@ final class EntityModelReloader {
      * them, so schema sync only ever touches what changed in this save -- not the whole
      * data model, which is what keeps it fast enough to run on every save instead of
      * only at startup. {@code ModelEntity.getLocation()} is set fresh on every entity
-     * object every time {@code ModelReader.getEntityCache()} runs (see {@code
+     * object every time {@code ModelReader} loads its entity cache (see {@code
      * buildEntity()} in {@code framework/entity}), so comparing it against the changed
      * paths is reliable even across repeated reloads within the same session -- unlike
-     * {@code ModelReader.getResourceHandlerEntities()}, whose backing collections are
-     * never cleared between reloads and would otherwise need extra bookkeeping here to
-     * stay accurate.
+     * {@code ModelReader.getResourceHandlerEntities()}, which is not part of the model a
+     * reload swaps in atomically.
      */
     private static Set<String> resolveChangedEntityNames(Set<Path> changedFiles) {
-        ensureFieldsResolved();
-        if (!entityReloadAvailable) {
-            return Set.of();
-        }
         Set<String> entityNames = new HashSet<>();
         try {
-            UtilCache<String, ModelReader> readers = castCache(modelReaderReadersField.get(null));
-            for (ModelReader reader : readers.values()) {
+            for (String delegatorName : readerDelegators(DelegatorElement::getEntityModelReader).values()) {
+                ModelReader reader = ModelReader.getModelReader(delegatorName);
                 for (Map.Entry<String, ModelEntity> entry : reader.getEntityCache().entrySet()) {
                     if (locationMatches(entry.getValue().getLocation(), changedFiles)) {
                         entityNames.add(entry.getKey());
@@ -409,87 +344,55 @@ final class EntityModelReloader {
         }
     }
 
-    /** Nulls {@code reader}'s {@code entityCache} field, then eagerly rebuilds it, self-healing on failure. */
-    private static boolean rebuildOneEntityReader(String readerName, ModelReader reader) {
+    /** Reloads the entity model reader named {@code readerName}, found through {@code delegatorName}. */
+    private static boolean reloadOneEntityReader(String readerName, String delegatorName) {
         long start = System.currentTimeMillis();
         try {
-            modelReaderEntityCacheField.set(reader, null);
+            ModelReader reader = ModelReader.getModelReader(delegatorName);
+            reader.reload();
             int entityCount = reader.getEntityCache().size();
             Debug.logInfo("Hot-reload: entity model '" + readerName + "' reloaded (" + entityCount
                     + " entities/view-entities) in " + (System.currentTimeMillis() - start) + "ms", MODULE);
             return true;
         } catch (Throwable t) {
-            // Re-null rather than leaving a partially-populated map in place -- see this
-            // class's javadoc for why a half-built entityCache would otherwise be served
-            // forever instead of retried on the next save.
-            reNullQuietly(modelReaderEntityCacheField, reader, "entityCache", readerName);
             Debug.logError(t, "Hot-reload: failed to reload entity model '" + readerName
-                    + "' -- fix the entitydef XML and save again.", MODULE);
+                    + "' -- the previous model stays in use; fix the entitydef XML and save again.", MODULE);
             return false;
         }
     }
 
-    /** Nulls {@code reader}'s {@code groupCache} field, then eagerly rebuilds it, self-healing on failure. */
-    private static boolean rebuildOneGroupReader(String readerName, ModelGroupReader reader) {
-        String delegatorName = resolveDelegatorNameForGroupReader(readerName);
-        if (delegatorName == null) {
-            Debug.logWarning("Hot-reload: could not find a delegator whose entity-group-reader is '" + readerName
-                    + "' in entityengine.xml -- skipping entitygroup reload for this reader.", MODULE);
-            return false;
-        }
+    /** Reloads the entity group reader named {@code readerName}, found through {@code delegatorName}. */
+    private static boolean reloadOneGroupReader(String readerName, String delegatorName) {
         long start = System.currentTimeMillis();
         try {
-            modelGroupReaderGroupCacheField.set(reader, null);
+            ModelGroupReader reader = ModelGroupReader.getModelGroupReader(delegatorName);
+            reader.reload();
             int groupCount = reader.getGroupCache(delegatorName).size();
             Debug.logInfo("Hot-reload: entity group model '" + readerName + "' reloaded (" + groupCount
                     + " entity-group mappings) in " + (System.currentTimeMillis() - start) + "ms", MODULE);
             return true;
         } catch (Throwable t) {
-            reNullQuietly(modelGroupReaderGroupCacheField, reader, "groupCache", readerName);
             Debug.logError(t, "Hot-reload: failed to reload entity group model '" + readerName
-                    + "' -- fix the entitygroup XML and save again.", MODULE);
+                    + "' -- the previous mapping stays in use; fix the entitygroup XML and save again.", MODULE);
             return false;
         }
     }
 
     /**
-     * {@code ModelGroupReader.getGroupCache(String delegatorName)} takes a delegator
-     * name purely to validate each group against {@code entityengine.xml} while
-     * rebuilding (see its javadoc in {@code framework/entity}) -- it's not stored on
-     * the reader itself, so this class has no instance-local way to recover one.
-     * Resolved instead straight from parsed config: the first configured delegator
-     * whose {@code entity-group-reader} matches this reader's model name. Pure
-     * {@link EntityConfig} lookups, no reflection needed for this part.
+     * Maps each reader name {@code readerOf} returns for the configured delegators to the
+     * first delegator that uses it, so a reader shared by several delegators is reloaded
+     * once.
      */
-    private static String resolveDelegatorNameForGroupReader(String groupReaderModelName) {
+    private static Map<String, String> readerDelegators(Function<DelegatorElement, String> readerOf) {
+        Map<String, String> readerDelegators = new LinkedHashMap<>();
         try {
-            List<DelegatorElement> delegators = EntityConfig.getInstance().getDelegatorList();
-            for (DelegatorElement delegator : delegators) {
-                if (groupReaderModelName.equals(delegator.getEntityGroupReader())) {
-                    return delegator.getName();
-                }
+            for (DelegatorElement delegator : EntityConfig.getInstance().getDelegatorList()) {
+                readerDelegators.putIfAbsent(readerOf.apply(delegator), delegator.getName());
             }
         } catch (Exception e) {
-            Debug.logError(e, "Hot-reload: could not read delegator config while resolving a delegator name for "
-                    + "entity-group-reader '" + groupReaderModelName + "'", MODULE);
+            Debug.logError(e, "Hot-reload: could not read the delegator config", MODULE);
         }
-        return null;
-    }
-
-    /** Best-effort re-null of {@code field} on {@code target}, logging if even that fails. */
-    private static void reNullQuietly(Field field, Object target, String fieldLabel, String readerName) {
-        try {
-            field.set(target, null);
-        } catch (ReflectiveOperationException inner) {
-            Debug.logError(inner, "Hot-reload: could not re-null " + fieldLabel + " for '" + readerName
-                    + "' after a failed rebuild -- it may now be serving a broken, partial model until OFBiz is "
-                    + "restarted.", MODULE);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <T> UtilCache<String, T> castCache(Object value) {
-        return (UtilCache<String, T>) value;
+        return readerDelegators;
     }
 
     @SuppressWarnings("unchecked")
@@ -497,7 +400,7 @@ final class EntityModelReloader {
         return (Map<String, Future<Delegator>>) value;
     }
 
-    /** Resolves and caches every {@link Field} handle this class needs, exactly once. */
+    /** Resolves and caches the {@link Field} handle this class needs, exactly once. */
     private static void ensureFieldsResolved() {
         if (resolutionAttempted) {
             return;
@@ -507,34 +410,6 @@ final class EntityModelReloader {
                 return;
             }
             resolutionAttempted = true;
-
-            try {
-                modelReaderReadersField = ModelReader.class.getDeclaredField("READERS");
-                modelReaderReadersField.setAccessible(true);
-                modelReaderEntityCacheField = ModelReader.class.getDeclaredField("entityCache");
-                modelReaderEntityCacheField.setAccessible(true);
-                entityReloadAvailable = true;
-            } catch (ReflectiveOperationException | SecurityException e) {
-                Debug.logError(e, "Hot-reload: could not resolve ModelReader's private fields (READERS/entityCache)"
-                        + " via reflection -- this OFBiz version's ModelReader implementation may have "
-                        + "changed. Entity/view-entity hot-reload is disabled for this session; Java and "
-                        + "services.xml hot-reload are unaffected.", MODULE);
-                entityReloadAvailable = false;
-            }
-
-            try {
-                modelGroupReaderReadersField = ModelGroupReader.class.getDeclaredField("READERS");
-                modelGroupReaderReadersField.setAccessible(true);
-                modelGroupReaderGroupCacheField = ModelGroupReader.class.getDeclaredField("groupCache");
-                modelGroupReaderGroupCacheField.setAccessible(true);
-                groupReloadAvailable = true;
-            } catch (ReflectiveOperationException | SecurityException e) {
-                Debug.logError(e, "Hot-reload: could not resolve ModelGroupReader's private fields (READERS/"
-                        + "groupCache) via reflection -- this OFBiz version's ModelGroupReader "
-                        + "implementation may have changed. entitygroup.xml hot-reload is disabled for this "
-                        + "session; entity/view-entity hot-reload is unaffected.", MODULE);
-                groupReloadAvailable = false;
-            }
 
             try {
                 delegatorFactoryDelegatorsField = DelegatorFactory.class.getDeclaredField("DELEGATORS");

@@ -140,7 +140,7 @@ sixth class, since it's just one more `UtilCache` clear on `DevReloadContainer` 
 | `HotSwapAgent` | A tiny self-attaching Java agent that gives `DevReloadContainer` access to `Instrumentation.redefineClasses` — the same mechanism an IDE debugger uses for HotSwap |
 | `Debouncer<T>` | Coalesces rapid-fire change notifications (a burst of file-system events, or one compile producing several `.class` files) into a single batched action; shared by all five watch paths below |
 | `RecordingFileManager` | Wraps the in-process compiler's file manager to record exactly which `.class` files it wrote, so the reload step hot-swaps precisely what was compiled instead of guessing from the source file's name |
-| `EntityModelReloader` | Reflectively resets the already-running `ModelReader`/`ModelGroupReader` singletons so an `entitydef/*.xml` edit re-parses on the next access, clears delegator data caches afterwards, and (opt-in) creates any missing table/column the change needs |
+| `EntityModelReloader` | Reloads the already-running `ModelReader`/`ModelGroupReader` instances through their `reload()` methods so an `entitydef/*.xml` edit takes effect at once, clears delegator data caches afterwards, and (opt-in) creates any missing table/column the change needs |
 
 At startup, `DevReloadContainer` self-attaches `HotSwapAgent` to the running
 JVM (via the Attach API — no `-javaagent` flag needed). This grants access to
@@ -156,7 +156,7 @@ this plugin exists.
 |---|---|---|---|
 | 1. Java source | Every component's `src/main/java` | Compiles the file in-process, then hot-swaps the resulting class(es) | New method bodies live in < 1s |
 | 2. `services.xml` | Every component's `servicedef/` directory | Clears the `service.ModelServiceMapByModel` cache | OFBiz re-reads service definitions on the next call |
-| 3. `entitydef/*.xml` | Every component's `entitydef/` directory (`entity-resource type="model"`/`"group"` only — not seed/demo data) | Reflectively resets and eagerly rebuilds the affected `ModelReader`/`ModelGroupReader` singleton(s), then clears delegator data caches (see `EntityModelReloader`) | Entity/view-entity/entity-group definition changes live in < 1s |
+| 3. `entitydef/*.xml` | Every component's `entitydef/` directory (`entity-resource type="model"`/`"group"` only — not seed/demo data) | Reloads the affected `ModelReader`/`ModelGroupReader` instance(s) through their `reload()` methods, then clears delegator data caches (see `EntityModelReloader`) | Entity/view-entity/entity-group definition changes live in < 1s |
 | 4. `config/*Labels.xml` / `*.properties` | Every component's `config/` directory (scoped to files ending `Labels.xml` or `.properties` — not other `config/*.xml` files like `entityengine.xml`) | Clears `UtilCache.clearCachesThatStartWith("properties.")` | Label/message bundle and property lookups re-read on the next call |
 | 5. Build output (opt-in) | `build/classes/java/main` | Same hot-swap as Path 1 | Picks up `./gradlew -t classes` run in a second terminal |
 
@@ -188,14 +188,15 @@ Unlike `services.xml` (clear a cache the service engine looks up by name on ever
 call), entity reload can't work that way: every `GenericDelegator` grabs a direct
 object reference to a `ModelReader` at construction time and keeps it, so clearing
 `ModelReader`'s own cache would only affect a brand-new delegator, not the one
-already serving traffic. `EntityModelReloader` instead reflectively nulls the
-already-running `ModelReader`/`ModelGroupReader` singleton's private parsed-model
-field and eagerly rebuilds it in place — every delegator sharing a reader name
-(almost always `"main"`) picks up the change for free.
+already serving traffic. `EntityModelReloader` instead calls `reload()` on the
+already-running `ModelReader`/`ModelGroupReader` instances — every delegator sharing a
+reader name (almost always `"main"`) picks up the change for free. The readers build
+the new model on the side and swap it in only once it is complete, so requests keep
+being served from the previous model while the reload runs.
 
 A broken save (invalid XML, a view-entity referencing a non-existent member entity)
-is caught and logged clearly, and self-heals: the very next save (or any access, at
-reparse cost) retries the parse instead of staying stuck until a restart.
+is caught and logged clearly, and the previous model stays in use: the next save
+retries the reload, with no restart needed.
 
 Optionally, `-Dofbiz.hotreload.autoUpdateSchema=true` (or
 `-Photreload.autoUpdateSchema=true`) also creates any missing table/column a changed
@@ -309,7 +310,7 @@ Everything `devreload` reads or writes, in one place.
 | Repo | Contains | Why |
 |---|---|---|
 | `plugins/devreload` (a separate repo, dropped into a local checkout) | `DevReloadContainer.java`, `HotSwapAgent.java`, `Debouncer.java`, `RecordingFileManager.java`, `EntityModelReloader.java`, `ofbiz-component.xml`, `build.gradle` (the `ofbizDev` task), `README.md` — everything | OFBiz plugins are conventionally distributed as separate repos; `ofbiz-framework`'s `.gitignore` excludes `/plugins/` for exactly this reason |
-| `ofbiz-framework` | Nothing — no files, no diffs | The current design redefines already-loaded `Class` objects in place, so no framework code ever needs to ask "is a fresher class available." (An earlier prototype *did* need a small reflective bridge into `framework/base`, since replaced.) Entity/view-entity reload takes a related but separate approach: it reflects into `framework/entity`'s already-running `ModelReader`/`ModelGroupReader` instances rather than changing them. |
+| `ofbiz-framework` | Nothing — no files, no diffs | The current design redefines already-loaded `Class` objects in place, so no framework code ever needs to ask "is a fresher class available." (An earlier prototype *did* need a small reflective bridge into `framework/base`, since replaced.) Entity/view-entity reload uses the public `reload()` method of `framework/entity`'s already-running `ModelReader`/`ModelGroupReader` instances. |
 
 To use it in a checkout: `git clone <devreload-repo-url> plugins/devreload`,
 then run `./gradlew ofbizDev --no-watch-fs`. Deleting `plugins/devreload/` at
@@ -328,8 +329,8 @@ OFBiz.
 | One shared `Debouncer` class for all five watch paths | Avoids five hand-rolled copies of the same concurrency logic that could drift out of sync |
 | Explicit `-PdcevmHome`/`DCEVM_HOME` only, no auto-detection | Guessing IDE install paths breaks silently whenever a vendor changes packaging; one explicit input is easier to keep working |
 | Failed directory watch = log a warning and skip it | No hidden fallback (like polling); a clear, actionable warning instead of silent degraded behavior |
-| Reflectively reset `ModelReader`/`ModelGroupReader`'s own parsed-model field in place, instead of clearing the `UtilCache` that hands them out | Every `GenericDelegator` grabs a direct object reference to a `ModelReader` at construction time and keeps it — clearing the lookup cache (the `services.xml` trick) would only affect a brand-new delegator, never the one already serving traffic |
-| A failed entity/group rebuild re-nulls the field again instead of leaving it half-populated | `ModelReader.getEntityCache()` populates its map field directly as it parses rather than swapping in a finished copy at the end, so a mid-parse failure would otherwise leave a broken, partial model served forever with no automatic retry; re-nulling makes the next save (or any access) retry instead |
+| Reload `ModelReader`/`ModelGroupReader` in place through `reload()`, instead of clearing the `UtilCache` that hands them out | Every `GenericDelegator` grabs a direct object reference to a `ModelReader` at construction time and keeps it — clearing the lookup cache (the `services.xml` trick) would only affect a brand-new delegator, never the one already serving traffic |
+| A failed entity/group reload keeps the previous model | `reload()` builds the new model on the side and swaps it in only once complete, so a broken save never replaces a working model with a partial one, and the next save retries |
 | Every entitydef save reloads both the entity model and the group model, regardless of which file actually changed | Both operations are cheap and a no-op in effect when nothing of that kind changed; same trade this plugin already makes elsewhere (see bug fix #10) in exchange for simpler bookkeeping |
 | Schema auto-update (`-Dofbiz.hotreload.autoUpdateSchema`) is opt-in, off by default, and additive-only (`checkDb(..., addMissing=true)`) | It's the one thing in this plugin that writes to the database automatically; non-destructive by construction (same call webtools' "Update Database" uses), but still a bigger blast radius than reloading in-memory definitions, so it stays explicit rather than bundled into entitydef reload unconditionally |
 | Label/properties reload copies the changed file into `hotReloadOutputDir`, then calls `UtilCache.clearCachesThatStartWith("properties.")` on `DevReloadContainer` itself — no new `XxxReloader` class | Nothing holds a direct reference to a parsed bundle the way `GenericDelegator` holds a `ModelReader`, so no reflection is needed — but a cache clear alone re-reads Gradle's stale `build/resources/main` copy, not the live source file (confirmed live); the overlay-copy step reuses the exact mechanism Java source already relies on to win over Gradle's own output |
@@ -355,9 +356,8 @@ OFBiz.
 | Same class keeps reporting a structural-change warning even after a pure method-body edit | Once a stock JVM rejects one structural change on a class, that class stays "stuck" until restart — every subsequent diff against its still-loaded old bytecode still includes the pending change | Expected JVM `redefineClasses` behavior, not a bug; restart to clear it |
 | Log: "batch redefinition rejected (...) -- retrying each class individually", but only some classes in the save show "Hot-reload complete" | One class in a debounced batch has a change the JVM can't apply; the others were only rejected as part of the same all-or-nothing batch call | Expected fallback behavior, not a bug — every class the JVM *can* apply still succeeds individually; only the named, rejected class needs a restart |
 | `<attribute>`/`<override>` schema warning (`cvc-complex-type.2.4.a`) repeats on every reload cycle | `<attribute>` elements must come before `<override>` per `services.xsd` | Reorder the elements in the edited `services.xml` |
-| Log: "Hot-reload: failed to reload entity model '...' -- fix the entitydef XML and save again" | Invalid XML, or a view-entity referencing a non-existent member entity | Fix the reported error and save again — self-heals automatically, no restart needed even for a broken intermediate save. In the meantime, only the specifically-broken entity/view is unavailable (confirmed live) — every other already-working entity keeps responding normally |
+| Log: "Hot-reload: failed to reload entity model '...' -- the previous model stays in use; fix the entitydef XML and save again" | Invalid XML, or a view-entity referencing a non-existent member entity | Fix the reported error and save again — no restart needed even for a broken intermediate save. In the meantime the previous model, from before the broken save, keeps serving every entity |
 | An `entitydef` change isn't picked up at all | Either a brand-new file not yet declared via `entity-resource` in `ofbiz-component.xml` (needs a restart — same as a new component), or it's seed/demo data (`entity-resource type="data"`/`"data-security"`), which this plugin doesn't watch | Restart for a new resource declaration; seed data reload is a different, unaddressed concern |
-| Log: "could not resolve ModelReader's private fields (READERS/entityCache) via reflection" | This OFBiz version's `ModelReader` implementation changed in a way `EntityModelReloader`'s reflection didn't account for | Entity/view-entity hot-reload is disabled for the session (Java and services.xml hot-reload are unaffected); file an issue against `devreload` naming the OFBiz version |
 | New field/entity shows up in the reloaded model but queries against it fail (missing column/table) | The DB schema itself wasn't updated — entitydef reload only ever changes the in-memory model | Run webtools' "Update Database", or set `-Dofbiz.hotreload.autoUpdateSchema=true` (`-Photreload.autoUpdateSchema=true`) to have it happen automatically on every entitydef save |
 | Log: "schema auto-update failed for delegator '...'" | The datasource for that group/helper isn't reachable, or `checkDb` itself hit a DB-specific error | `checkDb` only ever adds — it's safe to fix the underlying DB issue and save again |
 | A `*Labels.xml` or `.properties` edit under `config/` isn't picked up | Either the file doesn't end in `Labels.xml` (e.g. a component using the older singular convention, if any), or it's one of the two static-snapshot exceptions (`debug.properties` log levels, `security.properties`'s `password.encrypt.pbkdf2.iterations`) | Rename to match the `Labels.xml` convention, or restart for the two named exceptions — every other property and label reloads live |
