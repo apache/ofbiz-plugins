@@ -87,12 +87,10 @@ final class EntityModelReloader {
     private static volatile boolean entityReloadAvailable;
     private static Field modelReaderReadersField;
     private static Field modelReaderEntityCacheField;
-    private static Field modelReaderModelNameField;
 
     private static volatile boolean groupReloadAvailable;
     private static Field modelGroupReaderReadersField;
     private static Field modelGroupReaderGroupCacheField;
-    private static Field modelGroupReaderModelNameField;
 
     private static volatile boolean delegatorCacheClearAvailable;
     private static Field delegatorFactoryDelegatorsField;
@@ -135,8 +133,11 @@ final class EntityModelReloader {
         }
 
         boolean allSucceeded = true;
-        for (ModelReader reader : readers.values()) {
-            allSucceeded &= rebuildOneEntityReader(reader);
+        for (String readerName : readers.getCacheLineKeys()) {
+            ModelReader reader = readers.get(readerName);
+            if (reader != null) {
+                allSucceeded &= rebuildOneEntityReader(readerName, reader);
+            }
         }
         return allSucceeded;
     }
@@ -167,8 +168,11 @@ final class EntityModelReloader {
         }
 
         boolean allSucceeded = true;
-        for (ModelGroupReader reader : readers.values()) {
-            allSucceeded &= rebuildOneGroupReader(reader);
+        for (String readerName : readers.getCacheLineKeys()) {
+            ModelGroupReader reader = readers.get(readerName);
+            if (reader != null) {
+                allSucceeded &= rebuildOneGroupReader(readerName, reader);
+            }
         }
         return allSucceeded;
     }
@@ -406,8 +410,7 @@ final class EntityModelReloader {
     }
 
     /** Nulls {@code reader}'s {@code entityCache} field, then eagerly rebuilds it, self-healing on failure. */
-    private static boolean rebuildOneEntityReader(ModelReader reader) {
-        String readerName = readField(modelReaderModelNameField, reader);
+    private static boolean rebuildOneEntityReader(String readerName, ModelReader reader) {
         long start = System.currentTimeMillis();
         try {
             modelReaderEntityCacheField.set(reader, null);
@@ -427,8 +430,7 @@ final class EntityModelReloader {
     }
 
     /** Nulls {@code reader}'s {@code groupCache} field, then eagerly rebuilds it, self-healing on failure. */
-    private static boolean rebuildOneGroupReader(ModelGroupReader reader) {
-        String readerName = readField(modelGroupReaderModelNameField, reader);
+    private static boolean rebuildOneGroupReader(String readerName, ModelGroupReader reader) {
         String delegatorName = resolveDelegatorNameForGroupReader(readerName);
         if (delegatorName == null) {
             Debug.logWarning("Hot-reload: could not find a delegator whose entity-group-reader is '" + readerName
@@ -474,16 +476,6 @@ final class EntityModelReloader {
         return null;
     }
 
-    /** Best-effort read of a private {@code String} field, purely for log messages. */
-    private static String readField(Field field, Object target) {
-        try {
-            Object value = field.get(target);
-            return value != null ? value.toString() : "?";
-        } catch (ReflectiveOperationException e) {
-            return "?";
-        }
-    }
-
     /** Best-effort re-null of {@code field} on {@code target}, logging if even that fails. */
     private static void reNullQuietly(Field field, Object target, String fieldLabel, String readerName) {
         try {
@@ -521,12 +513,10 @@ final class EntityModelReloader {
                 modelReaderReadersField.setAccessible(true);
                 modelReaderEntityCacheField = ModelReader.class.getDeclaredField("entityCache");
                 modelReaderEntityCacheField.setAccessible(true);
-                modelReaderModelNameField = ModelReader.class.getDeclaredField("modelName");
-                modelReaderModelNameField.setAccessible(true);
                 entityReloadAvailable = true;
             } catch (ReflectiveOperationException | SecurityException e) {
-                Debug.logError(e, "Hot-reload: could not resolve ModelReader's private fields (READERS/entityCache"
-                        + "/modelName) via reflection -- this OFBiz version's ModelReader implementation may have "
+                Debug.logError(e, "Hot-reload: could not resolve ModelReader's private fields (READERS/entityCache)"
+                        + " via reflection -- this OFBiz version's ModelReader implementation may have "
                         + "changed. Entity/view-entity hot-reload is disabled for this session; Java and "
                         + "services.xml hot-reload are unaffected.", MODULE);
                 entityReloadAvailable = false;
@@ -537,12 +527,10 @@ final class EntityModelReloader {
                 modelGroupReaderReadersField.setAccessible(true);
                 modelGroupReaderGroupCacheField = ModelGroupReader.class.getDeclaredField("groupCache");
                 modelGroupReaderGroupCacheField.setAccessible(true);
-                modelGroupReaderModelNameField = ModelGroupReader.class.getDeclaredField("modelName");
-                modelGroupReaderModelNameField.setAccessible(true);
                 groupReloadAvailable = true;
             } catch (ReflectiveOperationException | SecurityException e) {
                 Debug.logError(e, "Hot-reload: could not resolve ModelGroupReader's private fields (READERS/"
-                        + "groupCache/modelName) via reflection -- this OFBiz version's ModelGroupReader "
+                        + "groupCache) via reflection -- this OFBiz version's ModelGroupReader "
                         + "implementation may have changed. entitygroup.xml hot-reload is disabled for this "
                         + "session; entity/view-entity hot-reload is unaffected.", MODULE);
                 groupReloadAvailable = false;
