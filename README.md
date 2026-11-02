@@ -8,3 +8,5 @@ It includes component that are not necessary for OFBiz to work but add significa
 
 You can find more documentation (asciidoc format), in the docs component. 
 You can also find technical information at https://nightlies.apache.org/ofbiz/stable/readme/html5/README.html#ofbiz-plugin-system
+
+If you are upgrading from an earlier release, read [UPGRADING.md](UPGRADING.md).

@@ -8,4 +8,6 @@ Fixed:
 
 Explanation
 
+If this changes or removes a public API, add an entry to UPGRADING.md.
+
 Thanks:
