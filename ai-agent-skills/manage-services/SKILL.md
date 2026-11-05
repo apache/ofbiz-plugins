@@ -84,7 +84,7 @@ Define and implement business logic as reusable, transactional, and securely enf
 - Error Messages: Use properties from `uiLabelMap` for user-facing error messages to support internationalization.
 
 ### 2. Error Handling Integrity
-- **Swallowing Errors via Dispatcher**: When invoking a sub-service with `dispatcher.runSync()`, ALWAYS check manually using `ServiceUtil.isError(result)`. Failing to check will mask business failures and block rollbacks.
+- **Swallowing Errors via Dispatcher**: When invoking a sub-service with `dispatcher.runSync()`, ALWAYS check manually using `ServiceUtil.isError(result)`. Failing to check will mask business failures and block rollbacks. A permission or validation failure is thrown as `ServiceAuthException` or `ServiceValidationException`, not returned; `isError` covers only errors the service returns.
 - **Null Safety**: Always check for mandatory attributes in implementation if not strictly enforced by XML validation.
 
 ### 3. Transaction Boundaries
