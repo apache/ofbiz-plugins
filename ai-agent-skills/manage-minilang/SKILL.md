@@ -62,6 +62,7 @@ Write and maintain OFBiz service logic in MiniLang (XML) that follows what the M
 - **Complex Logic**: Avoid deeply nested `<if>` or `<loop>` tags in MiniLang; split the method by business step instead.
 - **Variable Scoping**: Be aware that variables created with `<set>` are local to the `<simple-method>` unless explicitly mapped to `parameters`.
 - **Declared Entries Are Copies**: When a `List` or `Map` in-parameter declares child attributes, the dispatcher gives the service a new map for each entry (`ModelService.makeValid`). Set fields on the entry and pass it to `<call-service>` as it is; do not copy it first. A `List` with no child attributes holds the caller's own maps.
+- **Copy By Name**: `<make-value map="...">` copies every entity field whose name is a key in the map (`delegator.makeValidValue`). Build a row from an entry with `map=`, then `<set>` only the fields the entry does not hold; do not copy matching fields one by one.
 
 ## Examples
 **Example: Simple Status Update**
