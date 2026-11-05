@@ -49,6 +49,7 @@ Define and implement business logic as reusable, transactional, and securely enf
 ### 2. Service Definition & Registration
 - **Naming**: Use `verbNoun` format for all service names (e.g., `updateExample`, `createOrder`).
 - **In/Out Parameters**: Use `<attribute name="..." mode="IN|OUT|INOUT" type="..." optional="true|false"/>`. NEVER bypass attribute validation by casually omitting them or making them wrongly optional.
+- **Nested Parameters**: A `List` or `Map` in-parameter can declare its fields as child `<attribute>` elements. The validator checks each List entry, or the Map, against them (`ModelService.validate`). Declare them, so the engine checks the data. The OpenAPI schema in `rest-api` reads only the first child of a List, so do not rely on it for a List of Maps.
 - **Native Contract Types**: Backend/data services should keep OFBiz-native service types such as `Timestamp` and `BigDecimal` in IN/OUT attributes and returned maps.
 - **Type In XML First**: If a service consumes dates, numbers, or booleans, declare them with native OFBiz/Java types in `services.xml` first. Prefer fixing the service contract over keeping Groovy-side parsing code forever.
 - **Auth & Security**: Set `auth="true"` for protected services. ALWAYS implement permission checks (e.g., `<permission-service>`).
@@ -242,4 +243,17 @@ dispatcher.addRollbackService("releaseAuthorization", context, true);
     <description>Automatically exported as a REST API</description>
     <attribute name="productId" mode="IN" type="String" optional="false"/>
 </service>
+```
+
+**Example: Nested In-Parameters**
+Each package is a Map, and each package holds a List of item Maps:
+```xml
+<attribute name="packages" type="List" mode="IN" optional="false">
+    <attribute name="packageSeqId" type="String" mode="IN" optional="false"/>
+    <attribute name="weight" type="BigDecimal" mode="IN" optional="true"/>
+    <attribute name="items" type="List" mode="IN" optional="false">
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="quantity" type="BigDecimal" mode="IN" optional="false"/>
+    </attribute>
+</attribute>
 ```
