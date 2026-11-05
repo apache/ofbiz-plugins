@@ -19,16 +19,14 @@
 package org.apache.ofbiz.lucene.content
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer
-import org.apache.lucene.document.Document
 import org.apache.lucene.index.DirectoryReader
 import org.apache.lucene.index.Term
 import org.apache.lucene.queryparser.classic.QueryParser
+import org.apache.lucene.search.BooleanClause
 import org.apache.lucene.search.BooleanQuery
 import org.apache.lucene.search.IndexSearcher
 import org.apache.lucene.search.Query
-import org.apache.lucene.search.ScoreDoc
 import org.apache.lucene.search.TermQuery
-import org.apache.lucene.search.TopScoreDocCollector
 import org.apache.lucene.store.FSDirectory
 import org.apache.ofbiz.base.util.UtilHttp
 import org.apache.ofbiz.content.search.SearchWorker
@@ -99,14 +97,9 @@ if (searchFeature1 || searchFeature2 || searchFeature3 || !featureIdByType.isEmp
     }
 }
 if (searcher) {
-    TopScoreDocCollector collector = TopScoreDocCollector.create(100, 100) //defaulting to 100 results
-    searcher.search(combQuery.build(), collector)
-    ScoreDoc[] hits = collector.topDocs().scoreDocs
-
     contentList = [] as ArrayList
     hitSet = [:] as HashSet
-    for (int start = 0; start < collector.getTotalHits(); start++) {
-        Document doc = searcher.doc(hits[start].doc)
+    SearchWorker.search(searcher, combQuery.build(), 100).each { doc -> //defaulting to 100 results
         contentId = doc.get('contentId')
         content = from('Content').where('contentId', contentId).cache().queryOne()
         if (!hitSet.contains(contentId)) {

@@ -18,9 +18,17 @@
  *******************************************************************************/
 package org.apache.ofbiz.content.search;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.lucene.document.Document;
+import org.apache.lucene.index.StoredFields;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.TopScoreDocCollectorManager;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.UtilDateTime;
 import org.apache.ofbiz.base.util.UtilMisc;
@@ -87,6 +95,24 @@ public final class SearchWorker {
         for (GenericValue content : contentList) {
             indexer.queue(new ContentDocument(content, dispatcher));
         }
+    }
+
+    /**
+     * Runs a query and returns the stored fields of the best matching documents.
+     * @param searcher the searcher of the index to query
+     * @param query the query to run
+     * @param maxHits the maximum number of documents to return
+     * @return the matching documents, best match first
+     * @throws IOException if the index cannot be read
+     */
+    public static List<Document> search(IndexSearcher searcher, Query query, int maxHits) throws IOException {
+        TopDocs topDocs = searcher.search(query, new TopScoreDocCollectorManager(maxHits, maxHits));
+        StoredFields storedFields = searcher.storedFields();
+        List<Document> documents = new ArrayList<>(topDocs.scoreDocs.length);
+        for (ScoreDoc hit : topDocs.scoreDocs) {
+            documents.add(storedFields.document(hit.doc));
+        }
+        return documents;
     }
 
 }
