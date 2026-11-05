@@ -42,6 +42,7 @@ one has to keep its own copy, taken from the release24.09 branch.
 | bi, with the OLAP entities (`*Dimension`, `*Fact`, `*StarSchema`) | [#484](https://github.com/apache/ofbiz-plugins/pull/484) |
 | birt, which was already disabled in 24.09 | [#482](https://github.com/apache/ofbiz-plugins/pull/482) |
 | ebay and ebaystore | [#339](https://github.com/apache/ofbiz-plugins/pull/339) |
+| exampleext; the techniques it showed are in the developer manual under "Extending a component without modifying it" | [OFBIZ-13795](https://issues.apache.org/jira/browse/OFBIZ-13795) |
 | webpos | [#304](https://github.com/apache/ofbiz-plugins/pull/304) |
 | rest-api, which moved to `framework/rest-api` in ofbiz-framework | commit c9eb46469 |
 
@@ -64,14 +65,12 @@ The tables of the removed entities are not dropped; drop them once you no longer
 * The controller no longer declares the `http` view handler
   ([#426](https://github.com/apache/ofbiz-plugins/pull/426)).
 
-### example and exampleext
+### example
 
 * The `ExampleReportXls` and `ListExampleExport` requests are removed with the `screenxls` view handler
   ([#400](https://github.com/apache/ofbiz-plugins/pull/400)).
 * The websocket push notification example (`ExampleServices`, `ExampleWebSockets`) is removed
   ([#466](https://github.com/apache/ofbiz-plugins/pull/466)).
-* The exampleext `CommonBirtDecorator` is removed with the birt plugin
-  ([#482](https://github.com/apache/ofbiz-plugins/pull/482)).
 
 ### lucene
 

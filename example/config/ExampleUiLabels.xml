@@ -796,16 +796,6 @@
         <value xml:lang="zh">这个小窗口没有设置指定标题（SpecificTitle）属性。你可以用小窗口属性编辑按钮来设置它们。</value>
         <value xml:lang="zh-TW">這個小視窗沒有設置指定標題(SpecificTitle)屬性.你可以用小視窗屬性編輯按鈕來設置它們.</value>
     </property>
-    <property key="ExampleOriginalExample">
-        <value xml:lang="en">Original Example</value>
-        <value xml:lang="fr">Exemple original</value>
-        <value xml:lang="it">Esempio originale</value>
-        <value xml:lang="ja">オリジナルサンプル</value>
-        <value xml:lang="ru">Оригинальный пример</value>
-        <value xml:lang="th">ตัวอย่างเดิม</value>
-        <value xml:lang="zh">原样例</value>
-        <value xml:lang="zh-TW">原範例</value>
-    </property>
     <property key="ExampleParserConfigurationErrorRenderingScreen">
         <value xml:lang="en">Parser configuration error rendering screen [${screenLocation}]: ${errorString}</value>
     </property>
@@ -974,13 +964,6 @@
         <value xml:lang="en">Select "specify other" option, an input box will be shown next to dropdown. See tootip of other-field-size attribute of drop-down form element</value>
         <value xml:lang="zh">如果选择"specify other"，下拉框旁边会出现本文框。参考form的drop-down元素的other-field-size属性说明</value>
         <value xml:lang="zh-TW">如果選擇"specify other",下拉清單旁邊會出現本文框.參考form的drop-down元素的other-field-size屬性說明</value>
-    </property>
-    <property key="ExampleTextDescription">
-        <value xml:lang="en">This example text means we are in the extended form.</value>
-        <value xml:lang="it">Questo testo di esempio significa che noi siamo nella form estesa di esempio.</value>
-        <value xml:lang="ja">サンプルテキストが拡張フォームの中にあるサンプル。</value>
-        <value xml:lang="zh">这个样例文本意味着我们处于扩展表单中。</value>
-        <value xml:lang="zh-TW">這個範例文本意味著我們處於擴展表單中.</value>
     </property>
     <property key="ExampleToDo">
         <value xml:lang="en">Explanation TODO</value>
