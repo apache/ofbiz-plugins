@@ -76,6 +76,9 @@ The tables of the removed entities are not dropped; drop them once you no longer
 ### lucene
 
 * `SearchWorker.getLuceneVersion` is removed (commit 5590a52e0).
+* Lucene moves from 9 to 10 ([OFBIZ-13800](https://issues.apache.org/jira/browse/OFBIZ-13800)). Lucene 10 reads
+  the existing 9.x indexes. Custom code calling `IndexSearcher.doc` or `TopScoreDocCollector.create` must switch to
+  `IndexSearcher.storedFields()` and `TopScoreDocCollectorManager`, and `TotalHits.value` is now the `value()` method.
 
 ### pricat
 

@@ -67,7 +67,7 @@ class LuceneTests implements JupiterTestHelper {
         // (too long once indexing is already done).
         TopDocs topDocs = null
         long deadline = System.currentTimeMillis() + 10000
-        while ((topDocs == null || topDocs.totalHits.value != 1) && System.currentTimeMillis() < deadline) {
+        while ((topDocs == null || topDocs.totalHits.value() != 1) && System.currentTimeMillis() < deadline) {
             try {
                 DirectoryReader reader = DirectoryReader.open(directory)
                 try {
@@ -78,12 +78,12 @@ class LuceneTests implements JupiterTestHelper {
             } catch (Exception ignored) {
                 // index not created yet by the background indexer thread
             }
-            if (topDocs == null || topDocs.totalHits.value != 1) {
+            if (topDocs == null || topDocs.totalHits.value() != 1) {
                 Thread.sleep(200)
             }
         }
 
-        assert topDocs != null && topDocs.totalHits.value == 1 : 'Only 1 result expected from the testdata'
+        assert topDocs != null && topDocs.totalHits.value() == 1 : 'Only 1 result expected from the testdata'
     }
 
 }

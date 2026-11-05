@@ -24,18 +24,16 @@ import org.apache.lucene.document.Document
 import org.apache.lucene.index.DirectoryReader
 import org.apache.lucene.index.Term
 import org.apache.lucene.queryparser.classic.QueryParser
+import org.apache.lucene.search.BooleanClause
 import org.apache.lucene.search.BooleanQuery
 import org.apache.lucene.search.IndexSearcher
-import org.apache.lucene.search.ScoreDoc
+import org.apache.lucene.search.Query
 import org.apache.lucene.search.TermQuery
-import org.apache.lucene.search.TopScoreDocCollector
 import org.apache.lucene.store.Directory
 import org.apache.lucene.store.FSDirectory
 import org.apache.ofbiz.base.util.UtilHttp
 import org.apache.ofbiz.content.search.SearchWorker
 import org.apache.ofbiz.product.feature.ParametricSearch
-
-import javax.management.Query
 
 paramMap = UtilHttp.getParameterMap(request)
 queryLine = paramMap.queryLine.toString()
@@ -91,15 +89,12 @@ if (featureIdByType) {
 
 if (searcher) {
     logInfo('in search searchFeature3, combQuery:' + combQuery)
-    TopScoreDocCollector collector = TopScoreDocCollector.create(100, 100) //defaulting to 100 results
-    searcher.search(combQuery.build(), collector)
-    ScoreDoc[] hits = collector.topDocs().scoreDocs
-    logInfo('in search, hits:' + collector.getTotalHits())
+    List<Document> hits = SearchWorker.search(searcher, combQuery.build(), 100) //defaulting to 100 results
+    logInfo('in search, hits:' + hits.size())
 
     contentList = [] as ArrayList
     hitSet = [:] as HashSet
-    for (int start = 0; start < collector.getTotalHits(); start++) {
-        Document doc = searcher.doc(hits[start].doc)
+    hits.each { doc ->
         contentId = doc.get('contentId')
         content = from('Content').where('contentId', contentId).cache().queryOne()
         if (!hitSet.contains(contentId)) {
