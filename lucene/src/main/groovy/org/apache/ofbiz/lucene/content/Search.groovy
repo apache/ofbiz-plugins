@@ -93,8 +93,8 @@ if (searchFeature1 || searchFeature2 || searchFeature3 || !featureIdByType.isEmp
             termQuery = new TermQuery(new Term('feature', value))
             featureQuery.add(termQuery, featuresRequired)
         }
-        combQuery.add(featureQuery.build(), featuresRequired)
     }
+    combQuery.add(featureQuery.build(), featuresRequired)
 }
 if (searcher) {
     contentList = [] as ArrayList
