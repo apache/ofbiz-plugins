@@ -23,7 +23,7 @@
     -- productStoreId: 9000
     -- telecomMsgTypeEnumId: ORDER_SMS
     -- telecomMethodTypeId: Its optional so can be left blank.
-    -- numbers: comma seperated numbers. If you are sending SMS in India or USA, then the numbers should be excluding country code. Otherwise numbers should include country code too.
+    -- numbers: comma separated numbers. If you are sending SMS in India or USA, then the numbers should be excluding country code. Otherwise numbers should include country code too.
     -- message: message you want to send to.
     After entering the required parameters, run the service.
 
