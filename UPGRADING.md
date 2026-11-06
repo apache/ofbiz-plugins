@@ -45,6 +45,7 @@ one has to keep its own copy, taken from the release24.09 branch.
 | exampleext; the techniques it showed are in the developer manual under "Extending a component without modifying it" | [OFBIZ-13795](https://issues.apache.org/jira/browse/OFBIZ-13795) |
 | msggateway, with the `Msg91GatewayConfig` entity; the core telecom services stay, so replace any `TG_MSG91` telecom setting with your own gateway service | [OFBIZ-13797](https://issues.apache.org/jira/browse/OFBIZ-13797) |
 | multiflex; switch any product store or user still on the `MULTIFLEX` visual theme to `EC_DEFAULT` first | [OFBIZ-13796](https://issues.apache.org/jira/browse/OFBIZ-13796) |
+| pricat, with the `ExcelImportHistory` entity | [OFBIZ-13799](https://issues.apache.org/jira/browse/OFBIZ-13799) |
 | webpos | [#304](https://github.com/apache/ofbiz-plugins/pull/304) |
 | rest-api, which moved to `framework/rest-api` in ofbiz-framework | commit c9eb46469 |
 
@@ -80,11 +81,6 @@ The tables of the removed entities are not dropped; drop them once you no longer
 * Lucene moves from 9 to 10 ([OFBIZ-13800](https://issues.apache.org/jira/browse/OFBIZ-13800)). Lucene 10 reads
   the existing 9.x indexes. Custom code calling `IndexSearcher.doc` or `TopScoreDocCollector.create` must switch to
   `IndexSearcher.storedFields()` and `TopScoreDocCollectorManager`, and `TotalHits.value` is now the `value()` method.
-
-### pricat
-
-* `SampleHtmlThread` and `PricatParseExcelHtmlThread` are final, and the `AbstractReport` constructor is protected
-  ([#487](https://github.com/apache/ofbiz-plugins/pull/487)).
 
 ### scrum
 

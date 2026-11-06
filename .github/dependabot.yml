@@ -33,7 +33,6 @@ updates:
       - "/firstdatapaymentgateway"
       - "/ldap"
       - "/lucene"
-      - "/pricat"
       - "/secretshub"
     schedule:
       interval: "weekly"
