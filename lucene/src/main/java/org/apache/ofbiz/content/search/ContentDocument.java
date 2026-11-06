@@ -33,7 +33,6 @@ import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.Term;
 import org.apache.ofbiz.base.util.GeneralException;
-import org.apache.ofbiz.base.util.StringUtil;
 import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.content.content.ContentWorker;
@@ -158,15 +157,9 @@ public class ContentDocument implements LuceneDocument {
             doc.add(field);
         }
         List<GenericValue> featureDataResourceList = content.getRelated("ProductFeatureDataResource", null, null, true);
-        List<String> featureList = new ArrayList<>();
+        // one untokenized field per feature, so that a term query on the feature id matches
         for (GenericValue productFeatureDataResource : featureDataResourceList) {
-            String feature = productFeatureDataResource.getString("productFeatureId");
-            featureList.add(feature);
-        }
-        String featureString = StringUtil.join(featureList, " ");
-        if (UtilValidate.isNotEmpty(featureString)) {
-            Field field = new TextField("feature", featureString, Store.NO);
-            doc.add(field);
+            doc.add(new StringField("feature", productFeatureDataResource.getString("productFeatureId"), Store.NO));
         }
         return true;
     }
