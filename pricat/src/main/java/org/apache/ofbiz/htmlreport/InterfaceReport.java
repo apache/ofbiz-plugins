@@ -53,14 +53,14 @@ public interface InterfaceReport {
     String REPORT_TYPE_SIMPLE = "simple";
 
     /**
-     * Adds an error object to the list of errors that occured during the report.
+     * Adds an error object to the list of errors that occurred during the report.
      *
      * @param obj the error object
      */
     void addError(Object obj);
 
     /**
-     * Adds a warning object to the list of warnings that occured during the report.
+     * Adds a warning object to the list of warnings that occurred during the report.
      *
      * @param obj the error object
      */
@@ -74,9 +74,9 @@ public interface InterfaceReport {
     String formatRuntime();
 
     /**
-     * Returns a list of all errors that occured during the report.
+     * Returns a list of all errors that occurred during the report.
      *
-     * @return an error list that occured during the report
+     * @return an error list that occurred during the report
      */
     List<Object> getErrors();
 
@@ -106,9 +106,9 @@ public interface InterfaceReport {
     long getRuntime();
 
     /**
-     * Returns a list of all warnings that occured during the report.
+     * Returns a list of all warnings that occurred during the report.
      *
-     * @return a warning list that occured during the report
+     * @return a warning list that occurred during the report
      */
     List<Object> getWarnings();
 
