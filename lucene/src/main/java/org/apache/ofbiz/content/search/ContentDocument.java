@@ -96,10 +96,9 @@ public class ContentDocument implements LuceneDocument {
         }
         List<String> ancestorList = new ArrayList<>();
         getContentAncestry(content.getDelegator(), contentId, "WEB_SITE_PUB_PT", ancestorList, new HashSet<>());
-        String ancestorString = StringUtil.join(ancestorList, " ");
-        if (UtilValidate.isNotEmpty(ancestorString)) {
-            Field field = new StringField("site", ancestorString, Store.NO);
-            doc.add(field);
+        // one field per ancestor, so that a term query on any of them matches
+        for (String ancestorId : ancestorList) {
+            doc.add(new StringField("site", ancestorId, Store.NO));
         }
         boolean retVal = indexDataResource(doc);
         if (!retVal) {
@@ -109,9 +108,9 @@ public class ContentDocument implements LuceneDocument {
     }
 
     /**
-     * Adds the ancestors of a content having the given content type to the list, following the content associations from
-     * contentId to contentIdTo. Unlike ContentWorker.getContentAncestryAll(), a database error is thrown instead of being
-     * logged, so that the content is not indexed without its ancestors.
+     * Adds the ancestors of a content having the given content type to the list, following the content associations up
+     * from contentIdTo (the child) to contentId (the parent). Unlike ContentWorker.getContentAncestryAll(), a database error
+     * is thrown instead of being logged, so that the content is not indexed without its ancestors.
      */
     private static void getContentAncestry(Delegator delegator, String contentId, String contentTypeId, List<String> ancestorList,
             Set<String> visitedContentIds) throws GenericEntityException {
@@ -119,15 +118,15 @@ public class ContentDocument implements LuceneDocument {
             return;
         }
         List<GenericValue> contentAssocs = EntityQuery.use(delegator).from("ContentAssoc")
-                .where("contentId", contentId)
+                .where("contentIdTo", contentId)
                 .cache().filterByDate().queryList();
         for (GenericValue contentAssoc : contentAssocs) {
-            String contentIdTo = contentAssoc.getString("contentIdTo");
-            getContentAncestry(delegator, contentIdTo, contentTypeId, ancestorList, visitedContentIds);
-            if (!ancestorList.contains(contentIdTo)) {
-                GenericValue contentTo = EntityQuery.use(delegator).from("Content").where("contentId", contentIdTo).cache().queryOne();
-                if (contentTo != null && contentTypeId.equals(contentTo.getString("contentTypeId"))) {
-                    ancestorList.add(contentIdTo);
+            String parentContentId = contentAssoc.getString("contentId");
+            getContentAncestry(delegator, parentContentId, contentTypeId, ancestorList, visitedContentIds);
+            if (!ancestorList.contains(parentContentId)) {
+                GenericValue parentContent = EntityQuery.use(delegator).from("Content").where("contentId", parentContentId).cache().queryOne();
+                if (parentContent != null && contentTypeId.equals(parentContent.getString("contentTypeId"))) {
+                    ancestorList.add(parentContentId);
                 }
             }
         }
