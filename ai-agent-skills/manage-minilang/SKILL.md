@@ -20,16 +20,16 @@ under the License.
 ---
 name: manage-minilang
 description: |
-  Manage legacy business logic in OFBiz MiniLang (XML). Use when
-  - Modifying legacy service workflows defined in XML.
-  - Troubleshooting existing MiniLang codebases.
-  - Migrating MiniLang logic to Groovy (Highly Recommended).
+  Write and maintain OFBiz service logic in MiniLang (XML). Use when
+  - Writing a new `engine="simple"` service.
+  - Modifying or debugging existing MiniLang.
+  - Converting MiniLang to Groovy, when asked to.
 ---
 
 # Skill: manage-minilang (v1.0)
 
 ## Goal
-Manage legacy business logic in OFBiz MiniLang (XML) while ensuring a path toward modernization.
+Write and maintain OFBiz service logic in MiniLang (XML) that follows what the MiniLang engine actually does.
 
 ## Triggers
 **ALWAYS** read this skill when:
@@ -37,13 +37,16 @@ Manage legacy business logic in OFBiz MiniLang (XML) while ensuring a path towar
 - Debugging `engine="simple"` services.
 
 ## Use when
+- Writing new service logic in a project that uses MiniLang.
 - Maintaining existing OFBiz core logic.
-- Implementing very simple CRUD sequences (if required by project conventions).
 
 > [!IMPORTANT]
-> **MiniLang is DEPRECATED in modern OFBiz versions.**
-> - Use Groovy for all new business logic.
-> - Only use MiniLang for maintenance of existing legacy code.
+> **MiniLang is a supported service engine in trunk. The language is not deprecated.**
+> - Some elements and attributes are deprecated. The engine reports them when it parses
+>   a file, and fails under `validation.level=strict` (`SimpleMethod.java`,
+>   `MiniLangValidate.java`, `simple-methods.xsd`).
+> - Groovy and MiniLang are both valid for new logic. Follow the project's choice.
+> - Do not convert MiniLang to Groovy unless asked.
 
 ## Procedure
 1. **Locate**: Find the `<simple-method>` in a `script/.../*.xml` file.
@@ -54,10 +57,13 @@ Manage legacy business logic in OFBiz MiniLang (XML) while ensuring a path towar
    ```
 
 ## Guardrails
-- **Deprecation**: Never start NEW development in MiniLang.
+- **Deprecated Elements**: Never use an element or attribute that `simple-methods.xsd` marks deprecated.
 - **Service Security**: `auth="true"` is required at the service definition, not within MiniLang itself.
-- **Complex Logic**: Avoid deeply nested `<if>` or `<loop>` tags in MiniLang; this is a sign it should be migrated to Groovy.
+- **Complex Logic**: Avoid deeply nested `<if>` or `<loop>` tags in MiniLang; split the method by business step instead.
+- **No Wrapper Methods**: Do not add a `<simple-method>` whose only job is to set a few fields and make one `<call-service>` or one row write. Make that call where it is needed, even in two places. Split out a method only for a business step with logic of its own.
 - **Variable Scoping**: Be aware that variables created with `<set>` are local to the `<simple-method>` unless explicitly mapped to `parameters`.
+- **Declared Entries Are Copies**: When a `List` or `Map` in-parameter declares child attributes, the dispatcher gives the service a new map for each entry (`ModelService.makeValid`). Set fields on the entry and pass it to `<call-service>` as it is; do not copy it first. A `List` with no child attributes holds the caller's own maps.
+- **Copy By Name**: `<make-value map="...">` copies every entity field whose name is a key in the map (`delegator.makeValidValue`). Build a row from an entry with `map=`, then `<set>` only the fields the entry does not hold; do not copy matching fields one by one.
 
 ## Examples
 **Example: Simple Status Update**
