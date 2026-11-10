@@ -19,18 +19,18 @@ under the License.
 
 ---
 name: manage-api-integration
-description: Define and integrate REST and SOAP APIs in OFBiz.
+description: Define and integrate REST APIs in OFBiz.
 ---
 
 # Manage API Integration
 
-Integration patterns for exposing OFBiz services via REST and SOAP, and handling JSON responses.
+Integration patterns for exposing OFBiz services via REST, and handling JSON responses.
 
 ## REST API (framework REST API support)
 
 OFBiz uses framework REST API support to declaratively expose services.
 
-For REST API design/refactoring, wrapper decisions, contract safety, and PWA/API consumer compatibility, also read the `manage-rest-api` skill. This skill remains the broader integration guide for REST mechanics, SOAP integration, and controller JSON responses.
+For REST API design/refactoring, wrapper decisions, contract safety, and PWA/API consumer compatibility, also read the `manage-rest-api` skill. This skill remains the broader integration guide for REST mechanics and controller JSON responses.
 
 ### REST API Definitions
 
@@ -112,23 +112,6 @@ In `controller.xml`:
 ### Response Handling
 `CommonEvents.jsonResponseFromRequestAttributes` (or `CommonEvents.jsonResponseFromServiceResults` in some versions) processes the request attributes and writes a JSON object to the response.
 - **Security**: A `&&&START&&&` prefix is added to GET responses to prevent JSON hijacking (XSSI).
-
-## SOAP Integration
-
-OFBiz provides built-in SOAP support via the `SOAPEventHandler`.
-
-### Exposing a Service as SOAP
-1. Set `export="true"` in the service definition.
-2. Ensure the `soap` handler is enabled in `handlers-controller.xml`.
-3. Access the WSDL at `https://[host]/[webapp]/control/SOAPService/[ServiceName]?wsdl`.
-
-### Invoking a Remote SOAP Service
-Use the `soap-engine` or `SOAPClientEngine`.
-```xml
-<service name="remoteSoapCall" engine="soap" location="http://remote-host/control/SOAPService">
-    <implements service="localServiceTemplate"/>
-</service>
-```
 
 ## Security & Data Mapping
 

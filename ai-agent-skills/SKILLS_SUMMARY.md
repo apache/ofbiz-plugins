@@ -59,7 +59,7 @@ This document provides a high-level summary of the specialized skills developed 
 ## 🔌 Integrations & Communication
 | Skill | Description |
 | :--- | :--- |
-| **manage-api-integration** | Expose services via REST or SOAP and handle JSON/XML data mapping. |
+| **manage-api-integration** | Expose services via REST and handle JSON/XML data mapping. |
 | **manage-rest-api** | Design, refactor, and verify OFBiz REST APIs with native services and contract-safe wrappers. |
 | **manage-email-services** | Configure SMTP, manage email templates, and automate outgoing communications. |
 

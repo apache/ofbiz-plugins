@@ -10,7 +10,7 @@ Build OFBiz REST APIs that are thin, service-native, contract-safe, and easy to 
 
 Use OFBiz services, service definitions, entity utilities, and framework REST conventions first. Add REST wrapper services only when they adapt a transport contract, aggregate read data, or preserve compatibility for an existing consumer.
 
-For low-level REST XML syntax, direct service export mechanics, SOAP integration, or controller JSON response patterns, also read the `manage-api-integration` skill.
+For low-level REST XML syntax, direct service export mechanics, or controller JSON response patterns, also read the `manage-api-integration` skill.
 
 ## Core Workflow
 1. **Map the contract first**

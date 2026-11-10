@@ -118,7 +118,7 @@ When external systems or direct SQL modify the database, or when you bypass OFBi
 - **Async Services**: Async services run concurrently in new transactions. If an async service depends on cached data from the main transaction before it commits, it will see stale data.
 
 ### 3. Distributed Data Services (DDS)
-For multi-node setups, ensure cache clearing is synchronized (usually via RMI or JMS in OFBiz). *Assume a single-node setup unless explicitly requested, and do not overly engineer distributed event clearing otherwise.*
+For multi-node setups, ensure cache clearing is synchronized (usually via JMS in OFBiz). *Assume a single-node setup unless explicitly requested, and do not overly engineer distributed event clearing otherwise.*
 
 ## Examples: Good Patterns vs Anti-Patterns
 
