@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<!-- This document serves as an example for Compound Screen Widget feature -->
+<compound-widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:sc="http://ofbiz.apache.org/Site-Conf"
+        xmlns:sm="http://ofbiz.apache.org/Simple-Method"
+        xmlns:wf="http://ofbiz.apache.org/Widget-Form"
+        xmlns:wt="http://ofbiz.apache.org/Widget-Tree"
+        xmlns:wm="http://ofbiz.apache.org/Widget-Menu"
+        xmlns:ws="http://ofbiz.apache.org/Widget-Screen"
+        xsi:noNamespaceSchemaLocation="../../../framework/widget/dtd/compound-widgets.xsd">
+
+  <sc:site-conf>
+    <sc:request-map uri="ExampleFeatureAppl/list/{exampleId}"           method="get"><sc:security https="true" auth="true"/><sc:response name="success"
+                                                     type="view" value="ExampleFeatureApplsA"/></sc:request-map>
+    <sc:request-map uri="ExampleFeatureAppl/bList/{exampleFeatureId}"   method="get"><sc:security https="true" auth="true"/><sc:response name="success"
+                                                     type="view" value="ExampleFeatureApplsB"/></sc:request-map>
+    <sc:request-map uri="ExampleFeatureAppl/create/{exampleId}"         method="get"><sc:security https="true" auth="true"/><sc:response name="success"
+                                                     type="view" value="EditExampleFeatureAppl"/></sc:request-map>
+    <sc:request-map uri="ExampleFeatureAppl/bCreate/{exampleFeatureId}" method="get"><sc:security https="true" auth="true"/><sc:response name="success"
+                                                     type="view" value="EditExampleFeatureAppl"/></sc:request-map>
+    <sc:request-map uri="ExampleFeatureAppl/edit/{exampleId}/{exampleFeatureId}/{fromDate}"   method="get"><sc:security https="true" auth="true"/><sc:response name="success"
+                                                     type="view" value="EditExampleFeatureAppl"/></sc:request-map>
+    <sc:request-map uri="ExampleFeatureAppl/change"                     method="post"><sc:security https="true" auth="true"/>
+        <sc:event type="service" invoke="createExampleFeatureAppl"/>
+        <sc:response name="success" type="request" value="json"/>
+        <sc:response name="error" type="request" value="json"/>
+        <sc:response name="fail" type="request" value="json"/>
+    </sc:request-map>
+    <sc:request-map uri="ExampleFeatureAppl/change/{exampleId}/{exampleFeatureId}/{fromDate}" method="put"><sc:security https="true" auth="true"/>
+        <sc:event type="service" invoke="updateExampleFeatureAppl"/>
+        <sc:response name="success" type="request" value="json"/>
+        <sc:response name="error" type="request" value="json"/>
+    </sc:request-map>
+    <sc:request-map uri="ExampleFeatureAppl/change/{exampleId}/{exampleFeatureId}/{fromDate}" method="delete"><sc:security https="true" auth="true"/>
+        <sc:event type="service" invoke="deleteExampleFeatureAppl"/>
+        <sc:response name="success" type="request" value="json"/>
+        <sc:response name="error" type="request" value="json"/>
+    </sc:request-map>
+
+    <sc:view-map name="EditExampleFeatureAppl"   type="screenfrontjs" page="component://examplefjs/widget/ExampleFeatureApplWidgets.xml#EditExampleFeatureAppl"/>
+    <sc:view-map name="ExampleFeatureApplsA"      type="screenfrontjs" page="component://examplefjs/widget/ExampleFeatureApplWidgets.xml#ExampleFeatureApplsA"/>
+    <sc:view-map name="ExampleFeatureApplsB"      type="screenfrontjs" page="component://examplefjs/widget/ExampleFeatureApplWidgets.xml#ExampleFeatureApplsB"/>
+  </sc:site-conf>
+
+
+
+
+  <wm:menus>
+    <wm:menu name="ExampleFeatureAppls" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <wm:actions>
+          <wm:set field="exampleId" from-field="parameters.exampleId"/>
+        </wm:actions>
+        <wm:menu-item name="addExampleFeatureAppl">
+            <wm:link target="ExampleFeatureAppl/${groovy: exampleId ? 'create/'+exampleId : 'bCreate/'+parameters.exampleFeatureId}"
+                              link-type="set-area" target-window="ExampleFeatureAppl01"> <!-- target-window is used to give which area will be update -->
+                <wm:image src="${iconsPurpose.Add}" title="${uiLabelMap.IconsTooltips_Add}"/>
+            </wm:link>
+        </wm:menu-item>
+    </wm:menu>
+  </wm:menus>
+
+
+
+
+  <ws:screens>
+    <!-- Screen used by controller for entity edition (not used directly by a portlet) -->
+    <ws:screen name="EditExampleFeatureAppl">
+      <ws:section>
+        <ws:actions>
+          <ws:set field="exampleId" from-field="parameters.exampleId"/>
+          <ws:set field="exampleFeatureId" from-field="parameters.exampleFeatureId"/>
+          <ws:set field="fromDate" from-field="parameters.fromDate"/>
+          <ws:entity-one value-field="exampleFeatureAppl" entity-name="ExampleFeatureAppl"/>
+        </ws:actions>
+        <ws:widgets>
+          <ws:decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+            <ws:decorator-section name="body">
+              <ws:include-form name="EditExampleFeatureAppl" location="component://examplefjs/widget/ExampleFeatureApplWidgets.xml"/>
+            </ws:decorator-section>
+          </ws:decorator-screen>
+        </ws:widgets>
+      </ws:section>
+    </ws:screen>
+
+    <ws:screen name="ExampleFeatureApplsA">
+      <ws:section>
+        <ws:condition>
+          <ws:or>
+            <ws:not><ws:if-empty field="parameters.exampleId"/></ws:not>
+            <ws:not><ws:if-empty field="parameters.keyId"/></ws:not>
+          </ws:or>
+        </ws:condition>
+        <ws:actions>
+          <ws:set field="exampleId" from-field="parameters.exampleId" default-value="${parameters.keyId}"/>
+          <ws:set field="idDescription" value="exampleId=${exampleId}"/>
+        </ws:actions>
+          <ws:widgets>
+            <ws:decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+              <ws:decorator-section name="body">
+                <ws:screenlet title="${uiLabelMap.PageTitleExampleFeatureAppls} ${uiLabelMap.CommonFor} ${idDescription}" navigation-menu-name="ExampleFeatureAppls" >
+                  <ws:include-menu name="ExampleFeatureAppls" location="component://examplefjs/widget/ExampleFeatureApplWidgets.xml"/>
+                  <ws:include-menu name="ExampleFeatureExternalMenu" location="component://examplefjs/widget/ExampleFeatureWidgets.xml"/>
+                  <ws:container id="ExampleFeatureAppl01" /> <!-- will be used by add and edit exampleItem with a set-area -->
+                  <ws:include-grid name="ExampleFeatureApplsA" location="component://examplefjs/widget/ExampleFeatureApplWidgets.xml"/>
+                </ws:screenlet>
+              </ws:decorator-section>
+            </ws:decorator-screen>
+          </ws:widgets>
+      </ws:section>
+    </ws:screen>
+    <ws:screen name="ExampleFeatureApplsB">
+      <ws:section>
+        <ws:condition>
+          <ws:or>
+             <ws:not><ws:if-empty field="parameters.keyId"/></ws:not>
+             <ws:and>
+               <ws:not><ws:if-empty field="parameters.exampleFeatureId"/></ws:not>
+               <ws:if-compare operator="not-equals" value="undefined" field="parameters.exampleFeatureId"/>
+             </ws:and>
+          </ws:or>
+        </ws:condition>
+        <ws:actions>
+            <ws:set field="exampleFeatureId" from-field="parameters.exampleFeatureId" default-value="${parameters.keyId}"/>
+            <ws:set field="idDescription"
+                    value="exampleFeatureId= ${exampleFeatureId}"/>
+        </ws:actions>
+          <ws:widgets>
+            <ws:decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+              <ws:decorator-section name="body">
+                <ws:screenlet title="${uiLabelMap.PageTitleExampleFeatureAppls} ${uiLabelMap.CommonFor} ${idDescription}" navigation-menu-name="ExampleFeatureAppls" >
+                  <ws:include-menu name="ExampleFeatureAppls" location="component://examplefjs/widget/ExampleFeatureApplWidgets.xml"/>
+                  <ws:include-menu name="ExampleExternalMenu" location="component://examplefjs/widget/ExampleWidgets.xml"/>
+                  <ws:container id="ExampleFeatureAppl01" /> <!-- will be used by add and edit exampleItem with a set-area -->
+                  <ws:include-grid name="ExampleFeatureApplsB" location="component://examplefjs/widget/ExampleFeatureApplWidgets.xml"/>
+                </ws:screenlet>
+              </ws:decorator-section>
+            </ws:decorator-screen>
+          </ws:widgets>
+      </ws:section>
+    </ws:screen>
+  </ws:screens>
+
+
+
+
+  <wf:forms>
+    <wf:grid name="ExampleFeatureAppls" list-name="exampleFeatureAppls" default-entity-name="ExampleFeatureAppl">
+        <wf:row-actions>
+          <wf:entity-one entity-name="ExampleFeature" value-field="exampleFeature" use-cache="true"/>
+        </wf:row-actions>
+        <wf:field name="sequenceNum"><wf:display/></wf:field>
+        <wf:field name="exampleFeatureApplTypeId" title="${uiLabelMap.CommonType}">
+            <wf:display-entity entity-name="ExampleFeatureApplType" key-field-name="exampleFeatureApplTypeId" description="${description}"/>
+        </wf:field>
+        <wf:field name="fromDate"><wf:display type="date"/></wf:field>
+        <wf:field name="thruDate"><wf:display type="date"/></wf:field>
+        <wf:field name="deleteLink" title=" ">
+            <wf:hyperlink also-hidden="false" image-location="${iconsPurpose.Delete}" image-title="${uiLabelMap.IconsTooltips_Delete}"
+                       request-confirmation="true" confirmation-message="${uiLabelMap.CommonConfirmDelete} ${exampleId}-${exampleFeatureId}">
+            </wf:hyperlink>
+            <wf:on-field-event-update-area event-type="delete" area-id="" area-target="ExampleFeatureAppl/change/${exampleId}/${exampleFeatureId}/${fromDate}"/>
+            <wf:on-field-event-update-area event-type="refresh-area" area-id="listExampleFeatureAppl_show" area-target=""/>
+        </wf:field>
+        <wf:sort-order>
+          <wf:sort-field name="sequenceNum"/>
+          <wf:sort-field name="exampleFeatureApplTypeId"/>
+          <wf:sort-field name="fromDate"/>
+          <wf:sort-field name="thruDate"/>
+          <wf:sort-field name="deleteLink"/>
+        </wf:sort-order>
+    </wf:grid>
+    <wf:grid name="ExampleFeatureApplsA" list-name="exampleFeatureAppls" default-entity-name="ExampleFeatureAppl"
+          extends="ExampleFeatureAppls" extends-resource="component://examplefjs/widget/ExampleFeatureApplWidgets.xml">
+        <wf:actions>
+            <wf:set field="exampleId" from-field="parameters.exampleId"/>
+            <wf:set field="keyId"     from-field="exampleId"/>
+            <wf:entity-condition entity-name="ExampleFeatureAppl">
+                <wf:condition-expr field-name="exampleId" from-field="exampleId"/>
+                <wf:order-by field-name="sequenceNum"/>
+                <wf:order-by field-name="exampleFeatureId"/>
+            </wf:entity-condition>
+        </wf:actions>
+        <wf:field name="exampleId"><wf:hidden/></wf:field>
+        <wf:field name="exampleFeatureId" title="${uiLabelMap.ExampleExampleFeatureId}">
+            <wf:hyperlink description="${exampleFeatureId}" also-hidden="false"
+                 link-type="set-area" target="ExampleFeatureAppl/edit/${exampleId}/${exampleFeatureId}/${fromDate}" target-window="ExampleFeatureAppl01"/>
+        </wf:field>
+        <wf:sort-order>
+          <wf:sort-field name="sequenceNum"/>
+          <wf:sort-field name="exampleFeatureId"/>
+        </wf:sort-order>
+    </wf:grid>
+    <wf:grid name="ExampleFeatureApplsB" list-name="exampleFeatureAppls" default-entity-name="ExampleFeatureAppl"
+          extends="ExampleFeatureAppls" extends-resource="component://examplefjs/widget/ExampleFeatureApplWidgets.xml">
+        <wf:actions>
+            <wf:set field="exampleFeatureId" from-field="parameters.exampleFeatureId"/>
+            <wf:set field="keyId"     from-field="exampleFeatureId"/>
+            <wf:entity-condition entity-name="ExampleFeatureAppl">
+                <wf:condition-expr field-name="exampleFeatureId" from-field="exampleFeatureId"/>
+                <wf:order-by field-name="sequenceNum"/>
+                <wf:order-by field-name="exampleId"/>
+            </wf:entity-condition>
+        </wf:actions>
+        <wf:field name="exampleId">
+            <wf:hyperlink description="${exampleId}" also-hidden="false"
+                 link-type="set-area" target="ExampleFeatureAppl/edit/${exampleId}/${exampleFeatureId}/${fromDate}" target-window="ExampleFeatureAppl01"/>
+        </wf:field>
+        <wf:field name="exampleFeatureId"><wf:hidden/></wf:field>
+        <wf:sort-order>
+          <wf:sort-field name="sequenceNum"/>
+          <wf:sort-field name="exampleId"/>
+        </wf:sort-order>
+    </wf:grid>
+
+    <!-- ExampleFeatureAppl : Form used by a screen by controller entry (not used directly by a portlet) : use for entity edition in edit area -->
+    <wf:form name="EditExampleFeatureAppl" type="single" target="ExampleFeatureAppl/change" title="" default-map-name="exampleFeatureAppl">
+        <wf:alt-target use-when="exampleFeatureAppl!=null" target="ExampleFeatureAppl/change/${exampleId}/${exampleFeatureId}/${fromDate}"/>
+<!--         <wf:auto-fields-service service-name="createExampleFeatureAppl"/> -->
+        <wf:field name="_method" use-when="exampleFeatureAppl!=null"><wf:hidden value="PUT"/></wf:field>
+
+        <wf:field name="sequenceNum"><wf:text/></wf:field>
+        <wf:field name="exampleId" use-when="exampleFeatureAppl==null @and parameters.exampleId!=null"><wf:hidden/></wf:field>
+        <wf:field name="exampleId" use-when="exampleFeatureAppl==null @and parameters.exampleId==null">
+            <wf:lookup target-form-name="LookupExample"></wf:lookup>
+        </wf:field>
+        <wf:field name="exampleId" use-when="exampleFeatureAppl!=null">
+            <wf:display-entity entity-name="Example" description="${exampleName} (${exampleId})"/>
+        </wf:field>
+        <wf:field name="exampleFeatureId" title="${uiLabelMap.ExampleFeature}" use-when="exampleFeatureAppl==null @and parameters.exampleFeatureId!=null">
+            <wf:hidden/>
+        </wf:field>
+        <wf:field name="exampleFeatureId" title="${uiLabelMap.ExampleFeature}" use-when="exampleFeatureAppl==null @and parameters.exampleFeatureId==null"
+                                          required-field="true">
+            <wf:drop-down allow-empty="true">
+                <wf:entity-options entity-name="ExampleFeature" key-field-name="exampleFeatureId" description="${description}">
+                    <wf:entity-order-by field-name="exampleFeatureId"/>
+                    <wf:entity-order-by field-name="description"/>
+                </wf:entity-options>
+            </wf:drop-down>
+        </wf:field>
+        <wf:field name="exampleFeatureId" title="${uiLabelMap.ExampleFeature}" use-when="exampleFeatureAppl!=null">
+            <wf:display-entity entity-name="ExampleFeature" description="${description} (${exampleFeatureId})"/>
+        </wf:field>
+        <wf:field name="exampleFeatureApplTypeId" title="${uiLabelMap.CommonType}">
+            <wf:drop-down allow-empty="true">
+                <wf:entity-options entity-name="ExampleFeatureApplType" key-field-name="exampleFeatureApplTypeId" description="${description}">
+                    <wf:entity-order-by field-name="exampleFeatureApplTypeId"/>
+                    <wf:entity-order-by field-name="description"/>
+                </wf:entity-options>
+            </wf:drop-down>
+        </wf:field>
+        <wf:field name="fromDate" use-when="exampleFeatureAppl==null" required-field="true"><wf:date-time/></wf:field>
+        <wf:field name="fromDate" use-when="exampleFeatureAppl!=null"><wf:display type="date-time"/></wf:field>
+        <wf:field name="thruDate"><wf:date-time/></wf:field>
+        <wf:field name="submitButton" title="${groovy: exampleFeatureAppl == null ? uiLabelMap.CommonAdd : uiLabelMap.CommonSave}">
+           <wf:submit/>
+        </wf:field>
+        <wf:field name="back" title=" " position="2" widget-style="buttontext">  <!-- Back button that refresh portlet with edit area-->
+            <wf:hyperlink description="${uiLabelMap.CommonBack}" also-hidden="false"/>
+            <wf:on-field-event-update-area area-target="" event-type="refresh-area" area-id="listExampleFeatureAppl_show"/>
+        </wf:field>
+
+        <wf:on-event-update-area area-target="" event-type="submit" area-id="" />
+        <wf:on-event-update-area area-target="" event-type="refresh-area" area-id="listExampleFeatureAppl_show"/>
+    </wf:form>
+  </wf:forms>
+
+
+
+</compound-widgets>

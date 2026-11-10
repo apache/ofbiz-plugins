@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<entity-engine-xml>
+    <PortalPage portalPageId="ExampleMgmtFrontJs" sequenceNum="100" parentPortalPageId="ExampleMgmtFrontJs" portalPageName="Examples management (MgmtPageFrontJs)" description="Search, list, details area" ownerUserLoginId="_NA_"/>
+    <PortalPageColumn portalPageId="ExampleMgmtFrontJs" columnSeqId="00001" columnWidthPercentage="33"/>
+    <PortalPagePortlet portalPageId="ExampleMgmtFrontJs" portalPortletId="FindExamples" portletSeqId="00001" columnSeqId="00001" sequenceNum="10"/>
+    <PortalPagePortlet portalPageId="ExampleMgmtFrontJs" portalPortletId="ExampleDetailsMenu" portletSeqId="00001" columnSeqId="00001" sequenceNum="20" watcherName="showExample"/>
+    <PortalPageColumn portalPageId="ExampleMgmtFrontJs" columnSeqId="00002" />
+    <PortalPagePortlet portalPageId="ExampleMgmtFrontJs" portalPortletId="ListExamples" portletSeqId="00001" columnSeqId="00002" sequenceNum="10" watcherName="listExample"/>
+    <PortalPagePortlet portalPageId="ExampleMgmtFrontJs" portalPortletId="ExampleDetail" portletSeqId="00001" columnSeqId="00002" sequenceNum="20" watcherName="showExample"/>
+
+    <PortalPage portalPageId="ExampleRecapJs" sequenceNum="200" parentPortalPageId="ExampleMgmtFrontJs" portalPageName="One example (RecapPageFrontJs)" description="Example on One Page" ownerUserLoginId="_NA_"/>
+    <PortalPageColumn portalPageId="ExampleRecapJs" columnSeqId="00001" columnWidthPercentage="30"/>
+    <PortalPagePortlet portalPageId="ExampleRecapJs" portalPortletId="SelectExample" portletSeqId="00001" columnSeqId="00001" sequenceNum="10"/>
+    <PortalPageColumn portalPageId="ExampleRecapJs" columnSeqId="00002" />
+    <PortalPagePortlet portalPageId="ExampleRecapJs" portalPortletId="ShowExample" portletSeqId="00001" columnSeqId="00002" sequenceNum="10" watcherName="selectExample"/>
+    <PortalPagePortlet portalPageId="ExampleRecapJs" portalPortletId="ExampleItems" portletSeqId="00001" columnSeqId="00002" sequenceNum="20" watcherName="selectExample"/>
+    <PortalPagePortlet portalPageId="ExampleRecapJs" portalPortletId="ExampleStatus" portletSeqId="00001" columnSeqId="00002" sequenceNum="30" watcherName="selectExample, exampleStatus"/>
+    <PortalPagePortlet portalPageId="ExampleRecapJs" portalPortletId="ExampleFeatureAppls" portletSeqId="00001" columnSeqId="00002" sequenceNum="40" watcherName="selectExample"/>
+
+  <create-replace>
+    <PortalPage portalPageId="IconsList" sequenceNum="400" parentPortalPageId="EXAMPLE" portalPageName="List all icons available" description="List all icons available" ownerUserLoginId="_NA_" helpTargetId="PORTLET_IconsList"/>
+    <PortalPageColumn portalPageId="IconsList" columnSeqId="00001"/>
+    <PortalPagePortlet portalPageId="IconsList" portalPortletId="IconsList" portletSeqId="00001" columnSeqId="00001" sequenceNum="1"/>
+  </create-replace>
+
+</entity-engine-xml>

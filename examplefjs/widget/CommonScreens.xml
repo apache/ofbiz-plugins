@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://ofbiz.apache.org/Widget-Screen" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Screen http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="main-decorator">
+        <section>
+            <actions>
+                <!-- base/top/specific map first, then more common map added for shared labels -->
+                <property-map resource="ExampleFjsUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ExampleUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="layoutSettings.companyName" from-field="uiLabelMap.ExampleCompanyName" global="true"/>
+                <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.ExampleCompanySubtitle" global="true"/>
+                <!-- layoutSettings.headerImageUrl can be used to specify an application specific logo; if not set,
+                    then the global layoutSettings.commonHeaderImageUrl (specified in GlobalDecorator) will be used. -->
+                <!--<set field="layoutSettings.headerImageUrl" value="/images/ofbiz_logo.png" global="true"/>-->
+
+                <!-- <set field="layoutSettings.headerMiddleBackgroundUrl" value="" global="true"/> -->
+                <!-- <set field="layoutSettings.headerRightBackgroundUrl" value="" global="true"/> -->
+                <!-- TODO: Use transform to specify component URI -->
+                <set field="layoutSettings.companyName" from-field="uiLabelMap.ExampleCompanyName" global="true"/>
+                <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.ExampleCompanySubtitle" global="true"/>
+                <set field="activeApp" value="example" global="true"/>
+<!--                 <set field="applicationMenuName" value="ExampleAppBarFj" global="true"/> -->
+<!--                 <set field="applicationMenuLocation" value="component://examplefjs/widget/ExampleFjsMenus.xml" global="true"/> -->
+                <set field="applicationTitle" from-field="uiLabelMap.ExampleApplication" global="true"/>
+                <set field="helpAnchor" from-field="helpAnchor" default-value="_example"/>
+                <set field="visualThemeId" value="FRONT_JS" />
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <if-has-permission permission="EXAMPLE" action="_VIEW"/>
+                    </condition>
+                    <actions>
+                        <set field="layoutSettings.javaScripts[]" value="/example/js/ExamplePushNotifications.js" global="true"/>
+                    </actions>
+                </section>
+                <include-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="frontJsUiLabelDecorator">
+      <section>
+        <widgets>
+<!--           <include-screen name="uiLabelDecorator" location="${parameters.mainDecoratorLocation}"/> -->
+          <section><!-- Decorator use by portlet define in their preference label -->
+              <actions>
+                <set field="iconsPurposeProp" from-field="layoutSettings.VT_ICONS_PURP" default-value="iconsPurpose"/>
+                <property-map resource="${iconsPurposeProp}" map-name="iconsPurpose" global="true" />
+
+                <property-map resource="ExampleFjsUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ExampleUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonIconsTooltips" map-name="uiLabelMap" global="true"/>
+              </actions>
+              <widgets>
+<!--                 <include-screen name="uiLabelDecorator" location="component://common/widget/CommonScreens.xml"/> -->
+                <decorator-section-include name="body"/>
+              </widgets>
+          </section>
+        </widgets>
+      </section>
+    </screen>
+
+    <screen name="showPortletWD"><!-- with Decorator -->
+        <section>
+           <actions>
+                <entity-one value-field="portalPortlet" entity-name="PortalPortlet"/>
+                <set field="frontJs" value="true" type="Boolean"/>
+                <set field="widgetVerbose" value="true" />
+            </actions>
+            <widgets>
+              <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-section name="body">
+                  <label text="parameters.portalPortletId = ${parameters.portalPortletId} et portalPortlet.screenName=${portalPortlet.screenName}"/>
+                  <include-screen name="${portalPortlet.screenName}" location="${portalPortlet.screenLocation}"/>
+                </decorator-section>
+              </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="applicationMenu">
+      <section>
+          <widgets>
+            <decorator-screen name="frontJsUiLabelDecorator">
+              <decorator-section name="body">
+                <include-menu name="ExampleAppBarFj" location="component://examplefjs/widget/ExampleFjsMenus.xml"/>
+              </decorator-section>
+            </decorator-screen>
+          </widgets>
+      </section>
+    </screen>
+
+    <screen name="mainfjs">
+        <!-- This is the screen for the Main page in the Examplefjs component. A common pattern
+            in OFBiz is to have each component include a Main page as a starting point for
+            the user.
+            With FrontJs starting point can be a portalPageId too -->
+        <section>
+            <widgets>
+                 <include-screen name="FindExample" location="component://examplefjs/widget/ExampleScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
+</screens>

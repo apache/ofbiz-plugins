@@ -1,0 +1,29 @@
+
+= Portlet de Liste des utilisateurs de connexion d'un acteur.
+
+Cette portlet liste tous les utilisateurs de connexion associés à un acteur.
+La plupart du temps, il n'y a qu'un utilisateur de connexion par acteur, mais pour les acteurs de type société, il peut être utile de pouvoir créer de multiple utilisateurs, plutot que de créer des acteurs pour chaque employé(e).
+
+Un utilisateur de connexion permet de se connecter à l'application OFBiz.
+Les groupes de sécurité auxquels il est associé déterminent les écrans qu'il peut voir et les fonctions qu'il peux excécuter.
+
+&nbsp;
+
+== Limitations ou futures fonctionnalitées
+
+* Seul les 5 premiers utilisateur de connexion sont affichés
+
+
+== Les paramètres de la Portlet
+
+* Le show screenlet menu Standard, il permet de cacher le menu de la portlet (refresh et ajout d'un utilisateur de connexion)
+* Le show edit menu Standard: si il est positionné à N alors le bouton "ajout d'un utilisateur de connexion" n'apparait pas
+* security Group Id : Si un groupe de sécurité est indiqué alors le bouton "ajout d'un utilisateur de connexion" associe ce  groupe de sécurité à l'utilisateur de connexion juste après sa création
+
+
+== Règles de Securité
+
+* SECURITY_VIEW est nécessaire pour voir la liste des groupes de sécurité
+* PARTYMGR_CREATE est nécessaire pour avoir le bouton "ajout d'un utilisateur de connexion",  ainsi que SECURITY_CREATE si il y a un ajout de groupe de securité en automatique (cf paramètre Security Group Id)
+* PARTYMGR_UPDATE et SECURITY_ADMIN sont nécessaires pour pourvoir éditer les informations de sécurité d'un utilisateur de connexion  (le rendre valide ou non, changer son mot de passe, ...) et pour gérer les groupes de sécurité associés à un utilisateur de connexion.
+* Quand un utilisateur accéde à cette portlet pour lui-même, il peut changer son mot de passe

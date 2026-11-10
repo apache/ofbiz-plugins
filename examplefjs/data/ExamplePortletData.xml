@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<entity-engine-xml>
+  <create-replace>
+    <PortalPortlet portalPortletId="IconsList" portletName="List all icons usable in portlet with iconsPurpose and IconsTooltips_"
+                   description="List all icons usable in portlet with iconsPurpose and IconsTooltips_"
+       portletTypeId="Screenlet" component="example" subComponent="Example" webapp="example"
+       uiLabelLocation="component://example/widget/CommonScreens.xml"/>
+
+    <PortletCategory portletCategoryId="EX_PORTLET_FRONTJS" description="Example Portlet(s) using FrontIs"/>
+
+    <PortletPortletCategory portalPortletId="IconsList" portletCategoryId="EX_PORTLET_FRONTJS"/>
+
+
+    <PortalPortlet portalPortletId="FindExamples"
+       portletName="Find Examples (FrontJs)" description="portlet to define search criteria for Examples list"
+       editFormName="EditParam_FindExamples" editFormLocation="component://examplefjs/widget/ExampleForms.xml"
+       screenName="FindExamples" screenLocation="component://examplefjs/widget/ExampleFjsScreens.xml"/>
+    <PortalPortlet portalPortletId="ListExamples"
+       portletName="List Examples (FrontJs)" description="portlet to list example depending on search criteria, this portlet is update after FindExamples submit"
+       editFormName="EditParam_ListExamples" editFormLocation="component://examplefjs/widget/ExampleForms.xml"
+       screenName="ListExamples" screenLocation="component://examplefjs/widget/ExampleFjsScreens.xml"/>
+
+    <PortalPortlet portalPortletId="SelectExample"
+       portletName="Select one Example (FrontJs)" description="portlet to select one Example for the current portal page"
+       portletTypeId="Screenlet"  component="example" subComponent="Example" helpName="HELP_Screenlet"
+       screenName="SelectExample" screenLocation="component://examplefjs/widget/ExampleFjsScreens.xml"/>
+
+
+
+
+    <!-- When portlet have a parameters (look EditParam_ListExample), it's possible to define a default value portalPageId="_NA_" and portletSeqId="00000"-->
+    <PortletAttribute portalPageId="_NA_" portalPortletId="ListExamples" attrName="showType" attrValue="Y" portletSeqId="00000"/>
+
+    <PortalPortlet portalPortletId="ExampleDetailsMenu"
+       portletName="Example summary and details menu (for FrontJs and showPortlet)" description="Example summary and menu to see all details portlet in the ExampleDetail contener"
+       screenName="ExampleDetailsMenu" screenLocation="component://examplefjs/widget/ExampleFjsScreens.xml"/>
+
+    <PortalPortlet portalPortletId="ShowExample"
+       portletName="Display Example (all fields) (for FrontJs and showPortlet)" description="Same as Edit but with only display field, if necessary could show some informations coming from link entities"
+       screenName="ShowExample" screenLocation="component://examplefjs/widget/ExampleFjsScreens.xml"/>
+
+    <!-- Empty area for portlet injected by DetailMenu -->
+    <PortalPortlet portalPortletId="ExampleDetail"
+       portletName="Container to show Example portlet detail (for FrontJs and showPortlet)"
+       description="Use this portlet to say where detail portlet call from a menu will be show"
+       screenName="ExampleDetail" screenLocation="component://examplefjs/widget/ExampleFjsScreens.xml"/>
+
+
+    <PortletPortletCategory portalPortletId="FindExamples"       portletCategoryId="EX_PORTLET_FRONTJS"/>
+    <PortletPortletCategory portalPortletId="SelectExample"      portletCategoryId="EX_PORTLET_FRONTJS"/>
+    <PortletPortletCategory portalPortletId="ListExamples"       portletCategoryId="EX_PORTLET_FRONTJS"/>
+    <PortletPortletCategory portalPortletId="ExampleDetailsMenu" portletCategoryId="EX_PORTLET_FRONTJS"/>
+    <PortletPortletCategory portalPortletId="ShowExample"        portletCategoryId="EX_PORTLET_FRONTJS"/>
+    <PortletPortletCategory portalPortletId="ExampleDetail"      portletCategoryId="EX_PORTLET_FRONTJS"/>
+
+    <PortalPortlet portalPortletId="ExampleItems"
+       portletName="List and manage exampleItems" description="List all exampleItems for one example, subportlet simple (for FrontJs and showPortlet)"
+       editFormName="GenericEditEditOrShowParam" editFormLocation="component://common/widget/PortletEditForms.xml"
+       screenName="ExampleItems" screenLocation="component://examplefjs/widget/ExampleFjsScreens.xml"/>
+    <PortalPortlet portalPortletId="ExampleStatus"
+       portletName="List ExampleStatus" description="List all ExampleStatus for one example (FrontJs)"
+       screenName="ExampleStatus" screenLocation="component://examplefjs/widget/ExampleFjsScreens.xml"
+       editFormName="GenericEditEditOrShowParam" editFormLocation="component://common/widget/PortletEditForms.xml"/>
+    <PortalPortlet portalPortletId="ExampleFeatureAppls"
+       portletName="List and manage ExampleFeatureAppls" description="List all ExampleFeatureAppls for one example, subportlet simple  (FrontJs)"
+       screenName="ExampleFeatureAppls" screenLocation="component://examplefjs/widget/ExampleFjsScreens.xml"
+       editFormName="GenericEditEditOrShowParam" editFormLocation="component://common/widget/PortletEditForms.xml"/>
+
+    <PortletPortletCategory portalPortletId="ExampleItems"        portletCategoryId="EX_PORTLET_FRONTJS"/>
+    <PortletPortletCategory portalPortletId="ExampleStatus"       portletCategoryId="EX_PORTLET_FRONTJS"/>
+    <PortletPortletCategory portalPortletId="ExampleFeatureAppls" portletCategoryId="EX_PORTLET_FRONTJS"/>
+
+  </create-replace>
+</entity-engine-xml>
