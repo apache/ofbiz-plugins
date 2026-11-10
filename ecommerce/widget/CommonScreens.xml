@@ -354,7 +354,6 @@ under the License.
                         <platform-specific>
                             <html><html-template multi-block="true" location="component://ecommerce/template/Login.ftl"/></html>
                         </platform-specific>
-                        <!-- <include-screen name="ListThirdPartyLogins" location="component://passport/widget/PassportScreens.xml"/> -->
                         <platform-specific>
                             <html><html-template location="component://ecommerce/template/order/StartAnonCheckout.ftl"/></html>
                         </platform-specific>
