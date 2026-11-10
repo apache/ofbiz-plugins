@@ -46,10 +46,16 @@ one has to keep its own copy, taken from the release24.09 branch.
 | msggateway, with the `Msg91GatewayConfig` entity; the core telecom services stay, so replace any `TG_MSG91` telecom setting with your own gateway service | [OFBIZ-13797](https://issues.apache.org/jira/browse/OFBIZ-13797) |
 | multiflex; switch any product store or user still on the `MULTIFLEX` visual theme to `EC_DEFAULT` first | [OFBIZ-13796](https://issues.apache.org/jira/browse/OFBIZ-13796) |
 | pricat, with the `ExcelImportHistory` entity | [OFBIZ-13799](https://issues.apache.org/jira/browse/OFBIZ-13799) |
+| scrum, with its `/scrum` and `/scrumdemo` webapps | [OFBIZ-13818](https://issues.apache.org/jira/browse/OFBIZ-13818) |
 | webpos | [#304](https://github.com/apache/ofbiz-plugins/pull/304) |
 | rest-api, which moved to `framework/rest-api` in ofbiz-framework | commit c9eb46469 |
 
 The tables of the removed entities are not dropped; drop them once you no longer need their data.
+
+scrum defined no entities of its own, but it added columns to `CustRequest` (`custEstimatedMilliSeconds`,
+`custSequenceNum`, `parentCustRequestId` with the `CUST_REQ_PARENT` foreign key, and `billed`) and to `TimeEntry`
+(`planHours`). These columns and the scrum seed and demo rows stay in existing databases; drop the foreign key before
+the columns once you no longer need the data.
 
 ### All plugins
 
@@ -81,8 +87,3 @@ The tables of the removed entities are not dropped; drop them once you no longer
 * Lucene moves from 9 to 10 ([OFBIZ-13800](https://issues.apache.org/jira/browse/OFBIZ-13800)). Lucene 10 reads
   the existing 9.x indexes. Custom code calling `IndexSearcher.doc` or `TopScoreDocCollector.create` must switch to
   `IndexSearcher.storedFields()` and `TopScoreDocCollectorManager`, and `TotalHits.value` is now the `value()` method.
-
-### scrum
-
-* The `ProductStatistics` request, screen and form are removed with the birt plugin
-  ([#482](https://github.com/apache/ofbiz-plugins/pull/482)).
