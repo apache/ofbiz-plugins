@@ -209,16 +209,6 @@ webpos/webapp/webpos/images/js/WebPosHotkeys.js
 
 =========================================================================
 
-This product bundles "Webhelp for DocBook", which is available
-under the "MIT" License. For details, see cmssite/template/docbook/webhelp/
-
-=========================================================================
-
-This product bundles "DocBook XSL Stylesheets 1.77.1", which is available
-under the "MIT" license.
-For details, see cmssite/template/docbook/
-=========================================================================
-
 This product bundles "Bootstrap", which is available
 under the "MIT" license.
 For details, see:
