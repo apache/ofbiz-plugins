@@ -49,6 +49,7 @@ updates:
 
   - package-ecosystem: "gradle"
     directories:
+      - "/birt"
       - "/example"
       - "/firstdatapaymentgateway"
       - "/ldap"
