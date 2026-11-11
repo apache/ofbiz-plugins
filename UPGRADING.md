@@ -41,7 +41,7 @@ one has to keep its own copy, taken from the release24.09 branch.
 |---|---|
 | bi, with the OLAP entities (`*Dimension`, `*Fact`, `*StarSchema`) | [#484](https://github.com/apache/ofbiz-plugins/pull/484) |
 | birt, which was already disabled in 24.09 | [#482](https://github.com/apache/ofbiz-plugins/pull/482) |
-| cmssite, with its multi-site `WebSiteFilter` | [OFBIZ-13819](https://issues.apache.org/jira/browse/OFBIZ-13819) |
+| cmssite, with its multi-site `WebSiteFilter` (see below) | [OFBIZ-13819](https://issues.apache.org/jira/browse/OFBIZ-13819) |
 | ebay and ebaystore | [#339](https://github.com/apache/ofbiz-plugins/pull/339) |
 | exampleext; the techniques it showed are in the developer manual under "Extending a component without modifying it" | [OFBIZ-13795](https://issues.apache.org/jira/browse/OFBIZ-13795) |
 | msggateway, with the `Msg91GatewayConfig` entity; the core telecom services stay, so replace any `TG_MSG91` telecom setting with your own gateway service | [OFBIZ-13797](https://issues.apache.org/jira/browse/OFBIZ-13797) |
@@ -61,6 +61,11 @@ the columns once you no longer need the data.
 
 The cmssite demo web sites (`CmsSite`, `OfbizSite`, `WebSite1` and `WebSite2`) and their content rows stay in databases
 that loaded them; delete them once you no longer need them.
+
+A webapp whose `web.xml` names cmssite's `org.apache.ofbiz.cmssite.multisite.WebSiteFilter` fails to start. Serving
+several web sites from one webapp through `WebSite.hostedPathAlias` still works with a filter of your own; what it
+has to do is under "Custom code" in applications/UPGRADING.md of ofbiz-framework. cmssite's `WebSiteFilter` and
+`MultiSiteRequestWrapper` on the release24.09 branch can serve as a starting point.
 
 ### All plugins
 
