@@ -26,9 +26,3 @@ ifdef::backend-pdf[]
 endif::[]
 :toc:
 :sectnums:
-
-== Deployment
-
-include::../../ldap/src/docs/asciidoc/SingleSignOn.adoc[leveloffset=+2]
-
-

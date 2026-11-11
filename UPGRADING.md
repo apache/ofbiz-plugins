@@ -43,6 +43,7 @@ one has to keep its own copy, taken from the release24.09 branch.
 | birt, which was already disabled in 24.09 | [#482](https://github.com/apache/ofbiz-plugins/pull/482) |
 | ebay and ebaystore | [#339](https://github.com/apache/ofbiz-plugins/pull/339) |
 | exampleext; the techniques it showed are in the developer manual under "Extending a component without modifying it" | [OFBIZ-13795](https://issues.apache.org/jira/browse/OFBIZ-13795) |
+| ldap, with its CAS, LDAP and Active Directory login handlers; LDAP login stays available in the framework through `security.ldap.enable` | [OFBIZ-13823](https://issues.apache.org/jira/browse/OFBIZ-13823) |
 | msggateway, with the `Msg91GatewayConfig` entity; the core telecom services stay, so replace any `TG_MSG91` telecom setting with your own gateway service | [OFBIZ-13797](https://issues.apache.org/jira/browse/OFBIZ-13797) |
 | multiflex; switch any product store or user still on the `MULTIFLEX` visual theme to `EC_DEFAULT` first | [OFBIZ-13796](https://issues.apache.org/jira/browse/OFBIZ-13796) |
 | pricat, with the `ExcelImportHistory` entity | [OFBIZ-13799](https://issues.apache.org/jira/browse/OFBIZ-13799) |
