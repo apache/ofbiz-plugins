@@ -963,6 +963,18 @@ under the License.
                     </or>
                 </condition>
                 <then>
+                    <call-class-method class-name="org.apache.ofbiz.webapp.control.LoginWorker" method-name="hasRecentMfaProof"
+                        ret-field="mfaPasswordChangeAllowed">
+                        <field field="request" type="jakarta.servlet.http.HttpServletRequest"/>
+                        <field field="user" type="org.apache.ofbiz.entity.GenericValue"/>
+                        <field field="dispatcher" type="org.apache.ofbiz.service.LocalDispatcher"/>
+                    </call-class-method>
+                    <if-compare field="mfaPasswordChangeAllowed" operator="equals" value="false">
+                        <add-error error-list-name="error_list">
+                            <fail-property resource="SecurityextUiLabels" property="loginevents.mfa_factor_required_for_password_change"/>
+                        </add-error>
+                    </if-compare>
+                    <check-errors/>
                     <call-map-processor xml-resource="component://securityext/minilang/login/LoginMapProcs.xml"
                         processor-name="updatePassword" in-map-name="parameters" out-map-name="passwordMap"/>
                     <check-errors/>
