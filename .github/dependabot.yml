@@ -31,7 +31,6 @@ updates:
       - "/ai-agent-skills"
       - "/example"
       - "/firstdatapaymentgateway"
-      - "/ldap"
       - "/lucene"
       - "/secretshub"
     schedule:
@@ -42,10 +41,6 @@ updates:
         update-types:
           - "minor"
           - "patch"
-    ignore:
-      # cas-server-support-ldap-core 7.x needs Java 21 and 8.x needs Java 25.
-      - dependency-name: "org.apereo.cas:cas-server-support-ldap-core"
-        versions: [">= 7"]
 
   - package-ecosystem: "gradle"
     directories:
