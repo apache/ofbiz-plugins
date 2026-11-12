@@ -44,6 +44,7 @@ one has to keep its own copy, taken from the release24.09 branch.
 | cmssite, with its multi-site `WebSiteFilter` (see below) | [OFBIZ-13819](https://issues.apache.org/jira/browse/OFBIZ-13819) |
 | ebay and ebaystore | [#339](https://github.com/apache/ofbiz-plugins/pull/339) |
 | exampleext; the techniques it showed are in the developer manual under "Extending a component without modifying it" | [OFBIZ-13795](https://issues.apache.org/jira/browse/OFBIZ-13795) |
+| firstdatapaymentgateway, with the `PaymentGatewayFirstData` entity; the payment gateway extension points it used stay in the core (see below) | [OFBIZ-13828](https://issues.apache.org/jira/browse/OFBIZ-13828) |
 | ldap, with its CAS, LDAP and Active Directory login handlers; LDAP login stays available in the framework through `security.ldap.enable` | [OFBIZ-13823](https://issues.apache.org/jira/browse/OFBIZ-13823) |
 | msggateway, with the `Msg91GatewayConfig` entity; the core telecom services stay, so replace any `TG_MSG91` telecom setting with your own gateway service | [OFBIZ-13797](https://issues.apache.org/jira/browse/OFBIZ-13797) |
 | multiflex; switch any product store or user still on the `MULTIFLEX` visual theme to `EC_DEFAULT` first | [OFBIZ-13796](https://issues.apache.org/jira/browse/OFBIZ-13796) |
@@ -71,6 +72,11 @@ has to do is under "Custom code" in applications/UPGRADING.md of ofbiz-framework
 
 The myportal security groups and permissions (`MYPORTAL*`) and its portal pages (`MYPORTAL_*`) stay in databases that
 loaded them; delete them once you no longer need them.
+
+The `PaymentGatewayFirstData` table holds gateway credentials; delete its rows or drop it once you no longer need
+them. Switch any product store payment setting that uses the `CC_AUTH_FD`, `CC_CAPTURE_FD`, `CC_RELEASE_FD` or
+`CC_REFUND_FD` custom methods, or a `PAY_GATWY_FIRSTDATA` payment gateway config, to another gateway before you
+upgrade.
 
 ### All plugins
 
