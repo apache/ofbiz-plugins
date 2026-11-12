@@ -30,7 +30,6 @@ updates:
     directories:
       - "/ai-agent-skills"
       - "/example"
-      - "/firstdatapaymentgateway"
       - "/lucene"
       - "/secretshub"
     schedule:
