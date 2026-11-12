@@ -82,7 +82,7 @@ under the License.
                                 </section>
                                 <container id="div3" style="${bodyStyle} order-lg-2 order-1">
                                 <!-- render messages -->
-                                    <platform-specific><html><html-template multi-block="true" location="component://common-theme/template/includes/Messages.ftl"/></html></platform-specific>
+                                    <platform-specific><html><html-template location="component://common-theme/template/includes/Messages.ftl"/></html></platform-specific>
                                     <decorator-section-include name="body"/>
                                 </container>
                                 <section>
@@ -293,7 +293,7 @@ under the License.
             <widgets>
                 <platform-specific><html><html-template location="component://ecommerce/template/includes/HeaderHead.ftl"/></html></platform-specific>
                 <platform-specific><html><html-template location="component://common-theme/template/includes/OpenHtmlBody.ftl"/></html></platform-specific>
-                <platform-specific><html><html-template multi-block="true" location="component://common-theme/template/includes/Messages.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="component://common-theme/template/includes/Messages.ftl"/></html></platform-specific>
 
                 <decorator-section-include name="body"/>
 
@@ -352,7 +352,7 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
-                            <html><html-template multi-block="true" location="component://ecommerce/template/Login.ftl"/></html>
+                            <html><html-template location="component://ecommerce/template/Login.ftl"/></html>
                         </platform-specific>
                         <platform-specific>
                             <html><html-template location="component://ecommerce/template/order/StartAnonCheckout.ftl"/></html>
@@ -373,7 +373,7 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
-                            <html><html-template multi-block="true" location="component://ecommerce/template/RequirePasswordChange.ftl"/></html>
+                            <html><html-template location="component://ecommerce/template/RequirePasswordChange.ftl"/></html>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>

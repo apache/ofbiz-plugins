@@ -89,6 +89,8 @@ upgrade.
   are removed with the payment gateways ([#295](https://github.com/apache/ofbiz-plugins/pull/295)).
 * The controller no longer declares the `http` view handler
   ([#426](https://github.com/apache/ofbiz-plugins/pull/426)).
+* The `getJs` and `js` requests are removed with the `multi-block` script extraction
+  ([OFBIZ-13831](https://issues.apache.org/jira/browse/OFBIZ-13831)). See the framework notes.
 
 ### example
 

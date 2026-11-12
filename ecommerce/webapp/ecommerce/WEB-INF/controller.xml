@@ -168,19 +168,6 @@ under the License.
         <response name="success" type="none"/>
     </request-map>
 
-    <!-- Support multi-block="true" in html-template tag -->
-    <request-map uri="getJs" method="get" track-serverhit="false">
-        <security https="false" auth="false"/>
-        <response name="success" type="request" value="js"/>
-        <response name="error" type="request" value="js"/>
-    </request-map>
-
-    <request-map uri="js">
-        <security https="false" auth="false" direct-request="false"/>
-        <event type="java" path="org.apache.ofbiz.common.CommonEvents" invoke="jsResponseFromRequest"/>
-        <response name="success" type="none"/>
-    </request-map>
-
     <!-- open the corresponding FTL file with IDE when the named border is clicked from browser -->
     <request-map uri="openSourceFile">
         <security https="true" auth="true"/>
