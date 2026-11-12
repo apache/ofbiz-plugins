@@ -29,8 +29,6 @@ endif::[]
 
 include::../../projectmgr/src/docs/asciidoc/project-mgr.adoc[leveloffset=+1]
 
-include::../../myportal/src/docs/asciidoc/my-portal.adoc[leveloffset=+1]
-
 include::../../assetmaint/src/docs/asciidoc/assetm.adoc[leveloffset=+1]
 
 include::../../example/src/docs/asciidoc/example.adoc[leveloffset=+1]

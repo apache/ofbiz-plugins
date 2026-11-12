@@ -555,6 +555,16 @@
         <value xml:lang="zh">铜牌</value>
         <value xml:lang="zh-TW">銅牌</value>
     </property>
+    <property key="EcommerceCaptchaMissingError">
+        <value xml:lang="en">Verify code captcha is missing or wrong</value>
+        <value xml:lang="fr">Vérifier le code captcha, il est absent ou erroné</value>
+        <value xml:lang="it">Verifica il codice captcha, è mancante o errato</value>
+        <value xml:lang="ja">確認コードキャプチャが正しくありません</value>
+        <value xml:lang="th">รหัสตัวเลขที่ท่านกรอกมีข้อผิดพลาด</value>
+        <value xml:lang="vi">Mã ảnh xác nhận bị thiếu hoặc bị sai</value>
+        <value xml:lang="zh">缺少验证码或验证码错误</value>
+        <value xml:lang="zh-TW">沒有驗證碼或是錯誤</value>
+    </property>
     <property key="EcommerceCartHas">
         <value xml:lang="cs">Košík má</value>
         <value xml:lang="da">Indkøbskurven indeholder</value>
