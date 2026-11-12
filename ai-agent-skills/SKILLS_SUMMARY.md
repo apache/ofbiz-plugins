@@ -49,7 +49,7 @@ This document provides a high-level summary of the specialized skills developed 
 | **manage-java** | Implement typed business logic and worker classes in the Java source layer. |
 | **manage-java-patterns** | Adhere to OFBiz-specific Java design patterns (e.g., Worker classes, internal service calls). |
 | **manage-java-events** | Implement OFBiz Events (web boundaries) and route HTTP requests in Java. |
-| **manage-minilang** | Maintain and legacy MiniLang (XML) logic for standard service workflows. |
+| **manage-minilang** | Write and maintain MiniLang (XML) logic for service workflows. |
 | **manage-eca** | Orchestrate Event Condition Actions (Service ECA and Entity ECA) for automated flows. |
 | **manage-service-groups** | Define and manage aggregate service executions and engine-level groupings. |
 | **manage-controller** | Configure web request mappings, security constraints, and view handlers in `controller.xml`. |
