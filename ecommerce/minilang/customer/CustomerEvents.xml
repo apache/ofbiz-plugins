@@ -1297,7 +1297,7 @@ under the License.
         <call-object-method obj-field="parameters.captcha" method-name="toLowerCase" ret-field="submittedCaptcha"/>
         <script>groovy: context.actualCaptcha = request.getSession().getAttribute("_CAPTCHA_CODE_")?.get("captchaImage")?.toLowerCase()</script>
         <if-compare-field field="submittedCaptcha" operator="not-equals" to-field="actualCaptcha">
-            <add-error><fail-property resource="MyPortalUiLabels" property="MyPortalCaptchaMissingError"/></add-error>
+            <add-error><fail-property resource="EcommerceUiLabels" property="EcommerceCaptchaMissingError"/></add-error>
         </if-compare-field>
         <check-errors/>
         <if-empty field="parameters.partyId">

@@ -47,6 +47,7 @@ one has to keep its own copy, taken from the release24.09 branch.
 | ldap, with its CAS, LDAP and Active Directory login handlers; LDAP login stays available in the framework through `security.ldap.enable` | [OFBIZ-13823](https://issues.apache.org/jira/browse/OFBIZ-13823) |
 | msggateway, with the `Msg91GatewayConfig` entity; the core telecom services stay, so replace any `TG_MSG91` telecom setting with your own gateway service | [OFBIZ-13797](https://issues.apache.org/jira/browse/OFBIZ-13797) |
 | multiflex; switch any product store or user still on the `MULTIFLEX` visual theme to `EC_DEFAULT` first | [OFBIZ-13796](https://issues.apache.org/jira/browse/OFBIZ-13796) |
+| myportal, with its `/myportal` webapp and the `portalPermissionIsEmployee` and `portalPermissionIsCustomer` services; portal pages and portlets stay in the framework | [OFBIZ-13826](https://issues.apache.org/jira/browse/OFBIZ-13826) |
 | passport, with the `ThirdPartyLogin`, `OAuth2GitHub`, `GitHubUser`, `OAuth2LinkedIn` and `LinkedInUser` entities | [OFBIZ-13814](https://issues.apache.org/jira/browse/OFBIZ-13814) |
 | pricat, with the `ExcelImportHistory` entity | [OFBIZ-13799](https://issues.apache.org/jira/browse/OFBIZ-13799) |
 | scrum, with its `/scrum` and `/scrumdemo` webapps | [OFBIZ-13818](https://issues.apache.org/jira/browse/OFBIZ-13818) |
@@ -67,6 +68,9 @@ A webapp whose `web.xml` names cmssite's `org.apache.ofbiz.cmssite.multisite.Web
 several web sites from one webapp through `WebSite.hostedPathAlias` still works with a filter of your own; what it
 has to do is under "Custom code" in applications/UPGRADING.md of ofbiz-framework. cmssite's `WebSiteFilter` and
 `MultiSiteRequestWrapper` on the release24.09 branch can serve as a starting point.
+
+The myportal security groups and permissions (`MYPORTAL*`) and its portal pages (`MYPORTAL_*`) stay in databases that
+loaded them; delete them once you no longer need them.
 
 ### All plugins
 
