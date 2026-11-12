@@ -93,3 +93,9 @@ has to do is under "Custom code" in applications/UPGRADING.md of ofbiz-framework
 * Lucene moves from 9 to 10 ([OFBIZ-13800](https://issues.apache.org/jira/browse/OFBIZ-13800)). Lucene 10 reads
   the existing 9.x indexes. Custom code calling `IndexSearcher.doc` or `TopScoreDocCollector.create` must switch to
   `IndexSearcher.storedFields()` and `TopScoreDocCollectorManager`, and `TotalHits.value` is now the `value()` method.
+
+### projectmgr
+
+* The `mytimesheet` and `mytasks` portlets are checked with the framework's `employeePermissionCheck` service instead
+  of `portalPermissionIsEmployee`, and the `ListCustomerProjects` portlet and screen are removed
+  ([OFBIZ-13825](https://issues.apache.org/jira/browse/OFBIZ-13825)).

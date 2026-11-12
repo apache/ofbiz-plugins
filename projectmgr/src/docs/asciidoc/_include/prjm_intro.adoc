@@ -57,9 +57,9 @@ And go to the party profile to associate a role type to a party.
 == Parameters :
 * RoleType with PROJECT_TEAM as parentTypeId, used in a lot of screens; default proposed roleTypes are :
 ** CLIENT% : used to select parties which appears in Projects Parties info, client side
-** CLIENT_MANAGER : user login associated to a project with this roleType view it in ListCustomerProjects
-** CLIENT_ANALYST : same as CLIENT_MANAGER for ListCustomerProjects
-** CLIENT_BILLING : partyId which will be invoiced; same as CLIENT_MANAGER for ListCustomerProjects; appears in Company part
+** CLIENT_MANAGER : user login associated to a project with this roleType
+** CLIENT_ANALYST : same as CLIENT_MANAGER
+** CLIENT_BILLING : partyId which will be invoiced; appears in Company part
    of Project Parties info, other CLIENT% role appears in contact part
 ** PROVIDER% : all parties which provide the project. In Projects Parties info, provider part, all roleType not equals to CLIENT%
    will appear
