@@ -83,12 +83,16 @@ under the License.
         <security https="true" auth="false"/>
         <event type="java" path="org.apache.ofbiz.securityext.login.LoginEvents" invoke="storeCheckLogin"/>
         <response name="success" type="view-last"/>
+        <response name="authFactorRequired" type="view" value="authFactorChallenge"/>
+        <response name="authFactorEnrollmentRequired" type="view" value="authFactorForcedEnrollment"/>
         <response name="error" type="view" value="login"/>
     </request-map>
     <request-map uri="login">
         <security https="true" auth="false"/>
         <event type="java" path="org.apache.ofbiz.securityext.login.LoginEvents" invoke="storeLogin"/>
         <response name="success" type="view" value="main"/>
+        <response name="authFactorRequired" type="view" value="authFactorChallenge"/>
+        <response name="authFactorEnrollmentRequired" type="view" value="authFactorForcedEnrollment"/>
         <response name="requirePasswordChange" type="view" value="requirePasswordChange"/>
         <response name="error" type="view" value="login"/>
     </request-map>
@@ -103,6 +107,54 @@ under the License.
         <event type="java" path="org.apache.ofbiz.webapp.control.LoginWorker" invoke="autoLoginRemove"/>
         <response name="success" type="request-redirect-noparam" value="main"/>
         <response name="error" type="view" value="main"/>
+    </request-map>
+
+    <!-- Multi-Factor Authentication (MFA) Request Mappings -->
+    <request-map uri="authFactorSetup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="authFactorSetup"/>
+    </request-map>
+    <request-map uri="beginForcedTotpEnrollment">
+        <security https="true" auth="false" csrf-token="true"/>
+        <event type="java" path="org.apache.ofbiz.webapp.control.LoginWorker" invoke="beginForcedTotpEnrollment"/>
+        <response name="success" type="view" value="authFactorForcedEnrollment"/>
+        <response name="error" type="view-last"/>
+    </request-map>
+    <request-map uri="confirmForcedTotpEnrollment">
+        <security https="true" auth="false" csrf-token="true"/>
+        <event type="java" path="org.apache.ofbiz.webapp.control.LoginWorker" invoke="confirmForcedTotpEnrollment"/>
+        <response name="success" type="view-last"/>
+        <response name="requirePasswordChange" type="view" value="requirePasswordChange"/>
+        <response name="authFactorRequired" type="view" value="authFactorChallenge"/>
+        <response name="authFactorEnrollmentRequired" type="view" value="authFactorForcedEnrollment"/>
+        <response name="error" type="view-last"/>
+    </request-map>
+    <request-map uri="verifyAuthFactor">
+        <security https="true" auth="false" csrf-token="true"/>
+        <event type="java" path="org.apache.ofbiz.securityext.login.LoginEvents" invoke="storeVerifyAuthFactor"/>
+        <response name="success" type="view-last"/>
+        <response name="requirePasswordChange" type="view" value="requirePasswordChange"/>
+        <response name="authFactorRequired" type="view" value="authFactorChallenge"/>
+        <response name="authFactorEnrollmentRequired" type="view" value="authFactorForcedEnrollment"/>
+        <response name="error" type="view" value="login"/>
+    </request-map>
+    <request-map uri="beginTotpEnrollment">
+        <security https="true" auth="true" csrf-token="false"/>
+        <event type="java" path="org.apache.ofbiz.webapp.control.LoginWorker" invoke="beginTotpEnrollment"/>
+        <response name="success" type="view" value="authFactorEnrollment"/>
+        <response name="error" type="view" value="authFactorSetup"/>
+    </request-map>
+    <request-map uri="confirmTotpEnrollment">
+        <security https="true" auth="true" csrf-token="false"/>
+        <event type="java" path="org.apache.ofbiz.webapp.control.LoginWorker" invoke="confirmTotpEnrollment"/>
+        <response name="success" type="view" value="authFactorSetup"/>
+        <response name="error" type="view" value="authFactorSetup"/>
+    </request-map>
+    <request-map uri="revokeMfaFactor" method="post">
+        <security https="true" auth="true" csrf-token="false"/>
+        <event type="java" path="org.apache.ofbiz.webapp.control.LoginWorker" invoke="revokeMfaFactor"/>
+        <response name="success" type="view" value="authFactorSetup"/>
+        <response name="error" type="view" value="authFactorSetup"/>
     </request-map>
     <!-- End of Security Mappings -->
 
@@ -1105,8 +1157,8 @@ under the License.
     </request-map>
 
     <request-map uri="updatePassword">
-        <security https="true" auth="true"/>
-        <event type="simple" path="component://securityext/minilang/login/LoginSimpleEvents.xml" invoke="updatePassword"/>
+        <security https="true" auth="true" csrf-token="true"/>
+        <event type="java" path="org.apache.ofbiz.webapp.control.LoginWorker" invoke="updatePasswordWithMfa"/>
         <response name="success" type="view" value="passwordChange"/>
         <response name="error" type="view" value="passwordChange"/>
     </request-map>
@@ -1805,6 +1857,10 @@ under the License.
     <view-map name="CookiePolicy" type="screen" page="component://ecommerce/widget/CommonScreens.xml#CookiePolicy" auth="false"/>
     <view-map name="login" type="screen" page="component://ecommerce/widget/CommonScreens.xml#login" auth="false"/>
     <view-map name="requirePasswordChange" type="screen" page="component://ecommerce/widget/CommonScreens.xml#requirePasswordChange"/>
+    <view-map name="authFactorChallenge" type="screen" page="component://ecommerce/widget/CommonScreens.xml#authFactorChallenge" auth="false"/>
+    <view-map name="authFactorForcedEnrollment" type="screen" page="component://ecommerce/widget/CommonScreens.xml#authFactorForcedEnrollment" auth="false"/>
+    <view-map name="authFactorSetup" type="screen" page="component://ecommerce/widget/CommonScreens.xml#authFactorSetup"/>
+    <view-map name="authFactorEnrollment" type="screen" page="component://ecommerce/widget/CommonScreens.xml#authFactorEnrollment"/>
 
     <!-- Cart Views -->
     <view-map name="editShoppingList" type="screen" page="component://ecommerce/widget/ShoppingListScreens.xml#editShoppingList"/>

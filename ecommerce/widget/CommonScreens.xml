@@ -436,4 +436,79 @@ under the License.
             </widgets>
         </section>
     </screen>
+
+    <!-- Multi-Factor Authentication Screens -->
+    <screen name="authFactorChallenge">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleLogin"/>
+                <set field="headerItem" value="login"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://ecommerce/template/customer/AuthFactorChallenge.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="authFactorForcedEnrollment">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleLogin"/>
+                <set field="headerItem" value="login"/>
+                <set field="isForcedEnrollment" value="true" type="Boolean"/>
+                <set field="mfaFactorId" value="${groovy: request.getAttribute('mfaFactorId') ?: parameters.mfaFactorId}"/>
+                <set field="mfaProvisioningUri" value="${groovy: request.getAttribute('mfaProvisioningUri') ?: parameters.mfaProvisioningUri}"/>
+                <set field="mfaSecret" value="${groovy: request.getAttribute('mfaSecret') ?: parameters.mfaSecret}"/>
+                <set field="mfaQrCodeDataUri" value="${groovy: request.getAttribute('mfaQrCodeDataUri') ?: parameters.mfaQrCodeDataUri}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://ecommerce/template/customer/AuthFactorEnrollment.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="authFactorSetup">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleLogin"/>
+                <set field="headerItem" value="login"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://ecommerce/template/customer/AuthFactorSetup.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="authFactorEnrollment">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleLogin"/>
+                <set field="headerItem" value="login"/>
+                <set field="mfaFactorId" value="${groovy: request.getAttribute('mfaFactorId') ?: parameters.mfaFactorId}"/>
+                <set field="mfaProvisioningUri" value="${groovy: request.getAttribute('mfaProvisioningUri') ?: parameters.mfaProvisioningUri}"/>
+                <set field="mfaSecret" value="${groovy: request.getAttribute('mfaSecret') ?: parameters.mfaSecret}"/>
+                <set field="mfaQrCodeDataUri" value="${groovy: request.getAttribute('mfaQrCodeDataUri') ?: parameters.mfaQrCodeDataUri}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://ecommerce/template/customer/AuthFactorEnrollment.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
 </screens>

@@ -381,6 +381,8 @@ under the License.
           </div>
           <div class="col-lg-9 text-right">
             <a href="<@ofbizUrl>passwordChange</@ofbizUrl>">${uiLabelMap.PartyChangePassword}</a>
+            <span class="mx-2">|</span>
+            <a href="<@ofbizUrl>authFactorSetup</@ofbizUrl>">MFA Setup</a>
           </div>
         </div>
       </div>
