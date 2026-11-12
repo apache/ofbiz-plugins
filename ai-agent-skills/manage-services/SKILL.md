@@ -48,7 +48,10 @@ Define and implement business logic as reusable, transactional, and securely enf
 
 ### 2. Service Definition & Registration
 - **Naming**: Use `verbNoun` format for all service names (e.g., `updateExample`, `createOrder`).
+- **Names Are Global**: Before naming a new service, check that no other component already defines that name. A later definition with the same name replaces the earlier one with no warning across files (`DispatchContext` merges them with `putAll`), and ECAs keyed on that name still run. Choose a new name unless replacing the existing service is the intent; then check its ECAs first.
 - **In/Out Parameters**: Use `<attribute name="..." mode="IN|OUT|INOUT" type="..." optional="true|false"/>`. NEVER bypass attribute validation by casually omitting them or making them wrongly optional.
+- **Nested Parameters**: A `List` or `Map` in-parameter can declare its fields as child `<attribute>` elements. The validator checks each List entry, or the Map, against them (`ModelService.validate`). Declare them, so the engine checks the data. The OpenAPI schema in `rest-api` reads only the first child of a List, so do not rely on it for a List of Maps.
+- **Undeclared Keys Are Dropped**: Through `runSync`, the dispatcher calls `makeValidContext` before validation (`ServiceDispatcher`). It keeps only declared parameters, at every nested level, and drops every other key with no error. So "Unknown parameter found" never fires there, and a misspelled key is lost. Mark a field `optional="false"` when the service needs it, so a wrong key fails as a missing field.
 - **Native Contract Types**: Backend/data services should keep OFBiz-native service types such as `Timestamp` and `BigDecimal` in IN/OUT attributes and returned maps.
 - **Type In XML First**: If a service consumes dates, numbers, or booleans, declare them with native OFBiz/Java types in `services.xml` first. Prefer fixing the service contract over keeping Groovy-side parsing code forever.
 - **Auth & Security**: Set `auth="true"` for protected services. ALWAYS implement permission checks (e.g., `<permission-service>`).
@@ -82,7 +85,7 @@ Define and implement business logic as reusable, transactional, and securely enf
 - Error Messages: Use properties from `uiLabelMap` for user-facing error messages to support internationalization.
 
 ### 2. Error Handling Integrity
-- **Swallowing Errors via Dispatcher**: When invoking a sub-service with `dispatcher.runSync()`, ALWAYS check manually using `ServiceUtil.isError(result)`. Failing to check will mask business failures and block rollbacks.
+- **Swallowing Errors via Dispatcher**: When invoking a sub-service with `dispatcher.runSync()`, ALWAYS check manually using `ServiceUtil.isError(result)`. Failing to check will mask business failures and block rollbacks. A permission or validation failure is thrown as `ServiceAuthException` or `ServiceValidationException`, not returned; `isError` covers only errors the service returns.
 - **Null Safety**: Always check for mandatory attributes in implementation if not strictly enforced by XML validation.
 
 ### 3. Transaction Boundaries
@@ -242,4 +245,17 @@ dispatcher.addRollbackService("releaseAuthorization", context, true);
     <description>Automatically exported as a REST API</description>
     <attribute name="productId" mode="IN" type="String" optional="false"/>
 </service>
+```
+
+**Example: Nested In-Parameters**
+Each package is a Map, and each package holds a List of item Maps:
+```xml
+<attribute name="packages" type="List" mode="IN" optional="false">
+    <attribute name="packageSeqId" type="String" mode="IN" optional="false"/>
+    <attribute name="weight" type="BigDecimal" mode="IN" optional="true"/>
+    <attribute name="items" type="List" mode="IN" optional="false">
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="quantity" type="BigDecimal" mode="IN" optional="false"/>
+    </attribute>
+</attribute>
 ```
