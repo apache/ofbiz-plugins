@@ -131,19 +131,6 @@
     <PortalPagePortlet portalPageId="MYPORTAL_EMPL-NOEML4" portalPortletId="mytimesheet" portletSeqId="00001" columnSeqId="00001"  sequenceNum="0"/>
     <PortalPagePortlet portalPageId="MYPORTAL_EMPL-NOEML5" portalPortletId="mytasks" portletSeqId="00001" columnSeqId="00001"  sequenceNum="0"/>
 
-    <!-- open 'own' customer requests -->
-    <PortalPagePortlet portalPageId="MYPORTAL_CUSTOMER" portalPortletId="ListCustRequests" portletSeqId="00001" columnSeqId="00001" sequenceNum="0"/>
-    <PortletAttribute portalPageId="MYPORTAL_CUSTOMER" portalPortletId="ListCustRequests" portletSeqId="00001" attrName="statusGroup" attrValue="OPEN"/>
-    <PortletAttribute portalPageId="MYPORTAL_CUSTOMER" portalPortletId="ListCustRequests" portletSeqId="00001" attrName="otherContacts" attrValue="N"/>
-    <!-- completed 'own' customer requests -->
-    <PortalPagePortlet portalPageId="MYPORTAL_CUSTOMER" portalPortletId="ListCustRequests" portletSeqId="00002" columnSeqId="00001"  sequenceNum="2"/>
-    <PortletAttribute portalPageId="MYPORTAL_CUSTOMER" portalPortletId="ListCustRequests" portletSeqId="00002" attrName="statusGroup" attrValue="COMPLETED"/>
-    <PortletAttribute portalPageId="MYPORTAL_CUSTOMER" portalPortletId="ListCustRequests" portletSeqId="00002" attrName="otherContacts" attrValue="N"/>
-    <!-- open 'other people in same company' customer requests -->
-    <PortalPagePortlet portalPageId="MYPORTAL_CUSTOMER" portalPortletId="ListCustRequests" portletSeqId="00003" columnSeqId="00001"  sequenceNum="4"/>
-    <PortletAttribute portalPageId="MYPORTAL_CUSTOMER" portalPortletId="ListCustRequests" portletSeqId="00003" attrName="statusGroup" attrValue="OPEN"/>
-    <PortletAttribute portalPageId="MYPORTAL_CUSTOMER" portalPortletId="ListCustRequests" portletSeqId="00003" attrName="otherContacts" attrValue="Y"/>
-
     <PortalPagePortlet portalPageId="MYPORTAL_CUSTOMER" portalPortletId="MyCommunications" portletSeqId="00001" columnSeqId="00001"  sequenceNum="6"/>
     <PortletAttribute portalPageId="MYPORTAL_CUSTOMER" portalPortletId="MyCommunications" portletSeqId="00001" attrName="internalNotesOnly" attrValue="Y"/>
     <PortalPagePortlet portalPageId="MYPORTAL_CUSTOMER1" portalPortletId="party" portletSeqId="00001" columnSeqId="00001"  sequenceNum="1"/>
@@ -157,15 +144,5 @@
     <PortalPagePortlet portalPageId="MYPORTAL_CUSTOMER1" portalPortletId="Content" portletSeqId="00001" columnSeqId="00002"  sequenceNum="6"/>
     <PortalPagePortlet portalPageId="MYPORTAL_CUSTOMER1" portalPortletId="Notes" portletSeqId="00001" columnSeqId="00002"  sequenceNum="7"/>
     <PortalPagePortlet portalPageId="MYPORTAL_CUSTOMER1" portalPortletId="MYTASKSPARTY" portletSeqId="00001" columnSeqId="00002"  sequenceNum="8"/>
-    <PortalPagePortlet portalPageId="MYPORTAL_CUSTOMER2" portalPortletId="ListCustomerInvoices" portletSeqId="00001" columnSeqId="00001"  sequenceNum="0"/>
-    <PortalPagePortlet portalPageId="MYPORTAL_CUSTOMER3" portalPortletId="ListCustomerProjects" portletSeqId="00001" columnSeqId="00001"  sequenceNum="0"/>
-    <PortalPagePortlet portalPageId="MYPORTAL_CUSTOMER4" portalPortletId="ListCustomerOrders" portletSeqId="00001" columnSeqId="00001" sequenceNum="0"/>
-    <PortletAttribute portalPageId="MYPORTAL_CUSTOMER4" portalPortletId="ListCustomerOrders" portletSeqId="00001" attrName="statusId" attrValue="ORDER_APPROVED"/>
-    <PortletAttribute portalPageId="MYPORTAL_CUSTOMER4" portalPortletId="ListCustomerOrders" portletSeqId="00001" attrName="roleTypeId" attrValue="PLACING_CUSTOMER"/>
-    <PortalPagePortlet portalPageId="MYPORTAL_CUSTOMER5" portalPortletId="ListCustReturns" portletSeqId="00001" columnSeqId="00001" sequenceNum="0"/>
-    <PortletAttribute portalPageId="MYPORTAL_CUSTOMER5" portalPortletId="ListCustReturns" portletSeqId="00001" attrName="statusId" attrValue="RETURN_REQUESTED"/>
-
-    <PortletPortletCategory portalPortletId="ListCustomerProjects" portletCategoryId="LIST_CUSTOMER"/>
-    <PortletPortletCategory portalPortletId="ListCustomerInvoices" portletCategoryId="LIST_CUSTOMER"/>
 
 </entity-engine-xml>
