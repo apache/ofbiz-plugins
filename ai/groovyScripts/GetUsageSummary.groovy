@@ -1,0 +1,43 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+Map<String, Object> serviceCtx = [userLogin: userLogin]
+if (parameters.agentName) {
+    serviceCtx.agentName = parameters.agentName
+}
+if (parameters.userLoginId) {
+    serviceCtx.userLoginId = parameters.userLoginId
+}
+if (parameters.fromDate) {
+    serviceCtx.fromDate = parameters.fromDate
+}
+if (parameters.thruDate) {
+    serviceCtx.thruDate = parameters.thruDate
+}
+
+Map<String, Object> result = dispatcher.runSync('getUsageSummary', serviceCtx)
+if (org.apache.ofbiz.service.ServiceUtil.isError(result)) {
+    context.errorMessage = org.apache.ofbiz.service.ServiceUtil.getErrorMessage(result)
+    return
+}
+
+context.totalRuns = result.totalRuns
+context.totalInputTokens = result.totalInputTokens
+context.totalOutputTokens = result.totalOutputTokens
+context.estimatedCostUsd = result.estimatedCostUsd
