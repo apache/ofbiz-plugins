@@ -68,14 +68,12 @@ public abstract class AbstractOFBizAuthenticationHandler implements InterfaceOFB
 
     @Override
     public Object getPartyId(Element rootElement, SearchResult result) {
-        Object partyId = UtilXml.childElementValue(rootElement, "AutoPartyId", "admin");
-        return partyId;
+        return UtilXml.childElementValue(rootElement, "AutoPartyId", null);
     }
 
     @Override
     public Object getSecurityGroup(Element rootElement, SearchResult result) {
-        Object securityGroupId = UtilXml.childElementValue(rootElement, "AutoSecurityGroupId", "FULLADMIN");
-        return securityGroupId;
+        return UtilXml.childElementValue(rootElement, "AutoSecurityGroupId", null);
     }
 
     @Override
@@ -135,12 +133,16 @@ public abstract class AbstractOFBizAuthenticationHandler implements InterfaceOFB
                 throw new GenericEntityException(e.getLocalizedMessage());
             }
 
-            GenericValue userLoginSecurityGroup = delegator.makeValue("UserLoginSecurityGroup", UtilMisc.toMap("userLoginId",
-                    username, "groupId", getSecurityGroup(rootElement, result), "fromDate", UtilDateTime.nowTimestamp()));
-            try {
-                userLoginSecurityGroup.create();
-            } catch (GenericEntityException e) {
-                throw new GenericEntityException(e.getLocalizedMessage());
+            // only add the new user to a security group when one is configured
+            Object securityGroupId = getSecurityGroup(rootElement, result);
+            if (securityGroupId != null) {
+                GenericValue userLoginSecurityGroup = delegator.makeValue("UserLoginSecurityGroup", UtilMisc.toMap("userLoginId",
+                        username, "groupId", securityGroupId, "fromDate", UtilDateTime.nowTimestamp()));
+                try {
+                    userLoginSecurityGroup.create();
+                } catch (GenericEntityException e) {
+                    throw new GenericEntityException(e.getLocalizedMessage());
+                }
             }
         } else {
             userTryToLogin.setString("currentPassword", useEncryption ? HashCrypt.cryptUTF8(LoginServices.getHashType(), null,
