@@ -31,7 +31,7 @@ To properly implement and configure caching in OFBiz using `UtilCache` and Entit
 - When the user asks to improve database query latency.
 - When configuring service `<service ... use-cache="true">`.
 - When designing entity lookups that are frequently read but rarely updated.
-- When configuring `cache.properties` for OFBiz system performance.
+- When declaring cache settings with `<cache>` in `ofbiz-component.xml`.
 
 ## Rules & Procedures
 
@@ -53,17 +53,13 @@ GenericValue cachedValue = myCache.get("myKey");
 myCache.remove("myKey");
 ```
 
-### 2. Cache Configuration (`cache.properties`)
-Caches are configured in `framework/base/config/cache.properties`. *(See Anti-Pattern 7: Soft References as Primary Strategy)*
-```properties
-# Set max entries (0 for unlimited)
-my.custom.cache.maxSize=5000
-
-# Set expire time in milliseconds (e.g., 1 hour = 3600000)
-my.custom.cache.expireTime=3600000
-
-# Use soft references (allows GC to reclaim memory if needed)
-my.custom.cache.useSoftReference=true
+### 2. Cache Configuration (`<cache>` in `ofbiz-component.xml`)
+Each component declares the settings of its caches in its `ofbiz-component.xml`, after all other elements. An installation overrides a setting by declaring the same name in its own component, which loads later, with only the attributes it wants to change. Matching declarations are merged attribute by attribute: an exact name beats a prefix, a longer prefix beats a shorter one, and the component loaded last wins between declarations of the same name or prefix. *(See Anti-Pattern 7: Soft References as Primary Strategy)*
+```xml
+<!-- max-size: max entries (0 for unlimited); expire-time: milliseconds (1 hour = 3600000) -->
+<cache name="my.custom.cache" max-size="5000" expire-time="3600000" soft-values="true"/>
+<!-- name-prefix matches caches named at run time, such as the entity caches -->
+<cache name-prefix="entitycache.entity-list." max-size="2000"/>
 ```
 
 ### 3. Entity Engine Caching
@@ -144,7 +140,7 @@ For multi-node setups, ensure cache clearing is synchronized (usually via JMS in
 // 🚨 ANTI-PATTERN: Unbounded key cardinality
 myCache.put(userId + "_" + orderId + "_" + System.currentTimeMillis(), value);
 ```
-**Why this is dangerous**: This creates a theoretically infinite number of unique keys. It is a memory leak disguised as a cache. The cache immediately fills up to its `maxSize`, aggressively thrashes via LRU eviction, and consumes massive JVM memory overhead.
+**Why this is dangerous**: This creates a theoretically infinite number of unique keys. It is a memory leak disguised as a cache. The cache immediately fills up to its `max-size`, aggressively thrashes via size eviction, and consumes massive JVM memory overhead.
 
 ### 4. User/Session Data in Global Cache (🚨 ANTI-PATTERN)
 ```java
@@ -187,18 +183,16 @@ Order order = orderCache.get(orderId); // DB never consulted
 **Correct Alternative**: Always write to the DB first. Use cache strictly to avoid repeated reads. Cache misses MUST fall back to the DB.
 
 ### 7. Soft References as Primary Strategy (🚨 ANTI-PATTERN)
-```properties
-# 🚨 ANTI-PATTERN: Using soft references to hide memory pressure
-my.custom.cache.maxSize=0
-my.custom.cache.useSoftReference=true
+```xml
+<!-- 🚨 ANTI-PATTERN: Using soft references to hide memory pressure -->
+<cache name="my.custom.cache" max-size="0" soft-values="true"/>
 ```
 **Why this is dangerous**: 
 - **Unpredictable eviction**: Soft references are cleared only under GC pressure. The cache may work fine for days, then get wiped suddenly during GC.
 - **Performance cliffs**: Cache hit ratio collapses instantly. DB load spikes. System appears to “randomly slow down”.
 - **Hides real problems**: It masks memory leaks, oversized caches, bad cache keys, or missing invalidation. It delays failures, it doesn’t fix them.
-**Correct Alternative ✅**: Always define `maxSize` and `expireTime`. Use `useSoftReference=true` only as a secondary safety net after sizing correctly.
-```properties
-# ✅ Correct approach
-my.custom.cache.maxSize=5000
-my.custom.cache.expireTime=3600000
-my.custom.cache.useSoftReference=true
+**Correct Alternative ✅**: Always define `max-size` and `expire-time`. Use `soft-values="true"` only as a secondary safety net after sizing correctly.
+```xml
+<!-- ✅ Correct approach -->
+<cache name="my.custom.cache" max-size="5000" expire-time="3600000" soft-values="true"/>
+```
