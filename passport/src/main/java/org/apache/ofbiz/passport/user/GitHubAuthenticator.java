@@ -20,6 +20,7 @@ package org.apache.ofbiz.passport.user;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Locale;
@@ -150,7 +151,7 @@ public class GitHubAuthenticator implements Authenticator {
 
         GenericValue userLogin;
         try {
-            userLogin = EntityQuery.use(delegator).from("UserLogin").where("externalAuthId", userMap.get("id")).queryFirst();
+            userLogin = EntityQuery.use(delegator).from("UserLogin").where("externalAuthId", getGitHubUserId(userMap)).queryFirst();
         } catch (GenericEntityException e) {
             throw new AuthenticatorException(e.getMessage(), e);
         }
@@ -238,6 +239,20 @@ public class GitHubAuthenticator implements Authenticator {
         return createUser(userMap, system);
     }
 
+    /**
+     * Returns the numeric GitHub user id from the user information returned by GitHub, as a string.
+     * Unlike the login name, the id never changes and is never given to another user.
+     * @param userInfo the user information returned by the GitHub user API
+     * @return the GitHub user id, or null if the user information has none
+     */
+    public static String getGitHubUserId(Map<String, Object> userInfo) {
+        Object id = userInfo == null ? null : userInfo.get("id");
+        if (id == null) {
+            return null;
+        }
+        return new BigDecimal(id.toString()).toBigInteger().toString();
+    }
+
     private String createUser(Map<String, Object> userMap, GenericValue system) throws AuthenticatorException {
         // create person + userLogin
         Map<String, Serializable> createPersonUlMap = new HashMap<>();
@@ -246,8 +261,9 @@ public class GitHubAuthenticator implements Authenticator {
             // use github's name as OFBiz's lastName
             createPersonUlMap.put("lastName", (String) userMap.get("name"));
         }
-        if (userMap.containsKey("login")) {
-            createPersonUlMap.put("externalAuthId", (String) userMap.get("login"));
+        String gitHubUserId = getGitHubUserId(userMap);
+        if (gitHubUserId != null) {
+            createPersonUlMap.put("externalAuthId", gitHubUserId);
         }
         // createPersonUlMap.put("externalId", user.getUserId());
         createPersonUlMap.put("userLoginId", userLoginId);

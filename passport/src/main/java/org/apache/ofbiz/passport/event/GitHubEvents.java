@@ -20,24 +20,25 @@ package org.apache.ofbiz.passport.event;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.http.HttpStatus;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.ofbiz.base.conversion.ConversionException;
 import org.apache.ofbiz.base.conversion.JSONConverters.JSONToMap;
 import org.apache.ofbiz.base.crypto.HashCrypt;
@@ -150,7 +151,6 @@ public class GitHubEvents {
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
-        Debug.logInfo("GitHub authorization code: " + authorizationCode, MODULE);
 
         GenericValue oauth2GitHub = getOAuth2GitHubConfig(request);
         if (UtilValidate.isEmpty(oauth2GitHub)) {
@@ -168,16 +168,13 @@ public class GitHubEvents {
         String tokenType = null;
 
         try {
-            URI uri = new URIBuilder()
-                    .setScheme(TOKEN_END_POINT.substring(0, TOKEN_END_POINT.indexOf(":")))
-                    .setHost(TOKEN_END_POINT.substring(TOKEN_END_POINT.indexOf(":") + 3))
-                    .setPath(TOKEN_SERVICE_URI)
-                    .setParameter("client_id", clientId)
-                    .setParameter("client_secret", secret)
-                    .setParameter("code", authorizationCode)
-                    .setParameter("redirect_uri", returnURI)
-                    .build();
-            HttpPost postMethod = new HttpPost(uri);
+            // send the client credentials and the code in the request body, not in the URL
+            HttpPost postMethod = new HttpPost(TOKEN_END_POINT + TOKEN_SERVICE_URI);
+            postMethod.setEntity(new UrlEncodedFormEntity(List.of(
+                    new BasicNameValuePair("client_id", clientId),
+                    new BasicNameValuePair("client_secret", secret),
+                    new BasicNameValuePair("code", authorizationCode),
+                    new BasicNameValuePair("redirect_uri", returnURI)), StandardCharsets.UTF_8));
             CloseableHttpClient jsonClient = HttpClients.custom().build();
             // Debug.logInfo("GitHub get access token query string: " + postMethod.getURI(), MODULE);
             postMethod.setConfig(PassportUtil.STANDARD_REQ_CONFIG);
@@ -187,7 +184,6 @@ public class GitHubEvents {
             // Debug.logInfo("GitHub get access token response code: " + postResponse.getStatusLine().getStatusCode(), MODULE);
             // Debug.logInfo("GitHub get access token response content: " + responseString, MODULE);
             if (postResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                Debug.logInfo("Json Response from GitHub: " + responseString, MODULE);
                 JSON jsonObject = JSON.from(responseString);
                 JSONToMap jsonMap = new JSONToMap();
                 Map<String, Object> userMap = jsonMap.convert(jsonObject);
@@ -201,7 +197,7 @@ public class GitHubEvents {
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
-        } catch (URISyntaxException | ConversionException | IOException e) {
+        } catch (ConversionException | IOException e) {
             request.setAttribute("_ERROR_MESSAGE_", e.toString());
             return "error";
         }
@@ -227,7 +223,14 @@ public class GitHubEvents {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         String productStoreId = ProductStoreWorker.getProductStoreId(request);
-        String gitHubUserId = (String) userInfo.get("login");
+        // GitHub login names can be renamed and taken over by someone else, so users are identified by their numeric id
+        String gitHubUserId = GitHubAuthenticator.getGitHubUserId(userInfo);
+        String gitHubLogin = (String) userInfo.get("login");
+        if (UtilValidate.isEmpty(gitHubUserId)) {
+            request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(RESOURCE, "GitHubGetOAuth2AccessTokenError",
+                    UtilMisc.toMap("error", "missing user id"), UtilHttp.getLocale(request)));
+            return "error";
+        }
         GenericValue gitHubUser = null;
         try {
             gitHubUser = EntityQuery.use(delegator).from("GitHubUser").where("gitHubUserId", gitHubUserId).queryOne();
@@ -241,7 +244,7 @@ public class GitHubEvents {
                 gitHubUser.set("accessToken", accessToken);
                 dataChanged = true;
             }
-            if (!ENV_PREFIX.equals(gitHubUser.getString("ENV_PREFIX"))) {
+            if (!ENV_PREFIX.equals(gitHubUser.getString("envPrefix"))) {
                 gitHubUser.set("envPrefix", ENV_PREFIX);
                 dataChanged = true;
             }
@@ -269,6 +272,13 @@ public class GitHubEvents {
         }
         try {
             GenericValue userLogin = EntityQuery.use(delegator).from("UserLogin").where("externalAuthId", gitHubUserId).queryFirst();
+            if (UtilValidate.isEmpty(userLogin) && UtilValidate.isNotEmpty(gitHubLogin)) {
+                // a user linked by login name before the numeric id was used is moved to the numeric id
+                userLogin = EntityQuery.use(delegator).from("UserLogin").where("externalAuthId", gitHubLogin).queryFirst();
+                if (UtilValidate.isNotEmpty(userLogin)) {
+                    userLogin.set("externalAuthId", gitHubUserId);
+                }
+            }
             GitHubAuthenticator authn = new GitHubAuthenticator();
             authn.initialize(dispatcher);
             if (UtilValidate.isEmpty(userLogin)) {
