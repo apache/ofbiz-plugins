@@ -101,8 +101,12 @@ You can change a filter condition you want.
 . Attribute : LDAP attbitue for filter e.g. uid=%u
 . AuthenType : LDAP authentication method e.g. simple
 . AuthenticaionHandler : CAS handler class e.g. org.apache.ofbiz.ldap.cas.OFBizCasAuthenticationHandler
-. AutoPartyId : Party's id for user login e.g. admin
-. AutoSecurityGroupId : Security group's id for user login e.g. FULLADMIN
+. AutoPartyId : Party's id given to a user login created on first LDAP login. Empty by default, so the user login has
+  no party.
+. AutoSecurityGroupId : Security group given to a user login created on first LDAP login. Empty by default, so the
+  user login gets no permissions until a security group is assigned. Set it to a least-privilege group; any group set
+  here is given to every directory user who logs in. Directory users are matched to existing OFBiz user logins by
+  username, so a directory user whose uid equals an existing user login id logs in as that user.
 . BaseDN : The top level ofbiz LDAP directory tree e.g. dc=example,dc=com
 . Filter : LDAP search filter e.g. (objectclass=*)
 . Scope : LDAP search scope parameter e.g. sub,one, etc.

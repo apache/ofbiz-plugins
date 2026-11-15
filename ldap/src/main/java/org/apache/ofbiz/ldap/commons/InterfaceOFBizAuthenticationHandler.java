@@ -46,7 +46,7 @@ public interface InterfaceOFBizAuthenticationHandler {
      * Get the security group of a user.
      * @param rootElement Element root element of ldap config file
      * @param result SearchResult
-     * @return the SecurityGroup object.
+     * @return the SecurityGroup object, or null when no security group is configured.
      */
     Object getSecurityGroup(Element rootElement, SearchResult result);
 
@@ -54,7 +54,7 @@ public interface InterfaceOFBizAuthenticationHandler {
      * Get the party id of a user.
      * @param rootElement Element root element of ldap config file
      * @param result SearchResult
-     * @return the PartyId object.
+     * @return the PartyId object, or null when no party is configured.
      */
     Object getPartyId(Element rootElement, SearchResult result);
 

@@ -132,7 +132,7 @@ public final class LdapLoginWorker {
         }
 
         if ("error".equals(result)) {
-            boolean useOFBizLoginWhenFail = Boolean.getBoolean(UtilXml.childElementValue(rootElement, "UseOFBizLoginWhenLDAPFail", "false"));
+            boolean useOFBizLoginWhenFail = Boolean.parseBoolean(UtilXml.childElementValue(rootElement, "UseOFBizLoginWhenLDAPFail", "false"));
             if (useOFBizLoginWhenFail) {
                 return LoginWorker.login(request, response);
             }

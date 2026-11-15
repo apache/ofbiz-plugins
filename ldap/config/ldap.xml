@@ -23,8 +23,9 @@ under the License.
     <Attribute>uid=%u</Attribute>
     <AuthenType>simple</AuthenType>
     <AuthenticationHandler>org.apache.ofbiz.ldap.cas.OFBizCasAuthenticationHandler</AuthenticationHandler>
-    <AutoPartyId>admin</AutoPartyId>
-    <AutoSecurityGroupId>FULLADMIN</AutoSecurityGroupId>
+    <!-- party and security group given to a user created on first LDAP login; set a least-privilege group -->
+    <AutoPartyId/>
+    <AutoSecurityGroupId/>
     <BaseDN>o=ofbiz,o=org</BaseDN>
     <Filter>(objectclass=*)</Filter>
     <Scope>sub</Scope>
