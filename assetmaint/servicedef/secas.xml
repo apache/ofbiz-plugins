@@ -37,13 +37,16 @@ under the License.
         <action service="assetMaintPermissionCheck" mode="sync" result-to-result="true"/>
     </eca>
 
+    <!-- Asset maintenance only looks up catalog and party data, so these two only extend VIEW -->
     <eca service="catalogPermissionCheck" event="return" run-on-failure="true">
         <condition field-name="hasPermission" operator="equals" value="false" type="Boolean"/>
+        <condition field-name="mainAction" operator="equals" value="VIEW"/>
         <action service="assetMaintPermissionCheck" mode="sync" result-to-result="true"/>
     </eca>
 
     <eca service="partyBasePermissionCheck" event="return" run-on-failure="true">
         <condition field-name="hasPermission" operator="equals" value="false" type="Boolean"/>
+        <condition field-name="mainAction" operator="equals" value="VIEW"/>
         <action service="assetMaintPermissionCheck" mode="sync" result-to-result="true"/>
     </eca>
 
