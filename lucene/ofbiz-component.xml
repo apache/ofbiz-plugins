@@ -35,8 +35,6 @@ under the License.
 
     <test-suite loader="main" location="testdef/lucenetests.xml"/>
 
-    <container name="lucene-container" loaders="main,load-data,test" class="org.apache.ofbiz.content.search.DocumentIndexerContainer"/>
-
     <!-- this overrides the content application in order to add the index management screens -->
     <webapp name="content"
         title="Content"
@@ -45,4 +43,6 @@ under the License.
         location="webapp/content"
         base-permission="OFBTOOLS,CONTENTMGR"
         mount-point="/content"/>
+
+    <container name="lucene-container" loaders="main,load-data,test" class="org.apache.ofbiz.content.search.DocumentIndexerContainer"/>
 </ofbiz-component>
