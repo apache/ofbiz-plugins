@@ -95,7 +95,7 @@ public class BitwardenSecretsProviderTest {
         // Flip a byte in the ciphertext part
         String[] parts = cipherString.substring(2).split("\\|");
         byte[] ct = Base64.getDecoder().decode(parts[1]);
-        ct[0] ^= 0xFF;
+        ct[0] ^= (byte) 0xFF;
         String tampered = "2." + parts[0] + "|" + Base64.getEncoder().encodeToString(ct) + "|" + parts[2];
 
         BitwardenSecretsProvider provider = provider(mock(BitwardenHttpClient.class));
