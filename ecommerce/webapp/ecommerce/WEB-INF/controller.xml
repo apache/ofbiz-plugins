@@ -404,7 +404,6 @@ under the License.
 
     <request-map uri="setPaymentInformation">
         <security https="true" auth="false"/>
-        <event type="java" path="org.apache.ofbiz.order.shoppingcart.CheckOutEvents" invoke="checkExternalCheckout"/>
         <response name="success" type="view" value="paymentinformation"/>
     </request-map>
 
