@@ -21,7 +21,7 @@
     <Content contentId="PICTURE" contentTypeId="DOCUMENT" contentName="Picture" dataResourceId=""/>
     <Content contentId="PROD_DESCRIPTION" contentTypeId="DOCUMENT" contentName="Product Description" dataResourceId=""/>
     <Content contentId="GENERAL" contentTypeId="DOCUMENT" contentName="General" dataResourceId=""/>
-    <Content contentId="STORE_POLICIES" contentTypeId="DOCUMENT" contentName="Store Policies" dataResourceId=""/>
+    <Content contentId="STORE_POLICIES" contentTypeId="DOCUMENT" contentName="Store Policies"/>
 
     <ContentAssoc contentId="TREE_ROOT" contentIdTo="PICTURE" contentAssocTypeId="TREE_CHILD" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
     <ContentAssoc contentId="TREE_ROOT" contentIdTo="PROD_DESCRIPTION" contentAssocTypeId="TREE_CHILD" fromDate="2006-01-12 01:01:01" sequenceNum=""/>
