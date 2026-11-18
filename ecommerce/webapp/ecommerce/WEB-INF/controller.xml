@@ -1906,7 +1906,7 @@ under the License.
 
     <view-map name="ViewSimpleContent" page="" type="simplecontent" auth="false"/>
     <!-- PDFs  -->
-    <view-map name="OrderPDF" type="screenfop" page="component://order/widget/ordermgr/OrderPrintScreens.xml#OrderPDF" content-type="application/pdf" encoding="none"/>
+    <view-map name="OrderPDF" type="screenfop" page="component://ecommerce/widget/OrderScreens.xml#OrderPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="InvoicePDF" type="screenfop" page="component://accounting/widget/AccountingPrintScreens.xml#InvoicePDF" content-type="application/pdf" encoding="none"/>
 
     <!-- One Page Checkout -->

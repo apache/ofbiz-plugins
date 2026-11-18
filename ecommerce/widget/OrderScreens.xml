@@ -395,6 +395,18 @@ under the License.
         </section>
     </screen>
 
+    <screen name="OrderPDF">
+        <section>
+            <actions>
+                <!-- only the customer who created the order can view it -->
+                <set field="customerOrderView" value="Y"/>
+            </actions>
+            <widgets>
+                <include-screen name="OrderPDF" location="component://order/widget/ordermgr/OrderPrintScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
     <screen name="requestreturn">
         <section>
             <actions>
