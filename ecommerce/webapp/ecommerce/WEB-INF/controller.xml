@@ -143,19 +143,19 @@ under the License.
         <response name="error" type="view" value="login"/>
     </request-map>
     <request-map uri="beginTotpEnrollment">
-        <security https="true" auth="true" csrf-token="false"/>
+        <security https="true" auth="true" csrf-token="true"/>
         <event type="java" path="org.apache.ofbiz.webapp.control.LoginWorker" invoke="beginTotpEnrollment"/>
         <response name="success" type="view" value="authFactorEnrollment"/>
         <response name="error" type="view" value="authFactorSetup"/>
     </request-map>
     <request-map uri="confirmTotpEnrollment">
-        <security https="true" auth="true" csrf-token="false"/>
+        <security https="true" auth="true" csrf-token="true"/>
         <event type="java" path="org.apache.ofbiz.webapp.control.LoginWorker" invoke="confirmTotpEnrollment"/>
         <response name="success" type="view" value="authFactorSetup"/>
         <response name="error" type="view" value="authFactorSetup"/>
     </request-map>
     <request-map uri="revokeMfaFactor" method="post">
-        <security https="true" auth="true" csrf-token="false"/>
+        <security https="true" auth="true" csrf-token="true"/>
         <event type="java" path="org.apache.ofbiz.webapp.control.LoginWorker" invoke="revokeMfaFactor"/>
         <response name="success" type="view" value="authFactorSetup"/>
         <response name="error" type="view" value="authFactorSetup"/>
