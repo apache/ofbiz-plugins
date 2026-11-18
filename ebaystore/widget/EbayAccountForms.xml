@@ -41,7 +41,7 @@ under the License.
         </row-actions>
         <field name="itemID"><display description="${itemID} - ${title}"/></field>
         <field name="userID"><display description="${userID}"/></field>
-        <field name="actions" use-when="&quot;${commentType}&quot; == &quot;&quot;">
+        <field name="actions" use-when="commentType==null||commentType.toString().length()==0">
             <hyperlink description="Leave Feedback" target="LeaveFeedback">
                 <parameter param-name="itemId" value="${itemID}"/>
                 <parameter param-name="transactionId" value="${transactionID}"/>

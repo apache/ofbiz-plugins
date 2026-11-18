@@ -149,7 +149,7 @@ under the License.
         <field name="taskId" position="2"><hidden/></field>
         <field name="VIEW_SIZE_2" position="2"><hidden value="${parameters.VIEW_SIZE_2}"/></field>
         <field name="VIEW_INDEX_2" position="2"><hidden value="${parameters.VIEW_INDEX_2}"/></field>
-        <field name="custRequestId" title="${uiLabelMap.ScrumSprintBacklog}" position="1" use-when="showPosition1&amp;&amp;'${custRequestTypeId}'!='RF_SCRUM_MEETINGS'">
+        <field name="custRequestId" title="${uiLabelMap.ScrumSprintBacklog}" position="1" use-when="showPosition1&amp;&amp;!'RF_SCRUM_MEETINGS'.equals(custRequestTypeId)">
             <display-entity entity-name="CustRequest" key-field-name="custRequestId" description=" ">
                 <sub-hyperlink  target="ViewProdBacklogItem" description="${context.description} - [${custRequestId}]" link-type="hidden-form" target-window="_BLANK" link-style="buttontext">
                     <parameter param-name="custRequestId"/>
@@ -157,7 +157,7 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="custRequestId" title="${uiLabelMap.ScrumSprintBacklog}" position="1" use-when="showPosition1&amp;&amp;'${custRequestTypeId}'=='RF_SCRUM_MEETINGS'" widget-style="disabled">
+        <field name="custRequestId" title="${uiLabelMap.ScrumSprintBacklog}" position="1" use-when="showPosition1&amp;&amp;'RF_SCRUM_MEETINGS'.equals(custRequestTypeId)" widget-style="disabled">
             <display-entity entity-name="CustRequest" key-field-name="custRequestId" description="${context.description} - [${custRequestId}]">
             </display-entity>
         </field>
@@ -186,14 +186,14 @@ under the License.
         <field name="taskActualHours" title="${uiLabelMap.ScrumActualHours}" position="2" use-when="!'SCRUM_SPRINT'.equals(taskTypeId)"><display/></field>
         <field name="planHours" title="${uiLabelMap.ScrumPlannedHours}" position="2" use-when="!'SCRUM_SPRINT'.equals(taskTypeId)"><display></display>
         </field>
-        <field name="deleteButton" title=" " position="1" use-when="showPosition1&amp;&amp;!'CRQ_COMPLETED'.equals('${custRequest.statusId}')" widget-style="buttontext">
+        <field name="deleteButton" title=" " position="1" use-when="showPosition1&amp;&amp;!'CRQ_COMPLETED'.equals(custRequest?.statusId)" widget-style="buttontext">
             <hyperlink description="Delete" target="DeleteSprintBackLogs" confirmation-message="Are you sure to delete this sprint backlog ?" link-type="hidden-form">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="sprintId"/>
                 <parameter param-name="projectId"/>
             </hyperlink>
         </field>
-        <field name="newTask" title=" " position="1" use-when="showPosition1&amp;&amp;!'CRQ_COMPLETED'.equals('${custRequest.statusId}')" widget-style="buttontext">
+        <field name="newTask" title=" " position="1" use-when="showPosition1&amp;&amp;!'CRQ_COMPLETED'.equals(custRequest?.statusId)" widget-style="buttontext">
             <hyperlink description="Add Task" target="NewSprintBacklogTask" link-type="hidden-form">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="sprintId"/>
@@ -2066,7 +2066,7 @@ under the License.
         <field name="deleteTaskButton" position="2" use-when="!'STS_COMPLETED'.equals(taskCurrentStatusId)&amp;&amp;!'SCRUM_SPRINT'.equals(taskTypeId)"><hidden/></field>
         <field name="setCompleteButton" position="2" use-when="!'STS_COMPLETED'.equals(taskCurrentStatusId)&amp;&amp;!'SCRUM_SPRINT'.equals(taskTypeId)"><hidden/></field>
         <field name="editTaskParty" position="2" use-when="!'STS_COMPLETED'.equals(taskCurrentStatusId)&amp;&amp;!'SCRUM_SPRINT'.equals(taskTypeId)"><hidden/></field>
-        <field name="newTask" use-when="showPosition1&amp;&amp;!'CRQ_COMPLETED'.equals('${custRequest.statusId}')"><hidden/></field>
+        <field name="newTask" use-when="showPosition1&amp;&amp;!'CRQ_COMPLETED'.equals(custRequest?.statusId)"><hidden/></field>
         <sort-order>
             <sort-field name="custRequestId"/>
             <sort-field name="taskId"/>
@@ -3000,14 +3000,14 @@ under the License.
             <set field="productId" from-field="custRequestItems[0].productId"/>
         </row-actions>
         <field name="productId" position="2"><hidden/></field>
-        <field name="custRequestId" title="${uiLabelMap.PageTitleUnplanBacklogItem}" position="1" use-when="showPosition1&amp;&amp;'${custRequestTypeId}'!='RF_SCRUM_MEETINGS'">
+        <field name="custRequestId" title="${uiLabelMap.PageTitleUnplanBacklogItem}" position="1" use-when="showPosition1&amp;&amp;!'RF_SCRUM_MEETINGS'.equals(custRequestTypeId)">
             <display-entity entity-name="CustRequest" key-field-name="custRequestId" description=" ">
                 <sub-hyperlink  target="ViewProdBacklogItem" description="${context.description} - [${custRequestId}]" link-type="hidden-form" target-window="_BLANK" link-style="buttontext">
                     <parameter param-name="custRequestId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
-         <field name="custRequestId" title="${uiLabelMap.ScrumSprintBacklog}" position="1" use-when="showPosition1&amp;&amp;'${custRequestTypeId}'=='RF_SCRUM_MEETINGS'" widget-style="disabled">
+         <field name="custRequestId" title="${uiLabelMap.ScrumSprintBacklog}" position="1" use-when="showPosition1&amp;&amp;'RF_SCRUM_MEETINGS'.equals(custRequestTypeId)" widget-style="disabled">
             <display-entity entity-name="CustRequest" key-field-name="custRequestId" description="${context.description} - [${custRequestId}]">
             </display-entity>
         </field>
@@ -3036,14 +3036,14 @@ under the License.
         <field name="planHours" title="${uiLabelMap.ScrumPlannedHours}" position="2" use-when="workEffortId!=null">
             <display/>
         </field>
-        <field name="deleteButton" title=" " position="1" use-when="showPosition1&amp;&amp;!'CRQ_COMPLETED'.equals('${custRequest.statusId}')" widget-style="buttontext">
+        <field name="deleteButton" title=" " position="1" use-when="showPosition1&amp;&amp;!'CRQ_COMPLETED'.equals(custRequest?.statusId)" widget-style="buttontext">
             <hyperlink description="Delete" target="DeleteUnplanBacklog" confirmation-message="Are you sure to delete this sprint backlog ?" link-type="hidden-form">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="productId"/>
             </hyperlink>
         </field>
-        <field name="newTask" title=" " use-when="showPosition1&amp;&amp;!'CRQ_COMPLETED'.equals('${custRequest.statusId}')" widget-style="buttontext">
+        <field name="newTask" title=" " use-when="showPosition1&amp;&amp;!'CRQ_COMPLETED'.equals(custRequest?.statusId)" widget-style="buttontext">
             <hyperlink description="Add Task" target="NewUnplanBacklogTask" link-type="hidden-form">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="productId"/>
@@ -3101,7 +3101,7 @@ under the License.
         <field name="deleteTaskButton" position="2" use-when="workEffortId!=null"><hidden/></field>
         <field name="setCompleteButton" position="2" use-when="workEffortId!=null"><hidden/></field>
         <field name="editTaskParty" position="2" use-when="workEffortId!=null"><hidden/></field>
-        <field name="newTask" use-when="showPosition1&amp;&amp;!'CRQ_COMPLETED'.equals('${custRequest.statusId}')"><hidden/></field>
+        <field name="newTask" use-when="showPosition1&amp;&amp;!'CRQ_COMPLETED'.equals(custRequest?.statusId)"><hidden/></field>
         <sort-order>
             <sort-field name="custRequestId"/>
             <sort-field name="workEffortId"/>
