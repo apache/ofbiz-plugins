@@ -28,7 +28,7 @@ task syncAgentSkills {
     group = 'AI Agents'
     description = 'Syncs skills to agent directories. Usage: ./gradlew syncAgentSkills -Pagent=claude,gemini,github,cursor,agents,all (default is agents)'
     doLast {
-        def agentsArg = project.hasProperty('agent') ? project.getProperty('agent') : 'agents'
+        def agentsArg = providers.gradleProperty('agent').getOrElse('agents')
         def selectedAgents = agentsArg.split(',').collect { it.trim().toLowerCase() }
         def supportedAgents = ['agents', 'gemini', 'claude', 'github', 'cursor']
         
