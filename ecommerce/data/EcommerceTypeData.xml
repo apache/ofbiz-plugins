@@ -21,6 +21,13 @@ under the License.
 <entity-engine-xml>
     <!-- Ecommerce Default Visual Theme -->
     <VisualTheme visualThemeId="EC_DEFAULT" visualThemeSetId="ECOMMERCE" description="OFBiz Ecommerce Standard Floating Layout"/>
+
+    <!-- Decorators of the ecommerce screens, for content rendered with them -->
+    <DataResource dataResourceId="ECOM_BLANK" dataResourceTypeId="URL_RESOURCE" dataTemplateTypeId="SCREEN_COMBINED" dataResourceName="Plain Decorator" mimeTypeId="text/html" dataCategoryId="TEMPLATE" createdDate="2004-01-16 01:24:06.522" lastModifiedDate="2004-01-16 19:20:58.891" objectInfo="component://ecommerce/widget/CommonScreens.xml#CommonEmptyDecorator"/>
+    <DataResource dataResourceId="ECOM_LEFT" dataResourceTypeId="URL_RESOURCE" dataTemplateTypeId="SCREEN_COMBINED" dataResourceName="Left Decorator" mimeTypeId="text/html" dataCategoryId="TEMPLATE" createdDate="2004-01-16 01:24:06.522" lastModifiedDate="2004-01-16 19:20:58.891" objectInfo="component://ecommerce/widget/CommonScreens.xml#CommonLeftDecorator"/>
+    <DataResource dataResourceId="ECOM_RIGHT" dataResourceTypeId="URL_RESOURCE" dataTemplateTypeId="SCREEN_COMBINED" dataResourceName="Right Decorator" mimeTypeId="text/html" dataCategoryId="TEMPLATE" createdDate="2004-01-16 01:24:06.522" lastModifiedDate="2004-01-16 19:20:58.891" objectInfo="component://ecommerce/widget/CommonScreens.xml#CommonRightDecorator"/>
+    <DataResource dataResourceId="ECOM_LEFTRIGHT" dataResourceTypeId="URL_RESOURCE" dataTemplateTypeId="SCREEN_COMBINED" dataResourceName="Left/Right Decorator" mimeTypeId="text/html" dataCategoryId="TEMPLATE" createdDate="2004-01-16 01:24:06.522" lastModifiedDate="2004-01-16 19:20:58.891" objectInfo="component://ecommerce/widget/CommonScreens.xml#CommonLeftRightDecorator"/>
+
     <delete>
     <VisualThemeResource visualThemeId="EC_DEFAULT" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/ecommerce/images/blog.css" sequenceId="01"/>
     <VisualThemeResource visualThemeId="EC_DEFAULT" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/contentimages/css/contentForum.css" sequenceId="03"/>

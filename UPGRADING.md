@@ -91,6 +91,9 @@ upgrade.
   ([#426](https://github.com/apache/ofbiz-plugins/pull/426)).
 * The `getJs` and `js` requests are removed with the `multi-block` script extraction
   ([OFBIZ-13831](https://issues.apache.org/jira/browse/OFBIZ-13831)). See the framework notes.
+* `widget/blog/BlogTemplates.xml` is removed; the `FloatLeft` and `TopCenter` blog templates are in
+  `component://content/widget/forum/BlogTemplates.xml` of ofbiz-framework
+  ([OFBIZ-13870](https://issues.apache.org/jira/browse/OFBIZ-13870)).
 
 ### example
 
