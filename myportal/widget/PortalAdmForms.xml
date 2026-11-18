@@ -80,8 +80,8 @@ under the License.
     </form>
 
     <form name="EditPortalPage" type="single" target="${targetPortalPage}" default-map-name="portalPage">
-        <field name="portalPageId" use-when="!&quot;${portalPage.portalPageId}&quot;.equals(&quot;&quot;)" position="1"><display/></field>
-        <field name="portalPageId" use-when="&quot;${portalPage.portalPageId}&quot;.equals(&quot;&quot;)" position="1"><text/></field>
+        <field name="portalPageId" use-when="portalPage?.portalPageId!=null&amp;&amp;portalPage.portalPageId.toString().length()>0" position="1"><display/></field>
+        <field name="portalPageId" use-when="portalPage?.portalPageId==null||portalPage.portalPageId.toString().length()==0" position="1"><text/></field>
         <field name="originalPortalPageId" position="2"><text/></field>
         <field name="ownerUserLoginId">
             <!-- <lookup target-form-name="LookupUserLoginAndPartyDetails"/> -->
