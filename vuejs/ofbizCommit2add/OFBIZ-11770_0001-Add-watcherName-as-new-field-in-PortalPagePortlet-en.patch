@@ -1,0 +1,29 @@
+From 87d0ff83354742d360beee1a1e046719beec18ba Mon Sep 17 00:00:00 2001
+From: holivier <holivier@apache.org>
+Date: Wed, 27 May 2020 21:45:23 +0200
+Subject: [PATCH 22/22] Improved: Add watcherName as new field in
+ PortalPagePortlet entity (OFBIZ-11770)
+
+When a watcherName is associated to a Portal - Portlet, it's used to
+created a container (with this watcher) "around" the portlet, and so be
+able to update it with a set-area, refresh-area, set-watcher,
+refresh-watcher
+---
+ framework/common/entitydef/entitymodel.xml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/framework/common/entitydef/entitymodel.xml b/framework/common/entitydef/entitymodel.xml
+index 490a9410ef..7d8b51ef4b 100644
+--- a/framework/common/entitydef/entitymodel.xml
++++ b/framework/common/entitydef/entitymodel.xml
+@@ -827,6 +827,7 @@ under the License.
+         <field name="portletSeqId" type="id"><description>Identify the portalPortlet instance in case more copy of the same portalPortlet are present in the same portalPage</description></field>
+         <field name="columnSeqId" type="id"></field>
+         <field name="sequenceNum" type="numeric"></field>
++        <field name="watcherName" type="value"></field>
+         <prim-key field="portalPageId"/>
+         <prim-key field="portalPortletId"/>
+         <prim-key field="portletSeqId"/>
+-- 
+2.11.0
+

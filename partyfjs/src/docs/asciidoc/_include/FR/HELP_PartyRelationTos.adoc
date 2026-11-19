@@ -1,0 +1,45 @@
+
+= Liste des acteurs auxquels il est associés .
+
+Cette portlet permet d'afficher Les acteurs auxquels est associés l'acteur sélectionné.
+L'affichage et son comportement dependent de son paramétrage.
+
+Pour caractériser la relation entre deux acteurs, il faut préciser le "type de relation", le plus courament cette portlet est utilisé pour un type de relation précis, par exemple 
+
+* "Contact", c'est à dire lister tous les commerciaux ou les clients pour lequel il est un contact;
+* "Employé", c'est à dire lister la ou les sociétés où une personne est employé;
+* "Membre d'équipe", c'est à dire lister les groupes ou les services auxquels l'acteur est inscrit;
+* $$...$$
+
+Pour une relation entre acteur, il est aussi possible de préciser le rôle de l'acteur associé, par exemple dans le cas du type de relation "employé", le rôle permettra de détailler le rôle de l'employé dans la société.
+Le plus souvent ce champ n'apparait pas car il n'est pas nécessaire.
+
+Un relation entre acteur posséde des date de validité (de .. jusqu'a ..), il est donc possible de garder un historique.
+Selon le paramétrage il est aussi possible de supprimer une relation et dans ce cas l'historique ne sera pas conservé.
+
+&nbsp;
+
+== Les paramètre de la Portlet
+
+* Titre de la portlet : Il faut indiquer un "uiLabel" (un code qui selon la langue donnera un libéllé), cela permet de personnaliser la portlet, c'est surtout utile dès que cette portlet est utilisé plusieurs fois dans la même page. Demander à un consultant technique pour trouver le uiLabel correspondant à votre besoin ou pour en définir un nouveau.
+* Role type From : Si ce champ est renseigné, cela permet de filtrer la liste affiché et dans l'écran d'édition (ajout ou modification) ce sera la valeur utilisé, le champ role ne sera pas affiché à l'utilisateur. Habituellement, ce paramètre est laissé vide.
+* Groupe de role : Si le champ Role from est vide, indique le groupe de rôle parmi lequel l'utisateur choisira dans l'écran d'édition (ajout - modification). Le champ rôle d'origine sera alors affiché dans la liste
+* Type de relation (Party Relationship Type Id) : permer d'indiquer le type de relation à utiliser pour filtrer les relations à afficher, ou laisser le champ vide pour les afficher toutes et donc montrer ce champ.
+* Rôle de l'acteur associé (Role type To) : Si ce champ est renseigné, cela permet de filtrer la liste affiché et dans l'écran d'édition (ajout ou modification) ce sera la valeur utilisé, le champ role ne sera pas affiché à l'utilisateur.
+* Groupe de role : Si le champ Role To est vide, indique le groupe de rôle parmi lequel l'utisateur choisira dans l'écran d'édition (ajout - modification). Le champ rôle de destination sera alors affiché dans la liste.
+* Le show edit menu Standard: s'il est positionné à N alors les bouttons "ajout", "édition" et "suppression n'apparaissent pas
+* Gestion de l'historique (show history button): s'il est positionné à N alors les bouttons "invalider" et "afficher l'historique" apparaissent pas
+* Bouton suppression (Show Delete button) : s'il est positionné à N alors le bouttons "suppression" n'apparait pas, souvent utilisé pour forcer uniquement l'usage de l'historisation.
+
+
+== Règles de Securité
+
+* aucune au niveau de la portlet, uniquement celle au niveau du service de mise à jours (et celles du composant)
+
+
+== Remarques Techniques
+
+Cette portlet ne liste que la table PartyRelationship avec partyIdTo == le partyId selectionné.
+Une seconde portlet existe pour partyIdFrom = partyId
+
+Quand les roles ne sont pas précisé (à la saisie ou en paramétrage), la valeur _NA_ est utilisé.

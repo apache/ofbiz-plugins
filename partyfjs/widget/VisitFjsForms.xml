@@ -1,0 +1,157 @@
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://ofbiz.apache.org/Widget-Form" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Form http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+    <grid name="PartyLastVisits" odd-row-style="alternate-row" default-table-style="basic-table hover-bar" default-entity-name="Visit">
+        <actions>
+            <set field="partyId" from-field="parameters.partyId"/>
+            <entity-and entity-name="Visit">
+                <field-map field-name="partyId" from-field="partyId"/>
+                <order-by field-name="-fromDate"/>
+                <limit-range start="0" size="5"/>
+            </entity-and>
+            <set field="recapPageId" from-field="recapPageId" default-value="PartyRecap"/>
+        </actions>
+        <field name="visitId" title="${uiLabelMap.PartyVisitId}">
+            <hyperlink description="${visitId}" also-hidden="false"/>
+            <on-field-event-update-area event-type="set-area" area-id="partyVisitDetail" area-target="visitdetail">
+                <parameter param-name="visitId"/>
+                <parameter param-name="recapPageId"/>
+            </on-field-event-update-area>
+        </field>
+        <field name="userLoginId" title="${uiLabelMap.PartyUserLogin}"><display type="text"/></field>
+        <field name="userCreated" title="${uiLabelMap.PartyNewUser}"><display type="text"/></field>
+        <field name="webappName" title="${uiLabelMap.PartyWebApp}"><display type="text"/></field>
+        <field name="clientIpAddress" title="${uiLabelMap.PartyClientIP}"><display type="text"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display type="date-time"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display type="date-time"/></field>
+    </grid>
+
+    <form name="FindVisits" type="single" title="Find and list party visits"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="activeOnly"><check /></field>
+        <field name="visitId"><text-find ignore-case="true"/></field>
+        <field name="visitorId"><text-find ignore-case="true"/></field>
+        <field name="partyId"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="userLoginId"><text-find ignore-case="true"/></field>
+        <field name="userCreated"><date-find type="date"/></field>
+        <field name="webappName"><text-find ignore-case="true"/></field>
+        <field name="clientIpAddress"><text-find ignore-case="true"/></field>
+<!--         <field name="portalPageId"><hidden value="parameters.portalPageId"/></field> -->
+<!--         <field name="portalPortletId"><hidden value="parameters.portalPortletId"/></field> -->
+<!--         <field name="portletSeqId"><hidden value="parameters.portletSeqId"/></field> -->
+<!--         <field name="currentAreaId"><hidden value="parameters.currentAreaId"/></field> -->
+        <field name="searchButton" title="${uiLabelMap.CommonFind}"><submit/></field>
+        <on-event-update-area area-target="findVisits" event-type="set-area" area-id="searchResults_visits"/>
+        <on-event-update-area event-type="collapse" area-id="findScreenlet_visits" area-target="collapse"/>
+    </form>
+    <grid name="ListVisits" separate-columns="true" title="Visits List" list-name="listIt" target="" default-entity-name="Visit"
+          odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <actions>
+            <set field="parameters.sortField" from-field="parameters.sortField" default-value="-visitId"/>
+            <set field="recapPageId" from-field="recapPageId" default-value="PartyRecap"/>
+
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="Visit"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="filterByDate" from-field="parameters.activeOnly"/>
+            </service>
+        </actions>
+        <field name="visitId" sort-field="true">
+            <hyperlink description="${visitId}" also-hidden="false"/>
+            <on-field-event-update-area event-type="set-area" area-id="partyVisitDetail" area-target="visitdetail">
+                <parameter param-name="visitId"/>
+                <parameter param-name="recapPageId"/>
+            </on-field-event-update-area>
+        </field>
+        <field name="visitorId" title="${uiLabelMap.PartyVisitorId}" sort-field="true"><display/></field>
+        <field name="partyId" sort-field="true">
+          <hyperlink target="showPortalPage" description="${partyId}" image-location="${iconsPurpose.Overview}" image-title="${uiLabelMap.IconsTooltips_Overview}">
+            <parameter param-name="portalPageId" from-field="recapPageId"/>
+            <parameter param-name="partyId"/>
+          </hyperlink>
+        </field>
+        <field name="userLoginId" title="${uiLabelMap.CommonUserLoginId}" sort-field="true"><display/></field>
+        <field name="userCreated" title="${uiLabelMap.PartyNewUser}" sort-field="true"><display/></field>
+        <field name="webappName" title="${uiLabelMap.PartyWebApp}" sort-field="true"><display/></field>
+        <field name="clientIpAddress" title="${uiLabelMap.PartyClientIP}" sort-field="true"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" sort-field="true"><display type="date-time"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" sort-field="true"><display type="date-time"/></field>
+    </grid>
+
+    <form name="visitDetail" type="single" title="${uiLabelMap.PartyVisitDetail}" default-map-name="visit">
+        <field name="sessionId" title="${uiLabelMap.PartyVisitIDSessionID}"><display description="${visit.visitId} / ${visit.sessionId}"/></field>
+        <field name="visitorId" title="${uiLabelMap.PartyVisitorId}"><display default-value="${uiLabelMap.CommonNot} ${uiLabelMap.CommonFound}"/></field>
+        <field name="partyId" title="${uiLabelMap.PartyPartyIDUserLoginID}" >
+          <hyperlink target="showPortalPage" description="${visit.partyId} / ${visit.userLoginId}" image-location="${iconsPurpose.Overview}" image-title="${uiLabelMap.IconsTooltips_Overview}">
+            <parameter param-name="portalPageId" from-field="parameters.recapPageId"/>
+            <parameter param-name="partyId" from-field="visit.partyId"/>
+          </hyperlink>
+        </field>
+        <field name="userCreated" title="${uiLabelMap.PartyUserCreated}"><display/></field>
+        <field name="webappName" title="${uiLabelMap.PartyWebApp}"><display/></field>
+        <field name="serverIpAddress" title="${uiLabelMap.PartyServer}">
+          <hyperlink description="${visit.serverIpAddress} / ${visit.serverHostName}" target="http://uptime.netcraft.com/up/graph/" target-type="plain" target-window="_blank">
+            <parameter param-name="site" from-field="visit.serverIpAddress"/>
+          </hyperlink>
+        </field>
+        <field name="clientIpAddress" title="${uiLabelMap.PartyClient}">
+            <hyperlink description=" ${visit.clientIpAddress} " target="http://ws.arin.net/cgi-bin/whois.pl" target-type="plain" target-window="_blank">
+                <parameter param-name="queryinput" from-field="visit.clientIpAddress"/>
+            </hyperlink>
+        </field>
+        <field name="clientHostName" title="/" position="2">
+            <hyperlink description=" ${visit.clientHostName} " target="http://www.networksolutions.com/cgi-bin/whois/whois" target-type="plain" target-window="_blank">
+                <parameter param-name="STRING" from-field="visit.clientHostName"/>
+                <parameter param-name="SearchType" value="do"/>
+            </hyperlink>
+        </field>
+        <field name="clientUser"       title="${uiLabelMap.PartyClientUser}"><display/></field>
+        <field name="initialLocale"    title="PartyInitialLocale"><display/></field>
+        <field name="initialRequest"   title="${uiLabelMap.PartyInitialRequest}"><hyperlink target="_blank"/></field>
+        <field name="initialReferrer"  title="${uiLabelMap.PartyInitialReferer}"><hyperlink target="_blank"/></field>
+        <field name="initialUserAgent" title="${uiLabelMap.PartyInitialUserAgent}"><display/></field>
+        <field name="cookie"           title="${uiLabelMap.PartyCookie}"><display/></field>
+        <field use-when="thruDate!=empty" name="date"             title="${uiLabelMap.CommonFromDateThruDate}">
+            <display description="${visit.fromDate} / ${visit.thruDate}"/>
+        </field>
+        <field use-when="thruDate==empty" name="date"             title="${uiLabelMap.CommonFromDateThruDate}">
+            <display description="${visit.fromDate} / ${uiLabelMap.PartyStillActive}"/>
+        </field>
+    </form>
+    <form name="hitTracker" type="list" separate-columns="true" target="" list-name="serverHits"
+          odd-row-style="alternate-row" default-table-style="basic-table hover-bar" default-entity-name="ServerHit">
+        <row-actions>
+            <entity-one entity-name="ServerHitType" value-field="description">
+                <field-map field-name="hitTypeId"/>
+            </entity-one>
+        </row-actions>
+        <field name="contentId"        title="${uiLabelMap.PartyContentId}"><display/></field>
+        <field name="description"      title="${uiLabelMap.PartyType}"><display/></field>
+        <field name="numOfBytes"       title="${uiLabelMap.PartySize}"><display default-value="?"/></field>
+        <field name="hitStartDateTime" title="${uiLabelMap.PartyStartTime}"><display type="date-time"/></field>
+        <field name="runningTimeMillis" title="${uiLabelMap.PartyTime}"><display/></field>
+        <field name="requestUrl"       title="${uiLabelMap.PartyURI}"><hyperlink target="_blank"/></field>
+    </form>
+
+</forms>
