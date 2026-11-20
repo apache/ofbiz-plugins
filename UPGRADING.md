@@ -94,6 +94,8 @@ upgrade.
 * `widget/blog/BlogTemplates.xml` is removed; the `FloatLeft` and `TopCenter` blog templates are in
   `component://content/widget/forum/BlogTemplates.xml` of ofbiz-framework
   ([OFBIZ-13870](https://issues.apache.org/jira/browse/OFBIZ-13870)).
+* `template/forum/ShowForumResponse.ftl`, which nothing used, is removed
+  ([OFBIZ-13878](https://issues.apache.org/jira/browse/OFBIZ-13878)).
 
 ### example
 
