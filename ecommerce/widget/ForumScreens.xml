@@ -107,11 +107,15 @@ under the License.
             <actions>
                 <set field="MainColumnStyle" value="center"/>
                 <set field="titleProperty" value="PageTitleForumArticle"/>
-                <set field="contentAssoc.contentId" from-field="parameters.responseContentId"/>
+                <!-- render the message only when it belongs to a forum under the web store forum root -->
+                <set field="articleCheckContentId" from-field="parameters.responseContentId"/>
+                <set field="articlePublishRootId" value="WebStoreFORUM"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/content/GetPublishedArticle.groovy"/>
+                <set field="contentAssoc.contentId" from-field="publishedContentId"/>
                 <set field="contentAssoc.contentAssocTypeId" value="RESPONSE"/>
 
                 <entity-one entity-name="Content" value-field="content">
-                    <field-map field-name="contentId" from-field="parameters.responseContentId"/>
+                    <field-map field-name="contentId" from-field="publishedContentId"/>
                 </entity-one>
                 <entity-one entity-name="ElectronicText" value-field="electronicText">
                     <field-map field-name="dataResourceId" from-field="content.dataResourceId"/>
@@ -127,9 +131,15 @@ under the License.
                     </decorator-section>
                     <decorator-section name="body">
                         <label style="blogheader">${uiLabelMap.EcommerceBlogFullMessage}:</label>
-                        <container style="blogcontentwrapper">
-                        <content content-id="${parameters.responseContentId}"/>
-                        </container>
+                        <section>
+                            <condition><not><if-empty field="publishedContentId"/></not></condition>
+                            <widgets>
+                                <container style="blogcontentwrapper">
+                                <content content-id="${publishedContentId}"/>
+                                </container>
+                            </widgets>
+                            <fail-widgets><label style="blogheader">${uiLabelMap.CommonNoRecordFound}</label></fail-widgets>
+                        </section>
                         <section>
                             <condition>
                                 <if-has-permission permission="CONTENTMGR" action="_CREATE"/>
@@ -145,7 +155,12 @@ under the License.
                         <container>
                         <label style="blogheader">${uiLabelMap.EcommerceBlogMessageTree}:</label>
                         </container>
-                        <include-tree name="ResponseTree" location="component://ecommerce/widget/ForumTrees.xml"/>
+                        <section>
+                            <condition><not><if-empty field="publishedContentId"/></not></condition>
+                            <widgets>
+                                <include-tree name="ResponseTree" location="component://ecommerce/widget/ForumTrees.xml"/>
+                            </widgets>
+                        </section>
                     </decorator-section>
                     <decorator-section name="right-column">
                         <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
