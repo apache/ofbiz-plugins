@@ -226,7 +226,12 @@
     <screen name="ViewArticle">
         <section>
             <actions>
-                <set field="articleContentId" from-field="parameters.articleContentId" default-value="${parameters.contentId}"/>
+                <!-- render the entry only when it is published in a blog, or the user may update that blog -->
+                <set field="articleCheckContentId" from-field="parameters.articleContentId" default-value="${parameters.contentId}"/>
+                <property-to-field property="root.publish.point.blog" field="articlePublishRootId" resource="blog"/>
+                <set field="articleRequirePublished" value="true" type="Boolean"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/content/GetPublishedArticle.groovy"/>
+                <set field="articleContentId" from-field="publishedContentId"/>
                 <set field="ownerContentId" from-field="parameters.ownerContentId"/>
                 <set field="blogContentId" from-field="parameters.blogContentId"/>
                 <entity-one entity-name="Content" value-field="content" use-cache="true">
@@ -267,7 +272,13 @@
                             <container style="responsetext">
                                 <label text="${uiLabelMap.EcommerceBlogPostedOn}: ${content.createdDate}" style="responsetext"/>
                             </container>
-                            <content content-id="${articleContentId}"/>
+                            <section>
+                                <condition><not><if-empty field="publishedContentId"/></not></condition>
+                                <widgets>
+                                    <content content-id="${articleContentId}"/>
+                                </widgets>
+                                <fail-widgets><label text="${uiLabelMap.EcommerceBlogContentNotFound}" style="blogtitle"/></fail-widgets>
+                            </section>
                         </container>
 
                         <include-screen name="BlogResponses"/>
@@ -286,9 +297,14 @@
     <screen name="ViewResponse">
         <section>
             <actions>
-                <set field="contentId" from-field="parameters.contentId"/>
-                <set field="responseContentId" from-field="parameters.contentId"/>
-                <set field="articleContentId" from-field="parameters.articleContentId"/>
+                <!-- render the response only when its entry is published in a blog, or the user may update that blog -->
+                <set field="articleCheckContentId" from-field="parameters.contentId"/>
+                <property-to-field property="root.publish.point.blog" field="articlePublishRootId" resource="blog"/>
+                <set field="articleRequirePublished" value="true" type="Boolean"/>
+                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/content/GetPublishedArticle.groovy"/>
+                <set field="contentId" from-field="publishedContentId"/>
+                <set field="responseContentId" from-field="publishedContentId"/>
+                <set field="articleContentId" from-field="publishedArticle.contentId"/>
                 <set field="ownerContentId" from-field="parameters.ownerContentId"/>
                 <set field="blogContentId" from-field="parameters.blogContentId"/>
                 <entity-one entity-name="Content" value-field="content" use-cache="true">
@@ -351,7 +367,13 @@
                             </section>
                         </container>
                         <container style="blogcontentwrapper">
-                            <content content-id="${contentId}"/>
+                            <section>
+                                <condition><not><if-empty field="publishedContentId"/></not></condition>
+                                <widgets>
+                                    <content content-id="${contentId}"/>
+                                </widgets>
+                                <fail-widgets><label text="${uiLabelMap.EcommerceBlogContentNotFound}" style="blogtitle"/></fail-widgets>
+                            </section>
                         </container>
 
                         <include-screen name="AddBlogResponse"/>
@@ -359,7 +381,12 @@
                         <container style="bloghr">
                             <label text="${uiLabelMap.ContentForumThread}: " style="blogtitle"/>
                         </container>
-                        <include-tree name="ResponseTree" location="component://ecommerce/widget/blog/BlogTrees.xml"/>
+                        <section>
+                            <condition><not><if-empty field="publishedContentId"/></not></condition>
+                            <widgets>
+                                <include-tree name="ResponseTree" location="component://ecommerce/widget/blog/BlogTrees.xml"/>
+                            </widgets>
+                        </section>
                         <section>
                             <condition>
                                 <or>
