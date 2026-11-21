@@ -27,7 +27,8 @@ under the License.
       <form method="post" action="<@ofbizUrl>verifyAuthFactor</@ofbizUrl>" name="mfaChallengeForm">
         <div class="form-group">
           <label for="code">Verification Code</label>
-          <input type="text" class="form-control" id="code" name="code" autocomplete="off" placeholder="123456" maxlength="6" autofocus required />
+          <input type="text" class="form-control" id="code" name="code" autocomplete="off" placeholder="${uiLabelMap.EcommerceMfaCodePlaceholder!'123456 or abcd-efgh'}" maxlength="16" autofocus required />
+          <small class="form-text text-muted">${uiLabelMap.EcommerceMfaCodeOrBackupHelp!'Enter your 6-digit authenticator code or an 8-character backup recovery code.'}</small>
         </div>
         <div class="form-group">
           <input type="submit" class="btn btn-primary btn-block" value="Verify and Continue" />
