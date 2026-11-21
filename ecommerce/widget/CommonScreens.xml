@@ -31,6 +31,7 @@ under the License.
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="SecurityUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="MarketingUiLabels.xml" map-name="uiLabelMap" global="true"/>
 
                 <set field="MainColumnStyle" value="nocolumns" global="true"/>
@@ -281,6 +282,7 @@ under the License.
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="SecurityUiLabels" map-name="uiLabelMap" global="true"/>
 
                 <set field="MainColumnStyle" value="nocolumns" global="true"/>
                 <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/EcommerceSetup.groovy"/>
@@ -436,4 +438,79 @@ under the License.
             </widgets>
         </section>
     </screen>
+
+    <!-- Multi-Factor Authentication Screens -->
+    <screen name="authFactorChallenge">
+        <section>
+            <actions>
+                <set field="titleProperty" value="EcommerceMfaChallengeTitle"/>
+                <set field="headerItem" value="login"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://ecommerce/template/customer/AuthFactorChallenge.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="authFactorForcedEnrollment">
+        <section>
+            <actions>
+                <set field="titleProperty" value="EcommerceMfaSetUpAuthenticator"/>
+                <set field="headerItem" value="login"/>
+                <set field="isForcedEnrollment" value="true" type="Boolean"/>
+                <set field="mfaFactorId" value="${groovy: request.getAttribute('mfaFactorId')}"/>
+                <set field="mfaProvisioningUri" value="${groovy: request.getAttribute('mfaProvisioningUri')}"/>
+                <set field="mfaSecret" value="${groovy: request.getAttribute('mfaSecret')}"/>
+                <set field="mfaQrCodeDataUri" value="${groovy: request.getAttribute('mfaQrCodeDataUri')}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://ecommerce/template/customer/AuthFactorEnrollment.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="authFactorSetup">
+        <section>
+            <actions>
+                <set field="titleProperty" value="EcommerceMfaTitle"/>
+                <set field="headerItem" value="login"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://ecommerce/template/customer/AuthFactorSetup.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="authFactorEnrollment">
+        <section>
+            <actions>
+                <set field="titleProperty" value="EcommerceMfaSetUpAuthenticator"/>
+                <set field="headerItem" value="login"/>
+                <set field="mfaFactorId" value="${groovy: request.getAttribute('mfaFactorId')}"/>
+                <set field="mfaProvisioningUri" value="${groovy: request.getAttribute('mfaProvisioningUri')}"/>
+                <set field="mfaSecret" value="${groovy: request.getAttribute('mfaSecret')}"/>
+                <set field="mfaQrCodeDataUri" value="${groovy: request.getAttribute('mfaQrCodeDataUri')}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://ecommerce/template/customer/AuthFactorEnrollment.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
 </screens>
