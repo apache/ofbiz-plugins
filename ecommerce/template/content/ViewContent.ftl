@@ -70,13 +70,6 @@ under the License.
           <@renderSubContentCache subContentId=subContentId />
         </td>
         <td width="40" valign="bottom">
-        <#--
-        <@wrapSubContentCache subContentId=subContentId wrapTemplateId="WRAP_VIEW" >
-        </@wrapSubContentCache >
-        <@checkPermission mode="equals" entityOperation="_CREATE" targetOperation="HAS_USER_ROLE" >
-          <a class="tabButton" href="<@ofbizUrl>createforumresponse?contentIdTo=${requestParameters.contentId}&amp;nodeTrailCsv=${nodeTrailCsv!}</@ofbizUrl>" >Respond</a>
-        </@checkPermission>
-        -->
           <br/>
         </td>
       </tr>
