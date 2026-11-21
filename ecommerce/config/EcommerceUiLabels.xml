@@ -5342,4 +5342,114 @@
         <value xml:lang="fr">La génération de nouveaux codes invalidera tous les codes existants non utilisés. Continuer ?</value>
         <value xml:lang="hi-IN">नए कोड जनरेट करने से मौजूदा अप्रयुक्त कोड अमान्य हो जाएंगे। क्या जारी रखें?</value>
     </property>
+    <property key="EcommerceMfaChallengeTitle">
+        <value xml:lang="en">Two-Factor Authentication</value>
+        <value xml:lang="fr">Authentification à deux facteurs</value>
+        <value xml:lang="hi-IN">दो-कारक प्रमाणीकरण</value>
+    </property>
+    <property key="EcommerceMfaChallengeDescription">
+        <value xml:lang="en">Enter the 6-digit verification code from your authenticator application.</value>
+        <value xml:lang="fr">Entrez le code de vérification à 6 chiffres de votre application d'authentification.</value>
+        <value xml:lang="hi-IN">अपने प्रमाणीकरण ऐप से 6 अंकों का सत्यापन कोड दर्ज करें।</value>
+    </property>
+    <property key="EcommerceMfaVerificationCode">
+        <value xml:lang="en">Verification Code</value>
+        <value xml:lang="fr">Code de vérification</value>
+        <value xml:lang="hi-IN">सत्यापन कोड</value>
+    </property>
+    <property key="EcommerceMfaVerifyAndContinue">
+        <value xml:lang="en">Verify and Continue</value>
+        <value xml:lang="fr">Vérifier et continuer</value>
+        <value xml:lang="hi-IN">सत्यापित करें और जारी रखें</value>
+    </property>
+    <property key="EcommerceMfaSetUpAuthenticator">
+        <value xml:lang="en">Set Up Authenticator</value>
+        <value xml:lang="fr">Configurer l'authentificateur</value>
+        <value xml:lang="hi-IN">प्रमाणीकरणकर्ता सेट करें</value>
+    </property>
+    <property key="EcommerceMfaEnrollmentScanPrompt">
+        <value xml:lang="en">Scan this QR code using Google Authenticator, Microsoft Authenticator, or 2FAS on your mobile device.</value>
+        <value xml:lang="fr">Scannez ce code QR à l'aide de Google Authenticator, Microsoft Authenticator ou 2FAS sur votre appareil mobile.</value>
+        <value xml:lang="hi-IN">अपने मोबाइल डिवाइस पर Google Authenticator, Microsoft Authenticator, या 2FAS का उपयोग करके इस QR कोड को स्कैन करें।</value>
+    </property>
+    <property key="EcommerceMfaManualEntryKey">
+        <value xml:lang="en">Manual Entry Key</value>
+        <value xml:lang="fr">Clé de saisie manuelle</value>
+        <value xml:lang="hi-IN">मैन्युअल प्रविष्टि कुंजी</value>
+    </property>
+    <property key="EcommerceMfaManualEntryHelp">
+        <value xml:lang="en">If you cannot scan the QR code, enter this key manually into your authenticator app.</value>
+        <value xml:lang="fr">Si vous ne pouvez pas scanner le code QR, entrez cette clé manuellement dans votre application d'authentification.</value>
+        <value xml:lang="hi-IN">यदि आप QR कोड स्कैन नहीं कर सकते हैं, तो अपने प्रमाणीकरण ऐप में इस कुंजी को मैन्युअल रूप से दर्ज करें।</value>
+    </property>
+    <property key="EcommerceMfaEnterCodeToActivate">
+        <value xml:lang="en">Enter the 6-digit code displayed in your authenticator app to activate.</value>
+        <value xml:lang="fr">Entrez le code à 6 chiffres affiché dans votre application d'authentification pour l'activer.</value>
+        <value xml:lang="hi-IN">सक्रिय करने के लिए अपने प्रमाणीकरण ऐप में प्रदर्शित 6 अंकों का कोड दर्ज करें।</value>
+    </property>
+    <property key="EcommerceMfaActivateAuthenticator">
+        <value xml:lang="en">Activate Authenticator</value>
+        <value xml:lang="fr">Activer l'authentificateur</value>
+        <value xml:lang="hi-IN">प्रमाणीकरणकर्ता सक्रिय करें</value>
+    </property>
+    <property key="EcommerceMfaTitle">
+        <value xml:lang="en">Multi-Factor Authentication</value>
+        <value xml:lang="fr">Authentification multi-facteurs</value>
+        <value xml:lang="hi-IN">बहु-कारक प्रमाणीकरण</value>
+    </property>
+    <property key="EcommerceMfaSetup">
+        <value xml:lang="en">MFA Setup</value>
+        <value xml:lang="fr">Configuration MFA</value>
+        <value xml:lang="hi-IN">MFA सेटअप</value>
+    </property>
+    <property key="EcommerceMfaManageDescription">
+        <value xml:lang="en">Manage time-based one-time password (TOTP) authenticators for your account.</value>
+        <value xml:lang="fr">Gérez les authentificateurs de mot de passe à usage unique (TOTP) pour votre compte.</value>
+        <value xml:lang="hi-IN">अपने खाते के लिए समय-आधारित वन-टाइम पासवर्ड (TOTP) प्रमाणीकरणकर्ताओं का प्रबंधन करें।</value>
+    </property>
+    <property key="EcommerceMfaAddAuthenticator">
+        <value xml:lang="en">Add Authenticator</value>
+        <value xml:lang="fr">Ajouter un authentificateur</value>
+        <value xml:lang="hi-IN">प्रमाणीकरणकर्ता जोड़ें</value>
+    </property>
+    <property key="EcommerceMfaDeviceLabel">
+        <value xml:lang="en">Device Label</value>
+        <value xml:lang="fr">Libellé de l'appareil</value>
+        <value xml:lang="hi-IN">डिवाइस लेबल</value>
+    </property>
+    <property key="EcommerceMfaDeviceLabelHelp">
+        <value xml:lang="en">A name to identify this device (e.g. Mobile Phone).</value>
+        <value xml:lang="fr">Un nom pour identifier cet appareil (ex. Téléphone mobile).</value>
+        <value xml:lang="hi-IN">इस डिवाइस को पहचानने के लिए एक नाम (जैसे मोबाइल फोन)।</value>
+    </property>
+    <property key="EcommerceMfaCurrentPasswordRequiredHelp">
+        <value xml:lang="en">Your current login password is required to add an authenticator.</value>
+        <value xml:lang="fr">Votre mot de passe de connexion actuel est requis pour ajouter un authentificateur.</value>
+        <value xml:lang="hi-IN">प्रमाणीकरणकर्ता जोड़ने के लिए आपका वर्तमान लॉगिन पासवर्ड आवश्यक है।</value>
+    </property>
+    <property key="EcommerceMfaActiveAuthenticators">
+        <value xml:lang="en">Active Authenticators</value>
+        <value xml:lang="fr">Authentificateurs actifs</value>
+        <value xml:lang="hi-IN">सक्रिय प्रमाणीकरणकर्ता</value>
+    </property>
+    <property key="EcommerceMfaEnrolledDate">
+        <value xml:lang="en">Enrolled Date</value>
+        <value xml:lang="fr">Date d'enregistrement</value>
+        <value xml:lang="hi-IN">नामांकन की तारीख</value>
+    </property>
+    <property key="EcommerceMfaRemoveAuthenticator">
+        <value xml:lang="en">Remove Authenticator</value>
+        <value xml:lang="fr">Supprimer l'authentificateur</value>
+        <value xml:lang="hi-IN">प्रमाणीकरणकर्ता हटाएं</value>
+    </property>
+    <property key="EcommerceMfaRevoke">
+        <value xml:lang="en">Revoke</value>
+        <value xml:lang="fr">Révoquer</value>
+        <value xml:lang="hi-IN">रद्द करें</value>
+    </property>
+    <property key="EcommerceMfaNoAuthenticators">
+        <value xml:lang="en">No authenticators currently enrolled.</value>
+        <value xml:lang="fr">Aucun authentificateur actuellement enregistré.</value>
+        <value xml:lang="hi-IN">वर्तमान में कोई प्रमाणीकरणकर्ता नामांकित नहीं है।</value>
+    </property>
 </resource>

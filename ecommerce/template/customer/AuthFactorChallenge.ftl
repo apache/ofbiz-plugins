@@ -20,18 +20,18 @@ under the License.
 <div class="d-flex justify-content-center my-4">
   <div class="card" style="max-width: 500px; width: 100%;">
     <div class="card-header">
-      <h3>Two-Factor Authentication</h3>
+      <h3>${uiLabelMap.EcommerceMfaChallengeTitle}</h3>
     </div>
     <div class="card-body">
-      <p class="text-muted">Enter the 6-digit verification code from your authenticator application.</p>
+      <p class="text-muted">${uiLabelMap.EcommerceMfaChallengeDescription}</p>
       <form method="post" action="<@ofbizUrl>verifyAuthFactor</@ofbizUrl>" name="mfaChallengeForm">
         <div class="form-group">
-          <label for="code">Verification Code</label>
+          <label for="code">${uiLabelMap.EcommerceMfaVerificationCode}</label>
           <input type="text" class="form-control" id="code" name="code" autocomplete="off" placeholder="${uiLabelMap.EcommerceMfaCodePlaceholder!'123456 or abcd-efgh'}" maxlength="16" autofocus required />
           <small class="form-text text-muted">${uiLabelMap.EcommerceMfaCodeOrBackupHelp!'Enter your 6-digit authenticator code or an 8-character backup recovery code.'}</small>
         </div>
         <div class="form-group">
-          <input type="submit" class="btn btn-primary btn-block" value="Verify and Continue" />
+          <input type="submit" class="btn btn-primary btn-block" value="${uiLabelMap.EcommerceMfaVerifyAndContinue}" />
         </div>
         <div class="form-group text-center">
           <a href="<@ofbizUrl>main</@ofbizUrl>">${uiLabelMap.CommonCancel}</a>

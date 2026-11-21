@@ -20,10 +20,10 @@ under the License.
 <div class="d-flex justify-content-center my-4">
   <div class="card" style="max-width: 560px; width: 100%;">
     <div class="card-header">
-      <h3>Set Up Authenticator</h3>
+      <h3>${uiLabelMap.EcommerceMfaSetUpAuthenticator}</h3>
     </div>
     <div class="card-body">
-      <p class="text-muted">Scan this QR code using Google Authenticator, Microsoft Authenticator, or 2FAS on your mobile device.</p>
+      <p class="text-muted">${uiLabelMap.EcommerceMfaEnrollmentScanPrompt}</p>
 
       <#if mfaQrCodeDataUri?has_content>
         <div class="text-center my-3">
@@ -33,9 +33,9 @@ under the License.
 
       <#if mfaSecret?has_content>
         <div class="form-group">
-          <label>Manual Entry Key</label>
+          <label>${uiLabelMap.EcommerceMfaManualEntryKey}</label>
           <input type="text" class="form-control" value="${mfaSecret}" readonly />
-          <small class="form-text text-muted">If you cannot scan the QR code, enter this key manually into your authenticator app.</small>
+          <small class="form-text text-muted">${uiLabelMap.EcommerceMfaManualEntryHelp}</small>
         </div>
       </#if>
 
@@ -44,13 +44,13 @@ under the License.
         <input type="hidden" name="factorId" value="${mfaFactorId!}"/>
 
         <div class="form-group">
-          <label for="enrollCode">Verification Code</label>
+          <label for="enrollCode">${uiLabelMap.EcommerceMfaVerificationCode}</label>
           <input type="text" class="form-control" id="enrollCode" name="code" autocomplete="off" placeholder="123456" maxlength="6" autofocus required />
-          <small class="form-text text-muted">Enter the 6-digit code displayed in your authenticator app to activate.</small>
+          <small class="form-text text-muted">${uiLabelMap.EcommerceMfaEnterCodeToActivate}</small>
         </div>
 
         <div class="form-group">
-          <input type="submit" class="btn btn-primary btn-block" value="Activate Authenticator" />
+          <input type="submit" class="btn btn-primary btn-block" value="${uiLabelMap.EcommerceMfaActivateAuthenticator}" />
         </div>
         <div class="form-group text-center">
           <a href="<@ofbizUrl>authFactorSetup</@ofbizUrl>">${uiLabelMap.CommonCancel}</a>

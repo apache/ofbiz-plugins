@@ -34,12 +34,12 @@ under the License.
 
 <div class="card mb-4">
   <div class="card-header d-flex justify-content-between align-items-center">
-    <h3 class="mb-0">Multi-Factor Authentication</h3>
+    <h3 class="mb-0">${uiLabelMap.EcommerceMfaTitle}</h3>
     <a href="<@ofbizUrl>viewprofile</@ofbizUrl>" class="btn btn-outline-secondary btn-sm">${uiLabelMap.CommonGoBack}</a>
   </div>
   <div class="card-body">
     <#include "component://common-theme/template/includes/Messages.ftl"/>
-    <p class="text-muted">Manage time-based one-time password (TOTP) authenticators for your account.</p>
+    <p class="text-muted">${uiLabelMap.EcommerceMfaManageDescription}</p>
 
     <#-- One-time display of freshly generated backup recovery codes -->
     <#assign flashBackupCodes = (session.getAttribute("mfaBackupCodes"))! />
@@ -78,27 +78,27 @@ under the License.
     <#-- Add Authenticator Form -->
     <div class="card mb-4">
       <div class="card-header">
-        <strong>Add Authenticator</strong>
+        <strong>${uiLabelMap.EcommerceMfaAddAuthenticator}</strong>
       </div>
       <div class="card-body">
         <form method="post" action="<@ofbizUrl>beginTotpEnrollment</@ofbizUrl>" name="startMfaEnrollmentForm">
           <div class="row">
             <div class="col-md-5">
               <div class="form-group">
-                <label for="label">Device Label</label>
+                <label for="label">${uiLabelMap.EcommerceMfaDeviceLabel}</label>
                 <input type="text" name="label" id="label" class="form-control" value="Authenticator" required />
-                <small class="form-text text-muted">A name to identify this device (e.g. Mobile Phone).</small>
+                <small class="form-text text-muted">${uiLabelMap.EcommerceMfaDeviceLabelHelp}</small>
               </div>
             </div>
             <div class="col-md-5">
               <div class="form-group">
                 <label for="currentPassword">${uiLabelMap.CommonCurrentPassword}</label>
                 <input type="password" name="currentPassword" id="currentPassword" class="form-control" autocomplete="current-password" required />
-                <small class="form-text text-muted">Your current login password is required to add an authenticator.</small>
+                <small class="form-text text-muted">${uiLabelMap.EcommerceMfaCurrentPasswordRequiredHelp}</small>
               </div>
             </div>
             <div class="col-md-2 d-flex align-items-center">
-              <input type="submit" class="btn btn-primary btn-block mt-1" value="Add" />
+              <input type="submit" class="btn btn-primary btn-block mt-1" value="${uiLabelMap.CommonAdd}" />
             </div>
           </div>
         </form>
@@ -108,7 +108,7 @@ under the License.
     <#-- Active Authenticators Table -->
     <div class="card mb-4">
       <div class="card-header">
-        <strong>Active Authenticators</strong>
+        <strong>${uiLabelMap.EcommerceMfaActiveAuthenticators}</strong>
       </div>
       <div class="card-body">
         <#if primaryFactors?has_content>
@@ -116,10 +116,10 @@ under the License.
             <table class="table table-bordered table-striped mb-0">
               <thead>
                 <tr>
-                  <th>Device Label</th>
-                  <th>Type</th>
-                  <th>Enrolled Date</th>
-                  <th>Remove Authenticator</th>
+                  <th>${uiLabelMap.EcommerceMfaDeviceLabel}</th>
+                  <th>${uiLabelMap.CommonType}</th>
+                  <th>${uiLabelMap.EcommerceMfaEnrolledDate}</th>
+                  <th>${uiLabelMap.EcommerceMfaRemoveAuthenticator}</th>
                 </tr>
               </thead>
               <tbody>
@@ -132,9 +132,9 @@ under the License.
                       <form method="post" action="<@ofbizUrl>revokeMfaFactor</@ofbizUrl>" class="form-inline">
                         <input type="hidden" name="factorId" value="${factor.factorId}"/>
                         <div class="input-group input-group-sm">
-                          <input type="password" name="currentPassword" class="form-control" placeholder="Current password" required autocomplete="current-password"/>
+                          <input type="password" name="currentPassword" class="form-control" placeholder="${uiLabelMap.CommonCurrentPassword}" required autocomplete="current-password"/>
                           <div class="input-group-append">
-                            <input type="submit" class="btn btn-danger btn-sm" value="Revoke" />
+                            <input type="submit" class="btn btn-danger btn-sm" value="${uiLabelMap.EcommerceMfaRevoke}" />
                           </div>
                         </div>
                       </form>
@@ -145,7 +145,7 @@ under the License.
             </table>
           </div>
         <#else>
-          <p class="text-muted mb-0">No authenticators currently enrolled.</p>
+          <p class="text-muted mb-0">${uiLabelMap.EcommerceMfaNoAuthenticators}</p>
         </#if>
       </div>
     </div>
