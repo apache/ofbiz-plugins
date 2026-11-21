@@ -1162,7 +1162,7 @@ under the License.
 
     <request-map uri="updatePassword">
         <security https="true" auth="true" csrf-token="true"/>
-        <event type="java" path="org.apache.ofbiz.webapp.control.LoginWorker" invoke="updatePasswordWithMfa"/>
+        <event type="simple" path="component://securityext/minilang/login/LoginSimpleEvents.xml" invoke="updatePassword"/>
         <response name="success" type="view" value="passwordChange"/>
         <response name="error" type="view" value="passwordChange"/>
     </request-map>
