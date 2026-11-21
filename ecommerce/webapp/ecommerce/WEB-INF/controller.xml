@@ -124,7 +124,7 @@ under the License.
         <response name="success" type="view" value="authFactorForcedEnrollment"/>
         <response name="error" type="view-last"/>
     </request-map>
-    <request-map uri="confirmForcedTotpEnrollment">
+    <request-map uri="confirmForcedTotpEnrollment" method="post">
         <security https="true" auth="false" csrf-token="true"/>
         <event type="java" path="org.apache.ofbiz.webapp.control.LoginWorker" invoke="confirmForcedTotpEnrollment"/>
         <response name="success" type="view-last"/>
@@ -133,7 +133,7 @@ under the License.
         <response name="authFactorEnrollmentRequired" type="view" value="authFactorForcedEnrollment"/>
         <response name="error" type="view-last"/>
     </request-map>
-    <request-map uri="verifyAuthFactor">
+    <request-map uri="verifyAuthFactor" method="post">
         <security https="true" auth="false" csrf-token="true"/>
         <event type="java" path="org.apache.ofbiz.securityext.login.LoginEvents" invoke="storeVerifyAuthFactor"/>
         <response name="success" type="view-last"/>
@@ -142,13 +142,13 @@ under the License.
         <response name="authFactorEnrollmentRequired" type="view" value="authFactorForcedEnrollment"/>
         <response name="error" type="view" value="login"/>
     </request-map>
-    <request-map uri="beginTotpEnrollment">
+    <request-map uri="beginTotpEnrollment" method="post">
         <security https="true" auth="true" csrf-token="true"/>
         <event type="java" path="org.apache.ofbiz.webapp.control.LoginWorker" invoke="beginTotpEnrollment"/>
         <response name="success" type="view" value="authFactorEnrollment"/>
         <response name="error" type="view" value="authFactorSetup"/>
     </request-map>
-    <request-map uri="confirmTotpEnrollment">
+    <request-map uri="confirmTotpEnrollment" method="post">
         <security https="true" auth="true" csrf-token="true"/>
         <event type="java" path="org.apache.ofbiz.webapp.control.LoginWorker" invoke="confirmTotpEnrollment"/>
         <response name="success" type="view" value="authFactorSetup"/>
