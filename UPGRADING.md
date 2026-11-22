@@ -96,6 +96,8 @@ upgrade.
   ([OFBIZ-13870](https://issues.apache.org/jira/browse/OFBIZ-13870)).
 * `template/forum/ShowForumResponse.ftl`, which nothing used, is removed
   ([OFBIZ-13878](https://issues.apache.org/jira/browse/OFBIZ-13878)).
+* `widget/ForumForms.xml` keeps only `AddForumMessage`; the other forms, which no screen rendered, are removed
+  with the labels only they used ([OFBIZ-13883](https://issues.apache.org/jira/browse/OFBIZ-13883)).
 
 ### example
 
