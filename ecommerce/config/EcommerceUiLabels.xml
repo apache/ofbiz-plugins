@@ -542,19 +542,6 @@
         <value xml:lang="zh">浏览博客文章</value>
         <value xml:lang="zh-TW">檢視部落格文章</value>
     </property>
-    <property key="EcommerceBronze">
-        <value xml:lang="da">Bronze</value>
-        <value xml:lang="en">Bronze</value>
-        <value xml:lang="fr">Bronze</value>
-        <value xml:lang="it">Bronzo</value>
-        <value xml:lang="ja">ブロンズ</value>
-        <value xml:lang="nl">Brons</value>
-        <value xml:lang="pt-BR">Bronze</value>
-        <value xml:lang="ro">Bronz</value>
-        <value xml:lang="vi">Đồng (kim loại)</value>
-        <value xml:lang="zh">铜牌</value>
-        <value xml:lang="zh-TW">銅牌</value>
-    </property>
     <property key="EcommerceCaptchaMissingError">
         <value xml:lang="en">Verify code captcha is missing or wrong</value>
         <value xml:lang="fr">Vérifier le code captcha, il est absent ou erroné</value>
@@ -1492,24 +1479,6 @@
         <value xml:lang="zh">礼品包装全部明细</value>
         <value xml:lang="zh-TW">禮物包裝全部細項</value>
     </property>
-    <property key="EcommerceGold">
-        <value xml:lang="da">Guld</value>
-        <value xml:lang="de">Gold</value>
-        <value xml:lang="en">Gold</value>
-        <value xml:lang="es">Oro</value>
-        <value xml:lang="fr">Or</value>
-        <value xml:lang="hi-IN">स्वर्ण</value>
-        <value xml:lang="it">Oro</value>
-        <value xml:lang="ja">ゴールド</value>
-        <value xml:lang="nl">Goud</value>
-        <value xml:lang="pt-BR">Ouro</value>
-        <value xml:lang="ro">Aur</value>
-        <value xml:lang="ru">Золотой</value>
-        <value xml:lang="th">สีอง</value>
-        <value xml:lang="vi">(hạng)Vàng</value>
-        <value xml:lang="zh">金牌</value>
-        <value xml:lang="zh-TW">金牌</value>
-    </property>
     <property key="EcommerceGoToList">
         <value xml:lang="cs">Jdi na seznam</value>
         <value xml:lang="da">Hop til liste</value>
@@ -1566,60 +1535,6 @@
         <value xml:lang="zh">图像</value>
         <value xml:lang="zh-TW">圖片</value>
     </property>
-    <property key="EcommerceImageCenteredAbove">
-        <value xml:lang="da">Billede centreret ovenfor</value>
-        <value xml:lang="de">Bild zentriert oben</value>
-        <value xml:lang="en">Image Centered Above</value>
-        <value xml:lang="es">Imagen centrada</value>
-        <value xml:lang="fr">Image centrée au dessus</value>
-        <value xml:lang="hi-IN">तस्वीर उपर बीच में है</value>
-        <value xml:lang="it">Immagine centrata sotto</value>
-        <value xml:lang="ja">画像を中央上部に</value>
-        <value xml:lang="nl">Plaatje gecentreerd erboven</value>
-        <value xml:lang="pt-BR">Imagem centralizada acima</value>
-        <value xml:lang="ro">Imagine centrată deasupra</value>
-        <value xml:lang="ru">Изображение по центру ниже</value>
-        <value xml:lang="th">จัดภาพไว้ด้านบนตรงกลาง</value>
-        <value xml:lang="vi">Hình ảnh căn giữa</value>
-        <value xml:lang="zh">图像居中顶对齐</value>
-        <value xml:lang="zh-TW">圖片居中往上對齊</value>
-    </property>
-    <property key="EcommerceImageCenteredAboveFile">
-        <value xml:lang="da">Billede centreret over fil</value>
-        <value xml:lang="de">Bild zentriert über Datei</value>
-        <value xml:lang="en">Image Centered Above File</value>
-        <value xml:lang="es">Imagen centrada desde archivo</value>
-        <value xml:lang="fr">Image centrée au dessus du fichier</value>
-        <value xml:lang="hi-IN">फाइल का तस्वीर बीच में है</value>
-        <value xml:lang="it">Immagine centrata sotto il file</value>
-        <value xml:lang="ja">ファイルから画像を中央上部に</value>
-        <value xml:lang="nl">Plaatjes gecentreerd boven het bestand</value>
-        <value xml:lang="pt-BR">Imagem centralizada acima do arquivo</value>
-        <value xml:lang="ro">Imagine centrată deasupra fișierului</value>
-        <value xml:lang="ru">Изображение из файла по центру ниже</value>
-        <value xml:lang="th">จัดภาพไว้ตรงกลางบนไฟล์</value>
-        <value xml:lang="vi">Hình ảnh căn giữa trên tệp tài liệu</value>
-        <value xml:lang="zh">图像居中顶对齐来自文件</value>
-        <value xml:lang="zh-TW">圖片居中往上對齊來自檔案</value>
-    </property>
-    <property key="EcommerceImageFileName">
-        <value xml:lang="da">Filnavn for billede</value>
-        <value xml:lang="de">Bild Dateiname</value>
-        <value xml:lang="en">Image File Name</value>
-        <value xml:lang="es">Nombre de la imagen</value>
-        <value xml:lang="fr">Nom du fichier image </value>
-        <value xml:lang="hi-IN">फाइल की तस्वीर का नाम</value>
-        <value xml:lang="it">Name file immagine</value>
-        <value xml:lang="ja">画像ファイル名</value>
-        <value xml:lang="nl">Bestandsnaam van het plaatje</value>
-        <value xml:lang="pt-BR">Nome do arquivo de imagem</value>
-        <value xml:lang="ro">Nume Fișier Imagine</value>
-        <value xml:lang="ru">Имя файла изображения</value>
-        <value xml:lang="th">ชื่อรูปภาพ</value>
-        <value xml:lang="vi">Tên tệp hình ảnh</value>
-        <value xml:lang="zh">图像文件名</value>
-        <value xml:lang="zh-TW">圖片檔名</value>
-    </property>
     <property key="EcommerceImageInformation">
         <value xml:lang="da">Billedinformation</value>
         <value xml:lang="de">Bild Informationen</value>
@@ -1637,42 +1552,6 @@
         <value xml:lang="vi">Thông tin hình ảnh</value>
         <value xml:lang="zh">图像信息</value>
         <value xml:lang="zh-TW">圖片資訊</value>
-    </property>
-    <property key="EcommerceImageLeft">
-        <value xml:lang="da">Billede til venstre, tekst flyder rundtom</value>
-        <value xml:lang="de">Bild links, Text fliesst drumherum.</value>
-        <value xml:lang="en">Image left, text flows around.</value>
-        <value xml:lang="es">Imagen a la izquierda</value>
-        <value xml:lang="fr">Image à gauche, insérée dans le texte.</value>
-        <value xml:lang="hi-IN">तस्वीर बाऐं, लिख़ीत आजू बाजू</value>
-        <value xml:lang="it">Immagine sinistra, flusso del testo intorno.</value>
-        <value xml:lang="ja">画像は左、テキストは回り込む</value>
-        <value xml:lang="nl">Plaatje links, de tekst wordt eromheen gegroepeerd</value>
-        <value xml:lang="pt-BR">Imagem à esquerda, texto flutuante à direita</value>
-        <value xml:lang="ro">Imagine stânga, text împrejur.</value>
-        <value xml:lang="ru">Изображение слева, текст обтекает вокруг.</value>
-        <value xml:lang="th">รูปทางซ้าย</value>
-        <value xml:lang="vi">Hình ảnh bên trái, chữ tràn xung quanh.</value>
-        <value xml:lang="zh">图像居左、文字环绕。</value>
-        <value xml:lang="zh-TW">圖片居左、文字環繞.</value>
-    </property>
-    <property key="EcommerceInResponseTo">
-        <value xml:lang="da">Som svar på</value>
-        <value xml:lang="de">Als Antwort auf</value>
-        <value xml:lang="en">In Response To</value>
-        <value xml:lang="es">En respuesta a :</value>
-        <value xml:lang="fr">En réponse à</value>
-        <value xml:lang="hi-IN">सेवा में:</value>
-        <value xml:lang="it">In risposta a:</value>
-        <value xml:lang="ja">回答:</value>
-        <value xml:lang="nl">In antwoord op:</value>
-        <value xml:lang="pt-BR">Em resposta a</value>
-        <value xml:lang="ro">Ca răspuns la:</value>
-        <value xml:lang="ru">В ответ на:</value>
-        <value xml:lang="th">คำตอบถึง</value>
-        <value xml:lang="vi">Trong phản hồi cho</value>
-        <value xml:lang="zh">回答：</value>
-        <value xml:lang="zh-TW">回應:</value>
     </property>
     <property key="EcommerceIsDefault">
         <value xml:lang="da">Er standard</value>
@@ -1994,24 +1873,6 @@
         <value xml:lang="zh">(你必须登录才能留言)</value>
         <value xml:lang="zh-TW">(你必須登入才能留言)</value>
     </property>
-    <property key="EcommerceLongSubject">
-        <value xml:lang="da">Langt emne</value>
-        <value xml:lang="de">Thema lang</value>
-        <value xml:lang="en">Long Subject</value>
-        <value xml:lang="es">Título largo</value>
-        <value xml:lang="fr">Sujet long</value>
-        <value xml:lang="hi-IN">लम्बा विषय</value>
-        <value xml:lang="it">Soggetto lungo</value>
-        <value xml:lang="ja">詳しい件名</value>
-        <value xml:lang="nl">Onderwerp (lang)</value>
-        <value xml:lang="pt-BR">Assunto longo</value>
-        <value xml:lang="ro">Subiect Lung</value>
-        <value xml:lang="ru">Длинная тема</value>
-        <value xml:lang="th">หัวข้อใหญ่</value>
-        <value xml:lang="vi">Tiêu đề đầy đủ</value>
-        <value xml:lang="zh">长主题</value>
-        <value xml:lang="zh-TW">長主題</value>
-    </property>
     <property key="EcommerceLosePassword">
         <value xml:lang="da">Hvis De skulle miste Deres kodeord, kan De til enhver tid anmode om et nyt.</value>
         <value xml:lang="de">Falls Sie Ihr Passwort vergessen können Sie jederzeit ein neues beantragen.</value>
@@ -2304,24 +2165,6 @@
         <value xml:lang="vi">Số người</value>
         <value xml:lang="zh">人数</value>
         <value xml:lang="zh-TW">人數</value>
-    </property>
-    <property key="EcommerceNestedContent">
-        <value xml:lang="da">Underopdelt indhold</value>
-        <value xml:lang="de">Verschachtelter Inhalt</value>
-        <value xml:lang="en">Nested Content</value>
-        <value xml:lang="es">Contenido incluido</value>
-        <value xml:lang="fr">Contenu inclus</value>
-        <value xml:lang="hi-IN">जुड़ी अंतर्वस्तु अंश</value>
-        <value xml:lang="it">Contenuto incluso</value>
-        <value xml:lang="ja">ネストしたコンテンツ</value>
-        <value xml:lang="nl">Ingesloten content</value>
-        <value xml:lang="pt-BR">Conteúdo incluso</value>
-        <value xml:lang="ro">Conținut Înglobat.</value>
-        <value xml:lang="ru">Вложенный контент.</value>
-        <value xml:lang="th">หัวข้อที่อยู่</value>
-        <value xml:lang="vi">Nội dung được lồng vào</value>
-        <value xml:lang="zh">嵌套的内容</value>
-        <value xml:lang="zh-TW">巢狀內容</value>
     </property>
     <property key="EcommerceNewCreditCard">
         <value xml:lang="da">Nyt kreditkort</value>
@@ -2682,23 +2525,6 @@
         <value xml:lang="vi">Chủ sở hữu</value>
         <value xml:lang="zh">拥有者</value>
         <value xml:lang="zh-TW">擁有者</value>
-    </property>
-    <property key="EcommerceOwningDepartment">
-        <value xml:lang="da">Ejende afdeling</value>
-        <value xml:lang="de">Besitzende Abteilung</value>
-        <value xml:lang="en">Owning Department</value>
-        <value xml:lang="es">Servicio de propiedades</value>
-        <value xml:lang="fr">Rayon propriétaire</value>
-        <value xml:lang="it">Divisione proprietaria</value>
-        <value xml:lang="ja">所有部門</value>
-        <value xml:lang="nl">Afdelingseigendom</value>
-        <value xml:lang="pt-BR">Departamento proprietário</value>
-        <value xml:lang="ro">Departamentul proprietar</value>
-        <value xml:lang="ru">Отдел владелец</value>
-        <value xml:lang="th">ของแผนก</value>
-        <value xml:lang="vi">Phòng ban sở hữu</value>
-        <value xml:lang="zh">拥有的部门</value>
-        <value xml:lang="zh-TW">擁有的部門</value>
     </property>
     <property key="EcommerceParentList">
         <value xml:lang="cs">Seznam předchůdců</value>
@@ -3557,24 +3383,6 @@
         <value xml:lang="zh">简称</value>
         <value xml:lang="zh-TW">簡稱</value>
     </property>
-    <property key="EcommerceShortSubject">
-        <value xml:lang="da">Forkortet emne</value>
-        <value xml:lang="de">Thema Kurz</value>
-        <value xml:lang="en">Short Subject</value>
-        <value xml:lang="es">Asunto corto</value>
-        <value xml:lang="fr">Sujet court</value>
-        <value xml:lang="hi-IN">छोटा विषय</value>
-        <value xml:lang="it">Soggetto corto</value>
-        <value xml:lang="ja">簡単な件名</value>
-        <value xml:lang="nl">Kort onderwerp</value>
-        <value xml:lang="pt-BR">Assunto curto</value>
-        <value xml:lang="ro">Subiect Scurt</value>
-        <value xml:lang="ru">Краткая тема</value>
-        <value xml:lang="th">หัวข้อย่อย</value>
-        <value xml:lang="vi">Tiêu đề tắt</value>
-        <value xml:lang="zh">简短标题</value>
-        <value xml:lang="zh-TW">簡短標題</value>
-    </property>
     <property key="EcommerceSignUpForContactList">
         <value xml:lang="da">Tilmeld til kontaktliste</value>
         <value xml:lang="de">Anmelden für Kontaktliste</value>
@@ -3619,24 +3427,6 @@
         <value xml:lang="vi">Đăng nhập</value>
         <value xml:lang="zh">注册用于联系列表登录</value>
         <value xml:lang="zh-TW">註冊用於聯絡清單登入</value>
-    </property>
-    <property key="EcommerceSilver">
-        <value xml:lang="da">Sølv</value>
-        <value xml:lang="de">Silber</value>
-        <value xml:lang="en">Silver</value>
-        <value xml:lang="es">Plata</value>
-        <value xml:lang="fr">Argent</value>
-        <value xml:lang="hi-IN">छोटा</value>
-        <value xml:lang="it">Argento</value>
-        <value xml:lang="ja">シルバー</value>
-        <value xml:lang="nl">Zilver</value>
-        <value xml:lang="pt-BR">Prata</value>
-        <value xml:lang="ro">Argint</value>
-        <value xml:lang="ru">Серебряный</value>
-        <value xml:lang="th">สีเงิน</value>
-        <value xml:lang="vi">Bạc</value>
-        <value xml:lang="zh">银牌</value>
-        <value xml:lang="zh-TW">銀牌</value>
     </property>
     <property key="EcommerceSorryDigitalProductUploadNotEnabled">
         <value xml:lang="da">Beklager, upload af digitale produkter er ikke aktiveret</value>
@@ -3858,24 +3648,6 @@
         <value xml:lang="vi">Xin lỗi tới Bạn bè</value>
         <value xml:lang="zh">对不起，你不能把这个页面发送给朋友。请从一个分类或产品中进行选择。</value>
         <value xml:lang="zh-TW">抱歉, 你不能把這個頁面發送給朋友.請從一個分類或產品中進行選擇.</value>
-    </property>
-    <property key="EcommerceTextOnly">
-        <value xml:lang="da">Kun tekst</value>
-        <value xml:lang="de">Nur Text</value>
-        <value xml:lang="en">Text Only </value>
-        <value xml:lang="es">Solo texto</value>
-        <value xml:lang="fr">Seulement le texte</value>
-        <value xml:lang="hi-IN">सिर्फ लिख़ीत</value>
-        <value xml:lang="it">Solo testo</value>
-        <value xml:lang="ja">文章のみ</value>
-        <value xml:lang="nl">Alleen tekst</value>
-        <value xml:lang="pt-BR">Apenas texto</value>
-        <value xml:lang="ro">Numai text</value>
-        <value xml:lang="ru">Только текст</value>
-        <value xml:lang="th">ตัวหนังสือเท่านั้น</value>
-        <value xml:lang="vi">(chỉ có) Chữ</value>
-        <value xml:lang="zh">纯文本</value>
-        <value xml:lang="zh-TW">純文字</value>
     </property>
     <property key="EcommerceThankForRegistering">
         <value xml:lang="da">Tak for registreringen</value>
