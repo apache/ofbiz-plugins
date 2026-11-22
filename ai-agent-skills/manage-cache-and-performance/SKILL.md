@@ -60,6 +60,8 @@ Each component declares the settings of its caches in its `ofbiz-component.xml`,
 <cache name="my.custom.cache" max-size="5000" expire-time="3600000" soft-values="true"/>
 <!-- name-prefix matches caches named at run time, such as the entity caches -->
 <cache name-prefix="entitycache.entity-list." max-size="2000"/>
+<!-- policy: local (the default) or invalidate, for a cache of database data on servers sharing a database -->
+<cache name="my.content.rendered" policy="invalidate"/>
 ```
 
 ### 3. Entity Engine Caching
@@ -114,7 +116,7 @@ When external systems or direct SQL modify the database, or when you bypass OFBi
 - **Async Services**: Async services run concurrently in new transactions. If an async service depends on cached data from the main transaction before it commits, it will see stale data.
 
 ### 3. Distributed Data Services (DDS)
-For multi-node setups, ensure cache clearing is synchronized (usually via JMS in OFBiz). *Assume a single-node setup unless explicitly requested, and do not overly engineer distributed event clearing otherwise.*
+For multi-node setups, cache clearing is synchronized through a cache invalidation bus that comes from a provider plugin (none ships in the framework), with entity changes published after commit by `EntityCacheInvalidator` (selected with `distributed-cache-clear-class-name`); JMS (`EntityCacheServices`) remains the default unless a delegator selects `EntityCacheInvalidator`. Other `UtilCache`s are local by default: give a cache holding data read from the database `policy="invalidate"` in its component's `<cache>` element so the bus clears it on the other servers too, and leave caches of files and parsed definitions local (declare them `policy="local"`, since with a bus installed OFBiz warns about every cache that has no `<cache>` declaration). *Assume a single-node setup unless explicitly requested, and do not overly engineer distributed event clearing otherwise.*
 
 ## Examples: Good Patterns vs Anti-Patterns
 
