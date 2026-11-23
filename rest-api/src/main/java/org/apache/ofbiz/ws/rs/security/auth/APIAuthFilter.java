@@ -44,6 +44,7 @@ import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.ModelService;
 import org.apache.ofbiz.webapp.WebAppUtil;
 import org.apache.ofbiz.webapp.control.JWTManager;
+import org.apache.ofbiz.webapp.control.LoginWorker;
 import org.apache.ofbiz.ws.rs.common.AuthenticationScheme;
 import org.apache.ofbiz.ws.rs.resources.OFBizServiceResource;
 import org.apache.ofbiz.ws.rs.security.Secured;
@@ -103,6 +104,10 @@ public class APIAuthFilter implements ContainerRequestFilter {
             abortWithUnauthorized(requestContext, true, "Unauthorized: " + (String) claims.get(ModelService.ERROR_MESSAGE));
         } else {
             GenericValue userLogin = extractUserLoginFromJwtClaim(delegator, claims);
+            if (userLogin != null && !LoginWorker.isUserLoginActive(userLogin)) {
+                abortWithUnauthorized(requestContext, true, "Unauthorized: Access is denied due to the user of the token being disabled");
+                return;
+            }
             httpRequest.setAttribute("userLogin", userLogin);
         }
     }
