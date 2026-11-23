@@ -202,13 +202,6 @@
 
 =========================================================================
 
-This product bundles "jQuery" and "jQuery" plugins and extensions, which are available
-under the "MIT" license. For details, see:
-webpos/webapp/webpos/images/js/jquery.hotkeys-0.7.9.min.js
-webpos/webapp/webpos/images/js/WebPosHotkeys.js
-
-=========================================================================
-
 This product bundles "Bootstrap", which is available
 under the "MIT" license.
 For details, see:
@@ -217,6 +210,6 @@ ecommerce/webapp/ecommerce/css
 
 =========================================================================
 
-This product bundles "swagger-ui", which is available under the
-"Apache License Version 2.0".
-For details, see rest-api/webapp/docs
+This product bundles "Bootstrap GDPR Cookies", which is available
+under the "MIT" license.
+For details, see ecommerce/webapp/ecommerce/js/bsgdprcookies/LICENSE
