@@ -1639,24 +1639,6 @@
         <value xml:lang="zh">最近浏览的分类</value>
         <value xml:lang="zh-TW">最近看過分類</value>
     </property>
-    <property key="EcommerceLastContent">
-        <value xml:lang="da">Seneste indhold</value>
-        <value xml:lang="de">Letzter Inhalt</value>
-        <value xml:lang="en">Last Content</value>
-        <value xml:lang="es">Último contenido</value>
-        <value xml:lang="fr">Dernier contenu visité</value>
-        <value xml:lang="hi-IN">अतिंम अंतर्वस्तु अंश</value>
-        <value xml:lang="it">Ultimo contenuto</value>
-        <value xml:lang="ja">最近表示したコンテンツ</value>
-        <value xml:lang="nl">Laatste content</value>
-        <value xml:lang="pt-BR">último conteúdo</value>
-        <value xml:lang="ro">Ultimul  Conținut</value>
-        <value xml:lang="ru">Последнее содержимое</value>
-        <value xml:lang="th">หัวข้อสุดท้าย</value>
-        <value xml:lang="vi">Nội dung mới xem</value>
-        <value xml:lang="zh">最近览的内容</value>
-        <value xml:lang="zh-TW">最近看過內容</value>
-    </property>
     <property key="EcommerceLastProducts">
         <value xml:lang="cs">Poslední výrobky</value>
         <value xml:lang="da">Seneste produkter</value>
@@ -5008,23 +4990,6 @@
         <value xml:lang="vi">Xem blog</value>
         <value xml:lang="zh">浏览博客</value>
         <value xml:lang="zh-TW">檢視部落格</value>
-    </property>
-    <property key="PageTitleViewContent">
-        <value xml:lang="da">Vis indhold</value>
-        <value xml:lang="de">Inhalt anzeigen</value>
-        <value xml:lang="en">View Content</value>
-        <value xml:lang="es">Ver Contenido</value>
-        <value xml:lang="fr">Voir le contenu</value>
-        <value xml:lang="it">Mostra contenuto</value>
-        <value xml:lang="ja">コンテンツの表示</value>
-        <value xml:lang="nl">Bekijk content</value>
-        <value xml:lang="pt-BR">Visualizar conteúdo</value>
-        <value xml:lang="ro">Afiseaza Continut</value>
-        <value xml:lang="ru">Просмотреть содержание</value>
-        <value xml:lang="th">ดูหัวข้อ</value>
-        <value xml:lang="vi">Xem nội dung</value>
-        <value xml:lang="zh">浏览内容</value>
-        <value xml:lang="zh-TW">檢視內容</value>
     </property>
     <property key="PageTitleViewProfile">
         <value xml:lang="cs">Náhled profilu</value>

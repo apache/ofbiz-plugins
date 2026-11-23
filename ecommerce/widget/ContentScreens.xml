@@ -51,17 +51,6 @@ under the License.
         </section>
     </screen>
 
-    <screen name="recentlyviewed">
-        <section>
-            <actions>
-                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/content/Mrv.groovy"/>
-            </actions>
-            <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/template/content/RecentlyViewed.ftl"/></html></platform-specific>
-            </widgets>
-        </section>
-    </screen>
-
     <!-- =========== Top-Level and Stand-Alone Screens =========== -->
 
     <screen name="defaultcontent">
@@ -138,33 +127,6 @@ under the License.
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/template/content/SearchContent.ftl"/></html></platform-specific>
                         <include-form name="SearchList" location="component://ecommerce/widget/ContentForms.xml"/>
-                    </decorator-section>
-                    <decorator-section name="right-column">
-                        <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="viewcontent">
-        <section>
-            <actions>
-                <set field="MainColumnStyle" value="center"/>
-
-                <set field="titleProperty" value="PageTitleViewContent"/>
-                <set field="headerItem" value="Content"/>
-                <set field="entityName" value="ContentAssocDataResourceViewFrom"/>
-                <set field="permissionType" value="none"/>
-                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/forum/NodeTrailPrep.groovy"/>
-                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/includes/MruAdd.groovy"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column">
-                        <include-screen name="leftbar" location="component://ecommerce/widget/CommonScreens.xml"/>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/template/content/ViewContent.ftl"/></html></platform-specific>
                     </decorator-section>
                     <decorator-section name="right-column">
                         <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
