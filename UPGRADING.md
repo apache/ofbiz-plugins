@@ -98,6 +98,9 @@ upgrade.
   ([OFBIZ-13878](https://issues.apache.org/jira/browse/OFBIZ-13878)).
 * `widget/ForumForms.xml` keeps only `AddForumMessage`; the other forms, which no screen rendered, are removed
   with the labels only they used ([OFBIZ-13883](https://issues.apache.org/jira/browse/OFBIZ-13883)).
+* The `viewcontent` and `recentlyviewed` screens of `widget/ContentScreens.xml` are removed with their templates,
+  scripts and labels; the `viewcontent` request had already been disabled, and the recently viewed box only listed
+  content opened through it ([OFBIZ-13886](https://issues.apache.org/jira/browse/OFBIZ-13886)).
 
 ### example
 
