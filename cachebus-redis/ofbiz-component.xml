@@ -24,6 +24,14 @@ under the License.
     <resource-loader name="main" type="component"/>
     <!-- puts config/ on the classpath so UtilProperties finds cachebus-redis.properties -->
     <classpath type="dir" location="config"/>
+    <!-- status page of the bus -->
+    <webapp name="cachebus"
+        title="Cache Bus"
+        menu-name="secondary"
+        server="default-server"
+        location="webapp/cachebus"
+        base-permission="OFBTOOLS"
+        mount-point="/cachebus"/>
     <!-- installs the Redis/Valkey cache invalidation bus on start-up, removes it on shutdown -->
     <container name="cachebus-redis-container" loaders="main" class="org.apache.ofbiz.cachebus.redis.CacheBusRedisContainer">
         <!-- delegator used to read the SystemProperty overrides of config/cachebus-redis.properties -->
