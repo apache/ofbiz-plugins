@@ -20,6 +20,8 @@
 // Lettuce, the Redis/Valkey client (MIT License) — https://github.com/redis/lettuce
 dependencies {
     pluginLibsCompile 'io.lettuce:lettuce-core:7.9.0.RELEASE'
+    // log4j-core is on the OFBiz runtime classpath; the container uses it to quiet the client's debug logging
+    pluginLibsCompileOnly libs.log4j.core
 }
 
 dependencyLocking {
