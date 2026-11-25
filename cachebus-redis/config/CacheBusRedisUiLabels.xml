@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
+    <property key="CacheBusApplication"><value xml:lang="en">Cache Bus</value></property>
+    <property key="CacheBusChannel"><value xml:lang="en">Channel</value></property>
+    <property key="CacheBusCluster"><value xml:lang="en">Cluster</value></property>
+    <property key="CacheBusCompanyName"><value xml:lang="en">OFBiz: Cache Bus</value></property>
+    <property key="CacheBusCompanySubtitle"><value xml:lang="en">Distributed cache invalidation</value></property>
+    <property key="CacheBusConnected"><value xml:lang="en">Connected</value></property>
+    <property key="CacheBusGaps"><value xml:lang="en">Gaps (full cache clears)</value></property>
+    <property key="CacheBusInstalled"><value xml:lang="en">Installed</value></property>
+    <property key="CacheBusLastMessage"><value xml:lang="en">Last message received</value></property>
+    <property key="CacheBusNever"><value xml:lang="en">never</value></property>
+    <property key="CacheBusNo"><value xml:lang="en">No</value></property>
+    <property key="CacheBusNotInstalled"><value xml:lang="en">No (the bus is not running on this server)</value></property>
+    <property key="CacheBusPublishFailures"><value xml:lang="en">Publish failures</value></property>
+    <property key="CacheBusPublished"><value xml:lang="en">Published</value></property>
+    <property key="CacheBusReceived"><value xml:lang="en">Received</value></property>
+    <property key="CacheBusReceivedBytes"><value xml:lang="en">Received bytes</value></property>
+    <property key="CacheBusStatus"><value xml:lang="en">Cache Bus Status</value></property>
+    <property key="CacheBusViewPermissionError"><value xml:lang="en">You do not have permission to view the cache bus status. OFBTOOLS_VIEW is required.</value></property>
+    <property key="CacheBusYes"><value xml:lang="en">Yes</value></property>
+</resource>
