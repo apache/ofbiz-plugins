@@ -61,9 +61,9 @@
         <field name="d4" parameter-name="hoursDay4" title="${uiLabelMap.ProjectMgrFri}"><text size="2"/></field>
         <field name="d5" parameter-name="hoursDay5" title="${uiLabelMap.ProjectMgrSat}"><text size="2"/></field>
         <field name="d6" parameter-name="hoursDay6" title="${uiLabelMap.ProjectMgrSun}"><text size="2"/></field>
-        <field name="total" title="${uiLabelMap.ProjectMgrActualHours}"><display/></field>
-        <field name="actualHours" title="${uiLabelMap.ProjectMgrActualTotal}"><display/></field>
-        <field name="plannedHours" title="${uiLabelMap.ProjectMgrPlanHours}"><display/></field>
+        <field name="total" title="${uiLabelMap.ProjectMgrActualHours}"><display also-hidden="false"/></field>
+        <field name="actualHours" title="${uiLabelMap.ProjectMgrActualTotal}"><display also-hidden="false"/></field>
+        <field name="plannedHours" title="${uiLabelMap.ProjectMgrPlanHours}"><display also-hidden="false"/></field>
         <field name="updateButton"><submit button-type="button"/></field>
         <field name="_rowSubmit" title="${uiLabelMap.ProjectMgrRowSubmit}"><hidden value="Y"/></field>
     </form>
