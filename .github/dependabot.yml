@@ -29,6 +29,7 @@ updates:
   - package-ecosystem: "gradle"
     directories:
       - "/ai-agent-skills"
+      - "/cachebus-redis"
       - "/example"
       - "/lucene"
       - "/secretshub"

@@ -83,6 +83,12 @@ upgrade.
 * The plugins move from Java EE (`javax.*`) to Jakarta EE (`jakarta.*`) with the framework (commit 5590a52e0,
   [OFBIZ-12989](https://issues.apache.org/jira/browse/OFBIZ-12989)). See the framework notes.
 
+### cachebus-redis
+
+* New plugin: carries the framework's cache invalidation bus over Redis or Valkey, so servers sharing a database clear
+  each other's caches ([OFBIZ-13884](https://issues.apache.org/jira/browse/OFBIZ-13884)). It does nothing until
+  `cachebus.redis.uri` is set and a delegator selects `EntityCacheInvalidator`; see the plugin's README.md.
+
 ### ecommerce
 
 * The PayPal and WorldPay requests (`callPayPal`, `callWorldPay`, `payPal*`, `setPayPalCheckout`, `worldPayNotify`)
