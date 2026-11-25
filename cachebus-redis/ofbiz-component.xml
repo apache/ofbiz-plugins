@@ -24,4 +24,19 @@ under the License.
     <resource-loader name="main" type="component"/>
     <!-- puts config/ on the classpath so UtilProperties finds cachebus-redis.properties -->
     <classpath type="dir" location="config"/>
+    <!-- installs the Redis/Valkey cache invalidation bus on start-up, removes it on shutdown -->
+    <container name="cachebus-redis-container" loaders="main" class="org.apache.ofbiz.cachebus.redis.CacheBusRedisContainer">
+        <!-- delegator used to read the SystemProperty overrides of config/cachebus-redis.properties -->
+        <property name="delegator-name" value="default"/>
+        <!-- how often, in milliseconds, the subscribed connection is checked with a PING; a server that stops answering without
+            closing the connection (network partition, frozen server) is only noticed this way -->
+        <property name="heartbeat-ms" value="5000"/>
+        <!-- how long a PING may take, in milliseconds, before both connections are dropped and reopened and, once subscribed
+            again, every distributed cache is cleared; must be less than heartbeat-ms -->
+        <property name="heartbeat-timeout-ms" value="3000"/>
+        <!-- received payloads larger than this many bytes are dropped and treated as a gap (every distributed cache is cleared) -->
+        <property name="max-payload-bytes" value="1048576"/>
+        <!-- how long, in milliseconds, a received key invalidation blocks plain puts of that key -->
+        <property name="tombstone-ms" value="2000"/>
+    </container>
 </ofbiz-component>
