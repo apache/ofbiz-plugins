@@ -115,8 +115,6 @@ under the License.
             </simple-map-processor>
         </call-map-processor>
 
-        <log level="info" message="Creating new customer, newUserLogin=${newUserLogin}"/>
-
         <!-- Create the PartyRole -->
         <set from-field="parameters.roleTypeId" field="partyRoleContext.roleTypeId"/>
 
@@ -477,7 +475,6 @@ under the License.
         <log level="info" message="Setting up party ${tempMap.partyId} and shipping address ${addressPurposeContext} in cart"/>
         <session-to-field field="cart" session-name="shoppingCart"/>
         <session-to-field field="userLogin"/>
-        <log level="info" message="userLogin in Env ${userLogin} in parameters.userLogin ${parameters.userLogin}"/>
         <if-empty field="userLogin">
             <call-object-method obj-field="session" method-name="removeAttribute">
                 <string value="autoUserLogin"/>
@@ -720,8 +717,6 @@ under the License.
                 </if-compare>
             </else>
         </if-empty>
-
-        <log level="info" message="UserLogin : ${userLogin}"/>
 
         <!-- add the party to the customer role -->
         <set field="roleMap.roleTypeId" value="CUSTOMER"/>
