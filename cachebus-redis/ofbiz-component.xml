@@ -40,7 +40,8 @@ under the License.
             closing the connection (network partition, frozen server) is only noticed this way -->
         <property name="heartbeat-ms" value="5000"/>
         <!-- how long a PING may take, in milliseconds, before both connections are dropped and reopened and, once subscribed
-            again, every distributed cache is cleared; must be less than heartbeat-ms -->
+            again, every distributed cache is cleared; must be less than heartbeat-ms and at most 5000, the timeout of every
+            command, which fails a slower PING first -->
         <property name="heartbeat-timeout-ms" value="3000"/>
         <!-- received payloads larger than this many bytes are dropped and treated as a gap (every distributed cache is cleared) -->
         <property name="max-payload-bytes" value="1048576"/>

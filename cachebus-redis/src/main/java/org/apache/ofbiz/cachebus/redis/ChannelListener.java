@@ -23,9 +23,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.ofbiz.base.util.Debug;
 
 import io.lettuce.core.pubsub.RedisPubSubAdapter;
+import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 
 /**
- * Receives the channel's payloads on Lettuce's I/O thread. It also receives the gap channel, where another
+ * Receives the channel's payloads on Lettuce's I/O thread and only routes them: the receiver is called on the
+ * connection's delivery thread, so the I/O thread is never held up. It also receives the gap channel, where another
  * server's announcement is reported as a gap and the bus's own announcement is ignored. A listener belongs to one
  * pub/sub connection, whose first subscription confirmation answers the initial subscribe; any later one is Lettuce
  * resubscribing after a reconnect, when messages published while the connection was down are lost.
@@ -37,6 +39,7 @@ final class ChannelListener extends RedisPubSubAdapter<String, String> {
     private final CacheBusRedisSettings settings;
     private final String busId;
     private final RedisChannelConnection owner;
+    private final StatefulRedisPubSubConnection<String, String> connection;
     private final AtomicBoolean subscribedOnce = new AtomicBoolean();
 
     /**
@@ -44,11 +47,14 @@ final class ChannelListener extends RedisPubSubAdapter<String, String> {
      * @param settings the bus's settings, for the channel names and the payload limit
      * @param busId the id the owning bus announces lost publishes with, ignored on the gap channel
      * @param owner the connection the messages are delivered through
+     * @param connection the pub/sub connection this listener listens to
      */
-    ChannelListener(CacheBusRedisSettings settings, String busId, RedisChannelConnection owner) {
+    ChannelListener(CacheBusRedisSettings settings, String busId, RedisChannelConnection owner,
+            StatefulRedisPubSubConnection<String, String> connection) {
         this.settings = settings;
         this.busId = busId;
         this.owner = owner;
+        this.connection = connection;
     }
 
     @Override
@@ -83,6 +89,10 @@ final class ChannelListener extends RedisPubSubAdapter<String, String> {
     @Override
     public void subscribed(String channel, long count) {
         try {
+            // a late confirmation from a connection already replaced, after a failed heartbeat, says nothing of the current one
+            if (!owner.isSubscriber(connection)) {
+                return;
+            }
             if (settings.channel().equals(channel) && subscribedOnce.getAndSet(true)) {
                 owner.subscriberState(true);
                 Debug.logInfo("Redis cache invalidation bus resubscribed to channel " + channel

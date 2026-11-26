@@ -171,6 +171,11 @@ public final class RedisInvalidationBusTest {
         return (Long) bus.statistics().snapshot().get(name);
     }
 
+    /** Connected, and the gap that every connection reports, the first one included, delivered. */
+    private static boolean ready(RedisInvalidationBus bus, RecordingReceiver receiver) {
+        return connected(bus) && receiver.gaps.get() >= 1;
+    }
+
     private static void await(String what, BooleanSupplier condition) throws InterruptedException {
         long deadline = System.currentTimeMillis() + DEADLINE_MILLIS;
         while (!condition.getAsBoolean()) {
@@ -207,12 +212,12 @@ public final class RedisInvalidationBusTest {
         RedisInvalidationBus b1 = start(settings(uri(valkey), "same"), r1);
         assertSame(b1, RedisInvalidationBus.current());
         RedisInvalidationBus b2 = start(settings(uri(valkey), "same"), r2);
-        await("both connected", () -> connected(b1) && connected(b2));
+        await("both connected", () -> ready(b1, r1) && ready(b2, r2));
         b1.publish("hello");
         await("both received", () -> r1.payloads.contains("hello") && r2.payloads.contains("hello"));
         await("publish counted", () -> counter(b1, "published") == 1);
-        assertEquals(0, r1.gaps.get());
-        assertEquals(0, r2.gaps.get());
+        assertEquals(1, r1.gaps.get(), "the gap of the first connection only");
+        assertEquals(1, r2.gaps.get(), "the gap of the first connection only");
         assertEquals(1L, counter(b2, "received"));
         b2.stop();
         assertNull(RedisInvalidationBus.current());
@@ -224,12 +229,12 @@ public final class RedisInvalidationBusTest {
         RecordingReceiver r2 = new RecordingReceiver();
         RedisInvalidationBus b1 = start(fastHeartbeat(uri(valkey), "", "", "heartbeat"), r1);
         RedisInvalidationBus b2 = start(fastHeartbeat(uri(valkey), "", "", "heartbeat"), r2);
-        await("both connected", () -> connected(b1) && connected(b2));
+        await("both connected", () -> ready(b1, r1) && ready(b2, r2));
         // Several heartbeat periods: PING answers on the subscribed connection, so nothing reconnects.
         Thread.sleep(FAST_HEARTBEAT_MILLIS * 4);
         assertTrue(connected(b1) && connected(b2));
-        assertEquals(0, r1.gaps.get());
-        assertEquals(0, r2.gaps.get());
+        assertEquals(1, r1.gaps.get(), "the gap of the first connection only");
+        assertEquals(1, r2.gaps.get(), "the gap of the first connection only");
         b1.publish("beat");
         await("both received", () -> r1.payloads.contains("beat") && r2.payloads.contains("beat"));
     }
@@ -244,7 +249,7 @@ public final class RedisInvalidationBusTest {
         RecordingReceiver other = new RecordingReceiver();
         RedisInvalidationBus bus = start(fastHeartbeat(uri(valkey), ACL_USER, ACL_PASSWORD, "resub"), deaf);
         RedisInvalidationBus publisher = start(settings(uri(valkey), "resub"), other);
-        await("both connected", () -> connected(bus) && connected(publisher));
+        await("both connected", () -> ready(bus, deaf) && ready(publisher, other));
         try {
             // Lettuce reconnects at once, but its resubscribe fails with NOPERM and is never retried; PING still works.
             exec(valkey, "valkey-cli", "ACL", "SETUSER", ACL_USER, "resetchannels");
@@ -252,13 +257,13 @@ public final class RedisInvalidationBusTest {
             await("the bus notices", () -> !connected(bus));
             Thread.sleep(FAST_HEARTBEAT_MILLIS * 3);
             assertFalse(connected(bus));
-            assertEquals(0, deaf.gaps.get());
+            assertEquals(1, deaf.gaps.get(), "no gap while unsubscribed");
         } finally {
             // back to the README's channel rule; the NOPERM entries of the outage above are expected, so start the log afresh
             exec(valkey, "valkey-cli", "ACL", "SETUSER", ACL_USER, "resetchannels", "&ofbiz:cachebus:*");
             exec(valkey, "valkey-cli", "ACL", "LOG", "RESET");
         }
-        await("a gap once subscribed again", () -> deaf.gaps.get() >= 1);
+        await("a gap once subscribed again", () -> deaf.gaps.get() >= 2);
         await("connected again", () -> connected(bus));
         publishUntilBothReceive(publisher, deaf, other, "after-acl-");
         // the bus publishes as the ACL user too, so it needs no permission beyond the README's rule
@@ -280,7 +285,7 @@ public final class RedisInvalidationBusTest {
             RecordingReceiver rb = new RecordingReceiver();
             RedisInvalidationBus a = start(fastHeartbeat(uri(valkey), ACL_USER, ACL_PASSWORD, "announce"), ra);
             RedisInvalidationBus b = start(fastHeartbeat(uri(valkey), "", "", "announce"), rb);
-            await("both connected", () -> connected(a) && connected(b));
+            await("both connected", () -> ready(a, ra) && ready(b, rb));
             publishUntilBothReceive(a, ra, rb, "before-");
             int gapsOfB = rb.gaps.get();
             int gapsOfA = ra.gaps.get();
@@ -343,11 +348,11 @@ public final class RedisInvalidationBusTest {
         RecordingReceiver r2 = new RecordingReceiver();
         RedisInvalidationBus b1 = start(settings(uri(valkey), "reconnect"), r1);
         RedisInvalidationBus b2 = start(settings(uri(valkey), "reconnect"), r2);
-        await("both connected", () -> connected(b1) && connected(b2));
+        await("both connected", () -> ready(b1, r1) && ready(b2, r2));
         // The server closes the connections (a TCP reset); Lettuce reconnects and resubscribes.
         exec(valkey, "valkey-cli", "CLIENT", "KILL", "TYPE", "pubsub");
         exec(valkey, "valkey-cli", "CLIENT", "KILL", "TYPE", "normal");
-        await("both report a gap", () -> r1.gaps.get() >= 1 && r2.gaps.get() >= 1);
+        await("both report a gap", () -> r1.gaps.get() >= 2 && r2.gaps.get() >= 2);
         await("both reconnected", () -> connected(b1) && connected(b2));
         publishUntilBothReceive(b1, r1, r2, "after-");
     }
@@ -358,18 +363,18 @@ public final class RedisInvalidationBusTest {
         RecordingReceiver r2 = new RecordingReceiver();
         RedisInvalidationBus b1 = start(fastHeartbeat(uri(valkey), "", "", "pause"), r1);
         RedisInvalidationBus b2 = start(fastHeartbeat(uri(valkey), "", "", "pause"), r2);
-        await("both connected", () -> connected(b1) && connected(b2));
+        await("both connected", () -> ready(b1, r1) && ready(b2, r2));
         // A paused server keeps its TCP connections open and silent: only the heartbeat notices.
         valkey.getDockerClient().pauseContainerCmd(valkey.getContainerId()).exec();
         try {
             b1.publish("during-pause");
             await("both notice the pause", () -> !connected(b1) && !connected(b2));
-            assertEquals(0, r1.gaps.get());
-            assertEquals(0, r2.gaps.get());
+            assertEquals(1, r1.gaps.get(), "no gap before the subscription is back");
+            assertEquals(1, r2.gaps.get(), "no gap before the subscription is back");
         } finally {
             valkey.getDockerClient().unpauseContainerCmd(valkey.getContainerId()).exec();
         }
-        await("both report a gap once resubscribed", () -> r1.gaps.get() >= 1 && r2.gaps.get() >= 1);
+        await("both report a gap once resubscribed", () -> r1.gaps.get() >= 2 && r2.gaps.get() >= 2);
         await("both reconnected", () -> connected(b1) && connected(b2));
         await("the publish made during the pause failed", () -> counter(b1, "publishFailures") >= 1);
         publishUntilBothReceive(b1, r1, r2, "after-unpause-");
@@ -400,6 +405,8 @@ public final class RedisInvalidationBusTest {
         assertEquals(fixedPort, late.getMappedPort(REDIS_PORT));
         await("connected once the server is there", () -> connected(bus));
         await("a gap reported", () -> receiver.gaps.get() == 1);
+        Thread.sleep(200);
+        assertEquals(1, receiver.gaps.get(), "one gap however many attempts failed");
         bus.publish("found");
         await("received", () -> receiver.payloads.contains("found"));
         assertFalse(receiver.payloads.contains("lost"));
@@ -411,14 +418,14 @@ public final class RedisInvalidationBusTest {
         RecordingReceiver smallReceiver = new RecordingReceiver();
         RedisInvalidationBus big = start(settings(uri(valkey), "oversize"), bigReceiver);
         RedisInvalidationBus small = start(settings(uri(valkey), "", "", "oversize", 1024), smallReceiver);
-        await("both connected", () -> connected(big) && connected(small));
+        await("both connected", () -> ready(big, bigReceiver) && ready(small, smallReceiver));
         String oversized = "x".repeat(2000);
         big.publish(oversized);
         big.publish("small");
         await("small payload received", () -> smallReceiver.payloads.contains("small"));
         assertEquals(List.of("small"), smallReceiver.payloads);
-        assertEquals(1, smallReceiver.gaps.get());
-        assertEquals(1L, counter(small, "gaps"));
+        assertEquals(2, smallReceiver.gaps.get(), "the first connection's gap and the oversized payload's");
+        assertEquals(2L, counter(small, "gaps"));
         assertEquals(1L, counter(small, "received"));
         await("big bus received both", () -> bigReceiver.payloads.size() == 2);
         assertTrue(bigReceiver.payloads.contains(oversized));

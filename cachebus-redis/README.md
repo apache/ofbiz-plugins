@@ -77,7 +77,7 @@ The settings that ship with the plugin are `<property>` children of the `cachebu
 |---|---|---|
 | `delegator-name` | `default` | The delegator used to read the `SystemProperty` overrides described below. |
 | `heartbeat-ms` | `5000` | How often the subscribed connection is checked with a `PING`. 100 to 600000. |
-| `heartbeat-timeout-ms` | `3000` | How long a `PING` may take before the connections are reopened. At least 10 and less than `heartbeat-ms`. |
+| `heartbeat-timeout-ms` | `3000` | How long a `PING` may take before the connections are reopened. 10 to 5000, and less than `heartbeat-ms`; 5000 is the timeout of every command, which fails a slower `PING` first. |
 | `max-payload-bytes` | `1048576` | A received message larger than this is dropped and counted as a gap. 1024 to 67108864. |
 | `tombstone-ms` | `2000` | How long a received key invalidation blocks plain puts of that key. 0 to 60000. |
 
@@ -85,16 +85,16 @@ The deployment settings are in `config/cachebus-redis.properties`; every one is 
 
 | Property | Default | Meaning |
 |---|---|---|
-| `cachebus.redis.uri` | empty | `redis://host:6379`, `rediss://host:6380` for TLS, or `redis-sentinel://host:26379/0#mymaster` for Sentinel; several Sentinels are `redis-sentinel://h1:26379,h2:26379/0#mymaster`. The scheme must be lowercase. Empty disables the plugin. |
+| `cachebus.redis.uri` | empty | `redis://host:6379`, `rediss://host:6380` for TLS, or `redis-sentinel://host:26379/0#mymaster` for Sentinel (`rediss-sentinel://` with TLS); several Sentinels are `redis-sentinel://h1:26379,h2:26379/0#mymaster`. The scheme must be lowercase. Empty disables the plugin. |
 | `cachebus.redis.username` | empty | ACL user name; empty uses the server's default user. |
 | `cachebus.redis.password-env` | empty | Name of an environment variable that holds the password. |
 | `cachebus.redis.password-file` | empty | File that holds the password; one trailing line break is ignored. |
 | `cachebus.redis.password` | empty | The password itself, or `LOOKUP(key)` to read it from the configured secret provider. |
 | `cachebus.redis.cluster` | `test` | Cluster name, see below. Letters, digits, `.`, `_` and `-`. |
 
-Any key of the properties file can be overridden in the database of the `delegator-name` delegator with a
-`SystemProperty` record, with `systemResourceId="cachebus-redis"` and `systemPropertyId` set to the key. For example, to
-name the cluster in the database instead of the file:
+Any key of the properties file except `password-env` and `password-file` (see below) can be overridden in the
+database of the `delegator-name` delegator with a `SystemProperty` record, with `systemResourceId="cachebus-redis"` and
+`systemPropertyId` set to the key. For example, to name the cluster in the database instead of the file:
 
 ```xml
 <SystemProperty systemResourceId="cachebus-redis" systemPropertyId="cachebus.redis.cluster"
@@ -110,7 +110,10 @@ The password comes from the first of these that is set, in this order: `password
 is empty, OFBiz does not start; it does not fall back to the next source. Prefer the environment variable or the file
 over writing the password into the properties file. The URI is not logged with its credentials. A password with leading
 or trailing spaces must come from `password-env` or `password-file`, because the properties loader trims values.
-Do not put the password itself in a `SystemProperty` record: it would be stored in the database in plain text and be
+
+`password-env` and `password-file` are read from the properties file only, never from a `SystemProperty` record: they
+name a file or an environment variable of the server, and a record that could name any of them would let whoever can
+edit records send its content to a server of their choice. Do not put the password itself in a `SystemProperty` record: it would be stored in the database in plain text and be
 visible in Webtools. Use `password-env`, `password-file` or `LOOKUP(key)`. `LOOKUP(key)` is resolved only in the
 properties file, not in a `SystemProperty` value; a `SystemProperty` record can instead name the secret's key in its
 `systemPropertyLookup` field.
@@ -170,8 +173,8 @@ The bus has no authentication of its own beyond the Redis or Valkey login, and a
 distributed cache, which makes the server slow and loads the database. So:
 
 * The Redis or Valkey server must not be reachable by untrusted clients. Keep it on a private network.
-* Use TLS: a `rediss://` URI encrypts the traffic and checks the server certificate against the JVM's trust store.
-  Mutual TLS (a client certificate) is not supported yet and may be added later.
+* Use TLS: a `rediss://` (or `rediss-sentinel://`) URI encrypts the traffic and checks the server certificate against
+  the JVM's trust store. Mutual TLS (a client certificate) is not supported yet and may be added later.
 * Use a dedicated ACL user that may do nothing but use the channel, instead of the default user:
 
   ```
@@ -190,25 +193,41 @@ distributed cache, which makes the server slow and loads the database. So:
 A server that cannot be sure it received everything clears every distributed cache and every entity cache once, and
 counts a gap. That happens when:
 
-* the connection to Redis or Valkey is lost and restored, or the first connection succeeds only after earlier attempts
-  failed (messages published meanwhile are gone);
+* the bus connects, the first time included: messages published before the subscription is confirmed are gone, and
+  the caches filled while OFBiz was starting, before the bus was installed, may hold data other servers changed
+  meanwhile. At start-up the caches are nearly empty, so this clear costs little;
+* the connection to Redis or Valkey is lost and restored (messages published meanwhile are gone);
 * a heartbeat `PING` is not answered within `heartbeat-timeout-ms`, as in a network partition or a paused server; both
   connections are then reopened, and the clear follows once the subscription is back;
-* a received message is larger than `max-payload-bytes`.
+* a received message is larger than `max-payload-bytes`;
+* received messages arrive faster than they can be applied and more than 16 MB of them (or `max-payload-bytes`, if
+  larger) are waiting; the waiting ones are dropped.
 
 Reconnecting is automatic, starting at one second and doubling up to 30 seconds. The bus uses two connections, one to
 subscribe and one to publish, a five second command timeout, TCP keepalive, and a queue of at most 10 000 waiting
 commands, so a server that does not answer cannot exhaust the heap. Nothing waits for the network on the thread of
-the application: publishing is asynchronous.
+the application: publishing is asynchronous. Received messages are applied to the caches on a thread of their own, in
+the order they arrive, so that a long clear does not hold up the connection's network thread and its heartbeat.
 
 A server that could not publish an invalidation, for instance because it alone is cut off from Redis while the others
 are not, announces it on a second channel, `ofbiz:cachebus:<cluster>:gap`, once it is connected again (at the latest on
 the next heartbeat). The other servers then clear their distributed caches and count a gap; the ACL rule above
 (`&ofbiz:cachebus:*`) already covers that channel. A server may also announce right after it starts, for invalidations
-made before its first connection; the other servers then clear their caches once. The failures are counted as "Publish
-failures" on the status page. The announcement cannot reach the others while the publishing server is still cut off, so
-monitor that counter, and fix the connection of a server whose count grows. The pending announcement is held only in
-memory, so if that server is restarted while cut off, clear the caches of the other servers or restart them.
+made between the installation of the bus and its first connection; the other servers then clear their caches once.
+The failures are counted as "Publish failures" on the status page. The announcement cannot reach the others while the
+publishing server is still cut off, so monitor that counter, and fix the connection of a server whose count grows. The
+pending announcement is held only in memory, so if that server is restarted while cut off, clear the caches of the
+other servers or restart them.
+
+Changes made earlier in start-up, before the plugin's container starts, are not published at all, because no bus is
+installed yet; the container starts after the web and service containers, so web requests and jobs may already run.
+Other servers keep their cached copies of such data until it changes again or the cache entry expires, so avoid
+scheduling jobs that change cached data to run in the first moments after a start.
+
+The same holds at shutdown, in reverse: containers stop in the reverse order they started, so the plugin's container
+stops first and removes the bus while the web and service containers are still finishing their requests and jobs.
+Changes those make are not published, and publishes still in flight when the connections close may be lost. Before
+stopping a server, stop sending it traffic and let its running jobs finish.
 
 ## Logging
 

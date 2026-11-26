@@ -95,6 +95,11 @@ public class CacheBusRedisSettingsTest {
         }
         String msg = rejection(props("cachebus.redis.heartbeat-ms", "2000"), NO_ENV);
         assertTrue(msg.contains("heartbeat-timeout-ms") && msg.contains("less than cachebus-redis-container property heartbeat-ms (2000)"), msg);
+        // a PING fails at the command timeout first, so a longer heartbeat timeout would have no effect
+        assertEquals(5000L, build(props("cachebus.redis.heartbeat-ms", "20000", "cachebus.redis.heartbeat-timeout-ms", "5000"),
+                NO_ENV).heartbeatTimeoutMillis());
+        msg = rejection(props("cachebus.redis.heartbeat-ms", "20000", "cachebus.redis.heartbeat-timeout-ms", "5001"), NO_ENV);
+        assertTrue(msg.contains("heartbeat-timeout-ms must be between 10 and 5000, the command timeout"), msg);
     }
 
     @Test
@@ -198,6 +203,10 @@ public class CacheBusRedisSettingsTest {
                 .toString();
         assertFalse(s.contains("u:p"));
         assertTrue(s.contains("redis-sentinel://***@h1:26379,h2:26379/0#mymaster"));
+        // Sentinel over TLS
+        s = build(props("cachebus.redis.uri", "rediss-sentinel://u:p@h1:26379/0#mymaster"), NO_ENV).toString();
+        assertFalse(s.contains("u:p"));
+        assertTrue(s.contains("rediss-sentinel://***@h1:26379/0#mymaster"));
     }
 
     @Test
