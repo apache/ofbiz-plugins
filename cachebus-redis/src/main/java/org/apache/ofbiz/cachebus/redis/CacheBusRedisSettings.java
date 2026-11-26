@@ -37,7 +37,8 @@ import io.lettuce.core.RedisURI;
  * @param maxPayloadBytes received payloads larger than this are dropped and treated as a gap
  * @param tombstoneMillis how long a received key invalidation blocks plain puts of that key
  * @param heartbeatMillis how often the subscribed connection is checked with a PING
- * @param heartbeatTimeoutMillis how long a PING may take before the connections are dropped and reopened
+ * @param heartbeatTimeoutMillis how long a PING may take before the connections are dropped and reopened, at most the
+ *        command timeout
  */
 public record CacheBusRedisSettings(String uri, String username, String password, String cluster, int maxPayloadBytes,
         long tombstoneMillis, long heartbeatMillis, long heartbeatTimeoutMillis) {
@@ -45,13 +46,18 @@ public record CacheBusRedisSettings(String uri, String username, String password
     private static final String CONTAINER = "cachebus-redis-container property ";
     private static final String PREFIX = "cachebus.redis.";
     private static final Pattern CLUSTER_PATTERN = Pattern.compile("[A-Za-z0-9._-]+");
-    private static final Pattern SCHEME_PATTERN = Pattern.compile("(redis|rediss|redis-sentinel)://");
+    private static final Pattern SCHEME_PATTERN = Pattern.compile("(redis|rediss|redis-sentinel|rediss-sentinel)://");
     private static final int MIN_PAYLOAD_BYTES = 1024;
     private static final int MAX_PAYLOAD_BYTES = 64 * 1024 * 1024;
     private static final long MAX_TOMBSTONE_MILLIS = 60000L;
     private static final long MIN_HEARTBEAT_MILLIS = 100L;
     private static final long MAX_HEARTBEAT_MILLIS = 600000L;
     private static final long MIN_HEARTBEAT_TIMEOUT_MILLIS = 10L;
+    /**
+     * The fixed timeout, in milliseconds, of every command the bus sends, connection handshake included. It also bounds
+     * heartbeat-timeout-ms: a PING still unanswered after it fails as a timed-out command, whatever the setting.
+     */
+    static final long COMMAND_TIMEOUT_MILLIS = 5000L;
 
     public CacheBusRedisSettings {
         uri = uri == null ? "" : uri;
@@ -65,7 +71,7 @@ public record CacheBusRedisSettings(String uri, String username, String password
                 RedisURI.create(uri);
             } catch (RuntimeException e) {
                 // deliberately neither the URI nor the cause message: both may carry credentials
-                throw new IllegalArgumentException(PREFIX + "uri is not a valid redis://, rediss:// or redis-sentinel:// URI");
+                throw new IllegalArgumentException(PREFIX + "uri is not a valid redis://, rediss://, redis-sentinel:// or rediss-sentinel:// URI");
             }
         }
         if (cluster == null || !CLUSTER_PATTERN.matcher(cluster).matches()) {
@@ -82,9 +88,11 @@ public record CacheBusRedisSettings(String uri, String username, String password
             throw new IllegalArgumentException(CONTAINER + "heartbeat-ms must be between " + MIN_HEARTBEAT_MILLIS + " and "
                     + MAX_HEARTBEAT_MILLIS);
         }
-        if (heartbeatTimeoutMillis < MIN_HEARTBEAT_TIMEOUT_MILLIS || heartbeatTimeoutMillis >= heartbeatMillis) {
-            throw new IllegalArgumentException(CONTAINER + "heartbeat-timeout-ms must be at least " + MIN_HEARTBEAT_TIMEOUT_MILLIS
-                    + " and less than " + CONTAINER + "heartbeat-ms (" + heartbeatMillis + ")");
+        if (heartbeatTimeoutMillis < MIN_HEARTBEAT_TIMEOUT_MILLIS || heartbeatTimeoutMillis > COMMAND_TIMEOUT_MILLIS
+                || heartbeatTimeoutMillis >= heartbeatMillis) {
+            throw new IllegalArgumentException(CONTAINER + "heartbeat-timeout-ms must be between " + MIN_HEARTBEAT_TIMEOUT_MILLIS
+                    + " and " + COMMAND_TIMEOUT_MILLIS + ", the command timeout, and less than " + CONTAINER + "heartbeat-ms ("
+                    + heartbeatMillis + ")");
         }
     }
 

@@ -18,8 +18,8 @@
  *******************************************************************************/
 package org.apache.ofbiz.cachebus.redis;
 
-import java.nio.charset.StandardCharsets;
 import java.util.UUID;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -33,8 +33,8 @@ import io.lettuce.core.api.StatefulRedisConnection;
  * Carries cache invalidations over Redis/Valkey pub/sub with the Lettuce client. One pub/sub connection receives the
  * payloads of the cluster's channel and a second connection publishes. Nothing here waits for the network on the
  * caller's thread: connecting and the heartbeat run on a daemon thread, publishing is asynchronous, and received
- * payloads are handed to the receiver on Lettuce's I/O thread. A server that dropped published invalidations announces
- * it on the gap channel once it is connected again, and a server receiving such an announcement reports a gap.
+ * payloads are handed to the receiver on a delivery thread of their own. A server that dropped published invalidations
+ * announces it on the gap channel once it is connected again, and a server receiving such an announcement reports a gap.
  * Each start works through its own {@link RedisChannelConnection}.
  */
 public final class RedisInvalidationBus implements InvalidationBus {
@@ -42,7 +42,7 @@ public final class RedisInvalidationBus implements InvalidationBus {
     private static final String MODULE = RedisInvalidationBus.class.getName();
     private static final long INITIAL_BACKOFF_MILLIS = 1000;
     private static final long MAX_BACKOFF_MILLIS = 30000;
-    private static final long OVERSIZE_WARNING_INTERVAL_MILLIS = 60000;
+    private static final long WARNING_INTERVAL_MILLIS = 60000;
 
     private static volatile RedisInvalidationBus current;
 
@@ -51,6 +51,7 @@ public final class RedisInvalidationBus implements InvalidationBus {
     private final long maxBackoffMillis;
     private final BusStatistics statistics = new BusStatistics();
     private final AtomicLong lastOversizeWarning = new AtomicLong();
+    private final AtomicLong lastPublishFailureWarning = new AtomicLong();
     private final Object lock = new Object();
     /** Names this bus in its gap announcements; not the framework node id. */
     private final String busId = UUID.randomUUID().toString();
@@ -129,13 +130,12 @@ public final class RedisInvalidationBus implements InvalidationBus {
         RedisChannelConnection started = connection;
         StatefulRedisConnection<String, String> pub = started == null ? null : started.publisher();
         if (pub == null || !started.publisherUp()) {
-            statistics.publishFailed();
-            lostPublishes.set(true);
+            publishFailed("not connected");
             return;
         }
         // A char takes at most 3 bytes in UTF-8, so a short payload needs no encoding to be measured.
         if (payload.length() * 3L > settings.maxPayloadBytes() && byteLength(payload) > settings.maxPayloadBytes()
-                && shouldWarnOversize()) {
+                && shouldWarn(lastOversizeWarning)) {
             Debug.logWarning("Redis cache invalidation bus publishes a payload larger than max-payload-bytes ("
                     + settings.maxPayloadBytes() + "); servers with the same limit drop it and clear their distributed caches",
                     MODULE);
@@ -143,8 +143,7 @@ public final class RedisInvalidationBus implements InvalidationBus {
         try {
             pub.async().publish(settings.channel(), payload).whenComplete(this::published);
         } catch (RuntimeException e) {
-            statistics.publishFailed();
-            lostPublishes.set(true);
+            publishFailed(failureMessage(e));
         }
     }
 
@@ -152,20 +151,54 @@ public final class RedisInvalidationBus implements InvalidationBus {
         if (failure == null) {
             statistics.published();
         } else {
-            statistics.publishFailed();
-            lostPublishes.set(true);
+            publishFailed(failureMessage(failure));
         }
     }
 
-    private boolean shouldWarnOversize() {
-        long now = System.currentTimeMillis();
-        long last = lastOversizeWarning.get();
-        return now - last >= OVERSIZE_WARNING_INTERVAL_MILLIS && lastOversizeWarning.compareAndSet(last, now);
+    /** Counts a lost publish, to be announced once connected, and warns at most once a minute. */
+    private void publishFailed(String reason) {
+        statistics.publishFailed();
+        lostPublishes.set(true);
+        if (shouldWarn(lastPublishFailureWarning)) {
+            Debug.logWarning("Redis cache invalidation bus could not publish an invalidation (" + reason + "); the other servers"
+                    + " are told to clear their distributed caches once it can publish again", MODULE);
+        }
     }
 
-    /** The size of a payload in UTF-8, as the server and the receiving listeners measure it. */
+    private static String failureMessage(Throwable failure) {
+        Throwable shown = failure instanceof CompletionException && failure.getCause() != null ? failure.getCause() : failure;
+        return shown.getMessage() == null ? shown.getClass().getSimpleName() : shown.getMessage();
+    }
+
+    private static boolean shouldWarn(AtomicLong lastWarning) {
+        long now = System.currentTimeMillis();
+        long last = lastWarning.get();
+        return now - last >= WARNING_INTERVAL_MILLIS && lastWarning.compareAndSet(last, now);
+    }
+
+    /**
+     * The size of a payload in UTF-8, as the server and the receiving listeners measure it, counted without encoding it.
+     * An unpaired surrogate counts as one byte, as the encoder replaces it with '?'.
+     */
     static int byteLength(String payload) {
-        return payload.getBytes(StandardCharsets.UTF_8).length;
+        int bytes = 0;
+        int length = payload.length();
+        for (int i = 0; i < length; i++) {
+            char c = payload.charAt(i);
+            if (c < 0x80) {
+                bytes++;
+            } else if (c < 0x800) {
+                bytes += 2;
+            } else if (Character.isHighSurrogate(c) && i + 1 < length && Character.isLowSurrogate(payload.charAt(i + 1))) {
+                bytes += 4;
+                i++;
+            } else if (Character.isSurrogate(c)) {
+                bytes++;
+            } else {
+                bytes += 3;
+            }
+        }
+        return bytes;
     }
 
     @Override

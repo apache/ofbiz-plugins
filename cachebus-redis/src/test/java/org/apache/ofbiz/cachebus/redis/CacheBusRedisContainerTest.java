@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -42,6 +43,17 @@ public final class CacheBusRedisContainerTest {
 
     private static CacheBusRedisSettings settings(Map<String, String> properties) {
         return CacheBusRedisSettings.from(name -> null, properties::get, name -> null);
+    }
+
+    @Test
+    public void passwordSourcesIgnoreSystemPropertyOverrides() {
+        Function<String, String> lookup = CacheBusRedisContainer.deploymentProperty(key -> "file:" + key, key -> "db:" + key);
+        assertEquals("file:cachebus.redis.password-env", lookup.apply("cachebus.redis.password-env"));
+        assertEquals("file:cachebus.redis.password-file", lookup.apply("cachebus.redis.password-file"));
+        for (String key : new String[] {"cachebus.redis.uri", "cachebus.redis.username", "cachebus.redis.password",
+                "cachebus.redis.cluster"}) {
+            assertEquals("db:" + key, lookup.apply(key));
+        }
     }
 
     @Test

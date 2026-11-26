@@ -19,6 +19,8 @@
 package org.apache.ofbiz.cachebus.redis;
 
 import java.util.List;
+import java.util.Set;
+import java.util.function.Function;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -30,6 +32,7 @@ import org.apache.ofbiz.base.container.ContainerConfig;
 import org.apache.ofbiz.base.container.ContainerException;
 import org.apache.ofbiz.base.start.StartupCommand;
 import org.apache.ofbiz.base.util.Debug;
+import org.apache.ofbiz.base.util.UtilProperties;
 import org.apache.ofbiz.base.util.cache.CacheInvalidation;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.DelegatorFactory;
@@ -45,6 +48,11 @@ public class CacheBusRedisContainer implements Container {
     private static final List<String> CLIENT_LOGGERS = List.of("io.lettuce", "io.netty");
 
     private static final String RESOURCE = "cachebus-redis";
+    /**
+     * The keys that name where the password is read from, a file or an environment variable of this server. They are read
+     * from the properties file only: a SystemProperty record must not make the server read and send any file or variable.
+     */
+    static final Set<String> FILE_ONLY_KEYS = Set.of("cachebus.redis.password-env", "cachebus.redis.password-file");
 
     /** Test seam: loads the settings, in production from the container properties and the deployment properties. */
     @FunctionalInterface
@@ -71,7 +79,10 @@ public class CacheBusRedisContainer implements Container {
         this.name = name;
     }
 
-    /** Reads the container properties and, through the delegator, the file keys with their SystemProperty overrides. */
+    /**
+     * Reads the container properties and the deployment properties: through the delegator, so with their SystemProperty
+     * overrides, except the password source keys, which come from the properties file only.
+     */
     private CacheBusRedisSettings loadSettings() throws ContainerException {
         ContainerConfig.Configuration cfg = ContainerConfig.getConfiguration(name);
         String delegatorName = ContainerConfig.getPropertyValue(cfg, "delegator-name", "default");
@@ -81,7 +92,19 @@ public class CacheBusRedisContainer implements Container {
                     + " (cachebus-redis-container property delegator-name)");
         }
         return CacheBusRedisSettings.from(key -> ContainerConfig.getPropertyValue(cfg, key, ""),
-                key -> EntityUtilProperties.getPropertyValue(RESOURCE, key, "", delegator), System::getenv);
+                deploymentProperty(key -> UtilProperties.getPropertyValue(RESOURCE, key, ""),
+                        key -> EntityUtilProperties.getPropertyValue(RESOURCE, key, "", delegator)), System::getenv);
+    }
+
+    /**
+     * Looks up a deployment property in the properties file or, where a SystemProperty override is allowed, through the
+     * delegator.
+     * @param file looks a key up in the properties file
+     * @param overridable looks a key up with its SystemProperty override
+     * @return the lookup to build the settings with
+     */
+    static Function<String, String> deploymentProperty(Function<String, String> file, Function<String, String> overridable) {
+        return key -> FILE_ONLY_KEYS.contains(key) ? file.apply(key) : overridable.apply(key);
     }
 
     @Override

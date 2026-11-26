@@ -21,12 +21,16 @@ package org.apache.ofbiz.cachebus.redis;
 import java.net.SocketAddress;
 import java.time.Duration;
 import java.util.concurrent.CompletionException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Consumer;
 
@@ -49,8 +53,9 @@ import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
  * One start-to-stop period of the bus: its client, thread, connections and state. A connection attempt, heartbeat or
  * Lettuce callback works on the instance it was created for; there is one instance per start, so a callback left over
  * from before a stop cannot act on a later start. The connect attempts and the heartbeat run on the single scheduler
- * thread, which alone touches {@code failedAttempts}, {@code nextBackoffMillis}, {@code heartbeat} and
- * {@code unsubscribedBeats}.
+ * thread, which alone touches {@code nextBackoffMillis}, {@code heartbeat} and {@code unsubscribedBeats}. Received
+ * payloads and gaps are handed to the receiver on a second thread of their own, in the order they come, so that clearing
+ * the caches never holds up Lettuce's I/O thread, which also reads the heartbeat's PING replies.
  */
 final class RedisChannelConnection {
 
@@ -58,7 +63,15 @@ final class RedisChannelConnection {
     private static final String CLIENT_NAME = "ofbiz-cachebus";
     private static final long STOP_WAIT_SECONDS = 5;
     /** Bounds every command, connection handshake included, so a hung publish completes as a failure. */
-    private static final Duration COMMAND_TIMEOUT = Duration.ofSeconds(5);
+    private static final Duration COMMAND_TIMEOUT = Duration.ofMillis(CacheBusRedisSettings.COMMAND_TIMEOUT_MILLIS);
+    /**
+     * Bytes of waiting payloads, overhead included, that may wait for the delivery thread; at least max-payload-bytes so
+     * that any accepted payload fits. Beyond it a payload is dropped and a gap reported instead, so a flood of messages,
+     * small or large, cannot exhaust the heap.
+     */
+    private static final long MIN_QUEUED_BYTES = 16L * 1024 * 1024;
+    /** What a waiting payload costs besides its bytes (task, queue node, string header), counted against the same bound. */
+    private static final int QUEUED_PAYLOAD_OVERHEAD_BYTES = 128;
     /** Commands queued while a server does not answer; more are rejected at once, so a stuck server cannot grow the heap. */
     private static final int REQUEST_QUEUE_SIZE = 10_000;
     /** TCP keepalive, defence in depth behind the heartbeat for connections the network silently dropped. */
@@ -75,7 +88,19 @@ final class RedisChannelConnection {
     private final long initialBackoffMillis;
     private final long maxBackoffMillis;
     private final RedisClient client;
-    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(RedisChannelConnection::newThread);
+    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(
+            runnable -> newThread(runnable, "OFBiz-cachebus-redis"));
+    /** Runs the receiver calls one at a time, in the order the payloads and gaps came. */
+    private final ExecutorService delivery = Executors.newSingleThreadExecutor(
+            runnable -> newThread(runnable, "OFBiz-cachebus-redis-delivery"));
+    private final long maxQueuedBytes;
+    /** Bytes of the payloads waiting for the delivery thread, with their overhead. */
+    private final AtomicLong queuedBytes = new AtomicLong();
+    /**
+     * Whether a gap is waiting for the delivery thread. While it is, no other gap is queued, and the payloads queued before
+     * it are skipped, as the gap clears what they would invalidate.
+     */
+    private final AtomicBoolean gapQueued = new AtomicBoolean();
     /** Read-held while calling the receiver; stop takes the write lock, so nothing is delivered after stop returns. */
     private final ReentrantReadWriteLock deliveryLock = new ReentrantReadWriteLock();
     /** Cleared by {@link #end()} under the write lock of {@code deliveryLock}; read under its read lock. */
@@ -84,7 +109,6 @@ final class RedisChannelConnection {
     private volatile boolean stopped;
 
     // Scheduler thread only.
-    private int failedAttempts;
     private long nextBackoffMillis;
     private ScheduledFuture<?> heartbeat;
     private int unsubscribedBeats;
@@ -131,6 +155,7 @@ final class RedisChannelConnection {
         this.initialBackoffMillis = initialBackoffMillis;
         this.maxBackoffMillis = maxBackoffMillis;
         this.nextBackoffMillis = initialBackoffMillis;
+        this.maxQueuedBytes = Math.max(MIN_QUEUED_BYTES, settings.maxPayloadBytes());
         client = RedisClient.create(redisUri(settings));
         client.setOptions(ClientOptions.builder()
                 .autoReconnect(true)
@@ -186,7 +211,10 @@ final class RedisChannelConnection {
         } finally {
             deliveryLock.writeLock().unlock();
         }
+        // what is still queued finds the bus stopped and does nothing
+        delivery.shutdown();
         updateConnection(false, false);
+        statistics.setConnected(false);
         scheduler.shutdownNow();
         closeConnections();
         try {
@@ -209,8 +237,9 @@ final class RedisChannelConnection {
         subscriberUp = subscriberState;
         publisherUp = publisherState;
         if (stopped) {
+            // end() reports the bus disconnected once; a late call from a stopped instance must not overwrite what a
+            // later start of the bus, which shares the statistics, reports
             connected = false;
-            statistics.setConnected(false);
             return;
         }
         connected = subscriberUp && publisherUp;
@@ -239,20 +268,93 @@ final class RedisChannelConnection {
         }
     }
 
-    /** Counts a gap and tells the receiver, unless stopped. */
+    /**
+     * Queues a gap for the delivery thread, which counts it and tells the receiver unless stopped. A gap already waiting
+     * stands for this one too.
+     */
     void reportGap() {
-        deliver(r -> {
-            statistics.gap();
-            r.onGap();
-        });
+        if (stopped || !gapQueued.compareAndSet(false, true)) {
+            return;
+        }
+        if (!runOnDelivery(() -> {
+            gapQueued.set(false);
+            deliver(r -> {
+                statistics.gap();
+                r.onGap();
+            });
+        })) {
+            gapQueued.set(false);
+        }
     }
 
-    /** Counts a received payload and hands it to the receiver, unless stopped. */
+    /**
+     * Queues a received payload for the delivery thread, which counts it and hands it to the receiver unless stopped. When
+     * the queue is full the payload is dropped and a gap reported instead.
+     * @param payload the payload
+     * @param bytes its size in UTF-8
+     */
     void deliverPayload(String payload, int bytes) {
-        deliver(r -> {
-            statistics.received(bytes);
-            r.onPayload(payload);
-        });
+        if (stopped) {
+            return;
+        }
+        long cost = (long) bytes + QUEUED_PAYLOAD_OVERHEAD_BYTES;
+        if (queuedBytes.addAndGet(cost) > maxQueuedBytes) {
+            queuedBytes.addAndGet(-cost);
+            if (!gapQueued.get()) {
+                Debug.logWarning("Redis cache invalidation bus: more than " + maxQueuedBytes + " bytes of received payloads"
+                        + " are waiting to be applied; dropping them and clearing distributed caches", MODULE);
+            }
+            reportGap();
+            return;
+        }
+        if (!runOnDelivery(() -> {
+            queuedBytes.addAndGet(-cost);
+            // a gap queued behind this payload clears what it would invalidate
+            if (!gapQueued.get()) {
+                deliver(r -> {
+                    statistics.received(bytes);
+                    r.onPayload(payload);
+                });
+            }
+        })) {
+            queuedBytes.addAndGet(-cost);
+        }
+    }
+
+    private boolean runOnDelivery(Runnable task) {
+        try {
+            delivery.execute(() -> {
+                try {
+                    task.run();
+                } catch (Throwable t) {
+                    // the receiver's failure must not end the delivery thread
+                    Debug.logError(t, "Redis cache invalidation bus: error delivering a payload or gap", MODULE);
+                }
+            });
+            return true;
+        } catch (RejectedExecutionException e) {
+            // stopped
+            return false;
+        }
+    }
+
+    /**
+     * Test seam: waits until everything queued so far has been delivered.
+     * @throws InterruptedException if the wait is interrupted
+     * @throws ExecutionException never, the task does nothing
+     * @throws TimeoutException if the deliveries take longer than the stop wait
+     */
+    void awaitDeliveries() throws InterruptedException, ExecutionException, TimeoutException {
+        delivery.submit(() -> { }).get(STOP_WAIT_SECONDS, TimeUnit.SECONDS);
+    }
+
+    /**
+     * Whether a pub/sub connection is the one this start currently subscribes on.
+     * @param connection a connection
+     * @return true if it is the current subscriber connection
+     */
+    boolean isSubscriber(StatefulRedisPubSubConnection<String, String> connection) {
+        return connection == subscriber;
     }
 
     private void runOnScheduler(Runnable task) {
@@ -271,13 +373,15 @@ final class RedisChannelConnection {
         try {
             StatefulRedisPubSubConnection<String, String> sub = client.connectPubSub();
             subscriber = sub;
-            sub.addListener(new ChannelListener(settings, busId, this));
+            sub.addListener(new ChannelListener(settings, busId, this, sub));
             sub.sync().subscribe(settings.channel(), settings.gapChannel());
             StatefulRedisConnection<String, String> pub = client.connect();
             publisher = pub;
-            boolean missedMessages = failedAttempts > 0;
-            failedAttempts = 0;
             nextBackoffMillis = initialBackoffMillis;
+            // Always a gap, the first connection included: invalidations published before the subscription was confirmed are
+            // lost, and before the bus was installed the caches were filled without any invalidation from the other servers.
+            // Queued before the connection shows as up, so that a payload sent once it is up comes after the gap.
+            reportGap();
             updateConnection(sub.isOpen(), pub.isOpen());
             if (stopped) {
                 closeConnections();
@@ -285,9 +389,6 @@ final class RedisChannelConnection {
             }
             unsubscribedBeats = 0;
             Debug.logInfo("Redis cache invalidation bus connected to channel " + settings.channel(), MODULE);
-            if (missedMessages) {
-                reportGap();
-            }
             announceLostPublishes();
             heartbeat = scheduler.scheduleWithFixedDelay(this::heartbeat, settings.heartbeatMillis(), settings.heartbeatMillis(),
                     TimeUnit.MILLISECONDS);
@@ -308,7 +409,6 @@ final class RedisChannelConnection {
         if (stopped) {
             return;
         }
-        failedAttempts++;
         long delay = nextBackoffMillis;
         nextBackoffMillis = Math.min(nextBackoffMillis * 2, maxBackoffMillis);
         try {
@@ -340,6 +440,8 @@ final class RedisChannelConnection {
         if (stopped || sub == null) {
             return;
         }
+        // the publisher may be up while the subscriber is not
+        announceLostPublishes();
         if (!subscriberUp) {
             unsubscribedBeats++;
             if (unsubscribedBeats > 1) {
@@ -348,7 +450,6 @@ final class RedisChannelConnection {
             return;
         }
         unsubscribedBeats = 0;
-        announceLostPublishes();
         try {
             sub.async().ping().toCompletableFuture().orTimeout(settings.heartbeatTimeoutMillis(), TimeUnit.MILLISECONDS)
                     .whenComplete((pong, failure) -> {
@@ -383,7 +484,7 @@ final class RedisChannelConnection {
 
     /**
      * Drops both connections after a missed heartbeat and connects again. The next successful connection reports a
-     * gap once its subscription is confirmed, as after any failed attempt.
+     * gap once its subscription is confirmed, as every connection does.
      */
     private void heartbeatFailed(StatefulRedisPubSubConnection<String, String> sub, Throwable failure) {
         if (stopped || subscriber != sub) {
@@ -395,7 +496,6 @@ final class RedisChannelConnection {
             heartbeat = null;
         }
         closeConnections();
-        failedAttempts++;
         runOnScheduler(this::connect);
     }
 
@@ -409,8 +509,8 @@ final class RedisChannelConnection {
         closeQuietly(sub);
     }
 
-    private static Thread newThread(Runnable runnable) {
-        Thread thread = new Thread(runnable, "OFBiz-cachebus-redis");
+    private static Thread newThread(Runnable runnable, String name) {
+        Thread thread = new Thread(runnable, name);
         thread.setDaemon(true);
         return thread;
     }
