@@ -39,7 +39,7 @@
             <widgets>
                 <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="search-options">
-                        <include-form name="lookupPerson" location="component://assetmaint/widget/forms/LookupForms.xml"/>
+                        <include-form name="LookupPerson" location="component://assetmaint/widget/forms/LookupForms.xml"/>
                     </decorator-section>
                     <decorator-section name="search-results">
                         <include-form name="ListLookupPerson" location="component://party/widget/partymgr/LookupForms.xml"/>

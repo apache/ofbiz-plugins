@@ -509,7 +509,7 @@
         <field name="workEffortId"><hidden value="${parameters.workEffortId}"/></field>
         <field name="addButton" title="${uiLabelMap.CommonAdd}"><submit/></field>
     </form>
-    <form name="ListTaskNotes" extends="ListWorkEffortNotes" extends-resource="component://workeffort/widget/WorkEffortForms.xml" type="list" list-name="taskNotes" paginate-target="EditTaskNotes"
+    <form name="ListTaskNotes" extends="ListWorkEffortNotes" extends-resource="component://projectmgr/widget/forms/ProjectForms.xml" type="list" list-name="taskNotes" paginate-target="EditTaskNotes"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="WorkEffortNoteAndData">
@@ -536,7 +536,7 @@
             </hyperlink>
         </field>
     </form>
-    <form name="AddTaskNote" extends="AddWorkEffortNote" extends-resource="component://workeffort/widget/WorkEffortForms.xml" type="single" target="createTaskNote"/>
+    <form name="AddTaskNote" extends="AddWorkEffortNote" extends-resource="component://projectmgr/widget/forms/ProjectForms.xml" type="single" target="createTaskNote"/>
     <form name="TaskInfo" type="single" default-map-name="task">
         <field name="taskName" title="${uiLabelMap.ProjectMgrTaskName}"><display description="${task.taskName} [${task.taskId}]"/></field>
         <field name="phaseName" title="${uiLabelMap.ProjectMgrPhaseName}"><display description="${projectResult.phaseName} [${projectResult.phaseId}]"/></field>

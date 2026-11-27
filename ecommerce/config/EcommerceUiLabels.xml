@@ -4475,42 +4475,6 @@
         <value xml:lang="zh">论坛摘要</value>
         <value xml:lang="zh-TW">論壇摘要</value>
     </property>
-    <property key="PageTitleGiftCardBalance">
-        <value xml:lang="da">Gavekort saldo</value>
-        <value xml:lang="de">Gutschein Kontostand</value>
-        <value xml:lang="en">Gift Card Balance</value>
-        <value xml:lang="es">Balance de Tarjeta de Regalo</value>
-        <value xml:lang="fr">Solde de la carte cadeau</value>
-        <value xml:lang="hi-IN">उपहार कार्ड बचा मुल्य</value>
-        <value xml:lang="it">Saldo carta omaggio</value>
-        <value xml:lang="ja">ギフトカード残高</value>
-        <value xml:lang="nl">Geschenkkaart saldo/waarde</value>
-        <value xml:lang="pt-BR">Saldo do cartão de presentes</value>
-        <value xml:lang="ro">Sold card cadou</value>
-        <value xml:lang="ru">Баланс дисконтной карты</value>
-        <value xml:lang="th">ยอดคงเหลือในบัตรของขวัญ</value>
-        <value xml:lang="vi">Tài khoản thẻ quà tặng</value>
-        <value xml:lang="zh">礼品卡余额</value>
-        <value xml:lang="zh-TW">禮物卡餘額</value>
-    </property>
-    <property key="PageTitleGiftCardLink">
-        <value xml:lang="da">Gavekort link</value>
-        <value xml:lang="de">Gutschein Link</value>
-        <value xml:lang="en">Gift Card Link</value>
-        <value xml:lang="es">Enlace aTarjeta de Regalo</value>
-        <value xml:lang="fr">Lien vers la carte cadeau</value>
-        <value xml:lang="hi-IN">उपहार कार्ड लिंक</value>
-        <value xml:lang="it">Link carta omaggio</value>
-        <value xml:lang="ja">ギフトカードリンク</value>
-        <value xml:lang="nl">Geschenkkaart link</value>
-        <value xml:lang="pt-BR">Conexão do cartão de presentes</value>
-        <value xml:lang="ro">Link card cadou</value>
-        <value xml:lang="ru">Ссылка на дисконтную карту</value>
-        <value xml:lang="th">ลิ้งบัตรของขวัญ</value>
-        <value xml:lang="vi">Liên kết thẻ quà tặng</value>
-        <value xml:lang="zh">礼品卡链接</value>
-        <value xml:lang="zh-TW">禮物卡連結</value>
-    </property>
     <property key="PageTitleLastViewProducts">
         <value xml:lang="cs">předchozí náhled výrobku</value>
         <value xml:lang="da">Sidst viste produkter</value>

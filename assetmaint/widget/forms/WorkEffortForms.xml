@@ -75,8 +75,8 @@
         <field map-name="workEffort" name="submitButton" title="${uiLabelMap.CommonSave}"><submit/></field>
     </form>
 
-    <form name="EditWorkEffortPartyAssign" extends="EditWorkEffortPartyAssign" extends-resource="component://workeffort/widget/WorkEffortPartyAssignForms.xml"
-        target="createWorkEffortPartyAssign">
+    <form name="EditWorkEffortPartyAssign" default-map-name="workEffortPartyAssignment" target="createWorkEffortPartyAssign" title="" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
         <actions>
             <entity-condition entity-name="PartyRoleDetailAndPartyDetail" list="listMaintParties">
                 <condition-expr field-name="parentTypeId" value="FAM_ASSIGNEE"/>
@@ -85,31 +85,89 @@
                 <condition-expr field-name="parentTypeId" value="FAM_ASSIGNEE"/>
             </entity-condition>
         </actions>
-        <field name="roleTypeId">
-            <drop-down>
-                <list-options list-name="listMaintRoles" key-name="roleTypeId"/>
-            </drop-down>
-        </field>
-        <field name="fromDate"><date-time default-value="${nowTimestamp}"/></field>
+        <field name="workEffortId"><hidden/></field>
         <field name="partyId">
             <drop-down>
                 <list-options list-name="listMaintParties" key-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
             </drop-down>
         </field>
-        <field name="expectationEnumId"><ignored/></field>
+        <field name="roleTypeId" title="${uiLabelMap.PartyRoleType}">
+            <drop-down>
+                <list-options list-name="listMaintRoles" key-name="roleTypeId"/>
+            </drop-down>
+        </field>
+        <field name="fromDate"><date-time default-value="${nowTimestamp}"/></field>
+        <field name="thruDate"><date-time/></field>
+        <field name="statusId">
+            <drop-down no-current-selected-key="PRTYASGN_ASSIGNED">
+                <entity-options entity-name="StatusItem">
+                    <entity-constraint name="statusTypeId" operator="equals" value="PRTYASGN_STATUS"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="availabilityStatusId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="StatusItem" key-field-name="statusId">
+                    <entity-constraint name="statusTypeId" operator="equals" value="WEPA_AVAILABILITY"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="delegateReasonEnumId" title="${uiLabelMap.WorkEffortDelegateReason}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Enumeration" key-field-name="enumId">
+                    <entity-constraint name="enumTypeId" operator="equals" value="WORK_EFF_DEL_REAS"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="facilityId"><hidden value="${facilityId}"/></field>
+        <field name="mustRsvp"><check/></field>
+        <field name="comments"><text size="60" maxlength="255"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
-    <form name="ListWorkEffortPartyAssigns" extends="ListWorkEffortPartyAssigns" extends-resource="component://workeffort/widget/WorkEffortPartyAssignForms.xml"
-        header-row-style="header-row-2" default-table-style="basic-table">
-        <field name="partyId">
+    <form name="ListWorkEffortPartyAssigns" separate-columns="false" target="updateWorkEffortPartyAssign" title="" type="list"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table">
+        <actions>
+            <entity-condition entity-name="WorkEffortPartyAssignment">
+                <condition-expr field-name="workEffortId" operator="equals" from-field="workEffortId"/>
+                <order-by field-name="roleTypeId"/>
+            </entity-condition>
+        </actions>
+        <field name="workEffortId"><hidden/></field>
+        <field name="partyId" widget-style="buttontext">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
         </field>
-        <field name="statusDateTime"><ignored/></field>
-        <field name="expectationEnumId"><ignored/></field>
-        <field name="facilityId"><ignored/></field>
-        <field name="mustRsvp"><ignored/></field>
-        <field name="comments"><ignored/></field>
+        <field name="roleTypeId" title="${uiLabelMap.PartyRoleType}"><display-entity entity-name="RoleType"/></field>
+        <field name="fromDate"><display/></field>
+        <field name="thruDate"><date-time/></field>
+        <field name="statusId">
+            <drop-down no-current-selected-key="PARTYASSIGN_UNASSIGNED">
+                <entity-options entity-name="StatusItem">
+                    <entity-constraint name="statusTypeId" operator="equals" value="PRTYASGN_STATUS"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="availabilityStatusId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="StatusItem" key-field-name="statusId">
+                    <entity-constraint name="statusTypeId" operator="equals" value="WEPA_AVAILABILITY"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="delegateReasonEnumId" title="${uiLabelMap.WorkEffortDelegateReason}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Enumeration" key-field-name="enumId">
+                    <entity-constraint name="enumTypeId" operator="equals" value="WORK_EFF_DEL_REAS"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
     <form name="AddWorkEffortChild" target="createWorkEffortAndAssoc" type="single"
@@ -184,22 +242,130 @@
     </form>
 
     <!-- TimeEntry -->
-    <!-- Extended form necessary so we can preserve the parameters needed to refresh the screen -->
-    <form name="AddWorkEffortTimeEntry" extends="AddWorkEffortTimeEntry" extends-resource="component://workeffort/widget/WorkEffortForms.xml">
+    <!-- fixedAssetId and maintHistSeqId are kept so the screen can be refreshed after a submit -->
+    <form name="AddWorkEffortTimeEntry" type="single" target="createWorkEffortTimeEntry" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <auto-fields-service service-name="createTimeEntry"/>
+        <field name="timeEntryId"><ignored/><!-- don't pass, will be sequenced --></field>
+        <field name="timesheetId"><lookup size="10" target-form-name="LookupTimesheet"/></field>
+        <field name="partyId" title="${uiLabelMap.PartyParty}"><lookup target-form-name="LookupPartyName" default-value="${timesheet.partyId}"/></field>
+        <field name="fromDate"><date-time default-value="${nowTimestamp}"/></field>
+        <field name="rateTypeId" title="${uiLabelMap.WorkEffortTimesheetRateType}">
+            <drop-down no-current-selected-key="STANDARD">
+                <entity-options entity-name="RateType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="workEffortId"><hidden/></field>
         <field name="fixedAssetId"><hidden/></field>
         <field name="maintHistSeqId"><hidden/></field>
+        <field name="invoiceId"><ignored/><!-- don't pass, will be populated when this is added to an invoice later --></field>
+        <field name="invoiceItemSeqId"><ignored/><!-- don't pass, will be populated when this is added to an invoice later --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
-    <form name="ListWorkEffortTimeEntries" extends="ListWorkEffortTimeEntries" extends-resource="component://workeffort/widget/WorkEffortForms.xml">
-        <field name="invoiceInfo"><ignored/></field>
+    <form name="ListWorkEffortTimeEntries" type="list" list-name="timesheetEntries" target="updateWorkEffortTimeEntry"
+        header-row-style="header-row-2" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="TimeEntry">
+                <condition-expr field-name="workEffortId" from-field="workEffortId"/>
+                <order-by field-name="timesheetId"/>
+                <order-by field-name="partyId"/>
+                <order-by field-name="rateTypeId"/>
+                <order-by field-name="-fromDate"/>
+            </entity-condition>
+        </actions>
+        <field name="timeEntryId"><hidden/></field>
+        <field name="timesheetId">
+            <lookup size="10" target-form-name="LookupTimesheet">
+                <sub-hyperlink target="EditTimesheet" link-style="buttontext" description="${uiLabelMap.WorkEffortTimesheet}:${timesheetId}">
+                    <parameter param-name="timesheetId"/>
+                </sub-hyperlink>
+            </lookup>
+        </field>
+        <field name="partyId" title="${uiLabelMap.PartyParty}"><lookup size="12" target-form-name="LookupPartyName" default-value="${timesheet.partyId}"/></field>
+        <field name="rateTypeId" title="${uiLabelMap.WorkEffortTimesheetRateType}">
+            <drop-down no-current-selected-key="STANDARD">
+                <entity-options entity-name="RateType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="workEffortId"><hidden/></field>
+        <field name="comments"><text size="60"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="deleteLink" title=" " widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.CommonDelete}" target="deleteWorkEffortTimeEntry" also-hidden="false">
+                <parameter param-name="workEffortId"/>
+                <parameter param-name="timeEntryId"/>
+            </hyperlink>
+        </field>
     </form>
 
     <!-- WorkEffort Note -->
-    <!-- Extended form necessary so we can preserve the parameters needed to refresh the screen -->
-    <form name="AddWorkEffortNote" extends="AddWorkEffortNote" extends-resource="component://workeffort/widget/WorkEffortForms.xml">
+    <!-- fixedAssetId and maintHistSeqId are kept so the screen can be refreshed after a submit -->
+    <form name="AddWorkEffortNote" type="single" target="updateWorkEffortNote" title="" default-map-name="workEffortNoteAndData"
+        header-row-style="header-row" default-table-style="basic-table">
+        <alt-target use-when="noteId == null" target="createWorkEffortNote"/>
+        <auto-fields-service service-name="createWorkEffortNote"/>
+        <field name="noteId" use-when="noteId != null"><hidden/></field>
         <field name="workEffortId"><hidden/></field>
         <field name="fixedAssetId"><hidden/></field>
         <field name="maintHistSeqId"><hidden/></field>
+        <field name="noteInfo" title="${uiLabelMap.CommonNote}"><textarea cols="70" rows="5"/></field>
+        <field name="internalNote" title="${uiLabelMap.WorkEffortInternalNote}">
+            <drop-down no-current-selected-key="">
+                <option key="Y" description="${uiLabelMap.CommonYes}"/>
+                <option key="N" description="${uiLabelMap.CommonNo}"/>
+            </drop-down>
+        </field>
+        <field name="noteParty"><hidden/></field>
+        <field name="noteName"><hidden/></field>
+        <field name="submitButton" use-when="noteId == null" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" use-when="noteId != null" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <form name="ListWorkEffortNotes" type="list" list-name="workEffortNotes"
+        header-row-style="header-row-2" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="WorkEffortNoteAndData">
+                <condition-expr field-name="workEffortId" from-field="workEffortId"/>
+                <order-by field-name="noteId"/>
+            </entity-condition>
+        </actions>
+        <field name="noteId">
+            <hyperlink description="${noteId}" target="EditWorkEffortNotes" also-hidden="false">
+                <parameter param-name="workEffortId"/>
+                <parameter param-name="noteId"/>
+                <parameter param-name="fixedAssetId" from-field="parameters.fixedAssetId"/>
+                <parameter param-name="maintHistSeqId" from-field="parameters.maintHistSeqId"/>
+            </hyperlink>
+        </field>
+        <field name="workEffortId" entity-name="WorkEffort" widget-style="buttontext">
+            <hyperlink description="${workEffortId}" target="EditWorkEffort" also-hidden="false">
+                <parameter param-name="workEffortId"/>
+            </hyperlink>
+        </field>
+        <field name="noteInfo" title="${uiLabelMap.CommonNote}"><display/></field>
+        <field name="noteParty" title="${uiLabelMap.CommonBy}"><display description="${groovy:org.apache.ofbiz.party.party.PartyHelper.getPartyName(delegator, noteParty, true)} at ${noteDateTime}"/></field>
+        <field name="internalNote" title="${uiLabelMap.WorkEffortPrivatePublic}" widget-style="buttontext" use-when="&quot;N&quot;.equals(internalNote)">
+            <hyperlink description="${uiLabelMap.OrderNotesPrivate}" target="updateWorkEffortNote">
+                <parameter param-name="workEffortId"/>
+                <parameter param-name="noteId"/>
+                <parameter param-name="internalNote" value="Y"/>
+                <parameter param-name="fixedAssetId" from-field="parameters.fixedAssetId"/>
+                <parameter param-name="maintHistSeqId" from-field="parameters.maintHistSeqId"/>
+            </hyperlink>
+        </field>
+        <field name="internalNote" title="${uiLabelMap.WorkEffortPrivatePublic}" widget-style="buttontext" use-when="&quot;Y&quot;.equals(internalNote)">
+            <hyperlink description="${uiLabelMap.OrderNotesPublic}" target="updateWorkEffortNote">
+                <parameter param-name="workEffortId"/>
+                <parameter param-name="noteId"/>
+                <parameter param-name="internalNote" value="N"/>
+                <parameter param-name="fixedAssetId" from-field="parameters.fixedAssetId"/>
+                <parameter param-name="maintHistSeqId" from-field="parameters.maintHistSeqId"/>
+            </hyperlink>
+        </field>
     </form>
 </forms>

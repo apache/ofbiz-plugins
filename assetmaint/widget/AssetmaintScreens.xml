@@ -270,7 +270,7 @@
                         <screenlet id="add-workeffort-note" title="${uiLabelMap.PageTitleAddWorkEffortNotes}" collapsible="true">
                             <include-form name="AddWorkEffortNote" location="component://assetmaint/widget/forms/WorkEffortForms.xml"/>
                         </screenlet>
-                        <include-form name="ListWorkEffortNotes" location="component://workeffort/widget/WorkEffortForms.xml"/>
+                        <include-form name="ListWorkEffortNotes" location="component://assetmaint/widget/forms/WorkEffortForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
