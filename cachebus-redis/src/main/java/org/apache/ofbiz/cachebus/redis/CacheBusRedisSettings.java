@@ -36,7 +36,7 @@ import io.lettuce.core.RedisURI;
  * @param cluster the cluster name, part of the channel name
  * @param maxPayloadBytes received payloads larger than this are dropped and treated as a gap
  * @param tombstoneMillis how long a received key invalidation blocks plain puts of that key
- * @param heartbeatMillis how often the subscribed connection is checked with a PING
+ * @param heartbeatMillis how often both connections are checked with a PING
  * @param heartbeatTimeoutMillis how long a PING may take before the connections are dropped and reopened, at most the
  *        command timeout
  */

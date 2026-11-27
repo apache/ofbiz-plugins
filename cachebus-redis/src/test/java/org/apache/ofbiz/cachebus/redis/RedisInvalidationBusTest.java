@@ -25,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -41,12 +40,8 @@ import org.junit.jupiter.api.Test;
 import org.testcontainers.DockerClientFactory;
 import org.testcontainers.containers.Container.ExecResult;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.DockerImageName;
-
-import com.github.dockerjava.api.command.CreateContainerCmd;
-import com.github.dockerjava.api.model.ExposedPort;
-import com.github.dockerjava.api.model.PortBinding;
-import com.github.dockerjava.api.model.Ports;
 
 /** Tests the Redis/Valkey bus against real Valkey containers; skipped when Docker is not available. */
 public final class RedisInvalidationBusTest {
@@ -68,7 +63,6 @@ public final class RedisInvalidationBusTest {
 
     private static GenericContainer<?> valkey;
     private static GenericContainer<?> securedValkey;
-    private static int fixedPort;
 
     private final List<RedisInvalidationBus> buses = new ArrayList<>();
     private final List<GenericContainer<?>> extraContainers = new ArrayList<>();
@@ -184,16 +178,6 @@ public final class RedisInvalidationBusTest {
             }
             Thread.sleep(20);
         }
-    }
-
-    private static int freePort() throws IOException {
-        try (ServerSocket socket = new ServerSocket(0)) {
-            return socket.getLocalPort();
-        }
-    }
-
-    private static void bindFixedPort(CreateContainerCmd cmd) {
-        cmd.getHostConfig().withPortBindings(new PortBinding(Ports.Binding.bindPort(fixedPort), ExposedPort.tcp(REDIS_PORT)));
     }
 
     @Test
@@ -390,19 +374,19 @@ public final class RedisInvalidationBusTest {
 
     @Test
     public void aBusStartedBeforeTheServerConnectsAndReportsAGap() throws Exception {
-        fixedPort = freePort();
+        // the container and its port exist from the start, the server in it only later, so no other process can take the port
+        GenericContainer<?> late = new GenericContainer<>(VALKEY).withExposedPorts(REDIS_PORT)
+                .withCommand("tail", "-f", "/dev/null").waitingFor(Wait.forSuccessfulCommand("true"));
+        extraContainers.add(late);
+        late.start();
         RecordingReceiver receiver = new RecordingReceiver();
-        RedisInvalidationBus bus = start(settings("redis://localhost:" + fixedPort, "late"), receiver);
+        RedisInvalidationBus bus = start(settings(uri(late), "late"), receiver);
         Thread.sleep(500);
         assertFalse(connected(bus));
         bus.publish("lost");
         assertEquals(1L, counter(bus, "publishFailures"));
         assertEquals(0L, counter(bus, "published"));
-        GenericContainer<?> late = new GenericContainer<>(VALKEY).withExposedPorts(REDIS_PORT)
-                .withCreateContainerCmdModifier(RedisInvalidationBusTest::bindFixedPort);
-        extraContainers.add(late);
-        late.start();
-        assertEquals(fixedPort, late.getMappedPort(REDIS_PORT));
+        exec(late, "valkey-server", "--daemonize", "yes", "--protected-mode", "no");
         await("connected once the server is there", () -> connected(bus));
         await("a gap reported", () -> receiver.gaps.get() == 1);
         Thread.sleep(200);
