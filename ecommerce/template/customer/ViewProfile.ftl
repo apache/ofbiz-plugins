@@ -513,6 +513,7 @@ under the License.
             <th>${uiLabelMap.MarketingContactListOptInVerifyCode}</th>
             <th></th>
           </tr>
+          <#assign contextPath = request.getContextPath()>
           <#list contactListPartyList as contactListParty>
           <#assign contactList = contactListParty.getRelatedOne("ContactList", false)! />
           <#assign statusItem = contactListParty.getRelatedOne("StatusItem", true)! />
@@ -530,6 +531,7 @@ under the License.
                 <form method="post" class="form-inline" action="<@ofbizUrl>updateContactListParty</@ofbizUrl>" name="clistRejectForm${contactListParty_index}">
                   <#assign productStoreId = Static["org.apache.ofbiz.product.store.ProductStoreWorker"].getProductStoreId(request) />
                   <input type="hidden" name="productStoreId" value="${productStoreId!}" />
+                  <input type="hidden" name="baseLocation" value="${contextPath}"/>
                   <input type="hidden" name="partyId" value="${party.partyId}"/>
                   <input type="hidden" name="contactListId" value="${contactListParty.contactListId}"/>
                   <input type="hidden" name="preferredContactMechId" value="${contactListParty.preferredContactMechId}"/>
@@ -539,6 +541,7 @@ under the License.
                 </form>
               <#elseif ("CLPT_PENDING" == contactListParty.statusId!)>
                 <form method="post" class="form-inline" action="<@ofbizUrl>updateContactListParty</@ofbizUrl>" name="clistAcceptForm${contactListParty_index}">
+                  <input type="hidden" name="baseLocation" value="${contextPath}"/>
                   <input type="hidden" name="partyId" value="${party.partyId}"/>
                   <input type="hidden" name="contactListId" value="${contactListParty.contactListId}"/>
                   <input type="hidden" name="preferredContactMechId" value="${contactListParty.preferredContactMechId}"/>
@@ -551,6 +554,7 @@ under the License.
                 </form>
               <#elseif ("CLPT_REJECTED" == contactListParty.statusId!)>
                 <form method="post" class="form-inline" action="<@ofbizUrl>updateContactListParty</@ofbizUrl>" name="clistPendForm${contactListParty_index}">
+                  <input type="hidden" name="baseLocation" value="${contextPath}"/>
                   <input type="hidden" name="partyId" value="${party.partyId}"/>
                   <input type="hidden" name="contactListId" value="${contactListParty.contactListId}"/>
                   <input type="hidden" name="preferredContactMechId" value="${contactListParty.preferredContactMechId}"/>
@@ -564,6 +568,7 @@ under the License.
           </#list>
         </table>
           <form method="post" class="form-inline" action="<@ofbizUrl>createContactListParty</@ofbizUrl>" name="clistPendingForm">
+            <input type="hidden" name="baseLocation" value="${contextPath}"/>
             <input type="hidden" name="partyId" value="${party.partyId}"/>
             <label class="mr-2">${uiLabelMap.EcommerceNewListSubscription}: </label>
             <input type="hidden" name="statusId" value="CLPT_PENDING"/>
