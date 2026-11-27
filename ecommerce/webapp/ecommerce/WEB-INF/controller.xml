@@ -123,7 +123,7 @@ under the License.
     <request-map uri="confirmForcedTotpEnrollment" method="post">
         <security https="true" auth="false" csrf-token="true"/>
         <event type="java" path="org.apache.ofbiz.webapp.control.LoginWorker" invoke="confirmForcedTotpEnrollment"/>
-        <response name="success" type="view-last"/>
+        <response name="success" type="view" value="main"/>
         <response name="requirePasswordChange" type="view" value="requirePasswordChange"/>
         <response name="authFactorRequired" type="view" value="authFactorChallenge"/>
         <response name="authFactorEnrollmentRequired" type="view" value="authFactorForcedEnrollment"/>
@@ -132,7 +132,7 @@ under the License.
     <request-map uri="verifyAuthFactor" method="post">
         <security https="true" auth="false" csrf-token="true"/>
         <event type="java" path="org.apache.ofbiz.securityext.login.LoginEvents" invoke="storeVerifyAuthFactor"/>
-        <response name="success" type="view-last"/>
+        <response name="success" type="view" value="main"/>
         <response name="requirePasswordChange" type="view" value="requirePasswordChange"/>
         <response name="authFactorRequired" type="view" value="authFactorChallenge"/>
         <response name="authFactorEnrollmentRequired" type="view" value="authFactorForcedEnrollment"/>
@@ -150,12 +150,14 @@ under the License.
         <security https="true" auth="true" csrf-token="true"/>
         <event type="java" path="org.apache.ofbiz.webapp.control.LoginWorker" invoke="beginTotpEnrollment"/>
         <response name="success" type="view" value="authFactorEnrollment"/>
+        <response name="authFactorRequired" type="view" value="authFactorReverify" save-last-view="true"/>
         <response name="error" type="view" value="authFactorSetup"/>
     </request-map>
     <request-map uri="confirmTotpEnrollment" method="post">
         <security https="true" auth="true" csrf-token="true"/>
         <event type="java" path="org.apache.ofbiz.webapp.control.LoginWorker" invoke="confirmTotpEnrollment"/>
         <response name="success" type="view" value="authFactorSetup"/>
+        <response name="authFactorRequired" type="view" value="authFactorReverify" save-last-view="true"/>
         <response name="error" type="view" value="authFactorSetup"/>
     </request-map>
     <request-map uri="revokeMfaFactor" method="post">
@@ -1868,7 +1870,7 @@ under the License.
     <view-map name="policies" type="screen" page="component://ecommerce/widget/CommonScreens.xml#policies" auth="false"/>
     <view-map name="CookiePolicy" type="screen" page="component://ecommerce/widget/CommonScreens.xml#CookiePolicy" auth="false"/>
     <view-map name="login" type="screen" page="component://ecommerce/widget/CommonScreens.xml#login" auth="false"/>
-    <view-map name="requirePasswordChange" type="screen" page="component://ecommerce/widget/CommonScreens.xml#requirePasswordChange"/>
+    <view-map name="requirePasswordChange" type="screen" page="component://ecommerce/widget/CommonScreens.xml#requirePasswordChange" auth="false"/>
     <view-map name="authFactorChallenge" type="screen" page="component://ecommerce/widget/CommonScreens.xml#authFactorChallenge" auth="false"/>
     <view-map name="authFactorForcedEnrollment" type="screen" page="component://ecommerce/widget/CommonScreens.xml#authFactorForcedEnrollment" auth="false"/>
     <view-map name="authFactorReverify" type="screen" page="component://ecommerce/widget/CommonScreens.xml#authFactorReverify"/>
