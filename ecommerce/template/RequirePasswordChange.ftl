@@ -20,6 +20,8 @@ under the License.
 <#assign username = ""/>
 <#if requestParameters.USERNAME?has_content>
   <#assign username = requestParameters.USERNAME/>
+<#elseif requestAttributes.USERNAME?has_content>
+  <#assign username = requestAttributes.USERNAME/>
 <#elseif autoUserLogin?has_content>
   <#assign username = autoUserLogin.userLoginId/>
 </#if>
