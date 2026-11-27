@@ -107,6 +107,10 @@ upgrade.
 * The `viewcontent` and `recentlyviewed` screens of `widget/ContentScreens.xml` are removed with their templates,
   scripts and labels; the `viewcontent` request had already been disabled, and the recently viewed box only listed
   content opened through it ([OFBIZ-13886](https://issues.apache.org/jira/browse/OFBIZ-13886)).
+* ecommerce verifies customer email addresses when the store has a `PRDS_EMAIL_VERIFY` email setting
+  ([OFBIZ-13858](https://issues.apache.org/jira/browse/OFBIZ-13858)): registration, adding or changing an email
+  address on the profile contact page and the Resend button on the profile send the link, and the new
+  `verifyEmailAddress` request marks the address verified. Nothing is blocked for unverified addresses.
 
 ### example
 

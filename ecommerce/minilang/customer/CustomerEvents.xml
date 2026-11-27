@@ -388,6 +388,13 @@ under the License.
             <set from-field="tempMap.partyId" field="emailPurposeContext.partyId"/>
             <set value="PRIMARY_EMAIL" field="emailPurposeContext.contactMechPurposeTypeId"/>
             <call-service service-name="createPartyContactMechPurpose" in-map-name="emailPurposeContext"/>
+            <set field="verifyEmailContext.partyId" from-field="tempMap.partyId"/>
+            <set field="verifyEmailContext.contactMechId" from-field="emailPurposeContext.contactMechId"/>
+            <set field="verifyEmailContext.productStoreId" from-field="parameters.emailProductStoreId"/>
+            <call-class-method class-name="org.apache.ofbiz.webapp.website.WebSiteWorker" method-name="getWebSiteId" ret-field="verifyEmailContext.webSiteId">
+                <field field="request" type="jakarta.servlet.ServletRequest"/>
+            </call-class-method>
+            <call-service service-name="sendEmailAddressVerification" in-map-name="verifyEmailContext" break-on-error="false"/>
         </if-not-empty>
 
         <!-- club number -->

@@ -26,6 +26,10 @@ import org.apache.ofbiz.accounting.payment.PaymentWorker
 
 productStoreId = ProductStoreWorker.getProductStoreId(request)
 context.productStoreId = productStoreId
+context.emailVerificationEnabled = from('ProductStoreEmailSetting')
+        .where('productStoreId', productStoreId, 'emailType', 'PRDS_EMAIL_VERIFY')
+        .cache()
+        .queryOne()?.bodyScreenLocation as boolean
 
 if (userLogin) {
     profiledefs = from('PartyProfileDefault').where('partyId', partyId, 'productStoreId', productStoreId).queryOne()

@@ -230,6 +230,13 @@ under the License.
                   <#elseif contactMech.contactMechTypeId! = "EMAIL_ADDRESS">
                       ${contactMech.infoString}
                       <a href="mailto:${contactMech.infoString}" class="linktext">(${uiLabelMap.PartySendEmail})</a>
+                      <#if emailVerificationEnabled && partyContactMech.verified! != "Y">
+                        <span class="badge badge-warning">${uiLabelMap.EcommerceEmailNotVerified}</span>
+                        <form name="resendVerification_${contactMech.contactMechId}" method="post" action="<@ofbizUrl>resendEmailAddressVerification</@ofbizUrl>" class="d-inline">
+                          <input type="hidden" name="contactMechId" value="${contactMech.contactMechId}"/>
+                          <input type="submit" value="${uiLabelMap.EcommerceResendVerificationEmail}" class="btn btn-outline-secondary btn-sm"/>
+                        </form>
+                      </#if>
                   <#elseif contactMech.contactMechTypeId! = "WEB_ADDRESS">
                     <div>
                       ${contactMech.infoString}
