@@ -61,6 +61,7 @@ Define and maintain automated test suites within the OFBiz framework to ensure c
 - **Isolation**: Ensure tests do not depend on external data states. Use seed or demo data provided within the component.
 - **Naming**: Test case names should be descriptive of the scenario (e.g., `testCreateExample`).
 - **Paths**: Use `component://` paths for all resource locations.
+- **Wrong Keys Through runSync**: Do not expect "Unknown parameter" or `extraFields` from a `runSync` call; the dispatcher drops undeclared keys before validation. Assert `missingFields` for the required field instead.
 
 ## Examples
 **Example: Simple XML Service Test**
