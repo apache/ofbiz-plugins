@@ -56,7 +56,8 @@ before.
               distributed-cache-clear-class-name="org.apache.ofbiz.entity.cache.EntityCacheInvalidator">
    ```
 
-   JMS stays the default unless a delegator selects `EntityCacheInvalidator`.
+   JMS stays the default unless a delegator selects `EntityCacheInvalidator`; it is deprecated and will be removed after
+   26.11.
 
 3. Start the servers. Each one logs `cachebus-redis: cache invalidation bus installed, channel ...` and, once connected,
    `Redis cache invalidation bus connected to channel ...`. Check them on the status page described below.
