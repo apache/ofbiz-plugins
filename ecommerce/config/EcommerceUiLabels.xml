@@ -1065,6 +1065,12 @@
         <value xml:lang="zh">编辑这个评论</value>
         <value xml:lang="zh-TW">編輯這個評論</value>
     </property>
+    <property key="EcommerceEmailAddressVerification">
+        <value xml:lang="en">Email Address Verification</value>
+    </property>
+    <property key="EcommerceEmailNotVerified">
+        <value xml:lang="en">Not verified</value>
+    </property>
     <property key="EcommerceEmptyBody">
         <value xml:lang="da">Tekst ikke udfyldt</value>
         <value xml:lang="de">Leerer Meldungstext</value>
@@ -2959,6 +2965,9 @@
         <value xml:lang="vi">Lịch sử yêu cầu</value>
         <value xml:lang="zh">请求历史记录</value>
         <value xml:lang="zh-TW">請求歷史記錄</value>
+    </property>
+    <property key="EcommerceResendVerificationEmail">
+        <value xml:lang="en">Resend verification email</value>
     </property>
     <property key="EcommerceRespond">
         <value xml:lang="da">Svar</value>

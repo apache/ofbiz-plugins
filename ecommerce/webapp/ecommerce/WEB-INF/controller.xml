@@ -977,14 +977,30 @@ under the License.
     <request-map uri="createEmailAddress">
         <security https="true" auth="true"/>
         <event type="service" invoke="createPartyEmailAddress"/>
-        <response name="success" type="view" value="editcontactmech"/>
+        <response name="success" type="request" value="sendEmailAddressVerificationAfterEdit"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
     <request-map uri="updateEmailAddress">
         <security https="true" auth="true"/>
         <event type="service" invoke="updatePartyEmailAddress"/>
-        <response name="success" type="view" value="editcontactmech"/>
+        <response name="success" type="request" value="sendEmailAddressVerificationAfterEdit"/>
         <response name="error" type="view" value="editcontactmech"/>
+    </request-map>
+    <request-map uri="sendEmailAddressVerificationAfterEdit">
+        <security https="true" auth="true" direct-request="false"/>
+        <event type="groovy" path="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/customer/SendEmailAddressVerification.groovy"/>
+        <response name="success" type="view" value="editcontactmech"/>
+    </request-map>
+    <request-map uri="resendEmailAddressVerification">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/customer/SendEmailAddressVerification.groovy"/>
+        <response name="success" type="request-redirect" value="viewprofile"/>
+    </request-map>
+    <request-map uri="verifyEmailAddress" track-serverhit="false" track-visit="false">
+        <security https="true" auth="false"/>
+        <event type="service" invoke="verifyEmailAddress"/>
+        <response name="success" type="view" value="emailaddressverification"/>
+        <response name="error" type="view" value="emailaddressverification"/>
     </request-map>
 
     <request-map uri="createPartyContactMechPurpose">
@@ -1844,6 +1860,7 @@ under the License.
     <view-map name="newcustomer" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#newcustomer" auth="false"/>
 
     <view-map name="viewprofile" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#viewprofile"/>
+    <view-map name="emailaddressverification" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#EmailAddressVerification" auth="false"/>
     <view-map name="editcontactmech" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#editcontactmech"/>
     <view-map name="editcreditcard" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#editcreditcard"/>
     <view-map name="editeftaccount" type="screen" page="component://ecommerce/widget/CustomerScreens.xml#editeftaccount"/>

@@ -537,6 +537,22 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <screen name="EmailAddressVerification">
+        <section>
+            <actions>
+                <set field="titleProperty" value="EcommerceEmailAddressVerification"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="${uiLabelMap.EcommerceEmailAddressVerification}">
+                            <link target="main" text="${uiLabelMap.EcommerceContinueShopping}" style="btn btn-outline-secondary"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="viewprofile">
         <section>
             <actions>
