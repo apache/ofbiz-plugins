@@ -376,7 +376,7 @@ under the License.
                 <decorator-screen name="CommonProjectDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="AddWorkEffortNotePanel" title="${uiLabelMap.PageTitleAddProjectNotes}" collapsible="true">
-                            <include-form name="AddWorkEffortNote" location="component://workeffort/widget/WorkEffortForms.xml"/>
+                            <include-form name="AddWorkEffortNote" location="component://projectmgr/widget/forms/ProjectForms.xml"/>
                         </screenlet>
                         <include-form name="ListProjectNotes" location="component://projectmgr/widget/forms/ProjectForms.xml"/>
                     </decorator-section>

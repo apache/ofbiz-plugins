@@ -155,53 +155,6 @@ under the License.
         </section>
     </screen>
 
-    <screen name="giftcardbalance">
-        <section>
-            <actions>
-                <set field="MainColumnStyle" value="center"/>
-
-                <set field="titleProperty" value="PageTitleGiftCardBalance"/>
-                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/customer/GiftCardBalance.groovy"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column">
-                        <include-screen name="leftbar" location="component://ecommerce/widget/CommonScreens.xml"/>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/template/customer/GiftCardBalance.ftl"/></html></platform-specific>
-                    </decorator-section>
-                    <decorator-section name="right-column">
-                        <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="giftcardlink">
-        <section>
-            <actions>
-                <set field="MainColumnStyle" value="center"/>
-
-                <set field="titleProperty" value="PageTitleGiftCardLink"/>
-                <script location="component://ecommerce/src/main/groovy/org/apache/ofbiz/ecommerce/customer/GiftCardLink.groovy"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column">
-                        <include-screen name="leftbar" location="component://ecommerce/widget/CommonScreens.xml"/>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/template/customer/GiftCardLink.ftl"/></html></platform-specific>
-                    </decorator-section>
-                    <decorator-section name="right-column">
-                        <include-screen name="rightbar" location="component://ecommerce/widget/CommonScreens.xml"/>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
     <screen name="customersurvey">
         <section>
             <actions>

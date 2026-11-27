@@ -440,6 +440,18 @@
         <response name="success" type="view" value="taskView"/>
         <response name="error" type="view" value="taskView"/>
     </request-map>
+    <request-map uri="createWorkEffortNote">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createWorkEffortNote"/>
+        <response name="success" type="view" value="EditWorkEffortNotes"/>
+        <response name="error" type="view" value="EditWorkEffortNotes"/>
+    </request-map>
+    <request-map uri="updateWorkEffortNote">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateWorkEffortNote"/>
+        <response name="success" type="view" value="EditWorkEffortNotes"/>
+        <response name="error" type="view" value="EditWorkEffortNotes"/>
+    </request-map>
     <request-map uri="updateProjectNote">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateWorkEffortNote"/>

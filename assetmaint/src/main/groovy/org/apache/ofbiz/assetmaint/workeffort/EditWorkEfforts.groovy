@@ -18,9 +18,9 @@
 */
 package org.apache.ofbiz.assetmaint.workeffort
 
-maintHistSeqId = context.maintHistSeqId
-fixedAssetId = context.fixedAssetId
-workEffortId = context.workEffortId
+maintHistSeqId = context.maintHistSeqId ?: parameters.maintHistSeqId
+fixedAssetId = context.fixedAssetId ?: parameters.fixedAssetId
+workEffortId = context.workEffortId ?: parameters.workEffortId
 
 fixedAssetMaint = null
 workEffort = null

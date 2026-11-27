@@ -673,7 +673,7 @@
         <field entry-name="xx" name="thruDate"><date-time type="date"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="ListProjectNotes" extends="ListWorkEffortNotes" extends-resource="component://workeffort/widget/WorkEffortForms.xml" type="list" paginate-target="EditWorkEffortNotes"
+    <form name="ListProjectNotes" extends="ListWorkEffortNotes" extends-resource="component://projectmgr/widget/forms/ProjectForms.xml" type="list" paginate-target="EditWorkEffortNotes"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="WorkEffortNoteAndData">
@@ -883,7 +883,7 @@
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><date-time type="timestamp"/></field>
         <field name="submitButton" title="${uiLabelMap.PageTitleAddProjectTimeToInvoice}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="ListContents" extends="ListWorkEffortContents" extends-resource="component://workeffort/widget/WorkEffortForms.xml" default-entity-name="WorkEffortContent">
+    <form name="ListContents" extends="ListWorkEffortContents" extends-resource="component://projectmgr/widget/forms/ProjectForms.xml" default-entity-name="WorkEffortContent">
         <field name="contentId" use-when="headerItem.equals(&quot;EditProjectContents&quot;)">
             <display-entity entity-name="Content" key-field-name="contentId" description="${contentName}" also-hidden="true">
                 <sub-hyperlink target="EditProjectContents" description="${contentId}" link-style="buttontext" target-type="inter-app">
@@ -1041,5 +1041,90 @@
         <field name="partyIdTo"><hidden/></field>
         <field name="statusId"><hidden/></field>
         <field name="datetimeStarted"><hidden/></field>
+    </form>
+    <!-- Base forms that the work effort note and content forms of this component extend -->
+    <form name="AddWorkEffortNote" type="single" target="updateWorkEffortNote" title="" default-map-name="workEffortNoteAndData"
+        header-row-style="header-row" default-table-style="basic-table">
+        <alt-target use-when="noteId == null" target="createWorkEffortNote"/>
+        <auto-fields-service service-name="createWorkEffortNote"/>
+        <field name="noteId" use-when="noteId != null"><hidden/></field>
+        <field name="workEffortId"><hidden/></field>
+        <field name="noteInfo" title="${uiLabelMap.CommonNote}"><textarea cols="70" rows="5"/></field>
+        <field name="internalNote" title="${uiLabelMap.WorkEffortInternalNote}">
+            <drop-down no-current-selected-key="">
+                <option key="Y" description="${uiLabelMap.CommonYes}"/>
+                <option key="N" description="${uiLabelMap.CommonNo}"/>
+            </drop-down>
+        </field>
+        <field name="noteParty"><hidden/></field>
+        <field name="noteName"><hidden/></field>
+        <field name="submitButton" use-when="noteId == null" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" use-when="noteId != null" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <form name="ListWorkEffortNotes" type="list" list-name="workEffortNotes"
+        header-row-style="header-row-2" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="WorkEffortNoteAndData">
+                <condition-expr field-name="workEffortId" from-field="workEffortId"/>
+                <order-by field-name="noteId"/>
+            </entity-condition>
+        </actions>
+        <field name="noteId">
+            <hyperlink description="${noteId}" target="EditWorkEffortNotes" also-hidden="false">
+                <parameter param-name="workEffortId"/>
+                <parameter param-name="noteId"/>
+            </hyperlink>
+        </field>
+        <field name="workEffortId" entity-name="WorkEffort" widget-style="buttontext">
+           <hyperlink description="${workEffortId}" target="EditWorkEffort" also-hidden="false">
+                <parameter param-name="workEffortId"/>
+            </hyperlink>
+        </field>
+        <field name="noteInfo" title="${uiLabelMap.CommonNote}"><display/></field>
+        <field name="noteParty" title="${uiLabelMap.CommonBy}"><display description="${groovy:org.apache.ofbiz.party.party.PartyHelper.getPartyName(delegator, noteParty, true)} at ${noteDateTime}"/></field>
+        <field name="internalNote" title="${uiLabelMap.WorkEffortPrivatePublic}" widget-style="buttontext" use-when="&quot;N&quot;.equals(internalNote)">
+            <hyperlink description="${uiLabelMap.OrderNotesPrivate}" target="updateWorkEffortNote">
+                <parameter param-name="workEffortId"/>
+                <parameter param-name="noteId"/>
+                <parameter param-name="internalNote" value="Y"/>
+            </hyperlink>
+        </field>
+        <field name="internalNote" title="${uiLabelMap.WorkEffortPrivatePublic}" widget-style="buttontext" use-when="&quot;Y&quot;.equals(internalNote)">
+            <hyperlink description="${uiLabelMap.OrderNotesPublic}" target="updateWorkEffortNote">
+                <parameter param-name="workEffortId"/>
+                <parameter param-name="noteId"/>
+                <parameter param-name="internalNote" value="N"/>
+            </hyperlink>
+        </field>
+    </form>
+
+    <form name="ListWorkEffortContents" type="list" target="updateWorkEffortContent" list-name="workEffortContents"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-and entity-name="WorkEffortContent" use-cache="true" list="workEffortContents">
+                <field-map field-name="workEffortId" from-field="workEffortId"/>
+            </entity-and>
+        </actions>
+        <auto-fields-service service-name="updateWorkEffortContent" default-field-type="edit"/>
+        <field name="workEffortId"><hidden/></field>
+        <field name="contentId">
+            <display-entity entity-name="Content" key-field-name="contentId" description="${contentName}" also-hidden="true">
+                <sub-hyperlink target="/content/control/editContent" description="${contentId}" link-style="buttontext" target-type="inter-app">
+                    <parameter param-name="contentId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="workEffortContentTypeId"><display-entity entity-name="WorkEffortContentType"/></field>
+        <field name="fromDate"><display/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="deleteLink" title=" " widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.CommonDelete}" target="deleteWorkEffortContent" also-hidden="false">
+                <parameter param-name="workEffortContentTypeId"/>
+                <parameter param-name="fromDate"/>
+                <parameter param-name="workEffortId"/>
+                <parameter param-name="contentId"/>
+            </hyperlink>
+        </field>
     </form>
 </forms>
