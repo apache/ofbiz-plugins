@@ -124,6 +124,13 @@ final class RedisChannelConnection {
      */
     private volatile boolean subscriberUp;
     /**
+     * Whether the subscriber connection dropped after its subscribe returned and has not been resubscribed since. Guarded
+     * by this instance's monitor: cleared when a connect begins and by a resubscription, set by a disconnect. A connect
+     * that took a while to open the publisher then does not count a subscriber that Lettuce reopened, but could not
+     * resubscribe, as up.
+     */
+    private boolean subscriberDropped;
+    /**
      * Whether the publisher connection is open. Written only by {@link #updateConnection}: set by a successful connect
      * and by a reconnect ({@code StateListener}), cleared by a disconnect, by closing the connections and by
      * {@link #end()}. The bus publishes only while it is true; it may be true while the subscriber is down.
@@ -246,9 +253,34 @@ final class RedisChannelConnection {
         statistics.setConnected(connected);
     }
 
-    /** Records whether the subscriber is up, keeping the publisher's state. */
-    synchronized void subscriberState(boolean up) {
-        updateConnection(up, publisherUp);
+    /** Records that the subscriber connection dropped; it is up again once resubscribed. */
+    synchronized void subscriberLost() {
+        subscriberDropped = true;
+        updateConnection(false, publisherUp);
+    }
+
+    /** Records that the subscriber connection is subscribed again after a reconnect. */
+    synchronized void subscriberRestored() {
+        subscriberDropped = false;
+        updateConnection(true, publisherUp);
+    }
+
+    /**
+     * Records the state of both connections once a connect opened them: the subscriber counts as up only if it has not
+     * dropped since its subscribe returned, or was resubscribed since.
+     * @param subscriberOpen whether the subscriber connection is open
+     * @param publisherOpen whether the publisher connection is open
+     */
+    synchronized void connectionsOpened(boolean subscriberOpen, boolean publisherOpen) {
+        updateConnection(subscriberOpen && !subscriberDropped, publisherOpen);
+    }
+
+    /**
+     * Whether both connections are up and the bus is not stopped.
+     * @return true while connected
+     */
+    boolean isConnected() {
+        return connected;
     }
 
     /** Records whether the publisher is up, keeping the subscriber's state. */
@@ -371,6 +403,9 @@ final class RedisChannelConnection {
             return;
         }
         try {
+            synchronized (this) {
+                subscriberDropped = false;
+            }
             StatefulRedisPubSubConnection<String, String> sub = client.connectPubSub();
             subscriber = sub;
             sub.addListener(new ChannelListener(settings, busId, this, sub));
@@ -382,7 +417,7 @@ final class RedisChannelConnection {
             // lost, and before the bus was installed the caches were filled without any invalidation from the other servers.
             // Queued before the connection shows as up, so that a payload sent once it is up comes after the gap.
             reportGap();
-            updateConnection(sub.isOpen(), pub.isOpen());
+            connectionsOpened(sub.isOpen(), pub.isOpen());
             if (stopped) {
                 closeConnections();
                 return;
@@ -421,10 +456,11 @@ final class RedisChannelConnection {
     }
 
     /**
-     * Checks the subscribed connection, on the scheduler thread. While Lettuce reconnects, the subscription is not
-     * confirmed; one beat later it still is not, its resubscribe failed (Lettuce logs it and does not retry, for
-     * instance after a command timeout or NOPERM) and the bus would stay deaf, so the connections are reopened.
-     * Otherwise a PING checks that the server still answers.
+     * Checks both connections, on the scheduler thread. While Lettuce reconnects, the subscription is not confirmed;
+     * one beat later it still is not, its resubscribe failed (Lettuce logs it and does not retry, for instance after a
+     * command timeout or NOPERM) and the bus would stay deaf, so the connections are reopened. Otherwise a PING on each
+     * connection checks that the server still answers on both, since a half-open publisher connection would otherwise
+     * fail every publish until TCP gives up.
      */
     private void heartbeat() {
         try {
@@ -450,11 +486,30 @@ final class RedisChannelConnection {
             return;
         }
         unsubscribedBeats = 0;
+        ping(sub, sub, "pub/sub");
+        StatefulRedisConnection<String, String> pub = publisher;
+        // while Lettuce reconnects the publisher, its commands are rejected at once; the reconnect is its own check
+        if (pub != null && publisherUp) {
+            ping(pub, sub, "publishing");
+        }
+    }
+
+    /**
+     * Sends a heartbeat PING on a connection; a failure or a late answer reopens both connections.
+     * @param connection the connection to check
+     * @param sub the subscriber connection of this connect, so that a late failure does not act on a later connect
+     * @param name the connection's name in the log
+     */
+    private void ping(StatefulRedisConnection<String, String> connection, StatefulRedisPubSubConnection<String, String> sub,
+            String name) {
         try {
-            sub.async().ping().toCompletableFuture().orTimeout(settings.heartbeatTimeoutMillis(), TimeUnit.MILLISECONDS)
-                    .whenComplete((pong, failure) -> {
+            connection.async().ping().toCompletableFuture().orTimeout(settings.heartbeatTimeoutMillis(), TimeUnit.MILLISECONDS)
+                    .whenComplete((reply, failure) -> {
                         if (failure != null) {
-                            runOnScheduler(() -> heartbeatFailed(sub, failure));
+                            Throwable cause = failure instanceof CompletionException && failure.getCause() != null
+                                    ? failure.getCause() : failure;
+                            runOnScheduler(() -> heartbeatFailed(sub, new IllegalStateException("no answer to the PING on the "
+                                    + name + " connection", cause)));
                         }
                     });
         } catch (RuntimeException e) {
@@ -567,7 +622,7 @@ final class RedisChannelConnection {
                     if (owner.connected) {
                         Debug.logWarning("Redis cache invalidation bus lost its pub/sub connection; reconnecting", MODULE);
                     }
-                    owner.subscriberState(false);
+                    owner.subscriberLost();
                 } else if (connection == owner.publisher) {
                     owner.publisherState(false);
                 }

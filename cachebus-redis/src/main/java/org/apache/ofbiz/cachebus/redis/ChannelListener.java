@@ -94,7 +94,7 @@ final class ChannelListener extends RedisPubSubAdapter<String, String> {
                 return;
             }
             if (settings.channel().equals(channel) && subscribedOnce.getAndSet(true)) {
-                owner.subscriberState(true);
+                owner.subscriberRestored();
                 Debug.logInfo("Redis cache invalidation bus resubscribed to channel " + channel
                         + " after a reconnect; distributed caches are cleared", MODULE);
                 owner.reportGap();

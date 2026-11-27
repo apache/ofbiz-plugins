@@ -76,7 +76,7 @@ The settings that ship with the plugin are `<property>` children of the `cachebu
 | Property | Default | Meaning |
 |---|---|---|
 | `delegator-name` | `default` | The delegator used to read the `SystemProperty` overrides described below. |
-| `heartbeat-ms` | `5000` | How often the subscribed connection is checked with a `PING`. 100 to 600000. |
+| `heartbeat-ms` | `5000` | How often both connections are checked with a `PING`. 100 to 600000. |
 | `heartbeat-timeout-ms` | `3000` | How long a `PING` may take before the connections are reopened. 10 to 5000, and less than `heartbeat-ms`; 5000 is the timeout of every command, which fails a slower `PING` first. |
 | `max-payload-bytes` | `1048576` | A received message larger than this is dropped and counted as a gap. 1024 to 67108864. |
 | `tombstone-ms` | `2000` | How long a received key invalidation blocks plain puts of that key. 0 to 60000. |
@@ -197,8 +197,9 @@ counts a gap. That happens when:
   the caches filled while OFBiz was starting, before the bus was installed, may hold data other servers changed
   meanwhile. At start-up the caches are nearly empty, so this clear costs little;
 * the connection to Redis or Valkey is lost and restored (messages published meanwhile are gone);
-* a heartbeat `PING` is not answered within `heartbeat-timeout-ms`, as in a network partition or a paused server; both
-  connections are then reopened, and the clear follows once the subscription is back;
+* a heartbeat `PING` on either connection is not answered within `heartbeat-timeout-ms`, as in a network partition, a
+  paused server or a connection the network silently dropped; both connections are then reopened, and the clear
+  follows once the subscription is back;
 * a received message is larger than `max-payload-bytes`;
 * received messages arrive faster than they can be applied and more than 16 MB of them (or `max-payload-bytes`, if
   larger) are waiting; the waiting ones are dropped.

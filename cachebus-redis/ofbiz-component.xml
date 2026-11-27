@@ -36,7 +36,7 @@ under the License.
     <container name="cachebus-redis-container" loaders="main" class="org.apache.ofbiz.cachebus.redis.CacheBusRedisContainer">
         <!-- delegator used to read the SystemProperty overrides of config/cachebus-redis.properties -->
         <property name="delegator-name" value="default"/>
-        <!-- how often, in milliseconds, the subscribed connection is checked with a PING; a server that stops answering without
+        <!-- how often, in milliseconds, both connections are checked with a PING; a server that stops answering without
             closing the connection (network partition, frozen server) is only noticed this way -->
         <property name="heartbeat-ms" value="5000"/>
         <!-- how long a PING may take, in milliseconds, before both connections are dropped and reopened and, once subscribed
