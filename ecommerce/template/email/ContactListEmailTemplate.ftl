@@ -21,7 +21,7 @@ under the License.
     <div>
       ${content}
     </div>
-  <#if baseLocation == "/ecomseo">
+  <#if baseLocation?? && baseLocation == "/ecomseo">
     <#assign baseLocation = "/ecommerce">
   </#if>
   <#assign verifyUrl = baseEcommerceSecureUrl +'updateContactListPartyNoUserLogin?contactListId='+contactListId+'&amp;partyId='+partyId+'&amp;fromDate='+fromDate+'&amp;statusId=CLPT_UNSUBS_PENDING&amp;optInVerifyCode='+optInVerifyCode+'&amp;baseLocation='+baseLocation!>
